@@ -17,6 +17,6 @@ See the [example guide](docs/example-apps.md), [architecture](docs/architecture.
 python3 scripts/verify_foundation.py
 ```
 
-The workspace contains six framework crates plus an independent example component package. Foundation acceptance requires successful Linux/Windows/macOS validation and explicit owner approval. Image/CUDA implementation is deferred until that gate. See the [roadmap](docs/roadmap.md).
+The workspace contains six framework crates plus an independent example component package. Linux/Windows/macOS CI and MSRV 1.88 validation have passed. Foundation acceptance still requires explicit owner approval. Image/CUDA implementation is deferred until that gate. See the [roadmap](docs/roadmap.md).
 
 This repository contains source, tests, examples, CI and engineering documentation. External source checkouts and agent instructions are not part of it. Upstream revisions and declared dependency licenses are recorded in docs; Matea's distribution license and public naming availability remain owner review items.

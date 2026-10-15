@@ -1,6 +1,6 @@
 # Matea Foundation architecture
 
-Status: implemented experimental Foundation; three-OS acceptance and owner approval pending. Image/CUDA implementation is deferred until the Foundation gate.
+Status: implemented experimental Foundation; Linux/Windows/macOS CI and MSRV 1.88 verified; owner approval pending. Image/CUDA implementation is deferred until the Foundation gate.
 
 ```mermaid
 graph LR

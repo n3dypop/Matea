@@ -1,13 +1,13 @@
 # Matea Foundation gate report
 
-検証日時: **2026-10-16 06:41:09 JST**。状態: **F5未完了・ゲート未通過**。ローカル実装と検証は完了しましたが、3 OSのCI実行結果とオーナーの明示承認は未取得です。画像エンジン／CUDAの実装には進みません。
+検証日時: **2026-10-16 06:43:49 JST**。状態: **F5の技術検証完了・オーナー承認待ち**。ローカル検証、Linux/Windows/macOS CI、MSRV 1.88が成功しました。オーナーの明示承認は未取得のため、画像エンジン／CUDAの実装には進みません。
 
 ## 実装と設計
 
 - F0: Bubble Tea v2、Lip Gloss、Bubbles、Huh、Glamour、Harmonica、Ultraviolet、x/ansi・term、Ratatui、Crosstermの固定ソースを調査。[revision一覧](upstream-lock.json)、[Bubble Tea監査](bubbletea-audit.md)、[Charm監査](charm-ecosystem-audit.md)。Goテストは未実行です。
-- F1: 型付きModel/Effect、構造化View、描画方式、デザインシステム、フォーカス、crate責務、拡張境界、端末所有権を[ADR 0003〜0006](decisions/)に記録。公開APIは暫定で、固定・公開はしていません。
+- F1: 型付きModel/Effect、構造化View、描画方式、デザインシステム、フォーカス、crate責務、拡張境界、端末所有権を[ADR 0003〜0006](decisions/)に記録。公開APIは暫定で、固定やcrates.ioへの公開はしていません。
 - F2–F4: リポジトリ直下に6 crateを実装。UIスレッド上の状態遷移、最大8 worker・32 completionのEffect実行、世代付きキャンセル、周期subscription、Unicode Surface、行単位diff、クリッピング、テーマ、レイアウト、input/list/table/viewport/spinner/formを実装しました。
-- F5: カウンター、検索リスト、フォーム、ダッシュボード、型付き非同期Effect、別crateのBadgeを実行可能にしました。golden、mock backend、PTY、テスト、ドキュメント、CI設定と検証ログを追加しました。**CI設定の追加をCI成功とは扱っていません。**
+- F5: カウンター、検索リスト、フォーム、ダッシュボード、型付き非同期Effect、別crateのBadgeを実行可能にしました。golden、mock backend、PTY、テスト、ドキュメント、CI設定と検証ログを追加しました。初回コミットの3 OSとMSRVの実CIがすべて成功しました。結果は下表と保存したGitHubレスポンスで確認できます。
 
 [アーキテクチャ](architecture.md) / [デザインシステム](design-system.md) / [拡張契約](extension-contracts.md) / [サンプル実行ガイド](example-apps.md)
 
@@ -21,13 +21,13 @@
 | 第三者widgetを内部変更なしで統合 | ローカルPASS | 独立package `examples/external-widget` のテスト・snapshot |
 | input/focus/Unicode幅/resize/clipping/diffのテスト | ローカルPASS | core/render/style/widgetsテスト、幅広文字の置換・重なり、制御文字、0寸法、過大寸法、PTY resize |
 | counter/dashboard/list/formの実行 | ローカルPASS | 全6サンプルのsnapshot、dashboard golden。PTYで実端末I/O経路とEffect完了も検証 |
-| Linux/Windows/macOSのCI build/test | **未検証・ブロッカー** | `.github/workflows/foundation.yml` に3 OSとMSRV job。隔離した `Matea/` 内でGitを初期化し、`n3dypop/Matea` をoriginに設定済み。remote CIは初回push後に確認。手元macOSの成功は他OSの証明ではない |
-| graphics拡張境界を文書化、画像実装は存在しない | PASS | extension-contracts.md。実装範囲のリポジトリ に画像crate、codec、Kitty/Sixel encoder、CUDA、画像benchmarkなし。提供済みreferencesは実装成果に含めない |
-| Foundationの明示的なオーナー承認 | **未取得** | 3 OSの証拠を添付し、残課題をレビューした後に承認を依頼する。現在は次フェーズへの移行を求めない |
+| Linux/Windows/macOSのCI build/test | **CI PASS** | [3 OS + MSRV実行結果](https://github.com/n3dypop/Matea/actions/runs/38811891109)。fmt/clippy/test/doc/examplesが成功。Unix PTYはLinux/macOSで成功、Windowsでは対象外 |
+| graphics拡張境界を文書化、画像実装は存在しない | PASS | extension-contracts.md。実装範囲のリポジトリに画像crate、codec、Kitty/Sixel encoder、CUDA、画像benchmarkなし。提供済みreferencesは実装成果に含めない |
+| Foundationの明示的なオーナー承認 | **未取得・次フェーズのゲート** | CI結果と残課題を添付しました。このFoundation候補をレビューし、明示承認をお願いします。承認までは次フェーズへ移行しない |
 
 ## 実行結果
 
-環境: `macOS-27.0.1-arm64-arm-64bit-Mach-O`、`rustc 1.99.0 (b940084d7 2026-09-28)`、`cargo 1.99.0 (5f94df478 2026-08-27)`。MSRV 1.88は設定のみで、手元では未実行です。
+環境: `macOS-27.0.1-arm64-arm-64bit-Mach-O`、`rustc 1.99.0 (b940084d7 2026-09-28)`、`cargo 1.99.0 (5f94df478 2026-08-27)`。MSRV 1.88はLinux CIで成功しています（手元macOSでは未実行）。
 
 再現コマンド（プロジェクトの作業ディレクトリから）:
 
@@ -57,6 +57,21 @@ PTYでは通常終了、resize、raw Ctrl-C、SIGTERM、Update panic、最初の
 
 アクセシビリティ確認: 色なしでも選択marker・reverse・Errorラベルを保持、reduced motion、default RGB tokenの計算上のcontrast >= 4.5:1。対話型screen-reader promptや利用者評価は未実施です。
 
+## GitHub CIの実行証拠
+
+検証対象コミット: [`48ea6e978d69`](https://github.com/n3dypop/Matea/commit/48ea6e978d69838f9b6a55c460368dba2d223f2c)。実行完了: **2026-10-16 06:43:49 JST**。トリガーはpush、結論はsuccessです。
+
+| Job | 結果 | 証拠 |
+| --- | --- | --- |
+| msrv | **PASS** | [job](https://github.com/n3dypop/Matea/actions/runs/38811891109/job/116686892129) |
+| foundation (ubuntu-latest) | **PASS** | [job](https://github.com/n3dypop/Matea/actions/runs/38811891109/job/116686892437) |
+| foundation (macos-latest) | **PASS** | [job](https://github.com/n3dypop/Matea/actions/runs/38811891109/job/116686892632) |
+| foundation (windows-latest) | **PASS** | [job](https://github.com/n3dypop/Matea/actions/runs/38811891109/job/116686892797) |
+
+各OSではfmt、clippy（warningsをerror扱い）、workspace test、all-targets test、rustdoc、全サンプルsnapshot、描画probeが成功しています。Linux/macOSでは追加でPTY 8ケースが成功しました。WindowsのPTY stepは設計どおりskippedです。MSRV jobはRust 1.88でworkspace testを実行しました。
+
+GitHubから取得した[run metadata](evidence/ci-run.json)と[job/step結果](evidence/ci-jobs.json)を保存しています。実際のWindows console、IME、SSH/tmux、実エミュレータの表示互換をこのCIで確認したとは主張しません。
+
 ## 検証で見つけて解消した問題
 
 1. 初回描画と最初のpollの間のSIGWINCHが取りこぼされるため、描画前にCrosstermの監視を初期化しました。PTY resizeが成功しています。
@@ -65,13 +80,13 @@ PTYでは通常終了、resize、raw Ctrl-C、SIGTERM、Update panic、最初の
 
 ## 未解決の課題と承認前の作業
 
-1. **CI実行結果の取得。** オーナー指定の `n3dypop/Matea` を使用します。`Matea/` 内にソース・テスト・CI・技術資料を隔離してGitを初期化しました。参照ソース、agent指示書、skillsはリポジトリに含めません。初回push後にLinux/Windows/macOSとMSRVの結果を添付します。
-2. オーナーによる公開API・ADR・サンプルのレビュー。各crate名、crates.io／商標の可用性は未確認です。全packageは `publish=false`。Matea本体の配布ライセンスは未選択で、公開前の判断事項です。
+1. **オーナーのFoundation承認。** 3 OSとMSRVのCI結果は取得済みです。下記のAPI・対応範囲・未検証項目をレビューし、このFoundation候補を承認するか判断をお願いします。GitHubへの登録許可はFoundation承認として扱いません。
+2. オーナーによる公開API・ADR・サンプルのレビュー。各crate名、crates.io／商標の可用性は未確認です。全packageは `publish=false`。Matea本体のライセンスは未選択で、OSSリリース／crate公開に向けた判断事項です。
 3. 実端末のUnicode幅、IME、SSH/tmux、Windows console、カスタムpaletteは未検証。真のinline対話描画、mouse、function key、enhanced keyboard、clipboard、suspend/resume、screen-reader用の線形promptは未実装です。
 4. 協調しないユーザーworkerはRuntime終了後も残り得ます。I/O timeoutとtoken確認が必要です。SIGKILL、abort、電源断、出力失敗による復旧失敗は保証できません。セッション中にアプリ側でSIGINT/SIGTERM handlerを同時に置き換えることも非対応です。
 5. 現rendererは正しさを優先した行単位描画です。高速・省帯域・全端末互換とは主張しません。詳細は[リスク一覧](risks.md)。
 
-上記の検証範囲・制約をオーナーが確認し、必須CIが揃った後にFoundation F5の明示承認を依頼します。**それまでは画像／CUDAフェーズへ進みません。**
+必須CIの成功を確認したため、上記の検証範囲・制約を含むFoundation F5の明示承認を依頼します。**それまでは画像／CUDAフェーズへ進みません。**
 
 ## Repository isolation
 

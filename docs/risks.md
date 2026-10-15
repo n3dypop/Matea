@@ -2,9 +2,9 @@
 
 | Risk | Current mitigation / acceptance requirement |
 | --- | --- |
-| Three-OS execution unverified | CI workflow supplied; actual remote runs required before gate acceptance |
+| Scope of three-OS validation | Linux/Windows/macOS CI and Linux MSRV 1.88 passed; see gate report. Real-emulator/Windows-console behavior remains separate validation work |
 | Provisional public API / names | Owner API review, registry/trademark checks before publication; publish=false |
-| Distribution license not selected | Owner must select project license before distribution; upstream license facts captured separately |
+| Distribution license not selected | Owner must select project license for an OSS/crate release; upstream license facts captured separately |
 | Non-cooperative user tasks can outlive Runtime | Explicit tokens/deadlines, per-runtime active limit, stale-result discard; no forced-kill promise |
 | Narrow custom renderer maintenance | Row clear + explicit positioning; Unicode/diff/clip tests; revisit Ratatui before broader renderer scope |
 | Emoji/ambiguous widths differ by terminal | Non-CJK width policy, atomic clusters; real-emulator/SSH/tmux validation outstanding |
