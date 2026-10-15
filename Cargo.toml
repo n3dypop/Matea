@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+members = ["crates/*", "examples/external-widget"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+publish = false
+
+[workspace.dependencies]
+crossterm = "=0.29.0"
+unicode-segmentation = "=1.13.3"
+unicode-width = "=0.2.2"
+matea-style = { path = "crates/matea-style" }
+matea-render = { path = "crates/matea-render" }
+matea-core = { path = "crates/matea-core" }
+matea-widgets = { path = "crates/matea-widgets" }
+matea-terminal = { path = "crates/matea-terminal" }
+matea = { path = "crates/matea" }
