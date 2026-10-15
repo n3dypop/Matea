@@ -45,9 +45,12 @@ full issue bodies stay in a temporary research cache, outside the repository.
 The complete remaining execution order is in `../coverage-plan.md`. Normal CI
 validates links and current code; it does not pass the strict coverage gate.
 
-`module-verdicts.json` explicitly keeps all 94 directory groups pending. Twenty-one
-workloads and implemented motion primitives do not establish any complete module's
-parity. The strict gate additionally checks per-module correctness/performance,
+`module-verdicts.json` records Harmonica and Bubbles paginator as implemented and
+measured within their documented Rust contracts; 92 groups remain pending. The
+two reviewed groups cover 49 declarations and have explicit correctness paths,
+matched cases, source audits, deviations and limits. Thirty-one total workloads
+do not establish all-reference or universal performance parity. The strict gate
+validates these links and additionally checks per-module correctness/performance,
 issue-report dispositions and source-marker assessments, rather than relying only
 on declaration links. Initial manual findings need to be reconciled into that
 ledger as their reproduction and performance limits are resolved.

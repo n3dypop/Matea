@@ -34,3 +34,10 @@ keep `step` for explicit input/result errors. Neither uses unsafe code. Benchmar
 the raw arithmetic separately from checked updates; the Go checked case applies
 the same finite checks in the original research harness. Applications choose the
 contract explicitly rather than silently dropping validation to win a benchmark.
+
+The same distinction applies to Projectile: sample returns the next Copy value
+using raw forward Euler arithmetic, and step validates all six resulting position/
+velocity components before committing. Raw sampling cannot mutate the old value.
+Source-generated fixtures exercise all three axes, gravity, zero/time steps and
+nanosecond frame periods. Negative FPS/parameters remain unrepresentable or errors;
+do not recreate a divide-by-zero API merely to copy the reference signature.

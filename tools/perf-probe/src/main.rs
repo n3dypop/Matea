@@ -129,6 +129,8 @@ fn main() {
         .and_then(|n| n.parse().ok())
         .unwrap_or(300);
     input_bindings(iterations);
+    projectiles(iterations);
+    pagination(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -263,6 +265,152 @@ fn main() {
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
     }
+}
+fn projectiles(iterations: usize) {
+    use matea::motion::{Point3, Projectile, TERMINAL_GRAVITY, Vector3, frame_duration};
+    use std::{num::NonZeroU32, time::Duration};
+    let fps = NonZeroU32::new(60).unwrap();
+    measure(
+        "motion/frame_duration",
+        (iterations * 10).max(300000),
+        || frame_duration(black_box(fps)).as_secs_f64().to_bits(),
+        &format!("{:.12}", frame_duration(fps).as_secs_f64()),
+        "positive fps=60; integer nanosecond period converted to seconds",
+    );
+    let make = || {
+        Projectile::new(
+            Duration::from_millis(16),
+            black_box(Point3 {
+                x: 1.0,
+                y: 10.0,
+                z: -2.0,
+            }),
+            black_box(Vector3 {
+                x: 2.0,
+                y: -3.0,
+                z: 4.0,
+            }),
+            black_box(TERMINAL_GRAVITY),
+        )
+        .unwrap()
+    };
+    let initial = make();
+    let result = initial.sample();
+    let (p, v) = (result.position(), result.velocity());
+    let expected = format!(
+        "{:.12},{:.12},{:.12},{:.12},{:.12},{:.12}",
+        p.x, p.y, p.z, v.x, v.y, v.z
+    );
+    for checked in [false, true] {
+        measure(
+            if checked {
+                "motion/projectile_checked_update"
+            } else {
+                "motion/projectile_update"
+            },
+            (iterations * 10).max(300000),
+            || {
+                let mut next = black_box(initial);
+                if checked {
+                    next.step().unwrap();
+                } else {
+                    next = next.sample();
+                }
+                let (p, v, a) = (next.position(), next.velocity(), next.acceleration());
+                p.x.to_bits()
+                    ^ p.y.to_bits()
+                    ^ p.z.to_bits()
+                    ^ v.x.to_bits()
+                    ^ v.y.to_bits()
+                    ^ v.z.to_bits()
+                    ^ a.y.to_bits()
+            },
+            &expected,
+            if checked {
+                "copy initial projectile; forward Euler and six finite result checks; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters"
+            } else {
+                "copy initial projectile; raw forward Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters"
+            },
+        );
+    }
+    measure(
+        "motion/projectile_construct",
+        (iterations * 10).max(300000),
+        || {
+            let mut next = black_box(make());
+            let p = next.step().unwrap();
+            let v = next.velocity();
+            p.y.to_bits() ^ v.y.to_bits()
+        },
+        &expected,
+        "construct with nine finite input checks then checked Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0)",
+    );
+}
+fn pagination(iterations: usize) {
+    use matea::widgets::{Pagination, Paginator};
+    use std::num::NonZeroUsize;
+    let mut pages = Pagination::new(101, NonZeroUsize::new(10).unwrap());
+    pages.set_page(10);
+    assert_eq!(pages.range(), 100..101);
+    measure(
+        "pagination/range",
+        (iterations * 10).max(300000),
+        || {
+            let range = black_box(pages).range();
+            (range.start ^ range.end) as u64
+        },
+        "100,101",
+        "collection length=101 per_page=10 page=10; slice bounds only",
+    );
+    pages.set_page(4);
+    measure(
+        "pagination/navigation",
+        (iterations * 10).max(300000),
+        || {
+            let mut p = black_box(pages);
+            p.next();
+            p.previous();
+            p.page() as u64
+        },
+        "4",
+        "next then previous from page=4 total_pages=11 per_page=10; state helpers only",
+    );
+    let pager = Paginator::new(pages);
+    assert_eq!(pager.label(), "5/11");
+    measure(
+        "pagination/arabic",
+        iterations.max(1000),
+        || black_box(&pager).label().len() as u64,
+        "5/11",
+        "Arabic label only current=5 total=11; no view/render/I/O",
+    );
+    for count in [32, 256] {
+        let mut dots = Pagination::from_pages(count, NonZeroUsize::new(1).unwrap());
+        dots.set_page(10);
+        let expected = dots.dots("•", "○", count);
+        measure(
+            &format!("pagination/dots_{count}"),
+            iterations.max(1000),
+            || black_box(dots).dots("•", "○", black_box(count)).len() as u64,
+            &expected,
+            "dot label only all pages current=10 zero-based; active=• inactive=○; no view/render/I/O",
+        );
+    }
+    let mut pager = Paginator::new(pages);
+    let right = Input::Key(Key::new(KeyCode::Right));
+    let left = Input::Key(Key::new(KeyCode::Left));
+    measure(
+        "pagination/key_dispatch",
+        (iterations * 10).max(30000),
+        || {
+            black_box(black_box(&mut pager).event(black_box(&right), true));
+            black_box(black_box(&mut pager).event(black_box(&left), true));
+            pager.pages.page() as u64
+        },
+        "4",
+        "next/right then previous/left key dispatch; initial page=4 total_pages=11; no view/render/I/O",
+    );
+    assert_eq!(pager.pages.page(), 4);
 }
 fn input_bindings(iterations: usize) {
     use matea::widgets::key::Binding;

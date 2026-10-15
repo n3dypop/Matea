@@ -196,30 +196,53 @@ impl Projectile {
             dt: step.as_secs_f64(),
         })
     }
+    #[inline]
     pub fn position(self) -> Point3 {
         self.position
     }
+    #[inline]
     pub fn velocity(self) -> Vector3 {
         self.velocity
     }
+    #[inline]
     pub fn acceleration(self) -> Vector3 {
         self.acceleration
     }
     /// Reference-compatible forward Euler integration. Errors leave state intact.
+    #[inline]
     pub fn step(&mut self) -> Result<Point3, MotionError> {
-        self.advance(false)
+        self.commit(self.sample())
+    }
+    /// Copy the state and take one forward Euler step with IEEE arithmetic.
+    /// This matches the reference's unchecked numeric operation. Overflow may
+    /// produce infinity/NaN; use step for a checked, transactional mutation.
+    #[inline]
+    pub fn sample(self) -> Self {
+        let p = self.position;
+        let v = self.velocity;
+        let a = self.acceleration;
+        Self {
+            position: Point3 {
+                x: p.x + v.x * self.dt,
+                y: p.y + v.y * self.dt,
+                z: p.z + v.z * self.dt,
+            },
+            velocity: Vector3 {
+                x: v.x + a.x * self.dt,
+                y: v.y + a.y * self.dt,
+                z: v.z + a.z * self.dt,
+            },
+            ..self
+        }
     }
     /// Analytical constant-acceleration step. Independent of time partition to
     /// floating-point tolerance; useful when frames arrive at varying intervals.
     pub fn step_exact(&mut self) -> Result<Point3, MotionError> {
-        self.advance(true)
-    }
-    fn advance(&mut self, exact: bool) -> Result<Point3, MotionError> {
         let dt = self.dt;
         let a = self.acceleration;
         let v = self.velocity;
         let p = self.position;
-        let extra = if exact { 0.5 * dt } else { 0.0 };
+        let extra = 0.5 * dt;
         let position = Point3 {
             x: p.x + (v.x + a.x * extra) * dt,
             y: p.y + (v.y + a.y * extra) * dt,
@@ -230,17 +253,29 @@ impl Projectile {
             y: v.y + a.y * dt,
             z: v.z + a.z * dt,
         };
-        if ![
-            position.x, position.y, position.z, velocity.x, velocity.y, velocity.z,
-        ]
-        .iter()
-        .all(|n| n.is_finite())
+        self.commit(Self {
+            position,
+            velocity,
+            ..*self
+        })
+    }
+    #[inline]
+    fn commit(&mut self, next: Self) -> Result<Point3, MotionError> {
+        let p = next.position;
+        let v = next.velocity;
+        // Independent, side-effect-free checks can be combined without branchy
+        // short-circuit iteration. Keep the commit after all six checks.
+        if !(p.x.is_finite()
+            & p.y.is_finite()
+            & p.z.is_finite()
+            & v.x.is_finite()
+            & v.y.is_finite()
+            & v.z.is_finite())
         {
             return Err(MotionError::NonFiniteState);
         }
-        self.position = position;
-        self.velocity = velocity;
-        Ok(position)
+        *self = next;
+        Ok(p)
     }
 }
 
@@ -343,5 +378,91 @@ mod tests {
         .unwrap();
         assert!(overflow.step().is_err());
         assert_eq!(overflow.position(), p);
+        assert!(overflow.sample().position().x.is_infinite());
+        assert_eq!(overflow.position(), p);
+    }
+    #[test]
+    fn frame_duration_boundaries_and_zero_steps() {
+        for (fps, nanos) in [
+            (1, 1_000_000_000),
+            (60, 16_666_666),
+            (1_000_000_000, 1),
+            (u32::MAX, 0),
+        ] {
+            assert_eq!(
+                frame_duration(NonZeroU32::new(fps).unwrap()).as_nanos(),
+                nanos
+            );
+        }
+        let mut p = Projectile::new(
+            Duration::ZERO,
+            Point3 {
+                x: 1.0,
+                y: 2.0,
+                z: 3.0,
+            },
+            Vector3 {
+                x: 4.0,
+                y: 5.0,
+                z: 6.0,
+            },
+            TERMINAL_GRAVITY,
+        )
+        .unwrap();
+        let original = p;
+        assert_eq!(p.step().unwrap(), original.position());
+        assert_eq!(p.velocity(), original.velocity());
+        assert_eq!(p.acceleration(), TERMINAL_GRAVITY);
+        assert!(
+            Projectile::new(
+                Duration::ZERO,
+                Point3 {
+                    x: f64::NAN,
+                    ..Point3::default()
+                },
+                Vector3::default(),
+                GRAVITY
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it() {
+        let state = Motion {
+            position: 2.0,
+            velocity: 0.0,
+        };
+        let result = Spring::new(Duration::from_millis(16), 12.0, 1e12)
+            .unwrap()
+            .step(state, 1.0)
+            .unwrap();
+        assert!(result.position > 1.999999999999);
+        // At this scale the fast transient has decayed. The slow eigenvalue is
+        // approximately -omega/(2*damping), which must not cancel to zero.
+        assert!((result.velocity / -6e-12 - 1.0).abs() < 1e-10);
+    }
+    #[test]
+    fn velocity_overflow_cannot_partially_commit_position() {
+        let mut projectile = Projectile::new(
+            Duration::from_secs(2),
+            Point3::default(),
+            Vector3 {
+                x: 1.0,
+                y: 2.0,
+                z: 3.0,
+            },
+            Vector3 {
+                x: 0.0,
+                y: f64::MAX,
+                z: 0.0,
+            },
+        )
+        .unwrap();
+        let original = projectile;
+        assert_eq!(projectile.step(), Err(MotionError::NonFiniteState));
+        assert_eq!(projectile.position(), original.position());
+        assert_eq!(projectile.velocity(), original.velocity());
+        assert!(projectile.sample().velocity().y.is_infinite());
+        assert_eq!(projectile.sample().position().x, 2.0);
     }
 }

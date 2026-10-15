@@ -10,10 +10,11 @@ cargo run -p matea --example dashboard
 cargo run -p matea --example effects
 cargo run -p matea --example motion
 cargo run -p matea --example input
+cargo run -p matea --example pagination
 cargo run -p matea-example-external-widget
 ```
 
-All eight accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All nine accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -39,3 +40,7 @@ cargo run -p matea --example render_probe --release
 ```
 
 The Python smoke suite compares the dashboard against its reviewed plain golden and starts all public examples in snapshot mode. The PTY suite checks input, resize, termios/cursor/screen/paste/focus restoration and cancellation under exit and panic on Unix. PTYs are not terminal emulator visual tests. CI repeats portable tests on Linux, Windows and macOS, with PTYs on Unix. Actual recorded results are in foundation-gate-report.md.
+
+Pagination: left/h or right/l changes the tea page, d switches Arabic/dots, and q
+exits. Custom formatting, keys, empty data and bounded active-page dots are covered
+by the component tests; the example also has a Unix PTY navigation test.

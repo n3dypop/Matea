@@ -121,6 +121,14 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                     read_until(lambda:expected in plain())
                     assert child.poll() is None,(name,"release or delivered Ctrl-C exited")
                 os.write(master,b"\x1b[113u")
+            elif action == "pagination":
+                os.write(master,b"\x1b[C")
+                read_until(lambda:b"Page 2 of 4" in plain() and b"Hojicha" in plain())
+                os.write(master,b"lll")
+                read_until(lambda:b"Page 4 of 4" in plain() and b"Shincha" in plain())
+                os.write(master,b"h")
+                read_until(lambda:b"Page 3 of 4" in plain() and b"Bancha" in plain())
+                os.write(master,b"q")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
         read_until(lambda: child.poll() is not None)
@@ -163,3 +171,4 @@ case("post-run SIGTERM uses original handler", "post-signal", args=("--post-sign
      expected_status=-signal.SIGTERM, expect_cancelled=False)
 case("enhanced keys, mouse and mode restoration", "enhanced-input",example="input",ready=b"Matea input",
      args=("--mouse","--kitty","--deliver-ctrl-c"),expect_cancelled=False)
+case("interactive pagination", "pagination",example="pagination",ready=b"Page 1 of 4",expect_cancelled=False)

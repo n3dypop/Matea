@@ -68,10 +68,25 @@
     {
       "reference": "bubbles",
       "source_group": "paginator",
-      "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-widgets/src/pagination.rs",
+        "crates/matea-widgets/src/paginator.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "pagination/range",
+        "pagination/navigation",
+        "pagination/arabic",
+        "pagination/dots_32",
+        "pagination/dots_256",
+        "pagination/key_dispatch"
+      ],
+      "notes": "All production declarations manually reviewed. Rust contract deviations, source-edge reproduction, correctness coverage and measurement limits are explicit in the source audit. Global base-library and dependency closure remain open.",
+      "declarations_reviewed": 29,
+      "source_audit": "docs/motion-pagination-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Matched fixture outputs and measured p50/p95/allocations reviewed on one macOS arm64 host; current fixtures are comparable within their documented contracts. No universal or other-host performance claim."
     },
     {
       "reference": "bubbles",
@@ -372,10 +387,31 @@
     {
       "reference": "harmonica",
       "source_group": ".",
-      "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-motion/src/lib.rs",
+        "crates/matea-motion/tests/reference.rs"
+      ],
+      "performance_cases": [
+        "motion/frame_duration",
+        "motion/projectile_update",
+        "motion/projectile_checked_update",
+        "motion/projectile_construct",
+        "motion/spring_update_0.2",
+        "motion/spring_checked_update_0.2",
+        "motion/spring_construct_0.2",
+        "motion/spring_update_1",
+        "motion/spring_checked_update_1",
+        "motion/spring_construct_1",
+        "motion/spring_update_2",
+        "motion/spring_checked_update_2",
+        "motion/spring_construct_2"
+      ],
+      "notes": "All production declarations manually reviewed. Rust contract deviations, source-edge reproduction, correctness coverage and measurement limits are explicit in the source audit. Global base-library and dependency closure remain open.",
+      "declarations_reviewed": 20,
+      "source_audit": "docs/motion-pagination-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Matched fixture outputs and measured p50/p95/allocations reviewed on one macOS arm64 host; current fixtures are comparable within their documented contracts. No universal or other-host performance claim."
     },
     {
       "reference": "huh",

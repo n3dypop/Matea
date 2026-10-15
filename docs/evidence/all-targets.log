@@ -54,14 +54,19 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
 running 9 tests
 test input::tests::chords_ignore_repeat_and_lock_state_but_preserve_modifiers_and_release ... ok
 test input::tests::focus_ring_ignores_release_and_modified_tab ... ok
 test tests::model_state_can_remain_non_send ... ok
-test tests::deterministic_subscriptions_resize_and_focus ... ok
 test tests::cancelled_queued_results_are_discarded ... ok
-test tests::replacing_an_id_discards_the_old_generation ... ok
+test tests::deterministic_subscriptions_resize_and_focus ... ok
 test tests::full_completion_queue_does_not_prevent_shutdown ... ok
+test tests::replacing_an_id_discards_the_old_generation ... ok
 test tests::cancellation_interrupts_wait_and_worker_limit_is_enforced ... ok
 test tests::sequence_and_failures ... ok
 
@@ -74,18 +79,22 @@ test tests::extension_routes_input_and_renders_without_internals ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 3 tests
+running 6 tests
+test tests::extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it ... ok
+test tests::frame_duration_boundaries_and_zero_steps ... ok
+test tests::velocity_overflow_cannot_partially_commit_position ... ok
 test tests::analytical_oscillator_and_all_damping_regimes ... ok
-test tests::projectile_matches_forward_euler_and_exact_partition ... ok
 test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
+test tests::projectile_matches_forward_euler_and_exact_partition ... ok
 
-test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 1 test
+running 2 tests
+test reference_projectiles_cover_xyz_gravity_zero_steps_and_nanosecond_periods ... ok
 test reference_trajectories_across_frequencies_and_damping ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 running 0 tests
@@ -112,50 +121,53 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 17 tests
+test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
+test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
+test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
+test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
+test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
 test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
 test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
-test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
-test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
-test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
 test modes::tests::retries_failed_modes_without_repeating_successful_releases ... ok
-test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
-test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
 test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
 test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
 test tests::conservative_environment_and_key_release ... ok
+test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
 test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
+test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
 test tests::resize_to_empty_still_clears_old_content ... ok
 test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
-test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
 test tests::restoration_on_success_failure_and_unwind ... ok
-test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
 
 test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 running 4 tests
-test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
 test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
+test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
 test every_nonpayload_function_media_and_modifier_code_survives ... ok
 test key_kinds_modifiers_and_lock_state_survive_all_combinations ... ok
 
 test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 8 tests
+running 12 tests
+test pagination::tests::explicit_pages_are_independent_and_stale_collections_never_panic ... ok
 test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
-test tests::custom_filter_and_keys_share_enabled_help ... ok
-test tests::list_filter_selection_empty_and_table ... ok
-test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
+test pagination::tests::index_limits_preserve_slice_invariants_across_all_setters ... ok
+test paginator::tests::custom_bindings_repeat_release_focus_and_boundaries_share_one_state ... ok
 test tests::form_focus_validation_and_submit ... ok
+test tests::custom_filter_and_keys_share_enabled_help ... ok
+test paginator::tests::custom_formatting_and_dots_use_bounded_coherent_views ... ok
 test tests::viewport_bounds_and_reduced_motion ... ok
+test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
+test tests::list_filter_selection_empty_and_table ... ok
 test tests::input_graphemes_focus_paste_and_scroll ... ok
 test pagination::tests::range_remains_valid_on_empty_data_and_resize ... ok
 
-test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-   Compiling matea v0.1.0 (${REPOSITORY}/crates/matea)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
      Running unittests src/lib.rs (target/debug/deps/matea-cb222e928d375e7e)
      Running unittests examples/counter.rs (target/debug/examples/counter-a87359e97ca5da3e)
      Running unittests examples/dashboard.rs (target/debug/examples/dashboard-85e0bb205d277f60)
@@ -165,6 +177,7 @@ test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running unittests examples/lifecycle.rs (target/debug/examples/lifecycle-a7ee9d975331c672)
      Running unittests examples/list.rs (target/debug/examples/list-5669e7e448a22a20)
      Running unittests examples/motion.rs (target/debug/examples/motion-cae9b5f8f50894fa)
+     Running unittests examples/pagination.rs (target/debug/examples/pagination-4b5b290dd74e7075)
      Running unittests examples/render_probe.rs (target/debug/examples/render_probe-e84f8181fed788d7)
      Running unittests src/main.rs (target/debug/deps/matea_api_audit-6662563e79d858cc)
      Running unittests src/lib.rs (target/debug/deps/matea_core-8894afc18fe8c207)

@@ -26,7 +26,7 @@ graph LR
 | core | UI-thread transitions, eight effect slots, 32 completion envelopes, 64 subscriptions, generations, timers and focus order | OS input or terminal writes |
 | render | Immutable View tree, geometry, grapheme cells, clipping, layering, row damage | Model mutation, OS terminal commands |
 | style | Color/style/theme values, integer fixed/fill allocation | Terminal I/O or mutable global theme |
-| widgets | Input/list/table/viewport/spinner/form state and Component implementation | Runtime internals or terminal session lifecycle |
+| widgets | Input/list/table/viewport/spinner/form/paginator state and Component implementation | Runtime internals or terminal session lifecycle |
 | terminal | Exclusive session, Crossterm translation, signal shutdown, output batching, restoration | Domain state or layout policy |
 | motion | Cached spring coefficients and explicit-time projectile integration | Timers, threads, renderer or terminal state |
 | facade | Short imports and convenient run entry point | Additional state machine or duplicated contracts |

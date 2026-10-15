@@ -2,10 +2,12 @@
 //! Stateful components sharing input, theme and focus contracts.
 pub mod key;
 mod pagination;
+mod paginator;
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::{View, sanitize};
 use matea_style::Theme;
 pub use pagination::Pagination;
+pub use paginator::{PageDisplay, PageKeys, PageNumbers, Paginator};
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 

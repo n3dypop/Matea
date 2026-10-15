@@ -19,7 +19,7 @@
         "crates/matea-motion/tests/reference.rs"
       ],
       "performance": "docs/performance.md",
-      "notes": "Finite valid reference trajectories; rejects negative/nonfinite parameters rather than silently clamping. Full Harmonica module performance also needs projectile coverage."
+      "notes": "All four public declarations mapped: frame duration and cached spring. Positive representable periods/finite coefficients; deliberate checked/type/numeric deviations are documented in motion-pagination-audit.md."
     },
     {
       "id": "motion/projectile",
@@ -46,10 +46,11 @@
         "crates/matea-motion/src/lib.rs"
       ],
       "tests": [
-        "crates/matea-motion/src/lib.rs"
+        "crates/matea-motion/src/lib.rs",
+        "crates/matea-motion/tests/reference.rs"
       ],
-      "performance": "pending",
-      "notes": "Forward Euler plus opt-in analytical update. Point/Vector map to Point3/Vector3; gravity values are constants."
+      "performance": "docs/performance.md",
+      "notes": "All 16 public declarations mapped. Raw Euler sample, transactional checked step, opt-in analytical step, all XYZ getters and immutable gravity constants; 45 reference trajectories and matched raw/checked/construct fixtures."
     },
     {
       "id": "protocol/kitty",
@@ -224,7 +225,7 @@
     },
     {
       "id": "widgets/pagination",
-      "status": "partial",
+      "status": "implemented",
       "reference_ids": [
         "b53d6575934a809a7b0b",
         "44c957bcee07bb3d0a3e",
@@ -257,13 +258,16 @@
         "82697c7b8578f6cd4aa1"
       ],
       "implementation": [
-        "crates/matea-widgets/src/pagination.rs"
+        "crates/matea-widgets/src/pagination.rs",
+        "crates/matea-widgets/src/paginator.rs"
       ],
       "tests": [
-        "crates/matea-widgets/src/pagination.rs"
+        "crates/matea-widgets/src/pagination.rs",
+        "crates/matea-widgets/src/paginator.rs",
+        "scripts/pty_smoke.py"
       ],
-      "performance": "pending",
-      "notes": "Clamped slicing/Arabic/dots implemented; component/keymap API mapping pending."
+      "performance": "docs/performance.md",
+      "notes": "All 29 paginator declarations mapped to typed state, page/item extents, keys/component/view, custom dots and Rust formatter. Safe empty/stale/overflow behavior differs deliberately; six matched workloads and source-edge reproduction are documented in motion-pagination-audit.md."
     },
     {
       "id": "widgets/keybindings",
@@ -293,7 +297,7 @@
       "tests": [
         "crates/matea-widgets/src/lib.rs"
       ],
-      "performance": "docs/performance.md (six finite fixtures only)",
+      "performance": "docs/performance.md",
       "notes": "Typed matching, repeat/release policy, enable/unbind/help and multi-binding composition implemented. Public fields replace Go setter options. Six matched Bubbles/UV fixtures; arbitrary fmt.Stringer/associated-text chords and complete module verdict remain pending."
     },
     {

@@ -14,6 +14,9 @@ lock={r["name"]:r for r in json.loads((ROOT/"docs/upstream-lock.json").read_text
 source=args.references.resolve()/"ultraviolet"
 motion=args.references.resolve()/"harmonica"
 bindings=args.references.resolve()/"bubbles"
+tea=args.references.resolve()/"bubbletea"
+assert subprocess.check_output(["git","-C",str(tea),"rev-parse","HEAD"],text=True).strip()==lock["bubbletea"]["sha"]
+assert not subprocess.check_output(["git","-C",str(tea),"status","--porcelain"],text=True)
 assert subprocess.check_output(["git","-C",str(bindings),"rev-parse","HEAD"],text=True).strip()==lock["bubbles"]["sha"]
 assert not subprocess.check_output(["git","-C",str(bindings),"status","--porcelain"],text=True)
 assert subprocess.check_output(["git","-C",str(motion),"rev-parse","HEAD"],text=True).strip()==lock["harmonica"]["sha"]
@@ -34,6 +37,7 @@ require charm.land/bubbles/v2 v2.0.0
 replace github.com/charmbracelet/ultraviolet => {json.dumps(str(source))}
 replace github.com/charmbracelet/harmonica => {json.dumps(str(motion))}
 replace charm.land/bubbles/v2 => {json.dumps(str(bindings))}
+replace charm.land/bubbletea/v2 => {json.dumps(str(tea))}
 ''')
-(destination/"source-pin.json").write_text(json.dumps({"ultraviolet_sha":actual,"harmonica_sha":lock["harmonica"]["sha"],"bubbles_sha":lock["bubbles"]["sha"],"harness":"tools/perf-upstream/main.go"},indent=2)+"\n")
+(destination/"source-pin.json").write_text(json.dumps({"ultraviolet_sha":actual,"harmonica_sha":lock["harmonica"]["sha"],"bubbles_sha":lock["bubbles"]["sha"],"bubbletea_sha":lock["bubbletea"]["sha"],"harness":"tools/perf-upstream/main.go"},indent=2)+"\n")
 print(destination)

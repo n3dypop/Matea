@@ -33,3 +33,10 @@ production renderer; allocator instrumentation is confined to the probe binary.
 Typed key binding comparison also removes per-event string formatting for the
 six measured shortcut fixtures, while preserving repeat and ignoring releases.
 It does not establish full Bubbles key module parity.
+
+The [motion/pagination audit](motion-pagination-audit.md) records executed source
+edge cases for stale ranges, zero divisors and clearing data, plus extreme spring
+root cancellation. These are distinguished from maintainer-confirmed issues.
+Private page invariants, NonZero sizes, active-dot windows and transactional motion
+updates have regressions. Exact dot capacity and inline checked arithmetic are
+measured against retained pre-optimization samples.

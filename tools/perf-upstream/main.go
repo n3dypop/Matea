@@ -4,6 +4,8 @@ package main
 import (
 	"bytes"
 	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/paginator"
+	tea "charm.land/bubbletea/v2"
 	"encoding/json"
 	"fmt"
 	"github.com/charmbracelet/colorprofile"
@@ -25,6 +27,9 @@ var sink uint64
 // Mutable package data prevents specializing the update for a constant zero
 // velocity. Rust uses black_box inputs for the same purpose.
 var motionInputs = [3]float64{2, 0, 1}
+var projectilePoint = harmonica.Point{X: 1, Y: 10, Z: -2}
+var projectileVelocity = harmonica.Vector{X: 2, Y: -3, Z: 4}
+var motionFPS = 60
 
 func finite(n float64) bool { return !math.IsNaN(n) && !math.IsInf(n, 0) }
 func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) {
@@ -90,11 +95,21 @@ func main() {
 		motionFixtures()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--projectile-fixtures" {
+		projectileFixtures()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--source-regressions" {
+		sourceRegressions()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
 	}
 	inputBindings(n)
+	projectiles(n)
+	pagination(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -162,6 +177,116 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+func sourceRegressions() {
+	zeroDivisor := func() (panicked bool) {
+		defer func() { panicked = recover() != nil }()
+		p := paginator.New(paginator.WithPerPage(0))
+		p.SetTotalPages(3)
+		return
+	}
+	stale := paginator.New(paginator.WithPerPage(3), paginator.WithTotalPages(10))
+	stale.Page = 9
+	start, end := stale.GetSliceBounds(4)
+	cleared := paginator.New(paginator.WithTotalPages(10))
+	cleared.SetTotalPages(0)
+	spring := harmonica.NewSpring(0.016, 12, 1e12)
+	position, velocity := spring.Update(1e12, 0, 0)
+	json.NewEncoder(os.Stdout).Encode(map[string]any{
+		"paginator_zero_per_page_panics": zeroDivisor(),
+		"stale_slice_bounds":             []int{start, end},
+		"stale_items_on_page":            stale.ItemsOnPage(4),
+		"pages_after_setting_zero_items": cleared.TotalPages,
+		"spring_extreme_overdamping":     map[string]any{"dt": 0.016, "omega": 12, "damping": 1e12, "initial_position": 1e12, "target": 0, "position": position, "velocity": velocity},
+	})
+}
+func checkedProjectile(p *harmonica.Projectile) {
+	point := p.Update()
+	v := p.Velocity()
+	if !finite(point.X) || !finite(point.Y) || !finite(point.Z) || !finite(v.X) || !finite(v.Y) || !finite(v.Z) {
+		panic("nonfinite result")
+	}
+}
+func pagination(n int) {
+	pages := paginator.New(paginator.WithPerPage(10))
+	pages.SetTotalPages(101)
+	pages.Page = 10
+	start, end := pages.GetSliceBounds(101)
+	if start != 100 || end != 101 {
+		panic("bounds fixture")
+	}
+	measure("pagination/range", max(n*10, 300000), func() uint64 { p := pages; a, b := p.GetSliceBounds(101); return uint64(a ^ b) }, "100,101", "collection length=101 per_page=10 page=10; slice bounds only")
+	pages.Page = 4
+	measure("pagination/navigation", max(n*10, 300000), func() uint64 { p := pages; p.NextPage(); p.PrevPage(); return uint64(p.Page) }, "4", "next then previous from page=4 total_pages=11 per_page=10; state helpers only")
+	if pages.View() != "5/11" {
+		panic("label fixture")
+	}
+	measure("pagination/arabic", max(n, 1000), func() uint64 { return uint64(len(pages.View())) }, "5/11", "Arabic label only current=5 total=11; no view/render/I/O")
+	for _, count := range []int{32, 256} {
+		dots := paginator.New(paginator.WithTotalPages(count))
+		dots.Type = paginator.Dots
+		dots.Page = 10
+		measure(fmt.Sprintf("pagination/dots_%d", count), max(n, 1000), func() uint64 { return uint64(len(dots.View())) }, dots.View(), "dot label only all pages current=10 zero-based; active=• inactive=○; no view/render/I/O")
+	}
+	measure("pagination/key_dispatch", max(n*10, 30000), func() uint64 {
+		pages, _ = pages.Update(tea.KeyPressMsg{Code: tea.KeyRight})
+		pages, _ = pages.Update(tea.KeyPressMsg{Code: tea.KeyLeft})
+		return uint64(pages.Page)
+	}, "4", "next/right then previous/left key dispatch; initial page=4 total_pages=11; no view/render/I/O")
+	if pages.Page != 4 {
+		panic("navigation fixture")
+	}
+}
+func projectiles(n int) {
+	measure("motion/frame_duration", max(n*10, 300000), func() uint64 { return math.Float64bits(harmonica.FPS(motionFPS)) }, fmt.Sprintf("%.12f", harmonica.FPS(60)), "positive fps=60; integer nanosecond period converted to seconds")
+	makeProjectile := func() *harmonica.Projectile {
+		p, v, a := projectilePoint, projectileVelocity, harmonica.TerminalGravity
+		if !finite(p.X) || !finite(p.Y) || !finite(p.Z) || !finite(v.X) || !finite(v.Y) || !finite(v.Z) || !finite(a.X) || !finite(a.Y) || !finite(a.Z) {
+			panic("nonfinite fixture")
+		}
+		return harmonica.NewProjectile(0.016, p, v, a)
+	}
+	initial := makeProjectile()
+	result := *initial
+	checkedProjectile(&result)
+	p, v := result.Position(), result.Velocity()
+	expected := fmt.Sprintf("%.12f,%.12f,%.12f,%.12f,%.12f,%.12f", p.X, p.Y, p.Z, v.X, v.Y, v.Z)
+	for _, checked := range []bool{false, true} {
+		name, semantics := "motion/projectile_update", "copy initial projectile; raw forward Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters"
+		if checked {
+			name, semantics = "motion/projectile_checked_update", "copy initial projectile; forward Euler and six finite result checks; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters"
+		}
+		measure(name, max(n*10, 300000), func() uint64 {
+			next := *initial
+			if checked {
+				checkedProjectile(&next)
+			} else {
+				next.Update()
+			}
+			p, v, a := next.Position(), next.Velocity(), next.Acceleration()
+			return math.Float64bits(p.X) ^ math.Float64bits(p.Y) ^ math.Float64bits(p.Z) ^ math.Float64bits(v.X) ^ math.Float64bits(v.Y) ^ math.Float64bits(v.Z) ^ math.Float64bits(a.Y)
+		}, expected, semantics)
+	}
+	measure("motion/projectile_construct", max(n*10, 300000), func() uint64 {
+		next := makeProjectile()
+		checkedProjectile(next)
+		p, v := next.Position(), next.Velocity()
+		return math.Float64bits(p.Y) ^ math.Float64bits(v.Y)
+	}, expected, "construct with nine finite input checks then checked Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0)")
+}
+func projectileFixtures() {
+	for _, dt := range []int64{0, 1, 16000000, 16666666, 1000000000} {
+		for _, steps := range []int{0, 1, 100} {
+			for _, a := range []harmonica.Vector{{}, harmonica.Gravity, {X: 0.5, Y: 9.81, Z: -0.2}} {
+				p := harmonica.NewProjectile(float64(dt)/1e9, projectilePoint, projectileVelocity, a)
+				for range steps {
+					p.Update()
+				}
+				pos, vel := p.Position(), p.Velocity()
+				fmt.Printf("%d,%d,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g\n", dt, steps, a.X, a.Y, a.Z, pos.X, pos.Y, pos.Z, vel.X, vel.Y, vel.Z)
+			}
+		}
 	}
 }
 func inputBindings(n int) {

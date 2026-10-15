@@ -80,6 +80,20 @@ metadata = {"schema": 1, "recorded_at_utc": datetime.now(timezone.utc).isoformat
                        "Both current terminal encoders retain cursor/style state; stateless helper measured only in historical baseline",
                        "Old baseline files predate motion cases and anti-specialization changes; use for render/transport only"],
             "cases": comparison, "full_reference_parity": False}
+baseline = destination / "matea-motion-pagination-before.jsonl"
+baseline_report = destination / "motion-pagination-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    optimized = {}
+    for case in ("motion/projectile_checked_update", "pagination/range", "pagination/dots_32", "pagination/dots_256"):
+        before, after = previous[case], records[0][case]
+        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        optimized[case] = {"before": summary(before), "after": summary(after)}
+    metadata["motion_pagination_optimization"] = {"before_raw": baseline.name,
+        "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
+        "before_report_sha256": digest(baseline_report), "cases": optimized}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -90,10 +104,12 @@ for item in comparison:
     m, u = item["matea"], item["upstream"]
     lines.append(f"| {item['case']} | {m['p50_ns']:.2f} / {m['p95_ns']:.2f} | {u['p50_ns']:.2f} / {u['p95_ns']:.2f} | {m['allocations']} / {u['allocations']} |")
 lines += ["", "All listed output fixtures match. ASCII transport is independently replayed for a→b→a.",
-          "Input cases use short batches and show scheduling outliers in this run; p50 improvements do not imply p95 or application-latency parity. No samples were discarded.",
+          "Input cases use short batches and can show scheduling outliers; p50 improvements do not imply p95 or application-latency parity. No samples were discarded.",
           "The stateful encoders each emit 2 bytes per one-cell update in this fixture. This does not establish bandwidth parity for other workloads.",
           "The immutable unchanged-frame case uses pointer identity in Matea; equal newly allocated frames require comparison.",
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",
+          "Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construction share the same finite fixture; checks remain enabled in both checked harnesses.",
+          "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",
