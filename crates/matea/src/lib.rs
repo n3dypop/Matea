@@ -20,6 +20,7 @@
 //! fn main() -> Result<(), matea::terminal::Error> { matea::run(Counter(0)) }
 //! ```
 pub use matea_core as core;
+pub use matea_motion as motion;
 pub use matea_render as render;
 pub use matea_style as style;
 pub use matea_terminal as terminal;

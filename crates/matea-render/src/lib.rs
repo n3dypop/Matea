@@ -1,6 +1,8 @@
 #![forbid(unsafe_code)]
 //! Structured views, grapheme-safe cell composition, and deterministic row diffs.
+use compact_str::CompactString;
 use matea_style::{Border, Length, Style, Theme, distribute};
+use std::borrow::Cow;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -60,7 +62,7 @@ impl Rect {
 /// A leading grapheme or a reserved continuation cell. Mutated only through Canvas.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cell {
-    symbol: String,
+    symbol: CompactString,
     style: Style,
     width: u16,
 }
@@ -134,23 +136,37 @@ impl Surface {
     }
     /// Plain snapshot, preserving rows and trimming trailing spaces.
     pub fn plain(&self) -> String {
-        (0..self.size.height)
-            .map(|y| {
-                self.row(y)
-                    .iter()
-                    .map(Cell::symbol)
-                    .collect::<String>()
-                    .trim_end()
-                    .to_owned()
-            })
-            .collect::<Vec<_>>()
-            .join("\n")
+        let mut text = String::with_capacity(self.cells.len());
+        for y in 0..self.size.height {
+            let start = text.len();
+            for cell in self.row(y) {
+                text.push_str(cell.symbol());
+            }
+            let end = start + text[start..].trim_end().len();
+            text.truncate(end);
+            if y + 1 < self.size.height {
+                text.push('\n');
+            }
+        }
+        text
     }
     /// Changed rows in top-to-bottom order. Resize forces a complete redraw.
     pub fn diff(&self, previous: Option<&Self>) -> Vec<u16> {
-        (0..self.size.height)
-            .filter(|&y| previous.is_none_or(|p| p.size != self.size || p.row(y) != self.row(y)))
-            .collect()
+        self.changed_rows(previous).collect()
+    }
+    /// Borrowed damage iterator; reusing the same immutable surface is O(1).
+    pub fn changed_rows<'a>(
+        &'a self,
+        previous: Option<&'a Self>,
+    ) -> impl Iterator<Item = u16> + 'a {
+        let height = if previous.is_some_and(|p| std::ptr::eq(self, p)) {
+            0
+        } else {
+            self.size.height
+        };
+        (0..height).filter(move |&y| {
+            previous.is_none_or(|p| p.size != self.size || p.row(y) != self.row(y))
+        })
     }
     fn index(&self, x: u16, y: u16) -> usize {
         usize::from(y) * usize::from(self.size.width) + usize::from(x)
@@ -178,7 +194,7 @@ impl Canvas<'_> {
         self.clip
     }
     pub fn text(&mut self, x: u16, y: u16, text: &str, style: Style) {
-        let safe = sanitize(text);
+        let safe = sanitized(text);
         for (dy, line) in safe.split('\n').enumerate() {
             let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
                 break;
@@ -187,6 +203,18 @@ impl Canvas<'_> {
                 break;
             }
             let mut col = u32::from(x);
+            if line.is_ascii() {
+                for (offset, _) in line.bytes().enumerate() {
+                    if col >= u32::from(self.clip.right()) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) && row >= self.clip.y {
+                        self.put(col as u16, row, &line[offset..offset + 1], style, 1);
+                    }
+                    col += 1;
+                }
+                continue;
+            }
             for g in line.graphemes(true) {
                 let w = g.width() as u32;
                 if w == 0 {
@@ -215,7 +243,7 @@ impl Canvas<'_> {
         for col in x + 1..x + width {
             let i = self.surface.index(col, y);
             self.surface.cells[i] = Cell {
-                symbol: String::new(),
+                symbol: CompactString::default(),
                 style,
                 width: 0,
             };
@@ -232,14 +260,23 @@ impl Canvas<'_> {
 
 /// Newlines are structural; tabs use four spaces. Escape/C0/C1 controls become U+FFFD.
 pub fn sanitize(s: &str) -> String {
-    s.chars()
-        .map(|c| match c {
-            '\n' => "\n".into(),
-            '\t' => "    ".into(),
-            c if c.is_control() => "�".into(),
-            c => c.to_string(),
-        })
-        .collect()
+    sanitized(s).into_owned()
+}
+/// Borrow safe input; allocate once only when control replacement is necessary.
+pub fn sanitized(s: &str) -> Cow<'_, str> {
+    if s.chars().all(|c| c == '\n' || !c.is_control()) {
+        return Cow::Borrowed(s);
+    }
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\n' => out.push('\n'),
+            '\t' => out.push_str("    "),
+            c if c.is_control() => out.push('�'),
+            c => out.push(c),
+        }
+    }
+    Cow::Owned(out)
 }
 
 #[derive(Clone, Debug)]
@@ -457,6 +494,16 @@ impl View {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn sanitization_borrows_safe_input_and_handles_all_controls() {
+        assert!(matches!(sanitized("ASCII 茶\ne\u{301}"), Cow::Borrowed(_)));
+        assert_eq!(sanitized("\t\x00\x1b\u{85}\r"), "    ����");
+        let long = format!("e{}", "\u{301}".repeat(40));
+        let s = View::text(&long).render(Size::new(2, 1)).unwrap();
+        assert_eq!(s.row(0)[0].symbol(), long);
+        assert_eq!(s.clone(), s);
+        assert_eq!(s.plain(), long);
+    }
     #[test]
     fn unicode_clipping_and_controls() {
         let s = View::text("e\u{301}茶👩‍💻Z\n\x1b[31m")

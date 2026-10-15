@@ -1,8 +1,11 @@
 #![forbid(unsafe_code)]
 //! Stateful components sharing input, theme and focus contracts.
+pub mod key;
+mod pagination;
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::{View, sanitize};
 use matea_style::Theme;
+pub use pagination::Pagination;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -148,30 +151,49 @@ impl Component for TextInput {
 #[derive(Clone, Debug)]
 pub struct List {
     items: Vec<String>,
+    search_terms: Vec<String>,
     visible: Vec<usize>,
     selected: usize,
     pub rows: u16,
+    pub keys: key::NavigationKeys,
 }
 impl List {
     pub fn new(items: impl IntoIterator<Item = impl Into<String>>) -> Self {
         let items: Vec<_> = items.into_iter().map(Into::into).collect();
         let visible = (0..items.len()).collect();
+        let search_terms = items.iter().map(|s| s.to_lowercase()).collect();
         Self {
             items,
+            search_terms,
             visible,
             selected: 0,
             rows: 6,
+            keys: key::NavigationKeys::default(),
         }
     }
     pub fn filter(&mut self, query: &str) {
         let q = query.to_lowercase();
-        self.visible = self
-            .items
-            .iter()
-            .enumerate()
-            .filter(|(_, s)| s.to_lowercase().contains(&q))
-            .map(|(i, _)| i)
-            .collect();
+        self.visible.clear();
+        self.visible.extend(
+            self.search_terms
+                .iter()
+                .enumerate()
+                .filter(|(_, s)| s.contains(&q))
+                .map(|(i, _)| i),
+        );
+        self.selected = 0;
+    }
+    /// Caller-defined matching for locale/normalization/fuzzy policies. The
+    /// default filter is lowercase substring matching, not Unicode case folding.
+    pub fn filter_with(&mut self, query: &str, mut matches: impl FnMut(&str, &str) -> bool) {
+        self.visible.clear();
+        self.visible.extend(
+            self.items
+                .iter()
+                .enumerate()
+                .filter(|(_, s)| matches(s, query))
+                .map(|(i, _)| i),
+        );
         self.selected = 0;
     }
     pub fn selected(&self) -> Option<usize> {
@@ -191,21 +213,22 @@ impl Component for List {
         let Input::Key(k) = input else {
             return Response::ignored();
         };
-        if k.ctrl || k.alt {
-            return Response::ignored();
-        }
-        match k.code {
-            KeyCode::Up | KeyCode::Char('k') => self.selected = self.selected.saturating_sub(1),
-            KeyCode::Down | KeyCode::Char('j') => {
+        match *k {
+            k if self.keys.up.matches(k) => self.selected = self.selected.saturating_sub(1),
+            k if self.keys.down.matches(k) => {
                 self.selected = (self.selected + 1).min(self.visible.len() - 1)
             }
-            KeyCode::Home => self.selected = 0,
-            KeyCode::End => self.selected = self.visible.len() - 1,
-            KeyCode::PageDown => {
+            k if self.keys.first.matches(k) => self.selected = 0,
+            k if self.keys.last.matches(k) => self.selected = self.visible.len() - 1,
+            k if self.keys.page_down.matches(k) => {
                 self.selected = (self.selected + usize::from(self.rows)).min(self.visible.len() - 1)
             }
-            KeyCode::PageUp => self.selected = self.selected.saturating_sub(usize::from(self.rows)),
-            KeyCode::Enter => return Response::consumed(self.selected().map(Action::Selected)),
+            k if self.keys.page_up.matches(k) => {
+                self.selected = self.selected.saturating_sub(usize::from(self.rows))
+            }
+            k if self.keys.accept.matches(k) => {
+                return Response::consumed(self.selected().map(Action::Selected));
+            }
             _ => return Response::ignored(),
         }
         Response::consumed(Some(Action::Changed))
@@ -512,6 +535,23 @@ mod tests {
     use matea_render::Size;
     fn key(k: KeyCode) -> Input {
         Input::Key(Key::new(k))
+    }
+    #[test]
+    fn custom_filter_and_keys_share_enabled_help() {
+        let mut list = List::new(["café", "tea", "CAFÉ"]);
+        list.filter_with("cafe", |s, q| {
+            s.to_lowercase().replace('é', "e").contains(q)
+        });
+        list.keys.down = key::Binding::new([Key::new(KeyCode::Char('n'))], "n", "next");
+        assert!(!list.event(&key(KeyCode::Char('j')), true).consumed);
+        assert!(list.event(&key(KeyCode::Char('n')), true).consumed);
+        assert_eq!(list.selected(), Some(2));
+        assert_eq!(list.keys.down.help(), Some(("n", "next")));
+        list.keys.down.enabled = false;
+        assert!(list.keys.down.help().is_none());
+        assert!(!list.event(&key(KeyCode::Char('n')), true).consumed);
+        list.filter("TEA");
+        assert_eq!(list.selected(), Some(1));
     }
     #[test]
     fn input_graphemes_focus_paste_and_scroll() {

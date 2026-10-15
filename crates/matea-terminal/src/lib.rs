@@ -1,17 +1,20 @@
 #![deny(unsafe_code)]
 //! Exclusive terminal lifecycle and a replaceable I/O backend.
+mod frame;
+pub mod protocol;
+pub use frame::FrameEncoder;
 // sigaction has no safe standard-library wrapper; this is the only unsafe module.
 #[cfg(unix)]
 #[allow(unsafe_code)]
 mod signals_unix;
 use crossterm::{
-    cursor::{Hide, MoveTo, Show},
+    cursor::{Hide, Show},
     event::{
         self, DisableBracketedPaste, DisableFocusChange, EnableBracketedPaste, EnableFocusChange,
         KeyEventKind, KeyModifiers,
     },
     execute, queue,
-    style::{Attribute, Print, ResetColor, SetAttribute, SetBackgroundColor, SetForegroundColor},
+    style::{Attribute, ResetColor, SetAttribute, SetBackgroundColor, SetForegroundColor},
     terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use matea_core::{Event, Input, Key, KeyCode, Model, Runtime};
@@ -188,6 +191,8 @@ pub fn run_with_backend<A: Model, B: Backend>(
 static EXCLUSIVE: AtomicBool = AtomicBool::new(false);
 struct Native {
     out: io::Stdout,
+    encoded: Vec<u8>,
+    encoder: FrameEncoder,
     caps: Capabilities,
     entered: bool,
     raw: bool,
@@ -211,6 +216,8 @@ impl Native {
         }
         Ok(Self {
             out: io::stdout(),
+            encoded: Vec::new(),
+            encoder: FrameEncoder::default(),
             caps,
             entered: false,
             raw: false,
@@ -300,7 +307,15 @@ impl Backend for Native {
         Ok(translate(event::read()?))
     }
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()> {
-        write_frame(&mut self.out, frame, previous, self.caps)
+        self.encoded.clear();
+        self.encoder
+            .write(&mut self.encoded, frame, previous, self.caps)?;
+        if self.encoded.is_empty() {
+            return Ok(());
+        }
+        let mut out = self.out.lock();
+        out.write_all(&self.encoded)?;
+        out.flush()
     }
 }
 impl Drop for Native {
@@ -373,12 +388,13 @@ fn color(c: Color) -> crossterm::style::Color {
     }
 }
 fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
-    queue!(
-        w,
-        SetAttribute(Attribute::Reset),
-        SetForegroundColor(color(s.fg)),
-        SetBackgroundColor(color(s.bg))
-    )?;
+    queue!(w, SetAttribute(Attribute::Reset))?;
+    if s.fg != Color::Default {
+        queue!(w, SetForegroundColor(color(s.fg)))?;
+    }
+    if s.bg != Color::Default {
+        queue!(w, SetBackgroundColor(color(s.bg)))?;
+    }
     if s.bold {
         queue!(w, SetAttribute(Attribute::Bold))?;
     }
@@ -390,64 +406,15 @@ fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
     }
     Ok(())
 }
-/// Emit only changed rows, clear before painting, and explicitly position each grapheme.
+/// Encode damage to a writer. ASCII rows use cell damage; uncertain-width rows
+/// clear and repaint atomically. No terminal ownership is acquired here.
 pub fn write_frame(
     w: &mut impl Write,
     frame: &Surface,
     previous: Option<&Surface>,
     caps: Capabilities,
 ) -> io::Result<()> {
-    let rows = frame.diff(previous);
-    if rows.is_empty() {
-        return Ok(());
-    }
-    if previous.is_some_and(|p| p.size() != frame.size()) {
-        queue!(
-            w,
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::All)
-        )?;
-    }
-    for y in rows {
-        queue!(
-            w,
-            MoveTo(0, y),
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::CurrentLine)
-        )?;
-        let mut current = None;
-        for (x, cell) in frame
-            .row(y)
-            .iter()
-            .enumerate()
-            .filter(|(_, c)| !c.is_continuation())
-        {
-            let style = cell.style().adapt(caps.color);
-            if cell.symbol() == " " && style == Style::default() {
-                continue;
-            }
-            if current != Some(style) {
-                set_style(w, style)?;
-                current = Some(style);
-            }
-            let symbol = if !caps.unicode && !cell.symbol().is_ascii() {
-                "?"
-            } else {
-                cell.symbol()
-            };
-            queue!(w, MoveTo(x as u16, y), Print(symbol))?;
-        }
-    }
-    queue!(
-        w,
-        ResetColor,
-        SetAttribute(Attribute::Reset),
-        MoveTo(0, 0),
-        Hide
-    )?;
-    w.flush()
+    FrameEncoder::default().write(w, frame, previous, caps)
 }
 
 #[cfg(test)]
@@ -558,5 +525,46 @@ mod tests {
         out.clear();
         write_frame(&mut out, &b, Some(&b), caps).unwrap();
         assert!(out.is_empty());
+    }
+    #[test]
+    fn sparse_ascii_damage_preserves_unchanged_cells_and_styles() {
+        let a = View::text("aaaa").render(Size::new(4, 1)).unwrap();
+        let b = View::text("abaa").render(Size::new(4, 1)).unwrap();
+        let caps = Capabilities {
+            color: ColorLevel::None,
+            unicode: true,
+            reduced_motion: true,
+        };
+        let mut out = Vec::new();
+        write_frame(&mut out, &b, Some(&a), caps).unwrap();
+        let s = String::from_utf8(out).unwrap();
+        assert!(s.contains("\x1b[1;2H"));
+        assert!(!s.contains("\x1b[2K"));
+        assert_eq!(s.chars().filter(|&c| c == 'b').count(), 1);
+        assert!(!s.contains('a'));
+        let bold = View::styled("abaa", Style::default().bold())
+            .render(Size::new(4, 1))
+            .unwrap();
+        let mut out = Vec::new();
+        write_frame(&mut out, &bold, Some(&b), caps).unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[1m"));
+    }
+    #[test]
+    fn resize_to_empty_still_clears_old_content() {
+        let a = View::text("old").render(Size::new(4, 1)).unwrap();
+        let b = View::text("").render(Size::new(0, 0)).unwrap();
+        let mut out = Vec::new();
+        write_frame(
+            &mut out,
+            &b,
+            Some(&a),
+            Capabilities {
+                color: ColorLevel::None,
+                unicode: true,
+                reduced_motion: true,
+            },
+        )
+        .unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[2J"));
     }
 }
