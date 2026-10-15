@@ -16,6 +16,8 @@
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
+今回のローカル結果は38 testsと1 compile-only doc test成功、7サンプルsnapshot成功、Unix PTY 8ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力94対95バイト、更新2対2バイトで同じ画面を確認しました。
+
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
 初回候補 `48ea6e978d69838f9b6a55c460368dba2d223f2c` は[Linux/Windows/macOSとMSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38811891109)に成功しました。これは旧スコープの履歴です。今回の変更のCI証拠は別途記録し、過去の成功を流用しません。
