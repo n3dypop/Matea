@@ -7,24 +7,27 @@ One macOS arm64 host, sequential release executables, memory sinks, 31 batches. 
 
 | Workload | Matea p50 / p95 | Upstream p50 / p95 | allocations M / U |
 | --- | ---: | ---: | ---: |
-| render/empty_80x24 | 6300.88 / 7078.38 | 68368.83 / 83814.12 | 1 / 54 |
-| render/ascii_80x24 | 13374.17 / 13678.42 | 106237.21 / 107438.88 | 1 / 54 |
-| render/unicode_80x24 | 13945.83 / 14165.58 | 84213.83 / 85631.58 | 1 / 54 |
-| unicode/width | 699.05 / 726.37 | 3481.75 / 3523.20 | 0 / 0 |
-| terminal/unchanged_80x24 | 4.00 / 16.75 | 42548.12 / 42941.92 | 0 / 0 |
-| terminal/one_cell_80x24 | 10160.96 / 13901.42 | 44236.38 / 45294.46 | 0 / 5 |
-| motion/spring_update_0.2 | 2.15 / 2.20 | 1.29 / 1.77 | 0 / 0 |
-| motion/spring_construct_0.2 | 16.79 / 17.75 | 26.83 / 28.77 | 0 / 0 |
-| motion/spring_update_1 | 2.12 / 2.48 | 1.29 / 1.29 | 0 / 0 |
-| motion/spring_construct_1 | 11.48 / 11.72 | 13.67 / 14.66 | 0 / 0 |
-| motion/spring_update_2 | 2.11 / 2.15 | 1.29 / 1.29 | 0 / 0 |
-| motion/spring_construct_2 | 16.75 / 17.51 | 48.31 / 53.76 | 0 / 0 |
+| render/empty_80x24 | 6268.21 / 9614.75 | 68286.67 / 72688.29 | 1 / 54 |
+| render/ascii_80x24 | 13277.67 / 13487.21 | 106334.83 / 107969.83 | 1 / 54 |
+| render/unicode_80x24 | 13949.12 / 17206.12 | 84200.46 / 85159.33 | 1 / 54 |
+| unicode/width | 667.28 / 702.43 | 3465.56 / 3493.40 | 0 / 0 |
+| terminal/unchanged_80x24 | 3.62 / 3.67 | 42523.79 / 42923.79 | 0 / 0 |
+| terminal/one_cell_80x24 | 9965.12 / 10309.92 | 43987.67 / 44275.33 | 0 / 5 |
+| motion/spring_update_0.2 | 0.85 / 0.89 | 1.29 / 1.29 | 0 / 0 |
+| motion/spring_checked_update_0.2 | 2.11 / 2.28 | 2.97 / 3.08 | 0 / 0 |
+| motion/spring_construct_0.2 | 16.87 / 17.80 | 26.84 / 29.12 | 0 / 0 |
+| motion/spring_update_1 | 0.82 / 0.82 | 1.34 / 1.44 | 0 / 0 |
+| motion/spring_checked_update_1 | 2.11 / 2.11 | 3.07 / 3.11 | 0 / 0 |
+| motion/spring_construct_1 | 11.50 / 11.79 | 13.60 / 14.56 | 0 / 0 |
+| motion/spring_update_2 | 0.82 / 0.88 | 1.30 / 1.37 | 0 / 0 |
+| motion/spring_checked_update_2 | 2.14 / 3.14 | 2.99 / 3.08 | 0 / 0 |
+| motion/spring_construct_2 | 16.91 / 18.08 | 60.84 / 63.50 | 0 / 0 |
 
 All listed output fixtures match. ASCII transport is independently replayed for a→b→a.
 The stateful encoders each emit 2 bytes per one-cell update in this fixture. This does not establish bandwidth parity for other workloads.
 The immutable unchanged-frame case uses pointer identity in Matea; equal newly allocated frames require comparison.
 Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.
-Rust rejects invalid/nonfinite motion input, an extra cost included here. Very short timings are sensitive to harness effects.
+Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.
 
 ## Reproduction
 

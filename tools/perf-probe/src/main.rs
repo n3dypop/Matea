@@ -233,11 +233,21 @@ fn main() {
             &format!("motion/spring_update_{damping}"),
             (iterations * 10).max(30000),
             || {
-                let m = spring.step(black_box(state), black_box(1.0)).unwrap();
+                let m = spring.sample(black_box(state), black_box(1.0));
                 m.position.to_bits() ^ m.velocity.to_bits()
             },
             &expected,
             "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+        );
+        measure(
+            &format!("motion/spring_checked_update_{damping}"),
+            (iterations * 10).max(30000),
+            || {
+                let m = spring.step(black_box(state), black_box(1.0)).unwrap();
+                m.position.to_bits() ^ m.velocity.to_bits()
+            },
+            &expected,
+            "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
         );
         measure(
             &format!("motion/spring_construct_{damping}"),

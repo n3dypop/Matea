@@ -25,6 +25,18 @@ var sink uint64
 // velocity. Rust uses black_box inputs for the same purpose.
 var motionInputs = [3]float64{2, 0, 1}
 
+func finite(n float64) bool { return !math.IsNaN(n) && !math.IsInf(n, 0) }
+func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) {
+	if !finite(p) || !finite(v) || !finite(target) {
+		panic("nonfinite fixture")
+	}
+	p, v = s.Update(p, v, target)
+	if !finite(p) || !finite(v) {
+		panic("nonfinite result")
+	}
+	return p, v
+}
+
 func measure(id string, n int, f func() uint64, output, semantics string) {
 	start := time.Now()
 	sink = f()
@@ -139,6 +151,10 @@ func main() {
 			p, v := spring.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+		measure(fmt.Sprintf("motion/spring_checked_update_%g", damping), max(n*10, 30000), func() uint64 {
+			p, v := checkedSpring(spring, motionInputs[0], motionInputs[1], motionInputs[2])
+			return math.Float64bits(p) ^ math.Float64bits(v)
+		}, expected, "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1")
 		measure(fmt.Sprintf("motion/spring_construct_%g", damping), max(n*10, 30000), func() uint64 {
 			s := harmonica.NewSpring(0.016, 12, damping)
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])

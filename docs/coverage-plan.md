@@ -8,6 +8,15 @@ Audit all public functionality at the pinned revisions of Bubble Tea, Lip Gloss,
 
 The goal is equivalent user-visible capability, not identical Go syntax. Every public declaration must link to a capability entry. Generated Rust APIs, macros and cfg-dependent exports require explicit review; source declarations alone are not a complete resolved rustdoc export graph.
 
+The eleven current inventories are the first pass, not a declaration that the
+dependency boundary is complete. `coverage/dependency-frontier.json` records
+manifest edges: colorprofile, x/termios, x/windows, cancelreader, terminfo,
+Unicode/width/color helpers and other support libraries must be classified and
+their public foundational capabilities included where applicable. Resolve test-only
+dependencies, version differences and the Rust Cargo/platform/feature closure.
+Keep the strict gate closed until this review is complete; do not silently narrow
+the owner's instruction to the libraries already inventoried.
+
 ## Execution order
 
 1. Mechanically inventory every production module/public declaration, benchmark, test skip and TODO/FIXME at the fixed source revisions. Preserve source paths, lines and SHAs, without vendoring the source into this repository.

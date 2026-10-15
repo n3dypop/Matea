@@ -143,6 +143,12 @@ pub fn run_with_backend<A: Model, B: Backend>(
         let mut last = Instant::now();
         let mut dirty = true;
         while !runtime.is_quitting() {
+            if runtime.take_worker_panic_notice() {
+                // A caught worker panic runs the normal stderr hook first. Even
+                // canceled results can therefore invalidate cells/cursor/style.
+                previous = None;
+                dirty = true;
+            }
             if dirty {
                 let frame = runtime.frame()?;
                 session.backend.draw(&frame, previous.as_ref())?;

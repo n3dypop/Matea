@@ -27,3 +27,10 @@ notice in THIRD_PARTY_NOTICES.md; identify the Rust implementation as altered.
 No Go implementation is vendored. Tests compare equation identities, reference
 trajectories, invalid inputs, overdamping and partition invariance. Benchmark
 cached updates and coefficient construction separately before parity is claimed.
+
+Follow-up measurement found per-step finite validation measurable at nanosecond
+scale. Expose `sample` for the same IEEE numeric contract as the reference, and
+keep `step` for explicit input/result errors. Neither uses unsafe code. Benchmark
+the raw arithmetic separately from checked updates; the Go checked case applies
+the same finite checks in the original research harness. Applications choose the
+contract explicitly rather than silently dropping validation to win a benchmark.

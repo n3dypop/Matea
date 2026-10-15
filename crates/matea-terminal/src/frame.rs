@@ -82,6 +82,10 @@ impl FrameEncoder {
             return Ok(());
         }
         if full {
+            // None is also the driver's recovery signal after external output.
+            // Clearing cells alone cannot establish the current SGR/cursor.
+            self.style = None;
+            self.cursor = None;
             self.style(w, Style::default())?;
             queue!(w, Clear(ClearType::All))?;
         }
@@ -203,5 +207,18 @@ mod tests {
         assert!(!output.contains('茶'));
         assert!(!output.contains('👩'));
         assert!(output.contains('b'));
+    }
+    #[test]
+    fn missing_previous_forces_unknown_cursor_and_style_reset() {
+        let frame = View::text("aaaa").render(Size::new(4, 1)).unwrap();
+        let mut encoder = FrameEncoder::default();
+        let mut out = Vec::new();
+        encoder.write(&mut out, &frame, None, caps()).unwrap();
+        out.clear();
+        encoder.write(&mut out, &frame, None, caps()).unwrap();
+        let output = String::from_utf8(out).unwrap();
+        assert!(output.contains("\x1b[0m"));
+        assert!(output.contains("\x1b[1;1H"));
+        assert!(output.contains("\x1b[2J"));
     }
 }

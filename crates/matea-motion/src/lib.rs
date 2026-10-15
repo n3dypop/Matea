@@ -112,6 +112,17 @@ impl Spring {
         }
         Ok(Self { p, q, r, s })
     }
+    /// Evaluate the cached matrix with IEEE floating-point semantics, as in the
+    /// reference numeric primitive. Nonfinite inputs/overflow can produce NaN or
+    /// infinity; use step when the application needs explicit validation errors.
+    /// This operation performs no allocation, validation or global state access.
+    pub fn sample(self, state: Motion, target: f64) -> Motion {
+        let displacement = state.position - target;
+        Motion {
+            position: self.p * displacement + self.q * state.velocity + target,
+            velocity: self.r * displacement + self.s * state.velocity,
+        }
+    }
     pub fn step(self, state: Motion, target: f64) -> Result<Motion, MotionError> {
         if ![state.position, state.velocity, target]
             .iter()
@@ -119,9 +130,7 @@ impl Spring {
         {
             return Err(MotionError::NonFiniteState);
         }
-        let displacement = state.position - target;
-        let position = self.p * displacement + self.q * state.velocity + target;
-        let velocity = self.r * displacement + self.s * state.velocity;
+        let Motion { position, velocity } = self.sample(state, target);
         if !position.is_finite() || !velocity.is_finite() {
             return Err(MotionError::NonFiniteState);
         }
@@ -287,6 +296,14 @@ mod tests {
             })
         );
         assert!(Motion::at_rest(f64::INFINITY).is_err());
+        let spring = Spring::new(Duration::from_millis(16), 12.0, 0.7).unwrap();
+        assert_eq!(spring.step(state, 1.0).unwrap(), spring.sample(state, 1.0));
+        let invalid = Motion {
+            position: f64::NAN,
+            velocity: 0.0,
+        };
+        assert!(spring.step(invalid, 1.0).is_err());
+        assert!(spring.sample(invalid, 1.0).position.is_nan());
         assert_eq!(
             frame_duration(NonZeroU32::new(60).unwrap()).as_nanos(),
             16_666_666

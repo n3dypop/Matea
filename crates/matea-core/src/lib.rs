@@ -6,6 +6,7 @@ use std::{
     collections::{BTreeMap, HashMap},
     sync::{
         Arc, Condvar, Mutex,
+        atomic::{AtomicBool, Ordering},
         mpsc::{self, Receiver, SyncSender, TrySendError},
     },
     thread::{self, JoinHandle},
@@ -221,6 +222,7 @@ pub struct Runtime<A: Model> {
     generation: u64,
     timers: BTreeMap<String, Timer<A::Message>>,
     now: Duration,
+    worker_panic: Arc<AtomicBool>,
 }
 impl<A: Model> Runtime<A> {
     pub fn new(mut model: A, size: Size, theme: Theme) -> Result<Self, RuntimeError> {
@@ -238,6 +240,7 @@ impl<A: Model> Runtime<A> {
             generation: 0,
             timers: BTreeMap::new(),
             now: Duration::ZERO,
+            worker_panic: Arc::new(AtomicBool::new(false)),
         };
         r.schedule(effect)?;
         r.dispatch(Event::Resize(size))?;
@@ -251,6 +254,12 @@ impl<A: Model> Runtime<A> {
     }
     pub fn size(&self) -> Size {
         self.size
+    }
+    /// Observe a caught worker panic once, including canceled/stale effects.
+    /// The normal panic hook may have written outside the application's view.
+    /// Drivers can invalidate output caches without installing a global hook.
+    pub fn take_worker_panic_notice(&self) -> bool {
+        self.worker_panic.swap(false, Ordering::Acquire)
     }
     pub fn frame(&self) -> Result<Surface, GeometryError> {
         self.model
@@ -408,6 +417,7 @@ impl<A: Model> Runtime<A> {
         let c = token.clone();
         let tx = self.tx.clone();
         let worker_id = id.clone();
+        let worker_panic = self.worker_panic.clone();
         let handle = thread::Builder::new()
             .name(format!("matea:{id}"))
             .spawn(move || {
@@ -437,11 +447,14 @@ impl<A: Model> Runtime<A> {
                             message,
                             panicked: false,
                         }),
-                        Err(_) => Completion::Failure(EffectFailure {
-                            id: task.id,
-                            message: "effect panicked".into(),
-                            panicked: true,
-                        }),
+                        Err(_) => {
+                            worker_panic.store(true, Ordering::Release);
+                            Completion::Failure(EffectFailure {
+                                id: task.id,
+                                message: "effect panicked".into(),
+                                panicked: true,
+                            })
+                        }
                     };
                     let failed = matches!(completion, Completion::Failure(_));
                     if !send(completion) || failed {
@@ -624,6 +637,16 @@ mod tests {
         let mut r = app(Effect::perform("panic", |_| panic!("fixture")));
         drain(&mut r);
         assert!(r.model.failures[0].panicked);
+        assert!(r.take_worker_panic_notice());
+        assert!(!r.take_worker_panic_notice());
+        let mut r = app(Effect::perform("stale-panic", |_| panic!("stale fixture")));
+        while !r.workers[0].handle.is_finished() {
+            thread::yield_now();
+        }
+        r.schedule(Effect::cancel("stale-panic")).unwrap();
+        drain(&mut r);
+        assert!(r.model.failures.is_empty());
+        assert!(r.take_worker_panic_notice());
     }
     #[test]
     fn cancelled_queued_results_are_discarded() {

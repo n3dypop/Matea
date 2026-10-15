@@ -44,3 +44,10 @@ full issue bodies stay in a temporary research cache, outside the repository.
 
 The complete remaining execution order is in `../coverage-plan.md`. Normal CI
 validates links and current code; it does not pass the strict coverage gate.
+
+`module-verdicts.json` explicitly keeps all 94 directory groups pending. Fifteen
+workloads and implemented motion primitives do not establish any complete module's
+parity. The strict gate additionally checks per-module correctness/performance,
+issue-report dispositions and source-marker assessments, rather than relying only
+on declaration links. Initial manual findings need to be reconciled into that
+ledger as their reproduction and performance limits are resolved.

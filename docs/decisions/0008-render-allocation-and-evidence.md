@@ -26,3 +26,5 @@ terminal latency, Unicode completeness, scheduling or the full upstream suite.
 Compact strings add a dependency and do not reduce the fixed cell array much.
 Hash/interned glyph stores and packed structure-of-arrays remain alternatives;
 they would add lifetime or indirection costs without current evidence.
+
+A worker panic executes Rust's normal stderr hook even when the failure result is canceled. A per-Runtime atomic panic notice is consumed by the driver, which drops the previous-frame hint. A full frame explicitly resets SGR and cursor knowledge before repainting. This recovers from caught worker-panic output without replacing the process-wide panic hook. Unit tests cover canceled panics and forced state reset; PTY tests verify the panic text is cleared and normal interaction resumes.

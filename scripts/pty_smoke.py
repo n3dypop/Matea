@@ -23,15 +23,20 @@ def screen_text(data):
     cells = {}
     x = y = 0
     offset = 0
-    for match in CSI.finditer(data):
-        for c in data[offset:match.start()].decode("utf-8", errors="replace"):
+    def text(segment):
+        nonlocal x,y
+        for c in segment.decode("utf-8", errors="replace"):
             if c == "\n":
                 y += 1
             elif c == "\r":
                 x = 0
+            elif c == "\b":
+                x = max(0,x-1)
             elif c >= " ":
                 cells[y, x] = c
                 x += 1
+    for match in CSI.finditer(data):
+        text(data[offset:match.start()])
         body = match.group()[2:-1].decode("ascii")
         command = match.group()[-1:]
         if command == b"H":
@@ -42,6 +47,7 @@ def screen_text(data):
         elif command == b"K" and body == "2":
             cells = {position: c for position, c in cells.items() if position[0] != y}
         offset = match.end()
+    text(data[offset:])
     return "\n".join("".join(cells.get((row, col), " ") for col in range(200))
                      for row in range(100)).encode("utf-8")
 
@@ -89,6 +95,12 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master, b"q")
             elif action == "sigterm":
                 os.kill(child.pid, signal.SIGTERM)
+            elif action == "worker-panic":
+                os.write(master,b"w")
+                read_until(lambda:b"RECOVERED" in output)
+                visible=screen_text(output)
+                assert b"RECOVERED" in visible and b"worker panic hook fixture" not in visible,(name,visible)
+                os.write(master,b"q")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
         read_until(lambda: child.poll() is not None)
@@ -119,6 +131,7 @@ case("resize", "resize")
 case("raw Ctrl-C", "ctrl-c")
 case("SIGTERM", "sigterm")
 case("update panic", "panic", expected_status=101)
+case("worker panic redraw recovery", "worker-panic")
 case("view panic", args=("--panic-view",), expected_status=101)
 case("typed effect completion", "effect", example="effects", ready=b"Loading tea",
      expect_cancelled=False)

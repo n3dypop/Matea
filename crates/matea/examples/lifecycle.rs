@@ -10,6 +10,7 @@ use std::{
 struct App {
     cancelled: Arc<AtomicBool>,
     panic_view: bool,
+    recovered: bool,
 }
 impl Model for App {
     type Message = ();
@@ -22,7 +23,13 @@ impl Model for App {
         })
     }
     fn update(&mut self, event: Event<()>) -> Effect<()> {
+        if let Event::Failure(f) = &event {
+            self.recovered |= f.panicked;
+        }
         if let Event::Input(Input::Key(k)) = event {
+            if k.is_char('w') {
+                return Effect::perform("panicking-work", |_| panic!("worker panic hook fixture"));
+            }
             if k.is_char('p') {
                 panic!("lifecycle fixture update panic");
             }
@@ -35,8 +42,10 @@ impl Model for App {
     fn view(&self, c: ViewContext<'_>) -> View {
         assert!(!self.panic_view, "lifecycle fixture view panic");
         View::text(format!(
-            "READY {}x{} | q exit | p panic",
-            c.size.width, c.size.height
+            "READY {}x{} | q exit | p panic{}",
+            c.size.width,
+            c.size.height,
+            if self.recovered { " | RECOVERED" } else { "" }
         ))
     }
 }
@@ -45,6 +54,7 @@ fn main() -> Result<(), matea::terminal::Error> {
     matea::run(App {
         cancelled: cancelled.clone(),
         panic_view: std::env::args().any(|s| s == "--panic-view"),
+        recovered: false,
     })?;
     let deadline = std::time::Instant::now() + Duration::from_secs(2);
     while !cancelled.load(Ordering::Acquire) && std::time::Instant::now() < deadline {
