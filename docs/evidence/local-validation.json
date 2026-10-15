@@ -1,5 +1,5 @@
 {
-  "started_at_utc": "2026-10-15T21:41:03.055485+00:00",
+  "started_at_utc": "2026-10-15T22:33:13.963149+00:00",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "architecture": "arm64",
   "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
@@ -15,7 +15,7 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.137,
+      "elapsed_seconds": 0.166,
       "log": "fmt.log"
     },
     {
@@ -32,7 +32,7 @@
         "warnings"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.301,
+      "elapsed_seconds": 1.131,
       "log": "clippy.log"
     },
     {
@@ -45,7 +45,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.846,
+      "elapsed_seconds": 4.131,
       "log": "test.log"
     },
     {
@@ -59,7 +59,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.103,
+      "elapsed_seconds": 2.387,
       "log": "all-targets.log"
     },
     {
@@ -73,7 +73,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.087,
+      "elapsed_seconds": 0.522,
       "log": "docs.log"
     },
     {
@@ -87,7 +87,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.064,
+      "elapsed_seconds": 1.529,
       "log": "build-examples.log"
     },
     {
@@ -97,8 +97,18 @@
         "${REPOSITORY}/scripts/example_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.981,
+      "elapsed_seconds": 2.486,
       "log": "example-smoke.log"
+    },
+    {
+      "name": "coverage-integrity",
+      "command": [
+        "python",
+        "${REPOSITORY}/scripts/check_coverage.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.053,
+      "log": "coverage-integrity.log"
     },
     {
       "name": "pty-smoke",
@@ -107,7 +117,7 @@
         "${REPOSITORY}/scripts/pty_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.305,
+      "elapsed_seconds": 1.242,
       "log": "pty-smoke.log"
     },
     {
@@ -125,10 +135,10 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.417,
+      "elapsed_seconds": 0.686,
       "log": "render-probe.log"
     }
   ],
   "all_local_checks_passed": true,
-  "finished_at_utc": "2026-10-15T21:41:09.609790+00:00"
+  "finished_at_utc": "2026-10-15T22:33:28.511534+00:00"
 }

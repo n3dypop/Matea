@@ -1,6 +1,6 @@
 # Matea Foundation architecture
 
-Status: implemented experimental Foundation; Linux/Windows/macOS CI and MSRV 1.88 verified; owner approval pending. Image/CUDA implementation is deferred until the Foundation gate.
+Status: experimental Foundation, reopened for full reference coverage. Earlier CI covers the smaller prototype only; current evidence is tracked separately. F5 remains closed. Terminal image encoders are owner-authorized in Foundation; the image processing engine, decoders and CUDA remain deferred.
 
 ```mermaid
 graph LR
@@ -15,6 +15,7 @@ graph LR
     terminal --> crossterm[Crossterm]
     facade[matea facade] --> widgets
     facade --> terminal
+    facade --> motion[matea-motion]
 ```
 
 ## Ownership
@@ -27,6 +28,7 @@ graph LR
 | style | Color/style/theme values, integer fixed/fill allocation | Terminal I/O or mutable global theme |
 | widgets | Input/list/table/viewport/spinner/form state and Component implementation | Runtime internals or terminal session lifecycle |
 | terminal | Exclusive session, Crossterm translation, signal shutdown, output batching, restoration | Domain state or layout policy |
+| motion | Cached spring coefficients and explicit-time projectile integration | Timers, threads, renderer or terminal state |
 | facade | Short imports and convenient run entry point | Additional state machine or duplicated contracts |
 
 The Cargo workspace is the repository root; engineering documentation lives in `docs/`. All packages have `publish=false`. Facade and internal crate names have not been checked for registry or trademark availability. Distribution license and API stabilization require owner decisions before publication.
@@ -51,10 +53,10 @@ Subscriptions currently implement periodic UI-thread messages, keyed by stable I
 
 Columns use natural/fixed heights unless `fill()` is requested. Rows share available width unless fixed; gaps consume cells first. Fixed space wins over weighted fill. Integer remainder is deterministic from left to right. Text clips rather than wraps. Panels are opaque, ordered layers paint back to front, and all descendants inherit a clip. A wide grapheme is atomic: overwriting either half erases its whole old footprint (including a blank just outside the overlay clip if necessary). A cluster that cannot fit at the right edge is omitted entirely.
 
-Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-width rule. Combining clusters and ZWJ emoji are preserved. Standalone zero-width clusters are omitted. Tabs become four spaces, newlines are structural, C0/C1 control/escape characters become replacement glyphs. No raw ANSI view is accepted. Surfaces reject over 1,048,576 cells. Resize invalidates previous dimensions; each changed row is reset/cleared and leading cells are explicitly positioned. Default blank cells need no writes after the clear. This prioritizes correctness over bandwidth optimization.
+Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-width rule. Combining clusters and ZWJ emoji are preserved. Standalone zero-width clusters are omitted. Tabs become four spaces, newlines are structural, C0/C1 control/escape characters become replacement glyphs. No raw ANSI view is accepted. Surfaces reject over 1,048,576 cells. Common graphemes are stored inline; longer clusters remain intact on the heap. Sanitization borrows safe input. Resize invalidates previous dimensions, including resize to an empty surface. ASCII-only rows paint changed cells; rows containing uncertain-width graphemes clear and repaint atomically. Default blank cells need no writes after a clear. Output is staged in a reused buffer before a single stdout lock/write. Native transport owns a stateful FrameEncoder that retains cursor/adapted-style state, uses safe CR/BS shortcuts, and invalidates on external output, capability changes and writer errors. The standalone write_frame helper starts fresh. The measured one-cell trace is 2 bytes per update in both encoders; other workloads remain pending. See performance.md.
 
 ## Portability and extensions
 
 The terminal backend trait is public and tested with failure-injecting mocks. Native input handles key press/repeat (release ignored), paste, focus and resize. Mouse, function keys, enhanced keyboard protocol, clipboard, suspend/resume, true inline interactive layout and screen-reader prompt sessions are not implemented. Color capability detection uses environment hints and supports explicit overrides; no graphics support is inferred.
 
-See extension-contracts.md for the non-image component example and design-only future graphics ownership. Architecture ADRs 0003–0006 remain open to owner API review; no image/CUDA implementation exists.
+See extension-contracts.md for the non-image component example and future runtime graphics ownership. Pure Kitty/Sixel encoders are implemented under terminal::protocol (ADR 0009); automatic negotiation, resource reconciliation and real-emulator validation remain pending. matea-motion is independent (ADR 0010). No image processing engine, decoder or CUDA implementation exists. Public APIs remain provisional.

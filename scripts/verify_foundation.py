@@ -24,6 +24,7 @@ checks = [
     ("docs", ["cargo", "doc", "--locked", "--workspace", "--no-deps"]),
     ("build-examples", ["cargo", "build", "--locked", "--workspace", "--examples"]),
     ("example-smoke", [sys.executable, str(root / "scripts/example_smoke.py")]),
+    ("coverage-integrity", [sys.executable, str(root / "scripts/check_coverage.py")]),
 ]
 if sys.platform != "win32":
     checks.append(("pty-smoke", [sys.executable, str(root / "scripts/pty_smoke.py")]))

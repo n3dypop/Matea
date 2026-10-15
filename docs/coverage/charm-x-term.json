@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "name": "charm-x-term",
+  "sha": "4542a189d0fbeb156bb1df8730d253f2ef443c00",
+  "remote": "https://github.com/charmbracelet/x.git",
+  "language": "go",
+  "inventory_kind": "source_declarations_not_resolved_exports",
+  "macro_cfg_review": "build_tags_recorded",
+  "modules": [
+    {
+      "path": "term",
+      "production_files": [
+        "term/term.go",
+        "term/term_other.go",
+        "term/term_plan9.go",
+        "term/term_unix.go",
+        "term/term_unix_bsd.go",
+        "term/term_unix_other.go",
+        "term/term_windows.go",
+        "term/terminal.go",
+        "term/util.go"
+      ],
+      "test_files": [
+        "term/term_test.go"
+      ],
+      "coverage": "pending",
+      "performance": "unmeasured"
+    }
+  ],
+  "declarations": [
+    {
+      "file": "term/term.go",
+      "line": 6,
+      "package": "term",
+      "kind": "type",
+      "symbol": "State",
+      "id": "b4d8585def9cb6d51ca3",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L6",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 7,
+      "package": "term",
+      "kind": "embedding",
+      "symbol": "State.state",
+      "signature": "state",
+      "id": "ef5e23a0cd061355f803",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L7",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 11,
+      "package": "term",
+      "kind": "function",
+      "symbol": "IsTerminal",
+      "signature": "func(fd uintptr) bool",
+      "id": "2271bf263db17c55bcb2",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L11",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 18,
+      "package": "term",
+      "kind": "function",
+      "symbol": "MakeRaw",
+      "signature": "func(fd uintptr) (*State, error)",
+      "id": "5f939bc2695f5837c14d",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L18",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 24,
+      "package": "term",
+      "kind": "function",
+      "symbol": "GetState",
+      "signature": "func(fd uintptr) (*State, error)",
+      "id": "0a869f66d49efa082d4c",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L24",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 29,
+      "package": "term",
+      "kind": "function",
+      "symbol": "SetState",
+      "signature": "func(fd uintptr, state *State) error",
+      "id": "45aabb797e04002f4801",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L29",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 35,
+      "package": "term",
+      "kind": "function",
+      "symbol": "Restore",
+      "signature": "func(fd uintptr, oldState *State) error",
+      "id": "34a7a5d57799357b9dde",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L35",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 42,
+      "package": "term",
+      "kind": "function",
+      "symbol": "GetSize",
+      "signature": "func(fd uintptr) (width, height int, err error)",
+      "id": "5498be82dd39d6ff6b84",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L42",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term.go",
+      "line": 49,
+      "package": "term",
+      "kind": "function",
+      "symbol": "ReadPassword",
+      "signature": "func(fd uintptr) ([]byte, error)",
+      "id": "ba20e0ef0333f7a62339",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term.go#L49",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/term_unix.go",
+      "line": 75,
+      "package": "term",
+      "kind": "function",
+      "symbol": "passwordReader.Read",
+      "signature": "func(buf []byte) (int, error)",
+      "build": [
+        "aix || darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris || zos"
+      ],
+      "id": "694d31ce0e0d866117d2",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term_unix.go#L75",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/terminal.go",
+      "line": 9,
+      "package": "term",
+      "kind": "type",
+      "symbol": "File",
+      "id": "4c4a5592f5ce88312044",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/terminal.go#L9",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/terminal.go",
+      "line": 10,
+      "package": "term",
+      "kind": "interface_embedding",
+      "symbol": "File.io.ReadWriteCloser",
+      "signature": "io.ReadWriteCloser",
+      "id": "1c94775d772b791387d8",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/terminal.go#L10",
+      "coverage": "unmapped"
+    },
+    {
+      "file": "term/terminal.go",
+      "line": 11,
+      "package": "term",
+      "kind": "interface_method",
+      "symbol": "File.Fd",
+      "signature": "func() uintptr",
+      "id": "05cf24fad428fd56b354",
+      "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/terminal.go#L11",
+      "coverage": "unmapped"
+    }
+  ],
+  "issue_markers": []
+}
