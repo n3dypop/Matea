@@ -13,6 +13,9 @@ args=parser.parse_args()
 lock={r["name"]:r for r in json.loads((ROOT/"docs/upstream-lock.json").read_text())}
 source=args.references.resolve()/"ultraviolet"
 motion=args.references.resolve()/"harmonica"
+bindings=args.references.resolve()/"bubbles"
+assert subprocess.check_output(["git","-C",str(bindings),"rev-parse","HEAD"],text=True).strip()==lock["bubbles"]["sha"]
+assert not subprocess.check_output(["git","-C",str(bindings),"status","--porcelain"],text=True)
 assert subprocess.check_output(["git","-C",str(motion),"rev-parse","HEAD"],text=True).strip()==lock["harmonica"]["sha"]
 assert not subprocess.check_output(["git","-C",str(motion),"status","--porcelain"],text=True)
 actual=subprocess.check_output(["git","-C",str(source),"rev-parse","HEAD"],text=True).strip()
@@ -26,9 +29,11 @@ go 1.26.0
 
 require github.com/charmbracelet/ultraviolet v0.0.0-20261008173134-6b8d4baf91b4
 require github.com/charmbracelet/harmonica v0.2.0
+require charm.land/bubbles/v2 v2.0.0
 
 replace github.com/charmbracelet/ultraviolet => {json.dumps(str(source))}
 replace github.com/charmbracelet/harmonica => {json.dumps(str(motion))}
+replace charm.land/bubbles/v2 => {json.dumps(str(bindings))}
 ''')
-(destination/"source-pin.json").write_text(json.dumps({"ultraviolet_sha":actual,"harmonica_sha":lock["harmonica"]["sha"],"harness":"tools/perf-upstream/main.go"},indent=2)+"\n")
+(destination/"source-pin.json").write_text(json.dumps({"ultraviolet_sha":actual,"harmonica_sha":lock["harmonica"]["sha"],"bubbles_sha":lock["bubbles"]["sha"],"harness":"tools/perf-upstream/main.go"},indent=2)+"\n")
 print(destination)

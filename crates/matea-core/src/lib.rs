@@ -13,50 +13,11 @@ use std::{
     time::Duration,
 };
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum KeyCode {
-    Char(char),
-    Enter,
-    Esc,
-    Backspace,
-    Delete,
-    Left,
-    Right,
-    Up,
-    Down,
-    Home,
-    End,
-    Tab,
-    BackTab,
-    PageUp,
-    PageDown,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Key {
-    pub code: KeyCode,
-    pub ctrl: bool,
-    pub alt: bool,
-    pub shift: bool,
-}
-impl Key {
-    pub const fn new(code: KeyCode) -> Self {
-        Self {
-            code,
-            ctrl: false,
-            alt: false,
-            shift: false,
-        }
-    }
-    pub fn is_char(self, c: char) -> bool {
-        self.code == KeyCode::Char(c) && !self.ctrl && !self.alt
-    }
-}
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Input {
-    Key(Key),
-    Paste(String),
-    Focus(bool),
-}
+pub mod input;
+pub use input::{
+    Input, Key, KeyCode, KeyKind, KeyState, MediaKey, ModifierKey, Modifiers, Mouse, MouseButton,
+    MouseKind, ScrollDirection,
+};
 #[derive(Debug)]
 pub enum Event<M> {
     Input(Input),
@@ -549,18 +510,12 @@ impl FocusRing {
         if self.ids.is_empty() {
             return false;
         }
-        if let Input::Key(k) = input {
-            match k.code {
-                KeyCode::Tab if !k.shift => self.index = (self.index + 1) % self.ids.len(),
-                KeyCode::BackTab | KeyCode::Tab => {
-                    self.index = (self.index + self.ids.len() - 1) % self.ids.len()
-                }
-                _ => return false,
-            }
-            true
-        } else {
-            false
+        match input.key_down().and_then(Key::focus_direction) {
+            Some(1) => self.index = (self.index + 1) % self.ids.len(),
+            Some(-1) => self.index = (self.index + self.ids.len() - 1) % self.ids.len(),
+            _ => return false,
         }
+        true
     }
 }
 

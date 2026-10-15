@@ -8,7 +8,7 @@ impl Model for App {
     type Message = ();
     fn update(&mut self, event: Event<()>) -> Effect<()> {
         if let Event::Input(input) = event {
-            if matches!(&input, Input::Key(k) if k.code == KeyCode::Esc) {
+            if matches!(&input, Input::Key(k) if (k.is_plain() && k.code == KeyCode::Esc)) {
                 return Effect::quit();
             }
             if self.form.event(&input, true).message == Some(Action::Submit) {

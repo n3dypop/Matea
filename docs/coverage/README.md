@@ -25,8 +25,8 @@ Tests/benchmarks and private internals must be classified, not silently counted 
 public user features. The API tools record locations and conditions without copying
 implementation bodies. All sources remain in external reference checkouts.
 
-`capabilities.json` maps 199 declaration candidates to initial capability slices;
-7,256 remain unlinked. A link does not mean the whole declaration is implemented:
+`capabilities.json` maps 310 declaration candidates to initial capability slices;
+7,145 remain unlinked. A link does not mean the whole declaration is implemented:
 partial Kitty/Sixel and paginator/key coverage explicitly stays partial. The raw
 inventory's initial `unmapped` labels are preserved; capability links live in the
 separate file so regenerating an inventory cannot erase manual evidence.
@@ -45,7 +45,7 @@ full issue bodies stay in a temporary research cache, outside the repository.
 The complete remaining execution order is in `../coverage-plan.md`. Normal CI
 validates links and current code; it does not pass the strict coverage gate.
 
-`module-verdicts.json` explicitly keeps all 94 directory groups pending. Fifteen
+`module-verdicts.json` explicitly keeps all 94 directory groups pending. Twenty-one
 workloads and implemented motion primitives do not establish any complete module's
 parity. The strict gate additionally checks per-module correctness/performance,
 issue-report dispositions and source-marker assessments, rather than relying only

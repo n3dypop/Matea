@@ -128,6 +128,7 @@ fn main() {
         .ok()
         .and_then(|n| n.parse().ok())
         .unwrap_or(300);
+    input_bindings(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -260,6 +261,29 @@ fn main() {
             },
             &expected,
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+        );
+    }
+}
+fn input_bindings(iterations: usize) {
+    use matea::widgets::key::Binding;
+    let ctrl_x = Key::new(KeyCode::Char('x')).with_modifiers(Modifiers::CONTROL);
+    for (name, event, enabled, expected) in [
+        ("ctrl_x", ctrl_x, true, 1),
+        ("f12", Key::new(KeyCode::F(12)), true, 1),
+        ("miss", Key::new(KeyCode::Char('y')), true, 0),
+        ("disabled", ctrl_x, false, 0),
+        ("repeat", ctrl_x.with_kind(KeyKind::Repeat), true, 1),
+        ("release", ctrl_x.with_kind(KeyKind::Release), true, 0),
+    ] {
+        let mut binding = Binding::new([ctrl_x, Key::new(KeyCode::F(12))], "ctrl+x/F12", "inspect");
+        binding.enabled = enabled;
+        assert_eq!(u64::from(binding.matches(event)), expected);
+        measure(
+            &format!("input/binding_{name}"),
+            (iterations * 10).max(30000),
+            || u64::from(black_box(&binding).matches(black_box(event))),
+            &expected.to_string(),
+            "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
         );
     }
 }

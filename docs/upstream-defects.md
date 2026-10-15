@@ -6,6 +6,12 @@ time, excluding PRs. Closed reports are not enumerated. Source scanning addition
 found 117 TODO/FIXME/XXX/HACK/skip locations. Neither count is a confirmed-defect
 count. The remaining reports and module-level performance work remain pending.
 
+The [input audit](input-audit.md) adds analysis of Bubble Tea #1865 and Crossterm
+#1133. NUL is represented as a non-text key; explicit Kitty configuration avoids
+the unbounded startup query path. Native Windows parsing and the upstream hang
+have not been reproduced. New regression tests cover release-safe widgets,
+modified-Tab focus, Form submission state and independent terminal-mode cleanup.
+
 | Evidence | Analysis and Matea response | Verification / remaining work |
 | --- | --- | --- |
 | [Huh Select filter](https://github.com/charmbracelet/huh/blob/ffb6a97195b4a031925a31cc70c62fc1d309e69d/field_select.go#L749) | Source explicitly identifies missing diacritic/custom filter policy. `List::filter_with` permits caller-defined matching. Default lowercase substring matching caches immutable search terms and reuses visible-index storage. | `custom_filter_and_keys_share_enabled_help` exercises café/cafe normalization; full locale/case folding is not promised. Filtering performance remains unmeasured. |
@@ -24,3 +30,6 @@ lock per frame. The performance report limits these observations to measured
 fixtures. Long combining clusters, controls, wide-to-narrow updates, sparse ASCII
 styles and zero-size resize have regressions. No unsafe code was added to the
 production renderer; allocator instrumentation is confined to the probe binary.
+Typed key binding comparison also removes per-event string formatting for the
+six measured shortcut fixtures, while preserving repeat and ignoring releases.
+It does not establish full Bubbles key module parity.

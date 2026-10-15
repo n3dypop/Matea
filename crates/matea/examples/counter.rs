@@ -6,13 +6,13 @@ impl Model for Counter {
     type Message = ();
     fn update(&mut self, event: Event<()>) -> Effect<()> {
         if let Event::Input(Input::Key(key)) = event {
-            if key.is_char('+') || key.code == KeyCode::Up {
+            if key.is_char('+') || (key.is_plain() && key.code == KeyCode::Up) {
                 self.0 += 1;
             }
-            if key.is_char('-') || key.code == KeyCode::Down {
+            if key.is_char('-') || (key.is_plain() && key.code == KeyCode::Down) {
                 self.0 -= 1;
             }
-            if key.is_char('q') || key.code == KeyCode::Esc {
+            if key.is_char('q') || (key.is_plain() && key.code == KeyCode::Esc) {
                 return Effect::quit();
             }
         }

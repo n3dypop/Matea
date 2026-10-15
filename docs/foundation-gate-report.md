@@ -6,17 +6,18 @@
 ## 現在の範囲と進捗
 
 - 固定SHAの11参照単位を走査し、94モジュール、7,455件の宣言候補と117件のソース課題マーカーを記録。[台帳](coverage/summary.json)。マクロ展開・再公開・cfgを解決した正確な公開API一覧は未完成です。
-- 公開機能の対応付けは199候補までで、7,256候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
+- 公開機能の対応付けは310候補までで、7,145候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
 - 841件のopen issueを収集しました。未確認報告を不具合と断定していません。[一覧](coverage/upstream-issues.json)、[初期分析と回帰対策](upstream-defects.md)。全件の分析・再現は未完了です。
 - 7 crateにRuntime、描画、スタイル、基本widget、端末、facade、独立motionを配置。Harmonica相当のバネ・投射体、カスタムfilter/keymap、ページ分割を追加しました。公開APIとcrate名は暫定です。
-- 描画の割り当てを削減し、15ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。[測定条件と生データ](performance.md)。
+- 描画の割り当てを削減し、21ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。キー照合は型付き比較で文字列化を省き、6ケースで検証しました。[測定条件と生データ](performance.md)。
+- キーのPress/Repeat/Release、6修飾子、ロック状態、機能キー、マウスを公開型で保持。widgetのRelease誤操作、修飾Tabによるフォーカス移動、無視イベントによるForm状態消失を修正しました。端末モードを個別管理し、復旧リトライでキーボードスタックを二重popしないよう改善しました。自動能力交渉、物理キー、IME、WindowsのKitty要求などは残課題です。[入力監査](input-audit.md)、[ADR 0011](decisions/0011-input-events-and-mode-leases.md)。
 - オーナーの例外承認により、Kitty/Sixelの純粋なエンコーダをFoundationへ追加。画像エンジン、画像デコード・変換、CUDAは未実装です。[ADR 0009](decisions/0009-foundation-protocol-encoders.md)。実端末、完全な公開機能、Runtimeの自動能力交渉・資源管理は未検証／未実装です。
 
 ## 検証
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は39 testsと1 compile-only doc test成功、7サンプルsnapshot成功、Unix PTY 9ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力94対95バイト、更新2対2バイトで同じ画面を確認しました。
+今回のローカル結果は51 testsと1 compile-only doc test成功、8サンプルsnapshot成功、Unix PTY 10ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力94対95バイト、更新2対2バイトで同じ画面を確認しました。
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 

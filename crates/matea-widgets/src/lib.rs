@@ -81,10 +81,13 @@ impl Component for TextInput {
         if !focused {
             return Response::ignored();
         }
+        if matches!(input,Input::Key(key) if !key.is_plain()) {
+            return Response::ignored();
+        }
         let old = self.value.clone();
         match input {
             Input::Paste(s) => self.insert(s),
-            Input::Key(k) if !k.ctrl && !k.alt => {
+            Input::Key(k) if k.is_plain() => {
                 let boundaries = self.boundaries();
                 let previous = boundaries
                     .iter()
@@ -98,7 +101,7 @@ impl Component for TextInput {
                     .find(|&n| n > self.cursor)
                     .unwrap_or(self.value.len());
                 match k.code {
-                    KeyCode::Char(c) => self.insert(&c.to_string()),
+                    KeyCode::Char(c) if !c.is_control() => self.insert(&c.to_string()),
                     KeyCode::Left => self.cursor = previous,
                     KeyCode::Right => self.cursor = next,
                     KeyCode::Home => self.cursor = 0,
@@ -344,7 +347,7 @@ impl Component for Viewport {
         let Input::Key(k) = input else {
             return Response::ignored();
         };
-        if k.ctrl || k.alt {
+        if !k.is_plain() {
             return Response::ignored();
         }
         let max = self.lines.len().saturating_sub(usize::from(self.rows));
@@ -479,18 +482,20 @@ impl Component for Form {
         if !focused || self.fields.is_empty() {
             return Response::ignored();
         }
-        self.submitted = false;
-        if let Input::Key(k) = input {
+        if let Some(k) = input.key_down().filter(|k| k.is_plain()) {
             match k.code {
-                KeyCode::Tab if !k.shift => {
+                KeyCode::Tab if k.focus_direction() == Some(1) => {
+                    self.submitted = false;
                     self.focus = (self.focus + 1) % self.fields.len();
                     return Response::consumed(None);
                 }
                 KeyCode::BackTab | KeyCode::Tab => {
+                    self.submitted = false;
                     self.focus = (self.focus + self.fields.len() - 1) % self.fields.len();
                     return Response::consumed(None);
                 }
                 KeyCode::Enter => {
+                    self.submitted = false;
                     if self.focus + 1 == self.fields.len() {
                         return Response::consumed(self.validate().then_some(Action::Submit));
                     }
@@ -505,6 +510,9 @@ impl Component for Form {
             }
         }
         let response = self.fields[self.focus].input.event(input, true);
+        if response.consumed {
+            self.submitted = false;
+        }
         if response.message == Some(Action::Changed) {
             self.fields[self.focus].error = None;
         }
@@ -535,6 +543,45 @@ mod tests {
     use matea_render::Size;
     fn key(k: KeyCode) -> Input {
         Input::Key(Key::new(k))
+    }
+    #[test]
+    fn releases_command_modifiers_and_nontext_events_do_not_edit_or_submit() {
+        use matea_core::{KeyKind, Modifiers};
+        let mut text = TextInput::new("tea");
+        let mut list = List::new(["tea", "coffee"]);
+        let mut viewport = Viewport::new("one\ntwo\nthree");
+        viewport.rows = 1;
+        let mut form = Form::new(vec![Field::new("Name", required)]);
+        form.event(&Input::Paste("tea".into()), true);
+        form.event(&key(KeyCode::Enter), true);
+        assert!(form.submitted());
+        for event in [
+            Input::Key(Key::new(KeyCode::Char('x')).with_kind(KeyKind::Release)),
+            Input::Key(Key::new(KeyCode::Enter).with_kind(KeyKind::Release)),
+            Input::Key(Key::new(KeyCode::Tab).with_modifiers(Modifiers::CONTROL)),
+            Input::Key(Key::new(KeyCode::Char('q')).with_modifiers(Modifiers::SUPER)),
+            Input::Key(Key::new(KeyCode::Char('\0'))),
+            Input::Focus(false),
+        ] {
+            assert!(!text.event(&event, true).consumed);
+            assert!(!list.event(&event, true).consumed);
+            assert!(!viewport.event(&event, true).consumed);
+            assert!(!form.event(&event, true).consumed);
+            assert_eq!(text.value(), "tea");
+            assert_eq!(list.selected(), Some(0));
+            assert_eq!(viewport.offset(), 0);
+            assert!(form.submitted());
+        }
+        let repeat = Input::Key(Key::new(KeyCode::Down).with_kind(KeyKind::Repeat));
+        list.event(&repeat, true);
+        assert_eq!(list.selected(), Some(1));
+        viewport.event(&repeat, true);
+        assert_eq!(viewport.offset(), 1);
+        text.event(
+            &Input::Key(Key::new(KeyCode::Char('!')).with_kind(KeyKind::Repeat)),
+            true,
+        );
+        assert_eq!(text.value(), "tea!");
     }
     #[test]
     fn custom_filter_and_keys_share_enabled_help() {

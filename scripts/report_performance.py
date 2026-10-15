@@ -76,7 +76,7 @@ metadata = {"schema": 1, "recorded_at_utc": datetime.now(timezone.utc).isoformat
                        "cold_ns is first operation call, not process startup",
                        "Same immutable Surface shortcut is specific to this reuse workload",
                        "Raw spring samples use IEEE arithmetic in both; checked updates validate inputs/results in both; Rust constructors also reject invalid parameters",
-                       "Nanosecond microbenchmarks are not application latency or full-module parity",
+                       "Nanosecond microbenchmarks are not application latency or full-module parity; retain scheduling outliers, including p95 regressions",
                        "Both current terminal encoders retain cursor/style state; stateless helper measured only in historical baseline",
                        "Old baseline files predate motion cases and anti-specialization changes; use for render/transport only"],
             "cases": comparison, "full_reference_parity": False}
@@ -90,6 +90,7 @@ for item in comparison:
     m, u = item["matea"], item["upstream"]
     lines.append(f"| {item['case']} | {m['p50_ns']:.2f} / {m['p95_ns']:.2f} | {u['p50_ns']:.2f} / {u['p95_ns']:.2f} | {m['allocations']} / {u['allocations']} |")
 lines += ["", "All listed output fixtures match. ASCII transport is independently replayed for a→b→a.",
+          "Input cases use short batches and show scheduling outliers in this run; p50 improvements do not imply p95 or application-latency parity. No samples were discarded.",
           "The stateful encoders each emit 2 bytes per one-cell update in this fixture. This does not establish bandwidth parity for other workloads.",
           "The immutable unchanged-frame case uses pointer identity in Matea; equal newly allocated frames require comparison.",
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",

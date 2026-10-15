@@ -1,6 +1,11 @@
 #![deny(unsafe_code)]
 //! Exclusive terminal lifecycle and a replaceable I/O backend.
 mod frame;
+mod input;
+pub use input::translate_event;
+mod modes;
+pub use modes::{InputOptions, KeyboardFlags, KeyboardMode};
+use modes::{ModeLeases, apply_mode};
 pub mod protocol;
 pub use frame::FrameEncoder;
 // sigaction has no safe standard-library wrapper; this is the only unsafe module.
@@ -8,16 +13,11 @@ pub use frame::FrameEncoder;
 #[allow(unsafe_code)]
 mod signals_unix;
 use crossterm::{
-    cursor::{Hide, Show},
-    event::{
-        self, DisableBracketedPaste, DisableFocusChange, EnableBracketedPaste, EnableFocusChange,
-        KeyEventKind, KeyModifiers,
-    },
-    execute, queue,
-    style::{Attribute, ResetColor, SetAttribute, SetBackgroundColor, SetForegroundColor},
-    terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
+    event, execute, queue,
+    style::{Attribute, SetAttribute, SetBackgroundColor, SetForegroundColor},
+    terminal::{self, Clear, ClearType},
 };
-use matea_core::{Event, Input, Key, KeyCode, Model, Runtime};
+use matea_core::{Event, Input, KeyCode, Model, Modifiers, Runtime};
 use matea_render::{Size, Surface};
 use matea_style::{Border, Color, ColorLevel, Style, Theme};
 use std::{
@@ -61,12 +61,16 @@ impl Capabilities {
 pub struct RunOptions {
     pub theme: Theme,
     pub capabilities: Capabilities,
+    pub input: InputOptions,
+    pub ctrl_c: CtrlCBehavior,
 }
 impl Default for RunOptions {
     fn default() -> Self {
         Self {
             theme: Theme::default(),
             capabilities: Capabilities::detect(),
+            input: InputOptions::default(),
+            ctrl_c: CtrlCBehavior::Quit,
         }
     }
 }
@@ -75,6 +79,19 @@ pub enum TerminalEvent {
     Input(Input),
     Resize(Size),
     Interrupt,
+}
+/// Policy for Ctrl-C key-down. OS signals still trigger restoration and exit;
+/// releases are forwarded. Shift is allowed, other command modifiers are not.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum CtrlCBehavior {
+    #[default]
+    Quit,
+    Deliver,
+}
+fn ctrl_c(key: matea_core::Key) -> bool {
+    key.is_down()
+        && key.modifiers.difference(Modifiers::SHIFT) == Modifiers::CONTROL
+        && matches!(key.code, KeyCode::Char('c' | 'C'))
 }
 
 /// Only the transport owns terminal side effects. One poller per backend/session.
@@ -127,14 +144,23 @@ pub fn run_with_options<A: Model>(model: A, mut options: RunOptions) -> Result<(
     if !options.capabilities.unicode {
         options.theme.border_kind = Border::Ascii;
     }
-    let native = Native::new(options.capabilities)?;
-    run_with_backend(model, options.theme, native)
+    let native = Native::new(options.capabilities, options.input)?;
+    run_with_backend_and_ctrl_c(model, options.theme, native, options.ctrl_c)
 }
 /// Drive the same loop with a mock backend in integration tests or an alternate transport.
 pub fn run_with_backend<A: Model, B: Backend>(
     model: A,
     theme: Theme,
     backend: B,
+) -> Result<(), Error> {
+    run_with_backend_and_ctrl_c(model, theme, backend, CtrlCBehavior::Quit)
+}
+/// Configure key policy for another backend; mode acquisition stays with it.
+pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
+    model: A,
+    theme: Theme,
+    backend: B,
+    behavior: CtrlCBehavior,
 ) -> Result<(), Error> {
     let mut session = Session::enter(backend)?;
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<(), Error> {
@@ -158,7 +184,7 @@ pub fn run_with_backend<A: Model, B: Backend>(
                 match event {
                     TerminalEvent::Interrupt => break,
                     TerminalEvent::Input(Input::Key(k))
-                        if k.ctrl && matches!(k.code, KeyCode::Char('c' | 'C')) =>
+                        if behavior == CtrlCBehavior::Quit && ctrl_c(k) =>
                     {
                         break;
                     }
@@ -200,13 +226,15 @@ struct Native {
     encoded: Vec<u8>,
     encoder: FrameEncoder,
     caps: Capabilities,
-    entered: bool,
+    input: InputOptions,
+    modes: ModeLeases,
     raw: bool,
     #[cfg(unix)]
     signals: Option<signals_unix::SignalGuard>,
 }
 impl Native {
-    fn new(caps: Capabilities) -> io::Result<Self> {
+    fn new(caps: Capabilities, input: InputOptions) -> io::Result<Self> {
+        input.validate()?;
         if !io::stdin().is_terminal() || !io::stdout().is_terminal() {
             return Err(io::Error::other(
                 "interactive Matea requires TTY stdin/stdout; use an example's --snapshot option for plain output",
@@ -225,7 +253,8 @@ impl Native {
             encoded: Vec::new(),
             encoder: FrameEncoder::default(),
             caps,
-            entered: false,
+            input,
+            modes: ModeLeases::default(),
             raw: false,
             #[cfg(unix)]
             signals: None,
@@ -245,38 +274,26 @@ impl Backend for Native {
         }
         terminal::enable_raw_mode()?;
         self.raw = true;
-        self.entered = true;
         // Install the resize listener before the first frame is observable.
         // Otherwise a SIGWINCH between first paint and first poll can be lost.
         let _ = event::poll(Duration::ZERO)?;
-        execute!(
-            self.out,
-            EnterAlternateScreen,
-            Hide,
-            EnableBracketedPaste,
-            EnableFocusChange,
-            Clear(ClearType::All)
-        )
+        self.modes.enter(self.input, |mode, enable, flags| {
+            apply_mode(&mut self.out, mode, enable, flags)
+        })?;
+        execute!(self.out, Clear(ClearType::All))
     }
     fn restore(&mut self) -> io::Result<()> {
         let mut error = None;
-        if self.entered {
+        if self.modes.active() {
             // Attempt every operation even if an earlier write fails.
             for result in [
-                execute!(self.out, ResetColor),
-                execute!(self.out, SetAttribute(Attribute::Reset)),
-                execute!(self.out, DisableBracketedPaste),
-                execute!(self.out, DisableFocusChange),
-                execute!(self.out, Show),
-                execute!(self.out, LeaveAlternateScreen),
+                self.modes
+                    .restore(|mode, enable, flags| apply_mode(&mut self.out, mode, enable, flags)),
                 self.out.flush(),
             ] {
                 if let Err(e) = result {
                     error.get_or_insert(e);
                 }
-            }
-            if error.is_none() {
-                self.entered = false;
             }
         }
         if self.raw {
@@ -310,7 +327,7 @@ impl Backend for Native {
         if !event::poll(timeout)? {
             return Ok(None);
         }
-        Ok(translate(event::read()?))
+        Ok(Some(translate_event(event::read()?)))
     }
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()> {
         self.encoded.clear();
@@ -331,42 +348,6 @@ impl Drop for Native {
     }
 }
 
-fn translate(event: event::Event) -> Option<TerminalEvent> {
-    use event::{Event as E, KeyCode as C};
-    Some(match event {
-        E::Resize(w, h) => TerminalEvent::Resize(Size::new(w, h)),
-        E::Paste(s) => TerminalEvent::Input(Input::Paste(s)),
-        E::FocusGained => TerminalEvent::Input(Input::Focus(true)),
-        E::FocusLost => TerminalEvent::Input(Input::Focus(false)),
-        E::Key(k) if k.kind != KeyEventKind::Release => {
-            let code = match k.code {
-                C::Char(c) => KeyCode::Char(c),
-                C::Enter => KeyCode::Enter,
-                C::Esc => KeyCode::Esc,
-                C::Backspace => KeyCode::Backspace,
-                C::Delete => KeyCode::Delete,
-                C::Left => KeyCode::Left,
-                C::Right => KeyCode::Right,
-                C::Up => KeyCode::Up,
-                C::Down => KeyCode::Down,
-                C::Home => KeyCode::Home,
-                C::End => KeyCode::End,
-                C::Tab => KeyCode::Tab,
-                C::BackTab => KeyCode::BackTab,
-                C::PageUp => KeyCode::PageUp,
-                C::PageDown => KeyCode::PageDown,
-                _ => return None,
-            };
-            TerminalEvent::Input(Input::Key(Key {
-                code,
-                ctrl: k.modifiers.contains(KeyModifiers::CONTROL),
-                alt: k.modifiers.contains(KeyModifiers::ALT),
-                shift: k.modifiers.contains(KeyModifiers::SHIFT),
-            }))
-        }
-        _ => return None,
-    })
-}
 fn color(c: Color) -> crossterm::style::Color {
     use crossterm::style::Color as C;
     match c {
@@ -429,6 +410,82 @@ mod tests {
     use matea_core::{Effect, ViewContext};
     use matea_render::View;
     use std::sync::{Arc, Mutex};
+    #[test]
+    fn ctrl_c_policy_delivers_releases_and_other_modifier_chords() {
+        use matea_core::{Key, KeyKind};
+        use std::collections::VecDeque;
+        struct Keys(Arc<Mutex<Vec<Key>>>);
+        impl Model for Keys {
+            type Message = ();
+            fn update(&mut self, event: Event<()>) -> Effect<()> {
+                if let Event::Input(Input::Key(key)) = event {
+                    self.0.lock().unwrap().push(key);
+                    if key.is_char('q') {
+                        return Effect::quit();
+                    }
+                }
+                Effect::none()
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("keys")
+            }
+        }
+        struct Events {
+            events: VecDeque<TerminalEvent>,
+            restored: Arc<Mutex<bool>>,
+        }
+        impl Backend for Events {
+            fn enter(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn restore(&mut self) -> io::Result<()> {
+                *self.restored.lock().unwrap() = true;
+                Ok(())
+            }
+            fn size(&self) -> io::Result<Size> {
+                Ok(Size::new(8, 1))
+            }
+            fn poll(&mut self, _: Duration) -> io::Result<Option<TerminalEvent>> {
+                Ok(self.events.pop_front().or(Some(TerminalEvent::Interrupt)))
+            }
+            fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let c = Key::new(KeyCode::Char('c')).with_modifiers(Modifiers::CONTROL);
+        for (behavior, expected) in [(CtrlCBehavior::Quit, 2), (CtrlCBehavior::Deliver, 4)] {
+            let keys = Arc::new(Mutex::new(Vec::new()));
+            let restored = Arc::new(Mutex::new(false));
+            let events = [
+                c.with_kind(KeyKind::Release),
+                c.with_modifiers(Modifiers::CONTROL | Modifiers::ALT),
+                c,
+                Key::new(KeyCode::Char('q')),
+            ]
+            .into_iter()
+            .map(|k| TerminalEvent::Input(Input::Key(k)))
+            .collect();
+            run_with_backend_and_ctrl_c(
+                Keys(keys.clone()),
+                Theme::plain(),
+                Events {
+                    events,
+                    restored: restored.clone(),
+                },
+                behavior,
+            )
+            .unwrap();
+            assert_eq!(keys.lock().unwrap().len(), expected);
+            assert!(*restored.lock().unwrap());
+        }
+        assert!(ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SHIFT)
+        ));
+        assert!(!ctrl_c(c.with_kind(KeyKind::Release)));
+        assert!(!ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SUPER)
+        ));
+    }
     struct App {
         panic: bool,
     }
@@ -508,10 +565,12 @@ mod tests {
         assert!(!caps.unicode);
         let event = event::KeyEvent::new_with_kind(
             event::KeyCode::Char('a'),
-            KeyModifiers::NONE,
-            KeyEventKind::Release,
+            event::KeyModifiers::NONE,
+            event::KeyEventKind::Release,
         );
-        assert!(translate(event::Event::Key(event)).is_none());
+        assert!(
+            matches!(translate_event(event::Event::Key(event)),TerminalEvent::Input(Input::Key(key)) if key.kind==matea_core::KeyKind::Release)
+        );
     }
     #[test]
     fn diff_transport_clears_wide_rows_and_is_idle_when_equal() {

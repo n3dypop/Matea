@@ -12,7 +12,7 @@
 | Accessibility and motion | Textual focus/error cues, NO_COLOR, reduced motion, plain snapshots; interactive screen-reader prompt mode outstanding |
 | Surface memory / effect flood | Surface allocation cap, 8 workers/32 envelopes/64 subscriptions; component/document content still app-owned |
 | Signal, abort or failed output cleanup | SIGINT/SIGTERM flags and panic unwind cleanup; SIGKILL/abort/I/O failure cannot be guaranteed |
-| Interactive feature coverage | Inline, mouse, function keys, enhanced keyboard, clipboard, suspend/resume deferred and explicitly unsupported |
+| Interactive feature coverage | Typed keys/mouse and opt-in reporting implemented within released Crossterm data; bounded negotiation, physical/associated text, clipboard, suspend/resume and inline sessions pending; explicit Kitty mode unsupported by current Windows command backend |
 | Publication/source provenance | No Go code/assets copied; root licenses audited; Rust dependency license inventory is not a legal certification |
 
 Future image/CUDA work is deferred as described in roadmap.md; it requires explicit Foundation approval.

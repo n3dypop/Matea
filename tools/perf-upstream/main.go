@@ -3,6 +3,7 @@ package main
 
 import (
 	"bytes"
+	"charm.land/bubbles/v2/key"
 	"encoding/json"
 	"fmt"
 	"github.com/charmbracelet/colorprofile"
@@ -93,6 +94,7 @@ func main() {
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
 	}
+	inputBindings(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -160,6 +162,36 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+func inputBindings(n int) {
+	for _, item := range []struct {
+		name          string
+		event         uv.KeyPressEvent
+		down, enabled bool
+		expected      uint64
+	}{
+		{"ctrl_x", uv.KeyPressEvent{Code: 'x', Mod: uv.ModCtrl}, true, true, 1},
+		{"f12", uv.KeyPressEvent{Code: uv.KeyF12}, true, true, 1},
+		{"miss", uv.KeyPressEvent{Code: 'y'}, true, true, 0},
+		{"disabled", uv.KeyPressEvent{Code: 'x', Mod: uv.ModCtrl}, true, false, 0},
+		{"repeat", uv.KeyPressEvent{Code: 'x', Mod: uv.ModCtrl, IsRepeat: true}, true, true, 1},
+		{"release", uv.KeyPressEvent{Code: 'x', Mod: uv.ModCtrl}, false, true, 0},
+	} {
+		binding := key.NewBinding(key.WithKeys("ctrl+x", "f12"), key.WithHelp("ctrl+x/F12", "inspect"))
+		binding.SetEnabled(item.enabled)
+		// Bubbles' example widgets call Matches only for KeyPressMsg. The down
+		// guard models that event-dispatch contract, including a release case.
+		operation := func() uint64 {
+			if item.down && key.Matches(item.event, binding) {
+				return 1
+			}
+			return 0
+		}
+		if operation() != item.expected {
+			panic("binding fixture mismatch")
+		}
+		measure("input/binding_"+item.name, max(n*10, 30000), operation, strconv.FormatUint(item.expected, 10), "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O")
 	}
 }
 func motionFixtures() {

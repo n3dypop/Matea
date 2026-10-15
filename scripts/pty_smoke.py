@@ -101,6 +101,26 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 visible=screen_text(output)
                 assert b"RECOVERED" in visible and b"worker panic hook fixture" not in visible,(name,visible)
                 os.write(master,b"q")
+            elif action == "enhanced-input":
+                assert b"\x1b[>15u" in output and b"\x1b[?1006h" in output
+                for data,expected in [
+                    (b"\x1b[24~",b"F(12) Press"),
+                    (b"\x1b[113;1:3u",b"Char('q') Release"),
+                    (b"\x1b[97;1:2u",b"Char('a') Repeat"),
+                    (b"\x1b[97:65;2u",b"Char('A') Press Modifiers(0x0)"),
+                    (b"\x1b[51:163;2u",b"Char('\xc2\xa3') Press Modifiers(0x0)"),
+                    (b"\x1b[120;9u",b"SUPER"),
+                    (b"\x1b[99;5:3u",b"Char('c') Release"),
+                    (b"\x1b[99;5u",b"Char('c') Press"),
+                    (b"\x1b[<0;4;3M",b"Down(Left) 3,2"),
+                    (b"\x1b[200~tea\x1b[201~",b"Paste 3 bytes"),
+                    (b"\x1b[O",b"Focus false"),
+                    (b"\x1b[I",b"Focus true"),
+                ]:
+                    os.write(master,data)
+                    read_until(lambda:expected in plain())
+                    assert child.poll() is None,(name,"release or delivered Ctrl-C exited")
+                os.write(master,b"\x1b[113u")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
         read_until(lambda: child.poll() is not None)
@@ -117,6 +137,10 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
             assert command in output, (name, "cleanup command missing", command)
         if expected_status == 0 and expect_cancelled:
             assert b"CANCELLED" in output, (name, "effect cancellation not observed")
+        if action=="enhanced-input":
+            assert output.count(b"\x1b[<1u")==1,(name,"keyboard stack popped twice")
+            assert output.index(b"\x1b[<1u")<output.index(b"\x1b[?1049l"),(name,"keyboard popped on wrong screen")
+            assert b"\x1b[?1006l" in output,(name,"mouse mode not disabled")
         print(f"PASS {name}: input, cleanup" + (", cancellation" if expected_status == 0 and expect_cancelled else ""))
     finally:
         if child.poll() is None:
@@ -137,3 +161,5 @@ case("typed effect completion", "effect", example="effects", ready=b"Loading tea
      expect_cancelled=False)
 case("post-run SIGTERM uses original handler", "post-signal", args=("--post-signal",),
      expected_status=-signal.SIGTERM, expect_cancelled=False)
+case("enhanced keys, mouse and mode restoration", "enhanced-input",example="input",ready=b"Matea input",
+     args=("--mouse","--kitty","--deliver-ctrl-c"),expect_cancelled=False)

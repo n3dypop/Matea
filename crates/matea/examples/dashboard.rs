@@ -14,7 +14,8 @@ impl Model for Dashboard {
     fn update(&mut self, event: Event<()>) -> Effect<()> {
         match event {
             Event::Input(input) => {
-                if matches!(&input, Input::Key(k) if k.is_char('q') || k.code == KeyCode::Esc) {
+                if matches!(&input, Input::Key(k) if k.is_char('q') || (k.is_plain() && k.code == KeyCode::Esc))
+                {
                     return Effect::quit();
                 }
                 if !self.focus.handle(&input) {

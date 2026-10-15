@@ -9,7 +9,9 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 7 tests
+running 9 tests
+test input::tests::chords_ignore_repeat_and_lock_state_but_preserve_modifiers_and_release ... ok
+test input::tests::focus_ring_ignores_release_and_modified_tab ... ok
 test tests::model_state_can_remain_non_send ... ok
 test tests::cancelled_queued_results_are_discarded ... ok
 test tests::deterministic_subscriptions_resize_and_focus ... ok
@@ -18,7 +20,7 @@ test tests::replacing_an_id_discards_the_old_generation ... ok
 test tests::cancellation_interrupts_wait_and_worker_limit_is_enforced ... ok
 test tests::sequence_and_failures ... ok
 
-test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 running 1 test
@@ -28,9 +30,9 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 3 tests
-test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
 test tests::analytical_oscillator_and_all_damping_regimes ... ok
 test tests::projectile_matches_forward_euler_and_exact_partition ... ok
+test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
 
 test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -47,10 +49,10 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 5 tests
-test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
 test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
-test tests::unicode_clipping_and_controls ... ok
+test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
 test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+test tests::unicode_clipping_and_controls ... ok
 test tests::zero_and_oversized_geometry ... ok
 
 test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
@@ -64,33 +66,48 @@ test tests::fallback_is_bounded_and_no_color_keeps_focus ... ok
 test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 13 tests
+running 17 tests
+test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
+test modes::tests::retries_failed_modes_without_repeating_successful_releases ... ok
 test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
+test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
 test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
-test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
-test tests::conservative_environment_and_key_release ... ok
-test tests::resize_to_empty_still_clears_old_content ... ok
-test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
-test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
-test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
-test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
-test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
 test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
+test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
+test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
+test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
+test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
+test tests::conservative_environment_and_key_release ... ok
+test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
+test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
+test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
+test tests::resize_to_empty_still_clears_old_content ... ok
 test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
 test tests::restoration_on_success_failure_and_unwind ... ok
 
-test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
-running 6 tests
-test tests::list_filter_selection_empty_and_table ... ok
+running 4 tests
+test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
+test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
+test every_nonpayload_function_media_and_modifier_code_survives ... ok
+test key_kinds_modifiers_and_lock_state_survive_all_combinations ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
 test tests::custom_filter_and_keys_share_enabled_help ... ok
 test tests::viewport_bounds_and_reduced_motion ... ok
 test tests::form_focus_validation_and_submit ... ok
+test tests::list_filter_selection_empty_and_table ... ok
+test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
 test tests::input_graphemes_focus_paste_and_scroll ... ok
 test pagination::tests::range_remains_valid_on_empty_data_and_resize ... ok
 
-test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 running 1 test
@@ -98,7 +115,7 @@ test crates/matea/src/lib.rs - (line 4) - compile ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-all doctests ran in 0.87s; merged doctests compilation took 0.58s
+all doctests ran in 0.57s; merged doctests compilation took 0.36s
 
 running 0 tests
 
@@ -129,18 +146,23 @@ running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
-     Running unittests src/lib.rs (target/debug/deps/matea-9b0d4bccc7c3576b)
+   Compiling matea-terminal v0.1.0 (${REPOSITORY}/crates/matea-terminal)
+   Compiling matea v0.1.0 (${REPOSITORY}/crates/matea)
+   Compiling matea-perf-probe v0.1.0 (${REPOSITORY}/tools/perf-probe)
+   Compiling matea-example-external-widget v0.1.0 (${REPOSITORY}/examples/external-widget)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.59s
+     Running unittests src/lib.rs (target/debug/deps/matea-cb222e928d375e7e)
      Running unittests src/main.rs (target/debug/deps/matea_api_audit-6662563e79d858cc)
-     Running unittests src/lib.rs (target/debug/deps/matea_core-24e21c130a0f9f49)
-     Running unittests src/main.rs (target/debug/deps/matea_example_external_widget-95f63bdeb5dd9c1a)
+     Running unittests src/lib.rs (target/debug/deps/matea_core-8894afc18fe8c207)
+     Running unittests src/main.rs (target/debug/deps/matea_example_external_widget-94b928685eccdac0)
      Running unittests src/lib.rs (target/debug/deps/matea_motion-80cdead932a55756)
      Running tests/reference.rs (target/debug/deps/reference-2e082a472e95896c)
-     Running unittests src/main.rs (target/debug/deps/matea_perf_probe-9aaa48fc0237a911)
+     Running unittests src/main.rs (target/debug/deps/matea_perf_probe-d95725cbab15532b)
      Running unittests src/lib.rs (target/debug/deps/matea_render-69a88f959b835eb5)
      Running unittests src/lib.rs (target/debug/deps/matea_style-6bcc153808130e52)
-     Running unittests src/lib.rs (target/debug/deps/matea_terminal-c8f380920d5baf0a)
-     Running unittests src/lib.rs (target/debug/deps/matea_widgets-20e7f0a23985b666)
+     Running unittests src/lib.rs (target/debug/deps/matea_terminal-5c1a082ed23aab1a)
+     Running tests/input.rs (target/debug/deps/input-5df0dd7c79d7ffcb)
+     Running unittests src/lib.rs (target/debug/deps/matea_widgets-b7d0ca6f8ba426e9)
    Doc-tests matea
    Doc-tests matea_core
    Doc-tests matea_motion

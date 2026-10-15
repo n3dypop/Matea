@@ -28,8 +28,9 @@ pub use matea_terminal::{run, run_with_options};
 pub use matea_widgets as widgets;
 pub mod prelude {
     pub use matea_core::{
-        Cancellation, Component, Effect, Event, FocusRing, Input, Key, KeyCode, Model, Response,
-        Runtime, Subscription, Task, ViewContext,
+        Cancellation, Component, Effect, Event, FocusRing, Input, Key, KeyCode, KeyKind, KeyState,
+        MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
+        ScrollDirection, Subscription, Task, ViewContext,
     };
     pub use matea_render::{Rect, Size, Surface, View};
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
