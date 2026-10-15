@@ -20,14 +20,14 @@
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
-初回候補 `48ea6e978d69838f9b6a55c460368dba2d223f2c` は[Linux/Windows/macOSとMSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38811891109)に成功しました。これは旧スコープの履歴です。今回の変更のCI証拠は別途記録し、過去の成功を流用しません。
+初回候補 `48ea6e978d69838f9b6a55c460368dba2d223f2c` は[Linux/Windows/macOSとMSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38811891109)に成功しました。これは旧スコープの履歴です。今回の実装コミット `8697d5454a39512f4b76df153dca87e7127f4279` も[3 OS + MSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38819360615)に成功しました。[GitHubから取得したjob/step証拠](evidence/coverage-ci-run.json)を保存しています。WindowsのPTYは対象外です。
 
 ## F5の前に残る作業
 
-1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件の解決、全機能の実装と正しさの証拠。
+1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。
 3. Runtime拡張、style/layout、Bubbles/Huh/Glamour、Ratatui/Crossterm/Ultraviolet/xの残機能。依存の追加や再公開だけで対応完了としません。
-4. 新実装の3 OS CI、Windows native console、実端末のUnicode/IME/SSH/tmux、Kitty/Sixelの端末別検証。OS対応はプロトコル対応を意味しません。
+4. 残機能を実装した際の3 OS CI再検証と、Windows native console、実端末のUnicode/IME/SSH/tmux、Kitty/Sixelの端末別検証。OS対応はプロトコル対応を意味しません。
 5. 公開API・ライセンス・crate名の最終レビュー。全packageはpublish=falseで、Mateaの配布ライセンス、crates.io／商標の可用性は未確定です。
 6. 協調しないユーザーworkerはRuntime終了後も残り得ます。キャンセル・復旧保証の範囲は[アーキテクチャ](architecture.md)に記録しています。
 
