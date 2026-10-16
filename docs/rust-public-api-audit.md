@@ -63,3 +63,10 @@ Imported facts now use canonical UTF-8/LF bytes and the repository enforces LF f
 that directory, with an LF/CRLF/Unicode regression. This fixes evidence integrity;
 it does not close public-capability or platform review. Rooted /rustc paths are also
 classified as external on Windows even without a drive prefix.
+
+The corrected [three-OS collection run](https://github.com/n3dypop/Matea/actions/runs/38851892735)
+at `a6d3b81d1d10a9f773e79a2c67f2edbc19116b12` passed all six reference collection
+jobs and all four Foundation/MSRV jobs. [Job/step evidence](evidence/compiler-audit-fixed-ci-run.json)
+is retained. The twenty imported profiles use the corrected extractor and canonical
+hashes. This confirms collection/evidence integrity, not complete platform or
+public-capability coverage.
