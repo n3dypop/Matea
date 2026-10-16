@@ -7,46 +7,52 @@ One macOS arm64 host, sequential release executables, memory sinks, 31 batches. 
 
 | Workload | Matea p50 / p95 | Upstream p50 / p95 | allocations M / U |
 | --- | ---: | ---: | ---: |
-| input/binding_ctrl_x | 4.01 / 4.70 | 27.96 / 41.89 | 0 / 1 |
-| input/binding_f12 | 4.67 / 5.09 | 29.71 / 33.67 | 0 / 1 |
-| input/binding_miss | 6.37 / 7.34 | 26.00 / 43.81 | 0 / 1 |
-| input/binding_disabled | 2.32 / 3.70 | 28.10 / 40.69 | 0 / 1 |
-| input/binding_repeat | 3.48 / 3.57 | 29.68 / 43.68 | 0 / 1 |
-| input/binding_release | 1.54 / 1.69 | 2.18 / 2.20 | 0 / 0 |
-| motion/frame_duration | 1.09 / 1.12 | 2.24 / 2.32 | 0 / 0 |
-| motion/projectile_update | 2.98 / 3.53 | 5.60 / 6.13 | 0 / 0 |
-| motion/projectile_checked_update | 2.98 / 3.17 | 6.17 / 6.31 | 0 / 0 |
-| motion/projectile_construct | 7.46 / 8.07 | 20.20 / 23.59 | 0 / 1 |
-| pagination/range | 0.98 / 1.04 | 0.97 / 1.27 | 0 / 0 |
-| pagination/navigation | 1.78 / 1.96 | 5.44 / 5.61 | 0 / 0 |
-| pagination/arabic | 47.46 / 47.54 | 65.54 / 66.50 | 1 / 1 |
-| pagination/dots_32 | 137.83 / 139.62 | 768.38 / 835.25 | 1 / 31 |
-| pagination/dots_256 | 910.12 / 973.83 | 12931.42 / 13369.25 | 1 / 255 |
-| pagination/key_dispatch | 13.45 / 15.36 | 147.65 / 171.05 | 0 / 3 |
-| textinput/left_right_ascii_64 | 45.09 / 46.86 | 2757.89 / 2857.08 | 0 / 13 |
-| textinput/insert_end_ascii_64 | 78.02 / 89.12 | 2887.95 / 2940.12 | 0 / 5 |
-| textinput/insert_middle_ascii_64 | 85.18 / 89.40 | 2929.09 / 2965.05 | 0 / 6 |
-| textinput/word_roundtrip_ascii_63 | 129.18 / 138.72 | 2793.25 / 2822.25 | 0 / 17 |
-| textinput/paste_clear_ascii_64 | 100.14 / 105.62 | 3080.28 / 3120.98 | 0 / 19 |
-| textinput/ignored_focus_ascii_64 | 4.60 / 4.87 | 2339.23 / 2359.43 | 0 / 1 |
-| textinput/word_roundtrip_unicode | 175.56 / 185.22 | 2354.13 / 2435.74 | 0 / 16 |
-| textinput/suggestions_edit_pair | 123.25 / 130.20 | 3063.96 / 3126.20 | 0 / 18 |
-| cursor/visible_move_80x24 | 27.50 / 27.92 | 42609.29 / 43674.46 | 0 / 1 |
-| render/empty_80x24 | 6452.67 / 6858.71 | 68258.67 / 71811.83 | 1 / 54 |
-| render/ascii_80x24 | 13369.08 / 13689.62 | 107293.75 / 108247.08 | 1 / 54 |
-| render/unicode_80x24 | 13945.42 / 14046.25 | 83776.21 / 85845.04 | 1 / 54 |
-| unicode/width | 664.58 / 672.15 | 3469.64 / 3496.37 | 0 / 0 |
-| terminal/unchanged_80x24 | 4.42 / 4.46 | 42579.67 / 42899.29 | 0 / 0 |
-| terminal/one_cell_80x24 | 9893.04 / 9967.75 | 44350.12 / 44558.25 | 0 / 5 |
-| motion/spring_update_0.2 | 0.82 / 0.88 | 1.31 / 1.99 | 0 / 0 |
-| motion/spring_checked_update_0.2 | 2.15 / 2.23 | 2.97 / 3.03 | 0 / 0 |
-| motion/spring_construct_0.2 | 16.75 / 17.34 | 26.88 / 27.42 | 0 / 0 |
-| motion/spring_update_1 | 0.82 / 0.84 | 1.31 / 1.40 | 0 / 0 |
-| motion/spring_checked_update_1 | 2.15 / 2.19 | 3.02 / 3.36 | 0 / 0 |
-| motion/spring_construct_1 | 11.46 / 11.98 | 13.84 / 14.16 | 0 / 0 |
-| motion/spring_update_2 | 0.82 / 0.84 | 1.31 / 1.32 | 0 / 0 |
-| motion/spring_checked_update_2 | 2.26 / 2.71 | 3.02 / 3.23 | 0 / 0 |
-| motion/spring_construct_2 | 16.75 / 17.64 | 25.50 / 49.37 | 0 / 0 |
+| input/binding_ctrl_x | 1.91 / 5.53 | 59.01 / 85.38 | 0 / 1 |
+| input/binding_f12 | 6.32 / 8.94 | 35.05 / 40.67 | 0 / 1 |
+| input/binding_miss | 2.50 / 2.90 | 25.99 / 43.86 | 0 / 1 |
+| input/binding_disabled | 0.70 / 0.71 | 27.83 / 41.22 | 0 / 1 |
+| input/binding_repeat | 1.77 / 2.10 | 27.85 / 39.56 | 0 / 1 |
+| input/binding_release | 0.88 / 0.93 | 2.03 / 2.19 | 0 / 0 |
+| binding/value_hit | 2.50 / 2.61 | 6.89 / 6.99 | 0 / 0 |
+| binding/value_miss | 2.19 / 2.32 | 6.69 / 7.30 | 0 / 0 |
+| binding/value_disabled | 0.47 / 0.47 | 7.07 / 8.08 | 0 / 0 |
+| binding/construct | 29.43 / 31.52 | 45.30 / 51.73 | 1 / 2 |
+| binding/value_hit_owned | 5.62 / 5.77 | 7.10 / 7.98 | 0 / 0 |
+| binding/metadata | 1.16 / 1.26 | 2.03 / 2.36 | 0 / 0 |
+| motion/frame_duration | 0.68 / 0.69 | 2.08 / 2.20 | 0 / 0 |
+| motion/projectile_update | 2.41 / 2.89 | 5.51 / 5.80 | 0 / 0 |
+| motion/projectile_checked_update | 2.84 / 2.95 | 6.22 / 6.50 | 0 / 0 |
+| motion/projectile_construct | 7.53 / 7.98 | 20.22 / 21.58 | 0 / 1 |
+| pagination/range | 0.98 / 1.06 | 0.96 / 1.05 | 0 / 0 |
+| pagination/navigation | 1.79 / 1.96 | 5.43 / 5.87 | 0 / 0 |
+| pagination/arabic | 49.46 / 51.12 | 64.71 / 65.46 | 1 / 1 |
+| pagination/dots_32 | 140.42 / 161.67 | 765.12 / 896.21 | 1 / 31 |
+| pagination/dots_256 | 909.88 / 963.17 | 13428.08 / 13750.33 | 1 / 255 |
+| pagination/key_dispatch | 8.12 / 9.47 | 151.67 / 170.56 | 0 / 3 |
+| textinput/left_right_ascii_64 | 35.10 / 36.49 | 2742.60 / 2780.00 | 0 / 13 |
+| textinput/insert_end_ascii_64 | 67.93 / 71.23 | 2855.05 / 2895.35 | 0 / 5 |
+| textinput/insert_middle_ascii_64 | 75.79 / 78.43 | 2897.35 / 2926.53 | 0 / 6 |
+| textinput/word_roundtrip_ascii_63 | 116.19 / 121.32 | 2774.51 / 2800.17 | 0 / 17 |
+| textinput/paste_clear_ascii_64 | 91.75 / 96.58 | 3058.78 / 3086.20 | 0 / 19 |
+| textinput/ignored_focus_ascii_64 | 4.59 / 4.78 | 2334.66 / 2379.85 | 0 / 1 |
+| textinput/word_roundtrip_unicode | 154.73 / 160.33 | 2346.66 / 2393.43 | 0 / 16 |
+| textinput/suggestions_edit_pair | 111.42 / 115.32 | 3049.62 / 3248.50 | 0 / 18 |
+| cursor/visible_move_80x24 | 28.75 / 28.79 | 42608.00 / 42987.71 | 0 / 1 |
+| render/empty_80x24 | 6210.21 / 6309.62 | 69891.62 / 70716.08 | 1 / 54 |
+| render/ascii_80x24 | 13351.79 / 14087.75 | 107422.33 / 109682.50 | 1 / 54 |
+| render/unicode_80x24 | 13953.29 / 14182.29 | 85500.08 / 90307.04 | 1 / 54 |
+| unicode/width | 665.52 / 678.41 | 3474.04 / 3491.13 | 0 / 0 |
+| terminal/unchanged_80x24 | 5.58 / 5.67 | 42858.04 / 43151.08 | 0 / 0 |
+| terminal/one_cell_80x24 | 9860.00 / 9978.29 | 44518.92 / 44816.62 | 0 / 5 |
+| motion/spring_update_0.2 | 0.82 / 0.98 | 1.31 / 1.32 | 0 / 0 |
+| motion/spring_checked_update_0.2 | 2.15 / 2.25 | 3.02 / 3.36 | 0 / 0 |
+| motion/spring_construct_0.2 | 17.07 / 17.84 | 39.32 / 42.44 | 0 / 0 |
+| motion/spring_update_1 | 0.84 / 0.84 | 1.32 / 1.41 | 0 / 0 |
+| motion/spring_checked_update_1 | 2.19 / 2.19 | 3.02 / 3.57 | 0 / 0 |
+| motion/spring_construct_1 | 11.67 / 12.57 | 13.83 / 14.44 | 0 / 0 |
+| motion/spring_update_2 | 0.85 / 0.89 | 1.31 / 1.33 | 0 / 0 |
+| motion/spring_checked_update_2 | 2.15 / 2.38 | 3.11 / 3.30 | 0 / 0 |
+| motion/spring_construct_2 | 16.80 / 17.69 | 25.97 / 48.16 | 0 / 0 |
 
 All listed output fixtures match. ASCII transport is independently replayed for a→b→a.
 Input cases use short batches and can show scheduling outliers; p50 improvements do not imply p95 or application-latency parity. No samples were discarded.
@@ -59,6 +65,7 @@ Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construc
 The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.
 Text-input fixtures exclude View construction, clipboard I/O, validators and virtual-cursor commands in both harnesses. They include eight event pairs; Unicode rune-vs-grapheme single-step behavior is not compared.
 The text-input baseline retains samples/source hashes before ASCII query-buffer reuse. Unicode filtering keeps contextual lowercase semantics; that path is not covered by the ASCII allocation claim.
+Key bindings add three custom-token matches plus construction and metadata access. Existing-string custom tokens do not format/allocate in either language. Constructors retain their result through black_box/global storage; Go escape analysis and Rust ownership differ. Short help storage is inline after the retained baseline.
 Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.
 
 ## Reproduction

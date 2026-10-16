@@ -507,6 +507,65 @@ fn input_bindings(iterations: usize) {
             "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
         );
     }
+    for (name, value, enabled, expected) in [
+        ("hit", "F12", true, 1),
+        ("miss", "other", true, 0),
+        ("disabled", "F12", false, 0),
+    ] {
+        let mut binding = Binding::new(["ctrl+x", "F12"], "ctrl+x/F12", "inspect");
+        binding.enabled = enabled;
+        assert_eq!(u64::from(binding.matches_value(value)), expected);
+        measure(
+            &format!("binding/value_{name}"),
+            (iterations * 10).max(30000),
+            || u64::from(black_box(&binding).matches_value(black_box(value))),
+            &expected.to_string(),
+            "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
+        );
+    }
+    measure(
+        "binding/construct",
+        (iterations * 10).max(30000),
+        || {
+            let binding = black_box(Binding::new(
+                [black_box("ctrl+x"), black_box("F12")],
+                black_box("ctrl+x/F12"),
+                black_box("inspect"),
+            ));
+            binding.keys.len() as u64
+                + binding
+                    .help()
+                    .map_or(0, |(key, help)| (key.len() + help.len()) as u64)
+        },
+        "2,ctrl+x/F12,inspect,true",
+        "construct binding with owned two-token vector/slice and short help metadata; retain result through black_box/global sink; borrowed static token text",
+    );
+    let custom = Binding::new(["ctrl+x", "F12"], "ctrl+x/F12", "inspect");
+    let query = String::from("F12");
+    assert!(!std::ptr::eq(custom.keys[1], query.as_str()));
+    assert!(custom.matches_value(query.as_str()));
+    measure(
+        "binding/value_hit_owned",
+        (iterations * 10).max(30000),
+        || u64::from(black_box(&custom).matches_value(black_box(query.as_str()))),
+        "1",
+        "two custom string tokens ctrl+x,F12; equal F12 query has distinct owned storage; borrowed equality; no query construction, formatting or I/O",
+    );
+    let binding = Binding::new(["ctrl+x", "F12"], "ctrl+x/F12", "inspect");
+    measure(
+        "binding/metadata",
+        (iterations * 10).max(30000),
+        || {
+            let b = black_box(&binding);
+            let (label, description) = b.help().unwrap();
+            b.keys.len() as u64
+                + label.len() as u64
+                + description.len() as u64
+                + u64::from(b.is_enabled())
+        },
+        "2,ctrl+x/F12,inspect,true",
+        "borrow enabled binding keys, help and enabled status; no mutation, formatting or I/O",
+    );
 }
 fn text_input(iterations: usize) {
     for (name, initial, position, first, second) in [

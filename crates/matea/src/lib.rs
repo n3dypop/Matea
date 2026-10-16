@@ -34,6 +34,7 @@ pub mod prelude {
     };
     pub use matea_render::{Cursor, Rect, Size, Surface, View};
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
+    pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{
         Action, EchoMode, Field, Form, InputStyleState, InputStyles, List, PageDisplay, PageKeys,
         PageNumbers, Pagination, Paginator, Spinner, Table, TextEditKeys, TextInput, Viewport,

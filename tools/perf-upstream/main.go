@@ -32,6 +32,11 @@ var motionInputs = [3]float64{2, 0, 1}
 var projectilePoint = harmonica.Point{X: 1, Y: 10, Z: -2}
 var projectileVelocity = harmonica.Vector{X: 2, Y: -3, Z: 4}
 var motionFPS = 60
+var bindingSink key.Binding
+
+type keyToken string
+
+func (k keyToken) String() string { return string(k) }
 
 func finite(n float64) bool { return !math.IsNaN(n) && !math.IsInf(n, 0) }
 func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) {
@@ -95,6 +100,11 @@ func main() {
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--cursor-trace" {
 		cursorTrace()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--key-source-edges" {
+		empty := key.NewBinding(key.WithKeys([]string{}...), key.WithHelp("x", "execute"))
+		json.NewEncoder(os.Stdout).Encode(map[string]any{"empty_non_nil_keys_enabled": empty.Enabled(), "empty_non_nil_keys_matches": key.Matches(keyToken("x"), empty), "empty_non_nil_keys_help": empty.Help(), "no_keys_enabled": key.NewBinding().Enabled()})
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--motion-fixtures" {
@@ -546,6 +556,50 @@ func inputBindings(n int) {
 		}
 		measure("input/binding_"+item.name, max(n*10, 30000), operation, strconv.FormatUint(item.expected, 10), "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O")
 	}
+	for _, item := range []struct {
+		name, value string
+		enabled     bool
+		expected    uint64
+	}{
+		{"hit", "F12", true, 1}, {"miss", "other", true, 0}, {"disabled", "F12", false, 0},
+	} {
+		binding := key.NewBinding(key.WithKeys("ctrl+x", "F12"), key.WithHelp("ctrl+x/F12", "inspect"))
+		binding.SetEnabled(item.enabled)
+		operation := func() uint64 {
+			if key.Matches(keyToken(item.value), binding) {
+				return 1
+			}
+			return 0
+		}
+		if operation() != item.expected {
+			panic("custom token fixture")
+		}
+		measure("binding/value_"+item.name, max(n*10, 30000), operation, strconv.FormatUint(item.expected, 10), "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O")
+	}
+	measure("binding/construct", max(n*10, 30000), func() uint64 {
+		bindingSink = key.NewBinding(key.WithKeys("ctrl+x", "F12"), key.WithHelp("ctrl+x/F12", "inspect"))
+		help := bindingSink.Help()
+		return uint64(len(bindingSink.Keys()) + len(help.Key) + len(help.Desc))
+	}, "2,ctrl+x/F12,inspect,true", "construct binding with owned two-token vector/slice and short help metadata; retain result through black_box/global sink; borrowed static token text")
+	binding := key.NewBinding(key.WithKeys("ctrl+x", "F12"), key.WithHelp("ctrl+x/F12", "inspect"))
+	query := strings.Clone("F12")
+	if !key.Matches(keyToken(query), binding) {
+		panic("owned token fixture")
+	}
+	measure("binding/value_hit_owned", max(n*10, 30000), func() uint64 {
+		if key.Matches(keyToken(query), binding) {
+			return 1
+		}
+		return 0
+	}, "1", "two custom string tokens ctrl+x,F12; equal F12 query has distinct owned storage; borrowed equality; no query construction, formatting or I/O")
+	measure("binding/metadata", max(n*10, 30000), func() uint64 {
+		help := binding.Help()
+		enabled := 0
+		if binding.Enabled() {
+			enabled = 1
+		}
+		return uint64(len(binding.Keys()) + len(help.Key) + len(help.Desc) + enabled)
+	}, "2,ctrl+x/F12,inspect,true", "borrow enabled binding keys, help and enabled status; no mutation, formatting or I/O")
 }
 func motionFixtures() {
 	for _, d := range []float64{0, 0.2, 0.7, 0.999999, 1, 1.000001, 2, 100, 1e6} {

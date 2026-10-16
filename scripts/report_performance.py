@@ -132,6 +132,20 @@ if baseline.is_file() and baseline_report.is_file():
         "before": summary(before), "after": summary(after),
         "move_bytes_before": len(old_trace["sequences"][1].encode()),
         "move_bytes_after": len(cursor_traces[0]["sequences"][1].encode())}
+baseline = destination / "matea-key-before.jsonl"
+baseline_report = destination / "key-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    optimized = {}
+    for case in ("binding/construct", "binding/value_hit", "binding/value_miss", "binding/value_disabled"):
+        before, after = previous[case], records[0][case]
+        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        optimized[case] = {"before": summary(before), "after": summary(after)}
+    metadata["key_binding_optimization"] = {"before_raw": baseline.name,
+        "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
+        "before_report_sha256": digest(baseline_report), "cases": optimized}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -152,6 +166,7 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",
           "Text-input fixtures exclude View construction, clipboard I/O, validators and virtual-cursor commands in both harnesses. They include eight event pairs; Unicode rune-vs-grapheme single-step behavior is not compared.",
           "The text-input baseline retains samples/source hashes before ASCII query-buffer reuse. Unicode filtering keeps contextual lowercase semantics; that path is not covered by the ASCII allocation claim.",
+          "Key bindings add three custom-token matches plus construction and metadata access. Existing-string custom tokens do not format/allocate in either language. Constructors retain their result through black_box/global storage; Go escape analysis and Rust ownership differ. Short help storage is inline after the retained baseline.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",

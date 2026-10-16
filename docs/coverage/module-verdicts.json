@@ -52,10 +52,31 @@
     {
       "reference": "bubbles",
       "source_group": "key",
-      "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-widgets/src/key.rs",
+        "crates/matea-widgets/src/lib.rs",
+        "docs/evidence/key-source-edges.json"
+      ],
+      "performance_cases": [
+        "input/binding_ctrl_x",
+        "input/binding_f12",
+        "input/binding_miss",
+        "input/binding_disabled",
+        "input/binding_repeat",
+        "input/binding_release",
+        "binding/value_hit",
+        "binding/value_miss",
+        "binding/value_disabled",
+        "binding/construct",
+        "binding/value_hit_owned",
+        "binding/metadata"
+      ],
+      "notes": "Go constructor options map to values/fields, Help to raw metadata plus actionable borrowed help. Empty non-nil source slice behavior deliberately corrected. fmt.Stringer identity can be explicitly formatted before token lookup. Timed sequences are an absent-upstream feature request, not claimed; physical/associated keyboard data remain transport pending.",
+      "declarations_reviewed": 17,
+      "source_audit": "docs/key-bindings-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Twelve finite matched workloads agree. Typed events avoid formatting; borrowed tokens test shared and distinct owned storage. Short metadata construction: 3->1 allocations, p50 76.47->29.43ns on measured host. Current case p50/p95 below source in these fixtures; not universal or real-terminal parity."
     },
     {
       "reference": "bubbles",

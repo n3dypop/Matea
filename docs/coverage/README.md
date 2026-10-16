@@ -45,10 +45,10 @@ full issue bodies stay in a temporary research cache, outside the repository.
 The complete remaining execution order is in `../coverage-plan.md`. Normal CI
 validates links and current code; it does not pass the strict coverage gate.
 
-`module-verdicts.json` records Harmonica and Bubbles paginator as implemented and
-measured within their documented Rust contracts; 92 groups remain pending. The
-two reviewed groups cover 49 declarations and have explicit correctness paths,
-matched cases, source audits, deviations and limits. Forty total workloads
+`module-verdicts.json` records Harmonica, Bubbles paginator and key as implemented
+and measured within their documented Rust contracts; 91 groups remain pending.
+The three reviewed groups cover 66 declarations and have explicit correctness paths,
+matched cases, source audits, deviations and limits. Forty-six total workloads
 do not establish all-reference or universal performance parity. The strict gate
 validates these links and additionally checks per-module correctness/performance,
 issue-report dispositions and source-marker assessments, rather than relying only
@@ -62,3 +62,9 @@ with clipping, composed layout coordinates and cursor-only transport tests. Whol
 source Cursor types remain partial because their appearance fields are pending.
 The source inventory regeneration keeps
 manual marker assessments only when their fixed-SHA URLs still match.
+
+Key bindings review all 17 declarations, with generic borrowed Eq tokens, custom
+help/enable/unbind and short inline metadata. Twelve matched workloads include
+shared/distinct string storage, construction and getters. Empty retained storage
+is disabled deliberately. Timed vim-style sequences are an upstream extension
+request rather than a pinned public feature; see `../key-bindings-audit.md`.

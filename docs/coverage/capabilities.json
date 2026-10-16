@@ -271,7 +271,7 @@
     },
     {
       "id": "widgets/keybindings",
-      "status": "partial",
+      "status": "implemented",
       "reference_ids": [
         "f33c8ce8eddb3965b438",
         "c1a594b0fc8746f248c8",
@@ -295,10 +295,11 @@
         "crates/matea-widgets/src/key.rs"
       ],
       "tests": [
+        "crates/matea-widgets/src/key.rs",
         "crates/matea-widgets/src/lib.rs"
       ],
       "performance": "docs/performance.md",
-      "notes": "Typed matching, repeat/release policy, enable/unbind/help and multi-binding composition implemented. Public fields replace Go setter options. Six matched Bubbles/UV fixtures; arbitrary fmt.Stringer/associated-text chords and complete module verdict remain pending."
+      "notes": "All 17 public declarations reviewed: options/setters/getters via generic Binding<K=Key> and fields, enabled/unbind/help, typed down-event and borrowed Eq custom-token/multi-binding matching. Six keyboard plus six custom/construct/metadata workloads. Empty retained vectors disable help; no automatic text formatting or built-in timed sequences. Finite evidence in key-bindings-audit.md, not universal latency parity."
     },
     {
       "id": "input/crossterm-events",
