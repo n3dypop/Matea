@@ -11,10 +11,11 @@ cargo run -p matea --example effects
 cargo run -p matea --example motion
 cargo run -p matea --example input
 cargo run -p matea --example pagination
+cargo run -p matea --example help
 cargo run -p matea-example-external-widget
 ```
 
-All nine accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All ten accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -44,6 +45,12 @@ The Python smoke suite compares the dashboard against its reviewed plain golden 
 Pagination: left/h or right/l changes the tea page, d switches Arabic/dots, and q
 exits. Custom formatting, keys, empty data and bounded active-page dots are covered
 by the component tests; the example also has a Unix PTY navigation test.
+
+Help: `?` switches short/full display, `d` changes the action binding's enabled
+state and its displayed help together, and `q` exits. Borrow metadata into HelpItem
+per view call and configure Help.width for whole-item fitting. Gap colors/attributes
+can be styled independently. Rich per-field decorators remain pending; see the
+[help audit](key-help-audit.md).
 
 The form offers tea-name completion: type a prefix in Favorite tea, then Tab to
 accept a suggestion before moving focus. Up/down selects a match. TextInput also

@@ -35,6 +35,7 @@ jobs:
       - run: python scripts/check_coverage.py
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/test_rustdoc_import.py
+      - run: python scripts/test_color_trace.py
       - run: python -c "from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)"
       - run: cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json
         shell: bash
@@ -46,7 +47,7 @@ jobs:
         shell: bash
         env:
           NO_COLOR: "1"
-      - run: python scripts/check_color_trace.py artifacts/matea-color-trace.json
+      - run: python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"

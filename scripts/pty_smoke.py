@@ -40,8 +40,9 @@ def screen_text(data):
         body = match.group()[2:-1].decode("ascii")
         command = match.group()[-1:]
         if command == b"H":
-            row, col = (body or "1;1").split(";")
-            y, x = int(row) - 1, int(col) - 1
+            values = body.split(";")
+            y = int(values[0] or "1") - 1
+            x = int(values[1] or "1") - 1 if len(values) > 1 else 0
         elif command in (b"A", b"B", b"C", b"D"):
             distance = int(body or "1") or 1
             if command == b"A": y = max(0, y - distance)

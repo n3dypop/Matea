@@ -15,10 +15,19 @@ def replay(trace):
     x = y = attrs = 0
     fg = bg = None
     visible, last = True, " "
+    top, bottom = trace.get("scroll_region", [0, height - 1])
+    assert 0 <= top < bottom < height
+    def linefeed():
+        nonlocal y
+        if y == bottom:
+            cells[top:bottom + 1] = cells[top + 1:bottom + 1] + [[(" ", fg, bg, attrs) for _ in range(width)]]
+        else:
+            y = min(height - 1, y + 1)
     def put(char):
         nonlocal x, y, last
         if x == width:
-            x, y = 0, min(height - 1, y + 1)
+            x = 0
+            linefeed()
         cells[y][x] = (char, fg, bg, attrs)
         x += 1
         last = char
@@ -28,9 +37,7 @@ def replay(trace):
             char = stream[offset]
             if char != "\x1b":
                 if char == "\r": x = 0
-                elif char == "\n":
-                    assert y + 1 < height, "fixture must not scroll below the viewport"
-                    y += 1
+                elif char == "\n": linefeed()
                 elif char == "\b": x = max(0, x - 1)
                 else:
                     assert " " <= char <= "~", repr(char)
@@ -53,8 +60,8 @@ def replay(trace):
                 y = (values[0] or 1) - 1
                 x = (values[1] or 1) - 1 if len(values) > 1 else 0
             elif final in "ABCD":
-                if final == "A": y = max(0, y - n)
-                if final == "B": y = min(height - 1, y + n)
+                if final == "A": y = max(top if y >= top else 0, y - n)
+                if final == "B": y = min(bottom if y <= bottom else height - 1, y + n)
                 if final == "C": x = min(width - 1, x + n)
                 if final == "D": x = max(0, x - n)
             elif final == "G": x = n - 1
@@ -103,7 +110,7 @@ def replay(trace):
     return cells, visible
 
 
-def verify(document):
+def verify(document, nondefault_margins=False):
     assert {t["profile"] for t in document["traces"]} == {"ansi16", "ansi256", "truecolor", "none"}
     for trace in document["traces"]:
         assert (trace["width"], trace["height"]) == (80, 24)
@@ -111,7 +118,8 @@ def verify(document):
                                   "truecolor": (("rgb", 95, 135, 175), ("rgb", 175, 95, 135)),
                                   "none": (None, None)}[trace["profile"]]
         for end in range(1, len(trace["sequences"]) + 1):
-            cells, visible = replay({**trace, "sequences": trace["sequences"][:end]})
+            configuration = {"scroll_region": [3, 7]} if nondefault_margins else {}
+            cells, visible = replay({**trace, **configuration, "sequences": trace["sequences"][:end]})
             assert not visible
             for y, row in enumerate(cells):
                 for x, cell in enumerate(row):
@@ -128,6 +136,7 @@ def main():
     parser.add_argument("traces", type=Path, nargs="*")
     parser.add_argument("--probe", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--nondefault-margins", action="store_true")
     args = parser.parse_args()
     assert args.traces or args.probe, "provide trace paths or a built probe"
     if args.probe:
@@ -137,12 +146,15 @@ def main():
         output = subprocess.check_output([str(args.probe.resolve()), "--color-trace"], env=env)
         document = json.loads(output)
         verify(document)
+        verify(document, nondefault_margins=True)
         if args.output:
             args.output.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
         print("NO_COLOR=1: explicit four-profile capabilities preserved in a fresh process")
     for path in args.traces:
         document = json.loads(path.read_text(encoding="utf-8"))
         verify(document)
+        if args.nondefault_margins:
+            verify(document, nondefault_margins=True)
         print(f"{path.name}: exact glyph/palette/background/hidden-cursor fixtures")
 
 

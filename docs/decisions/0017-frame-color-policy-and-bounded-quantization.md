@@ -33,12 +33,18 @@ intermediate run rather than discarding it. The direct paths remove the observed
 regression. Cache-thrashing and arbitrary palette distributions remain unmeasured;
 eight entries are a bounded starting policy, not a universal optimum.
 
-For a known cursor, the next row's column zero uses CRLF, including a delayed-wrap
-position. CR cancels pending wrap before LF; requested coordinates are within the
-surface, so the encoder never advances below its last row. Unknown position uses
-absolute addressing; the home anchor uses CSI H with default parameters. Recovery
-still resets physical pen, cursor and visibility. Regression tests include the
-bottom row, and independent replay rejects scrolling below the fixture viewport.
+Follow-up correction: in-bounds coordinates do not make CRLF safe when an existing
+scroll region ends above the viewport bottom. The initial shortcut scrolled and
+mispainted rows under margins 3–7; [the retained reproduction](../evidence/row-margin-before.json)
+records the failure. CUU/CUD can also stop at vertical margins. All vertical changes
+now use absolute addressing; a column-zero CUP omits its default second parameter,
+and home uses CSI H. Horizontal CR/BS/relative shortcuts remain. Existing vertical
+margins no longer affect this path. Origin and horizontal-margin modes must be off;
+normalizing/querying those modes remains pending. Recovery still resets physical
+pen, cursor and visibility. Independent replay now models actual LF scrolling and
+margin clamping, and validates Matea's initial/recovered colored frames under both
+default and nondefault vertical margins. These are synthetic checks, not emulator
+compatibility claims. [Primary terminal sequence semantics](https://xtermjs.org/docs/api/vtfeatures/).
 
 Four matched full-frame cases cover ANSI16, ANSI256, truecolor and monochrome.
 Both implementations recover unknown cursor/style/visibility, retain their color
@@ -51,9 +57,11 @@ color algorithms and configurable terminal palettes are not equated. Retain all
 before/after p50/p95, allocation and output-byte evidence.
 
 The retained ANSI256 fixture changes from p50 1,575,277.5 ns / p95 1,581,835 ns
-to 28,472.5 / 31,150 ns, with measured allocations 2 to 0. All four profiles use
-zero measured allocations after these combined changes. CRLF/home reduce each
-full-frame fixture by 90 bytes; monochrome is 1,655 bytes in both implementations.
+to 28,780.84 / 29,974.16 ns after the margin correction, with measured allocations
+2 to 0. All four profiles use zero measured allocations after these combined
+changes. Short absolute row/home addressing reduces each full-frame fixture by
+41 bytes; monochrome is 1,704 bytes versus 1,655 upstream. The initial 90-byte
+reduction was only valid under default margins and is superseded by this correction.
 These are one-host warm-cache memory-sink results, not real-terminal latency or
 full-module parity. See [the audit](../frame-color-audit.md) and raw distributions.
 

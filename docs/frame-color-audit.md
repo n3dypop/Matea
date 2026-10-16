@@ -44,13 +44,26 @@ None/TrueColor paths bypass palette lookup entirely.
 
 ## Matched measurement
 
+Current follow-up: row changes use absolute CUP with a default column parameter,
+avoiding the earlier CRLF scrolling defect and CUU/CUD margin clamping. ANSI256 is
+p50 28,780.84 / p95 29,974.16 ns; all four profiles still measure zero allocations.
+Full-frame bytes are 1,718 / 1,729 / 1,744 / 1,704 for ANSI16/ANSI256/TrueColor/None.
+The last is 49 bytes above upstream's 1,655. The earlier 90-byte reduction is
+superseded by a safe 41-byte reduction relative to the pre-optimization baseline.
+See current [report.json](evidence/performance/2026-10-16/report.json), including
+the retained failing trace and nondefault-margin recovery checks. Origin mode and
+horizontal-margin mode remain required off; they are not queried automatically.
+
 Both public writers repaint an existing 80×24 surface containing twenty uniform
 80-cell ASCII rows, recover unknown cursor/style/visibility, preserve warmed
 logical color caches and use reused memory sinks. The Go probe resizes its renderer
 and explicitly resets pen/visibility before Redraw. Selected RGB colors produce
 identical profile outputs; arbitrary nearest-color distance metrics are excluded.
 
-| Profile | Matea before p50 / p95 ns | Matea after p50 / p95 ns | allocations before / after | frame bytes M / U after |
+The following is the initial default-margin checkpoint, retained for provenance;
+its CRLF row shortcut was subsequently corrected as described above.
+
+| Profile | Matea before p50 / p95 ns | initial checkpoint p50 / p95 ns | allocations before / checkpoint | frame bytes M / U checkpoint |
 | --- | ---: | ---: | ---: | ---: |
 | ANSI16 | 90,303.32 / 93,142.5 | 28,615 / 30,347.5 | 2 / 0 | 1,669 / 1,875 |
 | ANSI256 | 1,575,277.5 / 1,581,835 | 28,472.5 / 31,150 | 2 / 0 | 1,680 / 2,095 |
@@ -69,10 +82,13 @@ published separately as the evolving report.json.
 The first cache version regressed TrueColor/None p50 about 8/9 percent; the direct
 paths corrected that measured regression. No samples were discarded.
 
-CRLF first cancels delayed wrap, then advances to a valid next row. Bottom-row
-same-row moves use CR; unknown positions use absolute addressing. Independent
-replay rejects scrolling below the viewport. Shortened home addressing also saves
-three bytes in the existing ASCII and cursor traces; update/move bytes stay 2/4.
+The original replay only used full-screen margins and missed that CRLF can scroll
+inside a smaller existing region. The corrected replay models that scrolling and
+retains an observed wrong blank cell at row eight. All vertical moves now address
+absolutely, including known positions; same-row moves can use horizontal shortcuts.
+Shortened home addressing saves three bytes in the existing ASCII/cursor traces;
+update/move bytes stay 2/4. Both timed probes still use default margins, with Matea's
+nondefault-margin check recorded separately as additional correctness evidence.
 
 Remaining: adversarial cache distributions, custom terminal palettes, all style
 attributes, arbitrary color adaptation equivalence, real terminal I/O and native

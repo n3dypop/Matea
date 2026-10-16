@@ -64,10 +64,11 @@ Direct value serialization fixes deterministic output without changing global st
 A bounded per-writer palette cache avoids repeated per-cell search and the reference
 colorprofile's growing process-global map. Four matched profiles include retained
 cache-only regressions and their direct-path correction. All four now measure zero
-allocations; ANSI256 p50 changes from 1.58 ms to 28.47 us in this one memory-sink
-fixture. CRLF cancels pending wrap for a known next row and reduces full-frame
-traffic by 90 bytes. Unknown positions remain absolute; bottom-row and independent
-replay checks guard against scrolling. Other workloads and real terminals remain
+allocations; ANSI256 p50 changes from 1.58 ms to 28.78 us in this one memory-sink
+fixture. A follow-up found the CRLF shortcut could scroll inside existing vertical
+margins. The retained failing trace reproduces it; vertical changes now use absolute
+CUP, including a shorter default-column form. This saves 41 bytes relative to the
+original frame baseline, and nondefault margins are replayed independently. Other workloads and real terminals remain
 pending; this is not full terminal/style parity.
 
 The [key help audit](key-help-audit.md) executes the pinned width-overflow branch

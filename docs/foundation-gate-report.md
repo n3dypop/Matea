@@ -29,7 +29,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 今回のローカル結果は89 testsと1 compile-only doc test成功、10サンプルsnapshot成功、Unix PTY 14ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
-色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.47µs、測定割り当て2→0回、無彩色の出力は1,745→1,655バイト（参照元と同量）です。途中で観測したTrueColor／無彩色の性能後退も保存し、直接分岐で改善しています。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
+色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.78µs、測定割り当て2→0回です。行移動のCRLF短縮には、既存のスクロール領域内で画面を動かす不具合があり、失敗traceを保存して絶対指定へ修正しました。現在の無彩色出力は1,745→1,704バイトで、参照元の1,655バイトより49バイト多くなります。途中の性能後退と、標準／独自スクロール領域の再生検証も記録。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
 
 キー操作ヘルプを追加し、27宣言を対応付けました。短縮／複数列表示、無効bindingの除外、独立した余白スタイルとセル幅制限を実装。参照元の狭い幅でのはみ出しを再現し、#571の無装飾スペースを改善しました。平文4ケースは出力一致、割り当ては短縮5／4→1回、複数列9→5回です。Unicodeの安全性と描画器の幅に合わせた経路は従来の平文処理より遅くなったため、その測定も保存しました。Lip Glossの任意の装飾・折り返し等は未対応で、helpモジュール全体は部分対応のままです。[監査](key-help-audit.md)、[ADR 0018](decisions/0018-borrowed-and-width-bounded-key-help.md)。
 
@@ -43,7 +43,7 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 
 ## F5の前に残る作業
 
-公開API収集の初回[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/38850278693)では参照元6ジョブが成功しました。[結果](evidence/compiler-audit-ci-run.json)。本体Windows検証は監査JSONのCRLF変換によるhash不一致で失敗し、LF固定・取り込み正規化・回帰テストを追加しました。修正コミット `a6d3b81d1d10a9f773e79a2c67f2edbc19116b12` の[再実行](https://github.com/n3dypop/Matea/actions/runs/38851892735)は参照元6・本体3 OS・MSRVの計10ジョブ成功。[証拠](evidence/compiler-audit-fixed-ci-run.json)。現在の20構成・6,902レビューキーは未対応付けで、全feature／backend／依存閉包を示すものではありません。色出力 `f9c4b0c991d36d4a26fe012965367441078db1db` は[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38854767940)成功。[証拠](evidence/color-ci-run.json)。ヘルプの新しい変更のCIは別途記録します。
+公開API収集の初回[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/38850278693)では参照元6ジョブが成功しました。[結果](evidence/compiler-audit-ci-run.json)。本体Windows検証は監査JSONのCRLF変換によるhash不一致で失敗し、LF固定・取り込み正規化・回帰テストを追加しました。修正コミット `a6d3b81d1d10a9f773e79a2c67f2edbc19116b12` の[再実行](https://github.com/n3dypop/Matea/actions/runs/38851892735)は参照元6・本体3 OS・MSRVの計10ジョブ成功。[証拠](evidence/compiler-audit-fixed-ci-run.json)。現在の20構成・6,902レビューキーは未対応付けで、全feature／backend／依存閉包を示すものではありません。色出力 `f9c4b0c991d36d4a26fe012965367441078db1db` は[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38854767940)成功。[証拠](evidence/color-ci-run.json)。ヘルプ `456308057196036ce8106823273da6bae27f7c2f` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856048761)成功。[証拠](evidence/help-ci-run.json)。スクロール領域の追補修正のCIは別途記録します。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

@@ -52,6 +52,16 @@ assert all(replay(trace, include_cursor=True) == cursor_expected for trace in cu
 color_traces = [json.loads((destination / name).read_text()) for name in names[8:10]]
 for trace in color_traces:
     verify_colors(trace)
+verify_colors(color_traces[0], nondefault_margins=True)
+margin_before_path = destination / "matea-color-before-margin-trace.json"
+margin_proof = json.loads((ROOT / "docs/evidence/row-margin-before.json").read_text())
+assert digest(margin_before_path) == margin_proof["before_trace_sha256"]
+try:
+    verify_colors(json.loads(margin_before_path.read_text()), nondefault_margins=True)
+except AssertionError:
+    pass
+else:
+    raise AssertionError("old margin regression no longer reproduces")
 records = []
 for name in names[:2]:
     records.append({r["case"]: r for r in map(json.loads, (destination / name).read_text().splitlines())})
@@ -96,6 +106,14 @@ metadata = {"schema": 1, "recorded_at_utc": datetime.now(timezone.utc).isoformat
                        "Both current terminal encoders retain cursor/style state; stateless helper measured only in historical baseline",
                        "Old baseline files predate motion cases and anti-specialization changes; use for render/transport only"],
             "cases": comparison, "full_reference_parity": False}
+metadata["vertical_margin_recovery"] = {
+    "before_proof": "docs/evidence/row-margin-before.json",
+    "before_trace": margin_before_path.name, "before_trace_sha256": digest(margin_before_path),
+    "after_trace": "matea-color-trace.json", "after_nondefault_margins": [3, 7],
+    "after_all_profiles_and_recovery_passed": True,
+    "preconditions": "origin mode off; horizontal-margin mode off; finite replay, not real-emulator compatibility",
+    "timing_comparison": "Both timed harnesses use default margins; extra Matea margin replay is a separate correctness regression, not a cross-module parity claim",
+}
 baseline = destination / "matea-motion-pagination-before.jsonl"
 baseline_report = destination / "motion-pagination-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
@@ -224,7 +242,7 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "The native-cursor fixture also reuses unchanged cells. Four independently replayed states check cell contents, position and visibility; shape/color and terminal I/O are excluded.",
           "Colored full-frame cases force repaint of twenty 80-cell ASCII rows on an 80x24 frame. Four output traces independently check glyphs, palette/RGB colors, background erasure and hidden cursor. RGB inputs deliberately choose matching profile outputs; they do not compare arbitrary nearest-color algorithms.",
           "Explicit color profiles remain deterministic under NO_COLOR=1. A bounded eight-style cache removes repeated palette search without heap/global state. Retained intermediate samples include truecolor/none regressions, corrected by direct level fast paths; before/after distributions and frame bytes are in report.json.",
-          "Known-position same-axis cursor moves select shorter relative commands. The retained baseline records 6 bytes per move, compared with 4 after the change and 6 for the pinned Ultraviolet public MoveTo fixture. Unknown positions reanchor absolutely. A known next-row start uses CRLF, cancelling delayed wrap first; no row advance is issued below the surface.",
+          "Known-position horizontal cursor moves select shorter commands. The retained baseline records 6 bytes per move, compared with 4 after the change and 6 for pinned Ultraviolet. Vertical moves use absolute addressing: LF can scroll and CUU/CUD can clamp at existing margins. Column-zero absolute addresses omit the default column parameter. Matea's colored traces additionally replay with nondefault vertical margins; benchmark comparisons use default margins in both.",
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",
           "Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construction share the same finite fixture; checks remain enabled in both checked harnesses.",
           "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",

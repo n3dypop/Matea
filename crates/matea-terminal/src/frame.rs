@@ -1,6 +1,6 @@
 use super::{Capabilities, ansi::command, set_style};
 use crossterm::{
-    cursor::{Hide, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, Show},
+    cursor::{Hide, MoveLeft, MoveRight, MoveTo, Show},
     terminal::{Clear, ClearType},
 };
 use matea_render::Surface;
@@ -52,6 +52,8 @@ impl QuantizedStyles {
 /// previous Surface; call invalidate after external output, graphics or cursor
 /// movement. Encodes cursor visibility and position without acquiring a terminal
 /// or writing on Drop. The terminal session owns restoration.
+/// Coordinates assume origin mode and horizontal-margin mode are disabled.
+/// Existing vertical scroll regions do not affect absolute row addressing.
 #[derive(Default, Debug)]
 pub struct FrameEncoder {
     cursor: Option<(u16, u16)>,
@@ -89,12 +91,6 @@ impl FrameEncoder {
         }
         match self.cursor {
             Some((_, old_y)) if y == old_y && x == 0 => w.write_all(b"\r")?,
-            // CR cancels delayed wrap before LF advances one valid surface row.
-            // Callers only request in-bounds cells, so this cannot scroll below
-            // the viewport; unknown positions still need an absolute anchor.
-            Some((_, old_y)) if x == 0 && old_y.checked_add(1) == Some(y) => {
-                w.write_all(b"\r\n")?
-            }
             Some((old_x, old_y))
                 if y == old_y && old_x < width && x.checked_add(1) == Some(old_x) =>
             {
@@ -109,16 +105,10 @@ impl FrameEncoder {
                     command(w, MoveLeft(old_x - x))?;
                 }
             }
-            Some((old_x, old_y))
-                if old_x < width && x == old_x && relative_is_shorter(y.abs_diff(old_y), x, y) =>
-            {
-                if y > old_y {
-                    command(w, MoveDown(y - old_y))?;
-                } else {
-                    command(w, MoveUp(old_y - y))?;
-                }
-            }
+            // LF may scroll, and CUU/CUD may clamp at vertical margins even
+            // with origin mode off. Absolute row addressing avoids both.
             _ if x == 0 && y == 0 => w.write_all(b"\x1b[H")?,
+            _ if x == 0 => write!(w, "\x1b[{}H", u32::from(y) + 1)?,
             _ => command(w, MoveTo(x, y))?,
         }
         self.cursor = Some((x, y));
@@ -365,8 +355,8 @@ mod tests {
         for (cursor, expected) in [
             (Cursor::new(4, 3), &b"\x1b[2C"[..]),
             (Cursor::new(2, 3), &b"\x1b[2D"[..]),
-            (Cursor::new(2, 5), &b"\x1b[2B"[..]),
-            (Cursor::new(2, 3), &b"\x1b[2A"[..]),
+            (Cursor::new(2, 5), &b"\x1b[6;3H"[..]),
+            (Cursor::new(2, 3), &b"\x1b[4;3H"[..]),
             (Cursor::new(1, 3), &b"\x08"[..]),
             (Cursor::new(0, 3), &b"\r"[..]),
             (Cursor::new(2, 4), &b"\x1b[5;3H"[..]),
@@ -404,7 +394,7 @@ mod tests {
         assert!(out.windows(4).any(|w| w == b"aaaa"));
     }
     #[test]
-    fn row_advances_cancel_wrap_and_bottom_row_moves_do_not_scroll() {
+    fn row_changes_address_absolutely_without_scrolling_or_margin_clamping() {
         let mut encoder = FrameEncoder::default();
         let mut out = Vec::new();
         encoder.position(&mut out, 0, 0, 80).unwrap();
@@ -413,7 +403,7 @@ mod tests {
             encoder.cursor = Some((old_x, 22));
             out.clear();
             encoder.position(&mut out, 0, 23, 80).unwrap();
-            assert_eq!(out, b"\r\n");
+            assert_eq!(out, b"\x1b[24H");
             encoder.cursor = Some((80, 23));
             out.clear();
             encoder.position(&mut out, 0, 23, 80).unwrap();
@@ -422,7 +412,7 @@ mod tests {
         encoder.cursor = None;
         out.clear();
         encoder.position(&mut out, 0, 23, 80).unwrap();
-        assert_eq!(out, b"\x1b[24;1H");
+        assert_eq!(out, b"\x1b[24H");
     }
     #[test]
     fn io_failure_invalidates_cache_and_capability_change_repaints() {

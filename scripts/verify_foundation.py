@@ -27,6 +27,7 @@ checks = [
     ("coverage-integrity", [sys.executable, str(root / "scripts/check_coverage.py")]),
     ("rustdoc-audit-tests", [sys.executable, str(root / "scripts/test_rustdoc_exports.py")]),
     ("rustdoc-import-tests", [sys.executable, str(root / "scripts/test_rustdoc_import.py")]),
+    ("color-oracle-tests", [sys.executable, str(root / "scripts/test_color_trace.py")]),
     ("build-color-probe", ["cargo", "build", "--locked", "--release", "-p", "matea-perf-probe"]),
     ("color-trace", [sys.executable, str(root / "scripts/check_color_trace.py"),
                      "--probe", str(root / "target/release" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")),
