@@ -43,7 +43,13 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 
 ## F5の前に残る作業
 
-公開API収集の初回[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/38850278693)では参照元6ジョブが成功しました。[結果](evidence/compiler-audit-ci-run.json)。本体Windows検証は監査JSONのCRLF変換によるhash不一致で失敗し、LF固定・取り込み正規化・回帰テストを追加しました。修正コミット `a6d3b81d1d10a9f773e79a2c67f2edbc19116b12` の[再実行](https://github.com/n3dypop/Matea/actions/runs/38851892735)は参照元6・本体3 OS・MSRVの計10ジョブ成功。[証拠](evidence/compiler-audit-fixed-ci-run.json)。現在の20構成・6,902レビューキーは未対応付けで、全feature／backend／依存閉包を示すものではありません。色出力 `f9c4b0c991d36d4a26fe012965367441078db1db` は[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38854767940)成功。[証拠](evidence/color-ci-run.json)。ヘルプ `456308057196036ce8106823273da6bae27f7c2f` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856048761)成功。[証拠](evidence/help-ci-run.json)。スクロール領域の追補修正のCIは別途記録します。
+公開API収集の初回[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/38850278693)では参照元6ジョブが成功しました。[結果](evidence/compiler-audit-ci-run.json)。本体Windows検証は監査JSONのCRLF変換によるhash不一致で失敗し、LF固定・取り込み正規化・回帰テストを追加しました。
+
+修正コミット `a6d3b81d1d10a9f773e79a2c67f2edbc19116b12` の[再実行](https://github.com/n3dypop/Matea/actions/runs/38851892735)は参照元6・本体3 OS・MSRVの計10ジョブ成功。[証拠](evidence/compiler-audit-fixed-ci-run.json)。現在の20構成・6,902レビューキーは未対応付けで、全feature／backend／依存閉包を示すものではありません。
+
+色出力 `f9c4b0c991d36d4a26fe012965367441078db1db` は[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38854767940)成功。[証拠](evidence/color-ci-run.json)。ヘルプ `456308057196036ce8106823273da6bae27f7c2f` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856048761)成功。[証拠](evidence/help-ci-run.json)。
+
+最新のスクロール領域の追補修正 `80b3570e18e8ed3849006e80ecac4b30bfcb35a0` は[Linux・Windows・macOS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856755912)に成功しました。[ジョブ・step証拠](evidence/margin-ci-run.json)。独立再生oracleの3回帰テストと、独自スクロール領域での初回・復旧出力も通常CIへ含めています。参照元再収集ジョブはこの通常runではskipで、上記の専用runが証拠です。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。
