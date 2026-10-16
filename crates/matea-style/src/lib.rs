@@ -119,9 +119,19 @@ impl Style {
         self.reverse = true;
         self
     }
+    #[inline]
     pub fn adapt(mut self, level: ColorLevel) -> Self {
-        self.fg = self.fg.adapt(level);
-        self.bg = self.bg.adapt(level);
+        match level {
+            ColorLevel::None => {
+                self.fg = Color::Default;
+                self.bg = Color::Default;
+            }
+            ColorLevel::TrueColor => {}
+            _ => {
+                self.fg = self.fg.adapt(level);
+                self.bg = self.bg.adapt(level);
+            }
+        }
         self
     }
 }

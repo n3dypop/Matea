@@ -87,7 +87,7 @@ fn measure(
     semantics: &str,
 ) {
     let start = Instant::now();
-    black_box(operation());
+    let first_return_value = black_box(operation());
     let cold = start.elapsed().as_nanos();
     for _ in 0..100 {
         black_box(operation());
@@ -106,7 +106,7 @@ fn measure(
     black_box(operation());
     TRACK.store(false, Ordering::Relaxed);
     println!(
-        "{{\"case\":{},\"semantics\":{},\"cold_ns\":{cold},\"iterations_per_sample\":{iterations},\"samples_ns\":[{}],\"allocations\":{},\"allocated_bytes\":{},\"output\":{}}}",
+        "{{\"case\":{},\"semantics\":{},\"cold_ns\":{cold},\"first_return_value\":{first_return_value},\"iterations_per_sample\":{iterations},\"samples_ns\":[{}],\"allocations\":{},\"allocated_bytes\":{},\"output\":{}}}",
         quote(id),
         quote(semantics),
         samples
@@ -128,6 +128,10 @@ fn main() {
         cursor_trace();
         return;
     }
+    if std::env::args().any(|arg| arg == "--color-trace") {
+        colored_frames(0);
+        return;
+    }
     let iterations = std::env::var("MATEA_PERF_ITERATIONS")
         .ok()
         .and_then(|n| n.parse().ok())
@@ -137,6 +141,7 @@ fn main() {
     pagination(iterations);
     text_input(iterations);
     cursor_encoding(iterations);
+    colored_frames(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -270,6 +275,78 @@ fn main() {
             &expected,
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
+    }
+}
+fn colored_frames(iterations: usize) {
+    let mut traces = Vec::new();
+    for (profile, level, foreground, background) in [
+        (
+            "ansi16",
+            ColorLevel::Ansi16,
+            Color::Rgb(255, 255, 255),
+            Color::Rgb(0, 0, 0),
+        ),
+        (
+            "ansi256",
+            ColorLevel::Ansi256,
+            Color::Rgb(95, 135, 175),
+            Color::Rgb(175, 95, 135),
+        ),
+        (
+            "truecolor",
+            ColorLevel::TrueColor,
+            Color::Rgb(95, 135, 175),
+            Color::Rgb(175, 95, 135),
+        ),
+        (
+            "none",
+            ColorLevel::None,
+            Color::Rgb(95, 135, 175),
+            Color::Rgb(175, 95, 135),
+        ),
+    ] {
+        let caps = Capabilities {
+            color: level,
+            unicode: true,
+            reduced_motion: true,
+        };
+        let text = vec!["a".repeat(80); 20].join("\n");
+        let frame = View::styled(text, Style::default().fg(foreground).bg(background))
+            .render(Size::new(80, 24))
+            .unwrap();
+        let mut encoder = FrameEncoder::default();
+        let mut output = Vec::with_capacity(8192);
+        encoder.write(&mut output, &frame, None, caps).unwrap();
+        if iterations == 0 {
+            let initial = quote(std::str::from_utf8(&output).unwrap());
+            output.clear();
+            encoder.invalidate();
+            encoder.write(&mut output, &frame, None, caps).unwrap();
+            traces.push(format!(
+                "{{\"profile\":{},\"width\":80,\"height\":24,\"sequences\":[{},{}]}}",
+                quote(profile),
+                initial,
+                quote(std::str::from_utf8(&output).unwrap())
+            ));
+        } else {
+            measure(
+                &format!("terminal/colored_full_{profile}_80x24"),
+                (iterations / 20).max(50),
+                || {
+                    output.clear();
+                    encoder.invalidate();
+                    encoder.write(&mut output, &frame, None, caps).unwrap();
+                    output.len() as u64
+                },
+                "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+                &format!(
+                    "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; {profile}; hidden cursor; reused memory sink; no terminal I/O"
+                ),
+            );
+        }
+    }
+    if iterations == 0 {
+        println!("{{\"traces\":[{}]}}", traces.join(","));
     }
 }
 fn cursor_trace() {

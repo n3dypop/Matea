@@ -15,7 +15,6 @@ pub use frame::FrameEncoder;
 mod signals_unix;
 use crossterm::{
     event, execute,
-    style::{Attribute, SetAttribute, SetBackgroundColor, SetForegroundColor},
     terminal::{self, Clear, ClearType},
 };
 use matea_core::{Event, Input, KeyCode, Model, Modifiers, Runtime};
@@ -359,48 +358,22 @@ impl Drop for Native {
     }
 }
 
-fn color(c: Color) -> crossterm::style::Color {
-    use crossterm::style::Color as C;
-    match c {
-        Color::Default => C::Reset,
-        Color::Rgb(r, g, b) => C::Rgb { r, g, b },
-        Color::Indexed(n) => match n {
-            0 => C::Black,
-            1 => C::DarkRed,
-            2 => C::DarkGreen,
-            3 => C::DarkYellow,
-            4 => C::DarkBlue,
-            5 => C::DarkMagenta,
-            6 => C::DarkCyan,
-            7 => C::Grey,
-            8 => C::DarkGrey,
-            9 => C::Red,
-            10 => C::Green,
-            11 => C::Yellow,
-            12 => C::Blue,
-            13 => C::Magenta,
-            14 => C::Cyan,
-            15 => C::White,
-            _ => C::AnsiValue(n),
-        },
-    }
-}
 fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
-    ansi::command(w, SetAttribute(Attribute::Reset))?;
+    w.write_all(b"\x1b[0m")?;
     if s.fg != Color::Default {
-        ansi::command(w, SetForegroundColor(color(s.fg)))?;
+        ansi::color(w, s.fg, false)?;
     }
     if s.bg != Color::Default {
-        ansi::command(w, SetBackgroundColor(color(s.bg)))?;
+        ansi::color(w, s.bg, true)?;
     }
     if s.bold {
-        ansi::command(w, SetAttribute(Attribute::Bold))?;
+        w.write_all(b"\x1b[1m")?;
     }
     if s.underline {
-        ansi::command(w, SetAttribute(Attribute::Underlined))?;
+        w.write_all(b"\x1b[4m")?;
     }
     if s.reverse {
-        ansi::command(w, SetAttribute(Attribute::Reverse))?;
+        w.write_all(b"\x1b[7m")?;
     }
     Ok(())
 }
@@ -418,6 +391,32 @@ pub fn write_frame(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn fixed_attribute_sequences_match_crossterm_for_every_supported_combination() {
+        use crossterm::style::{Attribute, SetAttribute};
+        for mask in 0..8 {
+            let style = Style {
+                bold: mask & 1 != 0,
+                underline: mask & 2 != 0,
+                reverse: mask & 4 != 0,
+                ..Style::default()
+            };
+            let mut actual = Vec::new();
+            set_style(&mut actual, style).unwrap();
+            let mut reference = Vec::new();
+            ansi::command(&mut reference, SetAttribute(Attribute::Reset)).unwrap();
+            for (enabled, attribute) in [
+                (style.bold, Attribute::Bold),
+                (style.underline, Attribute::Underlined),
+                (style.reverse, Attribute::Reverse),
+            ] {
+                if enabled {
+                    ansi::command(&mut reference, SetAttribute(attribute)).unwrap();
+                }
+            }
+            assert_eq!(actual, reference);
+        }
+    }
     use matea_core::{Effect, ViewContext};
     use matea_render::View;
     use std::sync::{Arc, Mutex};

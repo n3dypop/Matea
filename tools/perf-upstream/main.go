@@ -13,6 +13,7 @@ import (
 	"github.com/charmbracelet/harmonica"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
+	"image/color" // Terminal style colors only; no image processing/decoding.
 	"math"
 	"os"
 	"runtime"
@@ -53,6 +54,7 @@ func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) 
 func measure(id string, n int, f func() uint64, output, semantics string) {
 	start := time.Now()
 	sink = f()
+	firstReturnValue := sink
 	cold := time.Since(start).Nanoseconds()
 	for i := 0; i < 100; i++ {
 		sink = f()
@@ -74,7 +76,7 @@ func measure(id string, n int, f func() uint64, output, semantics string) {
 	}
 	runtime.ReadMemStats(&after)
 	debug.SetGCPercent(old)
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"case": id, "semantics": semantics, "cold_ns": cold, "iterations_per_sample": n, "samples_ns": samples, "allocations": allocations, "allocated_bytes": float64(after.TotalAlloc-before.TotalAlloc) / 10, "output": output})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"case": id, "semantics": semantics, "cold_ns": cold, "first_return_value": firstReturnValue, "iterations_per_sample": n, "samples_ns": samples, "allocations": allocations, "allocated_bytes": float64(after.TotalAlloc-before.TotalAlloc) / 10, "output": output})
 }
 func plain(s uv.ScreenBuffer) string {
 	rows := make([]string, s.Height())
@@ -100,6 +102,10 @@ func main() {
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--cursor-trace" {
 		cursorTrace()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--color-trace" {
+		coloredFrames(0)
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--key-source-edges" {
@@ -132,6 +138,7 @@ func main() {
 	pagination(n)
 	textInput(n)
 	cursorEncoding(n)
+	coloredFrames(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -199,6 +206,66 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+func coloredFrames(n int) {
+	traces := []any{}
+	for _, item := range []struct {
+		name    string
+		profile colorprofile.Profile
+		fg, bg  color.RGBA
+	}{
+		{"ansi16", colorprofile.ANSI, color.RGBA{255, 255, 255, 255}, color.RGBA{0, 0, 0, 255}},
+		{"ansi256", colorprofile.ANSI256, color.RGBA{95, 135, 175, 255}, color.RGBA{175, 95, 135, 255}},
+		{"truecolor", colorprofile.TrueColor, color.RGBA{95, 135, 175, 255}, color.RGBA{175, 95, 135, 255}},
+		{"none", colorprofile.Ascii, color.RGBA{95, 135, 175, 255}, color.RGBA{175, 95, 135, 255}},
+	} {
+		frame := uv.NewScreenBuffer(80, 24)
+		frame.Method = ansi.GraphemeWidth
+		for y := 0; y < 20; y++ {
+			for x := 0; x < 80; x++ {
+				frame.SetCell(x, y, &uv.Cell{Content: "a", Width: 1, Style: uv.Style{Fg: item.fg, Bg: item.bg}})
+			}
+		}
+		var output bytes.Buffer
+		r := uv.NewTerminalRenderer(&output, []string{"TERM=xterm-256color"})
+		r.SetColorProfile(item.profile)
+		r.SetWidthMethod(ansi.GraphemeWidth)
+		r.Resize(80, 24)
+		r.EnterAltScreen()
+		r.WriteString(ansi.HideCursor)
+		r.Redraw(frame.RenderBuffer)
+		if err := r.Flush(); err != nil {
+			panic(err)
+		}
+		if n == 0 {
+			initial := output.String()
+			output.Reset()
+			r.Resize(80, 24)
+			r.WriteString(ansi.ResetStyle)
+			r.WriteString(ansi.HideCursor)
+			r.Redraw(frame.RenderBuffer)
+			if err := r.Flush(); err != nil {
+				panic(err)
+			}
+			traces = append(traces, map[string]any{"profile": item.name, "width": 80, "height": 24, "sequences": []string{initial, output.String()}})
+		} else {
+			measure("terminal/colored_full_"+item.name+"_80x24", max(n/20, 50), func() uint64 {
+				output.Reset()
+				r.Resize(80, 24)
+				r.WriteString(ansi.ResetStyle)
+				r.WriteString(ansi.HideCursor)
+				r.Redraw(frame.RenderBuffer)
+				if err := r.Flush(); err != nil {
+					panic(err)
+				}
+				return uint64(output.Len())
+			}, "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+				"recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; "+item.name+"; hidden cursor; reused memory sink; no terminal I/O")
+		}
+	}
+	if n == 0 {
+		json.NewEncoder(os.Stdout).Encode(map[string]any{"traces": traces})
 	}
 }
 func cursorEncoding(n int) {

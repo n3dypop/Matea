@@ -4,8 +4,49 @@ use crossterm::{
     terminal::{Clear, ClearType},
 };
 use matea_render::Surface;
-use matea_style::Style;
+use matea_style::{Color, ColorLevel, Style};
 use std::io::{self, Write};
+
+/// Logical, immutable palette results are independent of physical terminal state.
+/// Eight entries cover common theme tokens without a growing global color map.
+#[derive(Default, Debug)]
+struct QuantizedStyles {
+    level: Option<ColorLevel>,
+    entries: [Option<(Style, Style)>; 8],
+    next: usize,
+}
+impl QuantizedStyles {
+    fn adapt(&mut self, source: Style, level: ColorLevel) -> Style {
+        if matches!(level, ColorLevel::None | ColorLevel::TrueColor) {
+            return source.adapt(level);
+        }
+        let expensive = |color| match color {
+            Color::Rgb(..) => matches!(level, ColorLevel::Ansi16 | ColorLevel::Ansi256),
+            Color::Indexed(n) => level == ColorLevel::Ansi16 && n >= 16,
+            Color::Default => false,
+        };
+        if !expensive(source.fg) && !expensive(source.bg) {
+            return source.adapt(level);
+        }
+        if self.level != Some(level) {
+            self.entries.fill(None);
+            self.next = 0;
+            self.level = Some(level);
+        }
+        if let Some((_, result)) = self
+            .entries
+            .iter()
+            .flatten()
+            .find(|(key, _)| *key == source)
+        {
+            return *result;
+        }
+        let result = source.adapt(level);
+        self.entries[self.next] = Some((source, result));
+        self.next = (self.next + 1) % self.entries.len();
+        result
+    }
+}
 
 /// Stateful frame encoding for exclusive terminal writers. Reuse with the actual
 /// previous Surface; call invalidate after external output, graphics or cursor
@@ -18,6 +59,7 @@ pub struct FrameEncoder {
     caps: Option<Capabilities>,
     invalidated: bool,
     visible: Option<bool>,
+    quantized: QuantizedStyles,
 }
 impl FrameEncoder {
     /// The next write clears and repaints completely, including empty geometry.
@@ -47,6 +89,12 @@ impl FrameEncoder {
         }
         match self.cursor {
             Some((_, old_y)) if y == old_y && x == 0 => w.write_all(b"\r")?,
+            // CR cancels delayed wrap before LF advances one valid surface row.
+            // Callers only request in-bounds cells, so this cannot scroll below
+            // the viewport; unknown positions still need an absolute anchor.
+            Some((_, old_y)) if x == 0 && old_y.checked_add(1) == Some(y) => {
+                w.write_all(b"\r\n")?
+            }
             Some((old_x, old_y))
                 if y == old_y && old_x < width && x.checked_add(1) == Some(old_x) =>
             {
@@ -70,6 +118,7 @@ impl FrameEncoder {
                     command(w, MoveUp(old_y - y))?;
                 }
             }
+            _ if x == 0 && y == 0 => w.write_all(b"\x1b[H")?,
             _ => command(w, MoveTo(x, y))?,
         }
         self.cursor = Some((x, y));
@@ -145,10 +194,10 @@ impl FrameEncoder {
                 .enumerate()
                 .filter(|(_, cell)| !cell.is_continuation())
             {
-                let style = cell.style().adapt(caps.color);
                 if ascii && old.is_some_and(|old| old.row(y)[x] == *cell) {
                     continue;
                 }
+                let style = self.quantized.adapt(cell.style(), caps.color);
                 if (!ascii || full) && cell.symbol() == " " && style == Style::default() {
                     continue;
                 }
@@ -197,12 +246,66 @@ fn relative_is_shorter(distance: u16, x: u16, y: u16) -> bool {
 mod tests {
     use super::*;
     use matea_render::{Cursor, Size, View};
-    use matea_style::ColorLevel;
     fn caps() -> Capabilities {
         Capabilities {
             color: ColorLevel::None,
             unicode: true,
             reduced_motion: true,
+        }
+    }
+    #[test]
+    fn quantization_remains_correct_after_eviction_level_changes_and_attributes() {
+        let mut cache = QuantizedStyles::default();
+        let styles: Vec<_> = (0..40)
+            .map(|n| Style {
+                fg: Color::Rgb(n * 5, 135, 175),
+                bg: Color::Indexed(n + 16),
+                bold: n % 2 == 0,
+                underline: n % 3 == 0,
+                reverse: n % 5 == 0,
+            })
+            .collect();
+        for level in [
+            ColorLevel::Ansi256,
+            ColorLevel::Ansi16,
+            ColorLevel::None,
+            ColorLevel::TrueColor,
+            ColorLevel::Ansi256,
+        ] {
+            for style in styles.iter().chain(styles.iter().rev()) {
+                assert_eq!(cache.adapt(*style, level), style.adapt(level));
+            }
+        }
+    }
+    #[test]
+    fn logical_color_cache_survives_recovery_without_reusing_physical_pen_state() {
+        let frame = View::styled(
+            "tea",
+            Style::default()
+                .fg(Color::Rgb(95, 135, 175))
+                .bg(Color::Rgb(175, 95, 135)),
+        )
+        .render(Size::new(4, 1))
+        .unwrap();
+        let mut encoder = FrameEncoder::default();
+        for color in [
+            ColorLevel::Ansi256,
+            ColorLevel::Ansi16,
+            ColorLevel::None,
+            ColorLevel::TrueColor,
+            ColorLevel::Ansi256,
+        ] {
+            let capabilities = Capabilities { color, ..caps() };
+            let mut fresh = Vec::new();
+            FrameEncoder::default()
+                .write(&mut fresh, &frame, None, capabilities)
+                .unwrap();
+            encoder.invalidate();
+            let mut recovered = Vec::new();
+            encoder
+                .write(&mut recovered, &frame, Some(&frame), capabilities)
+                .unwrap();
+            assert_eq!(recovered, fresh);
         }
     }
     #[test]
@@ -301,6 +404,27 @@ mod tests {
         assert!(out.windows(4).any(|w| w == b"aaaa"));
     }
     #[test]
+    fn row_advances_cancel_wrap_and_bottom_row_moves_do_not_scroll() {
+        let mut encoder = FrameEncoder::default();
+        let mut out = Vec::new();
+        encoder.position(&mut out, 0, 0, 80).unwrap();
+        assert_eq!(out, b"\x1b[H");
+        for old_x in [0, 4, 80] {
+            encoder.cursor = Some((old_x, 22));
+            out.clear();
+            encoder.position(&mut out, 0, 23, 80).unwrap();
+            assert_eq!(out, b"\r\n");
+            encoder.cursor = Some((80, 23));
+            out.clear();
+            encoder.position(&mut out, 0, 23, 80).unwrap();
+            assert_eq!(out, b"\r");
+        }
+        encoder.cursor = None;
+        out.clear();
+        encoder.position(&mut out, 0, 23, 80).unwrap();
+        assert_eq!(out, b"\x1b[24;1H");
+    }
+    #[test]
     fn io_failure_invalidates_cache_and_capability_change_repaints() {
         struct Broken;
         impl Write for Broken {
@@ -351,7 +475,7 @@ mod tests {
         encoder.write(&mut out, &frame, None, caps()).unwrap();
         let output = String::from_utf8(out).unwrap();
         assert!(output.contains("\x1b[0m"));
-        assert!(output.contains("\x1b[1;1H"));
+        assert!(output.contains("\x1b[H"));
         assert!(output.contains("\x1b[2J"));
     }
 }

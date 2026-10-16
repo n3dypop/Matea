@@ -1,6 +1,22 @@
 //! Commands encoded to bytes must never fall through to WinAPI console calls.
 use crossterm::Command;
+use matea_style::Color;
 use std::{fmt, io};
+
+/// Color policy was resolved by Capabilities; never consult Crossterm's global
+/// NO_COLOR/force_color_output state while encoding a deterministic frame.
+pub(crate) fn color(w: &mut impl io::Write, color: Color, background: bool) -> io::Result<()> {
+    let prefix = if background { 48 } else { 38 };
+    match color {
+        Color::Default => write!(w, "\x1b[{}m", if background { 49 } else { 39 }),
+        Color::Indexed(n @ 0..=7) => write!(w, "\x1b[{}m", (if background { 40 } else { 30 }) + n),
+        Color::Indexed(n @ 8..=15) => {
+            write!(w, "\x1b[{}m", (if background { 100 } else { 90 }) + n - 8)
+        }
+        Color::Indexed(n) => write!(w, "\x1b[{prefix};5;{n}m"),
+        Color::Rgb(r, g, b) => write!(w, "\x1b[{prefix};2;{r};{g};{b}m"),
+    }
+}
 
 pub(crate) fn command(w: &mut impl io::Write, command: impl Command) -> io::Result<()> {
     struct Adapter<'a, W> {

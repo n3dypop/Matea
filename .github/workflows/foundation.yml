@@ -42,6 +42,11 @@ jobs:
       - run: cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json
         shell: bash
       - run: python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json
+        shell: bash
+        env:
+          NO_COLOR: "1"
+      - run: python scripts/check_color_trace.py artifacts/matea-color-trace.json
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"

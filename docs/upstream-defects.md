@@ -54,5 +54,18 @@ frame encoding from Crossterm's conditional WinAPI command execution. A Vec sink
 now receives ANSI bytes on every OS; mode acquisition/restoration still uses the
 actual transport. Regression tests exercise a command that would panic if the
 Windows console path were invoked, and preserve original I/O errors. Known same-axis
-cursor moves use 4 bytes instead of 6 in the measured fixture; wrap-pending or unknown
-positions reanchor absolutely. This does not establish legacy console support.
+cursor moves use 4 bytes instead of 6 in the measured fixture. Unknown positions
+reanchor absolutely; the later next-row CRLF case is described below. This does not
+establish legacy console support.
+
+The [frame color audit](frame-color-audit.md) records a Matea integration defect:
+Crossterm's global NO_COLOR policy overrode an explicit frame color capability.
+Direct value serialization fixes deterministic output without changing global state.
+A bounded per-writer palette cache avoids repeated per-cell search and the reference
+colorprofile's growing process-global map. Four matched profiles include retained
+cache-only regressions and their direct-path correction. All four now measure zero
+allocations; ANSI256 p50 changes from 1.58 ms to 28.47 us in this one memory-sink
+fixture. CRLF cancels pending wrap for a known next row and reduces full-frame
+traffic by 90 bytes. Unknown positions remain absolute; bottom-row and independent
+replay checks guard against scrolling. Other workloads and real terminals remain
+pending; this is not full terminal/style parity.

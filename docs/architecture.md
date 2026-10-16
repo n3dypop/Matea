@@ -57,6 +57,14 @@ Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-wi
 
 ## Portability and extensions
 
+Frame color policy is resolved in explicit Capabilities; encoding does not read
+Crossterm's process-global color flag. Each FrameEncoder owns a bounded eight-entry
+inline palette cache. Logical mappings may survive physical output invalidation;
+cursor/style/visibility may not. None/TrueColor bypass palette search. Known next-row
+starts use CRLF without advancing below the surface; unknown positions reanchor
+absolutely. [ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)
+records the measured scope and cache policy limits.
+
 Cursor hints are local render metadata, translated through the same clip/layout
 as their view. A later opaque glyph/panel covering a hint suppresses it. Wide-cell
 continuations normalize to the lead. The terminal applies native visibility and

@@ -10,6 +10,7 @@ import shutil
 import statistics
 import subprocess
 from check_terminal_trace import replay
+from check_color_trace import verify as verify_colors
 
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
@@ -37,7 +38,8 @@ def summary(record):
 
 names = ["matea-current.jsonl", "upstream-current.jsonl", "matea-before-controlled.jsonl",
          "matea-after.jsonl", "matea-trace.json", "ultraviolet-trace.json",
-         "matea-cursor-trace.json", "ultraviolet-cursor-trace.json"]
+         "matea-cursor-trace.json", "ultraviolet-cursor-trace.json",
+         "matea-color-trace.json", "ultraviolet-color-trace.json"]
 for name in names:
     shutil.copy2(args.artifacts / name, destination / name)
 traces = [json.loads((destination / name).read_text()) for name in names[4:6]]
@@ -47,6 +49,9 @@ cursor_traces = [json.loads((destination / name).read_text()) for name in names[
 cursor_expected = [{"screen": "a" * 80 + "\n" * 23, "cursor": [x, 3], "visible": show}
                    for x, show in [(2, True), (4, True), (2, True), (2, False)]]
 assert all(replay(trace, include_cursor=True) == cursor_expected for trace in cursor_traces)
+color_traces = [json.loads((destination / name).read_text()) for name in names[8:10]]
+for trace in color_traces:
+    verify_colors(trace)
 records = []
 for name in names[:2]:
     records.append({r["case"]: r for r in map(json.loads, (destination / name).read_text().splitlines())})
@@ -65,7 +70,10 @@ for case, matea in records[0].items():
     if case == "cursor/visible_move_80x24":
         item["replayed_move_bytes"] = {"matea": len(cursor_traces[0]["sequences"][1].encode()),
                                        "upstream": len(cursor_traces[1]["sequences"][1].encode())}
+    if case.startswith("terminal/colored_full_"):
+        item["measured_full_frame_bytes"] = {"matea": matea["first_return_value"], "upstream": upstream["first_return_value"]}
     comparison.append(item)
+assert all(item["output_equivalent_for_this_fixture"] for item in comparison), "fixture semantics/output mismatch; do not publish a parity claim"
 
 inputs = [ROOT / "Cargo.lock"]
 for folder in ("crates", "tools/perf-probe", "tools/perf-upstream"):
@@ -146,6 +154,34 @@ if baseline.is_file() and baseline_report.is_file():
     metadata["key_binding_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
         "before_report_sha256": digest(baseline_report), "cases": optimized}
+color_stages = {}
+for stage, raw_name, report_name in [
+    ("before_cache", "matea-color-before.jsonl", "color-before-report.json"),
+    ("cache_before_control_fastpaths", "matea-color-cache-intermediate.jsonl", "color-cache-intermediate-report.json"),
+    ("control_fastpaths_before_row_encoding", "matea-color-fastpaths.jsonl", "color-fastpaths-report.json"),
+]:
+    baseline, baseline_report = destination / raw_name, destination / report_name
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    cases = {}
+    for case, after in records[0].items():
+        if not case.startswith("terminal/colored_full_"):
+            continue
+        before = previous[case]
+        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        cases[case] = {"before": summary(before), "after": summary(after),
+                       "frame_bytes_before": before["first_return_value"],
+                       "frame_bytes_after": after["first_return_value"]}
+    color_stages[stage] = {"raw": raw_name, "source_report": report_name,
+                           "raw_sha256": digest(baseline), "report_sha256": digest(baseline_report),
+                           "cases": cases}
+metadata["color_frame_optimization"] = {
+    "scope": "correct explicit-color serializer baseline; warm logical palette caches; all four profiles are controls",
+    "stages": color_stages,
+    "intermediate_regression": "Cache-only version regressed truecolor/none p50 by roughly 8/9 percent; retained samples motivated direct level fast paths.",
+    "full_module_parity": False,
+}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -160,7 +196,9 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "The stateful encoders each emit 2 bytes per one-cell update in this fixture. This does not establish bandwidth parity for other workloads.",
           "The immutable unchanged-frame case uses pointer identity in Matea; equal newly allocated frames require comparison.",
           "The native-cursor fixture also reuses unchanged cells. Four independently replayed states check cell contents, position and visibility; shape/color and terminal I/O are excluded.",
-          "Known-position same-axis cursor moves now select shorter relative commands. The retained baseline records 6 bytes per move, compared with 4 after the change and 6 for the pinned Ultraviolet public MoveTo fixture. Full repaint reanchors absolutely; wrap-pending positions never use this shortcut.",
+          "Colored full-frame cases force repaint of twenty 80-cell ASCII rows on an 80x24 frame. Four output traces independently check glyphs, palette/RGB colors, background erasure and hidden cursor. RGB inputs deliberately choose matching profile outputs; they do not compare arbitrary nearest-color algorithms.",
+          "Explicit color profiles remain deterministic under NO_COLOR=1. A bounded eight-style cache removes repeated palette search without heap/global state. Retained intermediate samples include truecolor/none regressions, corrected by direct level fast paths; before/after distributions and frame bytes are in report.json.",
+          "Known-position same-axis cursor moves select shorter relative commands. The retained baseline records 6 bytes per move, compared with 4 after the change and 6 for the pinned Ultraviolet public MoveTo fixture. Unknown positions reanchor absolutely. A known next-row start uses CRLF, cancelling delayed wrap first; no row advance is issued below the surface.",
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",
           "Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construction share the same finite fixture; checks remain enabled in both checked harnesses.",
           "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",
@@ -175,7 +213,13 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "MATEA_PERF_ITERATIONS=1000 /tmp/matea-foundation-upstream/probe > artifacts/performance/upstream-current.jsonl",
           "target/release/matea-perf-probe --trace > artifacts/performance/matea-trace.json",
           "/tmp/matea-foundation-upstream/probe --trace > artifacts/performance/ultraviolet-trace.json",
-          "python3 scripts/check_terminal_trace.py artifacts/performance/*-trace.json", "```", "",
+          "target/release/matea-perf-probe --cursor-trace > artifacts/performance/matea-cursor-trace.json",
+          "/tmp/matea-foundation-upstream/probe --cursor-trace > artifacts/performance/ultraviolet-cursor-trace.json",
+          "NO_COLOR=1 target/release/matea-perf-probe --color-trace > artifacts/performance/matea-color-trace.json",
+          "/tmp/matea-foundation-upstream/probe --color-trace > artifacts/performance/ultraviolet-color-trace.json",
+          "python3 scripts/check_terminal_trace.py artifacts/performance/matea-trace.json artifacts/performance/ultraviolet-trace.json artifacts/performance/matea-cursor-trace.json artifacts/performance/ultraviolet-cursor-trace.json",
+          "python3 scripts/check_color_trace.py artifacts/performance/*-color-trace.json",
+          "python3 scripts/report_performance.py --artifacts artifacts/performance", "```", "",
           "Keep reference checkouts clean and at docs/upstream-lock.json revisions. The preparation script verifies pins.",
           "No image processing, GPU or real terminal performance claim is made."]
 (ROOT / "docs/performance.md").write_text("\n".join(lines) + "\n")
