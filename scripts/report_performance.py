@@ -182,6 +182,32 @@ metadata["color_frame_optimization"] = {
     "intermediate_regression": "Cache-only version regressed truecolor/none p50 by roughly 8/9 percent; retained samples motivated direct level fast paths.",
     "full_module_parity": False,
 }
+baseline, baseline_report = destination / "matea-help-before.jsonl", destination / "help-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    optimized = {}
+    for case, after in records[0].items():
+        if case.startswith("help/"):
+            before = previous[case]
+            assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+            optimized[case] = {"before": summary(before), "after": summary(after)}
+    metadata["help_text_optimization"] = {"before_raw": baseline.name, "before_source_report": baseline_report.name,
+        "before_raw_sha256": digest(baseline), "before_report_sha256": digest(baseline_report), "cases": optimized,
+        "scope": "Fresh unstyled strings. Capacity hints reduce growth allocations; additional zero-width cluster safety is included, so retain any timing regressions."}
+    intermediate = destination / "matea-help-capacity-intermediate.jsonl"
+    intermediate_report = destination / "help-capacity-intermediate-report.json"
+    stage = json.loads(intermediate_report.read_text())
+    assert digest(intermediate) == stage["raw_sha256"]["matea-current.jsonl"]
+    records_between = {r["case"]: r for r in map(json.loads, intermediate.read_text().splitlines())}
+    for case in optimized:
+        assert records_between[case]["output"] == records[0][case]["output"]
+        optimized[case]["capacity_intermediate"] = summary(records_between[case])
+    metadata["help_text_optimization"]["intermediate"] = {
+        "raw": intermediate.name, "source_report": intermediate_report.name,
+        "raw_sha256": digest(intermediate), "report_sha256": digest(intermediate_report),
+        "finding": "Unicode p50 regressed from 299.875 to 518.417 ns after a separate grapheme safety scan; final layout caches cell widths during the same scan and uses ASCII fast paths."}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -205,6 +231,7 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "Text-input fixtures exclude View construction, clipboard I/O, validators and virtual-cursor commands in both harnesses. They include eight event pairs; Unicode rune-vs-grapheme single-step behavior is not compared.",
           "The text-input baseline retains samples/source hashes before ASCII query-buffer reuse. Unicode filtering keeps contextual lowercase semantics; that path is not covered by the ASCII allocation claim.",
           "Key bindings add three custom-token matches plus construction and metadata access. Existing-string custom tokens do not format/allocate in either language. Constructors retain their result through black_box/global storage; Go escape analysis and Rust ownership differ. Short help storage is inline after the retained baseline.",
+          "Four help fixtures render fresh unstyled strings from existing metadata, excluding binding construction and structured-view/cell encoding in both. Ordinary outputs match byte-for-byte; narrow-width overflow and terminal-control safety deviations have separate regressions. Rich Lip Gloss style decorators and whole help-module coverage remain pending.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",

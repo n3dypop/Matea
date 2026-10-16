@@ -29,9 +29,21 @@
       "reference": "bubbles",
       "source_group": "help",
       "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "correctness": [
+        "crates/matea-widgets/src/help.rs",
+        "docs/evidence/help-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "help/short_unbounded",
+        "help/short_40",
+        "help/full_40",
+        "help/short_unicode_80"
+      ],
+      "notes": "Partial help implementation and four plain-string measurements; arbitrary rich per-field Lip Gloss style decorators and styled-layout performance/equivalence remain pending. Keep module status pending.",
+      "source_audit": "docs/key-help-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 27
     },
     {
       "reference": "bubbles",

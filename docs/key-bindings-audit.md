@@ -57,4 +57,6 @@ not a claim of universal speed superiority or full keyboard-parser coverage.
 vim/leader key sequences. That is an extension request, absent from this pinned
 module's public single-event capability set. Matea applications can track message
 state, but no built-in longest-prefix/timeout sequence resolver is claimed here.
-List-specific #1045 and help styling #571 remain in those modules' pending work.
+List-specific #1045 remains pending. The [help audit](key-help-audit.md) now assesses
+#571 and implements separate key-description gap styles; rich decorators remain
+pending with the broader style system.

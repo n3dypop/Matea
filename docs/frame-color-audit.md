@@ -60,8 +60,12 @@ identical profile outputs; arbitrary nearest-color distance metrics are excluded
 The baseline already has the corrected color serializer. The change combines
 bounded memoization, inline direct-level adaptation, fixed attributes and shorter
 row/home commands; it does not attribute every gain to caching. All 31 samples,
-source hashes, intermediate regressions and byte counts are retained under
-`color_frame_optimization` in [report.json](evidence/performance/2026-10-16/report.json).
+source hashes, intermediate regressions and byte counts for this increment are
+retained under `color_frame_optimization` in
+[color-final-report.json](evidence/performance/2026-10-16/color-final-report.json).
+Its current Rust raw file is preserved as `matea-color-final.jsonl`, with the same
+digest recorded for `matea-current.jsonl` in that report. Later measurements are
+published separately as the evolving report.json.
 The first cache version regressed TrueColor/None p50 about 8/9 percent; the direct
 paths corrected that measured regression. No samples were discarded.
 

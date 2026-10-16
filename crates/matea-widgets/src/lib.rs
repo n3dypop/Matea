@@ -1,9 +1,11 @@
 #![forbid(unsafe_code)]
 //! Stateful components sharing input, theme and focus contracts.
+mod help;
 pub mod key;
 mod pagination;
 mod paginator;
 mod textinput;
+pub use help::{Help, HelpItem, HelpMap, HelpStyles};
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::{View, sanitize};
 use matea_style::Theme;

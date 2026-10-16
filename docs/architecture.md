@@ -65,6 +65,12 @@ starts use CRLF without advancing below the surface; unknown positions reanchor
 absolutely. [ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)
 records the measured scope and cache policy limits.
 
+Help composes borrowed binding metadata into short/full layouts without runtime
+coupling. Plain strings and structured views share cell fitting and fragment
+widths; style roles include the key-description gap. Bound zero-width views emit
+nothing, disabled bindings disappear, and untrusted controls are sanitized.
+Rich per-field decorators remain pending. [ADR 0018](decisions/0018-borrowed-and-width-bounded-key-help.md).
+
 Cursor hints are local render metadata, translated through the same clip/layout
 as their view. A later opaque glyph/panel covering a hint suppresses it. Wide-cell
 continuations normalize to the lead. The terminal applies native visibility and

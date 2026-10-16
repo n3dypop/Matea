@@ -36,8 +36,8 @@ pub mod prelude {
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{
-        Action, EchoMode, Field, Form, InputStyleState, InputStyles, List, PageDisplay, PageKeys,
-        PageNumbers, Pagination, Paginator, Spinner, Table, TextEditKeys, TextInput, Viewport,
-        required,
+        Action, EchoMode, Field, Form, Help, HelpItem, HelpMap, HelpStyles, InputStyleState,
+        InputStyles, List, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Spinner,
+        Table, TextEditKeys, TextInput, Viewport, required,
     };
 }

@@ -141,6 +141,15 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"\t\r")
                 read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
                 os.write(master,b"\x1b")
+            elif action == "key-help":
+                read_until(lambda:b"d toggle tea action" in plain())
+                os.write(master,b"d")
+                read_until(lambda:b"d toggle tea action" not in plain())
+                os.write(master,b"?")
+                read_until(lambda:b"? toggle help    q quit" in plain())
+                os.write(master,b"d")
+                read_until(lambda:b"d toggle tea action" in plain())
+                os.write(master,b"q")
             elif action == "native-cursor":
                 # Assert before exit: cleanup alone also emits Show.
                 read_until(lambda: b"\x1b[4;3H\x1b[?25h" in output)
@@ -194,3 +203,4 @@ case("enhanced keys, mouse and mode restoration", "enhanced-input",example="inpu
 case("interactive pagination", "pagination",example="pagination",ready=b"Page 1 of 4",expect_cancelled=False)
 case("form completion and submission", "form-completion",example="form",ready=b"Tea tasting registration",expect_cancelled=False)
 case("native cursor composition and CJK paste", "native-cursor",example="form",args=("--native",),ready=b"Tea tasting registration",expect_cancelled=False)
+case("dynamic short and full key help", "key-help",example="help",ready=b"Matea key help",expect_cancelled=False)

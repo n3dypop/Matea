@@ -621,6 +621,49 @@
       ],
       "performance": "docs/performance.md",
       "notes": "Position/visibility metadata composes without manual widget offsets; clipping/overlap/Unicode and cursor-only updates tested. One immutable-cell move fixture measured and replayed. Whole source Cursor declarations also include unimplemented appearance/blink; raw backend escape hatch and capability negotiation remain pending. Not full module parity."
+    },
+    {
+      "id": "widgets/key-help",
+      "status": "partial",
+      "reference_ids": [
+        "3026afd783bdeb4e42e6",
+        "dd9ddacba5a78565fbc2",
+        "12dc1c0023f6f1a65ed8",
+        "950fc644f3a5512db418",
+        "bb1ca90a96378d2d321d",
+        "4fe7988c935dbff5b4cd",
+        "0ad86803e67d0a094112",
+        "6a8d0beaf507c87fc8f9",
+        "86c7e94aa3ccc62d7f22",
+        "67f194fbf348a903512f",
+        "e6ef7925690c13169ac5",
+        "22e568e34b876a2d7078",
+        "1d92e661275fb57d2733",
+        "de7416878e5077f2ad6f",
+        "cd1f905f122d7b39eac6",
+        "0c94ec94aa38054a6d40",
+        "b2dba586b8c9f5588291",
+        "219d6ffcae2d05604b62",
+        "36efe39836e9dc250343",
+        "424aea00b9659ffe6ba1",
+        "3e544e9ff53cc5ee5e37",
+        "9d181b183fc5e1869428",
+        "c407ef67e734cef88bd5",
+        "9bfa2c293f0cb127a29a",
+        "af4dcfdcc70355c7dbd6",
+        "4c54f6555af723cadd2b",
+        "6032d6a08a7dc8abd21b"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/help.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/src/help.rs",
+        "scripts/pty_smoke.py",
+        "docs/evidence/help-source-edges.json"
+      ],
+      "performance": "docs/performance.md",
+      "notes": "All 27 source declaration candidates reviewed and linked. Borrowed short/full help, mode switch, cell width, enable/unbind, independent gap style and theme/light/dark roles implemented. Four ordinary plain-string fixtures measured; deliberate narrow overflow/control/zero-width safety changes have regressions. Arbitrary Lip Gloss per-field decorators (padding/borders/wrapping/etc.), rich styled-layout equivalence and their performance remain pending, so the module is not complete."
     }
   ]
 }

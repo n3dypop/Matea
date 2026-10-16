@@ -142,6 +142,7 @@ fn main() {
     text_input(iterations);
     cursor_encoding(iterations);
     colored_frames(iterations);
+    help_cases(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -274,6 +275,54 @@ fn main() {
             },
             &expected,
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+        );
+    }
+}
+fn help_cases(iterations: usize) {
+    let binding = |key: &'static str, description: &'static str| HelpItem {
+        key,
+        description,
+        enabled: true,
+    };
+    let a = [binding("enter", "continue")];
+    let b = [binding("esc", "back"), binding("?", "help")];
+    let c = [
+        binding("H", "home"),
+        binding("ctrl+c", "quit"),
+        binding("ctrl+l", "log"),
+    ];
+    let groups = [&a[..], &b[..], &c[..]];
+    let short = [a[0], b[0], b[1], c[0], c[1], c[2]];
+    let unicode = [
+        binding("茶", "e\u{301}を選ぶ"),
+        binding("←/→", "移動"),
+        binding("q", "終了"),
+    ];
+    for (name, width, full, items) in [
+        ("short_unbounded", None, false, short.as_slice()),
+        ("short_40", Some(40), false, short.as_slice()),
+        ("full_40", Some(40), true, short.as_slice()),
+        ("short_unicode_80", Some(80), false, unicode.as_slice()),
+    ] {
+        let help = Help {
+            width,
+            full_separator: " | ".into(),
+            ..Help::default()
+        };
+        let render = || {
+            if full {
+                help.full_text(&groups)
+            } else {
+                help.short_text(items)
+            }
+        };
+        let output = render();
+        measure(
+            &format!("help/{name}"),
+            iterations,
+            || black_box(render()).len() as u64,
+            &output,
+            "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
         );
     }
 }

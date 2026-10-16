@@ -3,6 +3,7 @@ package main
 
 import (
 	"bytes"
+	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
 	"charm.land/bubbles/v2/textinput"
@@ -129,6 +130,10 @@ func main() {
 		textInputEdges()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--help-source-edges" {
+		helpSourceEdges()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
@@ -139,6 +144,7 @@ func main() {
 	textInput(n)
 	cursorEncoding(n)
 	coloredFrames(n)
+	helpCases(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -207,6 +213,56 @@ func main() {
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
 	}
+}
+func helpData() ([][]key.Binding, []key.Binding) {
+	bind := func(k, desc string) key.Binding { return key.NewBinding(key.WithKeys(k), key.WithHelp(k, desc)) }
+	groups := [][]key.Binding{{bind("enter", "continue")}, {bind("esc", "back"), bind("?", "help")}, {bind("H", "home"), bind("ctrl+c", "quit"), bind("ctrl+l", "log")}}
+	var short []key.Binding
+	for _, group := range groups {
+		short = append(short, group...)
+	}
+	return groups, short
+}
+func helpCases(n int) {
+	groups, short := helpData()
+	unicode := []key.Binding{key.NewBinding(key.WithKeys("a"), key.WithHelp("茶", "e\u0301を選ぶ")), key.NewBinding(key.WithKeys("b"), key.WithHelp("←/→", "移動")), key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "終了"))}
+	for _, fixture := range []struct {
+		name  string
+		width int
+		full  bool
+		items []key.Binding
+	}{
+		{"short_unbounded", 0, false, short}, {"short_40", 40, false, short}, {"full_40", 40, true, short}, {"short_unicode_80", 80, false, unicode},
+	} {
+		m := help.New()
+		m.Styles = help.Styles{}
+		m.FullSeparator = " | "
+		m.SetWidth(fixture.width)
+		render := func() string {
+			if fixture.full {
+				return m.FullHelpView(groups)
+			}
+			return m.ShortHelpView(fixture.items)
+		}
+		measure("help/"+fixture.name, n, func() uint64 { return uint64(len(render())) }, render(), "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction")
+	}
+}
+func helpSourceEdges() {
+	groups, _ := helpData()
+	m := help.New()
+	m.Styles = help.Styles{}
+	m.FullSeparator = " | "
+	results := map[string]any{}
+	for _, width := range []int{1, 2, 3, 16} {
+		m.SetWidth(width)
+		text := m.ShortHelpView([]key.Binding{key.NewBinding(key.WithKeys("k"), key.WithHelp("k", "go"))})
+		results[fmt.Sprintf("short_width_%d", width)] = map[string]any{"text": text, "cell_width": ansi.StringWidth(text)}
+	}
+	for _, width := range []int{20, 30, 40} {
+		m.SetWidth(width)
+		results[fmt.Sprintf("full_width_%d", width)] = m.FullHelpView(groups)
+	}
+	json.NewEncoder(os.Stdout).Encode(results)
 }
 func coloredFrames(n int) {
 	traces := []any{}

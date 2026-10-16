@@ -69,3 +69,11 @@ fixture. CRLF cancels pending wrap for a known next row and reduces full-frame
 traffic by 90 bytes. Unknown positions remain absolute; bottom-row and independent
 replay checks guard against scrolling. Other workloads and real terminals remain
 pending; this is not full terminal/style parity.
+
+The [key help audit](key-help-audit.md) executes the pinned width-overflow branch
+(four cells at a one/two-cell limit), adds whole-item fitting, and assesses #571's
+unstyled key-description gap. Independent gap styles have cell regressions in both
+modes. Borrowed metadata, retained fragment widths and caller-owned output avoid
+unnecessary key cloning and repeated width work. Plain-string fixtures agree;
+the safety-scan timing regression and subsequent width-cache revision are retained.
+Arbitrary rich style decorators and full module parity remain pending.
