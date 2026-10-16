@@ -1,312 +1,312 @@
 ratatui v0.30.2 (${AUDIT_TEMP}/source/ratatui/ratatui)
-|-- ratatui-widgets v0.3.2 (${AUDIT_TEMP}/source/ratatui/ratatui-widgets)
-|   |-- time v0.3.55
-|   |   |-- powerfmt v0.2.0
-|   |   |-- libc feature "default"
-|   |   |   |-- libc v0.2.175
-|   |   |   `-- libc feature "std"
-|   |   |       `-- libc v0.2.175
-|   |   |-- deranged feature "default"
-|   |   |   `-- deranged v0.5.8
-|   |   |-- num-conv feature "default"
-|   |   |   `-- num-conv v0.2.2
-|   |   |-- num_threads feature "default"
-|   |   |   `-- num_threads v0.1.7
-|   |   |       `-- libc feature "default" (*)
-|   |   `-- time-core feature "default"
-|   |       `-- time-core v0.1.9
-|   |-- instability feature "default"
-|   |   `-- instability v0.3.14 (proc-macro)
-|   |       |-- darling feature "default"
-|   |       |   |-- darling v0.24.0
-|   |       |   |   |-- darling_core feature "default"
-|   |       |   |   |   `-- darling_core v0.24.0
-|   |       |   |   |       |-- ident_case feature "default"
-|   |       |   |   |       |   `-- ident_case v1.0.1
-|   |       |   |   |       |-- proc-macro2 feature "default"
-|   |       |   |   |       |   |-- proc-macro2 v1.0.106
-|   |       |   |   |       |   |   `-- unicode-ident feature "default"
-|   |       |   |   |       |   |       `-- unicode-ident v1.0.18
-|   |       |   |   |       |   `-- proc-macro2 feature "proc-macro"
-|   |       |   |   |       |       `-- proc-macro2 v1.0.106 (*)
-|   |       |   |   |       |-- quote feature "default"
-|   |       |   |   |       |   |-- quote v1.0.45
-|   |       |   |   |       |   |   `-- proc-macro2 v1.0.106 (*)
-|   |       |   |   |       |   `-- quote feature "proc-macro"
-|   |       |   |   |       |       |-- quote v1.0.45 (*)
-|   |       |   |   |       |       `-- proc-macro2 feature "proc-macro" (*)
-|   |       |   |   |       |-- strsim feature "default"
-|   |       |   |   |       |   `-- strsim v0.11.1
-|   |       |   |   |       |-- syn feature "default"
-|   |       |   |   |       |   |-- syn v3.0.2
-|   |       |   |   |       |   |   |-- proc-macro2 v1.0.106 (*)
-|   |       |   |   |       |   |   |-- quote v1.0.45 (*)
-|   |       |   |   |       |   |   `-- unicode-ident feature "default" (*)
-|   |       |   |   |       |   |-- syn feature "clone-impls"
-|   |       |   |   |       |   |   `-- syn v3.0.2 (*)
-|   |       |   |   |       |   |-- syn feature "derive"
-|   |       |   |   |       |   |   `-- syn v3.0.2 (*)
-|   |       |   |   |       |   |-- syn feature "parsing"
-|   |       |   |   |       |   |   `-- syn v3.0.2 (*)
-|   |       |   |   |       |   |-- syn feature "printing"
-|   |       |   |   |       |   |   `-- syn v3.0.2 (*)
-|   |       |   |   |       |   `-- syn feature "proc-macro"
-|   |       |   |   |       |       |-- syn v3.0.2 (*)
-|   |       |   |   |       |       |-- proc-macro2 feature "proc-macro" (*)
-|   |       |   |   |       |       `-- quote feature "proc-macro" (*)
-|   |       |   |   |       |-- syn feature "extra-traits"
-|   |       |   |   |       |   `-- syn v3.0.2 (*)
-|   |       |   |   |       `-- syn feature "full"
-|   |       |   |   |           `-- syn v3.0.2 (*)
-|   |       |   |   `-- darling_macro feature "default"
-|   |       |   |       `-- darling_macro v0.24.0 (proc-macro)
-|   |       |   |           |-- darling_core feature "default" (*)
-|   |       |   |           |-- quote feature "default" (*)
-|   |       |   |           `-- syn feature "default" (*)
-|   |       |   `-- darling feature "suggestions"
-|   |       |       |-- darling v0.24.0 (*)
-|   |       |       `-- darling_core feature "suggestions"
-|   |       |           |-- darling_core v0.24.0 (*)
-|   |       |           `-- darling_core feature "strsim"
-|   |       |               `-- darling_core v0.24.0 (*)
-|   |       |-- proc-macro2 feature "default" (*)
-|   |       |-- quote feature "default" (*)
-|   |       |-- syn feature "default" (*)
-|   |       |-- syn feature "derive" (*)
-|   |       |-- syn feature "full" (*)
-|   |       `-- indoc feature "default"
-|   |           `-- indoc v2.0.7 (proc-macro)
-|   |               [build-dependencies]
-|   |               `-- rustversion feature "default"
-|   |                   `-- rustversion v1.0.22 (proc-macro)
-|   |-- indoc feature "default" (*)
-|   |-- ratatui-core feature "default"
-|   |   `-- ratatui-core v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-core)
-|   |       |-- compact_str v0.10.0
-|   |       |   |-- castaway feature "alloc"
-|   |       |   |   `-- castaway v0.2.4
-|   |       |   |       `-- rustversion feature "default" (*)
-|   |       |   |-- cfg-if feature "default"
-|   |       |   |   `-- cfg-if v1.0.1
-|   |       |   |-- itoa feature "default"
-|   |       |   |   `-- itoa v1.0.15
-|   |       |   |-- static_assertions feature "default"
-|   |       |   |   `-- static_assertions v1.1.0
-|   |       |   `-- zmij feature "default"
-|   |       |       `-- zmij v1.0.2
-|   |       |-- kasuari v0.4.12
-|   |       |   |-- thiserror v2.0.21
-|   |       |   |   `-- thiserror-impl feature "default"
-|   |       |   |       `-- thiserror-impl v2.0.21 (proc-macro)
-|   |       |   |           |-- proc-macro2 feature "default" (*)
-|   |       |   |           |-- quote feature "default" (*)
-|   |       |   |           `-- syn feature "default" (*)
-|   |       |   `-- hashbrown feature "default"
-|   |       |       |-- hashbrown v0.16.1
-|   |       |       |   |-- equivalent v1.0.2
-|   |       |       |   |-- foldhash v0.2.0
-|   |       |       |   `-- allocator-api2 feature "alloc"
-|   |       |       |       `-- allocator-api2 v0.2.21
-|   |       |       |-- hashbrown feature "allocator-api2"
-|   |       |       |   `-- hashbrown v0.16.1 (*)
-|   |       |       |-- hashbrown feature "default-hasher"
-|   |       |       |   `-- hashbrown v0.16.1 (*)
-|   |       |       |-- hashbrown feature "equivalent"
-|   |       |       |   `-- hashbrown v0.16.1 (*)
-|   |       |       |-- hashbrown feature "inline-more"
-|   |       |       |   `-- hashbrown v0.16.1 (*)
-|   |       |       `-- hashbrown feature "raw-entry"
-|   |       |           `-- hashbrown v0.16.1 (*)
-|   |       |-- thiserror v2.0.21 (*)
-|   |       |-- unicode-truncate v3.0.0
-|   |       |   |-- itertools v0.15.0
-|   |       |   |   `-- either v1.15.0
-|   |       |   |-- unicode-segmentation v1.13.3
-|   |       |   `-- unicode-width feature "default"
-|   |       |       |-- unicode-width v0.2.2
-|   |       |       `-- unicode-width feature "cjk"
-|   |       |           `-- unicode-width v0.2.2
-|   |       |-- bitflags feature "default"
-|   |       |   `-- bitflags v2.13.2
-|   |       |-- critical-section feature "default"
-|   |       |   `-- critical-section v1.2.0
-|   |       |-- hashbrown feature "default"
-|   |       |   |-- hashbrown v0.17.1
-|   |       |   |   |-- equivalent v1.0.2
-|   |       |   |   |-- foldhash v0.2.0
-|   |       |   |   `-- allocator-api2 feature "alloc" (*)
-|   |       |   |-- hashbrown feature "allocator-api2"
-|   |       |   |   `-- hashbrown v0.17.1 (*)
-|   |       |   |-- hashbrown feature "default-hasher"
-|   |       |   |   `-- hashbrown v0.17.1 (*)
-|   |       |   |-- hashbrown feature "equivalent"
-|   |       |   |   `-- hashbrown v0.17.1 (*)
-|   |       |   |-- hashbrown feature "inline-more"
-|   |       |   |   `-- hashbrown v0.17.1 (*)
-|   |       |   `-- hashbrown feature "raw-entry"
-|   |       |       `-- hashbrown v0.17.1 (*)
-|   |       |-- itertools feature "use_alloc"
-|   |       |   `-- itertools v0.15.0 (*)
-|   |       |-- lru feature "default"
-|   |       |   |-- lru v0.18.5
-|   |       |   |   |-- hashbrown feature "default-hasher" (*)
-|   |       |   |   `-- hashbrown feature "inline-more" (*)
-|   |       |   `-- lru feature "hashbrown"
-|   |       |       `-- lru v0.18.5 (*)
-|   |       |-- strum feature "derive"
-|   |       |   |-- strum v0.28.0
-|   |       |   |   `-- strum_macros feature "default"
-|   |       |   |       `-- strum_macros v0.28.0 (proc-macro)
-|   |       |   |           |-- proc-macro2 feature "default" (*)
-|   |       |   |           |-- quote feature "default" (*)
-|   |       |   |           |-- heck feature "default"
-|   |       |   |           |   `-- heck v0.5.0
-|   |       |   |           |-- syn feature "default"
-|   |       |   |           |   |-- syn v2.0.117
-|   |       |   |           |   |   |-- proc-macro2 v1.0.106 (*)
-|   |       |   |           |   |   |-- quote v1.0.45 (*)
-|   |       |   |           |   |   `-- unicode-ident feature "default" (*)
-|   |       |   |           |   |-- syn feature "clone-impls"
-|   |       |   |           |   |   `-- syn v2.0.117 (*)
-|   |       |   |           |   |-- syn feature "derive"
-|   |       |   |           |   |   `-- syn v2.0.117 (*)
-|   |       |   |           |   |-- syn feature "parsing"
-|   |       |   |           |   |   `-- syn v2.0.117 (*)
-|   |       |   |           |   |-- syn feature "printing"
-|   |       |   |           |   |   `-- syn v2.0.117 (*)
-|   |       |   |           |   `-- syn feature "proc-macro"
-|   |       |   |           |       |-- syn v2.0.117 (*)
-|   |       |   |           |       |-- proc-macro2 feature "proc-macro" (*)
-|   |       |   |           |       `-- quote feature "proc-macro" (*)
-|   |       |   |           `-- syn feature "parsing" (*)
-|   |       |   `-- strum feature "strum_macros"
-|   |       |       `-- strum v0.28.0 (*)
-|   |       |-- unicode-segmentation feature "default"
-|   |       |   `-- unicode-segmentation v1.13.3
-|   |       `-- unicode-width feature "default" (*)
-|   |-- bitflags feature "default" (*)
-|   |-- hashbrown feature "default" (*)
-|   |-- itertools feature "use_alloc" (*)
-|   |-- strum feature "derive" (*)
-|   |-- unicode-segmentation feature "default" (*)
-|   |-- unicode-width feature "default" (*)
-|   `-- line-clipping feature "default"
-|       `-- line-clipping v0.3.8
-|           `-- bitflags feature "default" (*)
-|-- instability feature "default" (*)
-|-- ratatui-core feature "default" (*)
-|-- ratatui-crossterm feature "default"
-|   |-- ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm)
-|   |   |-- instability feature "default" (*)
-|   |   |-- ratatui-core feature "default" (*)
-|   |   |-- cfg-if feature "default" (*)
-|   |   `-- crossterm feature "default"
-|   |       |-- crossterm v0.29.0
-|   |       |   |-- bitflags feature "default" (*)
-|   |       |   |-- derive_more feature "default"
-|   |       |   |   |-- derive_more v2.0.1
-|   |       |   |   |   `-- derive_more-impl feature "default"
-|   |       |   |   |       `-- derive_more-impl v2.0.1 (proc-macro)
-|   |       |   |   |           |-- proc-macro2 feature "default" (*)
-|   |       |   |   |           |-- quote feature "default" (*)
-|   |       |   |   |           |-- syn feature "default" (*)
-|   |       |   |   |           `-- convert_case feature "default"
-|   |       |   |   |               `-- convert_case v0.7.1
-|   |       |   |   |                   `-- unicode-segmentation feature "default"
-|   |       |   |   |                       `-- unicode-segmentation v1.13.3
-|   |       |   |   `-- derive_more feature "std"
-|   |       |   |       `-- derive_more v2.0.1 (*)
-|   |       |   |-- derive_more feature "is_variant"
-|   |       |   |   |-- derive_more v2.0.1 (*)
-|   |       |   |   `-- derive_more-impl feature "is_variant"
-|   |       |   |       `-- derive_more-impl v2.0.1 (proc-macro) (*)
-|   |       |   |-- document-features feature "default"
-|   |       |   |   `-- document-features v0.2.12 (proc-macro)
-|   |       |   |       `-- litrs feature "default"
-|   |       |   |           `-- litrs v1.0.0
-|   |       |   |-- mio feature "default"
-|   |       |   |   |-- mio v1.0.4
-|   |       |   |   |   |-- libc feature "default" (*)
-|   |       |   |   |   `-- log feature "default"
-|   |       |   |   |       `-- log v0.4.27
-|   |       |   |   `-- mio feature "log"
-|   |       |   |       `-- mio v1.0.4 (*)
-|   |       |   |-- mio feature "os-poll"
-|   |       |   |   `-- mio v1.0.4 (*)
-|   |       |   |-- parking_lot feature "default"
-|   |       |   |   `-- parking_lot v0.12.4
-|   |       |   |       |-- lock_api feature "default"
-|   |       |   |       |   |-- lock_api v0.4.13
-|   |       |   |       |   |   `-- scopeguard v1.2.0
-|   |       |   |       |   |   [build-dependencies]
-|   |       |   |       |   |   `-- autocfg feature "default"
-|   |       |   |       |   |       `-- autocfg v1.5.0
-|   |       |   |       |   `-- lock_api feature "atomic_usize"
-|   |       |   |       |       `-- lock_api v0.4.13 (*)
-|   |       |   |       `-- parking_lot_core feature "default"
-|   |       |   |           `-- parking_lot_core v0.9.11
-|   |       |   |               |-- cfg-if feature "default" (*)
-|   |       |   |               |-- libc feature "default" (*)
-|   |       |   |               `-- smallvec feature "default"
-|   |       |   |                   `-- smallvec v1.15.1
-|   |       |   |-- rustix feature "std"
-|   |       |   |   |-- rustix v1.0.8
-|   |       |   |   |   |-- bitflags v2.13.2
-|   |       |   |   |   |-- errno v0.3.13
-|   |       |   |   |   |   `-- libc v0.2.175
-|   |       |   |   |   `-- libc v0.2.175
-|   |       |   |   |-- bitflags feature "std"
-|   |       |   |   |   `-- bitflags v2.13.2
-|   |       |   |   |-- libc feature "std" (*)
-|   |       |   |   |-- rustix feature "alloc"
-|   |       |   |   |   `-- rustix v1.0.8 (*)
-|   |       |   |   `-- errno feature "std"
-|   |       |   |       |-- errno v0.3.13 (*)
-|   |       |   |       `-- libc feature "std" (*)
-|   |       |   |-- rustix feature "stdio"
-|   |       |   |   `-- rustix v1.0.8 (*)
-|   |       |   |-- rustix feature "termios"
-|   |       |   |   `-- rustix v1.0.8 (*)
-|   |       |   |-- signal-hook feature "default"
-|   |       |   |   |-- signal-hook v0.3.18
-|   |       |   |   |   |-- libc feature "default" (*)
-|   |       |   |   |   `-- signal-hook-registry feature "default"
-|   |       |   |   |       `-- signal-hook-registry v1.4.6
-|   |       |   |   |           `-- libc feature "default" (*)
-|   |       |   |   |-- signal-hook feature "channel"
-|   |       |   |   |   `-- signal-hook v0.3.18 (*)
-|   |       |   |   `-- signal-hook feature "iterator"
-|   |       |   |       |-- signal-hook v0.3.18 (*)
-|   |       |   |       `-- signal-hook feature "channel" (*)
-|   |       |   |-- signal-hook-mio feature "default"
-|   |       |   |   `-- signal-hook-mio v0.2.4
-|   |       |   |       |-- mio feature "default" (*)
-|   |       |   |       |-- mio feature "net"
-|   |       |   |       |   `-- mio v1.0.4 (*)
-|   |       |   |       |-- mio feature "os-ext"
-|   |       |   |       |   |-- mio v1.0.4 (*)
-|   |       |   |       |   `-- mio feature "os-poll" (*)
-|   |       |   |       |-- libc feature "default" (*)
-|   |       |   |       `-- signal-hook feature "default" (*)
-|   |       |   `-- signal-hook-mio feature "support-v1_0"
-|   |       |       |-- signal-hook-mio v0.2.4 (*)
-|   |       |       `-- signal-hook-mio feature "mio-1_0"
-|   |       |           `-- signal-hook-mio v0.2.4 (*)
-|   |       |-- crossterm feature "bracketed-paste"
-|   |       |   `-- crossterm v0.29.0 (*)
-|   |       |-- crossterm feature "derive-more"
-|   |       |   `-- crossterm v0.29.0 (*)
-|   |       |-- crossterm feature "events"
-|   |       |   `-- crossterm v0.29.0 (*)
-|   |       `-- crossterm feature "windows"
-|   |           `-- crossterm v0.29.0 (*)
-|   |-- ratatui-crossterm feature "crossterm_0_29"
-|   |   `-- ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm) (*)
-|   `-- ratatui-crossterm feature "underline-color"
-|       |-- ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm) (*)
-|       `-- ratatui-core feature "underline-color"
-|           `-- ratatui-core v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-core) (*)
-`-- ratatui-macros feature "default"
-    `-- ratatui-macros v0.7.2 (${AUDIT_TEMP}/source/ratatui/ratatui-macros)
-        |-- ratatui-widgets v0.3.2 (${AUDIT_TEMP}/source/ratatui/ratatui-widgets) (*)
-        `-- ratatui-core feature "default" (*)
+[2m|--[0m ratatui-widgets v0.3.2 (${AUDIT_TEMP}/source/ratatui/ratatui-widgets)
+[2m|[0m   [2m|--[0m time v0.3.55
+[2m|[0m   [2m|[0m   [2m|--[0m powerfmt v0.2.0
+[2m|[0m   [2m|[0m   [2m|--[0m libc feature "default"
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m|--[0m libc v0.2.175
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m libc feature "std"
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m libc v0.2.175
+[2m|[0m   [2m|[0m   [2m|--[0m deranged feature "default"
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m deranged v0.5.8
+[2m|[0m   [2m|[0m   [2m|--[0m num-conv feature "default"
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m num-conv v0.2.2
+[2m|[0m   [2m|[0m   [2m|--[0m num_threads feature "default"
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m num_threads v0.1.7
+[2m|[0m   [2m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m`--[0m time-core feature "default"
+[2m|[0m   [2m|[0m   [2m [0m   [2m[35m`--[0m time-core v0.1.9
+[2m|[0m   [2m|--[0m instability feature "default"
+[2m|[0m   [2m|[0m   [2m[35m`--[0m instability v0.3.14 (proc-macro)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m darling feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m darling v0.24.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m darling_core feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m darling_core v0.24.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m ident_case feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m ident_case v1.0.1
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m proc-macro2 feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m proc-macro2 v1.0.106
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m unicode-ident feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m unicode-ident v1.0.18
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m proc-macro2 feature "proc-macro"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m proc-macro2 v1.0.106 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m quote feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m quote v1.0.45
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m proc-macro2 v1.0.106 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m quote feature "proc-macro"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m quote v1.0.45 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m proc-macro2 feature "proc-macro" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m strsim feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m strsim v0.11.1
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m syn feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn v3.0.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m proc-macro2 v1.0.106 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m quote v1.0.45 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m unicode-ident feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "clone-impls"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "derive"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "parsing"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "printing"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m syn feature "proc-macro"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m proc-macro2 feature "proc-macro" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m quote feature "proc-macro" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m syn feature "extra-traits"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m syn feature "full"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m syn v3.0.2 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m darling_macro feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m darling_macro v0.24.0 (proc-macro)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m darling_core feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m quote feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m syn feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m darling feature "suggestions"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m darling v0.24.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m darling_core feature "suggestions"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m [0m   [2m[35m|--[0m darling_core v0.24.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m [0m   [2m[35m`--[0m darling_core feature "strsim"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m [0m   [2m[35m [0m   [2m[35m`--[0m darling_core v0.24.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m proc-macro2 feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m quote feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m syn feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m syn feature "derive" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m syn feature "full" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m indoc feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m indoc v2.0.7 (proc-macro)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [94m[1m[build-dependencies][39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [1m[34m`--[0m rustversion feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [1m[34m [0m   [2m[35m`--[0m rustversion v1.0.22 (proc-macro)
+[2m|[0m   [2m|--[0m indoc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m ratatui-core feature "default"
+[2m|[0m   [2m|[0m   [2m[35m`--[0m ratatui-core v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-core)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m compact_str v0.10.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m castaway feature "alloc"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m castaway v0.2.4
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m rustversion feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m cfg-if feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m cfg-if v1.0.1
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m itoa feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m itoa v1.0.15
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m static_assertions feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m[35m`--[0m static_assertions v1.1.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m`--[0m zmij feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m`--[0m zmij v1.0.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m kasuari v0.4.12
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m thiserror v2.0.21
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m`--[0m thiserror-impl feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m [0m   [2m[35m`--[0m thiserror-impl v2.0.21 (proc-macro)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m proc-macro2 feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m quote feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m syn feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m`--[0m hashbrown feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m hashbrown v0.16.1
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m equivalent v1.0.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m foldhash v0.2.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m`--[0m allocator-api2 feature "alloc"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m allocator-api2 v0.2.21
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m hashbrown feature "allocator-api2"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.16.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m hashbrown feature "default-hasher"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.16.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m hashbrown feature "equivalent"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.16.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m hashbrown feature "inline-more"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.16.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m`--[0m hashbrown feature "raw-entry"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m [0m   [2m[35m`--[0m hashbrown v0.16.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m thiserror v2.0.21 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m unicode-truncate v3.0.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m itertools v0.15.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|[0m   [2m`--[0m either v1.15.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m|--[0m unicode-segmentation v1.13.3
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m`--[0m unicode-width feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m|--[0m unicode-width v0.2.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m`--[0m unicode-width feature "cjk"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m [0m   [2m[35m [0m   [2m[35m`--[0m unicode-width v0.2.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m bitflags feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m bitflags v2.13.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m critical-section feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m critical-section v1.2.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m hashbrown feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m hashbrown v0.17.1
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m equivalent v1.0.2
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m foldhash v0.2.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m allocator-api2 feature "alloc" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m hashbrown feature "allocator-api2"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.17.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m hashbrown feature "default-hasher"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.17.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m hashbrown feature "equivalent"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.17.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m hashbrown feature "inline-more"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m hashbrown v0.17.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m hashbrown feature "raw-entry"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m hashbrown v0.17.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m itertools feature "use_alloc"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m itertools v0.15.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m lru feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m lru v0.18.5
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m hashbrown feature "default-hasher" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m hashbrown feature "inline-more" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m lru feature "hashbrown"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m lru v0.18.5 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m strum feature "derive"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m strum v0.28.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m strum_macros feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m strum_macros v0.28.0 (proc-macro)
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m proc-macro2 feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m quote feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m heck feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m heck v0.5.0
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m syn feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn v2.0.117
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m proc-macro2 v1.0.106 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m quote v1.0.45 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m unicode-ident feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "clone-impls"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v2.0.117 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "derive"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v2.0.117 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "parsing"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v2.0.117 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m syn feature "printing"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m syn v2.0.117 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m syn feature "proc-macro"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m syn v2.0.117 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m proc-macro2 feature "proc-macro" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m quote feature "proc-macro" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m syn feature "parsing" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m strum feature "strum_macros"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m strum v0.28.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m unicode-segmentation feature "default"
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m unicode-segmentation v1.13.3
+[2m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m unicode-width feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m bitflags feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m hashbrown feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m itertools feature "use_alloc" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m strum feature "derive" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m unicode-segmentation feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m|--[0m unicode-width feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m`--[0m line-clipping feature "default"
+[2m|[0m   [2m [0m   [2m[35m`--[0m line-clipping v0.3.8
+[2m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m bitflags feature "default" [33m[2m(*)[39m[22m
+[2m|--[0m instability feature "default" [33m[2m(*)[39m[22m
+[2m|--[0m ratatui-core feature "default" [33m[2m(*)[39m[22m
+[2m|--[0m ratatui-crossterm feature "default"
+[2m|[0m   [2m[35m|--[0m ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm)
+[2m|[0m   [2m[35m|[0m   [2m|--[0m instability feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m|--[0m ratatui-core feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m|--[0m cfg-if feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m`--[0m crossterm feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|--[0m crossterm v0.29.0
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m bitflags feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m derive_more feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m derive_more v2.0.1
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m derive_more-impl feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m derive_more-impl v2.0.1 (proc-macro)
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m proc-macro2 feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m quote feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m|--[0m syn feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m convert_case feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m convert_case v0.7.1
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m`--[0m unicode-segmentation feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m unicode-segmentation v1.13.3
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m derive_more feature "std"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m derive_more v2.0.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m derive_more feature "is_variant"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m derive_more v2.0.1 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m derive_more-impl feature "is_variant"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m derive_more-impl v2.0.1 (proc-macro) [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m document-features feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m document-features v0.2.12 (proc-macro)
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m litrs feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m litrs v1.0.0
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m mio feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m mio v1.0.4
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m log feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m log v0.4.27
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m mio feature "log"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m mio v1.0.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m mio feature "os-poll"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m mio v1.0.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m parking_lot feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m parking_lot v0.12.4
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m lock_api feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m lock_api v0.4.13
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m scopeguard v1.2.0
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [94m[1m[build-dependencies][39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [1m[34m`--[0m autocfg feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|[0m   [1m[34m [0m   [2m[35m`--[0m autocfg v1.5.0
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m lock_api feature "atomic_usize"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m lock_api v0.4.13 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m parking_lot_core feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m parking_lot_core v0.9.11
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m|--[0m cfg-if feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m|--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m`--[0m smallvec feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m [0m   [2m[35m [0m   [2m [0m   [2m[35m`--[0m smallvec v1.15.1
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m rustix feature "std"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m rustix v1.0.8
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m bitflags v2.13.2
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m errno v0.3.13
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m|[0m   [2m`--[0m libc v0.2.175
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m libc v0.2.175
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m bitflags feature "std"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m bitflags v2.13.2
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m libc feature "std" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m rustix feature "alloc"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m rustix v1.0.8 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m errno feature "std"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m errno v0.3.13 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m libc feature "std" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m rustix feature "stdio"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m rustix v1.0.8 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m rustix feature "termios"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m rustix v1.0.8 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m signal-hook feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m signal-hook v0.3.18
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m|--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m`--[0m signal-hook-registry feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m signal-hook-registry v1.4.6
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m`--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|--[0m signal-hook feature "channel"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m|[0m   [2m[35m`--[0m signal-hook v0.3.18 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m signal-hook feature "iterator"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m|--[0m signal-hook v0.3.18 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m[35m`--[0m signal-hook feature "channel" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|--[0m signal-hook-mio feature "default"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m`--[0m signal-hook-mio v0.2.4
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m mio feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m mio feature "net"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m mio v1.0.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m mio feature "os-ext"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m|--[0m mio v1.0.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|[0m   [2m[35m`--[0m mio feature "os-poll" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m|--[0m libc feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m|[0m   [2m[35m [0m   [2m`--[0m signal-hook feature "default" [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m`--[0m signal-hook-mio feature "support-v1_0"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m [0m   [2m[35m|--[0m signal-hook-mio v0.2.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m signal-hook-mio feature "mio-1_0"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m[35m`--[0m signal-hook-mio v0.2.4 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|--[0m crossterm feature "bracketed-paste"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m crossterm v0.29.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|--[0m crossterm feature "derive-more"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m crossterm v0.29.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|--[0m crossterm feature "events"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m|[0m   [2m[35m`--[0m crossterm v0.29.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m`--[0m crossterm feature "windows"
+[2m|[0m   [2m[35m|[0m   [2m [0m   [2m[35m [0m   [2m[35m`--[0m crossterm v0.29.0 [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m|--[0m ratatui-crossterm feature "crossterm_0_29"
+[2m|[0m   [2m[35m|[0m   [2m[35m`--[0m ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm) [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m`--[0m ratatui-crossterm feature "underline-color"
+[2m|[0m   [2m[35m [0m   [2m[35m|--[0m ratatui-crossterm v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-crossterm) [33m[2m(*)[39m[22m
+[2m|[0m   [2m[35m [0m   [2m[35m`--[0m ratatui-core feature "underline-color"
+[2m|[0m   [2m[35m [0m   [2m[35m [0m   [2m[35m`--[0m ratatui-core v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-core) [33m[2m(*)[39m[22m
+[2m`--[0m ratatui-macros feature "default"
+[2m [0m   [2m[35m`--[0m ratatui-macros v0.7.2 (${AUDIT_TEMP}/source/ratatui/ratatui-macros)
+[2m [0m   [2m[35m [0m   [2m|--[0m ratatui-widgets v0.3.2 (${AUDIT_TEMP}/source/ratatui/ratatui-widgets) [33m[2m(*)[39m[22m
+[2m [0m   [2m[35m [0m   [2m`--[0m ratatui-core feature "default" [33m[2m(*)[39m[22m

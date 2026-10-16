@@ -63,8 +63,8 @@ running 9 tests
 test input::tests::chords_ignore_repeat_and_lock_state_but_preserve_modifiers_and_release ... ok
 test input::tests::focus_ring_ignores_release_and_modified_tab ... ok
 test tests::model_state_can_remain_non_send ... ok
-test tests::cancelled_queued_results_are_discarded ... ok
 test tests::deterministic_subscriptions_resize_and_focus ... ok
+test tests::cancelled_queued_results_are_discarded ... ok
 test tests::replacing_an_id_discards_the_old_generation ... ok
 test tests::full_completion_queue_does_not_prevent_shutdown ... ok
 test tests::cancellation_interrupts_wait_and_worker_limit_is_enforced ... ok
@@ -80,12 +80,12 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 6 tests
-test tests::extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it ... ok
 test tests::analytical_oscillator_and_all_damping_regimes ... ok
+test tests::extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it ... ok
 test tests::frame_duration_boundaries_and_zero_steps ... ok
+test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
 test tests::projectile_matches_forward_euler_and_exact_partition ... ok
 test tests::velocity_overflow_cannot_partially_commit_position ... ok
-test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
 
 test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -103,11 +103,11 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 8 tests
-test tests::overlapping_wide_glyph_is_removed_atomically ... ok
-test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
-test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
 test tests::cursor_metadata_does_not_damage_cells_and_invalid_positions_hide ... ok
+test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
 test tests::unicode_clipping_and_controls ... ok
+test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
 test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
 test tests::cursor_composes_through_layout_panel_and_layers ... ok
 test tests::zero_and_oversized_geometry ... ok
@@ -126,33 +126,33 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 running 22 tests
 test ansi::tests::encoding_does_not_consult_console_support_or_execute_winapi ... ok
 test ansi::tests::preserves_original_io_error ... ok
-test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
 test frame::tests::cursor_only_updates_show_move_hide_without_repainting_cells ... ok
-test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
 test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
+test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
 test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
+test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
 test frame::tests::visible_cursor_is_hidden_during_damage_then_restored_after_paint ... ok
 test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
-test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
 test modes::tests::retries_failed_modes_without_repeating_successful_releases ... ok
+test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
 test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
-test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
 test frame::tests::cursor_moves_use_short_relative_sequences_only_from_known_positions ... ok
+test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
 test tests::conservative_environment_and_key_release ... ok
 test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
 test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
-test tests::resize_to_empty_still_clears_old_content ... ok
 test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
-test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
+test tests::resize_to_empty_still_clears_old_content ... ok
 test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
+test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
 test tests::restoration_on_success_failure_and_unwind ... ok
 
 test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 running 4 tests
-test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
 test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
+test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
 test every_nonpayload_function_media_and_modifier_code_survives ... ok
 test key_kinds_modifiers_and_lock_state_survive_all_combinations ... ok
 
@@ -160,37 +160,38 @@ test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 27 tests
-test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
-test pagination::tests::index_limits_preserve_slice_invariants_across_all_setters ... ok
 test pagination::tests::explicit_pages_are_independent_and_stale_collections_never_panic ... ok
+test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
 test key::tests::custom_tokens_share_enable_unbind_help_and_borrowed_matching ... ok
 test paginator::tests::custom_bindings_repeat_release_focus_and_boundaries_share_one_state ... ok
 test tests::custom_filter_and_keys_share_enabled_help ... ok
-test tests::form_focus_validation_and_submit ... ok
-test tests::list_filter_selection_empty_and_table ... ok
+test pagination::tests::index_limits_preserve_slice_invariants_across_all_setters ... ok
 test paginator::tests::custom_formatting_and_dots_use_bounded_coherent_views ... ok
+test tests::list_filter_selection_empty_and_table ... ok
 test tests::viewport_bounds_and_reduced_motion ... ok
 test tests::input_graphemes_focus_paste_and_scroll ... ok
+test tests::form_focus_validation_and_submit ... ok
 test textinput::tests::completion_handles_empty_selection_unicode_case_expansion_and_combining_marks ... ok
-test textinput::tests::completions_respect_limits_and_live_validation_and_form_tab_ownership ... ok
 test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
+test textinput::tests::completions_respect_limits_and_live_validation_and_form_tab_ownership ... ok
 test textinput::tests::custom_styles_switch_with_focus_without_embedded_terminal_sequences ... ok
+test textinput::tests::deleting_at_word_end_never_panics_or_erases_the_next_word ... ok
 test textinput::tests::form_submission_rechecks_validators_that_capture_other_ui_state ... ok
 test textinput::tests::context_merging_at_limit_and_paste_truncation_preserve_existing_suffix ... ok
-test textinput::tests::ignored_events_keep_error_and_state_and_repeat_is_an_edit ... ok
 test pagination::tests::range_remains_valid_on_empty_data_and_resize ... ok
-test textinput::tests::deleting_at_word_end_never_panics_or_erases_the_next_word ... ok
+test textinput::tests::ignored_events_keep_error_and_state_and_repeat_is_an_edit ... ok
 test textinput::tests::form_validation_cannot_bypass_the_input_validator ... ok
-test textinput::tests::native_cursor_uses_visible_cells_prompt_and_focus_without_reverse_style ... ok
 test textinput::tests::wide_completion_reserves_the_cursor_and_preview_respects_limits ... ok
 test textinput::tests::words_custom_bindings_and_masks_share_the_editing_contract ... ok
+test textinput::tests::native_cursor_uses_visible_cells_prompt_and_focus_without_reverse_style ... ok
 test textinput::tests::placeholders_clip_by_cell_width_without_nuls_and_views_keep_cursor_visible ... ok
 test textinput::tests::edits_preserve_global_grapheme_boundaries_without_splitting_xyz_or_flags ... ok
 test textinput::tests::byte_budget_and_sanitizer_are_independent_of_grapheme_limits ... ok
 
 test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling matea v0.1.0 (${REPOSITORY}/crates/matea)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
      Running unittests src/lib.rs (target/debug/deps/matea-6138443445be99b1)
      Running unittests examples/counter.rs (target/debug/examples/counter-84227fcf3f540055)
      Running unittests examples/dashboard.rs (target/debug/examples/dashboard-931d97a21a637524)

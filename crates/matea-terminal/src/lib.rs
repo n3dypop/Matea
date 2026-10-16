@@ -281,6 +281,16 @@ impl Backend for Native {
         self.modes.enter(self.input, |mode, enable, flags| {
             apply_mode(&mut self.out, mode, enable, flags)
         })?;
+        // Native mode commands have now selected Crossterm's real transport.
+        // The frame writer emits ANSI bytes only; never paint them through a
+        // known legacy-console fallback. Session rolls acquired modes back.
+        #[cfg(windows)]
+        if !crossterm::ansi_support::supports_ansi() {
+            return Err(io::Error::new(
+                io::ErrorKind::Unsupported,
+                "Matea native frame output requires ANSI; legacy WinAPI frame rendering is not implemented",
+            ));
+        }
         execute!(self.out, Clear(ClearType::All))
     }
     fn restore(&mut self) -> io::Result<()> {

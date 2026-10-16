@@ -30,7 +30,8 @@ def exports(document, source_root):
         if not span:
             return None
         path = Path(span["filename"])
-        if path.is_absolute():
+        # rustdoc may retain rooted /rustc/... paths on Windows without a drive.
+        if path.is_absolute() or path.root:
             try:
                 filename = path.resolve().relative_to(source_root).as_posix()
             except ValueError:

@@ -34,6 +34,7 @@ jobs:
       - run: cargo build --locked --workspace --examples
       - run: python scripts/check_coverage.py
       - run: python scripts/test_rustdoc_exports.py
+      - run: python scripts/test_rustdoc_import.py
       - run: python -c "from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)"
       - run: cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json
         shell: bash

@@ -22,9 +22,9 @@ Tests cover nested alias/glob visibility, private fields/methods, default trait
 members, inferred return types, compiler-ID renumbering and schema changes. A tiny
 actual compiler experiment also reproduced the inferred-type omission.
 
-Seven initial macOS profiles compile successfully, including the facade's all
-features. The normalized ledger contains 5,699 distinct item/impl keys before any
-capability mapping. This is additional overlapping review evidence, not 5,699
+Twenty initial Linux/Windows/macOS profiles compile successfully, including the
+facade's all features on Unix. The normalized ledger contains 6,902 distinct item/impl keys before any
+capability mapping. This is additional overlapping review evidence, not 6,902
 newly implemented functions. Standard generic blankets are identified separately;
 local generic implementations remain in review.
 
@@ -56,3 +56,10 @@ contracts. An optional bridge requires style, stateful-render and sanitization
 decisions before adoption; see [ADR 0016](decisions/0016-compiler-api-coverage-before-renderer-integration.md).
 The published ratatui-core 0.1.2 source SHA differs from the pinned reference;
 version labels alone are not interchangeability evidence.
+
+The first three-OS collection run completed all six reference jobs. Foundation's
+Windows coverage check exposed CRLF conversion changing the imported JSON hash.
+Imported facts now use canonical UTF-8/LF bytes and the repository enforces LF for
+that directory, with an LF/CRLF/Unicode regression. This fixes evidence integrity;
+it does not close public-capability or platform review. Rooted /rustc paths are also
+classified as external on Windows even without a drive prefix.

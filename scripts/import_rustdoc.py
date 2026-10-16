@@ -3,10 +3,16 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "docs/coverage/rustdoc"
+
+
+def canonical_fact_bytes(path):
+    text = Path(path).read_text(encoding="utf-8")
+    if Path(path).suffix == ".json":
+        text = json.dumps(json.loads(text), indent=2, ensure_ascii=False) + "\n"
+    return text.encode("utf-8")
 
 
 def main():
@@ -29,7 +35,7 @@ def main():
         for batch_path in sorted(folder.rglob("*-batch.json")):
             batch = json.loads(batch_path.read_text(encoding="utf-8"))
             assert pins[batch["reference"]] == batch["sha"]
-            shutil.copyfile(batch_path, DESTINATION / batch_path.name)
+            (DESTINATION / batch_path.name).write_bytes(canonical_fact_bytes(batch_path))
             batches[batch_path.name] = {"file": batch_path.name, "path": f"docs/coverage/rustdoc/{batch_path.name}",
                                         "reference": batch["reference"], "sha": batch["sha"], "target": batch["target"]}
         for run_path in sorted(folder.rglob("*-run.json")):
@@ -46,18 +52,19 @@ def main():
                 assert graph["extractor_sha256"] == report["extractor_sha256"]
                 assert report["rustdoc_exit_code"] == report["dependency_tree_exit_code"] == 0
                 assert all("profile_item_key" in i and "docs" not in i for i in graph["items"])
-                shutil.copyfile(graph_path, DESTINATION / graph_path.name)
+                graph_bytes = canonical_fact_bytes(graph_path)
+                (DESTINATION / graph_path.name).write_bytes(graph_bytes)
                 entry.update({"graph": f"docs/coverage/rustdoc/{graph_path.name}",
-                              "graph_sha256": hashlib.sha256(graph_path.read_bytes()).hexdigest(),
+                              "graph_sha256": hashlib.sha256(graph_bytes).hexdigest(),
                               "local_items": len(graph["items"]), "external_exports": len(graph["external_exports"])})
             for suffix in ("-run.json", ".log", "-dependencies.txt"):
                 source = run_path.with_name(stem + suffix)
                 if source.exists():
-                    shutil.copyfile(source, DESTINATION / source.name)
+                    (DESTINATION / source.name).write_bytes(canonical_fact_bytes(source))
             snapshots[stem] = entry
     index["snapshots"] = sorted(snapshots.values(), key=lambda s: s["stem"])
     index["batches"] = sorted(batches.values(), key=lambda b: b["file"])
-    index_path.write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
+    index_path.write_bytes((json.dumps(index, indent=2) + "\n").encode("utf-8"))
     print(f"Imported {len(index['snapshots'])} profile snapshots; full target/feature closure remains unreviewed")
 
 

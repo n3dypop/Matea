@@ -21,7 +21,7 @@ native cursorの位置と表示状態を追加しました。widgetの局所座�
 
 ## 検証
 
-Rustの公開API監査をコンパイラベースで拡張しました。固定SHA／lockfileを隔離コピーし、macOSの7構成をコンパイル済みです。マクロ生成、再公開、戻り値経由の公開型とメソッドを追跡し、5,699件のitem／implレビューキーを記録しました。すべて未対応付けで、元の7,455宣言候補とは重複します。対象OS・全feature・外部署名依存の閉包は未解決のまま、3 OS収集を追加しています。監査ロジックの4テストもローカル成功。[監査](rust-public-api-audit.md)、[ADR 0016](decisions/0016-compiler-api-coverage-before-renderer-integration.md)。
+Rustの公開API監査をコンパイラベースで拡張しました。固定SHA／lockfileを隔離コピーし、macOSの7構成をコンパイル済みです。マクロ生成、再公開、戻り値経由の公開型とメソッドを追跡し、6,902件のitem／implレビューキーを記録しました。すべて未対応付けで、元の7,455宣言候補とは重複します。対象OS・全feature・外部署名依存の閉包は未解決のまま、3 OS収集を追加しています。監査ロジックの4テストもローカル成功。[監査](rust-public-api-audit.md)、[ADR 0016](decisions/0016-compiler-api-coverage-before-renderer-integration.md)。
 
 Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実装／正しさ／有限性能fixtureを確認済みとしました。Bindingを型付きキーに加えて独自トークンにも対応させ、借用比較・空集合時の無効化・ヘルプの一貫性を実装しています。短いメタデータのインライン化で構築時の割り当てを3→1回、測定p50を76.47→29.43nsへ削減しました。shared／distinct storageを含む12比較ケースは出力一致。全モジュールの普遍的な同等性能を示すものではありません。[監査](key-bindings-audit.md)、[ADR 0015](decisions/0015-generic-shortcut-bindings.md)。
 
@@ -38,6 +38,8 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + Rust 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38826613401)に成功しました。[ジョブ証拠](evidence/motion-pagination-ci-run.json)。入力編集 `3fe410b44be6bc980cf6e6893b223e5c86dd5ba1` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38830825900)成功。[ジョブ証拠](evidence/textinput-ci-run.json)。native cursor `448d2f7be3d5455a238d4d633b1b12ff037a1706` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38845394481)成功。[ジョブ証拠](evidence/cursor-ci-run.json)。key `cea1ddbec0fddb46ea4630b3d8b0b9a0caec011a` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38846267433)成功。[ジョブ証拠](evidence/key-ci-run.json)。
 
 ## F5の前に残る作業
+
+公開API収集の初回[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/38850278693)では参照元6ジョブが成功しました。[結果](evidence/compiler-audit-ci-run.json)。本体Windows検証は監査JSONのCRLF変換によるhash不一致で失敗し、LF固定・取り込み正規化・回帰テストを追加しました。修正後CIは別途記録します。現在の20構成・6,902レビューキーは未対応付けで、全feature／backend／依存閉包を示すものではありません。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

@@ -26,6 +26,7 @@ class ExportsTests(unittest.TestCase):
         graph = exports(data, "/tmp/fixture")
         self.assertEqual(len(graph["trait_implementations"]), 1)
         self.assertEqual(graph["trait_implementations"][0]["trait"]["path"], "Local")
+        self.assertTrue(graph["trait_implementations"][0]["source"]["outside_reference"])
         self.assertEqual(graph["implicit_trait_summary"]["standard_blanket:core::convert::From"], 1)
 
     def test_public_types_in_private_modules_remain_callable_via_return_values(self):

@@ -41,6 +41,14 @@ and invalidate encoder state on failure. Native mode acquisition/restoration may
 still use Crossterm's actual transport commands. Pure encoding does not establish
 support in a legacy Windows console; native-console validation remains separate.
 
+Native mode acquisition still uses Crossterm's transport. After acquisition, reject
+its known-negative ANSI result before painting a frame and let Session roll back
+all acquired modes. This prevents escape bytes being painted literally when an app
+disables bracketed paste and would otherwise enter a legacy fallback. The check
+inherits Crossterm's process-cached/environment-hint limitations. A per-session
+VT-mode lease, original output-mode restoration and any legacy frame backend remain
+pending; no interactive Windows console compatibility is established by CI.
+
 Sources: pinned Bubble Tea tea.go:379, Bubbles textinput.go:916, Ratatui
 ratatui-core/src/terminal/frame.rs:151–168, released Crossterm src/command.rs:120–134
 and pinned cursor.rs. Appearance protocol research does not authorize image-engine
