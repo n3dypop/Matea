@@ -12,6 +12,7 @@ inventories = [r for r in inventories if "declarations" in r]
 declarations = {d["id"]: d for r in inventories for d in r["declarations"]}
 assert len(declarations) == sum(len(r["declarations"]) for r in inventories)
 capabilities = json.loads((ROOT / "docs/coverage/capabilities.json").read_text())["capabilities"]
+assert len({c["id"] for c in capabilities}) == len(capabilities), "duplicate capability IDs"
 linked = set()
 for capability in capabilities:
     assert capability["status"] in ("partial", "implemented", "owner_deferred")

@@ -25,8 +25,8 @@ Tests/benchmarks and private internals must be classified, not silently counted 
 public user features. The API tools record locations and conditions without copying
 implementation bodies. All sources remain in external reference checkouts.
 
-`capabilities.json` maps 310 declaration candidates to initial capability slices;
-7,145 remain unlinked. A link does not mean the whole declaration is implemented:
+`capabilities.json` maps 387 declaration candidates to initial capability slices;
+7,068 remain unlinked. A link does not mean the whole declaration is implemented:
 partial Kitty/Sixel and paginator/key coverage explicitly stays partial. The raw
 inventory's initial `unmapped` labels are preserved; capability links live in the
 separate file so regenerating an inventory cannot erase manual evidence.
@@ -48,9 +48,14 @@ validates links and current code; it does not pass the strict coverage gate.
 `module-verdicts.json` records Harmonica and Bubbles paginator as implemented and
 measured within their documented Rust contracts; 92 groups remain pending. The
 two reviewed groups cover 49 declarations and have explicit correctness paths,
-matched cases, source audits, deviations and limits. Thirty-one total workloads
+matched cases, source audits, deviations and limits. Thirty-nine total workloads
 do not establish all-reference or universal performance parity. The strict gate
 validates these links and additionally checks per-module correctness/performance,
 issue-report dispositions and source-marker assessments, rather than relying only
 on declaration links. Initial manual findings need to be reconciled into that
 ledger as their reproduction and performance limits are resolved.
+
+TextInput adds 77 declaration links split into editing, suggestions, presentation
+and lifecycle capabilities. The latter two stay partial; native cursor/blink/
+clipboard/light defaults remain pending. The source inventory regeneration keeps
+manual marker assessments only when their fixed-SHA URLs still match.

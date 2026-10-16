@@ -131,6 +131,7 @@ fn main() {
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
+    text_input(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -434,4 +435,112 @@ fn input_bindings(iterations: usize) {
             "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
         );
     }
+}
+fn text_input(iterations: usize) {
+    for (name, initial, position, first, second) in [
+        (
+            "left_right_ascii_64",
+            "a".repeat(64),
+            32,
+            Input::Key(Key::new(KeyCode::Left)),
+            Input::Key(Key::new(KeyCode::Right)),
+        ),
+        (
+            "insert_end_ascii_64",
+            "a".repeat(64),
+            64,
+            Input::Key(Key::new(KeyCode::Char('x'))),
+            Input::Key(Key::new(KeyCode::Backspace)),
+        ),
+        (
+            "insert_middle_ascii_64",
+            "a".repeat(64),
+            32,
+            Input::Key(Key::new(KeyCode::Char('x'))),
+            Input::Key(Key::new(KeyCode::Backspace)),
+        ),
+        (
+            "word_roundtrip_ascii_63",
+            format!("{}tea", "tea ".repeat(15)),
+            63,
+            Input::Key(Key::new(KeyCode::Left).with_modifiers(Modifiers::ALT)),
+            Input::Key(Key::new(KeyCode::Right).with_modifiers(Modifiers::ALT)),
+        ),
+        (
+            "paste_clear_ascii_64",
+            String::new(),
+            0,
+            Input::Paste("p".repeat(64)),
+            Input::Key(Key::new(KeyCode::Char('u')).with_modifiers(Modifiers::CONTROL)),
+        ),
+        (
+            "ignored_focus_ascii_64",
+            "a".repeat(64),
+            64,
+            Input::Focus(false),
+            Input::Focus(true),
+        ),
+    ] {
+        let mut input = TextInput::new(&initial);
+        input.set_cursor(position);
+        input.reserve(128);
+        let expected = format!("{},{}", initial.len(), position);
+        let semantics = format!(
+            "{name}; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse"
+        );
+        input.event(&first, true);
+        input.event(&second, true);
+        assert_eq!(input.value(), initial);
+        assert_eq!(input.position(), position);
+        measure(
+            &format!("textinput/{name}"),
+            (iterations * 10).max(10000),
+            || {
+                black_box(black_box(&mut input).event(black_box(&first), true));
+                black_box(black_box(&mut input).event(black_box(&second), true));
+                (input.value().len() ^ input.position()) as u64
+            },
+            &expected,
+            &semantics,
+        );
+        assert_eq!(input.value(), initial);
+        assert_eq!(input.position(), position);
+    }
+    let initial = "抹茶 e\u{301} 👩‍💻";
+    let mut input = TextInput::new(initial);
+    let left = Input::Key(Key::new(KeyCode::Left).with_modifiers(Modifiers::ALT));
+    let right = Input::Key(Key::new(KeyCode::Right).with_modifiers(Modifiers::ALT));
+    measure(
+        "textinput/word_roundtrip_unicode",
+        (iterations * 10).max(10000),
+        || {
+            black_box(black_box(&mut input).event(black_box(&left), true));
+            black_box(black_box(&mut input).event(black_box(&right), true));
+            input.value().len() as u64
+        },
+        &format!("{},end", initial.len()),
+        "Unicode whitespace word left-right; same value and cursor at end verified outside timing; no view, virtual cursor, clipboard, validator or suggestions",
+    );
+    assert_eq!(input.value(), initial);
+    assert_eq!(input.position(), input.grapheme_len());
+    let mut input = TextInput::new("t");
+    input.show_suggestions = true;
+    input.set_suggestions(["tea", "team", "toast"]);
+    input.reserve(16);
+    let insert = Input::Key(Key::new(KeyCode::Char('e')));
+    let delete = Input::Key(Key::new(KeyCode::Backspace));
+    measure(
+        "textinput/suggestions_edit_pair",
+        (iterations * 10).max(10000),
+        || {
+            black_box(black_box(&mut input).event(black_box(&insert), true));
+            black_box(black_box(&mut input).event(black_box(&delete), true));
+            input.value().len() as u64
+        },
+        "t,3,0",
+        "ASCII t -> te -> t with suggestions tea,team,toast; lowercase prefix filtering; no view, virtual cursor, clipboard or validator",
+    );
+    assert_eq!(input.value(), "t");
+    assert_eq!(input.matched_suggestions().count(), 3);
+    assert_eq!(input.current_suggestion_index(), Some(0));
 }

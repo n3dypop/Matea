@@ -40,3 +40,9 @@ root cancellation. These are distinguished from maintainer-confirmed issues.
 Private page invariants, NonZero sizes, active-dot windows and transactional motion
 updates have regressions. Exact dot capacity and inline checked arithmetic are
 measured against retained pre-optimization samples.
+
+The [input editing audit](input-editing-audit.md) records pinned reproductions of
+Bubbles #1056, #950, completion limit/validation bypass, stale matches, empty
+selection panic and NUL placeholder output. The older #562 adaptation did not
+reproduce. #906 native CJK cursor misplacement is reproduced and remains an open
+Matea native-cursor capability; virtual-cell rendering is a separate path.

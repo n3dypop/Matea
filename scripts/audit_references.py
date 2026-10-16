@@ -77,7 +77,17 @@ for entry in lock:
             if re.search(r"\b(TODO|FIXME|XXX|HACK)\b|\bt\.Skip\(|#\[ignore", line):
                 markers.append({"file": file, "line": number, "kind": "skipped_test" if "Skip(" in line or "#[ignore" in line else "issue_marker", "source_url": f"{entry['remote'].removesuffix('.git')}/blob/{entry['sha']}/{file}#L{number}"})
     record = {"schema": 1, "name": name, "sha": entry["sha"], "remote": entry["remote"], "language": language, "inventory_kind": "source_declarations_not_resolved_exports", "macro_cfg_review": "pending" if language == "rust" else "build_tags_recorded", "modules": list(modules.values()), "declarations": declarations, "issue_markers": markers}
-    (out / f"{name}.json").write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
+    target = out / f"{name}.json"
+    if target.is_file():
+        previous = json.loads(target.read_text())
+        if previous.get("sha") == entry["sha"]:
+            assessed = {m["source_url"]: m for m in previous.get("issue_markers", [])}
+            for marker in markers:
+                old = assessed.get(marker["source_url"], {})
+                for field in ("assessment", "analysis", "matea_evidence"):
+                    if field in old:
+                        marker[field] = old[field]
+    target.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
     repositories.append({"name": name, "sha": entry["sha"], "modules": len(modules), "declarations": len(declarations), "issue_markers": len(markers), "coverage": "pending", "performance": "unmeasured"})
     print(f"{name}: {len(modules)} modules, {len(declarations)} declarations, {len(markers)} issue markers", flush=True)
 (out / "summary.json").write_text(json.dumps({"schema": 1, "scope": "all pinned references including base libraries", "f5_eligible": False, "repositories": repositories}, indent=2) + "\n")

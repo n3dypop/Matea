@@ -27,11 +27,12 @@ impl Model for App {
     }
 }
 fn main() -> Result<(), matea::terminal::Error> {
+    let mut tea = Field::new("Favorite tea", required);
+    tea.input.placeholder = "Matcha, Sencha, Hojicha".into();
+    tea.input.show_suggestions = true;
+    tea.input.set_suggestions(["Matcha", "Sencha", "Hojicha"]);
     support::launch(App {
-        form: Form::new(vec![
-            Field::new("Name", required),
-            Field::new("Favorite tea", required),
-        ]),
-        status: "Tab/Shift-Tab: focus | Enter: next/submit | Esc: quit".into(),
+        form: Form::new(vec![Field::new("Name", required), tea]),
+        status: "Tab: complete/focus | Shift-Tab: back | Enter: next/submit | Esc: quit".into(),
     })
 }

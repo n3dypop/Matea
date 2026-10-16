@@ -129,6 +129,12 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"h")
                 read_until(lambda:b"Page 3 of 4" in plain() and b"Bancha" in plain())
                 os.write(master,b"q")
+            elif action == "form-completion":
+                os.write(master,b"\x1b[200~Akira\x1b[201~\ts")
+                read_until(lambda:b"Sencha" in plain())
+                os.write(master,b"\t\r")
+                read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
+                os.write(master,b"\x1b")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
         read_until(lambda: child.poll() is not None)
@@ -172,3 +178,4 @@ case("post-run SIGTERM uses original handler", "post-signal", args=("--post-sign
 case("enhanced keys, mouse and mode restoration", "enhanced-input",example="input",ready=b"Matea input",
      args=("--mouse","--kitty","--deliver-ctrl-c"),expect_cancelled=False)
 case("interactive pagination", "pagination",example="pagination",ready=b"Page 1 of 4",expect_cancelled=False)
+case("form completion and submission", "form-completion",example="form",ready=b"Tea tasting registration",expect_cancelled=False)

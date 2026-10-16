@@ -3,154 +3,19 @@
 pub mod key;
 mod pagination;
 mod paginator;
+mod textinput;
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::{View, sanitize};
 use matea_style::Theme;
 pub use pagination::Pagination;
 pub use paginator::{PageDisplay, PageKeys, PageNumbers, Paginator};
-use unicode_segmentation::UnicodeSegmentation;
-use unicode_width::UnicodeWidthStr;
+pub use textinput::{EchoMode, InputStyleState, InputStyles, TextEditKeys, TextInput};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Action {
     Changed,
     Selected(usize),
     Submit,
-}
-
-#[derive(Clone, Debug)]
-pub struct TextInput {
-    value: String,
-    cursor: usize,
-    pub width: u16,
-    pub limit: usize,
-}
-impl Default for TextInput {
-    fn default() -> Self {
-        Self {
-            value: String::new(),
-            cursor: 0,
-            width: 24,
-            limit: 1024,
-        }
-    }
-}
-impl TextInput {
-    pub fn new(value: impl Into<String>) -> Self {
-        let mut s = Self::default();
-        s.set_value(value.into());
-        s
-    }
-    pub fn value(&self) -> &str {
-        &self.value
-    }
-    pub fn set_value(&mut self, value: impl Into<String>) {
-        self.value = clean_input(&value.into())
-            .graphemes(true)
-            .take(self.limit)
-            .collect();
-        self.cursor = self.value.len();
-    }
-    fn boundaries(&self) -> Vec<usize> {
-        self.value
-            .grapheme_indices(true)
-            .map(|(n, _)| n)
-            .chain(std::iter::once(self.value.len()))
-            .collect()
-    }
-    fn insert(&mut self, s: &str) {
-        let s = clean_input(s);
-        let remaining = self
-            .limit
-            .saturating_sub(self.value.graphemes(true).count());
-        let s: String = s.graphemes(true).take(remaining).collect();
-        self.value.insert_str(self.cursor, &s);
-        self.cursor += s.len();
-        // A combining insertion may merge clusters; always reestablish a boundary.
-        self.cursor = self
-            .boundaries()
-            .into_iter()
-            .find(|&n| n >= self.cursor)
-            .unwrap_or(self.value.len());
-    }
-}
-fn clean_input(s: &str) -> String {
-    sanitize(s).replace(['\n', '\r'], " ")
-}
-impl Component for TextInput {
-    type Message = Action;
-    fn event(&mut self, input: &Input, focused: bool) -> Response<Action> {
-        if !focused {
-            return Response::ignored();
-        }
-        if matches!(input,Input::Key(key) if !key.is_plain()) {
-            return Response::ignored();
-        }
-        let old = self.value.clone();
-        match input {
-            Input::Paste(s) => self.insert(s),
-            Input::Key(k) if k.is_plain() => {
-                let boundaries = self.boundaries();
-                let previous = boundaries
-                    .iter()
-                    .copied()
-                    .take_while(|&n| n < self.cursor)
-                    .last()
-                    .unwrap_or(0);
-                let next = boundaries
-                    .iter()
-                    .copied()
-                    .find(|&n| n > self.cursor)
-                    .unwrap_or(self.value.len());
-                match k.code {
-                    KeyCode::Char(c) if !c.is_control() => self.insert(&c.to_string()),
-                    KeyCode::Left => self.cursor = previous,
-                    KeyCode::Right => self.cursor = next,
-                    KeyCode::Home => self.cursor = 0,
-                    KeyCode::End => self.cursor = self.value.len(),
-                    KeyCode::Backspace => {
-                        self.value.replace_range(previous..self.cursor, "");
-                        self.cursor = previous;
-                    }
-                    KeyCode::Delete => {
-                        self.value.replace_range(self.cursor..next, "");
-                    }
-                    KeyCode::Enter => return Response::consumed(Some(Action::Submit)),
-                    _ => return Response::ignored(),
-                }
-            }
-            _ => return Response::ignored(),
-        }
-        self.cursor = self
-            .boundaries()
-            .into_iter()
-            .find(|&n| n >= self.cursor)
-            .unwrap_or(self.value.len());
-        Response::consumed((self.value != old).then_some(Action::Changed))
-    }
-    fn view(&self, theme: &Theme, focused: bool) -> View {
-        if !focused {
-            return View::styled(self.value.clone(), theme.text).width(self.width);
-        }
-        let before = &self.value[..self.cursor];
-        let mut start = 0;
-        for (n, g) in before.grapheme_indices(true) {
-            if before[start..].width() < usize::from(self.width.max(1)) {
-                break;
-            }
-            start = n + g.len();
-        }
-        let prefix = &before[start..];
-        let after = &self.value[self.cursor..];
-        let cursor = after.graphemes(true).next().unwrap_or(" ");
-        let rest = &after[after.graphemes(true).next().map_or(0, str::len)..];
-        View::row([
-            View::styled(prefix, theme.text).width(prefix.width() as u16),
-            View::styled(cursor, theme.focus).width(cursor.width().max(1) as u16),
-            View::styled(rest, theme.text),
-        ])
-        .width(self.width)
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -432,7 +297,7 @@ impl Field {
         }
     }
     pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
+        self.error.as_deref().or_else(|| self.input.error())
     }
 }
 pub fn required(value: &str) -> Result<(), String> {
@@ -467,7 +332,12 @@ impl Form {
     }
     fn validate(&mut self) -> bool {
         for f in &mut self.fields {
-            f.error = (f.validator)(f.input.value()).err();
+            f.input.validate();
+            f.error = f
+                .input
+                .error()
+                .map(str::to_owned)
+                .or_else(|| (f.validator)(f.input.value()).err());
         }
         if let Some(i) = self.fields.iter().position(|f| f.error.is_some()) {
             self.focus = i;
@@ -485,6 +355,16 @@ impl Component for Form {
             return Response::ignored();
         }
         if let Some(k) = input.key_down().filter(|k| k.is_plain()) {
+            if k.focus_direction().is_some() {
+                let response = self.fields[self.focus].input.event(input, true);
+                if response.consumed {
+                    self.submitted = false;
+                    if response.message == Some(Action::Changed) {
+                        self.fields[self.focus].error = None;
+                    }
+                    return response;
+                }
+            }
             match k.code {
                 KeyCode::Tab if k.focus_direction() == Some(1) => {
                     self.submitted = false;
@@ -502,7 +382,12 @@ impl Component for Form {
                         return Response::consumed(self.validate().then_some(Action::Submit));
                     }
                     let f = &mut self.fields[self.focus];
-                    f.error = (f.validator)(f.input.value()).err();
+                    f.input.validate();
+                    f.error = f
+                        .input
+                        .error()
+                        .map(str::to_owned)
+                        .or_else(|| (f.validator)(f.input.value()).err());
                     if f.error.is_none() {
                         self.focus += 1;
                     }
@@ -530,7 +415,7 @@ impl Component for Form {
                 ),
                 f.input.view(theme, active),
             ];
-            if let Some(e) = &f.error {
+            if let Some(e) = f.error() {
                 rows.push(View::styled(format!("Error: {e}"), theme.error));
             }
             rows

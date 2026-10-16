@@ -94,6 +94,19 @@ if baseline.is_file() and baseline_report.is_file():
     metadata["motion_pagination_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
         "before_report_sha256": digest(baseline_report), "cases": optimized}
+baseline = destination / "matea-textinput-before.jsonl"
+baseline_report = destination / "textinput-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    case = "textinput/suggestions_edit_pair"
+    before, after = previous[case], records[0][case]
+    assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+    metadata["textinput_query_optimization"] = {"before_raw": baseline.name,
+        "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
+        "before_report_sha256": digest(baseline_report), "case": case,
+        "before": summary(before), "after": summary(after)}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -110,6 +123,8 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",
           "Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construction share the same finite fixture; checks remain enabled in both checked harnesses.",
           "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",
+          "Text-input fixtures exclude View construction, clipboard I/O, validators and virtual-cursor commands in both harnesses. They include eight event pairs; Unicode rune-vs-grapheme single-step behavior is not compared.",
+          "The text-input baseline retains samples/source hashes before ASCII query-buffer reuse. Unicode filtering keeps contextual lowercase semantics; that path is not covered by the ASCII allocation claim.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",

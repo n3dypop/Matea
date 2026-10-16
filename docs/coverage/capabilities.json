@@ -443,6 +443,147 @@
       ],
       "performance": "pending",
       "notes": "Opt-in mouse/explicit Kitty, configurable focus/paste, independent retryable leases. Keyboard stack pop precedes alt-screen leave; failed pop keeps owning screen. Active support query and Windows Kitty output pending."
+    },
+    {
+      "id": "widgets/text-editing",
+      "status": "implemented",
+      "reference_ids": [
+        "5017c0ce8e37bfcc5221",
+        "fba39136febd00dda8ae",
+        "11a3797221fe7407cedb",
+        "4baf4d43cd112e30de3e",
+        "7154d85efe542d39c018",
+        "5b4b3875168165300ba2",
+        "85d930bca439febeea0f",
+        "cbe3d87a7b1d4f3ade64",
+        "6f967a04082834a17792",
+        "3a3290d2d6d30b79ab10",
+        "bf977f8c38cab19db202",
+        "6e494e0f038c260455b8",
+        "9036e9c419dced030dbc",
+        "7ff447942978529dc9c0",
+        "6b58c34b53ee2ba8e96c",
+        "f1c740118f6b4f569241",
+        "1a6fd566a00f5ae8e3bd",
+        "903ba12249a12db43293",
+        "d008f5f109044cb38948",
+        "f41bd79efde2278f9a44",
+        "73c4d409fad9d6dc0ab9",
+        "3c41965414e1ba1414db",
+        "6e71f324d6e46b1254c0",
+        "9d1dcc62ca8ae4fd73a9",
+        "6b5cb94e88190579733e",
+        "f93ab75ac48f02a62ec4",
+        "be14157f97f92624ad8c",
+        "b4d2593fb9a6d240a608"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/textinput.rs",
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/src/textinput.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "docs/performance.md",
+      "notes": "Grapheme cursor/editing, configurable typed keys, validation and budgets. Rune units/defaults differ deliberately. Seven editing fixtures, eight including suggestion filtering; no native/clipboard lifecycle claim."
+    },
+    {
+      "id": "widgets/text-suggestions",
+      "status": "implemented",
+      "reference_ids": [
+        "8bc4f0656fafb1777ed3",
+        "b3f454a5e746b529708f",
+        "dd9d658924ed86e1e658",
+        "982baaa7d8764711c255",
+        "092bdd606dff98f188ff",
+        "65af9f586c48bc6c9a86"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/textinput.rs",
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/src/textinput.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "docs/performance.md",
+      "notes": "Borrowed getters, cached lowercase search/indices, safe empty/case-expansion behavior, bounded validated acceptance. Prefix matching only; active-edit fixture measured, standalone selection/getter timing remains a module limitation."
+    },
+    {
+      "id": "widgets/text-presentation",
+      "status": "partial",
+      "reference_ids": [
+        "1dfafadd1ddc1d5a9775",
+        "38035bcd1d52c6de2e7b",
+        "363ce949d6255418d3c5",
+        "bc93ca3cae5b0bac8337",
+        "868d135f2f3de1125feb",
+        "2bc1b3ce6e700c62b9a8",
+        "057d922c4cf16f58ffc1",
+        "b947aad14e3a30d1af2f",
+        "96958d3d81fb8315acb5",
+        "d53446137b353bccef30",
+        "64a85aca5fbf31984b1c",
+        "6a4f51fa32fcc1ac12f4",
+        "8d0f32dda617f605db22",
+        "4f2abd0cc9f144f5dfe1",
+        "223f4a0ad0be6d577722",
+        "85cdc1ea305aa86468df",
+        "1572af8e9d2472169430",
+        "78e0a91acf11d7650154",
+        "ad9b35472a49d290ef24",
+        "d3ce307c3ca64b55c58d",
+        "60008a144997c283c4b5",
+        "25f4eba7af0fcf635a74",
+        "2aa1ac1bb0607dbc3d6c",
+        "dd3efafddd0ea184076b",
+        "b8425eb07787a455f040",
+        "7571b442d129abc583a8",
+        "fbeb298a0b9a4fdd010c"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/textinput.rs",
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/src/textinput.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "notes": "Prompt, placeholder, echo and custom focused/blurred styles implemented. Native cursor shape/color/blink, default light-style helper and complete display performance remain pending."
+    },
+    {
+      "id": "widgets/text-input-lifecycle",
+      "status": "partial",
+      "reference_ids": [
+        "8c9f4fd1227dd1c03111",
+        "e3188bb4c99bafbe386e",
+        "27a245990234f3c997b2",
+        "16c9a79ebc299ac9dfa7",
+        "9ca50b51335f9f0e6481",
+        "b75f2f52e229b47a56e0",
+        "3a4a5106f65565046c07",
+        "b0feeeda6f71773e9ded",
+        "f5a8dbb73185c60778b1",
+        "46e6458dcb0a501e5613",
+        "b22b4397be9380ff47e4",
+        "4335cfdd929683af44e9",
+        "6b18d0d2721c77134664",
+        "2e8187f848d499b95e53",
+        "e79da175afcb8478156e",
+        "9d5d4f51d15feefdb621"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/textinput.rs",
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/src/textinput.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "notes": "Constructor and Component event/view/focus composition work. Clipboard command, native cursor API and virtual blink lifecycle remain pending; Model/KeyMap declarations include those missing features, so this capability stays partial."
     }
   ]
 }

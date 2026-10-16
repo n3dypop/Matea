@@ -64,3 +64,9 @@ Terminal acquisition tracks independent alternate-screen, cursor, style, paste, 
 See extension-contracts.md for the non-image component example and future runtime graphics ownership. Pure Kitty/Sixel encoders are implemented under terminal::protocol (ADR 0009); automatic negotiation, resource reconciliation and real-emulator validation remain pending. matea-motion is independent (ADR 0010). No image processing engine, decoder or CUDA implementation exists. Public APIs remain provisional.
 
 Motion offers a raw IEEE `Spring::sample` and explicitly checked `Spring::step`. Both are pure cached numeric operations. See ADR 0010 and the separated performance cases.
+
+TextInput owns UTF-8 state with private grapheme boundaries and cached ASCII/count
+metadata. It reuses edit/match buffers and stores optional non-Send UI callbacks
+in Rc. The parent owns focus, Tab traversal and effect scheduling. Input changes
+and completion share limit/validation paths; form submission rechecks callbacks.
+Terminal/native cursor and clipboard lifecycle are still separate pending work.

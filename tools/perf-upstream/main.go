@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
+	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 	"encoding/json"
 	"fmt"
@@ -20,6 +21,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 )
 
 var sink uint64
@@ -103,6 +105,10 @@ func main() {
 		sourceRegressions()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--textinput-source-edges" {
+		textInputEdges()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
@@ -110,6 +116,7 @@ func main() {
 	inputBindings(n)
 	projectiles(n)
 	pagination(n)
+	textInput(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -177,6 +184,151 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+func textInputEdges() {
+	altDelete := func(value string) (result string, panicked bool) {
+		defer func() { panicked = recover() != nil }()
+		input := textinput.New()
+		input.SetVirtualCursor(false)
+		input.Focus()
+		input.SetValue(value)
+		input.SetCursor(1)
+		input, _ = input.Update(tea.KeyPressMsg{Code: 'd', Mod: tea.ModAlt})
+		return input.Value(), false
+	}
+	inside, _ := altDelete("abc d")
+	lastWord, _ := altDelete("ab c")
+	_, lastPanics := altDelete("ab")
+	downPanics := func() (panicked bool) {
+		defer func() { panicked = recover() != nil }()
+		input := textinput.New()
+		input.SetVirtualCursor(false)
+		input.Focus()
+		input.ShowSuggestions = true
+		input.SetWidth(20)
+		input.SetSuggestions([]string{"foo", "bar"})
+		input, _ = input.Update(tea.KeyPressMsg{Code: 'f', Text: "f"})
+		for range 10 {
+			input, _ = input.Update(tea.KeyPressMsg{Code: tea.KeyDown})
+			input.View()
+			input.CurrentSuggestion()
+		}
+		return
+	}
+	emptySelectionPanic := func() (panicked bool) {
+		defer func() { panicked = recover() != nil }()
+		m := textinput.New()
+		m.SetVirtualCursor(false)
+		m.Focus()
+		m.ShowSuggestions = true
+		m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyUp})
+		m.CurrentSuggestion()
+		return
+	}
+	m := textinput.New()
+	m.SetVirtualCursor(false)
+	m.Focus()
+	m.ShowSuggestions = true
+	m.CharLimit = 2
+	calls := 0
+	m.Validate = func(s string) error {
+		calls++
+		if len(s) != 2 {
+			return fmt.Errorf("two bytes")
+		}
+		return nil
+	}
+	m.SetSuggestions([]string{"tea"})
+	m.SetValue("t")
+	staleSuggestion := m.CurrentSuggestion()
+	m.SetSuggestions([]string{"tea"})
+	before := calls
+	m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyTab})
+	placeholder := textinput.New()
+	placeholder.Placeholder = "输入消息..."
+	placeholder.SetWidth(20)
+	zeroWidth := textinput.New()
+	zeroWidth.Placeholder = "Something"
+	zeroWidth.SetWidth(0)
+	native := textinput.New()
+	native.Prompt = ""
+	native.SetVirtualCursor(false)
+	native.Focus()
+	native.SetWidth(40)
+	native.SetValue("あいう")
+	native.CursorEnd()
+	json.NewEncoder(os.Stdout).Encode(map[string]any{
+		"empty_previous_current_suggestion_panics": emptySelectionPanic(),
+		"completion_value":                         m.Value(), "completion_limit": m.CharLimit, "validation_calls_before": before, "validation_calls_after": calls,
+		"chinese_placeholder_contains_nul":           strings.ContainsRune(placeholder.View(), 0),
+		"suggestion_after_set_value_without_refresh": staleSuggestion,
+		"alt_delete_inside_word":                     inside, "alt_delete_last_rune_of_word": lastWord, "alt_delete_last_rune_panics": lastPanics,
+		"reported_down_case_panics_on_pinned_v2": downPanics(),
+		"zero_width_placeholder":                 ansi.Strip(zeroWidth.View()),
+		"native_cjk_cursor_x":                    native.Cursor().Position.X, "native_cjk_expected_columns": ansi.StringWidth("あいう"),
+	})
+}
+func textInput(n int) {
+	for _, item := range []struct {
+		name, initial string
+		position      int
+		first, second tea.Msg
+	}{
+		{"left_right_ascii_64", strings.Repeat("a", 64), 32, tea.KeyPressMsg{Code: tea.KeyLeft}, tea.KeyPressMsg{Code: tea.KeyRight}},
+		{"insert_end_ascii_64", strings.Repeat("a", 64), 64, tea.KeyPressMsg{Code: 'x', Text: "x"}, tea.KeyPressMsg{Code: tea.KeyBackspace}},
+		{"insert_middle_ascii_64", strings.Repeat("a", 64), 32, tea.KeyPressMsg{Code: 'x', Text: "x"}, tea.KeyPressMsg{Code: tea.KeyBackspace}},
+		{"word_roundtrip_ascii_63", strings.Repeat("tea ", 15) + "tea", 63, tea.KeyPressMsg{Code: tea.KeyLeft, Mod: tea.ModAlt}, tea.KeyPressMsg{Code: tea.KeyRight, Mod: tea.ModAlt}},
+		{"paste_clear_ascii_64", "", 0, tea.PasteMsg{Content: strings.Repeat("p", 64)}, tea.KeyPressMsg{Code: 'u', Mod: tea.ModCtrl}},
+		{"ignored_focus_ascii_64", strings.Repeat("a", 64), 64, tea.BlurMsg{}, tea.FocusMsg{}},
+	} {
+		m := textinput.New()
+		m.SetVirtualCursor(false)
+		m.Focus()
+		m.SetValue(item.initial)
+		m.SetCursor(item.position)
+		operation := func() uint64 {
+			m, _ = m.Update(item.first)
+			m, _ = m.Update(item.second)
+			return uint64(len(m.Value()) ^ m.Position())
+		}
+		operation()
+		if m.Value() != item.initial || m.Position() != item.position {
+			panic("text fixture")
+		}
+		semantics := item.name + "; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse"
+		measure("textinput/"+item.name, max(n*10, 10000), operation, fmt.Sprintf("%d,%d", len(item.initial), item.position), semantics)
+		if m.Value() != item.initial || m.Position() != item.position {
+			panic("text fixture drift")
+		}
+	}
+	initial := "抹茶 e\u0301 👩‍💻"
+	m := textinput.New()
+	m.SetVirtualCursor(false)
+	m.Focus()
+	m.SetValue(initial)
+	m.CursorEnd()
+	measure("textinput/word_roundtrip_unicode", max(n*10, 10000), func() uint64 {
+		m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyLeft, Mod: tea.ModAlt})
+		m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyRight, Mod: tea.ModAlt})
+		return uint64(len(m.Value()))
+	}, fmt.Sprintf("%d,end", len(initial)), "Unicode whitespace word left-right; same value and cursor at end verified outside timing; no view, virtual cursor, clipboard, validator or suggestions")
+	if m.Value() != initial || m.Position() != utf8.RuneCountInString(initial) {
+		panic("Unicode word fixture")
+	}
+	m = textinput.New()
+	m.SetVirtualCursor(false)
+	m.Focus()
+	m.ShowSuggestions = true
+	m.SetValue("t")
+	m.SetSuggestions([]string{"tea", "team", "toast"})
+	measure("textinput/suggestions_edit_pair", max(n*10, 10000), func() uint64 {
+		m, _ = m.Update(tea.KeyPressMsg{Code: 'e', Text: "e"})
+		m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyBackspace})
+		return uint64(len(m.Value()))
+	}, "t,3,0", "ASCII t -> te -> t with suggestions tea,team,toast; lowercase prefix filtering; no view, virtual cursor, clipboard or validator")
+	if m.Value() != "t" || len(m.MatchedSuggestions()) != 3 || m.CurrentSuggestionIndex() != 0 {
+		panic("suggestion fixture")
 	}
 }
 func sourceRegressions() {
