@@ -31,8 +31,13 @@ fn main() -> Result<(), matea::terminal::Error> {
     tea.input.placeholder = "Matcha, Sencha, Hojicha".into();
     tea.input.show_suggestions = true;
     tea.input.set_suggestions(["Matcha", "Sencha", "Hojicha"]);
+    let mut name = Field::new("Name", required);
+    if std::env::args().any(|arg| arg == "--native") {
+        name.input.set_virtual_cursor(false);
+        tea.input.set_virtual_cursor(false);
+    }
     support::launch(App {
-        form: Form::new(vec![Field::new("Name", required), tea]),
+        form: Form::new(vec![name, tea]),
         status: "Tab: complete/focus | Shift-Tab: back | Enter: next/submit | Esc: quit".into(),
     })
 }

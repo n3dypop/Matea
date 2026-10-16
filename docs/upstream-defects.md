@@ -44,5 +44,15 @@ measured against retained pre-optimization samples.
 The [input editing audit](input-editing-audit.md) records pinned reproductions of
 Bubbles #1056, #950, completion limit/validation bypass, stale matches, empty
 selection panic and NUL placeholder output. The older #562 adaptation did not
-reproduce. #906 native CJK cursor misplacement is reproduced and remains an open
-Matea native-cursor capability; virtual-cell rendering is a separate path.
+reproduce. #906 native CJK cursor misplacement and an adapted #1001 scroll-offset
+case are reproduced; Matea now composes native position/visibility from the same
+cell viewport as its text rendering. Shape/color/blink and real emulator checks
+remain pending.
+
+[ADR 0014](decisions/0014-composed-cursor-and-pure-encoding.md) also separates pure
+frame encoding from Crossterm's conditional WinAPI command execution. A Vec sink
+now receives ANSI bytes on every OS; mode acquisition/restoration still uses the
+actual transport. Regression tests exercise a command that would panic if the
+Windows console path were invoked, and preserve original I/O errors. Known same-axis
+cursor moves use 4 bytes instead of 6 in the measured fixture; wrap-pending or unknown
+positions reanchor absolutely. This does not establish legacy console support.

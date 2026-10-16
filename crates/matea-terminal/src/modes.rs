@@ -62,7 +62,7 @@ impl InputOptions {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Mode {
     Alternate,
-    CursorHidden,
+    CursorVisibility,
     Style,
     Paste,
     Focus,
@@ -100,7 +100,7 @@ impl ModeLeases {
     ) -> io::Result<()> {
         for mode in [
             Mode::Alternate,
-            Mode::CursorHidden,
+            Mode::CursorVisibility,
             Mode::Style,
             Mode::Paste,
             Mode::Focus,
@@ -140,7 +140,7 @@ impl ModeLeases {
             Mode::Focus,
             Mode::Paste,
             Mode::Style,
-            Mode::CursorHidden,
+            Mode::CursorVisibility,
             Mode::Alternate,
         ] {
             if self.held & mode.bit() == 0 {
@@ -170,8 +170,8 @@ pub(crate) fn apply_mode(
     match (mode, enable) {
         (Mode::Alternate, true) => execute!(out, EnterAlternateScreen),
         (Mode::Alternate, false) => execute!(out, LeaveAlternateScreen),
-        (Mode::CursorHidden, true) => execute!(out, Hide),
-        (Mode::CursorHidden, false) => execute!(out, Show),
+        (Mode::CursorVisibility, true) => execute!(out, Hide),
+        (Mode::CursorVisibility, false) => execute!(out, Show),
         (Mode::Style, _) => execute!(out, ResetColor, SetAttribute(Attribute::Reset)),
         (Mode::Paste, true) => execute!(out, EnableBracketedPaste),
         (Mode::Paste, false) => execute!(out, DisableBracketedPaste),
@@ -210,7 +210,7 @@ mod tests {
     fn retries_failed_modes_without_repeating_successful_releases() {
         for failure in [
             Mode::Alternate,
-            Mode::CursorHidden,
+            Mode::CursorVisibility,
             Mode::Style,
             Mode::Paste,
             Mode::Focus,
@@ -242,7 +242,7 @@ mod tests {
             assert!(!lease.active());
             for mode in [
                 Mode::Alternate,
-                Mode::CursorHidden,
+                Mode::CursorVisibility,
                 Mode::Style,
                 Mode::Paste,
                 Mode::Focus,
@@ -265,7 +265,7 @@ mod tests {
     fn partial_acquisition_restores_only_attempted_modes_and_is_idempotent() {
         for failure in [
             Mode::Alternate,
-            Mode::CursorHidden,
+            Mode::CursorVisibility,
             Mode::Style,
             Mode::Paste,
             Mode::Focus,
@@ -314,7 +314,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             attempted,
-            vec![Mode::Alternate, Mode::CursorHidden, Mode::Style]
+            vec![Mode::Alternate, Mode::CursorVisibility, Mode::Style]
         );
     }
 }

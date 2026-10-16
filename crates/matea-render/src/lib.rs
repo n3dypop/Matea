@@ -11,6 +11,17 @@ pub struct Size {
     pub width: u16,
     pub height: u16,
 }
+/// Zero-based cell position. Layout translates local hints into frame coordinates.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Cursor {
+    pub x: u16,
+    pub y: u16,
+}
+impl Cursor {
+    pub const fn new(x: u16, y: u16) -> Self {
+        Self { x, y }
+    }
+}
 impl Size {
     pub const fn new(width: u16, height: u16) -> Self {
         Self { width, height }
@@ -94,6 +105,7 @@ impl Cell {
 pub struct Surface {
     size: Size,
     cells: Vec<Cell>,
+    cursor: Option<Cursor>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct GeometryError;
@@ -112,6 +124,7 @@ impl Surface {
         Ok(Self {
             size,
             cells: vec![Cell::default(); count],
+            cursor: None,
         })
     }
     pub fn size(&self) -> Size {
@@ -119,6 +132,22 @@ impl Surface {
     }
     pub fn area(&self) -> Rect {
         Rect::new(0, 0, self.size.width, self.size.height)
+    }
+    pub fn cursor(&self) -> Option<Cursor> {
+        self.cursor
+    }
+    /// Invalid positions hide the cursor. Continuation cells normalize to the
+    /// grapheme lead, rather than allowing a caret inside a wide glyph.
+    pub fn set_cursor(&mut self, cursor: Option<Cursor>) {
+        self.cursor = cursor.and_then(|mut c| {
+            if c.x >= self.size.width || c.y >= self.size.height {
+                return None;
+            }
+            while c.x > 0 && self.cells[self.index(c.x, c.y)].is_continuation() {
+                c.x -= 1;
+            }
+            Some(c)
+        });
     }
     pub fn row(&self, y: u16) -> &[Cell] {
         if y >= self.size.height {
@@ -177,6 +206,12 @@ impl Surface {
             left -= 1;
         }
         let width = self.cells[self.index(left, y)].width.max(1);
+        if self
+            .cursor
+            .is_some_and(|c| c.y == y && c.x >= left && c.x < left.saturating_add(width))
+        {
+            self.cursor = None;
+        }
         for col in left..left.saturating_add(width).min(self.size.width) {
             let i = self.index(col, y);
             self.cells[i] = Cell::default();
@@ -293,6 +328,10 @@ enum Node {
         theme: Box<Theme>,
     },
     Layers(Vec<(Rect, View)>),
+    Cursor {
+        child: Box<View>,
+        cursor: Cursor,
+    },
 }
 /// An owned immutable scene. Views never contain terminal escape sequences.
 #[derive(Clone, Debug)]
@@ -331,6 +370,19 @@ impl View {
     }
     pub fn layers(children: Vec<(Rect, View)>) -> Self {
         Self::new(Node::Layers(children))
+    }
+    /// Declare a local cursor; clipping, offsets and later paint are composed by
+    /// the renderer. Only the transport controls terminal visibility/position.
+    pub fn with_cursor(self, cursor: Cursor) -> Self {
+        let (width, height) = (self.width, self.height);
+        Self {
+            node: Node::Cursor {
+                child: Box::new(self),
+                cursor,
+            },
+            width,
+            height,
+        }
     }
     pub fn panel(self, title: impl Into<String>, theme: &Theme) -> Self {
         Self::new(Node::Panel {
@@ -384,6 +436,7 @@ impl View {
                 .saturating_add(2)
                 .saturating_add(theme.padding.saturating_mul(2)),
             Node::Layers(c) => c.iter().map(|(r, _)| r.bottom()).max().unwrap_or(0),
+            Node::Cursor { child, .. } => child.natural_height(),
         }
     }
     pub fn render(&self, size: Size) -> Result<Surface, GeometryError> {
@@ -487,6 +540,24 @@ impl View {
                     v.paint(s, r, clip);
                 }
             }
+            Node::Cursor { child, cursor } => {
+                child.paint(s, area, clip);
+                let absolute = Cursor::new(
+                    area.x.saturating_add(cursor.x),
+                    area.y.saturating_add(cursor.y),
+                );
+                if absolute.x >= clip.x
+                    && absolute.x < clip.right()
+                    && absolute.y >= clip.y
+                    && absolute.y < clip.bottom()
+                {
+                    s.set_cursor(Some(absolute));
+                    // Normalization must not move outside the inherited clip.
+                    if s.cursor().is_some_and(|c| c.x < clip.x) {
+                        s.set_cursor(None);
+                    }
+                }
+            }
         }
     }
 }
@@ -494,6 +565,80 @@ impl View {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn cursor_composes_through_layout_panel_and_layers() {
+        let theme = Theme::default();
+        let child = View::column([
+            View::text("label"),
+            View::row([
+                View::text("prefix").width(3),
+                View::text("tea").with_cursor(Cursor::new(2, 0)),
+            ])
+            .gap(1),
+        ])
+        .gap(1)
+        .panel("input", &theme);
+        let frame = View::layers(vec![(Rect::new(5, 3, 30, 12), child)])
+            .render(Size::new(40, 20))
+            .unwrap();
+        let inset = 1 + theme.padding;
+        assert_eq!(
+            frame.cursor(),
+            Some(Cursor::new(5 + inset + 6, 3 + inset + 2))
+        );
+    }
+    #[test]
+    fn cursor_clips_normalizes_wide_cells_and_obeys_paint_order() {
+        let wide = || View::text("茶x").with_cursor(Cursor::new(1, 0));
+        assert_eq!(
+            wide().render(Size::new(3, 1)).unwrap().cursor(),
+            Some(Cursor::new(0, 0))
+        );
+        assert_eq!(
+            View::text("a")
+                .with_cursor(Cursor::new(3, 0))
+                .render(Size::new(3, 1))
+                .unwrap()
+                .cursor(),
+            None
+        );
+        assert_eq!(wide().render(Size::new(0, 0)).unwrap().cursor(), None);
+        for overlay in [View::text("X"), View::text("").panel("", &Theme::default())] {
+            let frame = View::layers(vec![
+                (Rect::new(0, 0, 3, 1), wide()),
+                (Rect::new(1, 0, 1, 1), overlay),
+            ])
+            .render(Size::new(3, 1))
+            .unwrap();
+            assert_eq!(frame.cursor(), None);
+        }
+        let frame = View::layers(vec![
+            (Rect::new(0, 0, 3, 1), wide()),
+            (
+                Rect::new(2, 0, 1, 1),
+                View::text("z").with_cursor(Cursor::new(0, 0)),
+            ),
+        ])
+        .render(Size::new(3, 1))
+        .unwrap();
+        assert_eq!(frame.cursor(), Some(Cursor::new(2, 0)));
+    }
+    #[test]
+    fn cursor_metadata_does_not_damage_cells_and_invalid_positions_hide() {
+        let a = View::text("tea").render(Size::new(4, 1)).unwrap();
+        let mut b = a.clone();
+        b.set_cursor(Some(Cursor::new(2, 0)));
+        assert!(b.diff(Some(&a)).is_empty());
+        assert_ne!(a, b);
+        for cursor in [
+            Cursor::new(4, 0),
+            Cursor::new(0, 1),
+            Cursor::new(u16::MAX, u16::MAX),
+        ] {
+            b.set_cursor(Some(cursor));
+            assert_eq!(b.cursor(), None);
+        }
+    }
     #[test]
     fn sanitization_borrows_safe_input_and_handles_all_controls() {
         assert!(matches!(sanitized("ASCII 茶\ne\u{301}"), Cow::Borrowed(_)));

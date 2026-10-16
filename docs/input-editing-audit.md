@@ -41,8 +41,14 @@ session or clipboard read. `probe --textinput-source-edges` reproduces them.
   previous-selection reproduction the same historical crash.
 - [Bubbles #906](https://github.com/charmbracelet/bubbles/issues/906): the pure
   native cursor getter reports X=3 for あいう instead of six columns in the fixed
-  source. Matea's virtual cell cursor uses grapheme widths; native cursor metadata
-  is not implemented yet, so the real-cursor capability and this work stay open.
+  source. Matea now uses the same grapheme-cell viewport for virtual and native
+  cursors. Native placement, prompt offsets and hidden/password echo have regressions.
+- [Bubbles #1001](https://github.com/charmbracelet/bubbles/issues/1001): an adapted
+  scroll reproduction uses 30 ASCII letters, width 20, prompt `> ` and one Left
+  after CursorEnd. The pinned native getter returns column 22 while the scrolled
+  content needs column 21. The source's getter uses absolute rune position rather
+  than the viewport offset. Matea returns 21. The report's end-position assertion
+  does not subtract prompt width, so the executed Left case is the clearer witness.
 
 ## Rust behavior and evidence
 
@@ -60,6 +66,15 @@ outer required-field validator. Tab completes before focus traversal, then moves
 focus when there is nothing left to accept. The form example exercises this path
 through the real Crossterm reader in a Unix PTY.
 
+Native input uses `set_virtual_cursor(false)` and a local `View::with_cursor`
+hint. The compositor translates it through rows, columns, panels and layers;
+clipping or later opaque paint can hide it. `Surface::cursor` is frame-relative.
+Cursor-only updates work without cell damage. The encoder hides the cursor while
+painting and places it after the batch. `form --native` exercises CJK paste and
+restoration in a Unix PTY. This verifies emitted coordinates, not an actual
+emulator's width implementation. Shape/color, blinking, real IME and native Windows
+console behavior remain pending. Design: [ADR 0014](decisions/0014-composed-cursor-and-pure-encoding.md).
+
 Eight matched performance cases separate six ASCII editing/navigation pairs, a
 Unicode whitespace-word roundtrip and active suggestion filtering. Virtual cursor
 effects, View construction, OS clipboard and validators are disabled in both timed
@@ -68,8 +83,8 @@ source's rune operations and Matea's whole-grapheme operations differ. The Unico
 word case checks the normalized end position outside timing. Limits do not bind
 the small common input fixtures. Construction is not timed; buffers are warmed.
 
-Theme styles and normal/password/hidden echo are functional, but complete native
-cursor/blink/clipboard/light-default APIs, rich associated text and real IME tests
+Theme styles, echo and native position/visibility are functional, but cursor
+appearance/blink/clipboard/light-default APIs, rich associated text and real IME tests
 remain pending. Suggestion matching uses Unicode lowercase prefixes, not full
 case folding, normalization or fuzzy matching. No full-module or universal latency
 claim is made by the finite workloads in [performance.md](performance.md).

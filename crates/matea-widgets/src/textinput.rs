@@ -1,7 +1,7 @@
 //! Grapheme editing and cell-based display. No terminal state or clipboard I/O.
 use crate::{Action, key::Binding};
 use matea_core::{Component, Input, Key, KeyCode, Modifiers, Response};
-use matea_render::View;
+use matea_render::{Cursor, View};
 use matea_style::{Style, Theme};
 use std::{borrow::Cow, fmt, rc::Rc};
 use unicode_segmentation::UnicodeSegmentation;
@@ -164,6 +164,7 @@ pub struct TextInput {
     pub echo: EchoMode,
     pub keys: TextEditKeys,
     pub show_suggestions: bool,
+    virtual_cursor: bool,
     styles: Option<InputStyles>,
     validator: Option<Validator>,
     error: Option<String>,
@@ -202,6 +203,7 @@ impl Default for TextInput {
             echo: EchoMode::Normal,
             keys: TextEditKeys::default(),
             show_suggestions: false,
+            virtual_cursor: true,
             styles: None,
             validator: None,
             error: None,
@@ -210,6 +212,14 @@ impl Default for TextInput {
     }
 }
 impl TextInput {
+    /// Virtual cursors are styled cells. Native cursors become local view hints;
+    /// the compositor handles layout offsets and the terminal owns visibility.
+    pub fn virtual_cursor(&self) -> bool {
+        self.virtual_cursor
+    }
+    pub fn set_virtual_cursor(&mut self, enabled: bool) {
+        self.virtual_cursor = enabled;
+    }
     pub fn new(value: impl Into<String>) -> Self {
         let mut result = Self::default();
         result.set_value(value);
@@ -691,8 +701,17 @@ impl Component for TextInput {
         };
         let prompt = single_line(&self.prompt);
         let prompt_width = prompt.width().min(u16::MAX as usize) as u16;
+        let mut caret_x = 0;
         let field = if self.echo == EchoMode::Hidden {
-            View::styled(" ", if focused { styles.cursor } else { state.text }).width(self.width)
+            View::styled(
+                " ",
+                if focused && self.virtual_cursor {
+                    styles.cursor
+                } else {
+                    state.text
+                },
+            )
+            .width(self.width)
         } else {
             let placeholder = self.value.is_empty();
             let source = if placeholder {
@@ -782,6 +801,7 @@ impl Component for TextInput {
                 columns += width;
                 start = i;
             }
+            caret_x = columns as u16;
             if !focused {
                 View::styled(
                     cell_prefix(&source[start..], usize::from(self.width)),
@@ -808,14 +828,23 @@ impl Component for TextInput {
                 );
                 View::row([
                     View::styled(&source[start..cursor], text_style).width(columns as u16),
-                    View::styled(glyph, styles.cursor)
-                        .width(glyph.width().max(1).min(usize::from(self.width)) as u16),
+                    View::styled(
+                        glyph,
+                        if self.virtual_cursor {
+                            styles.cursor
+                        } else if ghost.is_empty() {
+                            text_style
+                        } else {
+                            state.suggestion
+                        },
+                    )
+                    .width(glyph.width().max(1).min(usize::from(self.width)) as u16),
                     View::styled(rest, rest_style),
                 ])
                 .width(self.width)
             }
         };
-        if prompt.is_empty() {
+        let view = if prompt.is_empty() {
             field
         } else {
             View::row([
@@ -823,6 +852,11 @@ impl Component for TextInput {
                 field,
             ])
             .width(prompt_width.saturating_add(self.width))
+        };
+        if focused && !self.virtual_cursor && self.width > 0 {
+            view.with_cursor(Cursor::new(prompt_width.saturating_add(caret_x), 0))
+        } else {
+            view
         }
     }
 }
@@ -846,6 +880,73 @@ mod tests {
     }
     fn ctrl(c: char) -> Input {
         Input::Key(Key::new(KeyCode::Char(c)).with_modifiers(Modifiers::CONTROL))
+    }
+    #[test]
+    fn native_cursor_uses_visible_cells_prompt_and_focus_without_reverse_style() {
+        let theme = Theme::default();
+        let mut input = TextInput::new("あいう");
+        input.set_virtual_cursor(false);
+        input.width = 10;
+        input.prompt = "> ".into();
+        let frame = input.view(&theme, true).render(Size::new(20, 1)).unwrap();
+        assert_eq!(frame.cursor(), Some(Cursor::new(8, 0)));
+        assert_ne!(frame.row(0)[8].style(), input.styles(&theme).cursor);
+        input.width = 5;
+        assert_eq!(
+            input
+                .view(&theme, true)
+                .render(Size::new(20, 1))
+                .unwrap()
+                .cursor(),
+            Some(Cursor::new(6, 0))
+        );
+        assert_eq!(
+            input
+                .view(&theme, false)
+                .render(Size::new(20, 1))
+                .unwrap()
+                .cursor(),
+            None
+        );
+        input.echo = EchoMode::Hidden;
+        assert_eq!(
+            input
+                .view(&theme, true)
+                .render(Size::new(20, 1))
+                .unwrap()
+                .cursor(),
+            Some(Cursor::new(2, 0))
+        );
+        input.echo = EchoMode::Password('*');
+        assert_eq!(
+            input
+                .view(&theme, true)
+                .render(Size::new(20, 1))
+                .unwrap()
+                .cursor(),
+            Some(Cursor::new(5, 0))
+        );
+        input.width = 0;
+        assert_eq!(
+            input
+                .view(&theme, true)
+                .render(Size::new(20, 1))
+                .unwrap()
+                .cursor(),
+            None
+        );
+        input.set_virtual_cursor(true);
+        assert!(input.virtual_cursor());
+        let mut scrolled = TextInput::new("a".repeat(30));
+        scrolled.prompt = "> ".into();
+        scrolled.width = 20;
+        scrolled.set_virtual_cursor(false);
+        scrolled.event(&key(KeyCode::Left), true);
+        let frame = scrolled
+            .view(&theme, true)
+            .render(Size::new(24, 1))
+            .unwrap();
+        assert_eq!(frame.cursor(), Some(Cursor::new(21, 0)));
     }
     fn invariant(input: &TextInput) {
         assert_eq!(input.count, input.value.graphemes(true).count());

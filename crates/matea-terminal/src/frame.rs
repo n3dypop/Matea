@@ -1,8 +1,6 @@
-use super::{Capabilities, set_style};
+use super::{Capabilities, ansi::command, set_style};
 use crossterm::{
-    cursor::MoveTo,
-    queue,
-    style::Print,
+    cursor::{Hide, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, Show},
     terminal::{Clear, ClearType},
 };
 use matea_render::Surface;
@@ -11,13 +9,15 @@ use std::io::{self, Write};
 
 /// Stateful frame encoding for exclusive terminal writers. Reuse with the actual
 /// previous Surface; call invalidate after external output, graphics or cursor
-/// movement. The encoder never owns a terminal, hides a cursor, or writes on Drop.
+/// movement. Encodes cursor visibility and position without acquiring a terminal
+/// or writing on Drop. The terminal session owns restoration.
 #[derive(Default, Debug)]
 pub struct FrameEncoder {
     cursor: Option<(u16, u16)>,
     style: Option<Style>,
     caps: Option<Capabilities>,
     invalidated: bool,
+    visible: Option<bool>,
 }
 impl FrameEncoder {
     /// The next write clears and repaints completely, including empty geometry.
@@ -26,6 +26,7 @@ impl FrameEncoder {
         self.style = None;
         self.caps = None;
         self.invalidated = true;
+        self.visible = None;
     }
     pub fn write(
         &mut self,
@@ -51,7 +52,25 @@ impl FrameEncoder {
             {
                 w.write_all(b"\x08")?
             }
-            _ => queue!(w, MoveTo(x, y))?,
+            Some((old_x, old_y))
+                if old_x < width && y == old_y && relative_is_shorter(x.abs_diff(old_x), x, y) =>
+            {
+                if x > old_x {
+                    command(w, MoveRight(x - old_x))?;
+                } else {
+                    command(w, MoveLeft(old_x - x))?;
+                }
+            }
+            Some((old_x, old_y))
+                if old_x < width && x == old_x && relative_is_shorter(y.abs_diff(old_y), x, y) =>
+            {
+                if y > old_y {
+                    command(w, MoveDown(y - old_y))?;
+                } else {
+                    command(w, MoveUp(old_y - y))?;
+                }
+            }
+            _ => command(w, MoveTo(x, y))?,
         }
         self.cursor = Some((x, y));
         Ok(())
@@ -70,6 +89,12 @@ impl FrameEncoder {
         previous: Option<&Surface>,
         caps: Capabilities,
     ) -> io::Result<()> {
+        // A supplied previous frame describes the actual terminal state, even
+        // for the stateless write_frame convenience function's first call.
+        if self.caps.is_none() && !self.invalidated {
+            self.visible = previous.map(|old| old.cursor().is_some());
+            self.cursor = previous.and_then(|old| old.cursor().map(|c| (c.x, c.y)));
+        }
         let previous = if self.invalidated || self.caps.is_some_and(|old| old != caps) {
             None
         } else {
@@ -78,8 +103,19 @@ impl FrameEncoder {
         let resized = previous.is_some_and(|old| old.size() != frame.size());
         let full = previous.is_none() || resized;
         let mut rows = frame.changed_rows(previous).peekable();
-        if rows.peek().is_none() && !full {
+        let painting = rows.peek().is_some() || full;
+        let hint = frame.cursor();
+        let visible = hint.is_some();
+        let positioned = hint.is_none_or(|c| self.cursor == Some((c.x, c.y)));
+        if !painting && self.visible == Some(visible) && positioned {
             return Ok(());
+        }
+        if full && self.caps.is_some() {
+            self.visible = None;
+        }
+        if (painting || !visible) && self.visible != Some(false) {
+            command(w, Hide)?;
+            self.visible = Some(false);
         }
         if full {
             // None is also the driver's recovery signal after external output.
@@ -87,7 +123,7 @@ impl FrameEncoder {
             self.style = None;
             self.cursor = None;
             self.style(w, Style::default())?;
-            queue!(w, Clear(ClearType::All))?;
+            command(w, Clear(ClearType::All))?;
         }
         for y in rows {
             let old = previous.filter(|old| old.size() == frame.size());
@@ -101,7 +137,7 @@ impl FrameEncoder {
             if !ascii {
                 self.style(w, Style::default())?;
                 self.position(w, 0, y, frame.size().width)?;
-                queue!(w, Clear(ClearType::CurrentLine))?;
+                command(w, Clear(ClearType::CurrentLine))?;
             }
             for (x, cell) in frame
                 .row(y)
@@ -123,12 +159,19 @@ impl FrameEncoder {
                 } else {
                     cell.symbol()
                 };
-                queue!(w, Print(symbol))?;
+                w.write_all(symbol.as_bytes())?;
                 self.cursor = if cell.width() == 1 && symbol.len() == 1 && symbol.is_ascii() {
                     Some((x as u16 + 1, y))
                 } else {
                     None
                 };
+            }
+        }
+        if let Some(c) = hint {
+            self.position(w, c.x, c.y, frame.size().width)?;
+            if self.visible != Some(true) {
+                command(w, Show)?;
+                self.visible = Some(true);
             }
         }
         w.flush()?;
@@ -137,11 +180,23 @@ impl FrameEncoder {
         Ok(())
     }
 }
+fn relative_is_shorter(distance: u16, x: u16, y: u16) -> bool {
+    fn digits(value: u16) -> u16 {
+        match value {
+            0..=9 => 1,
+            10..=99 => 2,
+            100..=999 => 3,
+            1000..=9999 => 4,
+            _ => 5,
+        }
+    }
+    3 + digits(distance) < 4 + digits(x.saturating_add(1)) + digits(y.saturating_add(1))
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use matea_render::{Size, View};
+    use matea_render::{Cursor, Size, View};
     use matea_style::ColorLevel;
     fn caps() -> Capabilities {
         Capabilities {
@@ -149,6 +204,84 @@ mod tests {
             unicode: true,
             reduced_motion: true,
         }
+    }
+    #[test]
+    fn cursor_only_updates_show_move_hide_without_repainting_cells() {
+        let a = View::text("tea")
+            .with_cursor(Cursor::new(0, 0))
+            .render(Size::new(4, 1))
+            .unwrap();
+        let mut b = a.clone();
+        b.set_cursor(Some(Cursor::new(2, 0)));
+        let mut encoder = FrameEncoder::default();
+        let mut out = Vec::new();
+        encoder.write(&mut out, &a, None, caps()).unwrap();
+        assert!(out.starts_with(b"\x1b[?25l"));
+        assert!(out.ends_with(b"\r\x1b[?25h"));
+        out.clear();
+        encoder.write(&mut out, &b, Some(&a), caps()).unwrap();
+        assert_eq!(out, b"\x1b[2C");
+        out.clear();
+        encoder.write(&mut out, &b, Some(&b), caps()).unwrap();
+        assert!(out.is_empty());
+        let mut hidden = b.clone();
+        hidden.set_cursor(None);
+        encoder.write(&mut out, &hidden, Some(&b), caps()).unwrap();
+        assert_eq!(out, b"\x1b[?25l");
+    }
+    #[test]
+    fn visible_cursor_is_hidden_during_damage_then_restored_after_paint() {
+        let a = View::text("tea")
+            .with_cursor(Cursor::new(1, 0))
+            .render(Size::new(4, 1))
+            .unwrap();
+        let b = View::text("Tea")
+            .with_cursor(Cursor::new(1, 0))
+            .render(Size::new(4, 1))
+            .unwrap();
+        let mut encoder = FrameEncoder::default();
+        encoder.write(&mut Vec::new(), &a, None, caps()).unwrap();
+        let mut out = Vec::new();
+        encoder.write(&mut out, &b, Some(&a), caps()).unwrap();
+        assert_eq!(out, b"\x1b[?25l\rT\x1b[?25h");
+        encoder.invalidate();
+        out.clear();
+        encoder.write(&mut out, &b, Some(&b), caps()).unwrap();
+        assert!(out.starts_with(b"\x1b[?25l"));
+        assert!(out.ends_with(b"\x1b[?25h"));
+    }
+    #[test]
+    fn cursor_moves_use_short_relative_sequences_only_from_known_positions() {
+        let frame = View::text("").render(Size::new(12, 12)).unwrap();
+        let mut encoder = FrameEncoder::default();
+        let mut previous = frame.clone();
+        previous.set_cursor(Some(Cursor::new(2, 3)));
+        encoder
+            .write(&mut Vec::new(), &previous, None, caps())
+            .unwrap();
+        for (cursor, expected) in [
+            (Cursor::new(4, 3), &b"\x1b[2C"[..]),
+            (Cursor::new(2, 3), &b"\x1b[2D"[..]),
+            (Cursor::new(2, 5), &b"\x1b[2B"[..]),
+            (Cursor::new(2, 3), &b"\x1b[2A"[..]),
+            (Cursor::new(1, 3), &b"\x08"[..]),
+            (Cursor::new(0, 3), &b"\r"[..]),
+            (Cursor::new(2, 4), &b"\x1b[5;3H"[..]),
+        ] {
+            let mut next = frame.clone();
+            next.set_cursor(Some(cursor));
+            let mut out = Vec::new();
+            encoder
+                .write(&mut out, &next, Some(&previous), caps())
+                .unwrap();
+            assert_eq!(out, expected);
+            previous = next;
+        }
+        encoder.cursor = Some((12, 3)); // delayed-wrap position must reanchor
+        let mut out = Vec::new();
+        encoder.position(&mut out, 11, 3, 12).unwrap();
+        assert_eq!(out, b"\x1b[4;12H");
+        assert!(!relative_is_shorter(65535, 0, 0));
     }
     #[test]
     fn one_cell_updates_are_two_bytes_and_invalidation_repaints() {

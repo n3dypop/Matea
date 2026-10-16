@@ -11,12 +11,13 @@ from pathlib import Path
 CSI = re.compile(r"\x1b\[([0-?]*)([ -/]*)([@-~])")
 
 
-def replay(trace):
+def replay(trace, include_cursor=False):
     width, height = trace["width"], trace["height"]
     cells = [[" "] * width for _ in range(height)]
     x = y = 0
     saved = (0, 0)
     snapshots = []
+    visible = False
     for stream in trace["sequences"]:
         offset = 0
         while offset < len(stream):
@@ -41,6 +42,8 @@ def replay(trace):
                     if 1049 in values and final == "h":
                         cells = [[" "] * width for _ in range(height)]
                         x = y = 0
+                    if 25 in values:
+                        visible = final == "h"
                 elif final in "Hf":
                     y = (values[0] or 1) - 1
                     x = (values[1] or 1) - 1 if len(values) > 1 else 0
@@ -79,7 +82,8 @@ def replay(trace):
                 cells[y][x] = char
                 x += 1
             offset += 1
-        snapshots.append("\n".join("".join(row).rstrip() for row in cells))
+        screen = "\n".join("".join(row).rstrip() for row in cells)
+        snapshots.append({"screen": screen, "cursor": [x, y], "visible": visible} if include_cursor else screen)
     return snapshots
 
 
@@ -90,8 +94,13 @@ def main():
     expected = [c + "a" * 79 + "\n" * 23 for c in "aba"]
     for path in args.traces:
         trace = json.loads(path.read_text())
-        assert replay(trace) == expected, path
-        print(f"{path.name}: 3 exact screen states; frame bytes {[len(s.encode()) for s in trace['sequences']]}")
+        if "cursor-trace" in path.name:
+            cursor_expected = [{"screen": "a" * 80 + "\n" * 23, "cursor": [x, 3], "visible": show}
+                               for x, show in [(2, True), (4, True), (2, True), (2, False)]]
+            assert replay(trace, include_cursor=True) == cursor_expected, path
+        else:
+            assert replay(trace) == expected, path
+        print(f"{path.name}: exact states; frame bytes {[len(s.encode()) for s in trace['sequences']]}")
 
 
 if __name__ == "__main__":

@@ -124,6 +124,10 @@ fn main() {
         trace();
         return;
     }
+    if std::env::args().any(|arg| arg == "--cursor-trace") {
+        cursor_trace();
+        return;
+    }
     let iterations = std::env::var("MATEA_PERF_ITERATIONS")
         .ok()
         .and_then(|n| n.parse().ok())
@@ -132,6 +136,7 @@ fn main() {
     projectiles(iterations);
     pagination(iterations);
     text_input(iterations);
+    cursor_encoding(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -266,6 +271,73 @@ fn main() {
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
     }
+}
+fn cursor_trace() {
+    let caps = Capabilities {
+        color: ColorLevel::None,
+        unicode: true,
+        reduced_motion: true,
+    };
+    let mut encoder = FrameEncoder::default();
+    let mut frame = View::text("a".repeat(80))
+        .render(Size::new(80, 24))
+        .unwrap();
+    let mut sequences = Vec::new();
+    for (i, cursor) in [
+        Some(Cursor::new(2, 3)),
+        Some(Cursor::new(4, 3)),
+        Some(Cursor::new(2, 3)),
+        None,
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        frame.set_cursor(cursor);
+        let mut bytes = Vec::new();
+        encoder
+            .write(
+                &mut bytes,
+                &frame,
+                if i == 0 { None } else { Some(&frame) },
+                caps,
+            )
+            .unwrap();
+        sequences.push(quote(&String::from_utf8(bytes).unwrap()));
+    }
+    println!(
+        "{{\"width\":80,\"height\":24,\"sequences\":[{}]}}",
+        sequences.join(",")
+    );
+}
+fn cursor_encoding(iterations: usize) {
+    let caps = Capabilities {
+        color: ColorLevel::None,
+        unicode: true,
+        reduced_motion: true,
+    };
+    let mut frame = View::text("a".repeat(80))
+        .render(Size::new(80, 24))
+        .unwrap();
+    frame.set_cursor(Some(Cursor::new(2, 3)));
+    let mut encoder = FrameEncoder::default();
+    let mut bytes = Vec::with_capacity(8192);
+    encoder.write(&mut bytes, &frame, None, caps).unwrap();
+    let mut flip = false;
+    measure(
+        "cursor/visible_move_80x24",
+        iterations,
+        || {
+            bytes.clear();
+            frame.set_cursor(Some(Cursor::new(if flip { 2 } else { 4 }, 3)));
+            encoder
+                .write(&mut bytes, &frame, Some(&frame), caps)
+                .unwrap();
+            flip = !flip;
+            bytes.len() as u64
+        },
+        "visible cursor alternates (2,3),(4,3); independently replay output before claiming equivalence",
+        "cursor-only move on identical immutable cells in reused 80x24 frame; visible, default style; reused memory sink; no terminal I/O",
+    );
 }
 fn projectiles(iterations: usize) {
     use matea::motion::{Point3, Projectile, TERMINAL_GRAVITY, Vector3, frame_duration};

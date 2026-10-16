@@ -57,6 +57,15 @@ Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-wi
 
 ## Portability and extensions
 
+Cursor hints are local render metadata, translated through the same clip/layout
+as their view. A later opaque glyph/panel covering a hint suppresses it. Wide-cell
+continuations normalize to the lead. The terminal applies native visibility and
+position after cell damage, including frames with cursor-only changes. It hides a
+visible caret during painting. Shape/color/blink and actual-emulator negotiation
+remain pending. The pure encoder calls Crossterm Command::write_ansi directly;
+it never invokes WinAPI based on process-global console detection. Transport mode
+leases still own terminal side effects and restoration. [ADR 0014](decisions/0014-composed-cursor-and-pure-encoding.md).
+
 The terminal backend trait is public and tested with failure-injecting mocks. Transport-neutral input preserves key press/repeat/release, six modifiers, keypad/lock state, function/media/modifier keys, mouse, paste, focus and resize from released Crossterm 0.29. Widgets consume down events; apps can inspect releases. Mouse capture and Kitty keyboard reporting are explicit options; Kitty requests currently fail before setup on the Windows command backend. Automatic keyboard negotiation, richer physical/associated-text data, clipboard, suspend/resume, true inline interactive layout and screen-reader prompt sessions remain pending. Ctrl-C defaults to cleanup/quit and can be delivered to the app. [Input audit and limits](input-audit.md), [ADR 0011](decisions/0011-input-events-and-mode-leases.md).
 
 Terminal acquisition tracks independent alternate-screen, cursor, style, paste, focus, mouse and keyboard leases. Successful restorations are cleared individually; keyboard flags are popped before leaving their alternate-screen stack. Partial I/O still makes remote terminal state uncertain. Color capability detection uses environment hints and supports explicit overrides; no graphics support is inferred.

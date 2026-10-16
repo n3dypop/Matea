@@ -9,7 +9,7 @@
     "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
     "harness": "tools/perf-upstream/main.go"
   },
-  "harness_sha256": "79c43ea4efa0835cd8d884fcbf84ae03169a3f2d91bc7c4486569aacaadd913a",
+  "harness_sha256": "3ade5d70d5d43136082a6d37164a2a928d810d74d8a7bcc4a4c564164d9a1b3e",
   "upstream_observed": {
     "alt_delete_inside_word": "a d",
     "alt_delete_last_rune_of_word": "a",
@@ -20,11 +20,13 @@
     "empty_previous_current_suggestion_panics": true,
     "native_cjk_cursor_x": 3,
     "native_cjk_expected_columns": 6,
+    "native_scrolled_left_cursor_x": 22,
+    "native_scrolled_left_expected_columns": 21,
     "reported_down_case_panics_on_pinned_v2": false,
     "suggestion_after_set_value_without_refresh": "",
     "validation_calls_after": 1,
     "validation_calls_before": 1,
     "zero_width_placeholder": "> S"
   },
-  "notes": "Source-derived reproductions. #1056 reproduced; #562 pinned-v2 adaptation did not panic. #906 native-cursor work remains pending in Matea. No clipboard read/terminal session."
+  "notes": "Source-derived reproductions. #1056 and #906 reproduced; #1001 scroll-offset behavior adapted to one Left after overflow reproduced. #562 pinned-v2 adaptation did not panic. Matea position/visibility regressions and Unix PTY pass; shape/color/blink/real-emulator limits remain. No clipboard read."
 }

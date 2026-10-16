@@ -1,5 +1,6 @@
 #![deny(unsafe_code)]
 //! Exclusive terminal lifecycle and a replaceable I/O backend.
+mod ansi;
 mod frame;
 mod input;
 pub use input::translate_event;
@@ -13,7 +14,7 @@ pub use frame::FrameEncoder;
 #[allow(unsafe_code)]
 mod signals_unix;
 use crossterm::{
-    event, execute, queue,
+    event, execute,
     style::{Attribute, SetAttribute, SetBackgroundColor, SetForegroundColor},
     terminal::{self, Clear, ClearType},
 };
@@ -375,21 +376,21 @@ fn color(c: Color) -> crossterm::style::Color {
     }
 }
 fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
-    queue!(w, SetAttribute(Attribute::Reset))?;
+    ansi::command(w, SetAttribute(Attribute::Reset))?;
     if s.fg != Color::Default {
-        queue!(w, SetForegroundColor(color(s.fg)))?;
+        ansi::command(w, SetForegroundColor(color(s.fg)))?;
     }
     if s.bg != Color::Default {
-        queue!(w, SetBackgroundColor(color(s.bg)))?;
+        ansi::command(w, SetBackgroundColor(color(s.bg)))?;
     }
     if s.bold {
-        queue!(w, SetAttribute(Attribute::Bold))?;
+        ansi::command(w, SetAttribute(Attribute::Bold))?;
     }
     if s.underline {
-        queue!(w, SetAttribute(Attribute::Underlined))?;
+        ansi::command(w, SetAttribute(Attribute::Underlined))?;
     }
     if s.reverse {
-        queue!(w, SetAttribute(Attribute::Reverse))?;
+        ansi::command(w, SetAttribute(Attribute::Reverse))?;
     }
     Ok(())
 }

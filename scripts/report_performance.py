@@ -36,12 +36,17 @@ def summary(record):
 
 
 names = ["matea-current.jsonl", "upstream-current.jsonl", "matea-before-controlled.jsonl",
-         "matea-after.jsonl", "matea-trace.json", "ultraviolet-trace.json"]
+         "matea-after.jsonl", "matea-trace.json", "ultraviolet-trace.json",
+         "matea-cursor-trace.json", "ultraviolet-cursor-trace.json"]
 for name in names:
     shutil.copy2(args.artifacts / name, destination / name)
-traces = [json.loads((destination / name).read_text()) for name in names[-2:]]
+traces = [json.loads((destination / name).read_text()) for name in names[4:6]]
 expected = [c + "a" * 79 + "\n" * 23 for c in "aba"]
 assert all(replay(trace) == expected for trace in traces)
+cursor_traces = [json.loads((destination / name).read_text()) for name in names[6:8]]
+cursor_expected = [{"screen": "a" * 80 + "\n" * 23, "cursor": [x, 3], "visible": show}
+                   for x, show in [(2, True), (4, True), (2, True), (2, False)]]
+assert all(replay(trace, include_cursor=True) == cursor_expected for trace in cursor_traces)
 records = []
 for name in names[:2]:
     records.append({r["case"]: r for r in map(json.loads, (destination / name).read_text().splitlines())})
@@ -57,6 +62,9 @@ for case, matea in records[0].items():
     if case == "terminal/one_cell_80x24":
         item["replayed_update_bytes"] = {"matea": len(traces[0]["sequences"][1].encode()),
                                          "upstream": len(traces[1]["sequences"][1].encode())}
+    if case == "cursor/visible_move_80x24":
+        item["replayed_move_bytes"] = {"matea": len(cursor_traces[0]["sequences"][1].encode()),
+                                       "upstream": len(cursor_traces[1]["sequences"][1].encode())}
     comparison.append(item)
 
 inputs = [ROOT / "Cargo.lock"]
@@ -107,6 +115,23 @@ if baseline.is_file() and baseline_report.is_file():
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
         "before_report_sha256": digest(baseline_report), "case": case,
         "before": summary(before), "after": summary(after)}
+baseline = destination / "matea-cursor-before.jsonl"
+baseline_report = destination / "cursor-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    case = "cursor/visible_move_80x24"
+    before, after = previous[case], records[0][case]
+    assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+    old_trace = json.loads((destination / "matea-cursor-before-trace.json").read_text())
+    assert replay(old_trace, include_cursor=True) == cursor_expected
+    metadata["cursor_move_optimization"] = {"before_raw": baseline.name,
+        "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
+        "before_report_sha256": digest(baseline_report), "case": case,
+        "before": summary(before), "after": summary(after),
+        "move_bytes_before": len(old_trace["sequences"][1].encode()),
+        "move_bytes_after": len(cursor_traces[0]["sequences"][1].encode())}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -120,6 +145,8 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "Input cases use short batches and can show scheduling outliers; p50 improvements do not imply p95 or application-latency parity. No samples were discarded.",
           "The stateful encoders each emit 2 bytes per one-cell update in this fixture. This does not establish bandwidth parity for other workloads.",
           "The immutable unchanged-frame case uses pointer identity in Matea; equal newly allocated frames require comparison.",
+          "The native-cursor fixture also reuses unchanged cells. Four independently replayed states check cell contents, position and visibility; shape/color and terminal I/O are excluded.",
+          "Known-position same-axis cursor moves now select shorter relative commands. The retained baseline records 6 bytes per move, compared with 4 after the change and 6 for the pinned Ultraviolet public MoveTo fixture. Full repaint reanchors absolutely; wrap-pending positions never use this shortcut.",
           "Spring tests cover 45 reference trajectories × 100 steps; the benchmark uses three finite damping regimes.",
           "Projectile tests add 45 XYZ trajectories. Timed raw/checked updates and construction share the same finite fixture; checks remain enabled in both checked harnesses.",
           "The motion/pagination baseline preserves source hashes and all samples before inlining, independent finite checks, invariant-based ranges and exact dot capacity reservation; see report.json.",

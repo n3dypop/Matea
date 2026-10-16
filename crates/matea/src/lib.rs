@@ -32,7 +32,7 @@ pub mod prelude {
         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
         ScrollDirection, Subscription, Task, ViewContext,
     };
-    pub use matea_render::{Rect, Size, Surface, View};
+    pub use matea_render::{Cursor, Rect, Size, Surface, View};
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
     pub use matea_widgets::{
         Action, EchoMode, Field, Form, InputStyleState, InputStyles, List, PageDisplay, PageKeys,

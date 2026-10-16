@@ -93,6 +93,10 @@ func main() {
 		trace()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--cursor-trace" {
+		cursorTrace()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--motion-fixtures" {
 		motionFixtures()
 		return
@@ -117,6 +121,7 @@ func main() {
 	projectiles(n)
 	pagination(n)
 	textInput(n)
+	cursorEncoding(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -185,6 +190,68 @@ func main() {
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
 	}
+}
+func cursorEncoding(n int) {
+	frame := uv.NewScreenBuffer(80, 24)
+	frame.Method = ansi.GraphemeWidth
+	uv.NewStyledString(strings.Repeat("a", 80)).Draw(frame, frame.Bounds())
+	var output bytes.Buffer
+	r := uv.NewTerminalRenderer(&output, []string{"TERM=xterm-256color", "NO_COLOR=1"})
+	r.SetColorProfile(colorprofile.Ascii)
+	r.SetWidthMethod(ansi.GraphemeWidth)
+	r.Resize(80, 24)
+	r.EnterAltScreen()
+	r.Render(frame.RenderBuffer)
+	r.MoveTo(2, 3)
+	r.WriteString(ansi.ShowCursor)
+	if err := r.Flush(); err != nil {
+		panic(err)
+	}
+	flip := false
+	measure("cursor/visible_move_80x24", n, func() uint64 {
+		output.Reset()
+		x := 4
+		if flip {
+			x = 2
+		}
+		r.Render(frame.RenderBuffer)
+		r.MoveTo(x, 3)
+		if err := r.Flush(); err != nil {
+			panic(err)
+		}
+		flip = !flip
+		return uint64(output.Len())
+	}, "visible cursor alternates (2,3),(4,3); independently replay output before claiming equivalence",
+		"cursor-only move on identical immutable cells in reused 80x24 frame; visible, default style; reused memory sink; no terminal I/O")
+}
+func cursorTrace() {
+	frame := uv.NewScreenBuffer(80, 24)
+	frame.Method = ansi.GraphemeWidth
+	uv.NewStyledString(strings.Repeat("a", 80)).Draw(frame, frame.Bounds())
+	var output bytes.Buffer
+	r := uv.NewTerminalRenderer(&output, []string{"TERM=xterm-256color", "NO_COLOR=1"})
+	r.SetColorProfile(colorprofile.Ascii)
+	r.SetWidthMethod(ansi.GraphemeWidth)
+	r.Resize(80, 24)
+	r.EnterAltScreen()
+	sequences := []string{}
+	for i, x := range []int{2, 4, 2, -1} {
+		output.Reset()
+		r.Render(frame.RenderBuffer)
+		if x >= 0 {
+			r.MoveTo(x, 3)
+			if i == 0 {
+				r.WriteString(ansi.ShowCursor)
+			}
+		} else {
+			r.WriteString(ansi.HideCursor)
+		}
+		if err := r.Flush(); err != nil {
+			panic(err)
+		}
+		sequences = append(sequences, output.String())
+	}
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"width": 80, "height": 24, "sequences": sequences})
 }
 func textInputEdges() {
 	altDelete := func(value string) (result string, panicked bool) {
@@ -258,6 +325,14 @@ func textInputEdges() {
 	native.SetWidth(40)
 	native.SetValue("あいう")
 	native.CursorEnd()
+	scrolled := textinput.New()
+	scrolled.Prompt = "> "
+	scrolled.SetVirtualCursor(false)
+	scrolled.Focus()
+	scrolled.SetWidth(20)
+	scrolled.SetValue(strings.Repeat("a", 30))
+	scrolled.CursorEnd()
+	scrolled, _ = scrolled.Update(tea.KeyPressMsg{Code: tea.KeyLeft})
 	json.NewEncoder(os.Stdout).Encode(map[string]any{
 		"empty_previous_current_suggestion_panics": emptySelectionPanic(),
 		"completion_value":                         m.Value(), "completion_limit": m.CharLimit, "validation_calls_before": before, "validation_calls_after": calls,
@@ -267,6 +342,7 @@ func textInputEdges() {
 		"reported_down_case_panics_on_pinned_v2": downPanics(),
 		"zero_width_placeholder":                 ansi.Strip(zeroWidth.View()),
 		"native_cjk_cursor_x":                    native.Cursor().Position.X, "native_cjk_expected_columns": ansi.StringWidth("あいう"),
+		"native_scrolled_left_cursor_x": scrolled.Cursor().Position.X, "native_scrolled_left_expected_columns": 21,
 	})
 }
 func textInput(n int) {

@@ -42,6 +42,12 @@ def screen_text(data):
         if command == b"H":
             row, col = (body or "1;1").split(";")
             y, x = int(row) - 1, int(col) - 1
+        elif command in (b"A", b"B", b"C", b"D"):
+            distance = int(body or "1") or 1
+            if command == b"A": y = max(0, y - distance)
+            if command == b"B": y += distance
+            if command == b"C": x += distance
+            if command == b"D": x = max(0, x - distance)
         elif command == b"J" and body == "2":
             cells.clear()
         elif command == b"K" and body == "2":
@@ -135,6 +141,14 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"\t\r")
                 read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
                 os.write(master,b"\x1b")
+            elif action == "native-cursor":
+                # Assert before exit: cleanup alone also emits Show.
+                read_until(lambda: b"\x1b[4;3H\x1b[?25h" in output)
+                offset = len(output)
+                os.write(master, b"\x1b[200~" + "あいう".encode() + b"\x1b[201~")
+                read_until(lambda: b"\x1b[4;9H\x1b[?25h" in output[offset:])
+                assert b"\x1b[?25l" in output[offset:], (name, "paint did not hide cursor")
+                os.write(master, b"\x1b")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
         read_until(lambda: child.poll() is not None)
@@ -179,3 +193,4 @@ case("enhanced keys, mouse and mode restoration", "enhanced-input",example="inpu
      args=("--mouse","--kitty","--deliver-ctrl-c"),expect_cancelled=False)
 case("interactive pagination", "pagination",example="pagination",ready=b"Page 1 of 4",expect_cancelled=False)
 case("form completion and submission", "form-completion",example="form",ready=b"Tea tasting registration",expect_cancelled=False)
+case("native cursor composition and CJK paste", "native-cursor",example="form",args=("--native",),ready=b"Tea tasting registration",expect_cancelled=False)

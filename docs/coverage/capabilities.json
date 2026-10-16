@@ -583,7 +583,43 @@
         "scripts/pty_smoke.py"
       ],
       "performance": "pending",
-      "notes": "Constructor and Component event/view/focus composition work. Clipboard command, native cursor API and virtual blink lifecycle remain pending; Model/KeyMap declarations include those missing features, so this capability stays partial."
+      "notes": "Constructor and Component event/view/focus composition work, including local native cursor hints. OS clipboard command and virtual blink lifecycle remain pending; Model/KeyMap include missing features, so capability stays partial."
+    },
+    {
+      "id": "render/composed-cursor-position",
+      "status": "partial",
+      "reference_ids": [
+        "f3f416b119040475629f",
+        "6c363f8270a6966c9014",
+        "0c594fac971ccb8b880c",
+        "b68943c3e4a2c129627c",
+        "7a51a4c3c0c42659012f",
+        "2189ce85038d62bf56e2",
+        "83c7a665e2a03ea1f23c",
+        "c27ca44ad206a65f5782",
+        "9ce403c10d25ca5d7ffe",
+        "a01791b163ac5c78bfd5",
+        "16fdf682289305ecdb3b",
+        "ff1c39eb53ca3624e295",
+        "91bd1cecc9c178c57ff9",
+        "00b653c3b601870d4f5f"
+      ],
+      "implementation": [
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-terminal/src/frame.rs",
+        "crates/matea-terminal/src/ansi.rs",
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "tests": [
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-terminal/src/frame.rs",
+        "crates/matea-terminal/src/ansi.rs",
+        "crates/matea-widgets/src/textinput.rs",
+        "scripts/pty_smoke.py",
+        "scripts/check_terminal_trace.py"
+      ],
+      "performance": "docs/performance.md",
+      "notes": "Position/visibility metadata composes without manual widget offsets; clipping/overlap/Unicode and cursor-only updates tested. One immutable-cell move fixture measured and replayed. Whole source Cursor declarations also include unimplemented appearance/blink; raw backend escape hatch and capability negotiation remain pending. Not full module parity."
     }
   ]
 }

@@ -48,5 +48,6 @@ by the component tests; the example also has a Unix PTY navigation test.
 The form offers tea-name completion: type a prefix in Favorite tea, then Tab to
 accept a suggestion before moving focus. Up/down selects a match. TextInput also
 provides placeholder/prompt, typed edit keys, word deletion, live validators and
-normal/password/hidden echo. Native cursor, blink and OS clipboard remain pending;
-see the input editing audit for limits.
+normal/password/hidden echo. Run `cargo run -p matea --example form -- --native`
+to use a native cursor whose position composes through the panel. Appearance,
+blink and OS clipboard remain pending; see the input editing audit for limits.

@@ -6,22 +6,24 @@
 ## 現在の範囲と進捗
 
 - 固定SHAの11参照単位を走査し、94モジュール、7,455件の宣言候補と117件のソース課題マーカーを記録。[台帳](coverage/summary.json)。マクロ展開・再公開・cfgを解決した正確な公開API一覧は未完成です。
-- 公開機能の対応付けは387候補までで、7,068候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
+- 公開機能の対応付けは401候補までで、7,054候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
 - 841件のopen issueを収集しました。未確認報告を不具合と断定していません。[一覧](coverage/upstream-issues.json)、[初期分析と回帰対策](upstream-defects.md)。全件の分析・再現は未完了です。
 - 7 crateにRuntime、描画、スタイル、基本widget、端末、facade、独立motionを配置。Harmonica相当のバネ・投射体、カスタムfilter/keymap、ページ分割を追加しました。公開APIとcrate名は暫定です。
-- 描画の割り当てを削減し、39ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。キー照合は型付き比較で文字列化を省き、6ケースで検証しました。[測定条件と生データ](performance.md)。
+- 描画の割り当てを削減し、40ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。キー照合は型付き比較で文字列化を省き、6ケースで検証しました。[測定条件と生データ](performance.md)。
 - キーのPress/Repeat/Release、6修飾子、ロック状態、機能キー、マウスを公開型で保持。widgetのRelease誤操作、修飾Tabによるフォーカス移動、無視イベントによるForm状態消失を修正しました。端末モードを個別管理し、復旧リトライでキーボードスタックを二重popしないよう改善しました。自動能力交渉、物理キー、IME、WindowsのKitty要求などは残課題です。[入力監査](input-audit.md)、[ADR 0011](decisions/0011-input-events-and-mode-leases.md)。
 - オーナーの例外承認により、Kitty/Sixelの純粋なエンコーダをFoundationへ追加。画像エンジン、画像デコード・変換、CUDAは未実装です。[ADR 0009](decisions/0009-foundation-protocol-encoders.md)。実端末、完全な公開機能、Runtimeの自動能力交渉・資源管理は未検証／未実装です。
 
 Harmonica（20宣言）とBubbles paginator（29宣言）は、文書化したRustの契約に沿った実装・正しさ・性能fixtureのレビューを完了しました。92モジュールは未完了です。投射体のraw/checked更新、ページ状態・キー操作・書式・表示予算を実装し、参照元のゼロ除算・古いslice範囲・空件数時の挙動も実行して分析しました。普遍的な性能互換の主張ではありません。[モジュール監査](motion-pagination-audit.md)、[変更前後の生データ](evidence/performance/2026-10-16/motion-pagination-before-report.json)。
 
-TextInputでは77宣言を対応付け、grapheme編集・単語操作・補完・検証・表示を拡張しました。固定参照元でAlt+Dのpanic／過剰削除、上限を超える補完、空候補の参照panic、placeholderのNUL混入を再現し、回帰対策を追加しました。入力8ケースの出力一致を確認し、ASCII候補検索バッファの再利用で測定した割り当てを2回から0回へ削減しました。native cursor・blink・OS clipboard・light defaultなどは部分対応のままです。[入力編集監査](input-editing-audit.md)、[ADR 0013](decisions/0013-grapheme-input-and-completion.md)。
+TextInputでは77宣言を対応付け、grapheme編集・単語操作・補完・検証・表示を拡張しました。固定参照元でAlt+Dのpanic／過剰削除、上限を超える補完、空候補の参照panic、placeholderのNUL混入を再現し、回帰対策を追加しました。入力8ケースの出力一致を確認し、ASCII候補検索バッファの再利用で測定した割り当てを2回から0回へ削減しました。cursor appearance・blink・OS clipboard・light defaultなどは部分対応のままです。[入力編集監査](input-editing-audit.md)、[ADR 0013](decisions/0013-grapheme-input-and-completion.md)。
+
+native cursorの位置と表示状態を追加しました。widgetの局所座標をレイアウトで合成し、日本語の桁幅、スクロール、重なりとクリッピングを扱います。Bubbles #906／#1001の固定参照元での位置ずれを再現し、Mateaの回帰テストとUnix PTYを追加しました。既知位置の同軸移動は測定fixtureで6→4バイト、p50 34.67→27.50ns、割り当て0回です。独立再生で画面・位置・可視性を検査しています。pure encoderから条件付きWinAPI実行経路も除去しました。[ADR 0014](decisions/0014-composed-cursor-and-pure-encoding.md)。実端末の見え方やWindows native consoleの保証ではありません。
 
 ## 検証
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は72 testsと1 compile-only doc test成功、9サンプルsnapshot成功、Unix PTY 12ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力94対95バイト、更新2対2バイトで同じ画面を確認しました。
+今回のローカル結果は81 testsと1 compile-only doc test成功、9サンプルsnapshot成功、Unix PTY 13ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力100対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
@@ -29,7 +31,7 @@ TextInputでは77宣言を対応付け、grapheme編集・単語操作・補完�
 
 入力・端末モード改善 `35de86601a845736c7227616a15bc4bb496210d8` は[Linux/Windows/macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38823502200)に成功しました。[ジョブ・step証拠](evidence/input-ci-run.json)を保存しています。Linux/macOSのPTYも成功、WindowsのPTYはskipです。
 
-motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + Rust 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38826613401)に成功しました。[ジョブ証拠](evidence/motion-pagination-ci-run.json)。入力編集の新しい実装はローカル検証済みで、別途CI結果を記録します。
+motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + Rust 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38826613401)に成功しました。[ジョブ証拠](evidence/motion-pagination-ci-run.json)。入力編集 `3fe410b44be6bc980cf6e6893b223e5c86dd5ba1` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38830825900)成功。[ジョブ証拠](evidence/textinput-ci-run.json)。native cursor変更のCIは別途記録します。
 
 ## F5の前に残る作業
 
