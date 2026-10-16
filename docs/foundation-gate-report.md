@@ -21,6 +21,8 @@ native cursorの位置と表示状態を追加しました。widgetの局所座�
 
 ## 検証
 
+Rustの公開API監査をコンパイラベースで拡張しました。固定SHA／lockfileを隔離コピーし、macOSの7構成をコンパイル済みです。マクロ生成、再公開、戻り値経由の公開型とメソッドを追跡し、5,699件のitem／implレビューキーを記録しました。すべて未対応付けで、元の7,455宣言候補とは重複します。対象OS・全feature・外部署名依存の閉包は未解決のまま、3 OS収集を追加しています。監査ロジックの4テストもローカル成功。[監査](rust-public-api-audit.md)、[ADR 0016](decisions/0016-compiler-api-coverage-before-renderer-integration.md)。
+
 Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実装／正しさ／有限性能fixtureを確認済みとしました。Bindingを型付きキーに加えて独自トークンにも対応させ、借用比較・空集合時の無効化・ヘルプの一貫性を実装しています。短いメタデータのインライン化で構築時の割り当てを3→1回、測定p50を76.47→29.43nsへ削減しました。shared／distinct storageを含む12比較ケースは出力一致。全モジュールの普遍的な同等性能を示すものではありません。[監査](key-bindings-audit.md)、[ADR 0015](decisions/0015-generic-shortcut-bindings.md)。
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
@@ -33,7 +35,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 入力・端末モード改善 `35de86601a845736c7227616a15bc4bb496210d8` は[Linux/Windows/macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38823502200)に成功しました。[ジョブ・step証拠](evidence/input-ci-run.json)を保存しています。Linux/macOSのPTYも成功、WindowsのPTYはskipです。
 
-motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + Rust 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38826613401)に成功しました。[ジョブ証拠](evidence/motion-pagination-ci-run.json)。入力編集 `3fe410b44be6bc980cf6e6893b223e5c86dd5ba1` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38830825900)成功。[ジョブ証拠](evidence/textinput-ci-run.json)。native cursor `448d2f7be3d5455a238d4d633b1b12ff037a1706` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38845394481)成功。[ジョブ証拠](evidence/cursor-ci-run.json)。key改善のCIは別途記録します。
+motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + Rust 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/38826613401)に成功しました。[ジョブ証拠](evidence/motion-pagination-ci-run.json)。入力編集 `3fe410b44be6bc980cf6e6893b223e5c86dd5ba1` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38830825900)成功。[ジョブ証拠](evidence/textinput-ci-run.json)。native cursor `448d2f7be3d5455a238d4d633b1b12ff037a1706` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38845394481)成功。[ジョブ証拠](evidence/cursor-ci-run.json)。key `cea1ddbec0fddb46ea4630b3d8b0b9a0caec011a` も[3 OS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38846267433)成功。[ジョブ証拠](evidence/key-ci-run.json)。
 
 ## F5の前に残る作業
 

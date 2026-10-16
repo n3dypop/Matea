@@ -1,0 +1,138 @@
+ Documenting crossterm v0.29.0 (${AUDIT_TEMP}/source/crossterm)
+warning: unresolved link to `terminal::enable_raw_mode`
+  |
+  = note: the link appears in this line:
+          
+          Raw mode can be enabled/disabled with the [enable_raw_mode](terminal::enable_raw_mode) and
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: no item named `terminal` in scope
+  = note: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
+
+warning: unresolved link to `terminal::disable_raw_mode`
+  |
+  = note: the link appears in this line:
+          
+          [disable_raw_mode](terminal::disable_raw_mode) functions.
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: no item named `terminal` in scope
+
+warning: redundant explicit link target
+  --> src/lib.rs:39:25
+   |
+39 | //! - Module [`cursor`](cursor/index.html)
+   |               --------  ^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+   = note: `#[warn(rustdoc::redundant_explicit_links)]` on by default
+help: remove explicit link target
+   |
+39 - //! - Module [`cursor`](cursor/index.html)
+39 + //! - Module [`cursor`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:58:24
+   |
+58 | //! - Module [`style`](style/index.html)
+   |               -------  ^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+58 - //! - Module [`style`](style/index.html)
+58 + //! - Module [`style`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:67:27
+   |
+67 | //! - Module [`terminal`](terminal/index.html)
+   |               ----------  ^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+67 - //! - Module [`terminal`](terminal/index.html)
+67 + //! - Module [`terminal`]
+   |
+
+warning: redundant explicit link target
+  |
+  = note: when a link's destination is not specified,
+          the label is used to resolve intra-doc links
+
+warning: redundant explicit link target
+   --> src/style.rs:206:19
+    |
+206 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+206 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+206 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/style.rs:233:19
+    |
+233 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+233 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+233 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/style.rs:260:19
+    |
+260 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+260 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+260 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/terminal.rs:434:27
+    |
+434 | /// See the [`ClearType`](enum.ClearType.html) enum.
+    |              -----------  ^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |              |
+    |              because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+434 - /// See the [`ClearType`](enum.ClearType.html) enum.
+434 + /// See the [`ClearType`] enum.
+    |
+
+warning: `crossterm` (lib doc) generated 10 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s

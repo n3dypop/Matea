@@ -1,0 +1,226 @@
+ratatui-widgets v0.3.2 (${AUDIT_TEMP}/source/ratatui/ratatui-widgets)
+|-- portable-atomic-util v0.2.6
+|   `-- portable-atomic feature "require-cas"
+|       `-- portable-atomic v1.13.1
+|-- time v0.3.55
+|   |-- powerfmt v0.2.0
+|   |-- deranged feature "default"
+|   |   `-- deranged v0.5.8
+|   |-- libc feature "default"
+|   |   |-- libc v0.2.175
+|   |   `-- libc feature "std"
+|   |       `-- libc v0.2.175
+|   |-- num-conv feature "default"
+|   |   `-- num-conv v0.2.2
+|   |-- num_threads feature "default"
+|   |   `-- num_threads v0.1.7
+|   |       `-- libc feature "default" (*)
+|   `-- time-core feature "default"
+|       `-- time-core v0.1.9
+|-- bitflags feature "default"
+|   `-- bitflags v2.13.2
+|       `-- serde_core v1.0.229
+|-- document-features feature "default"
+|   `-- document-features v0.2.12 (proc-macro)
+|       `-- litrs feature "default"
+|           `-- litrs v1.0.0
+|-- hashbrown feature "default"
+|   |-- hashbrown v0.17.1
+|   |   |-- equivalent v1.0.2
+|   |   |-- foldhash v0.2.0
+|   |   `-- allocator-api2 feature "alloc"
+|   |       `-- allocator-api2 v0.2.21
+|   |-- hashbrown feature "allocator-api2"
+|   |   `-- hashbrown v0.17.1 (*)
+|   |-- hashbrown feature "default-hasher"
+|   |   `-- hashbrown v0.17.1 (*)
+|   |-- hashbrown feature "equivalent"
+|   |   `-- hashbrown v0.17.1 (*)
+|   |-- hashbrown feature "inline-more"
+|   |   `-- hashbrown v0.17.1 (*)
+|   `-- hashbrown feature "raw-entry"
+|       `-- hashbrown v0.17.1 (*)
+|-- indoc feature "default"
+|   `-- indoc v2.0.7 (proc-macro)
+|       [build-dependencies]
+|       `-- rustversion feature "default"
+|           `-- rustversion v1.0.22 (proc-macro)
+|-- instability feature "default"
+|   `-- instability v0.3.14 (proc-macro)
+|       |-- indoc feature "default" (*)
+|       |-- darling feature "default"
+|       |   |-- darling v0.24.0
+|       |   |   |-- darling_core feature "default"
+|       |   |   |   `-- darling_core v0.24.0
+|       |   |   |       |-- ident_case feature "default"
+|       |   |   |       |   `-- ident_case v1.0.1
+|       |   |   |       |-- proc-macro2 feature "default"
+|       |   |   |       |   |-- proc-macro2 v1.0.106
+|       |   |   |       |   |   `-- unicode-ident feature "default"
+|       |   |   |       |   |       `-- unicode-ident v1.0.18
+|       |   |   |       |   `-- proc-macro2 feature "proc-macro"
+|       |   |   |       |       `-- proc-macro2 v1.0.106 (*)
+|       |   |   |       |-- quote feature "default"
+|       |   |   |       |   |-- quote v1.0.45
+|       |   |   |       |   |   `-- proc-macro2 v1.0.106 (*)
+|       |   |   |       |   `-- quote feature "proc-macro"
+|       |   |   |       |       |-- quote v1.0.45 (*)
+|       |   |   |       |       `-- proc-macro2 feature "proc-macro" (*)
+|       |   |   |       |-- strsim feature "default"
+|       |   |   |       |   `-- strsim v0.11.1
+|       |   |   |       |-- syn feature "default"
+|       |   |   |       |   |-- syn v3.0.2
+|       |   |   |       |   |   |-- proc-macro2 v1.0.106 (*)
+|       |   |   |       |   |   |-- quote v1.0.45 (*)
+|       |   |   |       |   |   `-- unicode-ident feature "default" (*)
+|       |   |   |       |   |-- syn feature "clone-impls"
+|       |   |   |       |   |   `-- syn v3.0.2 (*)
+|       |   |   |       |   |-- syn feature "derive"
+|       |   |   |       |   |   `-- syn v3.0.2 (*)
+|       |   |   |       |   |-- syn feature "parsing"
+|       |   |   |       |   |   `-- syn v3.0.2 (*)
+|       |   |   |       |   |-- syn feature "printing"
+|       |   |   |       |   |   `-- syn v3.0.2 (*)
+|       |   |   |       |   `-- syn feature "proc-macro"
+|       |   |   |       |       |-- syn v3.0.2 (*)
+|       |   |   |       |       |-- proc-macro2 feature "proc-macro" (*)
+|       |   |   |       |       `-- quote feature "proc-macro" (*)
+|       |   |   |       |-- syn feature "extra-traits"
+|       |   |   |       |   `-- syn v3.0.2 (*)
+|       |   |   |       `-- syn feature "full"
+|       |   |   |           `-- syn v3.0.2 (*)
+|       |   |   `-- darling_macro feature "default"
+|       |   |       `-- darling_macro v0.24.0 (proc-macro)
+|       |   |           |-- darling_core feature "default" (*)
+|       |   |           |-- quote feature "default" (*)
+|       |   |           `-- syn feature "default" (*)
+|       |   `-- darling feature "suggestions"
+|       |       |-- darling v0.24.0 (*)
+|       |       `-- darling_core feature "suggestions"
+|       |           |-- darling_core v0.24.0 (*)
+|       |           `-- darling_core feature "strsim"
+|       |               `-- darling_core v0.24.0 (*)
+|       |-- proc-macro2 feature "default" (*)
+|       |-- quote feature "default" (*)
+|       |-- syn feature "default" (*)
+|       |-- syn feature "derive" (*)
+|       `-- syn feature "full" (*)
+|-- itertools feature "use_alloc"
+|   `-- itertools v0.15.0
+|       `-- either v1.15.0
+|-- line-clipping feature "default"
+|   `-- line-clipping v0.3.8
+|       `-- bitflags feature "default" (*)
+|-- ratatui-core feature "default"
+|   `-- ratatui-core v0.1.2 (${AUDIT_TEMP}/source/ratatui/ratatui-core)
+|       |-- compact_str v0.10.0
+|       |   |-- castaway feature "alloc"
+|       |   |   `-- castaway v0.2.4
+|       |   |       `-- rustversion feature "default" (*)
+|       |   |-- cfg-if feature "default"
+|       |   |   `-- cfg-if v1.0.1
+|       |   |-- itoa feature "default"
+|       |   |   `-- itoa v1.0.15
+|       |   |-- serde feature "alloc"
+|       |   |   |-- serde v1.0.229
+|       |   |   |   |-- serde_core feature "result"
+|       |   |   |   |   `-- serde_core v1.0.229
+|       |   |   |   `-- serde_derive feature "default"
+|       |   |   |       `-- serde_derive v1.0.229 (proc-macro)
+|       |   |   |           |-- proc-macro2 feature "proc-macro" (*)
+|       |   |   |           |-- quote feature "proc-macro" (*)
+|       |   |   |           |-- syn feature "clone-impls" (*)
+|       |   |   |           |-- syn feature "derive" (*)
+|       |   |   |           |-- syn feature "parsing" (*)
+|       |   |   |           |-- syn feature "printing" (*)
+|       |   |   |           `-- syn feature "proc-macro" (*)
+|       |   |   `-- serde_core feature "alloc"
+|       |   |       `-- serde_core v1.0.229
+|       |   |-- serde feature "derive"
+|       |   |   |-- serde v1.0.229 (*)
+|       |   |   `-- serde feature "serde_derive"
+|       |   |       `-- serde v1.0.229 (*)
+|       |   |-- static_assertions feature "default"
+|       |   |   `-- static_assertions v1.1.0
+|       |   `-- zmij feature "default"
+|       |       `-- zmij v1.0.2
+|       |-- kasuari v0.4.12
+|       |   |-- thiserror v2.0.21
+|       |   |   `-- thiserror-impl feature "default"
+|       |   |       `-- thiserror-impl v2.0.21 (proc-macro)
+|       |   |           |-- proc-macro2 feature "default" (*)
+|       |   |           |-- quote feature "default" (*)
+|       |   |           `-- syn feature "default" (*)
+|       |   |-- portable-atomic-util feature "alloc"
+|       |   |   `-- portable-atomic-util v0.2.6 (*)
+|       |   |-- portable-atomic-util feature "default"
+|       |   |   `-- portable-atomic-util v0.2.6 (*)
+|       |   |-- portable-atomic feature "require-cas" (*)
+|       |   `-- hashbrown feature "default"
+|       |       |-- hashbrown v0.16.1
+|       |       |   |-- equivalent v1.0.2
+|       |       |   |-- foldhash v0.2.0
+|       |       |   `-- allocator-api2 feature "alloc" (*)
+|       |       |-- hashbrown feature "allocator-api2"
+|       |       |   `-- hashbrown v0.16.1 (*)
+|       |       |-- hashbrown feature "default-hasher"
+|       |       |   `-- hashbrown v0.16.1 (*)
+|       |       |-- hashbrown feature "equivalent"
+|       |       |   `-- hashbrown v0.16.1 (*)
+|       |       |-- hashbrown feature "inline-more"
+|       |       |   `-- hashbrown v0.16.1 (*)
+|       |       `-- hashbrown feature "raw-entry"
+|       |           `-- hashbrown v0.16.1 (*)
+|       |-- thiserror v2.0.21 (*)
+|       |-- unicode-truncate v3.0.0
+|       |   |-- itertools v0.15.0 (*)
+|       |   |-- unicode-segmentation v1.13.3
+|       |   `-- unicode-width feature "default"
+|       |       |-- unicode-width v0.2.2
+|       |       `-- unicode-width feature "cjk"
+|       |           `-- unicode-width v0.2.2
+|       |-- bitflags feature "default" (*)
+|       |-- hashbrown feature "default" (*)
+|       |-- itertools feature "use_alloc" (*)
+|       |-- serde feature "derive" (*)
+|       |-- lru feature "default"
+|       |   |-- lru v0.18.5
+|       |   |   |-- hashbrown feature "default-hasher" (*)
+|       |   |   `-- hashbrown feature "inline-more" (*)
+|       |   `-- lru feature "hashbrown"
+|       |       `-- lru v0.18.5 (*)
+|       |-- strum feature "derive"
+|       |   |-- strum v0.28.0
+|       |   |   `-- strum_macros feature "default"
+|       |   |       `-- strum_macros v0.28.0 (proc-macro)
+|       |   |           |-- proc-macro2 feature "default" (*)
+|       |   |           |-- quote feature "default" (*)
+|       |   |           |-- heck feature "default"
+|       |   |           |   `-- heck v0.5.0
+|       |   |           |-- syn feature "default"
+|       |   |           |   |-- syn v2.0.117
+|       |   |           |   |   |-- proc-macro2 v1.0.106 (*)
+|       |   |           |   |   |-- quote v1.0.45 (*)
+|       |   |           |   |   `-- unicode-ident feature "default" (*)
+|       |   |           |   |-- syn feature "clone-impls"
+|       |   |           |   |   `-- syn v2.0.117 (*)
+|       |   |           |   |-- syn feature "derive"
+|       |   |           |   |   `-- syn v2.0.117 (*)
+|       |   |           |   |-- syn feature "parsing"
+|       |   |           |   |   `-- syn v2.0.117 (*)
+|       |   |           |   |-- syn feature "printing"
+|       |   |           |   |   `-- syn v2.0.117 (*)
+|       |   |           |   `-- syn feature "proc-macro"
+|       |   |           |       |-- syn v2.0.117 (*)
+|       |   |           |       |-- proc-macro2 feature "proc-macro" (*)
+|       |   |           |       `-- quote feature "proc-macro" (*)
+|       |   |           `-- syn feature "parsing" (*)
+|       |   `-- strum feature "strum_macros"
+|       |       `-- strum v0.28.0 (*)
+|       |-- unicode-segmentation feature "default"
+|       |   `-- unicode-segmentation v1.13.3
+|       `-- unicode-width feature "default" (*)
+|-- serde feature "derive" (*)
+|-- strum feature "derive" (*)
+|-- unicode-segmentation feature "default" (*)
+`-- unicode-width feature "default" (*)

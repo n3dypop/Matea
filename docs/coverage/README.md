@@ -68,3 +68,12 @@ help/enable/unbind and short inline metadata. Twelve matched workloads include
 shared/distinct string storage, construction and getters. Empty retained storage
 is disabled deliberately. Timed vim-style sequences are an upstream extension
 request rather than a pinned public feature; see `../key-bindings-audit.md`.
+
+`rustdoc/index.json` adds seven compiled macOS target/feature snapshots from the
+exact Rust references and lockfiles. It records 5,699 distinct compiled item/impl
+review keys, all initially unlinked. These overlap the source inventory and must
+not be added to 7,455. Macros, reexports, inferred public return types and trait
+members are expanded; private unrelated subtrees are filtered. All platform,
+signature-dependency and full feature closure flags remain false. The strict gate
+also checks these keys, so generated exports cannot disappear behind a source-only
+module verdict. See `../rust-public-api-audit.md` and ADR 0016.

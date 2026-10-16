@@ -1,0 +1,335 @@
+ Documenting crossterm v0.29.0 (${AUDIT_TEMP}/source/crossterm)
+warning: unresolved link to `Poll`
+  --> src/event/sys/unix/waker/tty.rs:21:23
+   |
+21 |     /// Wake up the [`Poll`] associated with this `Waker`.
+   |                       ^^^^ no item named `Poll` in scope
+   |
+   = help: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`
+   = note: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
+
+warning: unresolved link to `terminal::enable_raw_mode`
+  |
+  = note: the link appears in this line:
+          
+          Raw mode can be enabled/disabled with the [enable_raw_mode](terminal::enable_raw_mode) and
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: no item named `terminal` in scope
+
+warning: unresolved link to `terminal::disable_raw_mode`
+  |
+  = note: the link appears in this line:
+          
+          [disable_raw_mode](terminal::disable_raw_mode) functions.
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: no item named `terminal` in scope
+
+warning: redundant explicit link target
+  --> src/lib.rs:39:25
+   |
+39 | //! - Module [`cursor`](cursor/index.html)
+   |               --------  ^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+   = note: `#[warn(rustdoc::redundant_explicit_links)]` on by default
+help: remove explicit link target
+   |
+39 - //! - Module [`cursor`](cursor/index.html)
+39 + //! - Module [`cursor`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:52:24
+   |
+52 | //! - Module [`event`](event/index.html)
+   |               -------  ^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+52 - //! - Module [`event`](event/index.html)
+52 + //! - Module [`event`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:58:24
+   |
+58 | //! - Module [`style`](style/index.html)
+   |               -------  ^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+58 - //! - Module [`style`](style/index.html)
+58 + //! - Module [`style`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:67:27
+   |
+67 | //! - Module [`terminal`](terminal/index.html)
+   |               ----------  ^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+67 - //! - Module [`terminal`](terminal/index.html)
+67 + //! - Module [`terminal`]
+   |
+
+warning: redundant explicit link target
+  --> src/lib.rs:78:28
+   |
+78 | //! - Module [`clipboard`](clipboard/index.html) (requires [`feature =
+   |               -----------  ^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |               |
+   |               because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+78 - //! - Module [`clipboard`](clipboard/index.html) (requires [`feature =
+78 + //! - Module [`clipboard`] (requires [`feature =
+   |
+
+warning: redundant explicit link target
+  |
+  = note: when a link's destination is not specified,
+          the label is used to resolve intra-doc links
+
+warning: redundant explicit link target
+  --> src/event/stream.rs:28:32
+   |
+28 | /// It implements the [Stream](futures_core::stream::Stream)
+   |                        ------  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+   |                        |
+   |                        because label contains path that resolves to same destination
+   |
+   = note: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+help: remove explicit link target
+   |
+28 - /// It implements the [Stream](futures_core::stream::Stream)
+28 + /// It implements the [Stream]
+   |
+
+warning: redundant explicit link target
+   --> src/event.rs:147:37
+    |
+147 | /// Checks if there is an [`Event`](enum.Event.html) available.
+    |                            -------  ^^^^^^^^^^^^^^^ explicit target is redundant
+    |                            |
+    |                            because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+147 - /// Checks if there is an [`Event`](enum.Event.html) available.
+147 + /// Checks if there is an [`Event`] available.
+    |
+
+warning: redundant explicit link target
+   --> src/event.rs:149:40
+    |
+149 | /// Returns `Ok(true)` if an [`Event`](enum.Event.html) is available otherwise it returns
+    |                               -------  ^^^^^^^^^^^^^^^ explicit target is redundant
+    |                               |
+    |                               because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+149 - /// Returns `Ok(true)` if an [`Event`](enum.Event.html) is available otherwise it returns
+149 + /// Returns `Ok(true)` if an [`Event`] is available otherwise it returns
+    |
+
+warning: redundant explicit link target
+   --> src/event.rs:191:30
+    |
+191 | /// Reads a single [`Event`](enum.Event.html).
+    |                     -------  ^^^^^^^^^^^^^^^ explicit target is redundant
+    |                     |
+    |                     because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+191 - /// Reads a single [`Event`](enum.Event.html).
+191 + /// Reads a single [`Event`].
+    |
+
+warning: redundant explicit link target
+   --> src/event.rs:193:45
+    |
+193 | /// This function blocks until an [`Event`](enum.Event.html) is available. Combine it with the
+    |                                    -------  ^^^^^^^^^^^^^^^ explicit target is redundant
+    |                                    |
+    |                                    because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+193 - /// This function blocks until an [`Event`](enum.Event.html) is available. Combine it with the
+193 + /// This function blocks until an [`Event`] is available. Combine it with the
+    |
+
+warning: redundant explicit link target
+   --> src/event.rs:194:14
+    |
+194 | /// [`poll`](fn.poll.html) function to get non-blocking reads.
+    |      ------  ^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+194 - /// [`poll`](fn.poll.html) function to get non-blocking reads.
+194 + /// [`poll`] function to get non-blocking reads.
+    |
+
+warning: redundant explicit link target
+   --> src/event.rs:240:41
+    |
+240 | /// Attempts to read a single [`Event`](enum.Event.html) without blocking the thread.
+    |                                -------  ^^^^^^^^^^^^^^^ explicit target is redundant
+    |                                |
+    |                                because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+240 - /// Attempts to read a single [`Event`](enum.Event.html) without blocking the thread.
+240 + /// Attempts to read a single [`Event`] without blocking the thread.
+    |
+
+warning: redundant explicit link target
+   --> src/style.rs:206:19
+    |
+206 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+206 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+206 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/style.rs:233:19
+    |
+233 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+233 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+233 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/style.rs:260:19
+    |
+260 | /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    |      -----------  ^^^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |      |
+    |      because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+260 - /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+260 + /// [`SetColors`] can also be used to set both the foreground and background
+    |
+
+warning: redundant explicit link target
+   --> src/terminal.rs:434:27
+    |
+434 | /// See the [`ClearType`](enum.ClearType.html) enum.
+    |              -----------  ^^^^^^^^^^^^^^^^^^^ explicit target is redundant
+    |              |
+    |              because label contains path that resolves to same destination
+    |
+    = note: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+help: remove explicit link target
+    |
+434 - /// See the [`ClearType`](enum.ClearType.html) enum.
+434 + /// See the [`ClearType`] enum.
+    |
+
+warning: `crate::event::read` is both a function and a module
+  --> src/cursor/sys/unix.rs:19:32
+   |
+19 | /// [`crossterm::event::read`](crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+   |                                ^^^^^^^^^^^^^^^^^^ ambiguous link
+   |
+help: to link to the function, add parentheses
+   |
+19 | /// [`crossterm::event::read`](crate::event::read()) or [`crossterm::event::poll`](crate::event::poll)
+   |                                                  ++
+help: to link to the module, prefix with `mod@`
+   |
+19 | /// [`crossterm::event::read`](mod@crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+   |                                ++++
+
+warning: `crate::event::read` is both a function and a module
+  --> src/terminal/sys/unix.rs:97:32
+   |
+97 | /// [`crossterm::event::read`](crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+   |                                ^^^^^^^^^^^^^^^^^^ ambiguous link
+   |
+help: to link to the function, add parentheses
+   |
+97 | /// [`crossterm::event::read`](crate::event::read()) or [`crossterm::event::poll`](crate::event::poll)
+   |                                                  ++
+help: to link to the module, prefix with `mod@`
+   |
+97 | /// [`crossterm::event::read`](mod@crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+   |                                ++++
+
+warning: `crate::event::read` is both a function and a module
+   --> src/terminal/sys/unix.rs:107:32
+    |
+107 | /// [`crossterm::event::read`](crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+    |                                ^^^^^^^^^^^^^^^^^^ ambiguous link
+    |
+help: to link to the function, add parentheses
+    |
+107 | /// [`crossterm::event::read`](crate::event::read()) or [`crossterm::event::poll`](crate::event::poll)
+    |                                                  ++
+help: to link to the module, prefix with `mod@`
+    |
+107 | /// [`crossterm::event::read`](mod@crate::event::read) or [`crossterm::event::poll`](crate::event::poll)
+    |                                ++++
+
+warning: `crossterm` (lib doc) generated 28 warnings (5 duplicates)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s

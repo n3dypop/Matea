@@ -48,11 +48,58 @@ issues=json.loads((ROOT/"docs/coverage/upstream-issues.json").read_text())
 untriaged=sum(i["disposition"].startswith("untriaged") for r in issues["repositories"] for i in r["issues"])
 pending_markers=sum(m.get("assessment","pending")=="pending" for r in inventories for m in r["issue_markers"])
 scope_closed=json.loads((ROOT/"docs/coverage/dependency-frontier.json").read_text())["scope_closure_reviewed"]
+compiled_index = ROOT / "docs/coverage/rustdoc/index.json"
+compiled_keys, compiled_linked = set(), set()
+compiled_groups = {}
+compiled_scope_closed = False
+if compiled_index.exists():
+    import hashlib
+    compiler = json.loads(compiled_index.read_text(encoding="utf-8"))
+    current_pins = {p["name"]: p["sha"] for p in json.loads((ROOT / "docs/upstream-lock.json").read_text(encoding="utf-8"))}
+    compiled_scope_closed = compiler["target_feature_closure_reviewed"] and compiler["signature_dependency_closure_reviewed"]
+    for snapshot in compiler["snapshots"]:
+        assert current_pins[snapshot["reference"]] == snapshot["sha"]
+        run = json.loads((ROOT / snapshot["run"]).read_text(encoding="utf-8"))
+        assert run["sha"] == snapshot["sha"] and run["target"] == snapshot["target"]
+        if "graph" not in snapshot:
+            compiled_scope_closed = False
+            continue
+        graph_path = ROOT / snapshot["graph"]
+        assert hashlib.sha256(graph_path.read_bytes()).hexdigest() == snapshot["graph_sha256"]
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        assert graph["sha"] == snapshot["sha"] and graph["extractor_sha256"] == run["extractor_sha256"]
+        assert run["exit_code"] == run["rustdoc_exit_code"] == run["dependency_tree_exit_code"] == 0
+        prefix = f"{snapshot['reference']}:{snapshot['sha']}:{snapshot['package']}:"
+        compiled_keys.update(prefix + i["profile_item_key"] for i in graph["items"])
+        compiled_keys.update(prefix + i["profile_impl_key"] for i in graph["trait_implementations"])
+        for node, key_name in [(i, "profile_item_key") for i in graph["items"]] + [(i, "profile_impl_key") for i in graph["trait_implementations"]]:
+            source = node.get("source")
+            if source and not source.get("outside_reference"):
+                group = (snapshot["reference"], str(Path(source["file"]).parent))
+                compiled_groups.setdefault(group, set()).add(prefix + node[key_name])
+    for batch_entry in compiler.get("batches", []):
+        batch = json.loads((ROOT / batch_entry["path"]).read_text(encoding="utf-8"))
+        assert current_pins[batch["reference"]] == batch["sha"]
+        if batch["exclusions"] or not batch["all_requested_profiles_passed"]:
+            compiled_scope_closed = False
+    for capability in capabilities:
+        keys = set(capability.get("compiler_export_keys", []))
+        assert keys <= compiled_keys, capability["id"]
+        compiled_linked.update(keys)
+    for verdict in module_verdicts:
+        if verdict["status"] != "implemented_measured":
+            continue
+        inventory = next(r for r in inventories if r["name"] == verdict["reference"])
+        if inventory["language"] == "rust":
+            assert verdict.get("cfg_export_reviewed"), verdict
+            assert compiled_groups.get((verdict["reference"], verdict["source_group"]), set()) <= compiled_linked, verdict
+compiled_unmapped = len(compiled_keys - compiled_linked)
 print(f"{len(inventories)} reference inventories; {len(declarations)} declaration candidates; "
       f"{unmapped} unlinked; {pending} partial/unmeasured capabilities; {unresolved_exports} unresolved Rust export graphs")
 print(f"{pending_modules} module verdicts pending; {untriaged} issue reports and {pending_markers} source markers need ledger disposition")
 print(f"Dependency/public-capability closure reviewed: {scope_closed}")
-blocked=unmapped or pending or unresolved_exports or pending_modules or untriaged or pending_markers or not scope_closed
+print(f"{compiled_unmapped} compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: {compiled_scope_closed}")
+blocked=unmapped or pending or unresolved_exports or pending_modules or untriaged or pending_markers or not scope_closed or compiled_unmapped or not compiled_scope_closed
 print("F5 CLOSED" if blocked else "Coverage entry checks satisfied; full F5 validation still required")
 if args.gate and blocked:
     raise SystemExit(1)
