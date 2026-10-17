@@ -84,6 +84,25 @@ struct Packet {
     bytes: Vec<u8>,
     limit: usize,
 }
+
+// All numeric protocol headers below are shorter than 128 ASCII bytes even at
+// u32/usize maxima. Keep formatting temporary storage bounded and on the stack;
+// copy each complete header once so Vec growth does not follow fmt fragments.
+struct Header {
+    bytes: [u8; 128],
+    len: usize,
+}
+impl std::fmt::Write for Header {
+    fn write_str(&mut self, text: &str) -> std::fmt::Result {
+        let end = self.len.checked_add(text.len()).ok_or(std::fmt::Error)?;
+        self.bytes
+            .get_mut(self.len..end)
+            .ok_or(std::fmt::Error)?
+            .copy_from_slice(text.as_bytes());
+        self.len = end;
+        Ok(())
+    }
+}
 impl Packet {
     fn new(limits: Limits) -> Self {
         Self {
@@ -98,8 +117,13 @@ impl Packet {
         self.bytes.extend_from_slice(bytes);
         Ok(())
     }
-    fn text(&mut self, text: impl AsRef<str>) -> Result<(), EncodeError> {
-        self.push(text.as_ref().as_bytes())
+    fn formatted(&mut self, arguments: std::fmt::Arguments<'_>) -> Result<(), EncodeError> {
+        let mut header = Header {
+            bytes: [0; 128],
+            len: 0,
+        };
+        std::fmt::write(&mut header, arguments).map_err(|_| EncodeError::Limit)?;
+        self.push(&header.bytes[..header.len])
     }
 }
 #[derive(Clone, Copy, Debug)]
@@ -141,7 +165,7 @@ pub fn kitty_transfer(
     for (index, chunk) in chunks.enumerate() {
         let more = u8::from(index + 1 < total);
         if index == 0 {
-            packet.text(format!(
+            packet.formatted(format_args!(
                 "\x1b_Ga={},f={},s={},v={},i={},q=2,m={more};",
                 if display { 'T' } else { 't' },
                 pixels.format.channels() * 8,
@@ -150,7 +174,7 @@ pub fn kitty_transfer(
                 id
             ))?;
         } else {
-            packet.text(format!("\x1b_Gm={more};"))?;
+            packet.formatted(format_args!("\x1b_Gm={more};"))?;
         }
         base64(&mut packet, chunk)?;
         packet.push(b"\x1b\\")?;
@@ -248,7 +272,7 @@ pub fn sixel(pixels: IndexedPixels<'_>, limits: Limits) -> Result<Vec<u8>, Encod
         return Err(EncodeError::Palette);
     }
     let mut packet = Packet::new(limits);
-    packet.text(format!(
+    packet.formatted(format_args!(
         "\x1bP0;{};0q\"1;1;{};{}",
         u8::from(pixels.transparent.is_some()),
         pixels.width,
@@ -259,7 +283,7 @@ pub fn sixel(pixels: IndexedPixels<'_>, limits: Limits) -> Result<Vec<u8>, Encod
             continue;
         }
         let percent = |c: u8| (u32::from(c) * 100 + 127) / 255;
-        packet.text(format!(
+        packet.formatted(format_args!(
             "#{index};2;{};{};{}",
             percent(rgb[0]),
             percent(rgb[1]),
@@ -291,7 +315,7 @@ pub fn sixel(pixels: IndexedPixels<'_>, limits: Limits) -> Result<Vec<u8>, Encod
                 packet.push(b"$")?;
             }
             painted = true;
-            packet.text(format!("#{index}"))?;
+            packet.formatted(format_args!("#{index}"))?;
             let mut x = 0;
             while x <= last {
                 let value = mask[x];
@@ -301,7 +325,7 @@ pub fn sixel(pixels: IndexedPixels<'_>, limits: Limits) -> Result<Vec<u8>, Encod
                 }
                 let count = x - start;
                 if count >= 4 {
-                    packet.text(format!("!{count}"))?;
+                    packet.formatted(format_args!("!{count}"))?;
                     packet.push(&[value + 63])?;
                 } else {
                     for _ in 0..count {
@@ -323,6 +347,44 @@ mod tests {
     use super::*;
     fn id() -> NonZeroU32 {
         NonZeroU32::new(7).unwrap()
+    }
+    #[test]
+    fn header_formatting_is_bounded_and_failed_headers_are_not_appended() {
+        let mut packet = Packet::new(Limits::default());
+        let maximum_header = format!(
+            "\x1b_Ga=T,f=32,s={},v={},i={},q=2,m=1;",
+            u32::MAX,
+            u32::MAX,
+            u32::MAX
+        );
+        packet
+            .formatted(format_args!(
+                "\x1b_Ga=T,f=32,s={},v={},i={},q=2,m=1;",
+                u32::MAX,
+                u32::MAX,
+                u32::MAX
+            ))
+            .unwrap();
+        assert_eq!(packet.bytes, maximum_header.as_bytes());
+        packet.formatted(format_args!("!{}", usize::MAX)).unwrap();
+        let previous = packet.bytes.clone();
+        assert_eq!(
+            packet.formatted(format_args!("{}", "x".repeat(129))),
+            Err(EncodeError::Limit)
+        );
+        assert_eq!(packet.bytes, previous);
+        packet
+            .formatted(format_args!("{}", "x".repeat(128)))
+            .unwrap();
+        let mut limited = Packet::new(Limits {
+            max_encoded_bytes: 2,
+            ..Limits::default()
+        });
+        assert_eq!(
+            limited.formatted(format_args!("123")),
+            Err(EncodeError::Limit)
+        );
+        assert!(limited.bytes.is_empty());
     }
     #[test]
     fn kitty_byte_snapshots_and_lifecycle() {
