@@ -164,6 +164,10 @@ func main() {
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--clocks" {
+		clockCases(n)
+		return
+	}
 	inputBindings(n)
 	projectiles(n)
 	pagination(n)

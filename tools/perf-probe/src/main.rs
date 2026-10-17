@@ -140,6 +140,10 @@ fn main() {
         subscription_costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--clocks") {
+        clock_cases(iterations);
+        return;
+    }
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
