@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import platform
 import statistics
@@ -29,6 +30,19 @@ def main():
     args = parser.parse_args()
     pins = {p["name"]: p["sha"] for p in json.loads((ROOT / "docs/upstream-lock.json").read_text())}
     binary = args.binary.resolve()
+    sources = ["Cargo.toml", "Cargo.lock", "tools/api-audit/Cargo.toml", "tools/api-audit/src/main.rs",
+               "scripts/measure_auditor_performance.py"]
+    revision = git("rev-parse", "HEAD")
+    for path in sources:
+        committed = subprocess.check_output(["git", "show", revision + ":" + path], cwd=ROOT)
+        if hashlib.sha256(committed).hexdigest() != digest(ROOT / path):
+            raise ValueError("commit measured source inputs before collecting evidence: " + path)
+    expected_binary = ROOT / "target/release" / ("matea-api-audit.exe" if os.name == "nt" else "matea-api-audit")
+    if binary != expected_binary:
+        raise ValueError("binary must be the release auditor built by this invocation")
+    build = ["cargo", "build", "--release", "--locked", "--offline", "-p", "matea-api-audit"]
+    subprocess.run(build, cwd=ROOT, check=True,
+                   env=dict(os.environ, CARGO_TARGET_DIR=str(ROOT / "target")))
     args.directory.mkdir(parents=True, exist_ok=True)
     cases = []
     with tempfile.TemporaryDirectory(prefix="matea-auditor-fixture-") as temporary:
@@ -74,9 +88,8 @@ def main():
                           "allocations": None, "resident_memory": None})
     raw = args.directory / (args.stage + ".jsonl")
     raw.write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
-    sources = ["Cargo.toml", "Cargo.lock", "tools/api-audit/Cargo.toml", "tools/api-audit/src/main.rs",
-               "scripts/measure_auditor_performance.py"]
-    context = {"git_head": git("rev-parse", "HEAD"), "source_sha256": {p: digest(ROOT / p) for p in sources},
+    context = {"git_head": revision, "source_sha256": {p: digest(ROOT / p) for p in sources},
+               "build_command": build,
                "binary_sha256": digest(binary), "raw_sha256": digest(raw), "platform": platform.platform(),
                "rustc": subprocess.check_output(["rustc", "-Vv"], text=True),
                "limits": ["One native host, 31 sequential warm process samples, no affinity/frequency control.",

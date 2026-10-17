@@ -1,6 +1,10 @@
 //! Source declaration inventory; macro/cfg resolution is deliberately not claimed.
 use quote::ToTokens;
-use std::{env, fs, path::Path};
+use std::{
+    env, fs,
+    io::{self, Write},
+    path::Path,
+};
 use syn::{Fields, ImplItem, Item, TraitItem, Visibility, spanned::Spanned};
 
 fn json(s: &str) -> String {
@@ -19,14 +23,22 @@ fn json(s: &str) -> String {
     out.push('"');
     out
 }
-fn emit(file: &str, line: usize, kind: &str, symbol: &str, cfg: &str) {
-    println!(
+fn emit(
+    out: &mut impl Write,
+    file: &str,
+    line: usize,
+    kind: &str,
+    symbol: &str,
+    cfg: &str,
+) -> io::Result<()> {
+    writeln!(
+        out,
         "{{\"file\":{},\"line\":{line},\"kind\":{},\"symbol\":{},\"cfg\":{}}}",
         json(file),
         json(kind),
         json(symbol),
         json(cfg)
-    );
+    )
 }
 fn public(v: &Visibility) -> bool {
     matches!(v, Visibility::Public(_))
@@ -47,7 +59,14 @@ fn conditions(parent: &str, own: &[syn::Attribute]) -> String {
         format!("{parent} {own}")
     }
 }
-fn fields(file: &str, name: &str, fields: &Fields, cfg: &str, all: bool) {
+fn fields(
+    out: &mut impl Write,
+    file: &str,
+    name: &str,
+    fields: &Fields,
+    cfg: &str,
+    all: bool,
+) -> io::Result<()> {
     for (i, f) in fields.iter().enumerate() {
         if all || public(&f.vis) {
             let n = f
@@ -55,16 +74,24 @@ fn fields(file: &str, name: &str, fields: &Fields, cfg: &str, all: bool) {
                 .as_ref()
                 .map_or_else(|| i.to_string(), ToString::to_string);
             emit(
+                out,
                 file,
                 f.span().start().line,
                 "field",
                 &format!("{name}.{n}"),
                 &conditions(cfg, &f.attrs),
-            );
+            )?;
         }
     }
+    Ok(())
 }
-fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
+fn items(
+    out: &mut impl Write,
+    file: &str,
+    declarations: &[Item],
+    prefix: &str,
+    parent_cfg: &str,
+) -> io::Result<()> {
     for item in declarations {
         let line = item.span().start().line;
         match item {
@@ -75,10 +102,10 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                 }
                 let name = format!("{prefix}{}", v.ident);
                 if public(&v.vis) {
-                    emit(file, line, "module", &name, &cfg);
+                    emit(out, file, line, "module", &name, &cfg)?;
                 }
                 if let Some((_, inner)) = &v.content {
-                    items(file, inner, &format!("{name}::"), &cfg);
+                    items(out, file, inner, &format!("{name}::"), &cfg)?;
                 }
             }
             Item::Impl(v) => {
@@ -99,48 +126,50 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                         }
                         ImplItem::Macro(m) => {
                             emit(
+                                out,
                                 file,
                                 m.span().start().line,
                                 "impl_macro",
                                 &m.mac.path.to_token_stream().to_string(),
                                 &conditions(&cfg, &m.attrs),
-                            );
+                            )?;
                             continue;
                         }
                         _ => continue,
                     };
                     if public(vis) || tr.is_some() {
                         emit(
+                            out,
                             file,
                             it.span().start().line,
                             kind,
                             &format!("{prefix}<{ty}{}>::{name}", tr.as_deref().unwrap_or("")),
                             &conditions(&cfg, member_attrs),
-                        );
+                        )?;
                     }
                 }
             }
             Item::Struct(v) if public(&v.vis) => {
                 let cfg = format!("{parent_cfg} {}", attrs(&v.attrs));
                 let name = format!("{prefix}{}", v.ident);
-                emit(file, line, "struct", &name, &cfg);
-                fields(file, &name, &v.fields, &cfg, false);
+                emit(out, file, line, "struct", &name, &cfg)?;
+                fields(out, file, &name, &v.fields, &cfg, false)?;
             }
             Item::Enum(v) if public(&v.vis) => {
                 let cfg = format!("{parent_cfg} {}", attrs(&v.attrs));
                 let name = format!("{prefix}{}", v.ident);
-                emit(file, line, "enum", &name, &cfg);
+                emit(out, file, line, "enum", &name, &cfg)?;
                 for variant in &v.variants {
                     let cfg = conditions(&cfg, &variant.attrs);
                     let n = format!("{name}::{}", variant.ident);
-                    emit(file, variant.span().start().line, "variant", &n, &cfg);
-                    fields(file, &n, &variant.fields, &cfg, true);
+                    emit(out, file, variant.span().start().line, "variant", &n, &cfg)?;
+                    fields(out, file, &n, &variant.fields, &cfg, true)?;
                 }
             }
             Item::Trait(v) if public(&v.vis) => {
                 let cfg = format!("{parent_cfg} {}", attrs(&v.attrs));
                 let name = format!("{prefix}{}", v.ident);
-                emit(file, line, "trait", &name, &cfg);
+                emit(out, file, line, "trait", &name, &cfg)?;
                 for it in &v.items {
                     let (id, member_attrs) = match it {
                         TraitItem::Fn(f) => (f.sig.ident.to_string(), &f.attrs),
@@ -149,67 +178,75 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                         _ => continue,
                     };
                     emit(
+                        out,
                         file,
                         it.span().start().line,
                         "trait_member",
                         &format!("{name}::{id}"),
                         &conditions(&cfg, member_attrs),
-                    );
+                    )?;
                 }
             }
             Item::Fn(v) if public(&v.vis) => emit(
+                out,
                 file,
                 line,
                 "function",
                 &format!("{prefix}{}", v.sig.ident),
                 &format!("{parent_cfg} {}", attrs(&v.attrs)),
-            ),
+            )?,
             Item::Const(v) if public(&v.vis) => emit(
+                out,
                 file,
                 line,
                 "const",
                 &format!("{prefix}{}", v.ident),
                 &conditions(parent_cfg, &v.attrs),
-            ),
+            )?,
             Item::Static(v) if public(&v.vis) => emit(
+                out,
                 file,
                 line,
                 "static",
                 &format!("{prefix}{}", v.ident),
                 &conditions(parent_cfg, &v.attrs),
-            ),
+            )?,
             Item::Type(v) if public(&v.vis) => emit(
+                out,
                 file,
                 line,
                 "type",
                 &format!("{prefix}{}", v.ident),
                 &conditions(parent_cfg, &v.attrs),
-            ),
+            )?,
             Item::Use(v) if public(&v.vis) => emit(
+                out,
                 file,
                 line,
                 "reexport",
                 &v.tree.to_token_stream().to_string(),
                 &conditions(parent_cfg, &v.attrs),
-            ),
+            )?,
             Item::Macro(v) => {
                 let name = v.ident.as_ref().map_or_else(
                     || v.mac.path.to_token_stream().to_string(),
                     ToString::to_string,
                 );
                 emit(
+                    out,
                     file,
                     line,
                     "macro_or_invocation",
                     &name,
                     &format!("{parent_cfg} {}", attrs(&v.attrs)),
-                );
+                )?;
             }
             _ => {}
         }
     }
+    Ok(())
 }
-fn walk(root: &Path, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
+fn walk(out: &mut impl Write, root: &Path, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
     if path.is_dir() {
         let mut entries = fs::read_dir(path)?
             .map(|e| e.map(|e| e.path()))
@@ -224,7 +261,7 @@ fn walk(root: &Path, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
             {
                 continue;
             }
-            walk(root, &p)?;
+            walk(out, root, &p)?;
         }
     } else if path.extension().is_some_and(|e| e == "rs") {
         let file = path
@@ -235,13 +272,94 @@ fn walk(root: &Path, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
         let parsed = syn::parse_file(&fs::read_to_string(path)?)?;
-        items(&file, &parsed.items, "", &attrs(&parsed.attrs));
+        items(out, &file, &parsed.items, "", &attrs(&parsed.attrs))?;
     }
+    Ok(())
+}
+fn audit(out: &mut impl Write, root: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    walk(out, root, root)?;
+    out.flush()?;
     Ok(())
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = env::args()
         .nth(1)
         .ok_or("usage: matea-api-audit SOURCE_ROOT")?;
-    walk(Path::new(&root), Path::new(&root))
+    let stdout = io::stdout();
+    let mut out = io::BufWriter::new(stdout.lock());
+    audit(&mut out, Path::new(&root))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn output_failure_at_every_byte_is_reported_without_panicking() {
+        struct FailsAfter(usize);
+        impl Write for FailsAfter {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if self.0 == 0 {
+                    return Err(io::Error::new(io::ErrorKind::BrokenPipe, "fixture"));
+                }
+                let written = bytes.len().min(self.0);
+                self.0 -= written;
+                Ok(written)
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let parsed = syn::parse_file(
+            r#"pub mod nested {
+                pub struct S { pub field: u8 }
+                pub enum E { A { value: u8 } }
+                pub trait T { fn call(); }
+                impl S { pub fn run() {} }
+                pub const C: u8 = 0;
+                pub static V: u8 = 0;
+                pub type A = u8;
+                pub use self::S as Other;
+            }"#,
+        )
+        .unwrap();
+        let mut expected = Vec::new();
+        items(&mut expected, "抹茶.rs", &parsed.items, "", "").unwrap();
+        for limit in 0..expected.len() {
+            let error =
+                items(&mut FailsAfter(limit), "抹茶.rs", &parsed.items, "", "").unwrap_err();
+            assert_eq!(error.kind(), io::ErrorKind::BrokenPipe);
+            assert_eq!(error.to_string(), "fixture");
+        }
+        items(
+            &mut FailsAfter(expected.len()),
+            "抹茶.rs",
+            &parsed.items,
+            "",
+            "",
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn final_flush_failure_cannot_report_a_successful_inventory() {
+        #[derive(Default)]
+        struct FlushFails(usize);
+        impl Write for FlushFails {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                self.0 += bytes.len();
+                Ok(bytes.len())
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Err(io::Error::new(io::ErrorKind::BrokenPipe, "flush fixture"))
+            }
+        }
+        let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+        let mut out = FlushFails::default();
+        let error = audit(&mut out, &source).unwrap_err();
+        assert_eq!(
+            error.downcast_ref::<io::Error>().unwrap().kind(),
+            io::ErrorKind::BrokenPipe
+        );
+    }
 }
