@@ -327,6 +327,28 @@ fn view_construction_costs(iterations: usize) {
             &output,
             "clone and drop one owned text scene; no cell render or terminal I/O",
         );
+        measure(
+            &format!("views/new_render_{name}"),
+            iterations,
+            || {
+                let surface = View::text(black_box(text)).render(black_box(size)).unwrap();
+                black_box(surface);
+                1
+            },
+            &output,
+            "construct, normalize and render fresh owned scene to 72x4 cells; no terminal I/O",
+        );
+        measure(
+            &format!("views/clone_render_{name}"),
+            iterations,
+            || {
+                let surface = black_box(&view).clone().render(black_box(size)).unwrap();
+                black_box(surface);
+                1
+            },
+            &output,
+            "clone existing scene and render fresh 72x4 cell surface; no terminal I/O",
+        );
     }
     let value = black_box(42u64);
     let make_counter = || View::styled(format!("Count: {}", black_box(value)), theme.accent);
@@ -341,9 +363,20 @@ fn view_construction_costs(iterations: usize) {
         &output,
         "format one numeric counter into an owned styled text scene; no cell render or terminal I/O",
     );
+    measure(
+        "views/formatted_counter_render",
+        iterations,
+        || {
+            black_box(make_counter().render(black_box(size)).unwrap());
+            1
+        },
+        &output,
+        "format numeric counter and render owned styled scene to fresh 72x4 cells; no terminal I/O",
+    );
+    let panel_size = Size::new(72, 6);
     let output = View::text("抹茶")
         .panel("Tea", &theme)
-        .render(size)
+        .render(panel_size)
         .unwrap()
         .plain();
     measure(
@@ -355,6 +388,21 @@ fn view_construction_costs(iterations: usize) {
         },
         &output,
         "construct and drop owned panel with short text/title and existing theme; no cell render or terminal I/O",
+    );
+    measure(
+        "views/short_panel_render",
+        iterations,
+        || {
+            black_box(
+                View::text(black_box("抹茶"))
+                    .panel(black_box("Tea"), &theme)
+                    .render(black_box(panel_size))
+                    .unwrap(),
+            );
+            1
+        },
+        &output,
+        "construct and render owned panel with short text/title to fresh 72x6 cells; no terminal I/O",
     );
 }
 fn subscription_costs(iterations: usize) {
