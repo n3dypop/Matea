@@ -96,3 +96,11 @@ phase on replacement and reuses generation/timestamp filtering. Bubbles #999 is
 actually a Huh title-spacing report; source inspection and Matea label regressions
 are recorded separately, without claiming an executed Huh reproduction. See
 [spinner audit](spinner-audit.md) and its pinned harness/fixture evidence.
+
+An additional Matea defect was reproduced: a duplicate subscription ID discovered
+partway through reconciliation removed an existing timer before returning an error.
+Restoring valid configuration delayed that timer's original deadline. The saved
+[known-negative log](evidence/subscription-atomicity-before.log) loses callback a;
+current regressions retain a and b and cover zero-period/limit errors. Full
+validation before mutation and retained map entries fix it. This is a Matea defect,
+not an upstream attribution. [ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md).

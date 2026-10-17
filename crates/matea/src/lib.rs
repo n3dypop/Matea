@@ -30,7 +30,7 @@ pub mod prelude {
     pub use matea_core::{
         Cancellation, Component, Effect, Event, FocusRing, Input, Key, KeyCode, KeyKind, KeyState,
         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
-        ScrollDirection, Subscription, Task, ViewContext,
+        ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
     };
     pub use matea_render::{Cursor, Rect, Size, Surface, View};
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};

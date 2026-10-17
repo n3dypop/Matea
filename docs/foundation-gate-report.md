@@ -27,7 +27,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は103 testsと1 compile-only doc test成功、12サンプルsnapshot成功、Unix PTY 16ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
+今回のローカル結果は106 testsと1 compile-only doc test成功、12サンプルsnapshot成功、Unix PTY 16ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
 色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.78µs、測定割り当て2→0回です。行移動のCRLF短縮には、既存のスクロール領域内で画面を動かす不具合があり、失敗traceを保存して絶対指定へ修正しました。現在の無彩色出力は1,745→1,704バイトで、参照元の1,655バイトより49バイト多くなります。途中の性能後退と、標準／独自スクロール領域の再生検証も記録。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
 
@@ -38,6 +38,10 @@ stopwatch／countdownの43宣言を対応付けました。実際の単調経過
 時計実装時点では16比較ケースを追加し、計70ケースの出力が一致しました。owned書式化の最大共有durationは3回／56バイトから1回／24バイト、p50 148.17→54.42nsへ改善しましたが、参照元32.08nsには未達です。呼び出し側バッファ再利用は双方0割り当て。停止中／別IDのtickの4比較は双方0割り当てです。active schedulingはGo側の実timer作成と同じ意味の測定が未実施で、遅延通知・購読作成を含む性能はpendingです。時計2モジュールを性能同等と扱わず、現在の台帳の部分対応／未測定能力は11件、未分析issue報告は824件です。
 
 Spinnerの29宣言を対応付け、12プリセット・66フレーム、検証済みカスタムフレーム、共有データ、世代付き更新と単調時間による位相を実装しました。初回zero-tag tickの再送による追加回転、空／短縮フレームのerror表示、ゼロ周期の受理を参照元で実行して分析。Mateaは重複・古いtickを無視し、設定変更で位相をリセットします。5件の統合テストと、12プリセットのサンプル・操作PTYが成功しました。ラベルなし文字列はCowで借用し、14件の有限比較で双方割り当て0回。active schedulingと任意のLip Gloss装飾は未完了です。[監査](spinner-audit.md)、[ADR 0020](decisions/0020-validated-spinner-animations.md)。
+
+購読の再構築をRust側で追加測定し、型付き名前空間を持つSubscriptionIdとtimer表の再利用を導入しました。IDは表のキーへ移動し、Timer内で二重所有しません。64件維持の測定は割り当て203→65回、要求バイト20,992→9,216、p50 14.11→7.77µsです。途中で購読0件の遅延が20.96→24.96nsへ増えた測定も保存し、空設定の経路で19.33nsとなりました。5件はRust内の比較で、上記84件の参照元比較とは別です。通知遅延や初期化時の保持メモリは未測定で、callback／Vecの割り当ては残ります。[測定](subscription-performance.md)、[ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md)。
+
+同時に、重複IDを拒否する途中で既存timerを失うMateaの不具合を実行して再現しました。設定全体の検証後に表を更新し、元の期限を保持します。既知の失敗ログと3件の回帰テストで、重複・ゼロ周期・件数超過、名前空間とrevision、既存callback保持を検証。モデル状態・effect全体を巻き戻す保証ではありません。
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
@@ -60,6 +64,8 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 時計実装 `783b1e77f489fdd7a47e103c9c0df2d6975ef0be` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39010247644)の4ジョブに成功しました。[ジョブ・step証拠](evidence/clocks-ci-run.json)。Unix PTYはLinux/macOSで実行し、Windowsではskipです。参照元再収集はこの通常runではskipです。
 
 Spinner実装 `8ee28f9cf9e0ecec750bbd516937a1d14ceeb5b4` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39010918504)の4ジョブに成功しました。[ジョブ・step証拠](evidence/spinner-ci-run.json)。Unix PTYはLinux/macOSで実行、Windowsはskipです。通常runの参照元再収集もskipで、専用の20構成収集結果とは区別します。
+
+購読改善の3 OS + MSRV CIは送信前です。直前のSpinner成功とは実装コミットを分けて記録します。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

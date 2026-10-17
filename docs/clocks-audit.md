@@ -21,7 +21,8 @@ scheduling and the remaining formatter gap. [ADR 0019](decisions/0019-monotonic-
 
 None of these widgets acquires a terminal or spawns a worker. Schedule adapters
 use the existing UI-thread Runtime. The descriptor is cheap/Copy; constructing a
-subscription still allocates a callback/ID under the current Runtime contract.
+subscription still allocates a callback under the current Runtime contract; the
+scoped clock ID is now inline without formatting.
 Schedule IDs include generation and effective period so interval changes and the
 short final countdown period replace the old subscription. Unchanged behavior
 retains the existing timer/closure. Core's 64-subscription limit still applies.

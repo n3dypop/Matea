@@ -315,5 +315,6 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "python3 scripts/report_performance.py --artifacts artifacts/performance", "```", "",
           "Keep reference checkouts clean and at docs/upstream-lock.json revisions. The preparation script verifies pins.",
           "No image processing, GPU or real terminal performance claim is made."]
+lines += ["", "Additional [Rust-only subscription before/after costs](subscription-performance.md) measure adapter construction and retained timer tables, separately from the matched source fixtures."]
 (ROOT / "docs/performance.md").write_text("\n".join(lines) + "\n")
 print(f"{len(comparison)} narrow cases; {sum(r['output_equivalent_for_this_fixture'] for r in comparison)} output matches")

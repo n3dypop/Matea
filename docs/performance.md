@@ -132,3 +132,5 @@ python3 scripts/report_performance.py --artifacts artifacts/performance
 
 Keep reference checkouts clean and at docs/upstream-lock.json revisions. The preparation script verifies pins.
 No image processing, GPU or real terminal performance claim is made.
+
+Additional [Rust-only subscription before/after costs](subscription-performance.md) measure adapter construction and retained timer tables. These five cases are separate from the 84 matched source fixtures.

@@ -1,5 +1,5 @@
 //! Monotonic UI clocks with cheap, generation-safe scheduling descriptors.
-use matea_core::Subscription;
+use matea_core::{Subscription, SubscriptionId};
 use matea_render::View;
 use matea_style::Theme;
 use std::{
@@ -99,6 +99,7 @@ pub struct ClockSchedule {
     generation: u64,
     interval: TickInterval,
 }
+struct ClockSubscription;
 impl ClockSchedule {
     pub fn id(self) -> ClockId {
         self.id
@@ -128,13 +129,12 @@ impl ClockSchedule {
         now: impl Fn() -> Instant + 'static,
         message: impl Fn(ClockTick) -> M + 'static,
     ) -> Subscription<M> {
-        let id = format!(
-            "matea.clock.{}.{}.{}",
+        let id = SubscriptionId::scoped::<ClockSubscription>(
             self.id.0,
             self.generation,
-            self.interval.0.as_nanos()
+            self.interval.0.as_nanos(),
         );
-        Subscription::every(id, self.interval.0, move || message(self.tick_at(now())))
+        Subscription::every_with_id(id, self.interval.0, move || message(self.tick_at(now())))
     }
 }
 

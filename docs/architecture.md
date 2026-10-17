@@ -110,3 +110,11 @@ frame text can be borrowed. Total active elapsed time determines phase after lat
 updates, avoiding catch-up loops and nominal tick drift. Reduced-motion views are
 static and their subscription adapters omit schedules. Explicit manual cadence
 remains available. See [ADR 0020](decisions/0020-validated-spinner-animations.md).
+
+SubscriptionId offers named IDs and an opt-in scoped tuple with a private type
+namespace. Clock adapters use inline identities. Configuration validation precedes
+timer table mutation; retained subscriptions reuse nodes, callbacks and deadlines.
+Duplicate/zero/limit errors preserve that table, while model updates/effects are
+not rolled back. Scope identity is process-local. See
+[ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md) and
+[measured costs](subscription-performance.md).
