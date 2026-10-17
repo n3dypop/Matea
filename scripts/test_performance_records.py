@@ -1,15 +1,27 @@
 """Bad measurement input must not collapse into a positive verdict."""
 import copy
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 from performance_records import read_records, read_probe_outputs, summary, write_report
 from report_performance import generate
+from report_viewport_performance import apply_harness_patch
 
 
 class RecordTests(unittest.TestCase):
+    def test_historical_patch_reconstruction_preserves_bytes_with_windows_git_defaults(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);source=root/"source.txt";source.write_bytes(b"before\n")
+            diff=root/"harness.patch"
+            diff.write_bytes(b"diff --git a/source.txt b/source.txt\n--- a/source.txt\n+++ b/source.txt\n@@ -1 +1 @@\n-before\n+after\n")
+            environment={"GIT_CONFIG_COUNT":"2","GIT_CONFIG_KEY_0":"core.autocrlf","GIT_CONFIG_VALUE_0":"true",
+                         "GIT_CONFIG_KEY_1":"core.eol","GIT_CONFIG_VALUE_1":"crlf"}
+            with patch.dict(os.environ,environment):apply_harness_patch(root,diff)
+            self.assertEqual(source.read_bytes(),b"after\n")
+
     def test_correctness_and_measurement_records_cannot_be_confused(self):
         record={"record_kind":"probe-output", "case":"one", "semantics":"exact output", "first_return_value":1,"output":"value"}
         text=json.dumps(record)

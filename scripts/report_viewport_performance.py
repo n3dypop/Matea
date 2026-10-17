@@ -15,6 +15,13 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def apply_harness_patch(directory, patch):
+    # Reconstruct retained Git blob bytes, independent of a Windows checkout's
+    # line-ending preferences. No global config or retained hash is rewritten.
+    subprocess.run(["git", "-c", "core.autocrlf=false", "-c", "core.eol=lf", "apply", str(patch)],
+                   cwd=directory, check=True)
+
+
 def main():
     context = json.loads((BASE / "viewport-before-context.json").read_text(encoding="utf-8"))
     source = "crates/matea-widgets/src/lib.rs"
@@ -26,7 +33,7 @@ def main():
         path = Path(directory) / harness
         path.parent.mkdir(parents=True)
         path.write_bytes(subprocess.check_output(["git", "show", context["head"] + ":" + harness], cwd=ROOT))
-        subprocess.run(["git", "apply", str(BASE / "viewport-harness.patch")], cwd=directory, check=True)
+        apply_harness_patch(directory, BASE / "viewport-harness.patch")
         require(digest(path) == context["sha256"][harness])
     records = [read_records((BASE / name).read_text(encoding="utf-8"))
                for name in ["viewport-before.jsonl", "viewport-after.jsonl"]]
