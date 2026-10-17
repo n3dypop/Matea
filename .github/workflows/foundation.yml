@@ -8,6 +8,10 @@ on:
         description: Compile reference APIs and execute pinned source/probe paths
         type: boolean
         default: false
+      reference_probes_only:
+        description: Reuse completed compiler profiles; rerun source/probe checks only
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -108,7 +112,7 @@ jobs:
           toolchain: "1.88"
       - run: cargo test --locked --workspace
   reference-api:
-    if: github.event_name == 'workflow_dispatch' && inputs.reference_api
+    if: github.event_name == 'workflow_dispatch' && inputs.reference_api && !inputs.reference_probes_only
     timeout-minutes: 25
     strategy:
       fail-fast: false
