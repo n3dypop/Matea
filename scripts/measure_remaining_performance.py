@@ -17,7 +17,7 @@ import time
 import tracemalloc
 from check_color_trace import verify, verify_fallback
 from check_terminal_trace import replay
-from check_quality import assess, programs
+from check_quality import assess, programs, execution_inputs
 from fetch_upstream_issues import refresh
 from import_rustdoc import plan_import
 from optimization_evidence import records, compare
@@ -40,12 +40,16 @@ def measure(name, unit, operation, inputs, semantics, python_heap=False):
     # Validation/serialization performed by an operation is part of its stated
     # workload. The equality/hash checks below are outside every timed interval.
     baseline = operation()
+    if type(baseline) is not bytes:
+        raise TypeError("workload must return immutable bytes: " + name)
     samples = []
     for _ in range(31):
         start = time.perf_counter_ns()
         value = operation()
         elapsed = time.perf_counter_ns() - start
-        if value != baseline:
+        if type(elapsed) is not int or elapsed <= 0:
+            raise ValueError("nonpositive/noninteger elapsed duration: " + name)
+        if type(value) is not bytes or value != baseline:
             raise ValueError("nondeterministic workload output: " + name)
         samples.append(elapsed)
     heap = None
@@ -54,7 +58,7 @@ def measure(name, unit, operation, inputs, semantics, python_heap=False):
         try:
             value = operation()
             retained, peak = tracemalloc.get_traced_memory()
-            if value != baseline:
+            if type(value) is not bytes or value != baseline:
                 raise ValueError("heap pass changed output: " + name)
             heap = {"retained_bytes": retained, "peak_bytes": peak,
                     "scope": "Python tracemalloc allocations only, separate execution; not subprocess or native RSS"}
@@ -66,6 +70,12 @@ def measure(name, unit, operation, inputs, semantics, python_heap=False):
             "python_heap": heap, "allocations": None, "resident_memory": None}
 
 
+def quality_snapshot(plan, root):
+    # The immutable plan defines scope; neither growth nor eventual success
+    # should disable this workload. assess validates complete Git coverage.
+    return canonical(assess(plan, programs(root)))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, required=True)
@@ -74,9 +84,7 @@ def main():
     parser.add_argument("--rustdoc-ratatui", type=Path, help="existing external native collector directory; no compilation/fetch")
     args = parser.parse_args()
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    sources = [p for base in ["crates", "tools", "scripts"] for p in (ROOT/base).rglob("*")
-               if p.suffix in {".rs", ".go", ".py", ".toml"} and "__pycache__" not in p.parts]
-    sources += [ROOT/"Cargo.toml", ROOT/"Cargo.lock", ROOT/"docs/quality-plan.json"]
+    sources = [ROOT / name for name in execution_inputs(ROOT)]
     source_hashes = {}
     for path in sorted(sources):
         name = path.relative_to(ROOT).as_posix()
@@ -96,7 +104,7 @@ def main():
     for name, expected in [("counter", "Count: 0"), ("list", "Matcha"), ("form", "Favorite tea"),
                            ("dashboard", "Tea studio"), ("effects", "Loading tea"), ("motion", "Matea motion"),
                            ("input", "Matea input"), ("pagination", "Page 1 of 4"), ("help", "Matea key help"),
-                           ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("external-widget", "Third-party badge")]:
+                           ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("cursor", "Matea virtual cursor"), ("external-widget", "Third-party badge")]:
         binary = ROOT/"target/release"/("matea-example-external-widget"+suffix) if name=="external-widget" else ROOT/"target/release/examples"/(name+suffix)
         binary_hashes[name] = digest(binary.read_bytes())
         def example(binary=binary, name=name, expected=expected):
@@ -162,9 +170,7 @@ def main():
                          "validate retained raw/history, replay independent traces and generate full 84-case comparison/document in memory; includes read/hash/compiler-version metadata subprocesses; excludes publication; timestamp omitted only from output identity", True)
     current=json.loads((ROOT/"docs/quality-plan.json").read_bytes())
     def quality():
-        result=assess(current,programs(ROOT))
-        if result["review_units"]!=40 or result["all_high"]:raise ValueError("unexpected assessment scope/gate")
-        return canonical(result)
+        return quality_snapshot(current, ROOT)
     record("acceptance/inventory-and-assess-all-programs", "scripts/test-and-acceptance-drivers", quality,
                          digest((ROOT/"docs/quality-plan.json").read_bytes()),
                          "complete Git source discovery and all six-dimension unit assessments; includes Git process and JSON result serialization; excludes LLVM profiling, PTY and full acceptance suite", True)

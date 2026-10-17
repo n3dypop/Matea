@@ -48,16 +48,23 @@ def validate(record):
         if not isinstance(batches, list) or not batches:
             raise ValueError("missing calibration batches")
         expected = starting
+        confirmed = isinstance(batches[0],dict) and "confirmations_ns" in batches[0]
         for index, batch in enumerate(batches):
-            if not isinstance(batch, dict) or set(batch) != {"iterations", "elapsed_ns"}:
+            fields = {"iterations", "elapsed_ns"} | ({"confirmations_ns"} if confirmed else set())
+            if not isinstance(batch, dict) or set(batch) != fields:
                 raise ValueError("invalid calibration batch")
             count, elapsed = batch["iterations"], batch["elapsed_ns"]
-            if type(count) is not int or count != expected or type(elapsed) is not int or elapsed < 0:
+            confirmations = batch.get("confirmations_ns", [])
+            if not isinstance(confirmations, list) or (confirmed and len(confirmations) != 2):
+                raise ValueError("two calibration confirmations required")
+            observations = [elapsed, *confirmations]
+            if type(count) is not int or count != expected or any(type(n) is not int or n < 0 for n in observations):
                 raise ValueError("invalid calibration observation")
+            ready = min(observations) >= target
             if index == len(batches)-1:
-                if count != iterations or elapsed < target:
+                if count != iterations or not ready:
                     raise ValueError("calibration did not reach the recorded sample count/target")
-            elif elapsed >= target or count == maximum:
+            elif ready or count == maximum:
                 raise ValueError("calibration continued after completion/limit")
             expected = min(count*2, maximum)
     for key in ["allocations", "allocated_bytes"]:

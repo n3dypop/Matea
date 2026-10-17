@@ -85,6 +85,16 @@ class RecordTests(unittest.TestCase):
             if defect=="extra":cal["unknown"]=1
             with self.subTest(defect=defect),self.assertRaises(ValueError):read_records(json.dumps(bad))
 
+    def test_one_scheduling_pause_cannot_complete_confirmed_calibration(self):
+        record=self.fixture();record["iterations_per_sample"]=6
+        record["calibration"]={"target_ns":10,"start_n":3,"max_n":10,
+            "batches":[{"iterations":3,"elapsed_ns":1000,"confirmations_ns":[0,0]},
+                       {"iterations":6,"elapsed_ns":10,"confirmations_ns":[11,12]}]}
+        self.assertIn("one",read_records(json.dumps(record)))
+        for bad_value in [[],[10],[10,10,10],[True,10],[-1,10],[0,10],"10"]:
+            bad=copy.deepcopy(record);bad["calibration"]["batches"][-1]["confirmations_ns"]=bad_value
+            with self.subTest(value=bad_value),self.assertRaises(ValueError):read_records(json.dumps(bad))
+
     def test_duplicates_empty_and_bad_numbers_are_rejected(self):
         text = json.dumps(self.fixture())
         for bad in ["", text+"\n"+text, text.replace('"case": "one"','"case": "two", "case": "one"')]:

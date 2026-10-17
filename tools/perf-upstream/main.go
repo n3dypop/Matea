@@ -60,8 +60,9 @@ func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) 
 }
 
 type calibrationBatch struct {
-	Iterations int   `json:"iterations"`
-	ElapsedNS  int64 `json:"elapsed_ns"`
+	Iterations      int     `json:"iterations"`
+	ElapsedNS       int64   `json:"elapsed_ns"`
+	ConfirmationsNS []int64 `json:"confirmations_ns"`
 }
 
 // Keep coarse-clock observations as calibration evidence, never timing samples.
@@ -72,12 +73,22 @@ func calibratedIterations(n int, target int64, limit int, batch func(int) int64)
 	}
 	var history []calibrationBatch
 	for {
-		elapsed := batch(n)
-		if elapsed < 0 {
-			return 0, history, fmt.Errorf("negative calibration duration")
+		observation := calibrationBatch{Iterations: n, ConfirmationsNS: make([]int64, 2)}
+		ready := true
+		for repeat := 0; repeat < 3; repeat++ {
+			elapsed := batch(n)
+			if elapsed < 0 {
+				return 0, history, fmt.Errorf("negative calibration duration")
+			}
+			if repeat == 0 {
+				observation.ElapsedNS = elapsed
+			} else {
+				observation.ConfirmationsNS[repeat-1] = elapsed
+			}
+			ready = ready && elapsed >= target
 		}
-		history = append(history, calibrationBatch{n, elapsed})
-		if elapsed >= target {
+		history = append(history, observation)
+		if ready {
 			return n, history, nil
 		}
 		if n == limit {

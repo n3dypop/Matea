@@ -49,7 +49,7 @@ func TestRecordedIterationsMatchActualWorkAcrossAllPasses(t *testing.T) {
 	// ten allocation calls, and ten independent TotalAlloc calls.
 	expected := 1 + 100 + 31*record.Iterations + 11 + 10
 	for _, batch := range record.Calibration.Batches {
-		expected += batch.Iterations
+		expected += 3 * batch.Iterations
 	}
 	if calls != expected || record.First != 1 || len(record.Samples) != 31 {
 		t.Fatal(calls, expected, record)
@@ -91,16 +91,16 @@ func TestOutputOnlyCallsOnceBypassesCalibrationAndPropagatesWriterFailure(t *tes
 }
 
 func TestCoarseClockCalibrationRetainsZerosAndActualIterations(t *testing.T) {
-	durations := []int64{0, 0, 5, 10}
+	durations := []int64{1000, 0, 0, 0, 0, 0, 5, 5, 5, 10, 10, 10}
 	var calls []int
 	n, history, err := calibratedIterations(3, 10, 100, func(count int) int64 {
 		calls = append(calls, count)
 		return durations[len(calls)-1]
 	})
-	if err != nil || n != 24 || !reflect.DeepEqual(calls, []int{3, 6, 12, 24}) {
+	if err != nil || n != 24 || !reflect.DeepEqual(calls, []int{3, 3, 3, 6, 6, 6, 12, 12, 12, 24, 24, 24}) {
 		t.Fatalf("n=%d history=%v calls=%v err=%v", n, history, calls, err)
 	}
-	if !reflect.DeepEqual(history, []calibrationBatch{{3, 0}, {6, 0}, {12, 5}, {24, 10}}) {
+	if !reflect.DeepEqual(history, []calibrationBatch{{3, 1000, []int64{0, 0}}, {6, 0, []int64{0, 0}}, {12, 5, []int64{5, 5}}, {24, 10, []int64{10, 10}}}) {
 		t.Fatal(history)
 	}
 }
@@ -117,7 +117,7 @@ func TestCalibrationBoundsFailuresAndSaturatedGrowth(t *testing.T) {
 	}
 	var counts []int
 	_, history, err := calibratedIterations(3, 10, 10, func(n int) int64 { counts = append(counts, n); return 0 })
-	if err == nil || !reflect.DeepEqual(counts, []int{3, 6, 10}) || len(history) != 3 {
+	if err == nil || !reflect.DeepEqual(counts, []int{3, 3, 3, 6, 6, 6, 10, 10, 10}) || len(history) != 3 {
 		t.Fatal(counts, history, err)
 	}
 	_, history, err = calibratedIterations(1, 10, 10, func(int) int64 { return -1 })

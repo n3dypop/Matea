@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+from check_coverage import load_json
 
 ROOT = Path(__file__).resolve().parents[1]
 DIMENSIONS = {"rust_design", "memory_safety", "behavior", "reference", "performance", "portability"}
@@ -19,6 +20,16 @@ def programs(root):
         raise ValueError("quality inventory requires a Git checkout") from error
     suffixes = {".rs", ".go", ".py", ".yml", ".yaml", ".sh", ".ps1", ".js", ".mjs", ".ts"}
     return {name for name in names if Path(name).suffix in suffixes and (root / name).is_file()}
+
+
+def execution_inputs(root):
+    """Programs and build/check manifests; exclude generated evidence."""
+    names = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+                                    cwd=root, stderr=subprocess.PIPE).decode("utf-8").split("\0")
+    additional = {name for name in names if name and (root/name).is_file() and
+                  (Path(name).suffix in {".toml", ".lock", ".sum", ".mod"} or
+                   name in {".gitattributes", "docs/quality-plan.json", "docs/upstream-lock.json"})}
+    return programs(root) | additional
 
 
 def assess(plan, actual):
@@ -44,6 +55,46 @@ def assess(plan, actual):
     return {"all_high": not low, "programs": len(actual), "review_units": len(units), "below_high": low}
 
 
+def validate_native(report, root):
+    """Reject old, incomplete or changed native evidence before publication."""
+    if report.get("status") != "complete" or report.get("all_local_checks_passed") is not True:
+        raise ValueError("native verification incomplete/failed")
+    checks = report.get("checks")
+    if not isinstance(checks,list) or not checks or len({c["name"] for c in checks}) != len(checks):
+        raise ValueError("missing/duplicate native checks")
+    if any(type(c["exit_code"]) is not int or c["exit_code"] != 0 for c in checks):
+        raise ValueError("failed native check")
+    if any(type(report[t]["exit_code"]) is not int or report[t]["exit_code"] != 0 for t in ["rustc","cargo"]):
+        raise ValueError("failed native tool probe")
+    if report.get("source_changed_during_run") != []:
+        raise ValueError("source changed during native verification")
+    expected = {name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in execution_inputs(root)}
+    if not expected or report.get("source_sha256") != expected:
+        raise ValueError("stale/incomplete native source binding; rerun verification")
+    for check in checks:
+        log = check["log"]
+        if not isinstance(log,str) or log != check["name"]+".log" or Path(log).name != log or "\\" in log:
+            raise ValueError("invalid native log path")
+        if hashlib.sha256((root/"docs/evidence"/log).read_bytes()).hexdigest() != check.get("log_sha256"):
+            raise ValueError("stale native log: "+log)
+
+
+def validate_coverage(coverage, root):
+    if coverage.get("status") != "complete":
+        raise ValueError("native execution coverage incomplete/failed")
+    expected = {name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in execution_inputs(root)}
+    if not expected or coverage.get("input_sha256") != expected:
+        raise ValueError("stale/incomplete execution-coverage input binding")
+    files=coverage["files"]
+    by_file = {f["file"]: f for f in files}
+    if not files or len(by_file) != len(files) or set(by_file) != set(coverage["source_sha256"]):
+        raise ValueError("incomplete/duplicate execution-coverage paths; retain compiler instances explicitly")
+    for path, digest in coverage["source_sha256"].items():
+        if path not in expected or expected[path] != digest or not by_file[path].get("instances"):
+            raise ValueError("stale/incomplete execution coverage: "+path)
+    return by_file
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gate", action="store_true", help="fail if any applicable dimension is below 75")
@@ -57,16 +108,10 @@ def main():
             if not (ROOT / path).is_file():
                 raise ValueError("missing evidence: " + path)
     if args.report:
-        local = json.loads((ROOT / "docs/evidence/local-validation.json").read_text(encoding="utf-8"))
-        if not local["all_local_checks_passed"]:
-            raise ValueError("native verification failed; assessments cannot be published as validated")
-        coverage = json.loads((ROOT / "docs/evidence/quality/rust-execution-coverage.json").read_text(encoding="utf-8"))
-        for path, expected in coverage["source_sha256"].items():
-            if hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != expected:
-                raise ValueError("stale execution coverage: " + path)
-        by_file = {f["file"]: f for f in coverage["files"]}
-        if len(by_file) != len(coverage["files"]):
-            raise ValueError("duplicate execution-coverage paths; retain compiler instances explicitly")
+        local = load_json(ROOT / "docs/evidence/local-validation.json")
+        validate_native(local, ROOT)
+        coverage = load_json(ROOT / "docs/evidence/quality/rust-execution-coverage.json")
+        by_file = validate_coverage(coverage, ROOT)
         result.update({"schema": 1, "method": "docs/quality-evaluation.md", "units": plan["units"],
                        "plan_sha256": hashlib.sha256((ROOT / "docs/quality-plan.json").read_bytes()).hexdigest(),
                        "validation": "docs/evidence/local-validation.json",

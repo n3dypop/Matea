@@ -9,7 +9,12 @@ checking but supplied no measurement-mode portability evidence.
 
 Calibrate each case independently after its cold call and warmup. Starting with
 the requested iteration count, double up to a checked limit until the batch
-reaches one millisecond by default. Record every calibration observation,
+reaches one millisecond by default in three consecutive observations at that
+count. A single scheduler pause can exceed the target even for a tiny batch;
+the Windows counting fixture exposed that failure in run 39078434797. Two
+confirmation durations prevent that isolated observation from choosing the
+sample count. All three durations are retained; readers still accept the earlier
+single-observation metadata as historical data. Record every calibration observation,
 including zeros, and the actual chosen iteration count. Collect all 31 timing
 samples using that count. Calibration observations are not timing samples; no
 sample is dropped, clamped, retried selectively or replaced. Nonpositive timing

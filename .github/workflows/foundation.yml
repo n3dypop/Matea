@@ -26,13 +26,15 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
     steps:
       # Revisions taken from the audited Crossterm CI checkout; no moving action tags.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
         with:
           toolchain: stable
-          components: rustfmt, clippy
+          components: rustfmt, clippy, llvm-tools-preview
       - run: cargo fmt --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
@@ -67,6 +69,8 @@ jobs:
       - run: python scripts/test_optimization_evidence.py
       - run: python scripts/test_performance_records.py
       - run: python scripts/test_reference_paths.py
+      - run: python scripts/test_measurement_drivers.py
+      - run: python scripts/test_acceptance_driver.py
       - run: python -O -m unittest discover -s scripts -p 'test_*.py'
         env:
           PYTHONUTF8: "1"
@@ -110,6 +114,20 @@ jobs:
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release
+      # Exercise the complete drivers, including failure journals and profiling,
+      # on the actual host. Instrumented numbers are never timing evidence.
+      - run: python scripts/verify_foundation.py --offline
+      - run: python scripts/measure_rust_coverage.py
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-drivers-${{ matrix.os }}
+          path: |
+            docs/evidence/local-validation.json
+            docs/evidence/quality/rust-execution-coverage.json
+            docs/evidence/*-tests.log
+          if-no-files-found: warn
+          retention-days: 14
   msrv:
     runs-on: ubuntu-latest
     steps:

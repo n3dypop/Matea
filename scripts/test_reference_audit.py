@@ -15,6 +15,16 @@ from check_coverage import verify_inventory_summary
 
 
 class ReferenceAuditTests(unittest.TestCase):
+    def test_git_windows_checkout_preserves_hash_bound_inventory_bytes(self):
+        attributes=Path(__file__).resolve().parents[1]/".gitattributes"
+        folder=self.refs/"first"
+        (folder/".gitattributes").write_bytes(attributes.read_bytes())
+        target=folder/"docs/coverage/fixture.json";target.parent.mkdir(parents=True)
+        expected=b'{\n  "finite": true\n}\n';target.write_bytes(expected)
+        self.commit(folder)
+        self.git(folder,"-c","core.autocrlf=true","checkout-index","--all","--force")
+        self.assertEqual(target.read_bytes(),expected)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="matea-cohort-test-")
         self.addCleanup(self.temporary.cleanup)
