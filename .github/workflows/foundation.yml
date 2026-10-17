@@ -43,6 +43,7 @@ jobs:
       - run: python scripts/check_coverage.py
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/test_rustdoc_import.py
+      - run: python scripts/test_source_snapshot.py
       - run: python scripts/test_issue_refresh.py
       - run: python scripts/test_color_trace.py
       - run: cargo build --locked -p matea-api-audit
@@ -59,6 +60,7 @@ jobs:
       - run: python scripts/test_evidence_checks.py
       - run: python scripts/test_optimization_evidence.py
       - run: python scripts/test_performance_records.py
+      - run: python scripts/test_reference_paths.py
       - run: python -O -m unittest discover -s scripts -p 'test_*.py'
         env:
           PYTHONUTF8: "1"
@@ -162,6 +164,8 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: reference-paths-${{ matrix.os }}
-          path: ${{ runner.temp }}/matea-reference-paths/path-checks.json
+          path: |
+            ${{ runner.temp }}/matea-reference-paths/path-checks.json
+            ${{ runner.temp }}/matea-reference-paths/trajectory-errors.json
           if-no-files-found: warn
           retention-days: 14

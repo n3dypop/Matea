@@ -17,10 +17,25 @@ from rustdoc_exports import EXTRACTOR_SHA256, exports
 
 ROOT = Path(__file__).resolve().parents[1]
 COLLECTOR_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+COMPILER_TIMEOUT_SECONDS = 300
 
 
 def command(*args, cwd=None):
     return subprocess.check_output(args, cwd=cwd, text=True).strip()
+
+
+def run_compiler(invocation, env):
+    try:
+        return subprocess.run(invocation, env=env, text=True, encoding="utf-8", errors="replace",
+                              capture_output=True, timeout=COMPILER_TIMEOUT_SECONDS), False
+    except subprocess.TimeoutExpired as error:
+        def text(value):
+            return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
+        result = subprocess.CompletedProcess(invocation, 124, text(error.stdout),
+                                             text(error.stderr)+f"\ncollector: compiler command timed out after {COMPILER_TIMEOUT_SECONDS}s\n")
+        return result, True
+    except OSError as error:
+        return subprocess.CompletedProcess(invocation, 127, "", f"collector: {type(error).__name__}: {error}\n"), False
 
 
 MARKER = ".matea-source-pin.json"
@@ -176,7 +191,9 @@ def main():
     report["collector_sha256"] = COLLECTOR_SHA256
     env = dict(os.environ, CARGO_TARGET_DIR=str(target), RUSTFLAGS="", RUSTDOCFLAGS="")
     started = time.monotonic()
-    result = subprocess.run(invocation, env=env, text=True, capture_output=True)
+    result, timed_out = run_compiler(invocation, env)
+    report["compiler_timeout_seconds"] = COMPILER_TIMEOUT_SECONDS
+    report["rustdoc_timed_out"] = timed_out
     report["elapsed_seconds"] = round(time.monotonic() - started, 3)
     log = (result.stdout + result.stderr).replace(str(destination), "${AUDIT_TEMP}").replace(str(Path.home()), "${HOME}")
     (reports / f"{stem}.log").write_text(log, encoding="utf-8")
@@ -186,10 +203,10 @@ def main():
     (reports / f"{stem}-run.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     raw = target / host_target / "doc" / (args.package.replace("-", "_") + ".json")
     if result.returncode == 0:
-        data = raw.read_bytes()
         try:
+            data = raw.read_bytes()
             graph = exports(json.loads(data), snapshot)
-        except (ValueError, KeyError, TypeError) as error:
+        except (OSError, RecursionError, ValueError, KeyError, TypeError) as error:
             report["exit_code"] = 1
             report["export_error"] = f"{type(error).__name__}: {error}"
             (reports / f"{stem}-run.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -211,7 +228,8 @@ def main():
             tree_command.append("--all-features")
         if args.offline:
             tree_command.append("--offline")
-        tree = subprocess.run(tree_command, env=env, text=True, capture_output=True)
+        tree, tree_timed_out = run_compiler(tree_command, env)
+        report["dependency_tree_timed_out"] = tree_timed_out
         report["dependency_tree_exit_code"] = tree.returncode
         tree_text = (tree.stdout + tree.stderr).replace(str(destination), "${AUDIT_TEMP}").replace(str(Path.home()), "${HOME}")
         (reports / f"{stem}-dependencies.txt").write_text(tree_text, encoding="utf-8")

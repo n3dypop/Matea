@@ -50,6 +50,27 @@ def equivalent(actual, expected):
     return actual == expected
 
 
+def check_trajectories(output, fixture, spring):
+    actual = [[float(value) for value in line.split(",")] for line in output.splitlines()]
+    expected = [[float(value) for value in line.split(",")] for line in fixture.splitlines()]
+    require(actual and len(actual) == len(expected), "trajectory row count changed")
+    input_count, columns = (2, 4) if spring else (5, 11)
+    maximum = 0.0
+    for row, (a, b) in enumerate(zip(actual, expected)):
+        require(len(a) == len(b) == columns and all(math.isfinite(v) for v in a+b), "invalid trajectory shape/value")
+        require(a[:input_count] == b[:input_count], "trajectory inputs changed")
+        for column in range(input_count, columns):
+            delta = abs(a[column]-b[column])
+            maximum = max(maximum, delta)
+            # Exactly the established contracts in matea-motion/tests/reference.rs:
+            # springs use <1e-6 absolute; projectiles use <=1e-12*max(1,|expected|).
+            limit = 1e-6 if spring else 1e-12*max(1.0,abs(b[column]))
+            require(delta < limit if spring else delta <= limit,
+                    f"trajectory row={row} column={column}: actual={a[column]!r} expected={b[column]!r} abs_error={delta!r} limit={limit!r}")
+    return {"rows": len(actual), "maximum_absolute_error": maximum,
+            "criterion": "existing matea-motion/tests/reference.rs; no Rust test threshold changed"}
+
+
 def check_probes(destination, go_binary, rust_binary, environment):
     records=[]
     for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
@@ -68,6 +89,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
         b=records[1][name]
         require((a["semantics"],a["output"])==(b["semantics"],b["output"]), "comparison mismatch: "+name)
     fixtures={}
+    numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
               "--source-regressions":("motion-pagination-source-edges.json","upstream_observed"),
               "--help-source-edges":("help-source-edges.json","observations"),
@@ -84,13 +106,12 @@ def check_probes(destination, go_binary, rust_binary, environment):
             require(output.decode("utf-8").splitlines()==(ROOT/"crates/matea-widgets/tests/fixtures"/filename).read_text(encoding="utf-8").splitlines(), "widget fixture changed: "+flag)
         if flag in ["--motion-fixtures","--projectile-fixtures"]:
             filename="harmonica-motion.csv" if flag=="--motion-fixtures" else "harmonica-projectiles.csv"
-            actual=[[float(value) for value in line.split(",")] for line in output.decode().splitlines()]
-            expected_rows=[[float(value) for value in line.split(",")] for line in (ROOT/"crates/matea-motion/tests"/filename).read_text(encoding="utf-8").splitlines()]
-            require(equivalent(actual,expected_rows), "motion trajectories changed: "+flag)
+            numeric[flag]=check_trajectories(output.decode(),(ROOT/"crates/matea-motion/tests"/filename).read_text(encoding="utf-8"),flag=="--motion-fixtures")
         if flag=="--clocks":
             require(len(read_records(output.decode("utf-8")))==16, "incomplete clock probe")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
+    (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
     return fixtures
 
 
@@ -111,7 +132,7 @@ def main():
         require(not args.offline, "offline mode requires local references")
         references = destination/"references"
         fetch_all(references,pins)
-    environment = dict(os.environ, PYTHONUTF8="1", MATEA_PERF_ITERATIONS="200", CARGO_TARGET_DIR=str(ROOT/"target"))
+    environment = dict(os.environ, PYTHONUTF8="1", MATEA_PERF_ITERATIONS="20000", CARGO_TARGET_DIR=str(ROOT/"target"))
     if args.offline:
         environment["GOPROXY"] = "off"
     suffix = ".exe" if os.name=="nt" else ""

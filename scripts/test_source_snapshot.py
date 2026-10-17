@@ -41,7 +41,7 @@ class SnapshotTests(unittest.TestCase):
         return self.git("rev-parse","HEAD").strip()
 
     @contextlib.contextmanager
-    def mocked_compiler_cli(self):
+    def mocked_compiler_cli(self, cargo_run=None):
         original_command,original_run=collector.command,subprocess.run
         calls=[]
         def command(*args,**kwargs):
@@ -51,6 +51,7 @@ class SnapshotTests(unittest.TestCase):
         def run(arguments,*args,**kwargs):
             if arguments[0]=="cargo":
                 calls.append(list(arguments))
+                if cargo_run is not None:return cargo_run(arguments)
                 return subprocess.CompletedProcess(arguments,1,"","fixture: compiler intentionally not executed\n")
             return original_run(arguments,*args,**kwargs)
         arguments=["collect_rustdoc.py","--references",str(self.reference.parent),"--destination",str(self.root/"audit"),
@@ -58,6 +59,71 @@ class SnapshotTests(unittest.TestCase):
         with patch.object(collector,"ROOT",self.fake_root),patch.object(collector,"command",side_effect=command),\
              patch("sys.argv",arguments),patch.object(collector.subprocess,"run",side_effect=run):
             yield calls
+
+    def raw_document(self):
+        return {"format_version":61,"root":0,"paths":{},"external_crates":{},"index":{
+            "0":{"crate_id":0,"name":"fixture","visibility":"public","span":None,"attrs":[],
+                 "inner":{"module":{"items":[],"is_crate":True,"is_stripped":False}}}}}
+
+    def raw_path(self):
+        return self.root/"audit/target/crossterm/default/fixture-target/doc/crossterm.json"
+
+    def test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code(self):
+        for mode in ["missing","malformed","unknown-format","recursive"]:
+            with self.subTest(mode=mode):
+                def cargo(arguments):
+                    path=self.raw_path();path.parent.mkdir(parents=True,exist_ok=True)
+                    path.unlink(missing_ok=True)
+                    if mode!="missing":
+                        document=self.raw_document()
+                        if mode=="unknown-format":document["format_version"]=999
+                        path.write_text("{" if mode=="malformed" else json.dumps(document),encoding="utf-8")
+                    return subprocess.CompletedProcess(arguments,0,"","")
+                exporter=patch.object(collector,"exports",side_effect=RecursionError("fixture nesting")) if mode=="recursive" else contextlib.nullcontext()
+                with self.mocked_compiler_cli(cargo) as calls,exporter:
+                    self.assertEqual(collector.main(),1)
+                self.assertEqual(len(calls),1)
+                report=json.loads(next((self.root/"audit/reports").glob("*-run.json")).read_text())
+                self.assertEqual(report["rustdoc_exit_code"],0)
+                self.assertEqual(report["exit_code"],1)
+                self.assertTrue(report["export_error"])
+                self.assertNotEqual(report["status"],"compiled_profile_only_not_full_scope")
+
+    def test_dependency_tree_error_or_timeout_keeps_graph_scope_unresolved(self):
+        for timeout in [False,True]:
+            with self.subTest(timeout=timeout):
+                def cargo(arguments):
+                    if arguments[2]=="tree":
+                        if timeout:raise subprocess.TimeoutExpired(arguments,300,output=b"tree partial")
+                        return subprocess.CompletedProcess(arguments,7,"","fixture tree failure")
+                    path=self.raw_path();path.parent.mkdir(parents=True,exist_ok=True)
+                    path.write_text(json.dumps(self.raw_document()),encoding="utf-8")
+                    return subprocess.CompletedProcess(arguments,0,"","")
+                with self.mocked_compiler_cli(cargo):
+                    self.assertEqual(collector.main(),124 if timeout else 7)
+                report=json.loads(next((self.root/"audit/reports").glob("*-run.json")).read_text())
+                self.assertEqual(report["status"],"compiled_dependency_graph_unresolved")
+                self.assertEqual(report["dependency_tree_exit_code"],124 if timeout else 7)
+
+    def test_rustdoc_timeout_preserves_partial_log_and_nonzero_status(self):
+        def cargo(arguments):
+            raise subprocess.TimeoutExpired(arguments,300,output=b"partial stdout\xff",stderr=b"partial stderr")
+        with self.mocked_compiler_cli(cargo):
+            self.assertEqual(collector.main(),124)
+        report=json.loads(next((self.root/"audit/reports").glob("*-run.json")).read_text())
+        self.assertEqual(report["exit_code"],124)
+        self.assertTrue(report["rustdoc_timed_out"])
+        self.assertIn("partial stdout",next((self.root/"audit/reports").glob("*.log")).read_text())
+
+    def test_compiler_launch_error_is_recorded_without_stale_success(self):
+        def cargo(arguments):
+            raise FileNotFoundError("fixture cargo disappeared")
+        with self.mocked_compiler_cli(cargo):
+            self.assertEqual(collector.main(),127)
+        report=json.loads(next((self.root/"audit/reports").glob("*-run.json")).read_text())
+        self.assertEqual(report["rustdoc_exit_code"],127)
+        self.assertEqual(report["status"],"compile_failed_profile_unresolved")
+        self.assertIn("FileNotFoundError",next((self.root/"audit/reports").glob("*.log")).read_text())
 
     def test_modified_non_rust_asset_is_rejected_before_compiler_invocation(self):
         with self.mocked_compiler_cli() as calls:
