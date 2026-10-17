@@ -408,15 +408,18 @@ struct DurationText {
     start: usize,
 }
 impl DurationText {
+    #[inline]
     fn prepend(&mut self, text: &[u8]) {
         let start = self.start - text.len();
         self.bytes[start..self.start].copy_from_slice(text);
         self.start = start;
     }
+    #[inline]
     fn digit(&mut self, value: u8) {
         self.start -= 1;
         self.bytes[self.start] = b'0' + value;
     }
+    #[inline]
     fn integer(&mut self, mut value: u64) {
         loop {
             self.digit((value % 10) as u8);
@@ -426,6 +429,7 @@ impl DurationText {
             }
         }
     }
+    #[inline]
     fn fraction(&mut self, mut value: u32, width: usize) {
         if value == 0 {
             return;
