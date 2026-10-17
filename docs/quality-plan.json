@@ -1460,7 +1460,8 @@
     {
       "id": "tools/go-performance-probe",
       "files": [
-        "tools/perf-upstream/main.go"
+        "tools/perf-upstream/main.go",
+        "tools/perf-upstream/main_test.go"
       ],
       "criteria": {
         "rust_design": {
@@ -1584,7 +1585,9 @@
         "docs/evidence/optimization/ci-source-bindings.json",
         "scripts/test_coverage.py",
         "scripts/test_issue_refresh.py",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "scripts/test_reference_audit.py",
+        "docs/evidence/reference-cohort/before-failure.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -1740,7 +1743,8 @@
         "scripts/test_performance_records.py",
         "scripts/test_reference_paths.py",
         "scripts/test_source_snapshot.py",
-        "scripts/test_coverage.py"
+        "scripts/test_coverage.py",
+        "scripts/test_reference_audit.py"
       ],
       "criteria": {
         "rust_design": {

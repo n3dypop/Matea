@@ -56,6 +56,35 @@ class RecordTests(unittest.TestCase):
         self.assertNotIn("first_return_value", parsed["one"])
         self.assertEqual(summary(record), {"p50_ns": 16, "p95_ns": 30, "allocations": .25, "allocated_bytes": 8.5})
 
+    def test_calibration_keeps_zero_clock_observations_separate_from_positive_samples(self):
+        record=self.fixture(); record["iterations_per_sample"]=12
+        record["calibration"]={"target_ns":10,"start_n":3,"max_n":20,
+            "batches":[{"iterations":3,"elapsed_ns":0},{"iterations":6,"elapsed_ns":0},{"iterations":12,"elapsed_ns":11}]}
+        parsed=read_records(json.dumps(record))["one"]
+        self.assertEqual(parsed["calibration"],record["calibration"])
+        self.assertEqual(parsed["samples_ns"],list(range(1,32)))
+        parsed["samples_ns"][0]=0
+        with self.assertRaises(ValueError):read_records(json.dumps(parsed))
+
+    def test_invalid_calibration_cannot_fabricate_a_measurement(self):
+        record=self.fixture();record["iterations_per_sample"]=6
+        record["calibration"]={"target_ns":10,"start_n":3,"max_n":10,
+            "batches":[{"iterations":3,"elapsed_ns":0},{"iterations":6,"elapsed_ns":10}]}
+        self.assertIn("one",read_records(json.dumps(record)))
+        for defect in ["target-bool","start-negative","limit","missing","count","early-success","unreached","elapsed-bool","elapsed-negative","extra"]:
+            bad=copy.deepcopy(record);cal=bad["calibration"]
+            if defect=="target-bool":cal["target_ns"]=True
+            if defect=="start-negative":cal["start_n"]=-1
+            if defect=="limit":cal["max_n"]=2
+            if defect=="missing":cal["batches"]=[]
+            if defect=="count":cal["batches"][-1]["iterations"]=5
+            if defect=="early-success":cal["batches"][0]["elapsed_ns"]=10
+            if defect=="unreached":cal["batches"][-1]["elapsed_ns"]=9
+            if defect=="elapsed-bool":cal["batches"][-1]["elapsed_ns"]=True
+            if defect=="elapsed-negative":cal["batches"][0]["elapsed_ns"]=-1
+            if defect=="extra":cal["unknown"]=1
+            with self.subTest(defect=defect),self.assertRaises(ValueError):read_records(json.dumps(bad))
+
     def test_duplicates_empty_and_bad_numbers_are_rejected(self):
         text = json.dumps(self.fixture())
         for bad in ["", text+"\n"+text, text.replace('"case": "one"','"case": "two", "case": "one"')]:

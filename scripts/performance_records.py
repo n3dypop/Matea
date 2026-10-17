@@ -37,6 +37,29 @@ def validate(record):
     iterations = record.get("iterations_per_sample")
     if type(iterations) is not int or iterations <= 0:
         raise ValueError("invalid iterations_per_sample")
+    if "calibration" in record:
+        calibration = record["calibration"]
+        if not isinstance(calibration, dict) or set(calibration) != {"target_ns", "start_n", "max_n", "batches"}:
+            raise ValueError("invalid calibration schema")
+        target, starting, maximum = (calibration[key] for key in ["target_ns", "start_n", "max_n"])
+        if any(type(n) is not int or n <= 0 for n in [target, starting, maximum]) or starting > maximum:
+            raise ValueError("invalid calibration bounds")
+        batches = calibration["batches"]
+        if not isinstance(batches, list) or not batches:
+            raise ValueError("missing calibration batches")
+        expected = starting
+        for index, batch in enumerate(batches):
+            if not isinstance(batch, dict) or set(batch) != {"iterations", "elapsed_ns"}:
+                raise ValueError("invalid calibration batch")
+            count, elapsed = batch["iterations"], batch["elapsed_ns"]
+            if type(count) is not int or count != expected or type(elapsed) is not int or elapsed < 0:
+                raise ValueError("invalid calibration observation")
+            if index == len(batches)-1:
+                if count != iterations or elapsed < target:
+                    raise ValueError("calibration did not reach the recorded sample count/target")
+            elif elapsed >= target or count == maximum:
+                raise ValueError("calibration continued after completion/limit")
+            expected = min(count*2, maximum)
     for key in ["allocations", "allocated_bytes"]:
         if not numeric(record.get(key)):
             raise ValueError("invalid counter: " + key)

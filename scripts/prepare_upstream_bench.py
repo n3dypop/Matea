@@ -30,6 +30,8 @@ require(actual==lock["ultraviolet"]["sha"])
 require(not subprocess.check_output(["git","-C",str(source),"status","--porcelain"],text=True))
 destination=args.destination.resolve();destination.mkdir(parents=True,exist_ok=True)
 shutil.copy2(ROOT/"tools/perf-upstream/main.go",destination/"main.go")
+shutil.copy2(ROOT/"tools/perf-upstream/main_test.go",destination/"main_test.go")
+shutil.copy2(ROOT/"tools/perf-upstream/go.sum",destination/"go.sum")
 (destination/"go.mod").write_text(f'''module matea-foundation-comparison
 
 go 1.26.0

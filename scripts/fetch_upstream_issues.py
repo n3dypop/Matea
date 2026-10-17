@@ -11,6 +11,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 from evidence_checks import require
+from check_coverage import load_json, parse_json
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORIES = ["charmbracelet/" + name for name in ["bubbletea", "lipgloss", "bubbles", "huh", "glamour", "harmonica", "ultraviolet", "x"]]
@@ -18,15 +19,19 @@ REPOSITORIES += ["ratatui/ratatui", "crossterm-rs/crossterm"]
 
 
 def unique_by(items, key):
+    require(isinstance(items, list), "invalid previous issue collection")
     result = {}
     for item in items:
         value = item[key]
+        require((type(value) is int and value > 0) if key == "number" else
+                (isinstance(value, str) and bool(value)), "invalid prior " + key)
         require(value not in result, "duplicate " + key)
         result[value] = item
     return result
 
 
 def merge_repository(repository, pages, previous):
+    require(previous.get("repository", repository) == repository, "prior issue repository mismatch")
     require(isinstance(pages, list) and all(isinstance(p, list) for p in pages), "invalid paginated issues")
     active = unique_by(previous.get("issues", []), "number")
     archived = unique_by(previous.get("no_longer_open", []), "number")
@@ -42,6 +47,9 @@ def merge_repository(repository, pages, previous):
             require(type(number) is int and number > 0 and number not in seen, "invalid/duplicate issue number")
             seen.add(number)
             require(issue["html_url"] == f"https://github.com/{repository}/issues/{number}", "issue repository identity mismatch")
+            require(isinstance(issue["title"], str) and isinstance(issue["updated_at"], str)
+                    and bool(issue["updated_at"]) and isinstance(issue["labels"], list)
+                    and all(isinstance(label["name"], str) for label in issue["labels"]), "invalid issue metadata")
             old = known.get(number, {})
             current = {**old, "number": number, "title": issue["title"], "url": issue["html_url"],
                        "updated_at": issue["updated_at"], "labels": [label["name"] for label in issue["labels"]]}
@@ -58,7 +66,7 @@ def merge_repository(repository, pages, previous):
 
 
 def refresh(previous, fetch_pages):
-    require(previous.get("schema", 1) == 1, "unsupported issue schema")
+    require(type(previous.get("schema", 1)) is int and previous.get("schema", 1) == 1, "unsupported issue schema")
     known = unique_by(previous.get("repositories", []), "repository")
     records = [merge_repository(repo, fetch_pages(repo), known.get(repo, {})) for repo in REPOSITORIES]
     return {"schema": 1, "as_of_utc": datetime.now(timezone.utc).isoformat(),
@@ -72,7 +80,7 @@ def atomic_json(path, value):
     try:
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as output:
             temporary = Path(output.name)
-            json.dump(value, output, indent=2, ensure_ascii=False)
+            json.dump(value, output, indent=2, ensure_ascii=False, allow_nan=False)
             output.write("\n")
         os.replace(temporary, path)
     finally:
@@ -85,13 +93,13 @@ def main():
     parser.add_argument("--destination", type=Path, default=ROOT / "docs/coverage/upstream-issues.json")
     parser.add_argument("--cache", type=Path, default=Path(tempfile.gettempdir()) / "matea-upstream-issues")
     args = parser.parse_args()
-    previous = json.loads(args.destination.read_text(encoding="utf-8")) if args.destination.exists() else {}
+    previous = load_json(args.destination) if args.destination.exists() else {}
     cache = {}
 
     def fetch(repository):
         result = subprocess.run(["gh", "api", "--paginate", "--slurp", f"repos/{repository}/issues?state=open&per_page=100"],
                                 capture_output=True, text=True, encoding="utf-8", check=True, timeout=60)
-        pages = json.loads(result.stdout)
+        pages = parse_json(result.stdout)
         cache[repository] = [issue for page in pages for issue in page if "pull_request" not in issue]
         print(f"{repository}: {len(cache[repository])} open issues, {len(pages)} API pages", flush=True)
         return pages

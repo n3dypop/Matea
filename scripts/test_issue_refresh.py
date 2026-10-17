@@ -3,9 +3,14 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
+import contextlib
+import io
 import unittest
 from unittest.mock import patch
 from fetch_upstream_issues import atomic_json, merge_repository, refresh
+import fetch_upstream_issues as fetcher
 
 
 def issue(number, **changes):
@@ -67,6 +72,55 @@ class RefreshTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), before)
             self.assertEqual(json.loads(before), {"old": "抹茶"})
             self.assertEqual(list(path.parent.iterdir()), [path])
+
+    def test_schema_previous_identity_and_metadata_are_validated_before_merge(self):
+        for schema in [True,"1",2,None]:
+            with self.subTest(schema=schema),self.assertRaises(AssertionError): refresh({"schema":schema},lambda _:[])
+        for previous in [{"repository":"other/repo"}, {"issues":[{"number":True}]},
+                         {"issues":[{"number":1},{"number":1}]},
+                         {"issues":[{"number":1}],"no_longer_open":[{"number":1}]}]:
+            with self.subTest(previous=previous),self.assertRaises(AssertionError):merge_repository("owner/project",[],previous)
+        for change in [{"title":None},{"updated_at":""},{"labels":{}},{"labels":[{"name":7}]}]:
+            with self.subTest(change=change),self.assertRaises(AssertionError):merge_repository("owner/project",[[issue(1,**change)]],{})
+
+    def test_nonfinite_serialization_never_overwrites_or_leaves_a_temporary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/"issues.json";atomic_json(path,{"preserve":True});before=path.read_bytes()
+            with self.assertRaises(ValueError):atomic_json(path,{"invalid":float("nan")})
+            self.assertEqual(path.read_bytes(),before)
+            self.assertEqual(list(path.parent.iterdir()),[path])
+
+    def test_cli_late_network_or_json_failure_preserves_report_and_cache(self):
+        for failure in [subprocess.TimeoutExpired("gh",60), '{"duplicate":0,"duplicate":1}', 'NaN']:
+            with self.subTest(failure=failure),tempfile.TemporaryDirectory() as directory:
+                path=Path(directory)/"issues.json";cache=Path(directory)/"private-cache"
+                atomic_json(path,{"schema":1,"repositories":[]});before=path.read_bytes()
+                calls=0
+                def run(command,**kwargs):
+                    nonlocal calls
+                    calls+=1
+                    if calls==1:return subprocess.CompletedProcess(command,0,"[[]]","")
+                    if isinstance(failure,Exception):raise failure
+                    return subprocess.CompletedProcess(command,0,failure,"")
+                with patch.object(fetcher,"REPOSITORIES",["owner/first","owner/last"]),\
+                     patch.object(fetcher.subprocess,"run",side_effect=run),\
+                     patch.object(sys,"argv",["issues","--destination",str(path),"--cache",str(cache)]),\
+                     contextlib.redirect_stdout(io.StringIO()),self.assertRaises((subprocess.TimeoutExpired,AssertionError,ValueError)):
+                    fetcher.main()
+                self.assertEqual(calls,2)
+                self.assertEqual(path.read_bytes(),before)
+                self.assertFalse(cache.exists())
+
+    def test_cli_rejects_corrupted_prior_json_before_fetching(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/"issues.json"
+            for raw in ['{"schema":1,"schema":1}', '{"schema":1,"bad":NaN}']:
+                path.write_text(raw,encoding="utf-8")
+                with patch.object(sys,"argv",["issues","--destination",str(path)]),\
+                     patch.object(fetcher.subprocess,"run") as run,self.assertRaises((AssertionError,ValueError)):
+                    fetcher.main()
+                run.assert_not_called()
+                self.assertEqual(path.read_text(),raw)
 
 
 if __name__ == "__main__":

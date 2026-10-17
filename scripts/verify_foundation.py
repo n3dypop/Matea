@@ -29,6 +29,7 @@ checks = [
     ("example-smoke", [sys.executable, str(root / "scripts/example_smoke.py")]),
     ("coverage-integrity", [sys.executable, str(root / "scripts/check_coverage.py")]),
     ("coverage-guard-tests", [sys.executable, str(root / "scripts/test_coverage.py")]),
+    ("reference-audit-tests", [sys.executable, str(root / "scripts/test_reference_audit.py")]),
     ("rustdoc-audit-tests", [sys.executable, str(root / "scripts/test_rustdoc_exports.py")]),
     ("source-snapshot-tests", [sys.executable, str(root / "scripts/test_source_snapshot.py")]),
     ("rustdoc-import-tests", [sys.executable, str(root / "scripts/test_rustdoc_import.py")]),

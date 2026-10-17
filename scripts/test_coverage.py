@@ -43,6 +43,10 @@ class CoverageTests(unittest.TestCase):
 
     def save(self):
         self.write("docs/coverage/fixture.json", self.inventory)
+        self.write("docs/coverage/summary.json", {"schema":2,"f5_eligible":False,
+            "repositories":[{"name":self.inventory["name"],"sha":self.inventory["sha"],
+                **{field:len(self.inventory[field]) for field in ["modules","declarations","issue_markers"]}}],
+            "inventory_sha256":{"fixture.json":hashlib.sha256((self.root/"docs/coverage/fixture.json").read_bytes()).hexdigest()}})
         self.write("docs/coverage/capabilities.json", {"capabilities":[self.capability]})
         self.write("docs/coverage/module-verdicts.json", {"module_groups":[self.verdict]})
         self.write("docs/report.json", self.report)
@@ -69,6 +73,20 @@ class CoverageTests(unittest.TestCase):
     def test_duplicate_performance_case_cannot_overwrite_a_failed_result(self):
         self.report["cases"].insert(0,{"case":"one", "output_equivalent_for_this_fixture":False})
         self.save();self.assert_rejected()
+
+    def test_inventory_summary_rejects_missing_duplicate_stale_or_forged_cohorts(self):
+        path=self.root/"docs/coverage/summary.json"
+        for defect in ["schema", "eligible", "duplicate", "count", "hash", "missing", "extra"]:
+            self.save();summary=json.loads(path.read_text())
+            if defect=="schema":summary["schema"]=1
+            if defect=="eligible":summary["f5_eligible"]=True
+            if defect=="duplicate":summary["repositories"]*=2
+            if defect=="count":summary["repositories"][0]["declarations"]=True
+            if defect=="hash":summary["inventory_sha256"]["fixture.json"]="a"*64
+            if defect=="missing":summary["inventory_sha256"]={}
+            if defect=="extra":summary["inventory_sha256"]["other.json"]="a"*64
+            self.write("docs/coverage/summary.json",summary)
+            with self.subTest(defect=defect):self.assert_rejected()
 
     def test_equivalence_must_be_true_boolean(self):
         for value in ["false",1,False,None]:

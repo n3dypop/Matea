@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def load_json(path):
+def parse_json(text):
     def unique_fields(pairs):
         # JSON object keys are strings. Building the dictionary in C and
         # comparing lengths rejects every duplicate without a Python call and
@@ -18,8 +18,12 @@ def load_json(path):
         return value
     def invalid_constant(value):
         raise ValueError("nonfinite JSON constant: " + value)
-    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_fields,
+    return json.loads(text, object_pairs_hook=unique_fields,
                       parse_constant=invalid_constant)
+
+
+def load_json(path):
+    return parse_json(path.read_text(encoding="utf-8"))
 
 
 def evidence_path(root, name):
@@ -35,6 +39,26 @@ def evidence_path(root, name):
 def boolean(value):
     require(type(value) is bool, "closure flag must be boolean")
     return value
+
+
+def verify_inventory_summary(folder, inventories):
+    summary = load_json(folder / "summary.json")
+    require(type(summary["schema"]) is int and summary["schema"] == 2, "inventory summary schema 2 required")
+    require(summary["f5_eligible"] is False, "source inventory cannot declare F5 eligible")
+    by_name = {r["name"]: r for r in summary["repositories"]}
+    require(len(by_name) == len(summary["repositories"]) == len(inventories), "inventory summary identity mismatch")
+    require(set(by_name) == {r["name"] for r in inventories}, "missing/extra inventory summary member")
+    expected = {r["name"] + ".json" for r in inventories}
+    require(set(summary["inventory_sha256"]) == expected, "inventory summary hash members mismatch")
+    for inventory in inventories:
+        name = inventory["name"]
+        entry = by_name[name]
+        require(entry["sha"] == inventory["sha"], "inventory summary pin mismatch")
+        for field in ["modules", "declarations", "issue_markers"]:
+            require(type(entry[field]) is int and entry[field] == len(inventory[field]), "inventory summary count mismatch")
+        path = evidence_path(folder, name + ".json")
+        require(hashlib.sha256(path.read_bytes()).hexdigest() == summary["inventory_sha256"][name + ".json"],
+                "incomplete/stale inventory publication: " + name)
 
 
 def issue_needs_review(root, issue, repository, pins):
@@ -59,6 +83,7 @@ def check(root=ROOT):
     ROOT = root
     inventories = [load_json(p) for p in (ROOT / "docs/coverage").glob("*.json")]
     inventories = [r for r in inventories if "declarations" in r]
+    verify_inventory_summary(ROOT / "docs/coverage", inventories)
     pins = {p["name"]: p for p in load_json(ROOT / "docs/upstream-lock.json")}
     current_pins = {name: p["sha"] for name, p in pins.items()}
     require(inventories and len({r["name"] for r in inventories}) == len(inventories), "missing/duplicate inventories")

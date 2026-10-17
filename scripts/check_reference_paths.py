@@ -10,7 +10,8 @@ import sys
 from check_color_trace import verify
 from check_terminal_trace import replay
 from evidence_checks import require
-from performance_records import read_probe_outputs
+from performance_records import read_probe_outputs, read_records
+from check_coverage import verify_inventory_summary
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -71,6 +72,27 @@ def check_trajectories(output, fixture, spring):
             "criterion": "existing matea-motion/tests/reference.rs; no Rust test threshold changed"}
 
 
+def check_timing_mode(destination, go_binary, environment, correctness):
+    environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS="1000000")
+    environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
+    checked=[]
+    for flag, expected in correctness:
+        output=subprocess.check_output([str(go_binary),*flag],env=environment,timeout=120)
+        records=read_records(output.decode("utf-8"))
+        require(records.keys()==expected.keys(), "calibrated case set changed")
+        for name,item in records.items():
+            require(all(item[key]==expected[name][key] for key in ["semantics","output","first_return_value"]),
+                    "calibrated output changed: "+name)
+            require("calibration" in item and len(item["samples_ns"])==31, "calibrated measurement mode not executed")
+            checked.append({"case":name,"iterations_per_sample":item["iterations_per_sample"],
+                            "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
+                            "allocation_schema_valid":True})
+    require(len(checked)==91 and len({r["case"] for r in checked})==91, "incomplete calibrated probe")
+    result={"schema":1,"checked_cases":checked,"target_ns":1000000,"zero_or_invalid_samples":0,
+            "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
+    (destination/"timing-mode-checks.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
+
+
 def check_probes(destination, go_binary, rust_binary, environment):
     environment = dict(environment, MATEA_PROBE_OUTPUT_ONLY="1")
     records=[]
@@ -99,6 +121,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
         b=cursors[1][name]
         require((a["semantics"],a["output"],a["first_return_value"])==
                 (b["semantics"],b["output"],b["first_return_value"]), "virtual cursor mismatch: "+name)
+    check_timing_mode(destination,go_binary,environment,[([],records[1]),(["--virtual-cursor"],cursors[1])])
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -147,6 +170,7 @@ def main():
     environment = dict(os.environ, PYTHONUTF8="1", CARGO_TARGET_DIR=str(ROOT/"target"))
     if args.offline:
         environment["GOPROXY"] = "off"
+        environment["GOSUMDB"] = "off"  # Retained go.sum still checks cached module bytes; no sumdb network.
     suffix = ".exe" if os.name=="nt" else ""
     build=["cargo","build","--locked","--release","-p","matea-api-audit","-p","matea-perf-probe"]
     if args.offline:build.append("--offline")
@@ -158,6 +182,7 @@ def main():
              "--rust-tool",ROOT/("target/release/matea-api-audit"+suffix),"--destination",facts],env=environment)
     summary=json.loads((facts/"summary.json").read_text(encoding="utf-8"))
     expected=json.loads((ROOT/"docs/coverage/summary.json").read_text(encoding="utf-8"))
+    verify_inventory_summary(facts, [json.loads((facts/(pin["name"]+".json")).read_text(encoding="utf-8")) for pin in pins])
     require([(r["name"],r["sha"],r["declarations"]) for r in summary["repositories"]] ==
             [(r["name"],r["sha"],r["declarations"]) for r in expected["repositories"]], "source inventory counts changed")
     for pin in pins:
@@ -168,6 +193,8 @@ def main():
     go_workspace=destination/"go-probe"
     command([sys.executable,"scripts/prepare_upstream_bench.py","--references",references,"--destination",go_workspace],env=environment)
     command(["go","mod","tidy"],cwd=go_workspace,env=environment)
+    require((go_workspace/"go.sum").read_bytes()==(ROOT/"tools/perf-upstream/go.sum").read_bytes(), "pinned Go checksum cohort changed")
+    command(["go","test","."],cwd=go_workspace,env=environment)
     go_binary=go_workspace/("probe"+suffix)
     command(["go","build","-o",go_binary,"."],cwd=go_workspace,env=environment)
     rust_binary=ROOT/("target/release/matea-perf-probe"+suffix)
@@ -183,7 +210,7 @@ def main():
     if not args.offline:
         command([sys.executable,"scripts/fetch_upstream_issues.py","--destination",destination/"issue-metadata.json",
                  "--cache",destination/"private-issue-cache"],env=environment)
-    (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,
+    (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
         "source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")

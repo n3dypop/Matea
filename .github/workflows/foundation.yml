@@ -46,6 +46,7 @@ jobs:
       - run: cargo build --locked --workspace --examples
       - run: python scripts/check_coverage.py
       - run: python scripts/test_coverage.py
+      - run: python scripts/test_reference_audit.py
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/test_rustdoc_import.py
       - run: python scripts/test_source_snapshot.py
@@ -181,5 +182,6 @@ jobs:
             ${{ runner.temp }}/matea-reference-paths/matea-cursor-outputs.jsonl
             ${{ runner.temp }}/matea-reference-paths/upstream-cursor-outputs.jsonl
             ${{ runner.temp }}/matea-reference-paths/cursor-source-edges.txt
+            ${{ runner.temp }}/matea-reference-paths/timing-mode-checks.json
           if-no-files-found: warn
           retention-days: 14
