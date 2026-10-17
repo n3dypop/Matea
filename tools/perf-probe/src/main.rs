@@ -1,5 +1,6 @@
 //! Matched Foundation micro-workloads. No image or GPU processing.
 //! Allocation instrumentation is enabled only during the separate allocation pass.
+mod protocol;
 use matea::{
     prelude::*,
     style::Length,
@@ -163,6 +164,10 @@ fn main() {
     }
     if std::env::args().any(|arg| arg == "--input") {
         input_costs(iterations);
+        return;
+    }
+    if std::env::args().any(|arg| arg == "--protocol") {
+        protocol::costs(iterations);
         return;
     }
     input_bindings(iterations);
