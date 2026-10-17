@@ -38,6 +38,7 @@ jobs:
       - run: python scripts/check_coverage.py
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/test_rustdoc_import.py
+      - run: python scripts/test_issue_refresh.py
       - run: python scripts/test_color_trace.py
       - run: cargo build --locked -p matea-api-audit
       # Official actions/setup-go v6 resolved on 2026-10-17. Go is required by

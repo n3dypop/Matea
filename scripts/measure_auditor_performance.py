@@ -27,40 +27,50 @@ def main():
     parser.add_argument("--binary", type=Path, required=True)
     parser.add_argument("--directory", type=Path, required=True)
     parser.add_argument("--stage", choices=["before", "after"], required=True)
+    parser.add_argument("--language", choices=["rust", "go"], default="rust")
     args = parser.parse_args()
     pins = {p["name"]: p["sha"] for p in json.loads((ROOT / "docs/upstream-lock.json").read_text())}
     binary = args.binary.resolve()
-    sources = ["Cargo.toml", "Cargo.lock", "tools/api-audit/Cargo.toml", "tools/api-audit/src/main.rs",
-               "scripts/measure_auditor_performance.py"]
+    sources = (["Cargo.toml", "Cargo.lock", "tools/api-audit/Cargo.toml", "tools/api-audit/src/main.rs"]
+               if args.language == "rust" else ["tools/audit-go/main.go"])
+    sources.append("scripts/measure_auditor_performance.py")
     revision = git("rev-parse", "HEAD")
     for path in sources:
         committed = subprocess.check_output(["git", "show", revision + ":" + path], cwd=ROOT)
         if hashlib.sha256(committed).hexdigest() != digest(ROOT / path):
             raise ValueError("commit measured source inputs before collecting evidence: " + path)
-    expected_binary = ROOT / "target/release" / ("matea-api-audit.exe" if os.name == "nt" else "matea-api-audit")
+    executable = "matea-api-audit" if args.language == "rust" else "matea-go-audit"
+    expected_binary = ROOT / "target/release" / (executable + (".exe" if os.name == "nt" else ""))
     if binary != expected_binary:
         raise ValueError("binary must be the release auditor built by this invocation")
-    build = ["cargo", "build", "--release", "--locked", "--offline", "-p", "matea-api-audit"]
+    build = (["cargo", "build", "--release", "--locked", "--offline", "-p", "matea-api-audit"] if args.language == "rust"
+             else ["go", "build", "-o", str(binary), "tools/audit-go/main.go"])
     subprocess.run(build, cwd=ROOT, check=True,
-                   env=dict(os.environ, CARGO_TARGET_DIR=str(ROOT / "target")))
+                   env=dict(os.environ, CARGO_TARGET_DIR=str(ROOT / "target"),
+                            GOCACHE=str(Path(tempfile.gettempdir()) / "matea-go-benchcache"), GOPROXY="off"))
     args.directory.mkdir(parents=True, exist_ok=True)
     cases = []
     with tempfile.TemporaryDirectory(prefix="matea-auditor-fixture-") as temporary:
         synthetic = Path(temporary)
-        text = "".join(f"#[cfg(unix)] pub const ITEM_{i}: usize = {i};\n" for i in range(10000))
-        (synthetic / "lib.rs").write_text(text, encoding="utf-8")
-        for name in ["crossterm", "ratatui", "synthetic_10000"]:
+        text = ("".join(f"#[cfg(unix)] pub const ITEM_{i}: usize = {i};\n" for i in range(10000)) if args.language == "rust"
+                else "package fixture\n" + "".join(f"const ITEM_{i} = {i}\n" for i in range(10000)))
+        fixture_name = "lib.rs" if args.language == "rust" else "fixture.go"
+        (synthetic / fixture_name).write_text(text, encoding="utf-8")
+        names = ["crossterm", "ratatui"] if args.language == "rust" else ["bubbletea", "bubbles", "ultraviolet"]
+        for name in [*names, "synthetic_10000"]:
             if name == "synthetic_10000":
                 source = synthetic
-                expected = [{"file": "lib.rs", "line": i + 1, "kind": "const", "symbol": f"ITEM_{i}",
-                             "cfg": " # [cfg (unix)]"} for i in range(10000)]
+                expected = ([{"file": "lib.rs", "line": i + 1, "kind": "const", "symbol": f"ITEM_{i}",
+                              "cfg": " # [cfg (unix)]"} for i in range(10000)] if args.language == "rust" else
+                            [{"file": "fixture.go", "line": i + 2, "package": "fixture", "kind": "const", "symbol": f"ITEM_{i}"} for i in range(10000)])
                 input_identity = {"generated_lib_sha256": hashlib.sha256(text.encode()).hexdigest()}
             else:
                 source = args.references.resolve() / name
                 if git("rev-parse", "HEAD", cwd=source) != pins[name] or git("status", "--porcelain", cwd=source):
                     raise ValueError("reference is not the clean pinned input: " + name)
                 ledger = ROOT / "docs/coverage" / (name + ".json")
-                expected = [{k: d[k] for k in ["file", "line", "kind", "symbol", "cfg"]}
+                fields = ["file", "line", "kind", "symbol", "cfg"] if args.language == "rust" else ["file", "line", "package", "kind", "symbol", "signature", "build"]
+                expected = [{k: d[k] for k in fields if k in d}
                             for d in json.loads(ledger.read_text())["declarations"]]
                 input_identity = {"upstream_sha": pins[name], "expected_ledger_sha256": digest(ledger)}
             samples = []
@@ -91,7 +101,8 @@ def main():
     context = {"git_head": revision, "source_sha256": {p: digest(ROOT / p) for p in sources},
                "build_command": build,
                "binary_sha256": digest(binary), "raw_sha256": digest(raw), "platform": platform.platform(),
-               "rustc": subprocess.check_output(["rustc", "-Vv"], text=True),
+               "language": args.language,
+               "toolchain": subprocess.check_output(["rustc", "-Vv"] if args.language == "rust" else ["go", "version"], text=True),
                "limits": ["One native host, 31 sequential warm process samples, no affinity/frequency control.",
                           "Includes subprocess and pipe overhead; no allocation/RSS instrumentation or in-process AST-only timing.",
                           "Retained source ledgers are output regression checks, not resolved public API or upstream parity proofs."]}
@@ -107,7 +118,7 @@ def main():
             for field in ["case", "semantics", "input", "output_sha256", "output_bytes", "declarations"]:
                 if old[field] != new[field]:
                     raise ValueError("incomparable auditor measurement: " + field)
-        print("All three complete-output checks match the baseline.")
+        print(f"All {len(cases)} complete-output checks match the baseline.")
 
 
 if __name__ == "__main__":

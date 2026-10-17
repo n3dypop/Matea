@@ -1,0 +1,11 @@
+# ADR 0029: Validate research inputs before publication and preserve reviews
+
+Status: accepted for Foundation tooling.
+
+The compiler-profile importer previously wrote early input files before validating later reports. A failed import could therefore alter published evidence while leaving the old index. The issue collector rebuilt open-issue records with pending/untriaged defaults, erasing earlier Matea review decisions on refresh. These are evidence-integrity defects found by source review.
+
+Validate all compiler-profile inputs first, including pins, profile identities, all three success exit codes, unique item keys, and conflicting same-name files. Only after validation, stage canonical UTF-8 facts and atomically replace individual files, publishing the index last. This is not a filesystem-wide transaction: interrupted replacement and concurrent independent importers remain limitations. Invalid input must not modify any existing artifact.
+
+Refresh issue metadata by repository and issue number while retaining reproduction, disposition and additional review evidence. Keep missing records in a separate prior-review list, labeled only as absent from the current open snapshot. Absence is not proof of closure. Reopened reports recover their earlier review. Flag changed upstream timestamps for further review. Validate pagination and repository identity, reject duplicate IDs, and finish every repository before replacing the published JSON. Network failure must not erase earlier research. Issue bodies remain outside the repository.
+
+Tests cover malformed late profiles, duplicate/conflicting facts, canonical idempotent import, changed/disappeared/reopened issues, PR filtering, duplicate/foreign IDs, later network failure, and failed filesystem replacement. No real upstream metadata is refreshed by these regression fixtures. Load measurements and external compiler/network execution on each OS remain separate evidence.

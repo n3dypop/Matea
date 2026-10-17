@@ -30,6 +30,7 @@ checks = [
     ("coverage-integrity", [sys.executable, str(root / "scripts/check_coverage.py")]),
     ("rustdoc-audit-tests", [sys.executable, str(root / "scripts/test_rustdoc_exports.py")]),
     ("rustdoc-import-tests", [sys.executable, str(root / "scripts/test_rustdoc_import.py")]),
+    ("issue-refresh-tests", [sys.executable, str(root / "scripts/test_issue_refresh.py")]),
     ("color-oracle-tests", [sys.executable, str(root / "scripts/test_color_trace.py")]),
     ("build-source-auditor", ["cargo", "build", "--locked", "-p", "matea-api-audit"]),
     ("source-auditor-tests", [sys.executable, str(root / "scripts/test_source_auditors.py")]),
