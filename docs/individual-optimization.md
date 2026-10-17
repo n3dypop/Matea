@@ -82,3 +82,10 @@ Spinnerの借用経路はインライン化し、所有文字列を作るラベ�
 [順序を反転した同一実行ファイルの再測定](evidence/optimization/spinner/repeat-context.json)も保存し、
 観測された全ての悪化をコード変更の効果と断定しません。
 これらの経路は長いbatchや測定条件の再検討を含め、性能評価の残件です。
+
+実装 `203ba5d7c56f3588a2dadb14410e3aafe3ead59f` の
+[Linux・Windows・macOS・MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39049417573)は4ジョブ成功です。
+各OSでGo収集2テスト、Python最適化モード24テスト、追加CLIの46／37／41ケースを確認しました。
+[ジョブ・step証拠](evidence/optimization/ci-run.json)、[実行ログ抜粋](evidence/optimization/ci-excerpt.log)。
+通常CIの参照API再収集とWindows PTYはskipです。後続の追補は証拠文書と保存patchのwhitespace属性で、
+実装・CI workflowはこの検証済みソースと同一です。

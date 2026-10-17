@@ -11,7 +11,7 @@ reporting success. No worker/global buffer or new dependency is introduced.
 
 Format JSON string fields from borrowed `&str` segments using a private `Display`
 adapter. The UTF-8 scan only slices at `char_indices` boundaries. Copy unescaped
-segments as a whole and preserve the previous quote, slash and control escapes.
+segments as a whole and preserve the previous quote, backslash and control escapes.
 This avoids an owned temporary String for each file/kind/symbol/cfg field.
 
 ## Evidence

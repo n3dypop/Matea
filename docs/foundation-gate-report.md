@@ -97,3 +97,8 @@ GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Mate
 全プログラム評価・Viewport・cfg／検証ツール修正の実装 `9ce5564ad525d047594c5e1debecabd7c3bb4e37` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39043211231)の4ジョブに成功しました。[job／step証拠](evidence/quality/ci-run.json)。初回runではmacOSのGo fixtureが1件skipされたため、公式setup-goの固定SHA・Go 1.26.0導入と必須実行へ変更して再実行しました。同時点の品質評価は81ファイル・40単位で、性能28、参照元一致18、動作5、外部ツール移植性5の計56評価軸が75未満です。これは56件の確認済みバグという意味ではなく、未測定・部分対応・未検証を含みます。品質ゲートとF5は閉じたままです。
 
 個別最適化では127ケースの測定を追加し、色変換、フォーカス初期化、純粋なKitty／Sixelエンコーダ、宣言収集CLIを改善しました。Unicode非対応時の全角セルの背景欠落も回帰試験で修正しました。[生データ・改善・不利な結果・残件](individual-optimization.md)、[ADR 0024–0027](decisions/0024-exact-bounded-color-quantization.md)。追加11件の対象限定Miriに成功し、従来分と合わせて20件です。[追加の対象と制約](evidence/optimization/miri-context.json)。ローカル25検証、Rust 129テスト＋2 doctest、明示実行の全RGB検証、Python 24テスト、12 snapshot、17 Unix PTYに成功しました。既存84ケースの参照元比較も全fixtureの出力・意味が一致しました。86ファイル・40単位にはなお56評価軸の未達があり、全項目高評価・横断最適化への移行・F5には未到達です。
+
+個別最適化の実装 `203ba5d7c56f3588a2dadb14410e3aafe3ead59f` は
+[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39049417573)の4ジョブ成功です。
+各OSのGo収集2テスト、最適化Python 24テスト、46／37／41の追加CLIケースをログで確認しました。
+[ジョブ・stepと除外範囲](evidence/optimization/ci-run.json)。品質ゲート56未達とF5閉鎖は維持します。
