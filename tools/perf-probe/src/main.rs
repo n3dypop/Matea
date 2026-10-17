@@ -351,7 +351,7 @@ fn view_construction_costs(iterations: usize) {
         );
     }
     let value = black_box(42u64);
-    let make_counter = || View::styled(format!("Count: {}", black_box(value)), theme.accent);
+    let make_counter = || View::styled(format_args!("Count: {}", black_box(value)), theme.accent);
     let output = make_counter().render(size).unwrap().plain();
     measure(
         "views/formatted_counter",

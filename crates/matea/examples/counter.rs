@@ -20,7 +20,7 @@ impl Model for Counter {
     }
     fn view(&self, c: ViewContext<'_>) -> View {
         View::column([
-            View::styled(format!("Count: {}", self.0), c.theme.accent),
+            View::styled(format_args!("Count: {}", self.0), c.theme.accent),
             View::styled("+/- or arrows: change | q: quit", c.theme.muted),
         ])
         .gap(c.theme.gap)

@@ -27,7 +27,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は106 testsと1 compile-only doc test成功、12サンプルsnapshot成功、Unix PTY 16ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
+今回のローカル結果は111 testsと2 doc tests（compile-only／compile-fail）成功、12サンプルsnapshot成功、Unix PTY 17ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
 色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.78µs、測定割り当て2→0回です。行移動のCRLF短縮には、既存のスクロール領域内で画面を動かす不具合があり、失敗traceを保存して絶対指定へ修正しました。現在の無彩色出力は1,745→1,704バイトで、参照元の1,655バイトより49バイト多くなります。途中の性能後退と、標準／独自スクロール領域の再生検証も記録。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
 
@@ -44,6 +44,10 @@ Spinnerの29宣言を対応付け、12プリセット・66フレーム、検証�
 同時に、重複IDを拒否する途中で既存timerを失うMateaの不具合を実行して再現しました。設定全体の検証後に表を更新し、元の期限を保持します。既知の失敗ログと3件の回帰テストで、重複・ゼロ周期・件数超過、名前空間とrevision、既存callback保持を検証。モデル状態・effect全体を巻き戻す保証ではありません。
 
 時計の文字列化は、安全な固定バッファへ逆順に直接桁を書き込み、一時配列とコピーを減らしました。269件の参照元出力とRust Duration::MAXを維持。短い測定は未変更の経路にも揺れが大きかったため、旧／新版のバイナリを分離し、両言語の全16ケースを20倍のバッチで再測定しました。最大共有durationのowned書式化はp50 54.97→49.05nsですが、Go 32.50nsには未達です。短い結果も保持し、時計全体の性能判定はpendingのままです。これらは既存84ケース中の16ケースの再測定です。[詳細](clock-format-performance.md)。
+
+Viewの本文／見出しを、短い値をinline保持できる不変のTextへ変更しました。標準文字列とformat_args!から直ちに所有値を作り、制御文字を一度だけ正規化します。公開Canvas.textは任意文字列を引き続き検査。カウンターと独立widgetで中間Stringを省き、全Unicodeスカラー値の検証、複数サイズ・focus/themeのセル比較、formatter失敗時のPTY復旧を追加しました。[APIと互換性上の変更](text-api.md)、[ADR 0022](decisions/0022-owned-normalized-scene-text.md)。コンストラクタ境界は暫定のInto<Text>となり、独自Into<String>だけを実装する型は明示変換が必要です。
+
+Rust内20比較では短いViewの構築・複製・数値書式化が1→0割り当て、短いpanelが4→2回となりました。正規化を構築へ移したため、長いASCIIの構築は28.02→86.01ns、制御文字入りは24.38→101.49nsへ遅くなる結果も保持。構築＋描画と複製＋描画を別に測定し、1フレーム全体を無割り当てとは扱いません。既存84ケースも新コードで再実行して出力一致を確認しました。追加20件はRust内比較で、参照元との84件とは区別します。[正しさ・前後・途中の性能](view-performance.md)。
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
@@ -70,6 +74,8 @@ Spinner実装 `8ee28f9cf9e0ecec750bbd516937a1d14ceeb5b4` は[Linux・Windows・m
 購読改善 `fcf97f1a6e3065d8e01e4f6044191114a4f9c7d0` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39011713186)の4ジョブに成功しました。[ジョブ・step証拠](evidence/subscriptions-ci-run.json)。WindowsのPTYと通常runの参照元再収集はskipです。
 
 逆順時計書式化 `b6dfcca442e1a4bc810cc8655065065c81d232ac` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39012460120)の4ジョブに成功しました。[ジョブ・step証拠](evidence/clock-format-ci-run.json)。WindowsのPTY、通常runの参照元再収集はskipです。
+
+Textの追補CIは送信前です。直前の時計書式化成功とは実装コミットを分けて記録します。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

@@ -272,6 +272,15 @@ metadata["spinner_performance_pending"] = {
     "measured": "Twelve plain immutable preset frames (storage sharing allowed) and two rejected-ID/generation guards; no actual timer creation in either measured operation.",
     "pending": "Active scheduling, notification latency, custom frame construction/reconfiguration, labels, rich styled views and full module equivalence remain pending.",
     "allocation_contract": "Rust Cow borrows unlabeled frames. Go unstyled View may share its immutable string. Neither operation requires a fresh owned copy. Source Model.View still goes through default Lip Gloss Style.Render; guard cases include plain frame retrieval/rendering and do not isolate guard speed."}
+view_checkpoint = destination / "views-reference-checkpoint-report.json"
+view_checkpoint_data = json.loads(view_checkpoint.read_text())
+view_checkpoint_raw = [destination / "matea-views-reference-before.jsonl", destination / "upstream-views-reference-before.jsonl"]
+for raw, key in zip(view_checkpoint_raw, ("matea-current.jsonl", "upstream-current.jsonl")):
+    assert digest(raw) == view_checkpoint_data["raw_sha256"][key]
+metadata["view_text_followup"] = {"reference_checkpoint": view_checkpoint.name,
+    "checkpoint_sha256": digest(view_checkpoint), "raw_sha256": {raw.name: digest(raw) for raw in view_checkpoint_raw},
+    "paired_rust_report": "views-report.json", "paired_rust_report_sha256": digest(destination / "views-report.json"),
+    "scope": "Historical 84-case checkpoint predates subscription/formatter follow-ups. Isolated owned-scene results use their own exact committed baseline, twenty Rust-only cases and all intermediate regressions; no upstream/module parity inferred."}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -317,5 +326,6 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "No image processing, GPU or real terminal performance claim is made."]
 lines += ["", "Additional [Rust-only subscription before/after costs](subscription-performance.md) measure adapter construction and retained timer tables, separately from the matched source fixtures."]
 lines += ["", "The [clock-format follow-up](clock-format-performance.md) repeats the existing sixteen clock cases with longer batches and retains all short runs; these overlap the matched case set."]
+lines += ["", "[Owned scene Text costs](view-performance.md) add twenty Rust-only construction/clone/complete-render comparisons, with early-normalization tradeoffs and retained regressions. These are separate from the matched source cases."]
 (ROOT / "docs/performance.md").write_text("\n".join(lines) + "\n")
 print(f"{len(comparison)} narrow cases; {sum(r['output_equivalent_for_this_fixture'] for r in comparison)} output matches")

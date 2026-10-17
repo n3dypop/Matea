@@ -118,3 +118,12 @@ Duplicate/zero/limit errors preserve that table, while model updates/effects are
 not rolled back. Scope identity is process-local. See
 [ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md) and
 [measured costs](subscription-performance.md).
+
+Scene leaves and panel titles now hold immutable normalized Text. Standard string
+inputs and fmt::Arguments convert immediately to owned content with inline storage
+for small values. Typed leaf drawing avoids repeated control scans, while public
+Canvas::text retains its arbitrary-string validation. Constructor bounds are
+provisionally Into<Text>; custom Into<String>-only conversions need adaptation.
+The facade/counter and independent widget demonstrate ownership, theme/focus and
+formatting ergonomics. [ADR 0022](decisions/0022-owned-normalized-scene-text.md),
+[API](text-api.md), [measured costs and regressions](view-performance.md).

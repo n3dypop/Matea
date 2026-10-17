@@ -14,7 +14,7 @@
 //!         Effect::none()
 //!     }
 //!     fn view(&self, context: ViewContext<'_>) -> View {
-//!         View::styled(format!("Count: {}", self.0), context.theme.accent)
+//!         View::styled(format_args!("Count: {}", self.0), context.theme.accent)
 //!     }
 //! }
 //! fn main() -> Result<(), matea::terminal::Error> { matea::run(Counter(0)) }
@@ -32,7 +32,7 @@ pub mod prelude {
         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
         ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
     };
-    pub use matea_render::{Cursor, Rect, Size, Surface, View};
+    pub use matea_render::{Cursor, Rect, Size, Surface, Text, View};
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{

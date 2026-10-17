@@ -70,3 +70,7 @@ blink and OS clipboard remain pending; see the input editing audit for limits.
 Use p to pause/resume, r to reset phases, n for manual stepping, m to toggle
 reduced motion and q to quit. The stable `--snapshot` form acquires no terminal.
 The example adds a twelfth snapshot and a sixteenth Unix PTY control/cleanup case.
+
+The counter and independent widget use format_args! through owned Text, without a
+separate String allocation for short formatted content. A lifecycle formatter
+error joins the direct view/update panic checks in Unix PTY cleanup tests.

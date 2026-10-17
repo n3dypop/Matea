@@ -343,7 +343,7 @@ macro_rules! controls {
                 ClockText(self.0.value)
             }
             pub fn view(&self, theme: &Theme) -> View {
-                View::styled(self.text().into_string(), theme.text)
+                View::styled(format_args!("{}", self.text()), theme.text)
             }
         }
     };

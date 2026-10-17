@@ -10,6 +10,7 @@ use std::{
 struct App {
     cancelled: Arc<AtomicBool>,
     panic_view: bool,
+    panic_format: bool,
     recovered: bool,
 }
 impl Model for App {
@@ -41,6 +42,15 @@ impl Model for App {
     }
     fn view(&self, c: ViewContext<'_>) -> View {
         assert!(!self.panic_view, "lifecycle fixture view panic");
+        if self.panic_format {
+            struct Bad;
+            impl std::fmt::Display for Bad {
+                fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    Err(std::fmt::Error)
+                }
+            }
+            return View::text(format_args!("{Bad}"));
+        }
         View::text(format!(
             "READY {}x{} | q exit | p panic{}",
             c.size.width,
@@ -54,6 +64,7 @@ fn main() -> Result<(), matea::terminal::Error> {
     matea::run(App {
         cancelled: cancelled.clone(),
         panic_view: std::env::args().any(|s| s == "--panic-view"),
+        panic_format: std::env::args().any(|s| s == "--panic-format"),
         recovered: false,
     })?;
     let deadline = std::time::Instant::now() + Duration::from_secs(2);

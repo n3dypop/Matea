@@ -85,7 +85,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
         return screen_text(bytes(output))
 
     try:
-        if "--panic-view" not in args:
+        if not any(flag in args for flag in ("--panic-view", "--panic-format")):
             read_until(lambda: ready in plain())
             assert not termios.tcgetattr(slave)[3] & termios.ICANON, name
             if action == "post-signal":
@@ -221,6 +221,7 @@ case("SIGTERM", "sigterm")
 case("update panic", "panic", expected_status=101)
 case("worker panic redraw recovery", "worker-panic")
 case("view panic", args=("--panic-view",), expected_status=101)
+case("owned Text formatting panic", args=("--panic-format",), expected_status=101)
 case("typed effect completion", "effect", example="effects", ready=b"Loading tea",
      expect_cancelled=False)
 case("post-run SIGTERM uses original handler", "post-signal", args=("--post-signal",),

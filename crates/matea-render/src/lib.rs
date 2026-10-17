@@ -2,7 +2,9 @@
 //! Structured views, grapheme-safe cell composition, and deterministic row diffs.
 use compact_str::CompactString;
 use matea_style::{Border, Length, Style, Theme, distribute};
-use std::borrow::Cow;
+use std::{borrow::Cow, fmt};
+mod text;
+pub use text::Text;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -230,7 +232,13 @@ impl Canvas<'_> {
     }
     pub fn text(&mut self, x: u16, y: u16, text: &str, style: Style) {
         let safe = sanitized(text);
-        for (dy, line) in safe.split('\n').enumerate() {
+        self.draw_text(x, y, &safe, style);
+    }
+    fn text_owned(&mut self, x: u16, y: u16, text: &Text, style: Style) {
+        self.draw_text(x, y, text.as_str(), style);
+    }
+    fn draw_text(&mut self, x: u16, y: u16, text: &str, style: Style) {
+        for (dy, line) in text.split('\n').enumerate() {
             let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
                 break;
             };
@@ -297,33 +305,55 @@ impl Canvas<'_> {
 pub fn sanitize(s: &str) -> String {
     sanitized(s).into_owned()
 }
-/// Borrow safe input; allocate once only when control replacement is necessary.
+/// Borrow safe input; allocate only when control replacement is necessary.
 pub fn sanitized(s: &str) -> Cow<'_, str> {
-    if s.chars().all(|c| c == '\n' || !c.is_control()) {
+    if is_safe_text(s) {
         return Cow::Borrowed(s);
     }
     let mut out = String::with_capacity(s.len());
+    write_sanitized(s, &mut out).expect("writing normalized String cannot fail");
+    Cow::Owned(out)
+}
+fn is_safe_text(s: &str) -> bool {
+    // str already guarantees valid UTF-8. C0/DEL bytes cannot occur inside a
+    // multibyte scalar; C1 controls are exactly the pairs C2 80..9F.
+    // Fold ASCII-control/high-bit flags together so clean ASCII can vectorize.
+    let mut flags = 0u8;
+    for byte in s.bytes() {
+        let invalid = ((byte < 0x20) & (byte != b'\n')) | (byte == 0x7f);
+        flags |= u8::from(invalid) | (byte & 0x80);
+    }
+    if flags & 1 != 0 {
+        return false;
+    }
+    flags & 0x80 == 0
+        || !s
+            .as_bytes()
+            .windows(2)
+            .any(|pair| pair[0] == 0xc2 && pair[1] < 0xa0)
+}
+fn write_sanitized(s: &str, out: &mut impl fmt::Write) -> fmt::Result {
     for c in s.chars() {
         match c {
-            '\n' => out.push('\n'),
-            '\t' => out.push_str("    "),
-            c if c.is_control() => out.push('�'),
-            c => out.push(c),
+            '\n' => out.write_char('\n')?,
+            '\t' => out.write_str("    ")?,
+            c if c.is_control() => out.write_char('�')?,
+            c => out.write_char(c)?,
         }
     }
-    Cow::Owned(out)
+    Ok(())
 }
 
 #[derive(Clone, Debug)]
 enum Node {
-    Text(String, Style),
+    Text(Text, Style),
     Stack {
         horizontal: bool,
         children: Vec<View>,
         gap: u16,
     },
     Panel {
-        title: String,
+        title: Text,
         child: Box<View>,
         theme: Box<Theme>,
     },
@@ -348,10 +378,10 @@ impl View {
             height: None,
         }
     }
-    pub fn text(text: impl Into<String>) -> Self {
+    pub fn text(text: impl Into<Text>) -> Self {
         Self::new(Node::Text(text.into(), Style::default()))
     }
-    pub fn styled(text: impl Into<String>, style: Style) -> Self {
+    pub fn styled(text: impl Into<Text>, style: Style) -> Self {
         Self::new(Node::Text(text.into(), style))
     }
     pub fn column(children: impl IntoIterator<Item = View>) -> Self {
@@ -384,7 +414,7 @@ impl View {
             height,
         }
     }
-    pub fn panel(self, title: impl Into<String>, theme: &Theme) -> Self {
+    pub fn panel(self, title: impl Into<Text>, theme: &Theme) -> Self {
         Self::new(Node::Panel {
             title: title.into(),
             child: Box::new(self),
@@ -457,7 +487,7 @@ impl View {
             return;
         }
         match &self.node {
-            Node::Text(text, style) => s.canvas(clip).text(area.x, area.y, text, *style),
+            Node::Text(text, style) => s.canvas(clip).text_owned(area.x, area.y, text, *style),
             Node::Stack {
                 horizontal,
                 children,
