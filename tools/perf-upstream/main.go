@@ -3,6 +3,7 @@ package main
 
 import (
 	"bytes"
+	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
@@ -165,12 +166,20 @@ func main() {
 		spinnerSourceEdges()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--cursor-source-edges" {
+		virtualCursorEdges()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--clocks" {
 		clockCases(n)
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--virtual-cursor" {
+		virtualCursorCases(n)
 		return
 	}
 	inputBindings(n)
@@ -966,4 +975,104 @@ func trace() {
 		sequences = append(sequences, output.String())
 	}
 	json.NewEncoder(os.Stdout).Encode(map[string]any{"width": 80, "height": 24, "sequences": sequences})
+}
+
+// Use only public APIs. Capture actual timer messages without private field edits.
+func virtualCursorEdges() {
+	state := func(m cursor.Model) map[string]any {
+		return map[string]any{"mode": m.Mode().String(), "blinked": m.IsBlinked, "text": ansi.Strip(m.View())}
+	}
+	m := cursor.New()
+	result := map[string]any{"defaults": state(m)}
+	m.SetChar("e\u0301")
+	m.BlinkSpeed = time.Millisecond
+	cmd := m.Focus()
+	result["focused"] = state(m)
+	msg := cmd()
+	m, _ = m.Update(msg)
+	result["first_tick"] = state(m)
+	before := m.IsBlinked
+	m, cmd = m.Update(msg)
+	result["duplicate_tick_rejected"] = m.IsBlinked == before && cmd == nil
+	m.SetMode(cursor.CursorStatic)
+	result["static"] = state(m)
+	m.SetMode(cursor.CursorHide)
+	result["hidden"] = state(m)
+	m.SetMode(cursor.Mode(99))
+	result["invalid_mode_ignored"] = m.Mode() == cursor.CursorHide
+	m.Blur()
+	result["blurred"] = state(m)
+
+	stale := cursor.New()
+	stale.BlinkSpeed = time.Millisecond
+	cmd = stale.Focus()
+	expired := cmd()
+	stale.SetMode(cursor.CursorStatic)
+	stale.SetMode(cursor.CursorBlink) // Initial broadcast has not been processed.
+	stale, cmd = stale.Update(expired)
+	result["expired_tick_after_mode_roundtrip_is_accepted"] = stale.IsBlinked && cmd != nil
+
+	cancelled := cursor.New()
+	cancelled.BlinkSpeed = time.Hour
+	old := cancelled.Focus()
+	cancelled.Focus()
+	result["prior_command_cancelled"] = fmt.Sprintf("%T", old()) == "cursor.blinkCanceled"
+	result["mode_names"] = []string{cursor.CursorBlink.String(), cursor.CursorStatic.String(), cursor.CursorHide.String()}
+	json.NewEncoder(os.Stdout).Encode(result)
+}
+func virtualCursorCells(m cursor.Model) string {
+	screen := uv.NewScreenBuffer(16, 1)
+	screen.Method = ansi.GraphemeWidth
+	uv.NewStyledString(m.View()).Draw(screen, screen.Bounds())
+	return fmt.Sprintf("%s|%t", plain(screen), screen.CellAt(0, 0).Style.Attrs&uv.AttrReverse != 0)
+}
+func virtualCursorCases(n int) {
+	for _, item := range []struct {
+		name, text string
+		mode       cursor.Mode
+		focused    bool
+	}{
+		{"visible_ascii", "tea", cursor.CursorStatic, true},
+		{"visible_unicode", "抹e\u0301👩‍💻", cursor.CursorStatic, true},
+		{"blurred", "tea", cursor.CursorBlink, false},
+		{"hidden", "tea", cursor.CursorHide, true},
+	} {
+		m := cursor.New()
+		m.SetChar(item.text)
+		m.SetMode(item.mode)
+		if item.focused {
+			m.Focus()
+		}
+		output := virtualCursorCells(m)
+		measure("virtual_cursor/"+item.name, n, func() uint64 {
+			clockTextSink = virtualCursorCells(m)
+			return uint64(len(clockTextSink))
+		}, output, "existing virtual cursor to fresh 16x1 grapheme cells; owned plain text and first-cell reverse flag; no scheduling or terminal I/O")
+	}
+	for _, item := range []struct {
+		name string
+		mode cursor.Mode
+	}{{"static_controls", cursor.CursorStatic}, {"hidden_controls", cursor.CursorHide}} {
+		m := cursor.New()
+		m.SetMode(item.mode)
+		measure("virtual_cursor/"+item.name, n, func() uint64 {
+			m.Focus()
+			m.Blur()
+			if !m.IsBlinked {
+				panic("blurred cursor is visible")
+			}
+			return 0
+		}, "false", "focus then blur existing nonblinking cursor; final visibility false; no scheduling or terminal I/O")
+	}
+	m := cursor.New()
+	m.BlinkSpeed = time.Hour
+	m.Focus()
+	measure("virtual_cursor/foreign", n, func() uint64 {
+		var cmd tea.Cmd
+		m, cmd = m.Update(cursor.BlinkMsg{})
+		if cmd != nil || m.IsBlinked {
+			panic("foreign cursor tick accepted")
+		}
+		return 1
+	}, "true", "ignore foreign tick on focused blinking cursor; final visibility true; no new scheduling request or terminal I/O")
 }

@@ -1,5 +1,5 @@
 //! Grapheme editing and cell-based display. No terminal state or clipboard I/O.
-use crate::{Action, key::Binding};
+use crate::{Action, VirtualCursor, key::Binding};
 use matea_core::{Component, Input, Key, KeyCode, Modifiers, Response};
 use matea_render::{Cursor, View};
 use matea_style::{Style, Theme};
@@ -693,6 +693,18 @@ impl Component for TextInput {
         Response::consumed(changed.then_some(Action::Changed))
     }
     fn view(&self, theme: &Theme, focused: bool) -> View {
+        self.render_view(theme, focused, true)
+    }
+}
+impl TextInput {
+    /// Compose an independently owned virtual cursor without copying its live
+    /// identity into this clonable text model. The owner controls focus, restarts
+    /// after editing and forwards scheduled ticks; InputStyles owns cell colors.
+    /// Native cursor hints remain governed by set_virtual_cursor.
+    pub fn view_with_cursor(&self, theme: &Theme, focused: bool, cursor: &VirtualCursor) -> View {
+        self.render_view(theme, focused, cursor.visible(theme))
+    }
+    fn render_view(&self, theme: &Theme, focused: bool, cursor_visible: bool) -> View {
         let styles = self.styles(theme);
         let state = if focused {
             styles.focused
@@ -705,7 +717,7 @@ impl Component for TextInput {
         let field = if self.echo == EchoMode::Hidden {
             View::styled(
                 " ",
-                if focused && self.virtual_cursor {
+                if focused && self.virtual_cursor && cursor_visible {
                     styles.cursor
                 } else {
                     state.text
@@ -830,7 +842,7 @@ impl Component for TextInput {
                     View::styled(&source[start..cursor], text_style).width(columns as u16),
                     View::styled(
                         glyph,
-                        if self.virtual_cursor {
+                        if self.virtual_cursor && cursor_visible {
                             styles.cursor
                         } else if ghost.is_empty() {
                             text_style

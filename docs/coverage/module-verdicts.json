@@ -13,9 +13,22 @@
       "reference": "bubbles",
       "source_group": "cursor",
       "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "correctness": [
+        "crates/matea-widgets/tests/cursor.rs",
+        "docs/evidence/cursor-source-edges.json"
+      ],
+      "performance_cases": [
+        "virtual_cursor/visible_ascii",
+        "virtual_cursor/visible_unicode",
+        "virtual_cursor/blurred",
+        "virtual_cursor/hidden",
+        "virtual_cursor/static_controls",
+        "virtual_cursor/hidden_controls",
+        "virtual_cursor/foreign"
+      ],
+      "notes": "All 21 candidates linked; typed virtual cursor and text-input composition implemented. Rich styles, timer delivery, scale and residency comparisons remain pending; do not promote module parity.",
+      "source_audit": "docs/cursor-audit.md",
+      "declarations_reviewed": 21
     },
     {
       "reference": "bubbles",

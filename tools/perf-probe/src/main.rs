@@ -64,6 +64,10 @@ fn main() {
         clock_cases(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--virtual-cursor") {
+        virtual_cursor_cases(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--views") {
         view_construction_costs(iterations);
         return;
@@ -1464,4 +1468,73 @@ fn text_input(iterations: usize) {
     assert_eq!(input.value(), "t");
     assert_eq!(input.matched_suggestions().count(), 3);
     assert_eq!(input.current_suggestion_index(), Some(0));
+}
+
+fn virtual_cursor_cells(cursor: &VirtualCursor, theme: &Theme) -> String {
+    let frame = cursor.view(theme).render(Size::new(16, 1)).unwrap();
+    format!("{}|{}", frame.plain(), frame.row(0)[0].style().reverse)
+}
+fn virtual_cursor_cases(n: usize) {
+    let theme = Theme::plain();
+    let origin = Instant::now();
+    for (name, text, mode, focused) in [
+        ("visible_ascii", "tea", CursorMode::Static, true),
+        ("visible_unicode", "抹e\u{301}👩‍💻", CursorMode::Static, true),
+        ("blurred", "tea", CursorMode::Blink, false),
+        ("hidden", "tea", CursorMode::Hidden, true),
+    ] {
+        let mut cursor = VirtualCursor::new_at(origin);
+        cursor.set_char(text);
+        cursor.set_mode_at(mode, origin);
+        if focused {
+            cursor.focus_at(origin);
+        }
+        let output = virtual_cursor_cells(&cursor, &theme);
+        measure(
+            &format!("virtual_cursor/{name}"),
+            n,
+            || black_box(virtual_cursor_cells(&cursor, &theme)).len() as u64,
+            &output,
+            "existing virtual cursor to fresh 16x1 grapheme cells; owned plain text and first-cell reverse flag; no scheduling or terminal I/O",
+        );
+    }
+    for (name, mode) in [
+        ("static_controls", CursorMode::Static),
+        ("hidden_controls", CursorMode::Hidden),
+    ] {
+        let mut cursor = VirtualCursor::new_at(origin);
+        cursor.set_mode_at(mode, origin);
+        measure(
+            &format!("virtual_cursor/{name}"),
+            n,
+            || {
+                cursor.focus_at(black_box(origin));
+                cursor.blur_at(black_box(origin));
+                assert!(!cursor.visible(&theme));
+                0
+            },
+            "false",
+            "focus then blur existing nonblinking cursor; final visibility false; no scheduling or terminal I/O",
+        );
+    }
+    let normal = Theme::default();
+    let mut cursor = VirtualCursor::new_at(origin);
+    cursor.focus_at(origin);
+    let mut other = VirtualCursor::new_at(origin);
+    other.focus_at(origin);
+    let foreign = other
+        .schedule(&normal)
+        .unwrap()
+        .tick_at(origin + std::time::Duration::from_secs(1));
+    measure(
+        "virtual_cursor/foreign",
+        n,
+        || {
+            assert!(!cursor.update(black_box(foreign)));
+            assert!(cursor.visible(&normal));
+            1
+        },
+        "true",
+        "ignore foreign tick on focused blinking cursor; final visibility true; no new scheduling request or terminal I/O",
+    );
 }

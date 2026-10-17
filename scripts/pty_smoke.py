@@ -143,6 +143,18 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"\t\r")
                 read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
                 os.write(master,b"\x1b")
+            elif action == "virtual-cursor":
+                os.write(master,b"\x02")
+                read_until(lambda:b"Cursor: static" in plain())
+                os.write(master,b"\x02")
+                read_until(lambda:b"Cursor: blink" in plain())
+                os.write(master,b"\x12")
+                read_until(lambda:b"Motion: reduced" in plain())
+                os.write(master,b"\x12")
+                read_until(lambda:b"Motion: normal" in plain())
+                os.write(master,b"\x1b[200~ tea\x1b[201~")
+                read_until(lambda:b"Matcha tea" in plain())
+                os.write(master,b"\x1b")
             elif action == "spinners":
                 os.write(master,b"p")
                 read_until(lambda:b"Animation: paused" in plain())
@@ -236,3 +248,4 @@ case("dynamic short and full key help", "key-help",example="help",ready=b"Matea 
 case("monotonic clocks, pause, rearm and exactly-once timeout", "clocks",example="clocks",ready=b"Matea clocks",expect_cancelled=False)
 
 case("spinner presets, pause, manual phase and reduced-motion schedules", "spinners",example="spinners",ready=b"Matea spinners",expect_cancelled=False)
+case("virtual cursor modes, reduced motion and text composition", "virtual-cursor",example="cursor",ready=b"Matea virtual cursor",expect_cancelled=False)

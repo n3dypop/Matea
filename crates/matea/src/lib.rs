@@ -36,10 +36,10 @@ pub mod prelude {
     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{
-        Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, EchoMode,
-        EmptySpinnerFrames, Field, Form, Help, HelpItem, HelpMap, HelpStyles, InputStyleState,
-        InputStyles, List, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Spinner,
-        SpinnerAnimation, SpinnerPreset, Stopwatch, Table, TextEditKeys, TextInput, TickInterval,
-        Viewport, required,
+        Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, CursorMode,
+        EchoMode, EmptySpinnerFrames, Field, Form, Help, HelpItem, HelpMap, HelpStyles,
+        InputStyleState, InputStyles, List, PageDisplay, PageKeys, PageNumbers, Pagination,
+        Paginator, Spinner, SpinnerAnimation, SpinnerPreset, Stopwatch, Table, TextEditKeys,
+        TextInput, TickInterval, Viewport, VirtualCursor, required,
     };
 }

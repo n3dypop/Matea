@@ -62,7 +62,7 @@ def main():
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
     env["MATEA_PERF_ITERATIONS"] = "1"
-    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"]]:
+    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"], ["--virtual-cursor"]]:
         name = mode[0].removeprefix("--") if mode else "main"
         run([str(probe), *mode], "coverage-probe-" + name + ".log")
     env["MATEA_PROBE_OUTPUT_ONLY"] = "1"

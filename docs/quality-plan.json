@@ -822,6 +822,45 @@
       ]
     },
     {
+      "id": "matea-widgets/cursor",
+      "files": [
+        "crates/matea-widgets/src/cursor.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Five independent integration fixtures cover all three modes, focus, styling, coalesced elapsed phase, stale/foreign/duplicate/backward ticks, rejected backward controls, text-input composition and actual Runtime timer reconciliation."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "All 21 pinned cursor declarations linked to the typed cursor/composition API; executed source edge fixtures reproduce a mode-roundtrip stale-tick defect. Arbitrary Lip Gloss style decorators and complete physical terminal behavior remain partial."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Seven output-matched finite cell-render/control/foreign-tick cases are prepared. Active timer delivery, construction/reconfiguration scale, resident memory and broader style paths remain pending; no module maximum claim."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "New cursor implementation and executable example pass native macOS tests; current changed source still requires Linux/Windows/macOS and MSRV CI."
+        }
+      },
+      "evidence": [
+        "crates/matea-widgets/tests/cursor.rs",
+        "docs/evidence/cursor-source-edges.json"
+      ],
+      "remaining": [
+        "Complete rich-style equivalence, active scheduling/notification comparison, scale/residency and current three-OS validation."
+      ]
+    },
+    {
       "id": "matea-widgets/spinner",
       "files": [
         "crates/matea-widgets/src/spinner.rs"
@@ -1114,7 +1153,8 @@
       "files": [
         "crates/matea-widgets/tests/clocks.rs",
         "crates/matea-widgets/tests/spinner.rs",
-        "crates/matea-widgets/tests/viewport.rs"
+        "crates/matea-widgets/tests/viewport.rs",
+        "crates/matea-widgets/tests/cursor.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1209,7 +1249,8 @@
         "crates/matea/examples/render_probe.rs",
         "crates/matea/examples/spinners.rs",
         "crates/matea/examples/support/mod.rs",
-        "examples/external-widget/src/main.rs"
+        "examples/external-widget/src/main.rs",
+        "crates/matea/examples/cursor.rs"
       ],
       "criteria": {
         "rust_design": {

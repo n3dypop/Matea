@@ -791,6 +791,43 @@
       "performance": "pending",
       "partial_performance_evidence": "docs/performance.md",
       "notes": "Twelve immutable presets, custom shared validated frames, monotonic phase, opaque IDs/generations, controls and borrowed text implemented. Basic Style override and label composition work; arbitrary Lip Gloss Model.Style/WithStyle decorators and matched active scheduling/styled-view performance remain pending. See spinner-audit.md and ADR 0020."
+    },
+    {
+      "id": "widgets/virtual-cursor",
+      "status": "partial",
+      "reference_ids": [
+        "fd62e8c11d6cc20f7290",
+        "aa54efb683aff9596530",
+        "8a6050a3b35143f2d766",
+        "04250979e735152f235b",
+        "90313d505f18a038aef7",
+        "50da3bb25dfe39b28f49",
+        "bbd9479d5f2b30a069bf",
+        "fb9e4d64b20427a3fe89",
+        "092f961fda3aea651512",
+        "88762cb6b31d352c8b62",
+        "1a9da5d626ce3cca7d97",
+        "d5f214239f65d41ba6fe",
+        "1ff516c057134196f843",
+        "0d2956123a4d2b584fd7",
+        "b8be9e75a6cd3ed8998c",
+        "7f439534ae14c46f4bd1",
+        "af538eb47f16456037a6",
+        "bc3dc7baf5bbf2d6ccf2",
+        "ca005b27b6753e134fbb",
+        "3c197046047f6a31a990",
+        "74cbe7ff9799f3890f58"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/cursor.rs",
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/cursor.rs",
+        "docs/evidence/cursor-source-edges.json"
+      ],
+      "performance": "pending",
+      "notes": "All 21 declarations reviewed. Typed modes, positive interval, exclusive live identity and generation-safe monotonic phase. Explicit owner focus/restart and structured text-input composition replace shared context/broadcast commands. Arbitrary Lip Gloss style decorators and active timer comparison remain partial."
     }
   ]
 }

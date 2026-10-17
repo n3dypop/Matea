@@ -100,6 +100,12 @@ jobs:
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"
+      - run: |
+          cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); assert len(records)==7"
+        shell: bash
+        env:
+          MATEA_PROBE_OUTPUT_ONLY: "1"
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release
@@ -172,5 +178,8 @@ jobs:
           path: |
             ${{ runner.temp }}/matea-reference-paths/path-checks.json
             ${{ runner.temp }}/matea-reference-paths/trajectory-errors.json
+            ${{ runner.temp }}/matea-reference-paths/matea-cursor-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-cursor-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/cursor-source-edges.txt
           if-no-files-found: warn
           retention-days: 14

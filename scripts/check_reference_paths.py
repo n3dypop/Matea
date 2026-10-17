@@ -89,14 +89,25 @@ def check_probes(destination, go_binary, rust_binary, environment):
     for name,a in records[0].items():
         b=records[1][name]
         require((a["semantics"],a["output"])==(b["semantics"],b["output"]), "comparison mismatch: "+name)
+    cursors=[]
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output=subprocess.check_output([str(binary),"--virtual-cursor"],env=environment,timeout=30)
+        cursors.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-cursor-outputs.jsonl")).write_bytes(output)
+    require(len(cursors[0])==7 and cursors[0].keys()==cursors[1].keys(), "virtual cursor fixture set changed")
+    for name,a in cursors[0].items():
+        b=cursors[1][name]
+        require((a["semantics"],a["output"],a["first_return_value"])==
+                (b["semantics"],b["output"],b["first_return_value"]), "virtual cursor mismatch: "+name)
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
               "--source-regressions":("motion-pagination-source-edges.json","upstream_observed"),
               "--help-source-edges":("help-source-edges.json","observations"),
               "--clock-source-edges":("clocks-source-edges.json","observations"),
-              "--spinner-source-edges":("spinner-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks"]:
+              "--spinner-source-edges":("spinner-source-edges.json","observations"),
+              "--cursor-source-edges":("cursor-source-edges.json","observations")}
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -172,11 +183,11 @@ def main():
     if not args.offline:
         command([sys.executable,"scripts/fetch_upstream_issues.py","--destination",destination/"issue-metadata.json",
                  "--cache",destination/"private-issue-cache"],env=environment)
-    (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,
+    (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,
         "source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")
-    print("11 pinned inventories and 84 matched output cases validated; no performance verdict")
+    print("11 pinned inventories, 84 retained and seven cursor output cases validated; no performance verdict")
 
 
 if __name__=="__main__":
