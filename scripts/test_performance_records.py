@@ -27,6 +27,7 @@ class RecordTests(unittest.TestCase):
         text=json.dumps(record)
         self.assertEqual(read_probe_outputs(text)["one"],record)
         with self.assertRaises(ValueError):read_records(text)
+        with self.assertRaises(ValueError):read_records(json.dumps({**self.fixture(),**record}))
         with self.assertRaises(ValueError):read_probe_outputs(json.dumps(self.fixture()))
         for bad in ["",text+"\n"+text,text.replace('"case": "one"','"case": "two", "case": "one"')]:
             with self.assertRaises(ValueError):read_probe_outputs(bad)

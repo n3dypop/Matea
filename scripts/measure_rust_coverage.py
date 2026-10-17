@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from performance_records import read_probe_outputs
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/evidence/quality"
@@ -64,6 +65,13 @@ def main():
     for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"]]:
         name = mode[0].removeprefix("--") if mode else "main"
         run([str(probe), *mode], "coverage-probe-" + name + ".log")
+    env["MATEA_PROBE_OUTPUT_ONLY"] = "1"
+    try:
+        run([str(probe)], "coverage-probe-outputs.log")
+        if len(read_probe_outputs((OUT / "coverage-probe-outputs.log").read_text(encoding="utf-8"))) != 84:
+            raise ValueError("incomplete instrumented correctness records")
+    finally:
+        env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
 
     objects = set()
     for log in ["coverage-test.jsonl", "coverage-build.jsonl"]:
@@ -86,7 +94,7 @@ def main():
     data = json.loads(subprocess.check_output(command, text=True))
     files = canonical_files(data, ROOT)
     report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol; execution coverage only"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",

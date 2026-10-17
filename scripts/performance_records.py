@@ -27,6 +27,8 @@ def numeric(value, *, positive=False):
 def validate(record):
     if not isinstance(record, dict) or not isinstance(record.get("case"), str) or not record["case"]:
         raise ValueError("missing case identifier")
+    if "record_kind" in record:
+        raise ValueError("typed correctness records are not measurements")
     if not isinstance(record.get("semantics"), str) or not record["semantics"] or not isinstance(record.get("output"), str):
         raise ValueError("missing semantics/output")
     samples = record.get("samples_ns")

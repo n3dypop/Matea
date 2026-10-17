@@ -1446,7 +1446,7 @@
         },
         "performance": {
           "score": 50,
-          "reason": "31 complete validations/canonicalizations of all 20 retained compiler profiles, full output hashes and separate Python traced peak. Duplicate parsing removed with an identical-output repeat. External compiler/network latency, extraction/profile scale and native RSS remain unmeasured."
+          "reason": "31 complete validations/canonicalizations of all 20 retained profiles plus two captured native compiler JSON read/parse/extract/serialize paths. Full graph outputs match; repeated path resolution removed with before/after distributions and separate Python traced peak. External compiler/network latency, other profile scale and native RSS remain unmeasured."
         },
         "portability": {
           "score": 50,
@@ -1455,7 +1455,8 @@
       },
       "evidence": [
         "docs/evidence/local-validation.json",
-        "docs/evidence/optimization/remaining-report.json"
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/compiler-extraction/report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
