@@ -8,8 +8,10 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 import time
 from rustdoc_exports import EXTRACTOR_SHA256, exports
 
@@ -19,6 +21,114 @@ COLLECTOR_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 def command(*args, cwd=None):
     return subprocess.check_output(args, cwd=cwd, text=True).strip()
+
+
+MARKER = ".matea-source-pin.json"
+
+
+def file_digest(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024*1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def validate_snapshot(snapshot, provenance):
+    """All tracked inputs, including assets and executable modes, are inputs."""
+    hashes = provenance["source_hashes"]
+    require(hashes, "empty source input manifest")
+    directories = {"."}
+    for name, expected in hashes.items():
+        relative = Path(name)
+        require(not relative.is_absolute() and not relative.drive and ".." not in relative.parts,
+                "escaping snapshot manifest path")
+        require(relative.as_posix() == name and name != MARKER, "noncanonical snapshot path")
+        directories.update(parent.as_posix() for parent in relative.parents)
+        path = snapshot / relative
+        require(path.is_file() and not path.is_symlink(), "snapshot source changed: " + name)
+        require(file_digest(path) == expected, "snapshot source changed: " + name)
+        require(stat.S_IMODE(path.stat().st_mode) == provenance["source_modes"][name], "snapshot source mode changed: " + name)
+    actual_files, actual_directories = set(), {"."}
+    for folder, folders, files in os.walk(snapshot, followlinks=False):
+        for name in folders + files:
+            path = Path(folder) / name
+            require(not path.is_symlink(), "unexpected snapshot symlink")
+        actual_directories.update((Path(folder)/name).relative_to(snapshot).as_posix() for name in folders)
+        actual_files.update((Path(folder)/name).relative_to(snapshot).as_posix() for name in files)
+    require(actual_files == set(hashes) | {MARKER} and actual_directories == directories,
+            "unexpected or missing snapshot files/directories")
+
+
+def write_marker(marker, provenance):
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", prefix=".matea-pin-", dir=marker.parent.parent, delete=False) as output:
+            temporary = Path(output.name)
+            json.dump(provenance, output, indent=2, ensure_ascii=False)
+            output.write("\n")
+        os.replace(temporary, marker)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
+def prepare_snapshot(reference, snapshot, pin):
+    reference, snapshot = reference.resolve(), snapshot.absolute()
+    require(not snapshot.is_symlink(), "snapshot directory must not be a symlink")
+    require(not snapshot.resolve().is_relative_to(reference), "snapshot must stay outside its reference checkout")
+    require(command("git", "rev-parse", "HEAD", cwd=reference) == pin["sha"])
+    require(not command("git", "status", "--porcelain", "--untracked-files=no", cwd=reference))
+    files = subprocess.check_output(["git", "ls-files", "-z"], cwd=reference).split(b"\0")
+    hashes, modes, symlinks, sources = {}, {}, {}, []
+    for raw in files:
+        if not raw:
+            continue
+        relative = Path(os.fsdecode(raw))
+        require(not relative.is_absolute() and ".." not in relative.parts and relative.as_posix() != MARKER,
+                "invalid/reserved tracked reference path")
+        source = reference / relative
+        if source.is_symlink():
+            resolved = source.resolve()
+            require(resolved.is_relative_to(reference), "reference symlink escapes its checkout: " + str(relative))
+            symlinks[relative.as_posix()] = resolved.relative_to(reference).as_posix()
+        require(source.is_file(), "review non-regular reference source: " + str(relative))
+        name = relative.as_posix()
+        hashes[name] = file_digest(source)
+        modes[name] = stat.S_IMODE(source.stat().st_mode)
+        sources.append((relative, source))
+    provenance = {"schema": 2, "reference": pin["name"], "sha": pin["sha"], "source_hashes": hashes,
+                  "source_modes": modes, "dereferenced_internal_symlinks": symlinks}
+    marker = snapshot / MARKER
+    if marker.exists():
+        previous = json.loads(marker.read_text(encoding="utf-8"))
+        require(previous["reference"] == pin["name"] and previous["sha"] == pin["sha"], "snapshot identity changed")
+        schema = previous.get("schema")
+        require(schema is None or type(schema) is int and schema in (1, 2), "unsupported snapshot manifest schema")
+        # Validate against every input in the clean pinned checkout even for old
+        # manifests. Never trust an old Rust-only subset to repair itself.
+        validate_snapshot(snapshot, provenance)
+        if previous.get("schema") != 2:
+            write_marker(marker, provenance)
+        else:
+            require(previous == provenance, "snapshot provenance changed")
+        return marker
+    require(not snapshot.exists(), "destination snapshot already exists without provenance; choose an empty destination")
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    # One writer per destination. Build in a sibling stage and publish only a
+    # complete, checked directory; normal copy failures leave no partial cache.
+    with tempfile.TemporaryDirectory(prefix=".matea-source-", dir=snapshot.parent) as temporary:
+        stage = Path(temporary) / "snapshot"
+        stage.mkdir()
+        for relative, source in sources:
+            target = stage / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+        (stage / MARKER).write_text(json.dumps(provenance, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
+        validate_snapshot(stage, provenance)
+        require(not snapshot.exists(), "snapshot destination was created by another writer")
+        os.rename(stage, snapshot)
+    return marker
 
 
 def main():
@@ -37,39 +147,8 @@ def main():
     pin = next(p for p in json.loads((ROOT / "docs/upstream-lock.json").read_text(encoding="utf-8"))
                if p["name"] == args.reference)
     reference = (args.references / args.reference).resolve()
-    require(command("git", "rev-parse", "HEAD", cwd=reference) == pin["sha"])
-    require(not command("git", "status", "--porcelain", "--untracked-files=no", cwd=reference))
     snapshot = destination / "source" / args.reference
-    marker = snapshot / ".matea-source-pin.json"
-    if not marker.exists():
-        if snapshot.exists():
-            raise ValueError("destination snapshot already exists without provenance; choose an empty destination")
-        files = subprocess.check_output(["git", "ls-files", "-z"], cwd=reference).split(b"\0")
-        hashes = {}
-        symlinks = {}
-        for raw in files:
-            if not raw:
-                continue
-            relative = Path(os.fsdecode(raw))
-            source = reference / relative
-            if source.is_symlink():
-                resolved = source.resolve()
-                if not resolved.is_relative_to(reference):
-                    raise ValueError(f"reference symlink escapes its checkout: {relative}")
-                symlinks[relative.as_posix()] = resolved.relative_to(reference).as_posix()
-            if not source.is_file():
-                raise ValueError(f"review non-regular reference source: {relative}")
-            target = snapshot / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
-            if target.suffix in (".rs", ".toml") or target.name == "Cargo.lock":
-                hashes[relative.as_posix()] = hashlib.sha256(target.read_bytes()).hexdigest()
-        marker.write_text(json.dumps({"reference": args.reference, "sha": pin["sha"],
-                                     "source_hashes": hashes, "dereferenced_internal_symlinks": symlinks}, indent=2) + "\n", encoding="utf-8")
-    provenance = json.loads(marker.read_text(encoding="utf-8"))
-    require(provenance["sha"] == pin["sha"])
-    require(all(hashlib.sha256((snapshot / name).read_bytes()).hexdigest() == value
-               for name, value in provenance["source_hashes"].items()), lambda: "snapshot source changed")
+    marker = prepare_snapshot(reference, snapshot, pin)
     target = destination / "target" / args.reference / args.profile
     reports = destination / "reports"
     reports.mkdir(parents=True, exist_ok=True)
