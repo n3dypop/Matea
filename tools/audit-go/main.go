@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"go/format"
 	"go/parser"
 	"go/token"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -27,10 +29,19 @@ type Entry struct {
 
 func main() {
 	if len(os.Args) != 2 {
-		panic("usage: audit-go SOURCE_ROOT")
+		fmt.Fprintln(os.Stderr, "usage: audit-go SOURCE_ROOT")
+		os.Exit(2)
 	}
-	root := os.Args[1]
-	enc := json.NewEncoder(os.Stdout)
+	if err := audit(os.Args[1], os.Stdout); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func audit(root string, output io.Writer) error {
+	buffer := bufio.NewWriterSize(output, 64*1024)
+	enc := json.NewEncoder(buffer)
+	var failure error
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -50,7 +61,10 @@ func main() {
 		if err != nil {
 			return err
 		}
-		rel, _ := filepath.Rel(root, path)
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
 		rel = filepath.ToSlash(rel)
 		var build []string
 		for _, g := range file.Comments {
@@ -63,17 +77,23 @@ func main() {
 		signature := func(node any) string {
 			var b bytes.Buffer
 			if err := format.Node(&b, fset, node); err != nil {
-				panic(err)
+				failure = err
 			}
 			return b.String()
 		}
 		emit := func(kind, symbol string, pos token.Pos, node any) {
+			if failure != nil {
+				return
+			}
 			e := Entry{File: rel, Line: fset.Position(pos).Line, Package: file.Name.Name, Kind: kind, Symbol: symbol, Build: build}
 			if node != nil {
 				e.Signature = signature(node)
 			}
+			if failure != nil {
+				return
+			}
 			if err := enc.Encode(e); err != nil {
-				panic(err)
+				failure = err
 			}
 		}
 		for _, decl := range file.Decls {
@@ -138,10 +158,10 @@ func main() {
 				}
 			}
 		}
-		return nil
+		return failure
 	})
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
+	return buffer.Flush()
 }

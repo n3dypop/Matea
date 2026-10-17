@@ -54,3 +54,7 @@ The measurement driver now requires committed input hashes, builds the exact
 release executable itself with `--locked --offline`, and stops on build failure.
 The refusal for uncommitted source is retained. Valid before/intermediate/after
 contexts contain Git, source, binary, raw and upstream-ledger hashes.
+
+## Go auditor follow-up
+
+Apply the same bounded 64 KiB output buffering to the independent Go AST auditor. Return formatting, relative-path and writer errors through its library helper, including failures on the final buffer flush, rather than panicking. CLI usage exits with status 2, and source/output failures with status 1 and a diagnostic. Valid declaration order and JSON facts remain unchanged. Independent fixtures cover malformed/missing input, Unicode paths, excluded directories, and short/failed writes both below and above the buffer capacity. Measure pinned Bubble Tea, Bubbles, Ultraviolet and a generated 10000-constant input with complete output checks; process distributions remain separate from AST-only, allocation and resident-memory evidence.

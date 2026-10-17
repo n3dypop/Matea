@@ -10,7 +10,19 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def go_environment():
+    environment = dict(os.environ)
+    environment.setdefault("GOCACHE", str(Path(tempfile.gettempdir()) / "matea-quality-go-cache"))
+    return environment
+
+
 class SourceAuditorTests(unittest.TestCase):
+    def test_go_parser_and_writer_failures(self):
+        result = subprocess.run(["go", "test", "tools/audit-go/main.go", "tools/audit-go/main_test.go"],
+                                cwd=ROOT, env=go_environment(), capture_output=True, text=True,
+                                encoding="utf-8", timeout=90)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_rust_nested_platform_and_feature_conditions_are_never_dropped(self):
         target = Path(os.environ.get("CARGO_TARGET_DIR", ROOT / "target"))
         binary = target / "debug" / ("matea-api-audit.exe" if os.name == "nt" else "matea-api-audit")
@@ -56,7 +68,7 @@ const Answer = 42
 func BenchmarkVisible() {}
 func TestHidden() {}
 ''', encoding="utf-8")
-            result = subprocess.run(["go", "run", str(ROOT / "tools/audit-go/main.go"), folder], capture_output=True, text=True, encoding="utf-8", check=True, timeout=90)
+            result = subprocess.run(["go", "run", str(ROOT / "tools/audit-go/main.go"), folder], env=go_environment(), capture_output=True, text=True, encoding="utf-8", check=True, timeout=90)
         entries = [json.loads(line) for line in result.stdout.splitlines()]
         names = {e["symbol"] for e in entries}
         self.assertTrue({"Public", "Public.Field", "Public.Embedded", "Reader.Read", "Reader.Embedded", "*Public.Exported", "Answer", "BenchmarkVisible"}.issubset(names))
