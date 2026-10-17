@@ -23,6 +23,7 @@ from import_rustdoc import plan_import
 from optimization_evidence import records, compare
 from performance_records import read_records, summary
 from report_performance import generate
+from rustdoc_exports import exports
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -69,6 +70,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, required=True)
     parser.add_argument("--only", help="repeat one exact workload without rerunning completed paths")
+    parser.add_argument("--rustdoc-crossterm", type=Path, help="existing external native collector directory; no compilation/fetch")
+    parser.add_argument("--rustdoc-ratatui", type=Path, help="existing external native collector directory; no compilation/fetch")
     args = parser.parse_args()
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     sources = [p for base in ["crates", "tools", "scripts"] for p in (ROOT/base).rglob("*")
@@ -179,6 +182,41 @@ def main():
         return canonical({name:summary(item) for name,item in read_records(data.decode()).items()})
     record("reporters/historical-84-case-reader", "scripts/performance-reporters", historical, digest(data),
                          "decode/validate/summarize every retained Go reference case; preserve fractional average counters; no Rust/Go execution", True)
+    compiler_inputs = {}
+    graph_fields = ["schema", "status", "rustdoc_format", "root", "items", "edges", "trait_implementations",
+                    "external_exports", "implicit_trait_summary", "external_signature_types", "limits"]
+    host = next(line.split(": ",1)[1] for line in subprocess.check_output(["rustc","-vV"],text=True).splitlines() if line.startswith("host: "))
+    for reference, package, directory in [("crossterm","crossterm",args.rustdoc_crossterm),
+                                          ("ratatui","ratatui-core",args.rustdoc_ratatui)]:
+        if directory is None:
+            continue
+        directory=directory.resolve()
+        if directory.is_relative_to(ROOT):raise ValueError("raw compiler inputs must remain outside Matea")
+        stem=f"{reference}-{package}-all-{host}"
+        graph_path=directory/"reports"/(stem+"-exports.json")
+        run_path=directory/"reports"/(stem+"-run.json")
+        graph=json.loads(graph_path.read_bytes());run=json.loads(run_path.read_bytes())
+        for key,value in [("reference",reference),("package",package),("profile","all"),("target",host),("sha",pins[reference])]:
+            if graph[key]!=value or run[key]!=value:raise ValueError("compiler input identity mismatch: "+key)
+        if any(type(run.get(k)) is not int or run[k]!=0 for k in ["exit_code","rustdoc_exit_code","dependency_tree_exit_code"]):
+            raise ValueError("compiler input is not a completed profile")
+        raw=directory/"target"/reference/"all"/host/"doc"/(package.replace("-","_")+".json")
+        if digest(raw.read_bytes())!=graph["raw_rustdoc_sha256"]:raise ValueError("raw compiler input changed")
+        source_root=directory/"source"/reference
+        expected=canonical({key:graph[key] for key in graph_fields})
+        def extraction(raw=raw, source_root=source_root, expected=expected):
+            result=canonical(exports(json.loads(raw.read_bytes()),source_root))
+            if result!=expected:raise ValueError("compiler extraction changed retained complete graph")
+            return result
+        name=f"compiler/extract-{reference}-all"
+        inputs={"raw_sha256":graph["raw_rustdoc_sha256"],"graph_sha256":digest(graph_path.read_bytes()),
+                "run_sha256":digest(run_path.read_bytes()),"source_root":"${AUDIT_TEMP}/source/"+reference,
+                "sha":pins[reference],"package":package,"profile":"all","target":host,
+                "raw_bytes":raw.stat().st_size,"items":len(graph["items"]),"edges":len(graph["edges"]),
+                "trait_implementations":len(graph["trait_implementations"]),"rustc":run["rustc"]}
+        compiler_inputs[name]=inputs
+        record(name,"scripts/compiler-export-audit",extraction,digest(canonical(inputs)),
+               "complete captured compiler-JSON read, parse, public graph extraction and canonical serialization; whole graph compared with the prior local compiler record; excludes compiler/network/source generation",True)
     if not cases:
         raise ValueError("no selected workload")
     args.directory.mkdir(parents=True,exist_ok=True)
@@ -186,6 +224,7 @@ def main():
     context={"schema":1,"stage":"individual_modules","git_head":revision,"platform":platform.platform(),
              "python":sys.version,"rustc":subprocess.check_output(["rustc","-Vv"],text=True),"build_command":build,
              "source_sha256":source_hashes,"binary_sha256":binary_hashes,"raw_sha256":digest(raw.read_bytes()),
+             "compiler_inputs":compiler_inputs,
              "limits":["One native host; 31 sequential warm samples per path, no affinity/frequency control or removed outliers.",
                        "Partial paths within review units; this does not establish full scope, high scores, upstream parity or Stage B optimization.",
                        "Example process timings include spawn/pipe/exit. Python heap is separately traced and excludes subprocess/native heaps and OS residency.",
