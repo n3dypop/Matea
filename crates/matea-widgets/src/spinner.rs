@@ -53,6 +53,7 @@ impl SpinnerAnimation {
     pub fn is_empty(&self) -> bool {
         false
     }
+    #[inline]
     pub fn frame(&self, index: usize) -> Option<&str> {
         match &self.frames {
             Frames::Static(frames) => frames.get(index).copied(),
@@ -243,6 +244,7 @@ impl Spinner {
             self.synchronize();
         }
     }
+    #[inline]
     pub fn frame_text(&self, theme: &Theme) -> &str {
         if theme.reduced_motion {
             "*"
@@ -254,19 +256,24 @@ impl Spinner {
     }
     /// Plain output borrows an unlabeled frame; a label needs owned storage.
     /// Normalize trailing ASCII spaces only at the label boundary.
+    #[inline]
     pub fn text(&self, theme: &Theme) -> Cow<'_, str> {
         let frame = self.frame_text(theme);
         match self.label.as_deref().filter(|label| !label.is_empty()) {
-            Some(label) => {
-                let frame = frame.trim_end_matches(' ');
-                if frame.is_empty() {
-                    Cow::Borrowed(label)
-                } else {
-                    Cow::Owned(format!("{frame} {label}"))
-                }
-            }
+            Some(label) => labeled_text(frame, label),
             None => Cow::Borrowed(frame),
         }
+    }
+}
+
+// Isolate owned formatting from the inline, allocation-free frame lookup.
+#[inline(never)]
+fn labeled_text<'a>(frame: &'a str, label: &'a str) -> Cow<'a, str> {
+    let frame = frame.trim_end_matches(' ');
+    if frame.is_empty() {
+        Cow::Borrowed(label)
+    } else {
+        Cow::Owned(format!("{frame} {label}"))
     }
 }
 impl Component for Spinner {

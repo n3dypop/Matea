@@ -33,3 +33,21 @@ Reference: Bubbles c3bde0d166c2ca607d9864493453fd77bdcae7e4,
 spinner/spinner.go and spinner/spinner_test.go. Retain executed edge observations
 separately from issue reports. Public source Model.Style/WithStyle remains partial
 while the framework's rich style surface is incomplete.
+
+## Borrowed lookup follow-up
+
+The existing matched probe showed a plain-frame regression from roughly 2.2 ns
+to 3.3 ns after other binary changes, despite unchanged spinner source. Retain
+that intermediate measurement rather than attributing the change to a proven
+cause. Inline the three small frame/borrow accessors and outline label-owned
+formatting in a private helper. This keeps the public Cow and first-frame /
+reduced-motion / label boundary behavior unchanged without unsafe code or caches.
+
+All 14 existing spinner operation/output contracts match before and after;
+the twelve plain-frame medians change from 3.23–3.38 ns to 1.47–1.55 ns, with
+zero allocations in both. Foreign/stale medians change from 4.14 to 2.81 ns.
+Five independent spinner behavior tests still pass. This is one native release
+binary comparison, not an instruction-count proof, measured label performance,
+active scheduling result or full module parity. The complete samples and source
+snapshots are in `docs/evidence/optimization/spinner/report.json`; these fourteen
+cases overlap the existing 84-case set and are not fourteen new capabilities.
