@@ -2,6 +2,7 @@
 //! Allocation instrumentation is enabled only during the separate allocation pass.
 use matea::{
     prelude::*,
+    style::Length,
     terminal::{Capabilities, FrameEncoder},
 };
 use std::{
@@ -152,6 +153,10 @@ fn main() {
         viewport_costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--style") {
+        style_costs(iterations);
+        return;
+    }
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
@@ -296,6 +301,117 @@ fn main() {
         );
     }
 }
+fn style_costs(iterations: usize) {
+    let inputs = [
+        ("default", Color::Default),
+        ("indexed_9", Color::Indexed(9)),
+        ("indexed_200", Color::Indexed(200)),
+        ("rgb_black", Color::Rgb(0, 0, 0)),
+        ("rgb_white", Color::Rgb(255, 255, 255)),
+        ("rgb_cube", Color::Rgb(95, 135, 175)),
+        ("rgb_gray_tie", Color::Rgb(13, 13, 13)),
+        ("rgb_arbitrary", Color::Rgb(41, 173, 227)),
+    ];
+    for (profile, level) in [
+        ("none", ColorLevel::None),
+        ("ansi16", ColorLevel::Ansi16),
+        ("ansi256", ColorLevel::Ansi256),
+        ("truecolor", ColorLevel::TrueColor),
+    ] {
+        for (name, color) in inputs {
+            let expected = format!("{:?}", color.adapt(level));
+            measure(
+                &format!("style/adapt_{name}_{profile}"),
+                iterations,
+                || {
+                    let result = black_box(color).adapt(black_box(level));
+                    black_box(result);
+                    1
+                },
+                &expected,
+                "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+            );
+        }
+        let style = Style::default()
+            .fg(Color::Rgb(41, 173, 227))
+            .bg(Color::Rgb(13, 13, 13))
+            .bold()
+            .reverse();
+        let expected = format!("{:?}", style.adapt(level));
+        measure(
+            &format!("style/adapt_pair_{profile}"),
+            iterations,
+            || {
+                black_box(black_box(style).adapt(black_box(level)));
+                1
+            },
+            &expected,
+            "adapt foreground/background while preserving attributes; no global cache, scene or terminal I/O",
+        );
+        // Vary all channels to prevent a single-color cache from defining the
+        // workload. The complete 256-result fixture is checked independently.
+        let colors: Vec<_> = (0..=255u8)
+            .map(|n| Color::Rgb(n, n.wrapping_mul(73), n.wrapping_mul(151)))
+            .collect();
+        let expected = format!(
+            "{:?}",
+            colors.iter().map(|c| c.adapt(level)).collect::<Vec<_>>()
+        );
+        measure(
+            &format!("style/adapt_varied_256_{profile}"),
+            (iterations / 100).max(50),
+            || {
+                for c in black_box(&colors) {
+                    black_box(black_box(*c).adapt(black_box(level)));
+                }
+                256
+            },
+            &expected,
+            "adapt 256 distinct RGB triples in fixed order; squared RGB distance, first-index ties, no cache or terminal I/O",
+        );
+    }
+    for count in [0usize, 3, 64, 1024] {
+        let lengths: Vec<_> = (0..count)
+            .map(|i| match i % 4 {
+                0 => Length::Fixed(3),
+                1 => Length::Fill(0),
+                2 => Length::Fill(1),
+                _ => Length::Fill(2),
+            })
+            .collect();
+        let expected = format!("{:?}", matea::style::distribute(65535, &lengths));
+        measure(
+            &format!("style/layout_{count}"),
+            iterations,
+            || {
+                black_box(matea::style::distribute(
+                    black_box(65535),
+                    black_box(&lengths),
+                ));
+                1
+            },
+            &expected,
+            "allocate fixed and zero/weighted-fill widths under 65535-cell budget; construct/drop result Vec",
+        );
+    }
+    for (name, make) in [
+        ("default", Theme::default as fn() -> Theme),
+        ("plain", Theme::plain),
+    ] {
+        let expected = format!("{:?}", make());
+        measure(
+            &format!("style/theme_{name}"),
+            iterations,
+            || {
+                black_box(make());
+                1
+            },
+            &expected,
+            "construct/drop explicit theme tokens without environment lookup or terminal I/O",
+        );
+    }
+}
+
 fn viewport_costs(iterations: usize) {
     let theme = Theme::plain();
     for (name, line) in [
