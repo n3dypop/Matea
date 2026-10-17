@@ -59,6 +59,11 @@ func checkedSpring(s harmonica.Spring, p, v, target float64) (float64, float64) 
 }
 
 func measure(id string, n int, f func() uint64, output, semantics string) {
+	if os.Getenv("MATEA_PROBE_OUTPUT_ONLY") == "1" {
+		sink = f()
+		json.NewEncoder(os.Stdout).Encode(map[string]any{"record_kind": "probe-output", "case": id, "semantics": semantics, "first_return_value": sink, "output": output})
+		return
+	}
 	start := time.Now()
 	sink = f()
 	firstReturnValue := sink

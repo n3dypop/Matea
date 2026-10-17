@@ -55,6 +55,18 @@ pub(crate) fn measure(
     output: &str,
     semantics: &str,
 ) {
+    // CI verifies outputs without publishing fabricated or coarse-clock times.
+    // The distinct record kind is deliberately rejected by timing readers.
+    if std::env::var_os("MATEA_PROBE_OUTPUT_ONLY").is_some_and(|value| value == "1") {
+        let first_return_value = black_box(operation());
+        println!(
+            "{{\"record_kind\":\"probe-output\",\"case\":{},\"semantics\":{},\"first_return_value\":{first_return_value},\"output\":{}}}",
+            quote(id),
+            quote(semantics),
+            quote(output)
+        );
+        return;
+    }
     let start = Instant::now();
     let first_return_value = black_box(operation());
     let cold = start.elapsed().as_nanos();

@@ -64,6 +64,27 @@ def read_records(text):
     return records
 
 
+def read_probe_outputs(text):
+    """Correctness records are intentionally not accepted as measurements."""
+    records = {}
+    for line in text.splitlines():
+        item = json.loads(line, object_pairs_hook=unique_object)
+        if not isinstance(item, dict) or set(item) != {"record_kind", "case", "semantics", "first_return_value", "output"}:
+            raise ValueError("invalid output-only record schema")
+        if item["record_kind"] != "probe-output" or not isinstance(item["case"], str) or not item["case"]:
+            raise ValueError("invalid output-only identifier")
+        if not isinstance(item["semantics"], str) or not item["semantics"] or not isinstance(item["output"], str):
+            raise ValueError("invalid output-only semantics/output")
+        if type(item["first_return_value"]) is not int or not 0 <= item["first_return_value"] <= (1 << 64)-1:
+            raise ValueError("invalid output-only return value")
+        if item["case"] in records:
+            raise ValueError("duplicate output-only case")
+        records[item["case"]] = item
+    if not records:
+        raise ValueError("empty output-only records")
+    return records
+
+
 def summary(record):
     validate(record)
     samples = sorted(record["samples_ns"])

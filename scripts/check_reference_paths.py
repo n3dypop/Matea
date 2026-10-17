@@ -10,7 +10,7 @@ import sys
 from check_color_trace import verify
 from check_terminal_trace import replay
 from evidence_checks import require
-from performance_records import read_records
+from performance_records import read_probe_outputs
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -72,11 +72,12 @@ def check_trajectories(output, fixture, spring):
 
 
 def check_probes(destination, go_binary, rust_binary, environment):
+    environment = dict(environment, MATEA_PROBE_OUTPUT_ONLY="1")
     records=[]
     for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
         output=subprocess.check_output([str(binary)],cwd=ROOT,env=environment,timeout=120)
-        records.append(read_records(output.decode("utf-8")))
-        (destination/(label+".jsonl")).write_bytes(output)
+        records.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-outputs.jsonl")).write_bytes(output)
         trace=json.loads(subprocess.check_output([str(binary),"--trace"],env=environment,timeout=30))
         require(replay(trace)==[c+"a"*79+"\n"*23 for c in "aba"], "ASCII trace mismatch")
         cursor=json.loads(subprocess.check_output([str(binary),"--cursor-trace"],env=environment,timeout=30))
@@ -108,7 +109,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
             filename="harmonica-motion.csv" if flag=="--motion-fixtures" else "harmonica-projectiles.csv"
             numeric[flag]=check_trajectories(output.decode(),(ROOT/"crates/matea-motion/tests"/filename).read_text(encoding="utf-8"),flag=="--motion-fixtures")
         if flag=="--clocks":
-            require(len(read_records(output.decode("utf-8")))==16, "incomplete clock probe")
+            require(len(read_probe_outputs(output.decode("utf-8")))==16, "incomplete clock probe")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
@@ -132,7 +133,7 @@ def main():
         require(not args.offline, "offline mode requires local references")
         references = destination/"references"
         fetch_all(references,pins)
-    environment = dict(os.environ, PYTHONUTF8="1", MATEA_PERF_ITERATIONS="20000", CARGO_TARGET_DIR=str(ROOT/"target"))
+    environment = dict(os.environ, PYTHONUTF8="1", CARGO_TARGET_DIR=str(ROOT/"target"))
     if args.offline:
         environment["GOPROXY"] = "off"
     suffix = ".exe" if os.name=="nt" else ""

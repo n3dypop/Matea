@@ -5,11 +5,24 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from performance_records import read_records, summary, write_report
+from performance_records import read_records, read_probe_outputs, summary, write_report
 from report_performance import generate
 
 
 class RecordTests(unittest.TestCase):
+    def test_correctness_and_measurement_records_cannot_be_confused(self):
+        record={"record_kind":"probe-output", "case":"one", "semantics":"exact output", "first_return_value":1,"output":"value"}
+        text=json.dumps(record)
+        self.assertEqual(read_probe_outputs(text)["one"],record)
+        with self.assertRaises(ValueError):read_records(text)
+        with self.assertRaises(ValueError):read_probe_outputs(json.dumps(self.fixture()))
+        for bad in ["",text+"\n"+text,text.replace('"case": "one"','"case": "two", "case": "one"')]:
+            with self.assertRaises(ValueError):read_probe_outputs(bad)
+        for key,value in [("first_return_value",True),("first_return_value",-1),("first_return_value",1<<64),
+                          ("record_kind","measurement"),("output",None),("semantics","")]:
+            bad={**record,key:value}
+            with self.subTest(key=key,value=value),self.assertRaises(ValueError):read_probe_outputs(json.dumps(bad))
+
     def test_check_mode_never_rewrites_or_creates_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary)/"report.json"
