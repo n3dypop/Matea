@@ -26,8 +26,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -39,7 +39,8 @@
         "docs/performance.md",
         "docs/evidence/quality/miri-core.log",
         "docs/subscription-performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -68,8 +69,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -81,7 +82,8 @@
         "docs/performance.md",
         "docs/evidence/quality/miri-core.log",
         "docs/subscription-performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -234,8 +236,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -245,7 +247,13 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -325,7 +333,10 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -354,8 +365,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -365,7 +376,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -474,8 +486,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
         },
         "portability": {
           "score": 75,
@@ -485,7 +497,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -811,7 +824,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1215,8 +1229,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -1226,7 +1240,9 @@
       "evidence": [
         "scripts/test_source_auditors.py",
         "docs/evidence/quality/auditors-before.log",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/auditor/before.jsonl",
+        "docs/evidence/optimization/auditor/after.jsonl"
       ],
       "remaining": [
         "Nested cfg loss fixed; compiler-resolved exports remain a separate audit; more parser/error/scale fixtures needed.",
@@ -1236,7 +1252,8 @@
     {
       "id": "tools/perf-probe",
       "files": [
-        "tools/perf-probe/src/main.rs"
+        "tools/perf-probe/src/main.rs",
+        "tools/perf-probe/src/protocol.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1480,7 +1497,9 @@
         "scripts/report_performance.py",
         "scripts/report_subscription_performance.py",
         "scripts/report_view_performance.py",
-        "scripts/report_viewport_performance.py"
+        "scripts/report_viewport_performance.py",
+        "scripts/optimization_evidence.py",
+        "scripts/measure_auditor_performance.py"
       ],
       "criteria": {
         "rust_design": {
@@ -1566,7 +1585,8 @@
         "scripts/test_rustdoc_exports.py",
         "scripts/test_rustdoc_import.py",
         "scripts/test_source_auditors.py",
-        "scripts/test_evidence_checks.py"
+        "scripts/test_evidence_checks.py",
+        "scripts/test_optimization_evidence.py"
       ],
       "criteria": {
         "rust_design": {

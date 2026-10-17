@@ -1,5 +1,5 @@
 {
-  "started_at_utc": "2026-10-17T15:01:03.240017+00:00",
+  "started_at_utc": "2026-10-17T16:22:19.603072+00:00",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "architecture": "arm64",
   "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
@@ -15,7 +15,7 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.209,
+      "elapsed_seconds": 0.218,
       "log": "fmt.log"
     },
     {
@@ -32,7 +32,7 @@
         "warnings"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.307,
+      "elapsed_seconds": 1.863,
       "log": "clippy.log"
     },
     {
@@ -45,7 +45,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 3.065,
+      "elapsed_seconds": 8.34,
       "log": "test.log"
     },
     {
@@ -59,7 +59,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.644,
+      "elapsed_seconds": 10.818,
       "log": "all-targets.log"
     },
     {
@@ -73,8 +73,28 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.324,
+      "elapsed_seconds": 9.197,
       "log": "release-tests.log"
+    },
+    {
+      "name": "style-exhaustive",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "matea-style",
+        "--test",
+        "colors",
+        "every_rgb_triple_matches_full_palette_search",
+        "--offline",
+        "--",
+        "--ignored"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.948,
+      "log": "style-exhaustive.log"
     },
     {
       "name": "docs",
@@ -87,7 +107,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.078,
+      "elapsed_seconds": 1.183,
       "log": "docs.log"
     },
     {
@@ -101,7 +121,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.069,
+      "elapsed_seconds": 1.752,
       "log": "build-examples.log"
     },
     {
@@ -111,7 +131,7 @@
         "${REPOSITORY}/scripts/example_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 9.187,
+      "elapsed_seconds": 9.511,
       "log": "example-smoke.log"
     },
     {
@@ -121,7 +141,7 @@
         "${REPOSITORY}/scripts/check_coverage.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.456,
+      "elapsed_seconds": 0.458,
       "log": "coverage-integrity.log"
     },
     {
@@ -141,7 +161,7 @@
         "${REPOSITORY}/scripts/test_rustdoc_import.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.045,
+      "elapsed_seconds": 0.044,
       "log": "rustdoc-import-tests.log"
     },
     {
@@ -151,7 +171,7 @@
         "${REPOSITORY}/scripts/test_color_trace.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.063,
+      "elapsed_seconds": 0.067,
       "log": "color-oracle-tests.log"
     },
     {
@@ -165,7 +185,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.043,
+      "elapsed_seconds": 0.044,
       "log": "build-source-auditor.log"
     },
     {
@@ -175,7 +195,7 @@
         "${REPOSITORY}/scripts/test_source_auditors.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.5,
+      "elapsed_seconds": 0.517,
       "log": "source-auditor-tests.log"
     },
     {
@@ -185,7 +205,7 @@
         "${REPOSITORY}/scripts/test_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.068,
+      "elapsed_seconds": 0.106,
       "log": "quality-gate-tests.log"
     },
     {
@@ -195,8 +215,18 @@
         "${REPOSITORY}/scripts/test_evidence_checks.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.175,
+      "elapsed_seconds": 0.181,
       "log": "evidence-guard-tests.log"
+    },
+    {
+      "name": "optimization-evidence-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}/scripts/test_optimization_evidence.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.228,
+      "log": "optimization-evidence-tests.log"
     },
     {
       "name": "optimized-python-tests",
@@ -212,7 +242,7 @@
         "test_*.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.271,
+      "elapsed_seconds": 0.466,
       "log": "optimized-python-tests.log"
     },
     {
@@ -222,7 +252,7 @@
         "${REPOSITORY}/scripts/check_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.039,
+      "elapsed_seconds": 0.053,
       "log": "quality-inventory.log"
     },
     {
@@ -250,7 +280,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.055,
+      "elapsed_seconds": 0.066,
       "log": "build-color-probe.log"
     },
     {
@@ -264,7 +294,7 @@
         "${REPOSITORY}/docs/evidence/color-policy-after.json"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.337,
+      "elapsed_seconds": 0.345,
       "log": "color-trace.log"
     },
     {
@@ -274,7 +304,7 @@
         "${REPOSITORY}/scripts/pty_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 6.871,
+      "elapsed_seconds": 6.982,
       "log": "pty-smoke.log"
     },
     {
@@ -292,10 +322,10 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.314,
+      "elapsed_seconds": 0.317,
       "log": "render-probe.log"
     }
   ],
   "all_local_checks_passed": true,
-  "finished_at_utc": "2026-10-17T15:01:27.658799+00:00"
+  "finished_at_utc": "2026-10-17T16:23:16.592094+00:00"
 }

@@ -1,0 +1,141 @@
+diff --git a/crates/matea-core/src/lib.rs b/crates/matea-core/src/lib.rs
+index 16c22bb..4284da5 100644
+--- a/crates/matea-core/src/lib.rs
++++ b/crates/matea-core/src/lib.rs
+@@ -5,6 +5,7 @@ use matea_style::Theme;
+ use std::{
+     any::{TypeId, type_name},
+     collections::{BTreeMap, HashMap},
++    hash::BuildHasher,
+     sync::{
+         Arc, Condvar, Mutex,
+         atomic::{AtomicBool, Ordering},
+@@ -573,14 +574,13 @@ pub struct FocusRing {
+ }
+ impl FocusRing {
+     pub fn new(ids: impl IntoIterator<Item = impl Into<String>>) -> Self {
+-        let mut out = Vec::new();
+-        for id in ids {
+-            let id = id.into();
+-            if !out.contains(&id) {
+-                out.push(id);
+-            }
++        Self {
++            ids: focus_ids(
++                ids.into_iter().map(Into::into),
++                std::collections::hash_map::RandomState::new,
++            ),
++            index: 0,
+         }
+-        Self { ids: out, index: 0 }
+     }
+     pub fn current(&self) -> Option<&str> {
+         self.ids.get(self.index).map(String::as_str)
+@@ -598,9 +598,107 @@ impl FocusRing {
+     }
+ }
+ 
++/// Keep small rings and duplicate-heavy streams on the allocation-light scan.
++/// For larger unique sets, hashes select a linked chain of indices. Strings stay
++/// owned once in `out`; full equality verifies every hash match. No pointers or
++/// self-referential borrows survive Vec growth, and collisions never lose IDs.
++#[inline]
++fn focus_ids<H: BuildHasher>(
++    mut input: impl Iterator<Item = String>,
++    make_hasher: impl FnOnce() -> H,
++) -> Vec<String> {
++    let mut out = Vec::new();
++    for id in input.by_ref() {
++        if !out.contains(&id) {
++            out.push(id);
++            if out.len() > 128 {
++                return indexed_focus_ids(out, input, make_hasher());
++            }
++        }
++    }
++    out
++}
++
++// Keep the hash table's stack/drop machinery out of the common small ring path.
++#[inline(never)]
++fn indexed_focus_ids<H: BuildHasher>(
++    mut out: Vec<String>,
++    input: impl Iterator<Item = String>,
++    hasher: H,
++) -> Vec<String> {
++    let mut heads = HashMap::new();
++    let mut links = Vec::new();
++    for (index, id) in out.iter().enumerate() {
++        let key = hasher.hash_one(id.as_str());
++        links.push(heads.insert(key, index).unwrap_or(usize::MAX));
++    }
++    for id in input {
++        let key = hasher.hash_one(id.as_str());
++        let head = heads.get(&key).copied().unwrap_or(usize::MAX);
++        let mut index = head;
++        while index != usize::MAX && out[index] != id {
++            index = links[index];
++        }
++        if index == usize::MAX {
++            heads.insert(key, out.len());
++            links.push(head);
++            out.push(id);
++        }
++    }
++    out
++}
++
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++    #[test]
++    fn large_focus_rings_preserve_first_order_even_with_total_hash_collision() {
++        #[derive(Default)]
++        struct ZeroHasher;
++        impl std::hash::Hasher for ZeroHasher {
++            fn write(&mut self, _: &[u8]) {}
++            fn finish(&self) -> u64 {
++                0
++            }
++        }
++        let (count, modulus) = if cfg!(miri) { (160, 137) } else { (900, 257) };
++        let input: Vec<_> = (0..count)
++            .map(|i| format!("field-{}", i * 73 % modulus))
++            .collect();
++        let mut expected = Vec::new();
++        for name in &input {
++            if !expected.contains(name) {
++                expected.push(name.clone());
++            }
++        }
++        let actual = focus_ids(
++            input.clone().into_iter(),
++            std::hash::BuildHasherDefault::<ZeroHasher>::default,
++        );
++        assert_eq!(actual, expected);
++        let mut ring = FocusRing::new(input);
++        assert_eq!(ring.ids, expected);
++        for name in expected.iter().cycle().take(expected.len() * 2) {
++            assert_eq!(ring.current(), Some(name.as_str()));
++            assert!(ring.handle(&Input::Key(Key::new(KeyCode::Tab))));
++        }
++        assert_eq!(ring.current(), Some(expected[0].as_str()));
++    }
++    #[test]
++    fn small_or_duplicate_heavy_focus_rings_never_construct_a_hash_table() {
++        for count in [0, 3, 128, 1000] {
++            let mut i = 0usize;
++            let actual = focus_ids(
++                (0..count).map(|_| {
++                    i += 1;
++                    "same".to_owned()
++                }),
++                || -> std::collections::hash_map::RandomState { panic!("unneeded hasher") },
++            );
++            assert_eq!(i, count);
++            assert_eq!(actual.len(), usize::from(count != 0));
++        }
++    }
+     struct App {
+         values: Vec<i32>,
+         effect: Option<Effect<i32>>,

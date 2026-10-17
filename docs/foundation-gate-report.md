@@ -5,11 +5,11 @@
 
 ## 現在の範囲と進捗
 
-全実装の再評価として、81プログラムファイルを40評価単位へ登録し、Rust設計・メモリ安全性・動作・参照元一致・性能・移植性の6軸を採点しました。[評価項目と判定基準](quality-evaluation.md)、[ファイル別の証拠・未達項目](evidence/quality/report.json)。未測定を高評価とせず、平均点で不合格を隠しません。通常CIの台帳整合性チェックと、全軸75点以上を要求する`check_quality.py --gate`は別です。全高評価には未到達です。
+全実装の再評価として、86プログラムファイルを40評価単位へ登録し、Rust設計・メモリ安全性・動作・参照元一致・性能・移植性の6軸を採点しました。[評価項目と判定基準](quality-evaluation.md)、[ファイル別の証拠・未達項目](evidence/quality/report.json)。未測定を高評価とせず、平均点で不合格を隠しません。通常CIの台帳整合性チェックと、全軸75点以上を要求する`check_quality.py --gate`は別です。全高評価には未到達です。
 
 この評価でViewportの末尾空行・CRLF・リサイズ位置・無視入力の不整合を修正し、表示時の行ごとの複製を除去しました。12件のRust内前後測定では、ASCII 24行のView生成が26割り当てから1へ減少しました。初期測定のp95悪化も保存し、構築・描画込み・初期解析／常駐メモリ未測定を分けています。Rustの棚卸しツールではフィールド等の子`cfg`欠落を修正し、Crossterm 80件とRatatui 42件の条件を補正しました。宣言ID・件数は維持しています。Python `-O`が検証を省略する不具合も再現し、14スクリプトの138判定を明示検査へ変更しました。[ADR 0023](decisions/0023-indexed-viewport-and-evidence-based-quality-gates.md)。
 
-追加試験は1,296レイアウト組合せ、4,096連続描画の所有セル・差分不変条件、Kitty 20入力の分割・復元・出力上限、Sixel 54入力のバンド・透過・run、Viewportの独立行モデルを含みます。Miriは描画・購読・Textの合計9テストに成功しました。[正確な対象・seed・制約](evidence/quality/miri-context.json)。計測用ビルドでは49 Rustソースファイルの行・関数実行を記録しましたが、埋め込み単体テストを含む値であり、分岐・参照機能の網羅率や安全性の証明ではありません。[実行率](evidence/quality/rust-execution-coverage.json)。
+追加試験は1,296レイアウト組合せ、4,096連続描画の所有セル・差分不変条件、Kitty 20入力の分割・復元・出力上限、Sixel 54入力のバンド・透過・run、Viewportの独立行モデルを含みます。Miriは描画・購読・Textの合計9テストに成功しました。[正確な対象・seed・制約](evidence/quality/miri-context.json)。計測用ビルドでは51 Rustソースファイルの行・関数実行を記録しましたが、埋め込み単体テストを含む値であり、分岐・参照機能の網羅率や安全性の証明ではありません。[実行率](evidence/quality/rust-execution-coverage.json)。
 
 - 固定SHAの11参照単位を走査し、94モジュール、7,455件の宣言候補と117件のソース課題マーカーを記録。[台帳](coverage/summary.json)。マクロ展開・再公開・cfgを解決した正確な公開API一覧は未完成です。
 - 公開機能の対応付けは500候補までで、6,955候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
@@ -94,4 +94,6 @@ Text実装 `e91b0a5b9a03e4460f48dbc276a5ee8ed061861a` は[Linux・Windows・macO
 
 GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Matea)。Reference、AGENTS、CODEX_START、Skillsはリポジトリ外に保っています。
 
-全プログラム評価・Viewport・cfg／検証ツール修正の実装 `9ce5564ad525d047594c5e1debecabd7c3bb4e37` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39043211231)の4ジョブに成功しました。[job／step証拠](evidence/quality/ci-run.json)。初回runではmacOSのGo fixtureが1件skipされたため、公式setup-goの固定SHA・Go 1.26.0導入と必須実行へ変更して再実行しました。現在の品質評価は81ファイル・40単位で、性能28、参照元一致18、動作5、外部ツール移植性5の計56評価軸が75未満です。これは56件の確認済みバグという意味ではなく、未測定・部分対応・未検証を含みます。品質ゲートとF5は閉じたままです。
+全プログラム評価・Viewport・cfg／検証ツール修正の実装 `9ce5564ad525d047594c5e1debecabd7c3bb4e37` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39043211231)の4ジョブに成功しました。[job／step証拠](evidence/quality/ci-run.json)。初回runではmacOSのGo fixtureが1件skipされたため、公式setup-goの固定SHA・Go 1.26.0導入と必須実行へ変更して再実行しました。同時点の品質評価は81ファイル・40単位で、性能28、参照元一致18、動作5、外部ツール移植性5の計56評価軸が75未満です。これは56件の確認済みバグという意味ではなく、未測定・部分対応・未検証を含みます。品質ゲートとF5は閉じたままです。
+
+個別最適化では127ケースの測定を追加し、色変換、フォーカス初期化、純粋なKitty／Sixelエンコーダ、宣言収集CLIを改善しました。Unicode非対応時の全角セルの背景欠落も回帰試験で修正しました。[生データ・改善・不利な結果・残件](individual-optimization.md)、[ADR 0024–0027](decisions/0024-exact-bounded-color-quantization.md)。追加11件の対象限定Miriに成功し、従来分と合わせて20件です。[追加の対象と制約](evidence/optimization/miri-context.json)。ローカル25検証、Rust 129テスト＋2 doctest、明示実行の全RGB検証、Python 24テスト、12 snapshot、17 Unix PTYに成功しました。既存84ケースの参照元比較も全fixtureの出力・意味が一致しました。86ファイル・40単位にはなお56評価軸の未達があり、全項目高評価・横断最適化への移行・F5には未到達です。

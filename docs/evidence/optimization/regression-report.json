@@ -1,0 +1,1448 @@
+{
+  "schema": 1,
+  "stage": "existing_finite_module_regressions_not_new_whole_framework_stage",
+  "case_count": 84,
+  "all_matea_before_after_outputs_match": true,
+  "current_reference_fixtures_match": true,
+  "before_report": "regression-before/report.json",
+  "after_report": "../performance/2026-10-16/report.json",
+  "report_sha256": {
+    "before": "60462895ce9c5f1c1579e0b58eac2b8a6ac8e1d310f213884d58ba0366051108",
+    "after": "447a38f4194305b196b7d65755adbbf62600a4e1f242bfe1d3ee5238fa8971b9"
+  },
+  "cases": [
+    {
+      "case": "input/binding_ctrl_x",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "1",
+      "before": {
+        "p50_ns": 1.8791666666666667,
+        "p95_ns": 1.9472333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.8055666666666665,
+        "p95_ns": 3.8319666666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "input/binding_f12",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "1",
+      "before": {
+        "p50_ns": 2.120833333333333,
+        "p95_ns": 2.4847333333333332,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.3375,
+        "p95_ns": 4.709733333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "input/binding_miss",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "0",
+      "before": {
+        "p50_ns": 2.908333333333333,
+        "p95_ns": 2.9861,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.640266666666666,
+        "p95_ns": 5.3403,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "input/binding_disabled",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "0",
+      "before": {
+        "p50_ns": 0.7291666666666666,
+        "p95_ns": 0.7458333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.3055666666666668,
+        "p95_ns": 1.3208333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "input/binding_repeat",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "1",
+      "before": {
+        "p50_ns": 1.9458333333333333,
+        "p95_ns": 2.0736333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.2083333333333335,
+        "p95_ns": 3.5305333333333335,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "input/binding_release",
+      "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
+      "output": "0",
+      "before": {
+        "p50_ns": 0.9222,
+        "p95_ns": 0.9402666666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5958333333333334,
+        "p95_ns": 1.8736,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "binding/value_hit",
+      "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
+      "output": "1",
+      "before": {
+        "p50_ns": 2.4986,
+        "p95_ns": 2.7944333333333335,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.630566666666667,
+        "p95_ns": 6.2875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "binding/value_miss",
+      "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
+      "output": "0",
+      "before": {
+        "p50_ns": 2.1861,
+        "p95_ns": 2.1888666666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.581933333333333,
+        "p95_ns": 3.6791666666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "binding/value_disabled",
+      "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
+      "output": "0",
+      "before": {
+        "p50_ns": 0.46946666666666664,
+        "p95_ns": 0.4708333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.7694666666666666,
+        "p95_ns": 0.7708333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "binding/construct",
+      "semantics": "construct binding with owned two-token vector/slice and short help metadata; retain result through black_box/global sink; borrowed static token text",
+      "output": "2,ctrl+x/F12,inspect,true",
+      "before": {
+        "p50_ns": 29.825,
+        "p95_ns": 31.779166666666665,
+        "allocations": 1,
+        "allocated_bytes": 32
+      },
+      "after": {
+        "p50_ns": 37.74583333333333,
+        "p95_ns": 48.2597,
+        "allocations": 1,
+        "allocated_bytes": 32
+      }
+    },
+    {
+      "case": "binding/value_hit_owned",
+      "semantics": "two custom string tokens ctrl+x,F12; equal F12 query has distinct owned storage; borrowed equality; no query construction, formatting or I/O",
+      "output": "1",
+      "before": {
+        "p50_ns": 5.815266666666667,
+        "p95_ns": 6.105566666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 6.0264,
+        "p95_ns": 6.481933333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "binding/metadata",
+      "semantics": "borrow enabled binding keys, help and enabled status; no mutation, formatting or I/O",
+      "output": "2,ctrl+x/F12,inspect,true",
+      "before": {
+        "p50_ns": 1.1819333333333333,
+        "p95_ns": 1.1847333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2444333333333333,
+        "p95_ns": 1.2583333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/frame_duration",
+      "semantics": "positive fps=60; integer nanosecond period converted to seconds",
+      "output": "0.016666666000",
+      "before": {
+        "p50_ns": 0.6759733333333333,
+        "p95_ns": 0.8227766666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.7116666666666667,
+        "p95_ns": 0.7129166666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/projectile_update",
+      "semantics": "copy initial projectile; raw forward Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters",
+      "output": "1.032000000000,9.952000000000,-1.936000000000,2.000000000000,-2.843040000000,4.000000000000",
+      "before": {
+        "p50_ns": 2.4266666666666667,
+        "p95_ns": 2.5094433333333335,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.44375,
+        "p95_ns": 2.49111,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/projectile_checked_update",
+      "semantics": "copy initial projectile; forward Euler and six finite result checks; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters",
+      "output": "1.032000000000,9.952000000000,-1.936000000000,2.000000000000,-2.843040000000,4.000000000000",
+      "before": {
+        "p50_ns": 2.7948633333333333,
+        "p95_ns": 3.15889,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.71028,
+        "p95_ns": 3.001803333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/projectile_construct",
+      "semantics": "construct with nine finite input checks then checked Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0)",
+      "output": "1.032000000000,9.952000000000,-1.936000000000,2.000000000000,-2.843040000000,4.000000000000",
+      "before": {
+        "p50_ns": 7.5633333333333335,
+        "p95_ns": 9.565136666666668,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 8.49736,
+        "p95_ns": 9.810136666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "pagination/range",
+      "semantics": "collection length=101 per_page=10 page=10; slice bounds only",
+      "output": "100,101",
+      "before": {
+        "p50_ns": 0.9575,
+        "p95_ns": 1.0590266666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.81972,
+        "p95_ns": 0.8826366666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "pagination/navigation",
+      "semantics": "next then previous from page=4 total_pages=11 per_page=10; state helpers only",
+      "output": "4",
+      "before": {
+        "p50_ns": 1.78111,
+        "p95_ns": 1.9309733333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.7472233333333334,
+        "p95_ns": 1.8319433333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "pagination/arabic",
+      "semantics": "Arabic label only current=5 total=11; no view/render/I/O",
+      "output": "5/11",
+      "before": {
+        "p50_ns": 50.417,
+        "p95_ns": 50.625,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "after": {
+        "p50_ns": 47.292,
+        "p95_ns": 47.375,
+        "allocations": 1,
+        "allocated_bytes": 8
+      }
+    },
+    {
+      "case": "pagination/dots_32",
+      "semantics": "dot label only all pages current=10 zero-based; active=\u2022 inactive=\u25cb; no view/render/I/O",
+      "output": "\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u2022\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb",
+      "before": {
+        "p50_ns": 140.292,
+        "p95_ns": 145.833,
+        "allocations": 1,
+        "allocated_bytes": 96
+      },
+      "after": {
+        "p50_ns": 138.041,
+        "p95_ns": 141.709,
+        "allocations": 1,
+        "allocated_bytes": 96
+      }
+    },
+    {
+      "case": "pagination/dots_256",
+      "semantics": "dot label only all pages current=10 zero-based; active=\u2022 inactive=\u25cb; no view/render/I/O",
+      "output": "\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u2022\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb\u25cb",
+      "before": {
+        "p50_ns": 915.625,
+        "p95_ns": 977.667,
+        "allocations": 1,
+        "allocated_bytes": 768
+      },
+      "after": {
+        "p50_ns": 910.042,
+        "p95_ns": 977.208,
+        "allocations": 1,
+        "allocated_bytes": 768
+      }
+    },
+    {
+      "case": "pagination/key_dispatch",
+      "semantics": "next/right then previous/left key dispatch; initial page=4 total_pages=11; no view/render/I/O",
+      "output": "4",
+      "before": {
+        "p50_ns": 8.118066666666667,
+        "p95_ns": 9.675,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 8.381933333333333,
+        "p95_ns": 9.4611,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/left_right_ascii_64",
+      "semantics": "left_right_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "64,32",
+      "before": {
+        "p50_ns": 37.4542,
+        "p95_ns": 38.9375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 35.2125,
+        "p95_ns": 37.8458,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/insert_end_ascii_64",
+      "semantics": "insert_end_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "64,64",
+      "before": {
+        "p50_ns": 69.8666,
+        "p95_ns": 74.2125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 69.2417,
+        "p95_ns": 72.4792,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/insert_middle_ascii_64",
+      "semantics": "insert_middle_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "64,32",
+      "before": {
+        "p50_ns": 78.8041,
+        "p95_ns": 83.4042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 77.4042,
+        "p95_ns": 81.5708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/word_roundtrip_ascii_63",
+      "semantics": "word_roundtrip_ascii_63; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "63,63",
+      "before": {
+        "p50_ns": 116.9792,
+        "p95_ns": 124.0875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 116.4666,
+        "p95_ns": 123.7875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/paste_clear_ascii_64",
+      "semantics": "paste_clear_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "0,0",
+      "before": {
+        "p50_ns": 94.8875,
+        "p95_ns": 99.8375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 93.625,
+        "p95_ns": 97.6167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/ignored_focus_ascii_64",
+      "semantics": "ignored_focus_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
+      "output": "64,64",
+      "before": {
+        "p50_ns": 4.6333,
+        "p95_ns": 4.6375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.6417,
+        "p95_ns": 4.6584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/word_roundtrip_unicode",
+      "semantics": "Unicode whitespace word left-right; same value and cursor at end verified outside timing; no view, virtual cursor, clipboard, validator or suggestions",
+      "output": "22,end",
+      "before": {
+        "p50_ns": 156.2959,
+        "p95_ns": 165.4167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 155.4708,
+        "p95_ns": 161.8917,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "textinput/suggestions_edit_pair",
+      "semantics": "ASCII t -> te -> t with suggestions tea,team,toast; lowercase prefix filtering; no view, virtual cursor, clipboard or validator",
+      "output": "t,3,0",
+      "before": {
+        "p50_ns": 113.1833,
+        "p95_ns": 119.5458,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 112.4,
+        "p95_ns": 125.0125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "cursor/visible_move_80x24",
+      "semantics": "cursor-only move on identical immutable cells in reused 80x24 frame; visible, default style; reused memory sink; no terminal I/O",
+      "output": "visible cursor alternates (2,3),(4,3); independently replay output before claiming equivalence",
+      "before": {
+        "p50_ns": 28.417,
+        "p95_ns": 28.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 27.167,
+        "p95_ns": 27.292,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/colored_full_ansi16_80x24",
+      "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; ansi16; hidden cursor; reused memory sink; no terminal I/O",
+      "output": "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+      "before": {
+        "p50_ns": 29230.84,
+        "p95_ns": 30877.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 28665,
+        "p95_ns": 30088.32,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/colored_full_ansi256_80x24",
+      "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; ansi256; hidden cursor; reused memory sink; no terminal I/O",
+      "output": "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+      "before": {
+        "p50_ns": 29587.5,
+        "p95_ns": 30804.18,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 28751.66,
+        "p95_ns": 30150.84,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/colored_full_truecolor_80x24",
+      "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; truecolor; hidden cursor; reused memory sink; no terminal I/O",
+      "output": "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+      "before": {
+        "p50_ns": 25018.34,
+        "p95_ns": 26249.16,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 24460.84,
+        "p95_ns": 25494.18,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/colored_full_none_80x24",
+      "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; none; hidden cursor; reused memory sink; no terminal I/O",
+      "output": "20 rows of 80 a cells; palette output replayed independently; lower four rows blank/default",
+      "before": {
+        "p50_ns": 23886.66,
+        "p95_ns": 27317.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 23166.68,
+        "p95_ns": 24489.16,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "help/short_unbounded",
+      "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
+      "output": "enter continue \u2022 esc back \u2022 ? help \u2022 H home \u2022 ctrl+c quit \u2022 ctrl+l log",
+      "before": {
+        "p50_ns": 266.209,
+        "p95_ns": 278.458,
+        "allocations": 1,
+        "allocated_bytes": 85
+      },
+      "after": {
+        "p50_ns": 264,
+        "p95_ns": 275.125,
+        "allocations": 1,
+        "allocated_bytes": 85
+      }
+    },
+    {
+      "case": "help/short_40",
+      "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
+      "output": "enter continue \u2022 esc back \u2022 ? help \u2026",
+      "before": {
+        "p50_ns": 233.667,
+        "p95_ns": 259.875,
+        "allocations": 1,
+        "allocated_bytes": 85
+      },
+      "after": {
+        "p50_ns": 234.125,
+        "p95_ns": 253.042,
+        "allocations": 1,
+        "allocated_bytes": 85
+      }
+    },
+    {
+      "case": "help/full_40",
+      "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
+      "output": "enter continue | esc back | H      home\n                 ?   help   ctrl+c quit\n                            ctrl+l log ",
+      "before": {
+        "p50_ns": 372.084,
+        "p95_ns": 423.791,
+        "allocations": 5,
+        "allocated_bytes": 663
+      },
+      "after": {
+        "p50_ns": 374.166,
+        "p95_ns": 399,
+        "allocations": 5,
+        "allocated_bytes": 663
+      }
+    },
+    {
+      "case": "help/short_unicode_80",
+      "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
+      "output": "\u8336 e\u0301\u3092\u9078\u3076 \u2022 \u2190/\u2192 \u79fb\u52d5 \u2022 q \u7d42\u4e86",
+      "before": {
+        "p50_ns": 482.042,
+        "p95_ns": 508.166,
+        "allocations": 1,
+        "allocated_bytes": 53
+      },
+      "after": {
+        "p50_ns": 479.75,
+        "p95_ns": 501.75,
+        "allocations": 1,
+        "allocated_bytes": 53
+      }
+    },
+    {
+      "case": "clocks/format_zero",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "0s",
+      "before": {
+        "p50_ns": 22.667,
+        "p95_ns": 31.666,
+        "allocations": 1,
+        "allocated_bytes": 2
+      },
+      "after": {
+        "p50_ns": 22.625,
+        "p95_ns": 22.709,
+        "allocations": 1,
+        "allocated_bytes": 2
+      }
+    },
+    {
+      "case": "clocks/reused_format_zero",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "0s",
+      "before": {
+        "p50_ns": 7.75,
+        "p95_ns": 11.916,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 7.25,
+        "p95_ns": 7.292,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/format_nanoseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "42ns",
+      "before": {
+        "p50_ns": 33.125,
+        "p95_ns": 65,
+        "allocations": 1,
+        "allocated_bytes": 4
+      },
+      "after": {
+        "p50_ns": 26.709,
+        "p95_ns": 26.917,
+        "allocations": 1,
+        "allocated_bytes": 4
+      }
+    },
+    {
+      "case": "clocks/reused_format_nanoseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "42ns",
+      "before": {
+        "p50_ns": 14.958,
+        "p95_ns": 21.042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 14.917,
+        "p95_ns": 15.25,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/format_microseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1.5\u00b5s",
+      "before": {
+        "p50_ns": 35.75,
+        "p95_ns": 37.75,
+        "allocations": 1,
+        "allocated_bytes": 6
+      },
+      "after": {
+        "p50_ns": 30.958,
+        "p95_ns": 32.083,
+        "allocations": 1,
+        "allocated_bytes": 6
+      }
+    },
+    {
+      "case": "clocks/reused_format_microseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1.5\u00b5s",
+      "before": {
+        "p50_ns": 17.125,
+        "p95_ns": 17.375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 17,
+        "p95_ns": 17.25,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/format_seconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1.23456789s",
+      "before": {
+        "p50_ns": 41.084,
+        "p95_ns": 42.083,
+        "allocations": 1,
+        "allocated_bytes": 11
+      },
+      "after": {
+        "p50_ns": 37.125,
+        "p95_ns": 37.25,
+        "allocations": 1,
+        "allocated_bytes": 11
+      }
+    },
+    {
+      "case": "clocks/reused_format_seconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1.23456789s",
+      "before": {
+        "p50_ns": 24.208,
+        "p95_ns": 25.667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 23.916,
+        "p95_ns": 23.959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/format_hours",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1h2m3.4s",
+      "before": {
+        "p50_ns": 40.917,
+        "p95_ns": 43.042,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "after": {
+        "p50_ns": 37.084,
+        "p95_ns": 49.042,
+        "allocations": 1,
+        "allocated_bytes": 8
+      }
+    },
+    {
+      "case": "clocks/reused_format_hours",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1h2m3.4s",
+      "before": {
+        "p50_ns": 22.917,
+        "p95_ns": 23.083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 23.917,
+        "p95_ns": 25.041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/format_maximum_go",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "2562047h47m16.854775807s",
+      "before": {
+        "p50_ns": 44.417,
+        "p95_ns": 45.5,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "after": {
+        "p50_ns": 47.292,
+        "p95_ns": 47.5,
+        "allocations": 1,
+        "allocated_bytes": 24
+      }
+    },
+    {
+      "case": "clocks/reused_format_maximum_go",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "2562047h47m16.854775807s",
+      "before": {
+        "p50_ns": 32.584,
+        "p95_ns": 33.584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 28.083,
+        "p95_ns": 28.25,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/stopwatch_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=0ns,running=false,accepted=false",
+      "before": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2709,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/countdown_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=10000000000ns,running=false,accepted=false",
+      "before": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/stopwatch_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=0ns,running=true,accepted=false",
+      "before": {
+        "p50_ns": 1.2542,
+        "p95_ns": 1.2584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "clocks/countdown_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=10000000000ns,running=true,accepted=false",
+      "before": {
+        "p50_ns": 1.2542,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2542,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_line",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "|",
+      "before": {
+        "p50_ns": 2.1875,
+        "p95_ns": 2.1959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5417,
+        "p95_ns": 1.575,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_dot",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u28fe ",
+      "before": {
+        "p50_ns": 2.1916,
+        "p95_ns": 2.3541,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5083,
+        "p95_ns": 1.5125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_mini_dot",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u280b",
+      "before": {
+        "p50_ns": 2.1916,
+        "p95_ns": 3.2791,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4916,
+        "p95_ns": 1.4958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_jump",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2884",
+      "before": {
+        "p50_ns": 2.1916,
+        "p95_ns": 2.1959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.475,
+        "p95_ns": 1.4834,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_pulse",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2588",
+      "before": {
+        "p50_ns": 2.1875,
+        "p95_ns": 2.2667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_points",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2219\u2219\u2219",
+      "before": {
+        "p50_ns": 2.1916,
+        "p95_ns": 2.1959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.5917,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_globe",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83c\udf0d",
+      "before": {
+        "p50_ns": 2.1875,
+        "p95_ns": 3.2333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.4709,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_moon",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83c\udf11",
+      "before": {
+        "p50_ns": 2.2708,
+        "p95_ns": 3.6916,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_monkey",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83d\ude48",
+      "before": {
+        "p50_ns": 2.2667,
+        "p95_ns": 2.3792,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5459,
+        "p95_ns": 1.75,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_meter",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u25b1\u25b1\u25b1",
+      "before": {
+        "p50_ns": 2.3041,
+        "p95_ns": 2.3708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4792,
+        "p95_ns": 2.7958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_hamburger",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2631",
+      "before": {
+        "p50_ns": 2.1875,
+        "p95_ns": 3.0959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_ellipsis",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "",
+      "before": {
+        "p50_ns": 2.1875,
+        "p95_ns": 2.2666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4792,
+        "p95_ns": 2.6167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/foreign",
+      "semantics": "ignore foreign spinner tick; return unchanged plain frame; no new scheduling request",
+      "output": "|",
+      "before": {
+        "p50_ns": 4.1334,
+        "p95_ns": 4.1459,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.8125,
+        "p95_ns": 2.8167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/stale",
+      "semantics": "ignore old positive-generation spinner tick; return unchanged plain frame; no new scheduling request",
+      "output": "-",
+      "before": {
+        "p50_ns": 4.2041,
+        "p95_ns": 14.7125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.8125,
+        "p95_ns": 2.8166,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "render/empty_80x24",
+      "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
+      "output": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "before": {
+        "p50_ns": 6227.25,
+        "p95_ns": 6459.25,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      },
+      "after": {
+        "p50_ns": 6218.833,
+        "p95_ns": 6418.25,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      }
+    },
+    {
+      "case": "render/ascii_80x24",
+      "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
+      "output": "Matea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\nMatea tea studio: identical ASCII row\n\n\n\n",
+      "before": {
+        "p50_ns": 12961.958,
+        "p95_ns": 13753.209,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      },
+      "after": {
+        "p50_ns": 12792.625,
+        "p95_ns": 12906.708,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      }
+    },
+    {
+      "case": "render/unicode_80x24",
+      "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
+      "output": "\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\u62b9\u8336 e\u0301 \ud83d\udc69\u200d\ud83d\udcbb tea\n\n\n\n",
+      "before": {
+        "p50_ns": 13622.875,
+        "p95_ns": 13856.459,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      },
+      "after": {
+        "p50_ns": 13572.083,
+        "p95_ns": 13746.292,
+        "allocations": 1,
+        "allocated_bytes": 76800
+      }
+    },
+    {
+      "case": "unicode/width",
+      "semantics": "grapheme display width, no control characters, non-CJK ambiguous width",
+      "output": "160",
+      "before": {
+        "p50_ns": 663.6792,
+        "p95_ns": 678.8041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 664.4917,
+        "p95_ns": 685.8834,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/unchanged_80x24",
+      "semantics": "encode unchanged existing frame to reused memory sink; no terminal I/O",
+      "output": "",
+      "before": {
+        "p50_ns": 5.584,
+        "p95_ns": 5.625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.792,
+        "p95_ns": 5.083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "terminal/one_cell_80x24",
+      "semantics": "toggle one existing ASCII cell, encode to reused memory sink; output encoding may differ",
+      "output": "one ASCII cell toggled; independently replay output before claiming equivalence",
+      "before": {
+        "p50_ns": 9710.666,
+        "p95_ns": 9818.125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 9704,
+        "p95_ns": 9883.209,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_update_0.2",
+      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.982085786168,-2.204149079239",
+      "before": {
+        "p50_ns": 0.8208333333333333,
+        "p95_ns": 0.9875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.8194666666666667,
+        "p95_ns": 0.8222333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_checked_update_0.2",
+      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
+      "output": "1.982085786168,-2.204149079239",
+      "before": {
+        "p50_ns": 2.1069333333333335,
+        "p95_ns": 2.197233333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.2236333333333334,
+        "p95_ns": 2.2278,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_construct_0.2",
+      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.982085786168,-2.204149079239",
+      "before": {
+        "p50_ns": 16.831966666666666,
+        "p95_ns": 17.752766666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 17.033333333333335,
+        "p95_ns": 18.0375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_update_1",
+      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.983765787242,-1.901507025005",
+      "before": {
+        "p50_ns": 0.8194333333333333,
+        "p95_ns": 0.8222,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.8194666666666667,
+        "p95_ns": 0.8208333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_checked_update_1",
+      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
+      "output": "1.983765787242,-1.901507025005",
+      "before": {
+        "p50_ns": 2.1472333333333333,
+        "p95_ns": 2.1514,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.225,
+        "p95_ns": 2.3444666666666665,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_construct_1",
+      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.983765787242,-1.901507025005",
+      "before": {
+        "p50_ns": 11.708333333333334,
+        "p95_ns": 12.291666666666666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 11.7236,
+        "p95_ns": 12.8639,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_update_2",
+      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.985545831015,-1.598413010044",
+      "before": {
+        "p50_ns": 0.8208333333333333,
+        "p95_ns": 0.8222333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 0.8361,
+        "p95_ns": 0.8375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_checked_update_2",
+      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
+      "output": "1.985545831015,-1.598413010044",
+      "before": {
+        "p50_ns": 2.1069333333333335,
+        "p95_ns": 2.1889,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.2666666666666666,
+        "p95_ns": 2.365266666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "motion/spring_construct_2",
+      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output": "1.985545831015,-1.598413010044",
+      "before": {
+        "p50_ns": 17.025,
+        "p95_ns": 18.195833333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 17.490266666666667,
+        "p95_ns": 18.7236,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    }
+  ],
+  "limits": [
+    "Legacy checkpoint metadata retains its original source hashes and pre-uncommitted-change Git identity. Do not relabel it as a newly committed snapshot.",
+    "31 sequential release samples on one native host, no CPU frequency or affinity control. All raw samples are retained.",
+    "Existing 84 finite fixtures overlap spinner and clock repeats; this is not whole-framework/active-scheduling performance or full reference parity."
+  ]
+}

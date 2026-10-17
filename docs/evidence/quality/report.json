@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 81,
+  "programs": 86,
   "review_units": 40,
   "below_high": [
     {
@@ -12,8 +12,8 @@
     {
       "unit": "matea-core/input",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
     },
     {
       "unit": "matea-core/lib",
@@ -24,8 +24,8 @@
     {
       "unit": "matea-core/lib",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
     },
     {
       "unit": "matea-render/lib",
@@ -60,8 +60,8 @@
     {
       "unit": "matea-style/lib",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
     },
     {
       "unit": "matea-terminal/ansi",
@@ -96,8 +96,8 @@
     {
       "unit": "matea-terminal/input",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
     },
     {
       "unit": "matea-terminal/lib",
@@ -132,8 +132,8 @@
     {
       "unit": "matea-terminal/protocol",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
     },
     {
       "unit": "matea-terminal/signals_unix",
@@ -234,8 +234,8 @@
     {
       "unit": "tools/api-audit",
       "dimension": "performance",
-      "score": 0,
-      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+      "score": 50,
+      "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
     },
     {
       "unit": "tools/perf-probe",
@@ -366,8 +366,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -379,7 +379,8 @@
         "docs/performance.md",
         "docs/evidence/quality/miri-core.log",
         "docs/subscription-performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -408,8 +409,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -421,7 +422,8 @@
         "docs/performance.md",
         "docs/evidence/quality/miri-core.log",
         "docs/subscription-performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -574,8 +576,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -585,7 +587,13 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -665,7 +673,10 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -694,8 +705,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -705,7 +716,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -814,8 +826,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
         },
         "portability": {
           "score": 75,
@@ -825,7 +837,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1151,7 +1164,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/performance.md",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1359,7 +1373,8 @@
     {
       "id": "matea-style/integration-tests",
       "files": [
-        "crates/matea-style/tests/layout.rs"
+        "crates/matea-style/tests/layout.rs",
+        "crates/matea-style/tests/colors.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1554,8 +1569,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -1565,7 +1580,9 @@
       "evidence": [
         "scripts/test_source_auditors.py",
         "docs/evidence/quality/auditors-before.log",
-        "docs/evidence/quality/ci-run.json"
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/auditor/before.jsonl",
+        "docs/evidence/optimization/auditor/after.jsonl"
       ],
       "remaining": [
         "Nested cfg loss fixed; compiler-resolved exports remain a separate audit; more parser/error/scale fixtures needed.",
@@ -1575,7 +1592,8 @@
     {
       "id": "tools/perf-probe",
       "files": [
-        "tools/perf-probe/src/main.rs"
+        "tools/perf-probe/src/main.rs",
+        "tools/perf-probe/src/protocol.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1819,7 +1837,9 @@
         "scripts/report_performance.py",
         "scripts/report_subscription_performance.py",
         "scripts/report_view_performance.py",
-        "scripts/report_viewport_performance.py"
+        "scripts/report_viewport_performance.py",
+        "scripts/optimization_evidence.py",
+        "scripts/measure_auditor_performance.py"
       ],
       "criteria": {
         "rust_design": {
@@ -1905,7 +1925,8 @@
         "scripts/test_rustdoc_exports.py",
         "scripts/test_rustdoc_import.py",
         "scripts/test_source_auditors.py",
-        "scripts/test_evidence_checks.py"
+        "scripts/test_evidence_checks.py",
+        "scripts/test_optimization_evidence.py"
       ],
       "criteria": {
         "rust_design": {
@@ -1982,12 +2003,12 @@
       ]
     }
   ],
-  "plan_sha256": "d5add579cf6bf50d12fb0195d2723eaf521064ccc383d40ec3926fc831a9ed65",
+  "plan_sha256": "f529c4e5e487d6adf18472daa021e3aaee5da2150d8f87099f292e6c48666963",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "de3a81480f926699cbbb55d24bbcdd0633a10676d231eefc5833ea3eab9ac0aa",
+      "sha256": "1527a2f75768343f41b4b0392beceaee333166cc2feef75ec850522c869d99db",
       "units": [
         "ci/workflow"
       ],
@@ -2003,8 +2024,8 @@
         "file": "crates/matea-core/src/input.rs",
         "lines": {
           "count": 100,
-          "covered": 99,
-          "percent": 99
+          "covered": 100,
+          "percent": 100
         },
         "functions": {
           "count": 12,
@@ -2013,14 +2034,14 @@
         },
         "instantiations": {
           "count": 22,
-          "covered": 21,
-          "percent": 95.45454545454545
+          "covered": 22,
+          "percent": 100
         },
         "regions": {
           "count": 143,
-          "covered": 142,
-          "notcovered": 1,
-          "percent": 99.3006993006993
+          "covered": 143,
+          "notcovered": 0,
+          "percent": 100
         },
         "branches": {
           "count": 0,
@@ -2038,32 +2059,32 @@
     },
     {
       "file": "crates/matea-core/src/lib.rs",
-      "sha256": "06604ccb23a801be975707de63694010bc17d6e0a30ec3d731bccfdc3a295f94",
+      "sha256": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
       "units": [
         "matea-core/lib"
       ],
       "native_execution_coverage": {
         "file": "crates/matea-core/src/lib.rs",
         "lines": {
-          "count": 593,
-          "covered": 556,
-          "percent": 93.76053962900505
+          "count": 670,
+          "covered": 632,
+          "percent": 94.32835820895522
         },
         "functions": {
-          "count": 85,
-          "covered": 76,
-          "percent": 89.41176470588236
+          "count": 94,
+          "covered": 84,
+          "percent": 89.36170212765957
         },
         "instantiations": {
-          "count": 836,
-          "covered": 512,
-          "percent": 61.24401913875598
+          "count": 861,
+          "covered": 531,
+          "percent": 61.672473867595826
         },
         "regions": {
-          "count": 902,
-          "covered": 849,
-          "notcovered": 53,
-          "percent": 94.12416851441242
+          "count": 1047,
+          "covered": 991,
+          "notcovered": 56,
+          "percent": 94.65138490926456
         },
         "branches": {
           "count": 0,
@@ -2261,8 +2282,8 @@
         "file": "crates/matea-render/src/lib.rs",
         "lines": {
           "count": 572,
-          "covered": 553,
-          "percent": 96.67832167832168
+          "covered": 555,
+          "percent": 97.02797202797203
         },
         "functions": {
           "count": 69,
@@ -2271,14 +2292,14 @@
         },
         "instantiations": {
           "count": 186,
-          "covered": 169,
-          "percent": 90.86021505376344
+          "covered": 170,
+          "percent": 91.39784946236558
         },
         "regions": {
           "count": 1042,
-          "covered": 1006,
-          "notcovered": 36,
-          "percent": 96.54510556621881
+          "covered": 1009,
+          "notcovered": 33,
+          "percent": 96.83301343570058
         },
         "branches": {
           "count": 0,
@@ -2425,32 +2446,75 @@
     },
     {
       "file": "crates/matea-style/src/lib.rs",
-      "sha256": "515f652dc09ce427156938feee3d38c580227a11f3ff8bd4692f4442b4036a6a",
+      "sha256": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
       "units": [
         "matea-style/lib"
       ],
       "native_execution_coverage": {
         "file": "crates/matea-style/src/lib.rs",
         "lines": {
-          "count": 168,
-          "covered": 164,
-          "percent": 97.61904761904762
+          "count": 198,
+          "covered": 195,
+          "percent": 98.48484848484848
         },
         "functions": {
-          "count": 18,
-          "covered": 18,
+          "count": 19,
+          "covered": 19,
           "percent": 100
         },
         "instantiations": {
-          "count": 33,
-          "covered": 32,
-          "percent": 96.96969696969697
+          "count": 38,
+          "covered": 35,
+          "percent": 92.10526315789474
         },
         "regions": {
-          "count": 253,
-          "covered": 249,
+          "count": 315,
+          "covered": 311,
           "notcovered": 4,
-          "percent": 98.41897233201581
+          "percent": 98.73015873015873
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-style/tests/colors.rs",
+      "sha256": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+      "units": [
+        "matea-style/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/tests/colors.rs",
+        "lines": {
+          "count": 101,
+          "covered": 91,
+          "percent": 90.0990099009901
+        },
+        "functions": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "instantiations": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "regions": {
+          "count": 197,
+          "covered": 175,
+          "notcovered": 22,
+          "percent": 88.83248730964468
         },
         "branches": {
           "count": 0,
@@ -2528,9 +2592,9 @@
           "percent": 81.81818181818183
         },
         "instantiations": {
-          "count": 101,
-          "covered": 38,
-          "percent": 37.62376237623762
+          "count": 122,
+          "covered": 41,
+          "percent": 33.60655737704918
         },
         "regions": {
           "count": 93,
@@ -2554,32 +2618,32 @@
     },
     {
       "file": "crates/matea-terminal/src/frame.rs",
-      "sha256": "4694c82544a02eacfefaee9fbebd8f8f2cbb5c45fe617bfda40981fab6d49226",
+      "sha256": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
       "units": [
         "matea-terminal/frame"
       ],
       "native_execution_coverage": {
         "file": "crates/matea-terminal/src/frame.rs",
         "lines": {
-          "count": 399,
-          "covered": 394,
-          "percent": 98.74686716791979
+          "count": 440,
+          "covered": 432,
+          "percent": 98.18181818181819
         },
         "functions": {
-          "count": 37,
-          "covered": 35,
-          "percent": 94.5945945945946
+          "count": 42,
+          "covered": 39,
+          "percent": 92.85714285714286
         },
         "instantiations": {
-          "count": 94,
-          "covered": 70,
-          "percent": 74.46808510638297
+          "count": 114,
+          "covered": 80,
+          "percent": 70.17543859649122
         },
         "regions": {
-          "count": 854,
-          "covered": 821,
-          "notcovered": 33,
-          "percent": 96.13583138173301
+          "count": 918,
+          "covered": 881,
+          "notcovered": 37,
+          "percent": 95.96949891067538
         },
         "branches": {
           "count": 0,
@@ -2657,9 +2721,9 @@
           "percent": 98.0392156862745
         },
         "instantiations": {
-          "count": 182,
-          "covered": 126,
-          "percent": 69.23076923076923
+          "count": 183,
+          "covered": 127,
+          "percent": 69.39890710382514
         },
         "regions": {
           "count": 704,
@@ -2726,32 +2790,32 @@
     },
     {
       "file": "crates/matea-terminal/src/protocol.rs",
-      "sha256": "5790dc552948710164ff37178e380b02037fb08ad571a3c88d2688c15aa47300",
+      "sha256": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
       "units": [
         "matea-terminal/protocol"
       ],
       "native_execution_coverage": {
         "file": "crates/matea-terminal/src/protocol.rs",
         "lines": {
-          "count": 320,
-          "covered": 299,
-          "percent": 93.4375
+          "count": 357,
+          "covered": 341,
+          "percent": 95.51820728291317
         },
         "functions": {
-          "count": 29,
-          "covered": 27,
-          "percent": 93.10344827586206
+          "count": 31,
+          "covered": 30,
+          "percent": 96.7741935483871
         },
         "instantiations": {
-          "count": 75,
-          "covered": 42,
-          "percent": 56.00000000000001
+          "count": 79,
+          "covered": 51,
+          "percent": 64.55696202531645
         },
         "regions": {
-          "count": 486,
-          "covered": 444,
-          "notcovered": 42,
-          "percent": 91.35802469135803
+          "count": 557,
+          "covered": 521,
+          "notcovered": 36,
+          "percent": 93.53680430879713
         },
         "branches": {
           "count": 0,
@@ -3156,32 +3220,32 @@
     },
     {
       "file": "crates/matea-widgets/src/spinner.rs",
-      "sha256": "1144ce02cbacf6cb46263304a94d412cd6d03531eacd13b921fc63649745f9c4",
+      "sha256": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
       "units": [
         "matea-widgets/spinner"
       ],
       "native_execution_coverage": {
         "file": "crates/matea-widgets/src/spinner.rs",
         "lines": {
-          "count": 182,
-          "covered": 168,
-          "percent": 92.3076923076923
+          "count": 184,
+          "covered": 170,
+          "percent": 92.3913043478261
         },
         "functions": {
-          "count": 35,
-          "covered": 31,
-          "percent": 88.57142857142857
+          "count": 36,
+          "covered": 32,
+          "percent": 88.88888888888889
         },
         "instantiations": {
-          "count": 78,
-          "covered": 44,
-          "percent": 56.41025641025641
+          "count": 89,
+          "covered": 54,
+          "percent": 60.67415730337079
         },
         "regions": {
-          "count": 252,
-          "covered": 228,
+          "count": 257,
+          "covered": 233,
           "notcovered": 24,
-          "percent": 90.47619047619048
+          "percent": 90.6614785992218
         },
         "branches": {
           "count": 0,
@@ -4032,7 +4096,7 @@
     },
     {
       "file": "scripts/check_color_trace.py",
-      "sha256": "c37696d17bc975a013288fade95e8f059cada02d2d7b02f897725806dcb5147c",
+      "sha256": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
       "units": [
         "scripts/independent-terminal-oracles"
       ],
@@ -4048,7 +4112,7 @@
     },
     {
       "file": "scripts/check_quality.py",
-      "sha256": "4f971ec5ee0dbfdbbec13684ce8899f5ad3497df4e4b5187cdac7a4218423a58",
+      "sha256": "486cfbb2233060bcdeb7fc8a61cee21de5c7354c38407a998d1e51408793b12e",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -4119,10 +4183,26 @@
       "native_execution_coverage": null
     },
     {
+      "file": "scripts/measure_auditor_performance.py",
+      "sha256": "adcefaa11229db65f79c2c62fb874d9a9de46e19cae7f4296a4a1c534d0008ea",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "e6044be9617971516dd049973aef766c63ecca692bb88b53a2d533f89ce9e244",
+      "sha256": "3f454b7f66c89bea3323f5154128a55e843c599f660b818ef33a9316c4b1a6d4",
       "units": [
         "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/optimization_evidence.py",
+      "sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+      "units": [
+        "scripts/performance-reporters"
       ],
       "native_execution_coverage": null
     },
@@ -4192,7 +4272,7 @@
     },
     {
       "file": "scripts/test_color_trace.py",
-      "sha256": "100057885cb70fad501ded9b11f72d9c7bbb5027daff897b8ba8f7290142aa8d",
+      "sha256": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
       "units": [
         "scripts/regression-tests"
       ],
@@ -4207,8 +4287,16 @@
       "native_execution_coverage": null
     },
     {
+      "file": "scripts/test_optimization_evidence.py",
+      "sha256": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
       "file": "scripts/test_quality.py",
-      "sha256": "4213dd52f60bd9e3dacf377da0c2bc5b359653bd4e4ed841dff796b68659f508",
+      "sha256": "61d4f57494489fe6d81f11b2ece2492599541453d7766d9701e5211bb3a2ae70",
       "units": [
         "scripts/regression-tests"
       ],
@@ -4240,7 +4328,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "b42ab8fc7ab41f0214a01778223f474f7002719c084de02a4c75349e13685ba2",
+      "sha256": "da95f3e954db1001889f384e3d4796dc469bdba4f5210d2a6f18eab4c7f9300d",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -4248,32 +4336,32 @@
     },
     {
       "file": "tools/api-audit/src/main.rs",
-      "sha256": "34cf0545a3e110fa3f930cd391fcaeae7b298e1e8903031d695d1545767c3059",
+      "sha256": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
       "units": [
         "tools/api-audit"
       ],
       "native_execution_coverage": {
         "file": "tools/api-audit/src/main.rs",
         "lines": {
-          "count": 217,
-          "covered": 174,
-          "percent": 80.18433179723502
+          "count": 327,
+          "covered": 276,
+          "percent": 84.40366972477065
         },
         "functions": {
-          "count": 19,
-          "covered": 16,
-          "percent": 84.21052631578947
+          "count": 27,
+          "covered": 24,
+          "percent": 88.88888888888889
         },
         "instantiations": {
-          "count": 38,
-          "covered": 16,
-          "percent": 42.10526315789473
+          "count": 59,
+          "covered": 45,
+          "percent": 76.27118644067797
         },
         "regions": {
-          "count": 433,
-          "covered": 339,
-          "notcovered": 94,
-          "percent": 78.29099307159353
+          "count": 585,
+          "covered": 499,
+          "notcovered": 86,
+          "percent": 85.2991452991453
         },
         "branches": {
           "count": 0,
@@ -4299,32 +4387,75 @@
     },
     {
       "file": "tools/perf-probe/src/main.rs",
-      "sha256": "7f9eea5c515368e9bf2a690b4e5680b0c2eb74fa08b115b980b06f92062b1bc6",
+      "sha256": "038252d42bdce3ef1ba0af5db415659264a2fa0df3d3772da2fbcf5375d04acd",
       "units": [
         "tools/perf-probe"
       ],
       "native_execution_coverage": {
         "file": "tools/perf-probe/src/main.rs",
         "lines": {
-          "count": 1064,
-          "covered": 1056,
-          "percent": 99.24812030075188
+          "count": 1383,
+          "covered": 1379,
+          "percent": 99.71077368040491
         },
         "functions": {
-          "count": 85,
-          "covered": 84,
-          "percent": 98.82352941176471
+          "count": 106,
+          "covered": 105,
+          "percent": 99.05660377358491
         },
         "instantiations": {
-          "count": 214,
-          "covered": 131,
-          "percent": 61.21495327102804
+          "count": 270,
+          "covered": 166,
+          "percent": 61.48148148148148
         },
         "regions": {
-          "count": 1769,
-          "covered": 1751,
-          "notcovered": 18,
-          "percent": 98.98247597512719
+          "count": 2199,
+          "covered": 2193,
+          "notcovered": 6,
+          "percent": 99.72714870395635
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "tools/perf-probe/src/protocol.rs",
+      "sha256": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+      "units": [
+        "tools/perf-probe"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/perf-probe/src/protocol.rs",
+        "lines": {
+          "count": 102,
+          "covered": 102,
+          "percent": 100
+        },
+        "functions": {
+          "count": 9,
+          "covered": 9,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 18,
+          "covered": 9,
+          "percent": 50
+        },
+        "regions": {
+          "count": 186,
+          "covered": 186,
+          "notcovered": 0,
+          "percent": 100
         },
         "branches": {
           "count": 0,

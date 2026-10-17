@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "stage": "individual_modules",
+  "case_count": 14,
+  "contexts": {
+    "before": {
+      "git_head": "a7b3cbcc0bda4e927bed61abd761f04ddfdd114a",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-widgets/src/spinner.rs": "1144ce02cbacf6cb46263304a94d412cd6d03531eacd13b921fc63649745f9c4",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "tools/perf-probe/src/main.rs": "038252d42bdce3ef1ba0af5db415659264a2fa0df3d3772da2fbcf5375d04acd",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9"
+      },
+      "binary_sha256": "e2b5e945f66780dc68ccacac31f480972c388d131af63fc57024fec5f60d7e7e",
+      "raw_sha256": "c1d54bdafe74d9501f99b31e910c6601577a4845774d2ed2e7e013ae8364d373",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "scope": "14 existing spinner fixtures extracted from the sequential matched 84-case probe, same n=1000; no scheduling or terminal I/O"
+    },
+    "after": {
+      "git_head": "6eb7d905084e0a02363813895758cac059c0dea6",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "tools/perf-probe/src/main.rs": "038252d42bdce3ef1ba0af5db415659264a2fa0df3d3772da2fbcf5375d04acd",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9"
+      },
+      "binary_sha256": "76c2f7282c69f661837cdece90ee5ad5c2570f8f1c514018b9201b4e962de849",
+      "raw_sha256": "4a881f4dd34f4bbdf14cffaf2c36db2b02705f12018bd43299d44711f38a7a49",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "scope": "14 existing spinner fixtures extracted from the sequential matched 84-case probe, same n=1000; no scheduling or terminal I/O"
+    }
+  },
+  "cases": [
+    {
+      "case": "spinner/plain_line",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "|",
+      "before": {
+        "p50_ns": 3.2666,
+        "p95_ns": 3.3791,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5417,
+        "p95_ns": 1.575,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_dot",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u28fe ",
+      "before": {
+        "p50_ns": 3.2667,
+        "p95_ns": 4.425,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5083,
+        "p95_ns": 1.5125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_mini_dot",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u280b",
+      "before": {
+        "p50_ns": 3.2583,
+        "p95_ns": 3.2708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4916,
+        "p95_ns": 1.4958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_jump",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2884",
+      "before": {
+        "p50_ns": 3.3833,
+        "p95_ns": 4.025,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.475,
+        "p95_ns": 1.4834,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_pulse",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2588",
+      "before": {
+        "p50_ns": 3.2917,
+        "p95_ns": 4.2667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_points",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2219\u2219\u2219",
+      "before": {
+        "p50_ns": 3.2667,
+        "p95_ns": 3.275,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.5917,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_globe",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83c\udf0d",
+      "before": {
+        "p50_ns": 3.2708,
+        "p95_ns": 3.3458,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.4709,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_moon",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83c\udf11",
+      "before": {
+        "p50_ns": 3.2625,
+        "p95_ns": 3.275,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_monkey",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\ud83d\ude48",
+      "before": {
+        "p50_ns": 3.2625,
+        "p95_ns": 3.2708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.5459,
+        "p95_ns": 1.75,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_meter",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u25b1\u25b1\u25b1",
+      "before": {
+        "p50_ns": 3.2667,
+        "p95_ns": 3.5625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4792,
+        "p95_ns": 2.7958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_hamburger",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "\u2631",
+      "before": {
+        "p50_ns": 3.2667,
+        "p95_ns": 3.2709,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4667,
+        "p95_ns": 1.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/plain_ellipsis",
+      "semantics": "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+      "output": "",
+      "before": {
+        "p50_ns": 3.225,
+        "p95_ns": 3.2334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.4792,
+        "p95_ns": 2.6167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/foreign",
+      "semantics": "ignore foreign spinner tick; return unchanged plain frame; no new scheduling request",
+      "output": "|",
+      "before": {
+        "p50_ns": 4.1375,
+        "p95_ns": 4.1541,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.8125,
+        "p95_ns": 2.8167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "spinner/stale",
+      "semantics": "ignore old positive-generation spinner tick; return unchanged plain frame; no new scheduling request",
+      "output": "-",
+      "before": {
+        "p50_ns": 4.1416,
+        "p95_ns": 4.2334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.8125,
+        "p95_ns": 2.8166,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    }
+  ],
+  "limits": [
+    "Rust-only matched before/after fixtures; no upstream speed ratio or full-framework-stage claim.",
+    "One macOS arm64 host, sequential release probes, 31 samples. No affinity/frequency control; retain p95 and unchanged-path regressions.",
+    "Requested System allocation counters are separate from timing and are not resident-memory measurements.",
+    "Successful measurements do not automatically raise a quality score or establish universal optimality."
+  ],
+  "reporter_sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da"
+}

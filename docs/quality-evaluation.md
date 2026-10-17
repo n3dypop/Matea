@@ -22,7 +22,7 @@ Scores are ordinal evidence levels, **not percentages of correctness**:
 | 100 | Exhaustive evidence for an explicitly finite domain; never universal safety or maximum speed. |
 | N/A | The dimension has no counterpart (e.g. Rust ownership for a Python utility); a reason is mandatory. Unmeasured performance is 0, never N/A. |
 
-The initial assessments are conservative reviewer judgments, with limitations in
+The assessments are conservative reviewer judgments, with limitations in
 each row. Passing a native test does not establish reference parity. Passing an
 inventory check does not establish a passing quality gate. Tests/configuration
 have no production latency acceptance criterion, so performance is N/A there;
@@ -112,3 +112,5 @@ reference recollection remain separate exclusions.
 F5 and the image-engine/CUDA gate remain closed.
 
 Final implementation `9ce5564ad525d047594c5e1debecabd7c3bb4e37` passed [Linux, Windows, macOS and MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39043211231). The generated report retains 56 below-threshold assessments: performance 28, reference equivalence 18, behavior 5 and external-tool portability 5. These are incomplete evidence/behavior scopes, not 56 confirmed defects. The quality gate still fails.
+
+The individual optimization follow-up adds 127 measured fixtures (124 Rust primitive/packet fixtures plus three complete auditor processes). [Results and retained regressions](individual-optimization.md) include exact all-RGB ANSI256 checking, adaptive owned focus indexing, bounded stack protocol headers, fallback style restoration and streaming source inventories. Eleven additional distinct targeted Miri tests passed: [commands, seeds, target hashes and logs](evidence/optimization/miri-context.json). The current native suite runs 129 Rust cases plus two doctests, one explicit ignored exhaustive case, 24 Python regression cases in normal/optimized mode, 12 snapshots and 17 Unix PTY cases. Six performance assessments move from 0 to 50; no dimension is promoted to high by these partial measurements. Of 86 program files in 40 units, 56 assessments remain below 75 (performance 28, reference 18, behavior 5, portability 5). Fully unmeasured performance units decrease from 18 to 12. The whole-framework optimization stage has not started.

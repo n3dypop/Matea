@@ -39,7 +39,7 @@ def main():
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
     env["MATEA_PERF_ITERATIONS"] = "1"
-    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"]]:
+    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"]]:
         name = mode[0].removeprefix("--") if mode else "main"
         run([str(probe), *mode], "coverage-probe-" + name + ".log")
 
@@ -72,7 +72,7 @@ def main():
             if path.startswith(("crates/", "tools/", "examples/")):
                 files.append({"file": path, **item["summary"]})
     report = {"schema": 1, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main and all seven modes; execution coverage only"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol; execution coverage only"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages."],

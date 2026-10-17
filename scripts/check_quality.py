@@ -3,14 +3,22 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 DIMENSIONS = {"rust_design", "memory_safety", "behavior", "reference", "performance", "portability"}
 
 
 def programs(root):
-    return {p.relative_to(root).as_posix() for folder in ("crates", "tools", "scripts", "examples", ".github")
-            for p in (root / folder).rglob("*") if p.is_file() and p.suffix in {".rs", ".go", ".py", ".yml", ".yaml"}}
+    # Git supplies the whole checkout, including untracked source and future
+    # root/build/benchmark programs, while excluding generated ignored files.
+    try:
+        names = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+                                        cwd=root, stderr=subprocess.PIPE).decode("utf-8").split("\0")
+    except subprocess.CalledProcessError as error:
+        raise ValueError("quality inventory requires a Git checkout") from error
+    suffixes = {".rs", ".go", ".py", ".yml", ".yaml", ".sh", ".ps1", ".js", ".mjs", ".ts"}
+    return {name for name in names if Path(name).suffix in suffixes and (root / name).is_file()}
 
 
 def assess(plan, actual):

@@ -29,6 +29,8 @@ jobs:
       - run: cargo test --locked --workspace
       - run: cargo test --locked --workspace --all-targets
       - run: cargo test --locked --release --workspace
+      - if: runner.os == 'Linux'
+        run: cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored
       - run: cargo doc --locked --workspace --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
@@ -49,6 +51,7 @@ jobs:
           PYTHONUTF8: "1"
       - run: python scripts/test_quality.py
       - run: python scripts/test_evidence_checks.py
+      - run: python scripts/test_optimization_evidence.py
       - run: python -O -m unittest discover -s scripts -p 'test_*.py'
         env:
           PYTHONUTF8: "1"
@@ -66,6 +69,20 @@ jobs:
         env:
           NO_COLOR: "1"
       - run: python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json
+        shell: bash
+      - run: python scripts/check_color_trace.py artifacts/matea-fallback-trace.json
+      # CLI/serialization checks only; shared CI runner timings are not benchmark evidence.
+      - run: |
+          cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl
+          python scripts/optimization_evidence.py artifacts/style.jsonl --validate-current --expected 46
+          cargo run --locked --quiet --release -p matea-perf-probe -- --input > artifacts/input.jsonl
+          python scripts/optimization_evidence.py artifacts/input.jsonl --validate-current --expected 37
+          cargo run --locked --quiet --release -p matea-perf-probe -- --protocol > artifacts/protocol.jsonl
+          python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41
+        shell: bash
+        env:
+          MATEA_PERF_ITERATIONS: "20"
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"
