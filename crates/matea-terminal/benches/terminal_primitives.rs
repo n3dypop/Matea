@@ -12,6 +12,7 @@ mod measurement;
 #[path = "../src/modes.rs"]
 mod modes;
 #[cfg(unix)]
+#[allow(unused_imports)] // Unit-test imports are unused under this custom bench harness.
 #[allow(unsafe_code)] // The same isolated production sigaction boundary.
 #[path = "../src/signals_unix.rs"]
 mod signals_unix;

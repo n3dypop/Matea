@@ -6,7 +6,7 @@ use crossterm::{
         EnableFocusChange, EnableMouseCapture, PopKeyboardEnhancementFlags,
         PushKeyboardEnhancementFlags,
     },
-    execute,
+    queue,
     style::{Attribute, ResetColor, SetAttribute},
     terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -168,19 +168,19 @@ pub(crate) fn apply_mode(
     flags: KeyboardFlags,
 ) -> io::Result<()> {
     match (mode, enable) {
-        (Mode::Alternate, true) => execute!(out, EnterAlternateScreen),
-        (Mode::Alternate, false) => execute!(out, LeaveAlternateScreen),
-        (Mode::CursorVisibility, true) => execute!(out, Hide),
-        (Mode::CursorVisibility, false) => execute!(out, Show),
-        (Mode::Style, _) => execute!(out, ResetColor, SetAttribute(Attribute::Reset)),
-        (Mode::Paste, true) => execute!(out, EnableBracketedPaste),
-        (Mode::Paste, false) => execute!(out, DisableBracketedPaste),
-        (Mode::Focus, true) => execute!(out, EnableFocusChange),
-        (Mode::Focus, false) => execute!(out, DisableFocusChange),
-        (Mode::Mouse, true) => execute!(out, EnableMouseCapture),
-        (Mode::Mouse, false) => execute!(out, DisableMouseCapture),
-        (Mode::Keyboard, true) => execute!(out, PushKeyboardEnhancementFlags(flags)),
-        (Mode::Keyboard, false) => execute!(out, PopKeyboardEnhancementFlags),
+        (Mode::Alternate, true) => queue!(out, EnterAlternateScreen),
+        (Mode::Alternate, false) => queue!(out, LeaveAlternateScreen),
+        (Mode::CursorVisibility, true) => queue!(out, Hide),
+        (Mode::CursorVisibility, false) => queue!(out, Show),
+        (Mode::Style, _) => queue!(out, ResetColor, SetAttribute(Attribute::Reset)),
+        (Mode::Paste, true) => queue!(out, EnableBracketedPaste),
+        (Mode::Paste, false) => queue!(out, DisableBracketedPaste),
+        (Mode::Focus, true) => queue!(out, EnableFocusChange),
+        (Mode::Focus, false) => queue!(out, DisableFocusChange),
+        (Mode::Mouse, true) => queue!(out, EnableMouseCapture),
+        (Mode::Mouse, false) => queue!(out, DisableMouseCapture),
+        (Mode::Keyboard, true) => queue!(out, PushKeyboardEnhancementFlags(flags)),
+        (Mode::Keyboard, false) => queue!(out, PopKeyboardEnhancementFlags),
     }
 }
 #[cfg(test)]

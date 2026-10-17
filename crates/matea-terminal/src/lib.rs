@@ -5,8 +5,10 @@ mod frame;
 mod input;
 pub use input::translate_event;
 mod modes;
+mod session;
 pub use modes::{InputOptions, KeyboardFlags, KeyboardMode};
 use modes::{ModeLeases, apply_mode};
+use session::{Exclusive, Session};
 pub mod protocol;
 pub use frame::FrameEncoder;
 // sigaction has no safe standard-library wrapper; this is the only unsafe module.
@@ -22,7 +24,7 @@ use matea_render::{Size, Surface};
 use matea_style::{Border, Color, ColorLevel, Style, Theme};
 use std::{
     io::{self, IsTerminal, Write},
-    sync::atomic::{AtomicBool, Ordering},
+    sync::atomic::AtomicBool,
     time::{Duration, Instant},
 };
 
@@ -102,40 +104,6 @@ pub trait Backend {
     fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>>;
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()>;
 }
-struct Session<B: Backend> {
-    backend: B,
-    active: bool,
-}
-impl<B: Backend> Session<B> {
-    fn enter(backend: B) -> io::Result<Self> {
-        let mut session = Self {
-            backend,
-            active: true,
-        };
-        if let Err(error) = session.backend.enter() {
-            return match session.restore() {
-                Ok(()) => Err(error),
-                Err(cleanup) => Err(io::Error::other(format!(
-                    "{error}; terminal restoration also failed: {cleanup}"
-                ))),
-            };
-        }
-        Ok(session)
-    }
-    fn restore(&mut self) -> io::Result<()> {
-        if self.active {
-            self.backend.restore()?;
-            self.active = false;
-        }
-        Ok(())
-    }
-}
-impl<B: Backend> Drop for Session<B> {
-    fn drop(&mut self) {
-        let _ = self.restore();
-    }
-}
-
 pub fn run<A: Model>(model: A) -> Result<(), Error> {
     run_with_options(model, RunOptions::default())
 }
@@ -233,31 +201,25 @@ struct Native {
     signals: Option<signals_unix::SignalGuard>,
 }
 impl Native {
-    fn new(caps: Capabilities, input: InputOptions) -> io::Result<Self> {
+    fn new(caps: Capabilities, input: InputOptions) -> io::Result<Exclusive<'static, Self>> {
         input.validate()?;
         if !io::stdin().is_terminal() || !io::stdout().is_terminal() {
             return Err(io::Error::other(
                 "interactive Matea requires TTY stdin/stdout; use an example's --snapshot option for plain output",
             ));
         }
-        if EXCLUSIVE
-            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
-            .is_err()
-        {
-            return Err(io::Error::other(
-                "another Matea terminal session is already active",
-            ));
-        }
-        Ok(Self {
-            out: io::stdout(),
-            encoded: Vec::new(),
-            encoder: FrameEncoder::default(),
-            caps,
-            input,
-            modes: ModeLeases::default(),
-            raw: false,
-            #[cfg(unix)]
-            signals: None,
+        Exclusive::acquire(&EXCLUSIVE, || {
+            Ok(Self {
+                out: io::stdout(),
+                encoded: Vec::new(),
+                encoder: FrameEncoder::default(),
+                caps,
+                input,
+                modes: ModeLeases::default(),
+                raw: false,
+                #[cfg(unix)]
+                signals: None,
+            })
         })
     }
 }
@@ -354,7 +316,6 @@ impl Backend for Native {
 impl Drop for Native {
     fn drop(&mut self) {
         let _ = self.restore();
-        EXCLUSIVE.store(false, Ordering::Release);
     }
 }
 
