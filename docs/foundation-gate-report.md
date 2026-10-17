@@ -93,3 +93,5 @@ Text実装 `e91b0a5b9a03e4460f48dbc276a5ee8ed061861a` は[Linux・Windows・macO
 全公開機能と性能要件を満たした後にF5安定化結果と未解決事項を改めて報告し、次フェーズへ進む前に明示承認を求めます。現時点では承認を求めません。
 
 GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Matea)。Reference、AGENTS、CODEX_START、Skillsはリポジトリ外に保っています。
+
+全プログラム評価・Viewport・cfg／検証ツール修正の実装 `9ce5564ad525d047594c5e1debecabd7c3bb4e37` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39043211231)の4ジョブに成功しました。[job／step証拠](evidence/quality/ci-run.json)。初回runではmacOSのGo fixtureが1件skipされたため、公式setup-goの固定SHA・Go 1.26.0導入と必須実行へ変更して再実行しました。現在の品質評価は81ファイル・40単位で、性能28、参照元一致18、動作5、外部ツール移植性5の計56評価軸が75未満です。これは56件の確認済みバグという意味ではなく、未測定・部分対応・未検証を含みます。品質ゲートとF5は閉じたままです。

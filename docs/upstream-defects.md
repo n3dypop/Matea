@@ -104,3 +104,21 @@ Restoring valid configuration delayed that timer's original deadline. The saved
 current regressions retain a and b and cover zero-period/limit errors. Full
 validation before mutation and retained map entries fix it. This is a Matea defect,
 not an upstream attribution. [ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md).
+
+The all-program quality audit reproduces two further Matea tooling defects: the
+Rust source scanner lost member/field/variant cfg constraints (122 records
+corrected without changing IDs), and Python `-O` could remove an entire evidence
+replay call and report a mismatched fixture as exact. Explicit runtime checks and
+normal/optimized regression tests fix the latter; the initial macOS Go-fixture
+skip is retained as a CI gap and fixed by mandatory Go setup. See the
+[evaluation and known-negative logs](quality-evaluation.md).
+
+An extra [Ultraviolet trace diagnostic](evidence/quality/upstream-margin-negative.log)
+fails under the oracle's preserved vertical margins [3,7], although default-margin
+fixtures pass. The pinned `terminal_renderer.go` `relativeCursorMove` selects
+shorter CUD/LF/CUU sequences; these depend on scroll-region state. This diagnostic
+uses stricter inherited-state assumptions than the 84 matched workloads, and its
+alternate-screen margin assumptions need emulator validation. It is not a new
+confirmed upstream defect or a performance comparison. Matea's documented
+absolute-row addressing passes this extra oracle; the failed source result is
+kept rather than discarded.
