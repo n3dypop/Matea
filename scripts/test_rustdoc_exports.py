@@ -1,5 +1,7 @@
 """Regression tests for visibility/alias boundaries in compiler JSON ingestion."""
 import unittest
+from pathlib import Path
+import tempfile
 from rustdoc_exports import FORMAT, exports
 
 
@@ -9,6 +11,25 @@ def item(identifier, name, kind, data, visibility="public", crate_id=0):
 
 
 class ExportsTests(unittest.TestCase):
+    def test_locations_keep_independent_coordinates_and_reference_roots(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);first=root/"first";second=root/"second"
+            first.mkdir();second.mkdir()
+            filename=str(first/"source.rs")
+            data={"format_version":FORMAT,"root":0,"paths":{},"index":{
+                "0":item(0,"fixture","module",{"items":[1,2]}),
+                "1":item(1,"one","function",{}),"2":item(2,"two","function",{})}}
+            for identity,line,column in [("1",3,5),("2",7,11)]:
+                data["index"][identity]["span"]={"filename":filename,"begin":[line,column],"end":[line,column+1]}
+            inside={i["name"]:i["source"] for i in exports(data,first)["items"]}
+            self.assertEqual(inside["one"],{"file":"source.rs","line":3,"column":5})
+            self.assertEqual(inside["two"],{"file":"source.rs","line":7,"column":11})
+            inside["one"]["line"]=99
+            self.assertEqual(inside["two"]["line"],7)
+            outside={i["name"]:i["source"] for i in exports(data,second)["items"]}
+            self.assertEqual(outside["one"],{"file":"${EXTERNAL_SOURCE}/source.rs","line":3,"outside_reference":True})
+            self.assertEqual(outside["two"]["line"],7)
+
     def test_standard_blankets_are_distinct_from_local_generic_implementations(self):
         def implementation(trait):
             return {"trait": trait, "items": [], "is_synthetic": False,

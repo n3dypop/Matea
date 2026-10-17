@@ -24,21 +24,29 @@ def exports(document, source_root):
     implicit_traits = {}
     paths = document["paths"]
     source_root = Path(source_root).resolve()
+    source_files = {}
 
     def location(item):
         span = item.get("span")
         if not span:
             return None
-        path = Path(span["filename"])
-        # rustdoc may retain rooted /rustc/... paths on Windows without a drive.
-        if path.is_absolute() or path.root:
-            try:
-                filename = path.resolve().relative_to(source_root).as_posix()
-            except ValueError:
-                return {"file": "${EXTERNAL_SOURCE}/" + path.name,
-                        "line": span["begin"][0], "outside_reference": True}
-        else:
-            filename = path.as_posix()
+        raw_name = span["filename"]
+        normalized = source_files.get(raw_name)
+        if normalized is None:
+            path = Path(raw_name)
+            outside = False
+            # rustdoc may retain rooted /rustc/... paths on Windows without a drive.
+            if path.is_absolute() or path.root:
+                try:
+                    filename = path.resolve().relative_to(source_root).as_posix()
+                except ValueError:
+                    filename, outside = "${EXTERNAL_SOURCE}/" + path.name, True
+            else:
+                filename = path.as_posix()
+            normalized = source_files[raw_name] = (filename, outside)
+        filename, outside = normalized
+        if outside:
+            return {"file": filename, "line": span["begin"][0], "outside_reference": True}
         return {"file": filename, "line": span["begin"][0], "column": span["begin"][1]}
 
     def child(parent, child_id, prefix, relation, implicit_public=False, alias=None, nameable=None):
