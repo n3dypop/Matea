@@ -17,3 +17,7 @@ Queue native mode commands, preserving their byte order and Crossterm platform d
 ## Validation and limits
 
 Regression tests assert that ownership outlives backend and nested destructors, reject overlapping constructors, release failed/panicking constructors, and exercise every two-signal failure mask and partial acquisition. The native phase benchmark checks exact output literals for default, minimal and full mode cycles. Record before/after timing, requested allocations and logical write/flush counts separately. Actual signal calls run only in an isolated Unix probe; synthetic journal tests do not establish that an OS syscall cannot fail. Native PTY cleanup, all-target checks and three-OS CI remain required after the implementation changes.
+
+## Measured follow-up
+
+The first phase-flushing probe reduced logical flushes from 12/8/16 to 2, but native memory-sink p50 regressed from 101/91/132 ns to 105/95/146 ns. Retain this intermediate run. Source inspection of the locked Crossterm 0.29 `SetAttribute::write_ansi` / `Attribute::sgr` identifies an owned SGR string for each reset. Use a private fixed reset command with exactly the same ANSI bytes and the same no-op legacy WinAPI behavior as that command; retain Crossterm `ResetColor` and native dispatch. Full cycle byte literals and the explicit enter/exit phase checks constrain this optimization.

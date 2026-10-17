@@ -7,7 +7,7 @@ use crossterm::{
         PushKeyboardEnhancementFlags,
     },
     queue,
-    style::{Attribute, ResetColor, SetAttribute},
+    style::ResetColor,
     terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io::{self, Write};
@@ -161,6 +161,19 @@ impl ModeLeases {
         error.map_or(Ok(()), Err)
     }
 }
+// Crossterm 0.29 SetAttribute builds an owned SGR String even for Reset.
+// Preserve its ANSI bytes and no-op legacy WinAPI behavior without allocation.
+struct ResetAttributes;
+impl crossterm::Command for ResetAttributes {
+    fn write_ansi(&self, out: &mut impl std::fmt::Write) -> std::fmt::Result {
+        out.write_str("\x1b[0m")
+    }
+    #[cfg(windows)]
+    fn execute_winapi(&self) -> io::Result<()> {
+        Ok(())
+    }
+}
+
 pub(crate) fn apply_mode(
     out: &mut impl Write,
     mode: Mode,
@@ -172,7 +185,7 @@ pub(crate) fn apply_mode(
         (Mode::Alternate, false) => queue!(out, LeaveAlternateScreen),
         (Mode::CursorVisibility, true) => queue!(out, Hide),
         (Mode::CursorVisibility, false) => queue!(out, Show),
-        (Mode::Style, _) => queue!(out, ResetColor, SetAttribute(Attribute::Reset)),
+        (Mode::Style, _) => queue!(out, ResetColor, ResetAttributes),
         (Mode::Paste, true) => queue!(out, EnableBracketedPaste),
         (Mode::Paste, false) => queue!(out, DisableBracketedPaste),
         (Mode::Focus, true) => queue!(out, EnableFocusChange),
