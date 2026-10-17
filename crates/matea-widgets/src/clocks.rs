@@ -417,14 +417,9 @@ impl DurationText {
         self.start -= 1;
         self.bytes[self.start] = b'0' + value;
     }
-    fn integer(&mut self, mut value: u64) {
-        loop {
-            self.digit((value % 10) as u8);
-            value /= 10;
-            if value == 0 {
-                break;
-            }
-        }
+    fn integer(&mut self, value: u64) {
+        let mut digits = itoa::Buffer::new();
+        self.prepend(digits.format(value).as_bytes());
     }
     fn fraction(&mut self, mut value: u32, width: usize) {
         if value == 0 {
