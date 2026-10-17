@@ -53,6 +53,7 @@ jobs:
       - run: python scripts/test_quality.py
       - run: python scripts/test_evidence_checks.py
       - run: python scripts/test_optimization_evidence.py
+      - run: python scripts/test_performance_records.py
       - run: python -O -m unittest discover -s scripts -p 'test_*.py'
         env:
           PYTHONUTF8: "1"

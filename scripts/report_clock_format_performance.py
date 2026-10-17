@@ -1,12 +1,11 @@
 """Compare forward/reverse clock text, preserving short and longer paired runs."""
 from evidence_checks import require
+from performance_records import read_records, summary
 from datetime import datetime, timezone
 import hashlib
 import json
-import math
 from pathlib import Path
 import platform
-import statistics
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,12 +15,6 @@ BASE = ROOT / "docs/evidence/performance/2026-10-16"
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-
-def summary(record):
-    samples = sorted(record["samples_ns"])
-    require(len(samples) >= 31 and all(math.isfinite(n) and n > 0 for n in samples))
-    return {"p50_ns": statistics.median(samples), "p95_ns": samples[math.ceil(.95 * len(samples)) - 1],
-            "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
 
 
 context = json.loads((BASE / "clocks-forward-context.json").read_text())
@@ -34,7 +27,7 @@ groups = [["clocks-forward-before.jsonl", "clocks-forward-upstream.jsonl", "cloc
           ["clocks-forward-long.jsonl", "clocks-forward-go-long.jsonl", "clocks-reverse-long.jsonl", "clocks-reverse-go-long.jsonl"]]
 comparisons = []
 for names in groups:
-    records = [{r["case"]: r for r in map(json.loads, (BASE / name).read_text().splitlines())} for name in names]
+    records = [read_records((BASE / name).read_text()) for name in names]
     require(len(records[0]) == 16 and all(r.keys() == records[0].keys() for r in records))
     cases = []
     for case, before in records[0].items():

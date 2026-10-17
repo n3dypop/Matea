@@ -1,10 +1,9 @@
 """Verify finite Viewport before/after outputs, raw hashes and baseline source."""
 from evidence_checks import require
+from performance_records import read_records, summary
 import hashlib
 import json
-import math
 from pathlib import Path
-import statistics
 import subprocess
 import tempfile
 
@@ -15,13 +14,6 @@ BASE = ROOT / "docs/evidence/quality"
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-
-def summary(record):
-    values = sorted(record["samples_ns"])
-    if len(values) != 31 or not all(math.isfinite(v) and v > 0 for v in values):
-        raise ValueError("invalid sample distribution")
-    return {"p50_ns": statistics.median(values), "p95_ns": values[29],
-            "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
 
 
 def main():
@@ -37,7 +29,7 @@ def main():
         path.write_bytes(subprocess.check_output(["git", "show", context["head"] + ":" + harness], cwd=ROOT))
         subprocess.run(["git", "apply", str(BASE / "viewport-harness.patch")], cwd=directory, check=True)
         require(digest(path) == context["sha256"][harness])
-    records = [{r["case"]: r for r in map(json.loads, (BASE / name).read_text(encoding="utf-8").splitlines())}
+    records = [read_records((BASE / name).read_text(encoding="utf-8"))
                for name in ["viewport-before.jsonl", "viewport-after.jsonl"]]
     require(len(records[0]) == 12 and records[0].keys() == records[1].keys())
     cases = []

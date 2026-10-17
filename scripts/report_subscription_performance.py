@@ -1,12 +1,11 @@
 """Publish Rust-only before/after subscription evidence; no upstream parity claim."""
 from evidence_checks import require
+from performance_records import read_records, summary
 from datetime import datetime, timezone
 import hashlib
 import json
-import math
 from pathlib import Path
 import platform
-import statistics
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,20 +16,13 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def summary(record):
-    samples = sorted(record["samples_ns"])
-    require(len(samples) >= 31 and all(value > 0 for value in samples))
-    return {"p50_ns": statistics.median(samples),
-            "p95_ns": samples[math.ceil(.95 * len(samples)) - 1],
-            "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
-
 
 before_context = json.loads((BASE / "subscriptions-before-context.json").read_text())
 require(digest(BASE / "subscriptions-before.jsonl") == before_context["raw_sha256"])
 for name, expected in before_context["source_sha256"].items():
     original = subprocess.check_output(["git", "show", before_context["git_head"] + ":" + name], cwd=ROOT)
     require(hashlib.sha256(original).hexdigest() == expected, lambda: name)
-records = [{record["case"]: record for record in map(json.loads, (BASE / name).read_text().splitlines())}
+records = [read_records((BASE / name).read_text())
            for name in ("subscriptions-before.jsonl", "subscriptions-after.jsonl")]
 require(records[0].keys() == records[1].keys())
 cases = []
@@ -45,7 +37,7 @@ for stem, label in [("subscriptions-scoped-stage", "Scoped IDs and retained node
     raw, context, patch = BASE / (stem + ".jsonl"), BASE / (stem + "-report.json"), BASE / (stem + ".patch")
     data = json.loads(context.read_text())
     require(digest(raw) == data["raw_sha256"]["subscriptions-after.jsonl"])
-    stage = {record["case"]: record for record in map(json.loads, raw.read_text().splitlines())}
+    stage = read_records(raw.read_text())
     require(stage.keys() == records[0].keys())
     for name, record in stage.items():
         require((record["semantics"], record["output"]) == (records[0][name]["semantics"], records[0][name]["output"]))

@@ -36,6 +36,7 @@ checks = [
     ("source-auditor-tests", [sys.executable, str(root / "scripts/test_source_auditors.py")]),
     ("quality-gate-tests", [sys.executable, str(root / "scripts/test_quality.py")]),
     ("evidence-guard-tests", [sys.executable, str(root / "scripts/test_evidence_checks.py")]),
+    ("performance-record-tests", [sys.executable, str(root / "scripts/test_performance_records.py")]),
     ("optimization-evidence-tests", [sys.executable, str(root / "scripts/test_optimization_evidence.py")]),
     ("optimized-python-tests", [sys.executable, "-O", "-m", "unittest", "discover", "-s", str(root / "scripts"), "-p", "test_*.py"]),
     ("quality-inventory", [sys.executable, str(root / "scripts/check_quality.py")]),
