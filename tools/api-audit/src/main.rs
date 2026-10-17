@@ -1,27 +1,38 @@
 //! Source declaration inventory; macro/cfg resolution is deliberately not claimed.
 use quote::ToTokens;
 use std::{
-    env, fs,
+    env, fmt, fs,
     io::{self, Write},
     path::Path,
 };
 use syn::{Fields, ImplItem, Item, TraitItem, Visibility, spanned::Spanned};
 
-fn json(s: &str) -> String {
-    let mut out = String::from("\"");
-    for c in s.chars() {
-        match c {
-            '"' => out.push_str("\\\""),
-            '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            c if c.is_control() => out.push_str(&format!("\\u{:04x}", c as u32)),
-            c => out.push(c),
+struct Json<'a>(&'a str);
+impl fmt::Display for Json<'_> {
+    fn fmt(&self, out: &mut fmt::Formatter<'_>) -> fmt::Result {
+        out.write_str("\"")?;
+        let mut start = 0;
+        for (index, c) in self.0.char_indices() {
+            let escaped = match c {
+                '"' => "\\\"",
+                '\\' => "\\\\",
+                '\n' => "\\n",
+                '\r' => "\\r",
+                '\t' => "\\t",
+                c if c.is_control() => "",
+                _ => continue,
+            };
+            out.write_str(&self.0[start..index])?;
+            if escaped.is_empty() {
+                write!(out, "\\u{:04x}", c as u32)?;
+            } else {
+                out.write_str(escaped)?;
+            }
+            start = index + c.len_utf8();
         }
+        out.write_str(&self.0[start..])?;
+        out.write_str("\"")
     }
-    out.push('"');
-    out
 }
 fn emit(
     out: &mut impl Write,
@@ -34,10 +45,10 @@ fn emit(
     writeln!(
         out,
         "{{\"file\":{},\"line\":{line},\"kind\":{},\"symbol\":{},\"cfg\":{}}}",
-        json(file),
-        json(kind),
-        json(symbol),
-        json(cfg)
+        Json(file),
+        Json(kind),
+        Json(symbol),
+        Json(cfg)
     )
 }
 fn public(v: &Visibility) -> bool {
@@ -293,6 +304,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn borrowed_json_preserves_unicode_and_escapes_without_changing_bytes() {
+        assert_eq!(
+            Json("抹茶\"\\\n\r\t\0\x7f\u{85}").to_string(),
+            "\"抹茶\\\"\\\\\\n\\r\\t\\u0000\\u007f\\u0085\""
+        );
+    }
 
     #[test]
     fn output_failure_at_every_byte_is_reported_without_panicking() {
