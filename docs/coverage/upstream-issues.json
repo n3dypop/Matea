@@ -23,9 +23,22 @@
           "url": "https://github.com/charmbracelet/bubbletea/issues/1865",
           "updated_at": "2026-10-14T20:49:41Z",
           "labels": [],
-          "matea_reproduction": "synthetic_and_unix_PTY_only; upstream/Windows native reproduction not executed",
-          "disposition": "assessed_with_limitations",
-          "analysis": "docs/input-audit.md"
+          "matea_reproduction": "synthetic_boundary_only_native_report_not_reproduced",
+          "disposition": "assessed_partial_native_windows_pending",
+          "analysis": "docs/input-audit.md",
+          "review": {
+            "status": "partial",
+            "reference": "bubbletea",
+            "reference_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+            "reviewed_updated_at": "2026-10-14T20:49:41Z",
+            "notes": "Matea normalizes backend NUL to Null and refuses control insertion, verified with synthetic translation/widget cases. Native Windows modifier parser behavior, AltGr/IME and physical keyboard identity remain unverified.",
+            "evidence_sha256": {
+              "docs/input-audit.md": "c5ae27d7960aebd92a3d2b7e37496af639568574e9abe633def8dfa8cfaad49d",
+              "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 1857,
@@ -1898,9 +1911,22 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/1056",
           "updated_at": "2026-09-22T10:57:52Z",
           "labels": [],
-          "matea_reproduction": "See executed textinput-source-edges.json, component regression tests and explicit remaining native/terminal limits.",
-          "disposition": "reproduced_at_pin_and_addressed_in_matea",
-          "analysis": "docs/input-editing-audit.md"
+          "matea_reproduction": "fixed_source_observation_and_matea_regression",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/input-editing-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-09-22T10:57:52Z",
+            "notes": "Pinned Alt+D cases reproduce extra-word deletion and panic. Matea deletes through the whitespace boundary and preserves grapheme/cursor invariants in the named regression.",
+            "evidence_sha256": {
+              "docs/input-editing-audit.md": "7eef165d0d2e513ec1536c9e70439da28781407de9f1c51b89c5e307b7df246d",
+              "docs/evidence/textinput-source-edges.json": "e885d6c780a080bf7eea939a1899b4c789cbd4f9d8db6b4baeb96e122db5cd87",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 1053,
@@ -1975,9 +2001,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/1007",
           "updated_at": "2026-06-26T01:41:30Z",
           "labels": [],
-          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
-          "disposition": "assessed_stale_generation_reproduced",
-          "analysis": "Pinned timer tag never advances; a pre-pause/resume tick was accepted. Typed generations and stale/duplicate/backward-time guards have regressions."
+          "matea_reproduction": "source_observation_and_deterministic_matea_tests",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "Pinned timer tag never advances; a pre-pause/resume tick was accepted. Typed generations and stale/duplicate/backward-time guards have regressions.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-06-26T01:41:30Z",
+            "notes": "A captured source timer tick survives pause/resume because its tag never advances. Matea invalidates generations and rejects stale/duplicate/foreign timestamps in deterministic clock and Runtime tests.",
+            "evidence_sha256": {
+              "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+              "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+              "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+              "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 1001,
@@ -1985,9 +2025,22 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/1001",
           "updated_at": "2026-08-15T21:09:30Z",
           "labels": [],
-          "matea_reproduction": "Pinned pure getter reproduced in textinput-source-edges.json; Matea cell/scroll/offset regression and Unix PTY native cursor paste pass. No actual emulator, shape/color/blink or Windows native console claim.",
-          "disposition": "reproduced_at_pin_position_fixed_with_terminal_limits",
-          "analysis": "docs/input-editing-audit.md"
+          "matea_reproduction": "fixed_source_observation_and_matea_regression",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/input-editing-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-08-15T21:09:30Z",
+            "notes": "The pinned overflowing ASCII Left case returns X=22 instead of viewport X=21. Matea regression returns 21; no native-emulator reproduction or broader cursor-appearance claim.",
+            "evidence_sha256": {
+              "docs/input-editing-audit.md": "7eef165d0d2e513ec1536c9e70439da28781407de9f1c51b89c5e307b7df246d",
+              "docs/evidence/textinput-source-edges.json": "e885d6c780a080bf7eea939a1899b4c789cbd4f9d8db6b4baeb96e122db5cd87",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 999,
@@ -1995,9 +2048,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/999",
           "updated_at": "2026-07-04T22:07:25Z",
           "labels": [],
-          "matea_reproduction": "Source inspected: report actually concerns Huh spinner/spinner.go View concatenation, not Bubbles Model.View. No Huh runtime reproduction claimed. Matea label boundary covered by Line/Dot/Ellipsis regression tests.",
-          "disposition": "assessed_related_huh_spacing_improved",
-          "evidence": "docs/spinner-audit.md"
+          "matea_reproduction": "source_inspected_matea_label_regression_huh_not_executed",
+          "disposition": "assessed_partial_huh_runtime_pending",
+          "evidence": "docs/spinner-audit.md",
+          "review": {
+            "status": "partial",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-07-04T22:07:25Z",
+            "notes": "Report concerns Huh spinner title concatenation. Pinned Huh source was inspected; Matea Spinner label composition has separator/empty-frame regressions. Huh action/accessibility/runtime reproduction and full capability mapping remain pending.",
+            "evidence_sha256": {
+              "docs/spinner-audit.md": "0beae3580b5814493e344ca57dad139fe1dfed8932b48f9f73234b202f61fc36",
+              "docs/evidence/spinner-source-edges.json": "09dca1ba0fb43e73ae790b80a4f45e37ea01fde2f271a6a33b3974e7871bd9bd",
+              "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+              "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 993,
@@ -2054,9 +2121,22 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/950",
           "updated_at": "2026-04-13T01:31:59Z",
           "labels": [],
-          "matea_reproduction": "See executed textinput-source-edges.json, component regression tests and explicit remaining native/terminal limits.",
-          "disposition": "reproduced_and_addressed_with_typed_width_semantics",
-          "analysis": "docs/input-editing-audit.md"
+          "matea_reproduction": "fixed_source_observation_and_matea_regression",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/input-editing-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-04-13T01:31:59Z",
+            "notes": "Pinned zero-width placeholder is truncated. Matea deliberately distinguishes unconstrained None from explicitly hidden Some(0); both typed behaviors have regressions.",
+            "evidence_sha256": {
+              "docs/input-editing-audit.md": "7eef165d0d2e513ec1536c9e70439da28781407de9f1c51b89c5e307b7df246d",
+              "docs/evidence/textinput-source-edges.json": "e885d6c780a080bf7eea939a1899b4c789cbd4f9d8db6b4baeb96e122db5cd87",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 949,
@@ -2091,9 +2171,22 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/906",
           "updated_at": "2026-08-15T20:42:49Z",
           "labels": [],
-          "matea_reproduction": "Pinned pure getter reproduced in textinput-source-edges.json; Matea cell/scroll/offset regression and Unix PTY native cursor paste pass. No actual emulator, shape/color/blink or Windows native console claim.",
-          "disposition": "reproduced_at_pin_position_fixed_with_terminal_limits",
-          "analysis": "docs/input-editing-audit.md"
+          "matea_reproduction": "fixed_source_observation_and_matea_regression",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/input-editing-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-08-15T20:42:49Z",
+            "notes": "The pure pinned native-cursor getter counts CJK runes rather than display cells. Matea computes cells through the viewport, with prompt/password/hidden regressions. Physical emulator width and IME behavior are separate pending capabilities.",
+            "evidence_sha256": {
+              "docs/input-editing-audit.md": "7eef165d0d2e513ec1536c9e70439da28781407de9f1c51b89c5e307b7df246d",
+              "docs/evidence/textinput-source-edges.json": "e885d6c780a080bf7eea939a1899b4c789cbd4f9d8db6b4baeb96e122db5cd87",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 897,
@@ -2161,9 +2254,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/867",
           "updated_at": "2026-03-19T21:33:25Z",
           "labels": [],
-          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
-          "disposition": "reproduced_multiple_starts_corrected",
-          "analysis": "Executed two Start commands; source schedules two ticks and reduces 5ms to 3ms. Matea start is idempotent and clocks use retained UI subscriptions."
+          "matea_reproduction": "source_observation_and_deterministic_matea_tests",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "Executed two Start commands; source schedules two ticks and reduces 5ms to 3ms. Matea start is idempotent and clocks use retained UI subscriptions.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-03-19T21:33:25Z",
+            "notes": "Two public source starts produce two callbacks. Matea start is idempotent and retains one subscription; injected-clock tests verify reconciliation, without a real-time wake guarantee.",
+            "evidence_sha256": {
+              "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+              "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+              "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+              "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 865,
@@ -2191,9 +2298,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/862",
           "updated_at": "2026-03-11T03:50:44Z",
           "labels": [],
-          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
-          "disposition": "reproduced_zero_default_corrected",
-          "analysis": "Executed pinned constructor interval=0. Matea defaults to one second and rejects zero intervals."
+          "matea_reproduction": "source_observation_and_deterministic_matea_tests",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "Executed pinned constructor interval=0. Matea defaults to one second and rejects zero intervals.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-03-11T03:50:44Z",
+            "notes": "Pinned constructor observation confirms a zero default interval. Matea uses one second and validates positive periods; no infinite source loop or CPU-spin measurement was executed.",
+            "evidence_sha256": {
+              "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+              "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+              "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+              "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 857,
@@ -2506,9 +2627,22 @@
           "labels": [
             "bug"
           ],
-          "matea_reproduction": "crates/matea-widgets/src/help.rs: shared_binding_state_unicode_safety_and_gap_styles_reach_cells",
-          "disposition": "assessed_source_literal_gap_separate_style_implemented",
-          "analysis": "Pinned help inserts an unstyled literal key-description space. Matea adds independent short_gap/full_gap styles, with background/underline cell regressions. Arbitrary per-field rich decorators remain pending; no maintainer-confirmed defect claim."
+          "matea_reproduction": "gap_style_regression_only_broader_style_pending",
+          "disposition": "assessed_partial_rich_styles_pending",
+          "analysis": "Pinned help inserts an unstyled literal key-description space. Matea adds independent short_gap/full_gap styles, with background/underline cell regressions. Arbitrary per-field rich decorators remain pending; no maintainer-confirmed defect claim.",
+          "review": {
+            "status": "partial",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2024-12-05T21:44:16Z",
+            "notes": "Separate short/full gap styles are implemented with cell-style regressions. Rich Lip Gloss decorators and the broader requested styling system remain pending; this review stays open.",
+            "evidence_sha256": {
+              "docs/key-help-audit.md": "a6ec22bc190c6a94b7cda6c43c6ca64486d4f6e7805f28775359bac961b0c08c",
+              "docs/evidence/help-source-edges.json": "2081b1b2284884c1cbbad89c617e807b64272939b9eb64726800fcc35a708a42",
+              "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 568,
@@ -2543,9 +2677,22 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/562",
           "updated_at": "2024-07-19T19:47:36Z",
           "labels": [],
-          "matea_reproduction": "See executed textinput-source-edges.json, component regression tests and explicit remaining native/terminal limits.",
-          "disposition": "assessed_pinned_v2_adaptation_not_reproduced",
-          "analysis": "docs/input-editing-audit.md"
+          "matea_reproduction": "historical_report_not_reproduced_in_pinned_v2",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/input-editing-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2024-07-19T19:47:36Z",
+            "notes": "The documented pinned-v2 adaptation of the older suggestion-navigation report does not panic. The distinct empty previous-selection defect is reproduced separately and guarded; no claim that the historical v1 crash was reproduced.",
+            "evidence_sha256": {
+              "docs/input-editing-audit.md": "7eef165d0d2e513ec1536c9e70439da28781407de9f1c51b89c5e307b7df246d",
+              "docs/evidence/textinput-source-edges.json": "e885d6c780a080bf7eea939a1899b4c789cbd4f9d8db6b4baeb96e122db5cd87",
+              "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 567,
@@ -2959,9 +3106,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/262",
           "updated_at": "2022-10-02T18:24:30Z",
           "labels": [],
-          "matea_reproduction": "Fixed source formatting observed in six enhanced-key fixtures; Rust typed comparisons allocate zero. Existing-string generic tokens separately measured with zero source allocation; do not generalize the report to all Stringers.",
-          "disposition": "assessed_with_measured_formatter_limits",
-          "analysis": "docs/key-bindings-audit.md"
+          "matea_reproduction": "matched_finite_workloads_and_matea_regressions",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/key-bindings-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2022-10-02T18:24:30Z",
+            "notes": "Typed matching and borrowed custom tokens avoid mandatory Stringer formatting. Twelve finite matching/construction/metadata cases retain exact outputs and allocations; this does not imply every Go Stringer allocates or universal performance parity.",
+            "evidence_sha256": {
+              "docs/key-bindings-audit.md": "37697d382adf8490bdcf39085f215cb6e4126781b8d7652a4fd06dd626e81e58",
+              "docs/evidence/key-source-edges.json": "e317e1529ddb46254e4a8ac49ea8bdfaa3cbd5c506ca908150c04c263b1b9db7",
+              "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+              "docs/evidence/performance/2026-10-16/report.json": "447a38f4194305b196b7d65755adbbf62600a4e1f242bfe1d3ee5238fa8971b9"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 246,
@@ -3024,9 +3185,23 @@
           "labels": [
             "bug"
           ],
-          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
-          "disposition": "assessed_nominal_step_drift_corrected",
-          "analysis": "Pinned code increments/subtracts nominal intervals. Injected delayed/coalesced clocks verify real elapsed accounting in Matea; issue author wall-clock numbers were not reproduced and wake latency remains pending."
+          "matea_reproduction": "source_observation_and_deterministic_matea_tests",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "Pinned code increments/subtracts nominal intervals. Injected delayed/coalesced clocks verify real elapsed accounting in Matea; issue author wall-clock numbers were not reproduced and wake latency remains pending.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2023-11-15T23:28:08Z",
+            "notes": "Source advances nominal periods and can lose delayed elapsed time. Matea accounts monotonic elapsed time and coalesced late handling in injected-clock tests. The report's wall-clock figures were not reproduced; physical scheduling accuracy remains unverified.",
+            "evidence_sha256": {
+              "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+              "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+              "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+              "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 231,
@@ -3092,9 +3267,21 @@
           "labels": [
             "enhancement"
           ],
-          "matea_reproduction": "Feature request for timed vim-style sequences, absent from pinned key public APIs; not a failing existing single-event capability. Applications can track message state; built-in sequence helper remains a possible extension.",
-          "disposition": "assessed_feature_request_not_reference_capability",
-          "analysis": "docs/key-bindings-audit.md"
+          "matea_reproduction": "extension_request_assessed_not_runtime_defect",
+          "disposition": "assessed_extension_absent_from_pinned_public_api",
+          "analysis": "docs/key-bindings-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2022-05-24T13:26:36Z",
+            "notes": "Timed vim/leader sequences are an extension request absent from the pinned single-event key module. No built-in longest-prefix/timeout resolver is claimed. This assessment does not mark such a resolver implemented.",
+            "evidence_sha256": {
+              "docs/key-bindings-audit.md": "37697d382adf8490bdcf39085f215cb6e4126781b8d7652a4fd06dd626e81e58",
+              "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 157,
@@ -3138,9 +3325,23 @@
           "labels": [
             "enhancement"
           ],
-          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
-          "disposition": "assessed_formatting_composition",
-          "analysis": "Expose Duration and ClockText independently of scheduling; applications can render custom formats. Month/calendar policy is not inferred from elapsed Duration; this is an extension request, not a pinned missing public declaration."
+          "matea_reproduction": "extension_request_assessed_not_runtime_defect",
+          "disposition": "assessed_extension_composition",
+          "analysis": "Expose Duration and ClockText independently of scheduling; applications can render custom formats. Month/calendar policy is not inferred from elapsed Duration; this is an extension request, not a pinned missing public declaration.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2022-04-08T21:33:50Z",
+            "notes": "Formatting is composed from exposed Duration/ClockText values independently of scheduling. This is an extension request, not a missing pinned public formatting callback. Calendar month policy and arithmetic are not claimed.",
+            "evidence_sha256": {
+              "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+              "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+              "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+              "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 125,
@@ -4753,9 +4954,22 @@
           "url": "https://github.com/charmbracelet/harmonica/issues/13",
           "updated_at": "2022-06-22T16:10:50Z",
           "labels": [],
-          "matea_reproduction": "Root source/manifest and maintainer responses reviewed; portable Matea motion example tested; original OpenGL environment not reproduced.",
-          "disposition": "assessed_example_native_dependencies",
-          "analysis": "docs/motion-pagination-audit.md"
+          "matea_reproduction": "environment_report_assessed_not_reproduced",
+          "disposition": "assessed_example_environment_not_root_library",
+          "analysis": "docs/motion-pagination-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "harmonica",
+            "reference_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+            "reviewed_updated_at": "2022-06-22T16:10:50Z",
+            "notes": "Existing review identifies OpenGL example development packages rather than a root motion dependency. Matea motion has no external dependencies and its portable TUI example is compiled in CI. The reporter's native setup was not reproduced.",
+            "evidence_sha256": {
+              "docs/motion-pagination-audit.md": "d21c2272609fbb4d40545bfb1d6146286a87a16dd59de2bef8f69c64e0e4574b",
+              "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+              "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         }
       ]
     },
@@ -6908,9 +7122,21 @@
           "url": "https://github.com/crossterm-rs/crossterm/issues/1133",
           "updated_at": "2026-10-05T23:23:14Z",
           "labels": [],
-          "matea_reproduction": "synthetic_and_unix_PTY_only; upstream/Windows native reproduction not executed",
-          "disposition": "assessed_with_limitations",
-          "analysis": "docs/input-audit.md"
+          "matea_reproduction": "source_inspection_only_no_hang_execution",
+          "disposition": "assessed_partial_bounded_negotiation_pending",
+          "analysis": "docs/input-audit.md",
+          "review": {
+            "status": "partial",
+            "reference": "crossterm",
+            "reference_sha": "9a397df6dc4f5bd3ff900bb6308b728186cb914c",
+            "reviewed_updated_at": "2026-10-05T23:23:14Z",
+            "notes": "Pinned source contains an unbounded DA1 query. Matea avoids invoking it and uses explicit mode requests; bounded active negotiation and an executed hang reproduction/fix remain pending.",
+            "evidence_sha256": {
+              "docs/input-audit.md": "c5ae27d7960aebd92a3d2b7e37496af639568574e9abe633def8dfa8cfaad49d",
+              "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c"
+            },
+            "scope": "Link prior executed/source-inspected review; no new upstream or native-environment reproduction claimed."
+          }
         },
         {
           "number": 1130,

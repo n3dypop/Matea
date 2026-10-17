@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from check_coverage import issue_needs_review
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -121,6 +122,27 @@ class CoverageTests(unittest.TestCase):
                     "signature_dependency_closure_reviewed":False,"snapshots":[snapshot]*(2 if defect=="duplicate-profile" else 1)})
                 if defect=="none":self.assertEqual(self.run_checker().returncode,0)
                 else:self.assert_rejected()
+
+    def test_issue_review_stales_on_upstream_source_or_evidence_change(self):
+        pin={"name":"fixture","sha":"a"*40,"remote":"https://github.com/owner/fixture.git"}
+        proof="docs/proof.md"
+        review={"status":"complete","notes":"bounded review", "reference":"fixture", "reference_sha":pin["sha"],
+                "reviewed_updated_at":"snapshot", "evidence_sha256":{proof:hashlib.sha256((self.root/proof).read_bytes()).hexdigest()}}
+        issue={"disposition":"assessed", "updated_at":"snapshot", "review":review}
+        self.assertFalse(issue_needs_review(self.root,issue,"owner/fixture",{"fixture":pin}))
+        for key,value in [("status","partial"),("reference_sha","b"*40),("reviewed_updated_at","old")]:
+            original=review[key];review[key]=value
+            self.assertTrue(issue_needs_review(self.root,issue,"owner/fixture",{"fixture":pin}))
+            review[key]=original
+        (self.root/proof).write_text("changed evidence",encoding="utf-8")
+        self.assertTrue(issue_needs_review(self.root,issue,"owner/fixture",{"fixture":pin}))
+        with self.assertRaises(AssertionError):issue_needs_review(self.root,issue,"other/repo",{"fixture":pin})
+
+    def test_unsubstantiated_triage_cannot_hide_an_issue(self):
+        issue={"disposition":"untriaged_report_not_confirmed_defect"}
+        self.assertTrue(issue_needs_review(self.root,issue,"owner/fixture",{}))
+        issue["disposition"]="fixed"
+        with self.assertRaises(KeyError):issue_needs_review(self.root,issue,"owner/fixture",{})
 
 
 if __name__=="__main__":

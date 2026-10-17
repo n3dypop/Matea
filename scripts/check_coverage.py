@@ -1,6 +1,7 @@
 """Validate evidence links; --gate deliberately fails while any scope is pending."""
 from evidence_checks import require
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -35,11 +36,30 @@ def boolean(value):
     return value
 
 
+def issue_needs_review(root, issue, repository, pins):
+    if issue["disposition"].startswith("untriaged"):
+        return True
+    review = issue["review"]
+    require(review["status"] in ("complete", "partial"), "invalid issue review status")
+    require(isinstance(review["notes"], str) and review["notes"].strip(), "missing issue assessment")
+    pin = pins[review["reference"]]
+    require(pin["remote"].removeprefix("https://github.com/").removesuffix(".git") == repository,
+            "issue review repository mismatch")
+    require(review["evidence_sha256"], "issue assessment needs evidence")
+    stale = False
+    for name, expected in review["evidence_sha256"].items():
+        path = evidence_path(root, name)
+        stale |= hashlib.sha256(path.read_bytes()).hexdigest() != expected
+    return (review["status"] != "complete" or stale or review["reference_sha"] != pin["sha"]
+            or review["reviewed_updated_at"] != issue["updated_at"])
+
+
 def check(root=ROOT):
     ROOT = root
     inventories = [load_json(p) for p in (ROOT / "docs/coverage").glob("*.json")]
     inventories = [r for r in inventories if "declarations" in r]
-    current_pins = {p["name"]: p["sha"] for p in load_json(ROOT / "docs/upstream-lock.json")}
+    pins = {p["name"]: p for p in load_json(ROOT / "docs/upstream-lock.json")}
+    current_pins = {name: p["sha"] for name, p in pins.items()}
     require(inventories and len({r["name"] for r in inventories}) == len(inventories), "missing/duplicate inventories")
     for inventory in inventories:
         require(current_pins[inventory["name"]] == inventory["sha"], "stale inventory pin")
@@ -88,7 +108,7 @@ def check(root=ROOT):
         require(verdict["performance_cases"] and all(c in cases and cases[c]["output_equivalent_for_this_fixture"] for c in verdict["performance_cases"]), lambda: verdict)
         require(verdict["performance_verdict"] and verdict["notes"], lambda: verdict)
     issues=load_json(ROOT/"docs/coverage/upstream-issues.json")
-    untriaged=sum(i["disposition"].startswith("untriaged") for r in issues["repositories"] for i in r["issues"])
+    untriaged=sum(issue_needs_review(ROOT, i, r["repository"], pins) for r in issues["repositories"] for i in r["issues"])
     pending_markers=sum(m.get("assessment","pending")=="pending" for r in inventories for m in r["issue_markers"])
     scope_closed=boolean(load_json(ROOT/"docs/coverage/dependency-frontier.json")["scope_closure_reviewed"])
     compiled_index = ROOT / "docs/coverage/rustdoc/index.json"
@@ -96,7 +116,6 @@ def check(root=ROOT):
     compiled_groups = {}
     compiled_scope_closed = False
     if compiled_index.exists():
-        import hashlib
         compiler = load_json(compiled_index)
         current_pins = {p["name"]: p["sha"] for p in load_json(ROOT / "docs/upstream-lock.json")}
         compiled_scope_closed = boolean(compiler["target_feature_closure_reviewed"]) & boolean(compiler["signature_dependency_closure_reviewed"])
