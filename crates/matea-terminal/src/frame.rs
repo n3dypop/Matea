@@ -193,17 +193,24 @@ impl FrameEncoder {
                 }
                 self.style(w, style)?;
                 self.position(w, x as u16, y, frame.size().width)?;
-                let symbol = if !caps.unicode && !cell.symbol().is_ascii() {
-                    "?"
-                } else {
-                    cell.symbol()
-                };
+                let fallback = !caps.unicode && !cell.symbol().is_ascii();
+                let symbol = if fallback { "?" } else { cell.symbol() };
                 w.write_all(symbol.as_bytes())?;
-                self.cursor = if cell.width() == 1 && symbol.len() == 1 && symbol.is_ascii() {
-                    Some((x as u16 + 1, y))
-                } else {
-                    None
-                };
+                if fallback {
+                    // The logical continuation cells own the same background
+                    // and attributes. Painting only '?' leaves an unstyled gap.
+                    // ASCII padding preserves the original layout width and is
+                    // bounded by the Surface's validated row geometry.
+                    for _ in 1..cell.width() {
+                        w.write_all(b" ")?;
+                    }
+                }
+                self.cursor =
+                    if fallback || (cell.width() == 1 && symbol.len() == 1 && symbol.is_ascii()) {
+                        Some((x as u16 + cell.width(), y))
+                    } else {
+                        None
+                    };
             }
         }
         if let Some(c) = hint {
@@ -242,6 +249,49 @@ mod tests {
             unicode: true,
             reduced_motion: true,
         }
+    }
+    #[test]
+    fn fallback_padding_failure_invalidates_state_before_retry() {
+        struct FailPadding {
+            saw_question: bool,
+        }
+        impl io::Write for FailPadding {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if self.saw_question && bytes == b" " {
+                    return Err(io::Error::new(io::ErrorKind::BrokenPipe, "padding failed"));
+                }
+                self.saw_question |= bytes == b"?";
+                Ok(bytes.len())
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let frame = View::styled("茶", Style::default().reverse())
+            .render(Size::new(2, 2))
+            .unwrap();
+        let caps = Capabilities {
+            unicode: false,
+            ..caps()
+        };
+        let mut encoder = FrameEncoder::default();
+        let error = encoder
+            .write(
+                &mut FailPadding {
+                    saw_question: false,
+                },
+                &frame,
+                None,
+                caps,
+            )
+            .unwrap_err();
+        assert_eq!(error.kind(), io::ErrorKind::BrokenPipe);
+        let mut recovered = Vec::new();
+        encoder
+            .write(&mut recovered, &frame, Some(&frame), caps)
+            .unwrap();
+        assert!(recovered.windows(4).any(|w| w == b"\x1b[2J"));
+        assert!(recovered.windows(2).any(|w| w == b"? "));
     }
     #[test]
     fn quantization_remains_correct_after_eviction_level_changes_and_attributes() {

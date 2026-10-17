@@ -161,6 +161,10 @@ fn main() {
         style_costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--input") {
+        input_costs(iterations);
+        return;
+    }
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
@@ -305,6 +309,180 @@ fn main() {
         );
     }
 }
+fn input_costs(iterations: usize) {
+    use crossterm::event as source;
+    use matea::terminal::translate_event;
+    let events = vec![
+        (
+            "ascii",
+            source::Event::Key(source::KeyEvent::new(
+                source::KeyCode::Char('q'),
+                source::KeyModifiers::empty(),
+            )),
+        ),
+        (
+            "null",
+            source::Event::Key(source::KeyEvent::new(
+                source::KeyCode::Char('\0'),
+                source::KeyModifiers::empty(),
+            )),
+        ),
+        (
+            "modified_repeat",
+            source::Event::Key(source::KeyEvent::new_with_kind_and_state(
+                source::KeyCode::F(12),
+                source::KeyModifiers::all(),
+                source::KeyEventKind::Repeat,
+                source::KeyEventState::all(),
+            )),
+        ),
+        (
+            "release",
+            source::Event::Key(source::KeyEvent::new_with_kind(
+                source::KeyCode::Left,
+                source::KeyModifiers::SHIFT,
+                source::KeyEventKind::Release,
+            )),
+        ),
+        (
+            "media",
+            source::Event::Key(source::KeyEvent::new(
+                source::KeyCode::Media(source::MediaKeyCode::PlayPause),
+                source::KeyModifiers::empty(),
+            )),
+        ),
+        ("resize", source::Event::Resize(80, 24)),
+        ("focus_gained", source::Event::FocusGained),
+        ("focus_lost", source::Event::FocusLost),
+        ("paste_short", source::Event::Paste("tea".into())),
+        ("paste_long", source::Event::Paste("a".repeat(4096))),
+        (
+            "paste_unicode",
+            source::Event::Paste("抹茶 e\u{301} 👩‍💻".repeat(32)),
+        ),
+    ];
+    for (name, event) in events {
+        let expected = format!("{:?}", translate_event(event.clone()));
+        measure(
+            &format!("input/translate_{name}"),
+            iterations,
+            || {
+                black_box(translate_event(black_box(event.clone())));
+                1
+            },
+            &expected,
+            "clone an existing Crossterm event, move into transport-neutral translation, drop output; paste includes source String clone; no terminal parsing or I/O",
+        );
+    }
+    for (name, kind) in [
+        (
+            "down",
+            source::MouseEventKind::Down(source::MouseButton::Left),
+        ),
+        ("up", source::MouseEventKind::Up(source::MouseButton::Right)),
+        (
+            "drag",
+            source::MouseEventKind::Drag(source::MouseButton::Middle),
+        ),
+        ("moved", source::MouseEventKind::Moved),
+        ("scroll_up", source::MouseEventKind::ScrollUp),
+        ("scroll_down", source::MouseEventKind::ScrollDown),
+        ("scroll_left", source::MouseEventKind::ScrollLeft),
+        ("scroll_right", source::MouseEventKind::ScrollRight),
+    ] {
+        let event = source::Event::Mouse(source::MouseEvent {
+            kind,
+            column: 17,
+            row: 9,
+            modifiers: source::KeyModifiers::ALT,
+        });
+        let expected = format!("{:?}", translate_event(event.clone()));
+        measure(
+            &format!("input/translate_mouse_{name}"),
+            iterations,
+            || {
+                black_box(translate_event(black_box(event.clone())));
+                1
+            },
+            &expected,
+            "clone/translate/drop one existing mouse event, preserving kind/coordinates/modifiers; no terminal parsing or I/O",
+        );
+    }
+    let chord = Key::new(KeyCode::Char('x')).with_modifiers(Modifiers::CONTROL);
+    for (name, key) in [
+        ("press", chord),
+        ("repeat", chord.with_kind(KeyKind::Repeat)),
+        ("release", chord.with_kind(KeyKind::Release)),
+        (
+            "wrong_modifier",
+            chord.with_modifiers(Modifiers::CONTROL | Modifiers::META),
+        ),
+        ("wrong_code", Key::new(KeyCode::Char('z'))),
+    ] {
+        let expected = key.matches_chord(chord);
+        measure(
+            &format!("input/chord_{name}"),
+            iterations,
+            || u64::from(black_box(key).matches_chord(black_box(chord))),
+            &expected.to_string(),
+            "typed chord comparison including down/repeat/release and exact modifiers; no string conversion or I/O",
+        );
+    }
+    for (name, key) in [
+        ("tab", Key::new(KeyCode::Tab)),
+        (
+            "shift_tab",
+            Key::new(KeyCode::Tab).with_modifiers(Modifiers::SHIFT),
+        ),
+        ("backtab", Key::new(KeyCode::BackTab)),
+        (
+            "control_tab",
+            Key::new(KeyCode::Tab).with_modifiers(Modifiers::CONTROL),
+        ),
+        (
+            "release_tab",
+            Key::new(KeyCode::Tab).with_kind(KeyKind::Release),
+        ),
+    ] {
+        let expected = format!("{:?}", key.focus_direction());
+        measure(
+            &format!("input/focus_direction_{name}"),
+            iterations,
+            || {
+                black_box(black_box(key).focus_direction());
+                1
+            },
+            &expected,
+            "derive typed focus traversal direction from one key event; no focus ring, strings or I/O",
+        );
+    }
+    for count in [0usize, 3, 64, 1024] {
+        for duplicate in [false, true] {
+            let ids: Vec<_> = (0..count)
+                .map(|i| format!("field-{}", if duplicate { 0 } else { i }))
+                .collect();
+            let expected = format!("{:?}", FocusRing::new(ids.iter().cloned()));
+            measure(
+                &format!(
+                    "input/focus_construct_{count}_{}",
+                    if duplicate { "duplicate" } else { "unique" }
+                ),
+                if count > 64 {
+                    (iterations / 100).max(50)
+                } else {
+                    iterations
+                },
+                || {
+                    black_box(FocusRing::new(black_box(&ids).iter().cloned()));
+                    1
+                },
+                &expected,
+                "clone owned input IDs, construct/deduplicate/drop ordered focus ring; includes String/Vec allocation; no runtime or terminal I/O",
+            );
+        }
+    }
+}
+
 fn fallback_trace() {
     let style = Style::default()
         .fg(Color::Rgb(95, 135, 175))
