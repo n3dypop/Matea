@@ -64,7 +64,10 @@ impl List {
     }
     /// Caller-defined matching for locale/normalization/fuzzy policies. The
     /// default filter is lowercase substring matching, not Unicode case folding.
+    /// If the predicate panics, the accepted prefix remains visible and its first
+    /// item is selected. An empty prefix has no selection.
     pub fn filter_with(&mut self, query: &str, mut matches: impl FnMut(&str, &str) -> bool) {
+        self.selected = 0;
         self.visible.clear();
         self.visible.extend(
             self.items
@@ -73,7 +76,6 @@ impl List {
                 .filter(|(_, s)| matches(s, query))
                 .map(|(i, _)| i),
         );
-        self.selected = 0;
     }
     pub fn selected(&self) -> Option<usize> {
         self.visible.get(self.selected).copied()
