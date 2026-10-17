@@ -144,6 +144,10 @@ fn main() {
         clock_cases(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--views") {
+        view_construction_costs(iterations);
+        return;
+    }
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
@@ -287,6 +291,71 @@ fn main() {
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
     }
+}
+fn view_construction_costs(iterations: usize) {
+    let theme = Theme::default();
+    let size = Size::new(72, 4);
+    let fixtures = [
+        ("short_ascii", "Matea tea"),
+        ("short_unicode", "抹茶 e\u{301}"),
+        (
+            "long_ascii",
+            "Matea owns this longer line of terminal-neutral text without retaining a caller borrow.",
+        ),
+        ("controls", "tea\t\u{1b}[31m\n抹茶"),
+    ];
+    for (name, text) in fixtures {
+        let output = View::text(text).render(size).unwrap().plain();
+        measure(
+            &format!("views/new_{name}"),
+            iterations,
+            || {
+                black_box(View::text(black_box(text)));
+                1
+            },
+            &output,
+            "construct and drop one owned text scene from borrowed UTF-8; no cell render or terminal I/O",
+        );
+        let view = View::text(text);
+        measure(
+            &format!("views/clone_{name}"),
+            iterations,
+            || {
+                black_box(black_box(&view).clone());
+                1
+            },
+            &output,
+            "clone and drop one owned text scene; no cell render or terminal I/O",
+        );
+    }
+    let value = black_box(42u64);
+    let make_counter = || View::styled(format!("Count: {}", black_box(value)), theme.accent);
+    let output = make_counter().render(size).unwrap().plain();
+    measure(
+        "views/formatted_counter",
+        iterations,
+        || {
+            black_box(make_counter());
+            1
+        },
+        &output,
+        "format one numeric counter into an owned styled text scene; no cell render or terminal I/O",
+    );
+    let output = View::text("抹茶")
+        .panel("Tea", &theme)
+        .render(size)
+        .unwrap()
+        .plain();
+    measure(
+        "views/short_panel",
+        iterations,
+        || {
+            black_box(View::text(black_box("抹茶")).panel(black_box("Tea"), &theme));
+            1
+        },
+        &output,
+        "construct and drop owned panel with short text/title and existing theme; no cell render or terminal I/O",
+    );
 }
 fn subscription_costs(iterations: usize) {
     let origin = Instant::now();
