@@ -1,0 +1,24 @@
+   Compiling matea-render v0.1.0 (${REPOSITORY}/crates/matea-render)
+   Compiling matea-core v0.1.0 (${REPOSITORY}/crates/matea-core)
+   Compiling matea-terminal v0.1.0 (${REPOSITORY}/crates/matea-terminal)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.13s
+     Running unittests src/lib.rs (target/debug/deps/matea_terminal-8ef2ba856b962199)
+
+running 1 test
+test frame::tests::fallback_padding_failure_invalidates_state_before_retry ... FAILED
+
+failures:
+
+---- frame::tests::fallback_padding_failure_invalidates_state_before_retry stdout ----
+
+thread 'frame::tests::fallback_padding_failure_invalidates_state_before_retry' (2822596) panicked at crates/matea-terminal/src/frame.rs:280:14:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    frame::tests::fallback_padding_failure_invalidates_state_before_retry
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p matea-terminal --lib`

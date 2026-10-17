@@ -17,6 +17,8 @@ See the [example guide](docs/example-apps.md), [architecture](docs/architecture.
 python3 scripts/verify_foundation.py
 ```
 
-The workspace contains six framework crates plus an independent example component package. Linux/Windows/macOS CI and MSRV 1.88 validation have passed. Foundation acceptance still requires explicit owner approval. Image/CUDA implementation is deferred until that gate. See the [roadmap](docs/roadmap.md).
+The workspace contains seven framework crates plus an independent example component package. The earlier limited implementation passed Linux/Windows/macOS CI and MSRV 1.88. Foundation development has reopened for [complete reference capability coverage and performance validation](docs/coverage-plan.md); those earlier results do not establish parity. Pure terminal graphics encoders are included by explicit owner clarification; the image processing engine, decoding and CUDA remain deferred until that gate. See the [roadmap](docs/roadmap.md), [capability ledger](docs/coverage/capabilities.json), [performance evidence](docs/performance.md) and [upstream issue analysis](docs/upstream-defects.md).
+
+The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
 This repository contains source, tests, examples, CI and engineering documentation. External source checkouts and agent instructions are not part of it. Upstream revisions and declared dependency licenses are recorded in docs; Matea's distribution license and public naming availability remain owner review items.

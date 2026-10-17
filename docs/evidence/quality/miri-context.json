@@ -1,0 +1,39 @@
+{
+  "toolchain": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "miri": "miri 0.1.0 (6f5da406b5 2026-10-10)",
+  "runs": [
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=17 cargo +nightly miri test --locked --offline -p matea-render --test invariants",
+      "exit_code": 0,
+      "tests": 2,
+      "log": "miri-render.log"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=29 cargo +nightly miri test --locked --offline -p matea-core --test subscription_atomicity --test subscription_identity",
+      "exit_code": 0,
+      "tests": 3,
+      "log": "miri-core.log"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=41 cargo +nightly miri test --locked --offline -p matea-render --test text -- --skip byte_scan_preserves_standard_control_policy_for_every_unicode_scalar",
+      "exit_code": 0,
+      "tests": 4,
+      "log": "miri-text.log"
+    }
+  ],
+  "source_sha256": {
+    "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+    "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+    "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+    "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+    "crates/matea-core/src/lib.rs": "06604ccb23a801be975707de63694010bc17d6e0a30ec3d731bccfdc3a295f94",
+    "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+    "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+    "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+    "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828"
+  },
+  "limits": [
+    "Targeted tests only; one macOS arm64 interpreter target, three selected seeds. No general soundness, FFI or all-schedule proof.",
+    "Bounded paint test runs 32 steps under Miri and 4096 natively."
+  ]
+}

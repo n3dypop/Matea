@@ -1,0 +1,891 @@
+{
+  "schema": 1,
+  "module_groups": [
+    {
+      "reference": "bubbles",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "cursor",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "filepicker",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "help",
+      "status": "pending",
+      "correctness": [
+        "crates/matea-widgets/src/help.rs",
+        "docs/evidence/help-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "help/short_unbounded",
+        "help/short_40",
+        "help/full_40",
+        "help/short_unicode_80"
+      ],
+      "notes": "Partial help implementation and four plain-string measurements; arbitrary rich per-field Lip Gloss style decorators and styled-layout performance/equivalence remain pending. Keep module status pending.",
+      "source_audit": "docs/key-help-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 27
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "internal/memoization",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "internal/runeutil",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "key",
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-widgets/src/key.rs",
+        "crates/matea-widgets/src/lib.rs",
+        "docs/evidence/key-source-edges.json"
+      ],
+      "performance_cases": [
+        "input/binding_ctrl_x",
+        "input/binding_f12",
+        "input/binding_miss",
+        "input/binding_disabled",
+        "input/binding_repeat",
+        "input/binding_release",
+        "binding/value_hit",
+        "binding/value_miss",
+        "binding/value_disabled",
+        "binding/construct",
+        "binding/value_hit_owned",
+        "binding/metadata"
+      ],
+      "notes": "Go constructor options map to values/fields, Help to raw metadata plus actionable borrowed help. Empty non-nil source slice behavior deliberately corrected. fmt.Stringer identity can be explicitly formatted before token lookup. Timed sequences are an absent-upstream feature request, not claimed; physical/associated keyboard data remain transport pending.",
+      "declarations_reviewed": 17,
+      "source_audit": "docs/key-bindings-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Twelve finite matched workloads agree. Typed events avoid formatting; borrowed tokens test shared and distinct owned storage. Short metadata construction: 3->1 allocations, p50 76.47->29.43ns on measured host. Current case p50/p95 below source in these fixtures; not universal or real-terminal parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "list",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "paginator",
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-widgets/src/pagination.rs",
+        "crates/matea-widgets/src/paginator.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "pagination/range",
+        "pagination/navigation",
+        "pagination/arabic",
+        "pagination/dots_32",
+        "pagination/dots_256",
+        "pagination/key_dispatch"
+      ],
+      "notes": "All production declarations manually reviewed. Rust contract deviations, source-edge reproduction, correctness coverage and measurement limits are explicit in the source audit. Global base-library and dependency closure remain open.",
+      "declarations_reviewed": 29,
+      "source_audit": "docs/motion-pagination-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Matched fixture outputs and measured p50/p95/allocations reviewed on one macOS arm64 host; current fixtures are comparable within their documented contracts. No universal or other-host performance claim."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "progress",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "spinner",
+      "status": "pending",
+      "correctness": [
+        "crates/matea-widgets/tests/spinner.rs",
+        "docs/evidence/spinner-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "spinner/plain_line",
+        "spinner/plain_dot",
+        "spinner/plain_mini_dot",
+        "spinner/plain_jump",
+        "spinner/plain_pulse",
+        "spinner/plain_points",
+        "spinner/plain_globe",
+        "spinner/plain_moon",
+        "spinner/plain_monkey",
+        "spinner/plain_meter",
+        "spinner/plain_hamburger",
+        "spinner/plain_ellipsis",
+        "spinner/foreign",
+        "spinner/stale"
+      ],
+      "notes": "All 29 source candidates linked; full Lip Gloss style decorators and active scheduling/custom/styled performance remain pending. Plain preset/ignored tick fixtures alone do not establish module parity.",
+      "source_audit": "docs/spinner-audit.md",
+      "declarations_reviewed": 29
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "stopwatch",
+      "status": "pending",
+      "correctness": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "clocks/format_zero",
+        "clocks/format_nanoseconds",
+        "clocks/format_microseconds",
+        "clocks/format_seconds",
+        "clocks/format_hours",
+        "clocks/format_maximum_go",
+        "clocks/reused_format_zero",
+        "clocks/reused_format_nanoseconds",
+        "clocks/reused_format_microseconds",
+        "clocks/reused_format_seconds",
+        "clocks/reused_format_hours",
+        "clocks/reused_format_maximum_go",
+        "clocks/stopwatch_paused",
+        "clocks/stopwatch_foreign"
+      ],
+      "notes": "Public functionality implemented under documented monotonic/nonnegative/typed-control contract. Active scheduling/subscription latency and remaining fresh-formatter performance gaps are pending; keep module status pending.",
+      "source_audit": "docs/clocks-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 21
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "table",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "textarea",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "textinput",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "timer",
+      "status": "pending",
+      "correctness": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "clocks/format_zero",
+        "clocks/format_nanoseconds",
+        "clocks/format_microseconds",
+        "clocks/format_seconds",
+        "clocks/format_hours",
+        "clocks/format_maximum_go",
+        "clocks/reused_format_zero",
+        "clocks/reused_format_nanoseconds",
+        "clocks/reused_format_microseconds",
+        "clocks/reused_format_seconds",
+        "clocks/reused_format_hours",
+        "clocks/reused_format_maximum_go",
+        "clocks/countdown_paused",
+        "clocks/countdown_foreign"
+      ],
+      "notes": "Public functionality implemented under documented monotonic/nonnegative/typed-control contract. Active scheduling/subscription latency and remaining fresh-formatter performance gaps are pending; keep module status pending.",
+      "source_audit": "docs/clocks-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 22
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "tree",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbles",
+      "source_group": "viewport",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "bubbletea",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-ansi",
+      "source_group": "ansi",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-ansi",
+      "source_group": "ansi/iterm2",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-ansi",
+      "source_group": "ansi/kitty",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-ansi",
+      "source_group": "ansi/parser",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-ansi",
+      "source_group": "ansi/sixel",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "charm-x-term",
+      "source_group": "term",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/cursor/sys",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/cursor",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/source/unix",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/source",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/sys/unix",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/sys/unix/waker",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/sys",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/event/sys/windows",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/style",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/style/sys",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/style/types",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/terminal/sys",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "src/terminal",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "crossterm",
+      "source_group": "tests",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "glamour",
+      "source_group": "ansi",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "glamour",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "glamour",
+      "source_group": "internal/autolink",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "glamour",
+      "source_group": "internal/generate-style-json",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "glamour",
+      "source_group": "styles",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "harmonica",
+      "source_group": ".",
+      "status": "implemented_measured",
+      "correctness": [
+        "crates/matea-motion/src/lib.rs",
+        "crates/matea-motion/tests/reference.rs"
+      ],
+      "performance_cases": [
+        "motion/frame_duration",
+        "motion/projectile_update",
+        "motion/projectile_checked_update",
+        "motion/projectile_construct",
+        "motion/spring_update_0.2",
+        "motion/spring_checked_update_0.2",
+        "motion/spring_construct_0.2",
+        "motion/spring_update_1",
+        "motion/spring_checked_update_1",
+        "motion/spring_construct_1",
+        "motion/spring_update_2",
+        "motion/spring_checked_update_2",
+        "motion/spring_construct_2"
+      ],
+      "notes": "All production declarations manually reviewed. Rust contract deviations, source-edge reproduction, correctness coverage and measurement limits are explicit in the source audit. Global base-library and dependency closure remain open.",
+      "declarations_reviewed": 20,
+      "source_audit": "docs/motion-pagination-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "performance_verdict": "Matched fixture outputs and measured p50/p95/allocations reviewed on one macOS arm64 host; current fixtures are comparable within their documented contracts. No universal or other-host performance claim."
+    },
+    {
+      "reference": "huh",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "huh",
+      "source_group": "internal/accessibility",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "huh",
+      "source_group": "internal/compat",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "huh",
+      "source_group": "internal/selector",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "huh",
+      "source_group": "spinner",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "lipgloss",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "lipgloss",
+      "source_group": "compat",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "lipgloss",
+      "source_group": "list",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "lipgloss",
+      "source_group": "table",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "lipgloss",
+      "source_group": "tree",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui/benches/main",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui/benches",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui/src/widgets",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui/tests",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/backend",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/buffer",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/layout",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/layout/rect",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/style",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/style/palette",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/symbols",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/terminal",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/text",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/src/widgets",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-core/tests",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-crossterm/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-macros/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-macros/tests",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-macros/tests/ui",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-termina/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-termion/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-termwiz/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src/barchart",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src/block",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src/canvas",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src/list",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/src/table",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ratatui",
+      "source_group": "ratatui-widgets/tests",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": ".",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": "internal/casso",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": "internal/conformance",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": "internal/lru",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": "layout",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    },
+    {
+      "reference": "ultraviolet",
+      "source_group": "screen",
+      "status": "pending",
+      "correctness": [],
+      "performance_cases": [],
+      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+    }
+  ]
+}

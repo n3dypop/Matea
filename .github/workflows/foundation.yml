@@ -3,6 +3,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      reference_api:
+        description: Compile pinned reference public API snapshots
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -23,10 +28,61 @@ jobs:
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
       - run: cargo test --locked --workspace --all-targets
+      - run: cargo test --locked --release --workspace
+      - if: runner.os == 'Linux'
+        run: cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored
       - run: cargo doc --locked --workspace --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
       - run: cargo build --locked --workspace --examples
+      - run: python scripts/check_coverage.py
+      - run: python scripts/test_rustdoc_exports.py
+      - run: python scripts/test_rustdoc_import.py
+      - run: python scripts/test_color_trace.py
+      - run: cargo build --locked -p matea-api-audit
+      # Official actions/setup-go v6 resolved on 2026-10-17. Go is required by
+      # the standalone source-auditor fixture, including on macOS runners.
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.26.0"
+          cache: false
+      - run: python scripts/test_source_auditors.py
+        env:
+          PYTHONUTF8: "1"
+      - run: python scripts/test_quality.py
+      - run: python scripts/test_evidence_checks.py
+      - run: python scripts/test_optimization_evidence.py
+      - run: python -O -m unittest discover -s scripts -p 'test_*.py'
+        env:
+          PYTHONUTF8: "1"
+      - run: python scripts/check_quality.py
+      - run: python -m compileall -q scripts
+      - run: python -c "from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)"
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json
+        shell: bash
+      - run: python scripts/check_terminal_trace.py artifacts/matea-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json
+        shell: bash
+      - run: python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json
+        shell: bash
+        env:
+          NO_COLOR: "1"
+      - run: python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json
+        shell: bash
+      - run: python scripts/check_color_trace.py artifacts/matea-fallback-trace.json
+      # CLI/serialization checks only; shared CI runner timings are not benchmark evidence.
+      - run: |
+          cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl
+          python scripts/optimization_evidence.py artifacts/style.jsonl --validate-current --expected 46
+          cargo run --locked --quiet --release -p matea-perf-probe -- --input > artifacts/input.jsonl
+          python scripts/optimization_evidence.py artifacts/input.jsonl --validate-current --expected 37
+          cargo run --locked --quiet --release -p matea-perf-probe -- --protocol > artifacts/protocol.jsonl
+          python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41
+        shell: bash
+        env:
+          MATEA_PERF_ITERATIONS: "20"
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"
@@ -41,3 +97,30 @@ jobs:
         with:
           toolchain: "1.88"
       - run: cargo test --locked --workspace
+  reference-api:
+    if: github.event_name == 'workflow_dispatch' && inputs.reference_api
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        reference: [crossterm, ratatui]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: nightly-2026-10-11
+      - run: python scripts/test_rustdoc_exports.py
+      - run: python scripts/fetch_rust_references.py --reference ${{ matrix.reference }} --destination "${{ runner.temp }}/matea-api-inputs"
+      - run: python scripts/collect_rustdoc_batch.py --reference ${{ matrix.reference }} --references "${{ runner.temp }}/matea-api-inputs" --destination "${{ runner.temp }}/matea-rustdoc" --toolchain nightly-2026-10-11
+      # Official actions/upload-artifact v4 tag resolved via GitHub on 2026-10-16.
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reference-api-${{ matrix.os }}-${{ matrix.reference }}
+          path: ${{ runner.temp }}/matea-rustdoc/reports
+          if-no-files-found: warn
+          retention-days: 14

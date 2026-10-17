@@ -1,0 +1,1701 @@
+{
+  "schema": 1,
+  "high_threshold": 75,
+  "scope": "Every tracked program file, including tests/examples/tools; no averaging or claim of whole-reference completion.",
+  "units": [
+    {
+      "id": "matea-core/input",
+      "files": [
+        "crates/matea-core/src/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/lib",
+      "files": [
+        "crates/matea-core/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-motion/lib",
+      "files": [
+        "crates/matea-motion/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/lib",
+      "files": [
+        "crates/matea-render/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/text",
+      "files": [
+        "crates/matea-render/src/text.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/lib",
+      "files": [
+        "crates/matea-style/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/ansi",
+      "files": [
+        "crates/matea-terminal/src/ansi.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/frame",
+      "files": [
+        "crates/matea-terminal/src/frame.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/input",
+      "files": [
+        "crates/matea-terminal/src/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/lib",
+      "files": [
+        "crates/matea-terminal/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/modes",
+      "files": [
+        "crates/matea-terminal/src/modes.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/protocol",
+      "files": [
+        "crates/matea-terminal/src/protocol.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/signals_unix",
+      "files": [
+        "crates/matea-terminal/src/signals_unix.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Only production unsafe boundary: initialized sigaction/masks, successful-call-only assume_init, static allocation-free AtomicBool handler, exclusive sessions and exact restore. POSIX FFI is outside Miri; native PTY restoration is separate evidence."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-terminal/src/signals_unix.rs",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/clocks",
+      "files": [
+        "crates/matea-widgets/src/clocks.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/help",
+      "files": [
+        "crates/matea-widgets/src/help.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/key",
+      "files": [
+        "crates/matea-widgets/src/key.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/lib",
+      "files": [
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/evidence/viewport-before.log",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
+        "Viewport parsing/resident-memory cost and matched Bubbles rendering/scheduling remain unmeasured; basic List/Table/Form breadth is incomplete."
+      ]
+    },
+    {
+      "id": "matea-widgets/pagination",
+      "files": [
+        "crates/matea-widgets/src/pagination.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/paginator",
+      "files": [
+        "crates/matea-widgets/src/paginator.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/spinner",
+      "files": [
+        "crates/matea-widgets/src/spinner.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/textinput",
+      "files": [
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea/lib",
+      "files": [
+        "crates/matea/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/integration-tests",
+      "files": [
+        "crates/matea-core/tests/subscription_atomicity.rs",
+        "crates/matea-core/tests/subscription_identity.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/integration-tests",
+      "files": [
+        "crates/matea-render/tests/invariants.rs",
+        "crates/matea-render/tests/text.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-motion/integration-tests",
+      "files": [
+        "crates/matea-motion/tests/reference.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/integration-tests",
+      "files": [
+        "crates/matea-style/tests/layout.rs",
+        "crates/matea-style/tests/colors.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/integration-tests",
+      "files": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "crates/matea-widgets/tests/spinner.rs",
+        "crates/matea-widgets/tests/viewport.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/integration-tests",
+      "files": [
+        "crates/matea-terminal/tests/graphics_encoding.rs",
+        "crates/matea-terminal/tests/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "examples",
+      "files": [
+        "crates/matea/examples/clocks.rs",
+        "crates/matea/examples/counter.rs",
+        "crates/matea/examples/dashboard.rs",
+        "crates/matea/examples/effects.rs",
+        "crates/matea/examples/form.rs",
+        "crates/matea/examples/help.rs",
+        "crates/matea/examples/input.rs",
+        "crates/matea/examples/lifecycle.rs",
+        "crates/matea/examples/list.rs",
+        "crates/matea/examples/motion.rs",
+        "crates/matea/examples/pagination.rs",
+        "crates/matea/examples/render_probe.rs",
+        "crates/matea/examples/spinners.rs",
+        "crates/matea/examples/support/mod.rs",
+        "examples/external-widget/src/main.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/example-smoke.log",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Snapshot/PTY examples run; application latency and physical terminal behavior remain unmeasured."
+      ]
+    },
+    {
+      "id": "tools/api-audit",
+      "files": [
+        "tools/api-audit/src/main.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "scripts/test_source_auditors.py",
+        "docs/evidence/quality/auditors-before.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/auditor/before.jsonl",
+        "docs/evidence/optimization/auditor/after.jsonl",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Nested cfg loss fixed; compiler-resolved exports remain a separate audit; more parser/error/scale fixtures needed.",
+        "Regenerated inventories correct 80 Crossterm and 42 Ratatui cfg records without changing declaration IDs/counts."
+      ]
+    },
+    {
+      "id": "tools/perf-probe",
+      "files": [
+        "tools/perf-probe/src/main.rs",
+        "tools/perf-probe/src/protocol.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Measurement-only GlobalAlloc forwards pointers/layouts to System without allocation in counters. Not linked into production libraries; Miri does not prove all allocator executions."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/performance.md",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified."
+      ]
+    },
+    {
+      "id": "tools/go-auditor",
+      "files": [
+        "tools/audit-go/main.go"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "scripts/test_source_auditors.py",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Standalone Go parser fixture validates exports/build tags; malformed input and scale distributions remain pending."
+      ]
+    },
+    {
+      "id": "tools/go-performance-probe",
+      "files": [
+        "tools/perf-upstream/main.go"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/performance.md"
+      ],
+      "remaining": [
+        "Pinned external references and fixture outputs validated; Go allocation accounting differs from requested System bytes."
+      ]
+    },
+    {
+      "id": "scripts/compiler-export-audit",
+      "files": [
+        "scripts/collect_rustdoc.py",
+        "scripts/collect_rustdoc_batch.py",
+        "scripts/fetch_rust_references.py",
+        "scripts/import_rustdoc.py",
+        "scripts/rustdoc_exports.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/coverage-and-issues",
+      "files": [
+        "scripts/audit_references.py",
+        "scripts/check_coverage.py",
+        "scripts/fetch_upstream_issues.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/independent-terminal-oracles",
+      "files": [
+        "scripts/check_color_trace.py",
+        "scripts/check_terminal_trace.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/performance-reporters",
+      "files": [
+        "scripts/prepare_upstream_bench.py",
+        "scripts/report_clock_format_performance.py",
+        "scripts/report_performance.py",
+        "scripts/report_subscription_performance.py",
+        "scripts/report_view_performance.py",
+        "scripts/report_viewport_performance.py",
+        "scripts/optimization_evidence.py",
+        "scripts/measure_auditor_performance.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/test-and-acceptance-drivers",
+      "files": [
+        "scripts/check_quality.py",
+        "scripts/example_smoke.py",
+        "scripts/measure_rust_coverage.py",
+        "scripts/pty_smoke.py",
+        "scripts/verify_foundation.py",
+        "scripts/evidence_checks.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/regression-tests",
+      "files": [
+        "scripts/test_color_trace.py",
+        "scripts/test_quality.py",
+        "scripts/test_rustdoc_exports.py",
+        "scripts/test_rustdoc_import.py",
+        "scripts/test_source_auditors.py",
+        "scripts/test_evidence_checks.py",
+        "scripts/test_optimization_evidence.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "ci/workflow",
+      "files": [
+        ".github/workflows/foundation.yml"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        ".github/workflows/foundation.yml",
+        "docs/evidence/text-ci-run.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Run current changed source on all 3 OSes/MSRV; nightly Miri and physical emulator matrix are separate."
+      ]
+    }
+  ]
+}

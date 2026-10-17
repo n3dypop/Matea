@@ -1,0 +1,197 @@
+diff --git a/crates/matea-core/src/lib.rs b/crates/matea-core/src/lib.rs
+index 971c39a..3ebe519 100644
+--- a/crates/matea-core/src/lib.rs
++++ b/crates/matea-core/src/lib.rs
+@@ -3,6 +3,7 @@
+ use matea_render::{GeometryError, Size, Surface, View};
+ use matea_style::Theme;
+ use std::{
++    any::{TypeId, type_name},
+     collections::{BTreeMap, HashMap},
+     sync::{
+         Arc, Condvar, Mutex,
+@@ -122,9 +123,58 @@ impl<M> Effect<M> {
+     }
+ }
+ 
++/// In-process subscription identity. Named and type-scoped keys never collide.
++/// A scoped key is not a stable serialization or cross-build ordering format.
++#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
++pub struct SubscriptionId(SubscriptionIdentity);
++#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
++enum SubscriptionIdentity {
++    Named(String),
++    Scoped {
++        namespace: &'static str,
++        type_id: TypeId,
++        instance: u64,
++        revision: u64,
++        variant: u128,
++    },
++}
++impl SubscriptionId {
++    pub fn named(name: impl Into<String>) -> Self {
++        Self(SubscriptionIdentity::Named(name.into()))
++    }
++    /// Use a private tag type for an independently owned component namespace.
++    /// The full tuple is retained and compared, without formatting or hashing it
++    /// down to a lossy short ID. Changing behavior requires changing the tuple.
++    pub fn scoped<Tag: 'static>(instance: u64, revision: u64, variant: u128) -> Self {
++        Self(SubscriptionIdentity::Scoped {
++            namespace: type_name::<Tag>(),
++            type_id: TypeId::of::<Tag>(),
++            instance,
++            revision,
++            variant,
++        })
++    }
++}
++impl std::fmt::Display for SubscriptionId {
++    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++        match &self.0 {
++            SubscriptionIdentity::Named(name) => f.write_str(name),
++            SubscriptionIdentity::Scoped {
++                namespace,
++                type_id,
++                instance,
++                revision,
++                variant,
++            } => write!(
++                f,
++                "{namespace}[{type_id:?}]:{instance}:{revision}:{variant}"
++            ),
++        }
++    }
++}
+ /// Stable ID identifies behavior. To restart/change a subscription, change its ID.
+ pub struct Subscription<M> {
+-    id: String,
++    id: SubscriptionId,
+     interval: Duration,
+     message: Box<dyn Fn() -> M>,
+ }
+@@ -133,9 +183,16 @@ impl<M> Subscription<M> {
+         id: impl Into<String>,
+         interval: Duration,
+         message: impl Fn() -> M + 'static,
++    ) -> Self {
++        Self::every_with_id(SubscriptionId::named(id), interval, message)
++    }
++    pub fn every_with_id(
++        id: SubscriptionId,
++        interval: Duration,
++        message: impl Fn() -> M + 'static,
+     ) -> Self {
+         Self {
+-            id: id.into(),
++            id,
+             interval,
+             message: Box::new(message),
+         }
+@@ -182,7 +239,7 @@ pub struct Runtime<A: Model> {
+     workers: Vec<Worker>,
+     current: HashMap<String, u64>,
+     generation: u64,
+-    timers: BTreeMap<String, Timer<A::Message>>,
++    timers: BTreeMap<SubscriptionId, Timer<A::Message>>,
+     now: Duration,
+     worker_panic: Arc<AtomicBool>,
+ }
+@@ -246,29 +303,38 @@ impl<A: Model> Runtime<A> {
+         self.reconcile()
+     }
+     fn reconcile(&mut self) -> Result<(), RuntimeError> {
+-        let subscriptions = self.model.subscriptions();
++        let mut subscriptions = self.model.subscriptions();
+         if subscriptions.len() > 64 {
+             return Err(RuntimeError("subscription limit is 64".into()));
+         }
+-        let mut next = BTreeMap::new();
+-        for s in subscriptions {
++        subscriptions.sort_unstable_by(|a, b| a.id.cmp(&b.id));
++        for s in &subscriptions {
+             if s.interval.is_zero() {
+                 return Err(RuntimeError(format!(
+                     "subscription {} requires a nonzero interval",
+                     s.id
+                 )));
+             }
+-            if next.contains_key(&s.id) {
+-                return Err(RuntimeError(format!("duplicate subscription ID: {}", s.id)));
++        }
++        for pair in subscriptions.windows(2) {
++            if pair[0].id == pair[1].id {
++                return Err(RuntimeError(format!(
++                    "duplicate subscription ID: {}",
++                    pair[0].id
++                )));
+             }
+-            let id = s.id.clone();
+-            let t = self.timers.remove(&id).unwrap_or_else(|| Timer {
+-                next: self.now.checked_add(s.interval),
++        }
++        // Validate everything before mutating the table. Retain unchanged nodes,
++        // deadlines and callbacks; a rejected configuration cannot postpone them.
++        self.timers
++            .retain(|id, _| subscriptions.binary_search_by(|s| s.id.cmp(id)).is_ok());
++        let now = self.now;
++        for s in subscriptions {
++            self.timers.entry(s.id.clone()).or_insert_with(|| Timer {
++                next: now.checked_add(s.interval),
+                 subscription: s,
+             });
+-            next.insert(id, t);
+         }
+-        self.timers = next;
+         Ok(())
+     }
+     /// Advance logical time. Delayed timers coalesce to one message per call.
+diff --git a/crates/matea-widgets/src/clocks.rs b/crates/matea-widgets/src/clocks.rs
+index bf0769a..a12504b 100644
+--- a/crates/matea-widgets/src/clocks.rs
++++ b/crates/matea-widgets/src/clocks.rs
+@@ -1,5 +1,5 @@
+ //! Monotonic UI clocks with cheap, generation-safe scheduling descriptors.
+-use matea_core::Subscription;
++use matea_core::{Subscription, SubscriptionId};
+ use matea_render::View;
+ use matea_style::Theme;
+ use std::{
+@@ -99,6 +99,7 @@ pub struct ClockSchedule {
+     generation: u64,
+     interval: TickInterval,
+ }
++struct ClockSubscription;
+ impl ClockSchedule {
+     pub fn id(self) -> ClockId {
+         self.id
+@@ -128,13 +129,12 @@ impl ClockSchedule {
+         now: impl Fn() -> Instant + 'static,
+         message: impl Fn(ClockTick) -> M + 'static,
+     ) -> Subscription<M> {
+-        let id = format!(
+-            "matea.clock.{}.{}.{}",
++        let id = SubscriptionId::scoped::<ClockSubscription>(
+             self.id.0,
+             self.generation,
+-            self.interval.0.as_nanos()
++            self.interval.0.as_nanos(),
+         );
+-        Subscription::every(id, self.interval.0, move || message(self.tick_at(now())))
++        Subscription::every_with_id(id, self.interval.0, move || message(self.tick_at(now())))
+     }
+ }
+ 
+diff --git a/crates/matea/src/lib.rs b/crates/matea/src/lib.rs
+index 7fb4a79..d698ebd 100644
+--- a/crates/matea/src/lib.rs
++++ b/crates/matea/src/lib.rs
+@@ -30,7 +30,7 @@ pub mod prelude {
+     pub use matea_core::{
+         Cancellation, Component, Effect, Event, FocusRing, Input, Key, KeyCode, KeyKind, KeyState,
+         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
+-        ScrollDirection, Subscription, Task, ViewContext,
++        ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
+     };
+     pub use matea_render::{Cursor, Rect, Size, Surface, View};
+     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};

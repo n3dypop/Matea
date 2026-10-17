@@ -1,20 +1,23 @@
 #![deny(unsafe_code)]
 //! Exclusive terminal lifecycle and a replaceable I/O backend.
+mod ansi;
+mod frame;
+mod input;
+pub use input::translate_event;
+mod modes;
+pub use modes::{InputOptions, KeyboardFlags, KeyboardMode};
+use modes::{ModeLeases, apply_mode};
+pub mod protocol;
+pub use frame::FrameEncoder;
 // sigaction has no safe standard-library wrapper; this is the only unsafe module.
 #[cfg(unix)]
 #[allow(unsafe_code)]
 mod signals_unix;
 use crossterm::{
-    cursor::{Hide, MoveTo, Show},
-    event::{
-        self, DisableBracketedPaste, DisableFocusChange, EnableBracketedPaste, EnableFocusChange,
-        KeyEventKind, KeyModifiers,
-    },
-    execute, queue,
-    style::{Attribute, Print, ResetColor, SetAttribute, SetBackgroundColor, SetForegroundColor},
-    terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
+    event, execute,
+    terminal::{self, Clear, ClearType},
 };
-use matea_core::{Event, Input, Key, KeyCode, Model, Runtime};
+use matea_core::{Event, Input, KeyCode, Model, Modifiers, Runtime};
 use matea_render::{Size, Surface};
 use matea_style::{Border, Color, ColorLevel, Style, Theme};
 use std::{
@@ -58,12 +61,16 @@ impl Capabilities {
 pub struct RunOptions {
     pub theme: Theme,
     pub capabilities: Capabilities,
+    pub input: InputOptions,
+    pub ctrl_c: CtrlCBehavior,
 }
 impl Default for RunOptions {
     fn default() -> Self {
         Self {
             theme: Theme::default(),
             capabilities: Capabilities::detect(),
+            input: InputOptions::default(),
+            ctrl_c: CtrlCBehavior::Quit,
         }
     }
 }
@@ -72,6 +79,19 @@ pub enum TerminalEvent {
     Input(Input),
     Resize(Size),
     Interrupt,
+}
+/// Policy for Ctrl-C key-down. OS signals still trigger restoration and exit;
+/// releases are forwarded. Shift is allowed, other command modifiers are not.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum CtrlCBehavior {
+    #[default]
+    Quit,
+    Deliver,
+}
+fn ctrl_c(key: matea_core::Key) -> bool {
+    key.is_down()
+        && key.modifiers.difference(Modifiers::SHIFT) == Modifiers::CONTROL
+        && matches!(key.code, KeyCode::Char('c' | 'C'))
 }
 
 /// Only the transport owns terminal side effects. One poller per backend/session.
@@ -124,14 +144,23 @@ pub fn run_with_options<A: Model>(model: A, mut options: RunOptions) -> Result<(
     if !options.capabilities.unicode {
         options.theme.border_kind = Border::Ascii;
     }
-    let native = Native::new(options.capabilities)?;
-    run_with_backend(model, options.theme, native)
+    let native = Native::new(options.capabilities, options.input)?;
+    run_with_backend_and_ctrl_c(model, options.theme, native, options.ctrl_c)
 }
 /// Drive the same loop with a mock backend in integration tests or an alternate transport.
 pub fn run_with_backend<A: Model, B: Backend>(
     model: A,
     theme: Theme,
     backend: B,
+) -> Result<(), Error> {
+    run_with_backend_and_ctrl_c(model, theme, backend, CtrlCBehavior::Quit)
+}
+/// Configure key policy for another backend; mode acquisition stays with it.
+pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
+    model: A,
+    theme: Theme,
+    backend: B,
+    behavior: CtrlCBehavior,
 ) -> Result<(), Error> {
     let mut session = Session::enter(backend)?;
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<(), Error> {
@@ -140,6 +169,12 @@ pub fn run_with_backend<A: Model, B: Backend>(
         let mut last = Instant::now();
         let mut dirty = true;
         while !runtime.is_quitting() {
+            if runtime.take_worker_panic_notice() {
+                // A caught worker panic runs the normal stderr hook first. Even
+                // canceled results can therefore invalidate cells/cursor/style.
+                previous = None;
+                dirty = true;
+            }
             if dirty {
                 let frame = runtime.frame()?;
                 session.backend.draw(&frame, previous.as_ref())?;
@@ -149,7 +184,7 @@ pub fn run_with_backend<A: Model, B: Backend>(
                 match event {
                     TerminalEvent::Interrupt => break,
                     TerminalEvent::Input(Input::Key(k))
-                        if k.ctrl && matches!(k.code, KeyCode::Char('c' | 'C')) =>
+                        if behavior == CtrlCBehavior::Quit && ctrl_c(k) =>
                     {
                         break;
                     }
@@ -188,14 +223,18 @@ pub fn run_with_backend<A: Model, B: Backend>(
 static EXCLUSIVE: AtomicBool = AtomicBool::new(false);
 struct Native {
     out: io::Stdout,
+    encoded: Vec<u8>,
+    encoder: FrameEncoder,
     caps: Capabilities,
-    entered: bool,
+    input: InputOptions,
+    modes: ModeLeases,
     raw: bool,
     #[cfg(unix)]
     signals: Option<signals_unix::SignalGuard>,
 }
 impl Native {
-    fn new(caps: Capabilities) -> io::Result<Self> {
+    fn new(caps: Capabilities, input: InputOptions) -> io::Result<Self> {
+        input.validate()?;
         if !io::stdin().is_terminal() || !io::stdout().is_terminal() {
             return Err(io::Error::other(
                 "interactive Matea requires TTY stdin/stdout; use an example's --snapshot option for plain output",
@@ -211,8 +250,11 @@ impl Native {
         }
         Ok(Self {
             out: io::stdout(),
+            encoded: Vec::new(),
+            encoder: FrameEncoder::default(),
             caps,
-            entered: false,
+            input,
+            modes: ModeLeases::default(),
             raw: false,
             #[cfg(unix)]
             signals: None,
@@ -232,38 +274,36 @@ impl Backend for Native {
         }
         terminal::enable_raw_mode()?;
         self.raw = true;
-        self.entered = true;
         // Install the resize listener before the first frame is observable.
         // Otherwise a SIGWINCH between first paint and first poll can be lost.
         let _ = event::poll(Duration::ZERO)?;
-        execute!(
-            self.out,
-            EnterAlternateScreen,
-            Hide,
-            EnableBracketedPaste,
-            EnableFocusChange,
-            Clear(ClearType::All)
-        )
+        self.modes.enter(self.input, |mode, enable, flags| {
+            apply_mode(&mut self.out, mode, enable, flags)
+        })?;
+        // Native mode commands have now selected Crossterm's real transport.
+        // The frame writer emits ANSI bytes only; never paint them through a
+        // known legacy-console fallback. Session rolls acquired modes back.
+        #[cfg(windows)]
+        if !crossterm::ansi_support::supports_ansi() {
+            return Err(io::Error::new(
+                io::ErrorKind::Unsupported,
+                "Matea native frame output requires ANSI; legacy WinAPI frame rendering is not implemented",
+            ));
+        }
+        execute!(self.out, Clear(ClearType::All))
     }
     fn restore(&mut self) -> io::Result<()> {
         let mut error = None;
-        if self.entered {
+        if self.modes.active() {
             // Attempt every operation even if an earlier write fails.
             for result in [
-                execute!(self.out, ResetColor),
-                execute!(self.out, SetAttribute(Attribute::Reset)),
-                execute!(self.out, DisableBracketedPaste),
-                execute!(self.out, DisableFocusChange),
-                execute!(self.out, Show),
-                execute!(self.out, LeaveAlternateScreen),
+                self.modes
+                    .restore(|mode, enable, flags| apply_mode(&mut self.out, mode, enable, flags)),
                 self.out.flush(),
             ] {
                 if let Err(e) = result {
                     error.get_or_insert(e);
                 }
-            }
-            if error.is_none() {
-                self.entered = false;
             }
         }
         if self.raw {
@@ -297,10 +337,18 @@ impl Backend for Native {
         if !event::poll(timeout)? {
             return Ok(None);
         }
-        Ok(translate(event::read()?))
+        Ok(Some(translate_event(event::read()?)))
     }
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()> {
-        write_frame(&mut self.out, frame, previous, self.caps)
+        self.encoded.clear();
+        self.encoder
+            .write(&mut self.encoded, frame, previous, self.caps)?;
+        if self.encoded.is_empty() {
+            return Ok(());
+        }
+        let mut out = self.out.lock();
+        out.write_all(&self.encoded)?;
+        out.flush()
     }
 }
 impl Drop for Native {
@@ -310,152 +358,144 @@ impl Drop for Native {
     }
 }
 
-fn translate(event: event::Event) -> Option<TerminalEvent> {
-    use event::{Event as E, KeyCode as C};
-    Some(match event {
-        E::Resize(w, h) => TerminalEvent::Resize(Size::new(w, h)),
-        E::Paste(s) => TerminalEvent::Input(Input::Paste(s)),
-        E::FocusGained => TerminalEvent::Input(Input::Focus(true)),
-        E::FocusLost => TerminalEvent::Input(Input::Focus(false)),
-        E::Key(k) if k.kind != KeyEventKind::Release => {
-            let code = match k.code {
-                C::Char(c) => KeyCode::Char(c),
-                C::Enter => KeyCode::Enter,
-                C::Esc => KeyCode::Esc,
-                C::Backspace => KeyCode::Backspace,
-                C::Delete => KeyCode::Delete,
-                C::Left => KeyCode::Left,
-                C::Right => KeyCode::Right,
-                C::Up => KeyCode::Up,
-                C::Down => KeyCode::Down,
-                C::Home => KeyCode::Home,
-                C::End => KeyCode::End,
-                C::Tab => KeyCode::Tab,
-                C::BackTab => KeyCode::BackTab,
-                C::PageUp => KeyCode::PageUp,
-                C::PageDown => KeyCode::PageDown,
-                _ => return None,
-            };
-            TerminalEvent::Input(Input::Key(Key {
-                code,
-                ctrl: k.modifiers.contains(KeyModifiers::CONTROL),
-                alt: k.modifiers.contains(KeyModifiers::ALT),
-                shift: k.modifiers.contains(KeyModifiers::SHIFT),
-            }))
-        }
-        _ => return None,
-    })
-}
-fn color(c: Color) -> crossterm::style::Color {
-    use crossterm::style::Color as C;
-    match c {
-        Color::Default => C::Reset,
-        Color::Rgb(r, g, b) => C::Rgb { r, g, b },
-        Color::Indexed(n) => match n {
-            0 => C::Black,
-            1 => C::DarkRed,
-            2 => C::DarkGreen,
-            3 => C::DarkYellow,
-            4 => C::DarkBlue,
-            5 => C::DarkMagenta,
-            6 => C::DarkCyan,
-            7 => C::Grey,
-            8 => C::DarkGrey,
-            9 => C::Red,
-            10 => C::Green,
-            11 => C::Yellow,
-            12 => C::Blue,
-            13 => C::Magenta,
-            14 => C::Cyan,
-            15 => C::White,
-            _ => C::AnsiValue(n),
-        },
-    }
-}
 fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
-    queue!(
-        w,
-        SetAttribute(Attribute::Reset),
-        SetForegroundColor(color(s.fg)),
-        SetBackgroundColor(color(s.bg))
-    )?;
+    w.write_all(b"\x1b[0m")?;
+    if s.fg != Color::Default {
+        ansi::color(w, s.fg, false)?;
+    }
+    if s.bg != Color::Default {
+        ansi::color(w, s.bg, true)?;
+    }
     if s.bold {
-        queue!(w, SetAttribute(Attribute::Bold))?;
+        w.write_all(b"\x1b[1m")?;
     }
     if s.underline {
-        queue!(w, SetAttribute(Attribute::Underlined))?;
+        w.write_all(b"\x1b[4m")?;
     }
     if s.reverse {
-        queue!(w, SetAttribute(Attribute::Reverse))?;
+        w.write_all(b"\x1b[7m")?;
     }
     Ok(())
 }
-/// Emit only changed rows, clear before painting, and explicitly position each grapheme.
+/// Encode damage to a writer. ASCII rows use cell damage; uncertain-width rows
+/// clear and repaint atomically. No terminal ownership is acquired here.
 pub fn write_frame(
     w: &mut impl Write,
     frame: &Surface,
     previous: Option<&Surface>,
     caps: Capabilities,
 ) -> io::Result<()> {
-    let rows = frame.diff(previous);
-    if rows.is_empty() {
-        return Ok(());
-    }
-    if previous.is_some_and(|p| p.size() != frame.size()) {
-        queue!(
-            w,
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::All)
-        )?;
-    }
-    for y in rows {
-        queue!(
-            w,
-            MoveTo(0, y),
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::CurrentLine)
-        )?;
-        let mut current = None;
-        for (x, cell) in frame
-            .row(y)
-            .iter()
-            .enumerate()
-            .filter(|(_, c)| !c.is_continuation())
-        {
-            let style = cell.style().adapt(caps.color);
-            if cell.symbol() == " " && style == Style::default() {
-                continue;
-            }
-            if current != Some(style) {
-                set_style(w, style)?;
-                current = Some(style);
-            }
-            let symbol = if !caps.unicode && !cell.symbol().is_ascii() {
-                "?"
-            } else {
-                cell.symbol()
-            };
-            queue!(w, MoveTo(x as u16, y), Print(symbol))?;
-        }
-    }
-    queue!(
-        w,
-        ResetColor,
-        SetAttribute(Attribute::Reset),
-        MoveTo(0, 0),
-        Hide
-    )?;
-    w.flush()
+    FrameEncoder::default().write(w, frame, previous, caps)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn fixed_attribute_sequences_match_crossterm_for_every_supported_combination() {
+        use crossterm::style::{Attribute, SetAttribute};
+        for mask in 0..8 {
+            let style = Style {
+                bold: mask & 1 != 0,
+                underline: mask & 2 != 0,
+                reverse: mask & 4 != 0,
+                ..Style::default()
+            };
+            let mut actual = Vec::new();
+            set_style(&mut actual, style).unwrap();
+            let mut reference = Vec::new();
+            ansi::command(&mut reference, SetAttribute(Attribute::Reset)).unwrap();
+            for (enabled, attribute) in [
+                (style.bold, Attribute::Bold),
+                (style.underline, Attribute::Underlined),
+                (style.reverse, Attribute::Reverse),
+            ] {
+                if enabled {
+                    ansi::command(&mut reference, SetAttribute(attribute)).unwrap();
+                }
+            }
+            assert_eq!(actual, reference);
+        }
+    }
     use matea_core::{Effect, ViewContext};
     use matea_render::View;
     use std::sync::{Arc, Mutex};
+    #[test]
+    fn ctrl_c_policy_delivers_releases_and_other_modifier_chords() {
+        use matea_core::{Key, KeyKind};
+        use std::collections::VecDeque;
+        struct Keys(Arc<Mutex<Vec<Key>>>);
+        impl Model for Keys {
+            type Message = ();
+            fn update(&mut self, event: Event<()>) -> Effect<()> {
+                if let Event::Input(Input::Key(key)) = event {
+                    self.0.lock().unwrap().push(key);
+                    if key.is_char('q') {
+                        return Effect::quit();
+                    }
+                }
+                Effect::none()
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("keys")
+            }
+        }
+        struct Events {
+            events: VecDeque<TerminalEvent>,
+            restored: Arc<Mutex<bool>>,
+        }
+        impl Backend for Events {
+            fn enter(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn restore(&mut self) -> io::Result<()> {
+                *self.restored.lock().unwrap() = true;
+                Ok(())
+            }
+            fn size(&self) -> io::Result<Size> {
+                Ok(Size::new(8, 1))
+            }
+            fn poll(&mut self, _: Duration) -> io::Result<Option<TerminalEvent>> {
+                Ok(self.events.pop_front().or(Some(TerminalEvent::Interrupt)))
+            }
+            fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let c = Key::new(KeyCode::Char('c')).with_modifiers(Modifiers::CONTROL);
+        for (behavior, expected) in [(CtrlCBehavior::Quit, 2), (CtrlCBehavior::Deliver, 4)] {
+            let keys = Arc::new(Mutex::new(Vec::new()));
+            let restored = Arc::new(Mutex::new(false));
+            let events = [
+                c.with_kind(KeyKind::Release),
+                c.with_modifiers(Modifiers::CONTROL | Modifiers::ALT),
+                c,
+                Key::new(KeyCode::Char('q')),
+            ]
+            .into_iter()
+            .map(|k| TerminalEvent::Input(Input::Key(k)))
+            .collect();
+            run_with_backend_and_ctrl_c(
+                Keys(keys.clone()),
+                Theme::plain(),
+                Events {
+                    events,
+                    restored: restored.clone(),
+                },
+                behavior,
+            )
+            .unwrap();
+            assert_eq!(keys.lock().unwrap().len(), expected);
+            assert!(*restored.lock().unwrap());
+        }
+        assert!(ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SHIFT)
+        ));
+        assert!(!ctrl_c(c.with_kind(KeyKind::Release)));
+        assert!(!ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SUPER)
+        ));
+    }
     struct App {
         panic: bool,
     }
@@ -535,10 +575,12 @@ mod tests {
         assert!(!caps.unicode);
         let event = event::KeyEvent::new_with_kind(
             event::KeyCode::Char('a'),
-            KeyModifiers::NONE,
-            KeyEventKind::Release,
+            event::KeyModifiers::NONE,
+            event::KeyEventKind::Release,
         );
-        assert!(translate(event::Event::Key(event)).is_none());
+        assert!(
+            matches!(translate_event(event::Event::Key(event)),TerminalEvent::Input(Input::Key(key)) if key.kind==matea_core::KeyKind::Release)
+        );
     }
     #[test]
     fn diff_transport_clears_wide_rows_and_is_idle_when_equal() {
@@ -558,5 +600,46 @@ mod tests {
         out.clear();
         write_frame(&mut out, &b, Some(&b), caps).unwrap();
         assert!(out.is_empty());
+    }
+    #[test]
+    fn sparse_ascii_damage_preserves_unchanged_cells_and_styles() {
+        let a = View::text("aaaa").render(Size::new(4, 1)).unwrap();
+        let b = View::text("abaa").render(Size::new(4, 1)).unwrap();
+        let caps = Capabilities {
+            color: ColorLevel::None,
+            unicode: true,
+            reduced_motion: true,
+        };
+        let mut out = Vec::new();
+        write_frame(&mut out, &b, Some(&a), caps).unwrap();
+        let s = String::from_utf8(out).unwrap();
+        assert!(s.contains("\x1b[1;2H"));
+        assert!(!s.contains("\x1b[2K"));
+        assert_eq!(s.chars().filter(|&c| c == 'b').count(), 1);
+        assert!(!s.contains('a'));
+        let bold = View::styled("abaa", Style::default().bold())
+            .render(Size::new(4, 1))
+            .unwrap();
+        let mut out = Vec::new();
+        write_frame(&mut out, &bold, Some(&b), caps).unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[1m"));
+    }
+    #[test]
+    fn resize_to_empty_still_clears_old_content() {
+        let a = View::text("old").render(Size::new(4, 1)).unwrap();
+        let b = View::text("").render(Size::new(0, 0)).unwrap();
+        let mut out = Vec::new();
+        write_frame(
+            &mut out,
+            &b,
+            Some(&a),
+            Capabilities {
+                color: ColorLevel::None,
+                unicode: true,
+                reduced_motion: true,
+            },
+        )
+        .unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[2J"));
     }
 }

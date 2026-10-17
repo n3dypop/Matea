@@ -1,0 +1,541 @@
+//! Borrowed binding metadata, cell-bounded help and independently styled gaps.
+use crate::key::Binding;
+use matea_core::{Input, Response};
+use matea_render::{View, sanitized};
+use matea_style::{Color, Style, Theme};
+use std::borrow::Cow;
+use unicode_segmentation::UnicodeSegmentation;
+use unicode_width::UnicodeWidthStr;
+
+#[derive(Clone, Copy, Debug)]
+pub struct HelpItem<'a> {
+    pub key: &'a str,
+    pub description: &'a str,
+    pub enabled: bool,
+}
+impl<'a, K> From<&'a Binding<K>> for HelpItem<'a> {
+    fn from(binding: &'a Binding<K>) -> Self {
+        Self {
+            key: &binding.label,
+            description: &binding.description,
+            enabled: binding.is_enabled(),
+        }
+    }
+}
+/// Construct per view call after changing bindings; items borrow metadata.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct HelpMap<'a> {
+    pub short: &'a [HelpItem<'a>],
+    pub full: &'a [&'a [HelpItem<'a>]],
+}
+#[derive(Clone, Copy, Debug)]
+pub struct HelpStyles {
+    pub ellipsis: Style,
+    pub short_key: Style,
+    pub short_description: Style,
+    pub short_separator: Style,
+    pub short_gap: Style,
+    pub full_key: Style,
+    pub full_description: Style,
+    pub full_separator: Style,
+    pub full_gap: Style,
+}
+impl HelpStyles {
+    pub fn from_theme(theme: &Theme) -> Self {
+        Self {
+            ellipsis: theme.muted,
+            short_key: theme.text,
+            short_description: theme.muted,
+            short_separator: theme.muted,
+            short_gap: theme.muted,
+            full_key: theme.text,
+            full_description: theme.muted,
+            full_separator: theme.muted,
+            full_gap: theme.muted,
+        }
+    }
+    pub fn dark() -> Self {
+        Self::from_theme(&Theme::default())
+    }
+    pub fn light() -> Self {
+        let mut theme = Theme::plain();
+        theme.text = Style::default().fg(Color::Rgb(44, 56, 39));
+        theme.muted = Style::default().fg(Color::Rgb(86, 101, 77));
+        Self::from_theme(&theme)
+    }
+}
+impl Default for HelpStyles {
+    fn default() -> Self {
+        Self::dark()
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Help {
+    pub show_all: bool,
+    /// None is unbounded; Some(0) hides help.
+    pub width: Option<u16>,
+    pub short_separator: String,
+    pub full_separator: String,
+    pub ellipsis: String,
+    pub styles: HelpStyles,
+}
+impl Default for Help {
+    fn default() -> Self {
+        Self {
+            show_all: false,
+            width: None,
+            short_separator: " • ".into(),
+            full_separator: "    ".into(),
+            ellipsis: "…".into(),
+            styles: HelpStyles::default(),
+        }
+    }
+}
+impl Help {
+    /// Passive help never consumes input or schedules work.
+    pub fn event(&mut self, _: &Input) -> Response<()> {
+        Response::ignored()
+    }
+    pub fn view(&self, map: HelpMap<'_>) -> View {
+        if self.show_all {
+            self.full_view(map.full)
+        } else {
+            self.short_view(map.short)
+        }
+    }
+    pub fn short_view(&self, items: &[HelpItem<'_>]) -> View {
+        let mut sink = ViewSink::default();
+        self.short_to(items, &mut sink);
+        sink.finish()
+    }
+    pub fn full_view(&self, groups: &[&[HelpItem<'_>]]) -> View {
+        let mut sink = ViewSink::default();
+        self.full_to(groups, &mut sink);
+        sink.finish()
+    }
+    pub fn short_text(&self, items: &[HelpItem<'_>]) -> String {
+        // Byte lengths are a capacity hint, not a width/sanitization decision.
+        // A finite cell budget avoids reserving the entire unshown input.
+        let estimate = items
+            .iter()
+            .filter(|item| item.enabled)
+            .fold(0usize, |size, item| {
+                size.saturating_add(item.key.len())
+                    .saturating_add(item.description.len())
+                    .saturating_add(1)
+                    .saturating_add(self.short_separator.len())
+            });
+        let hint = self
+            .width
+            .map(|width| usize::from(width).saturating_mul(4))
+            .unwrap_or(estimate);
+        let mut result = String::with_capacity(estimate.min(hint));
+        self.short_text_into(items, &mut result);
+        result
+    }
+    /// Append plain, sanitized help, allowing caller-owned output reuse.
+    pub fn short_text_into(&self, items: &[HelpItem<'_>], output: &mut String) {
+        self.short_to(items, &mut TextSink(output));
+    }
+    pub fn full_text(&self, groups: &[&[HelpItem<'_>]]) -> String {
+        let mut result = String::new();
+        self.full_to(groups, &mut TextSink(&mut result));
+        result
+    }
+    fn limit(&self) -> usize {
+        self.width.map(usize::from).unwrap_or(usize::MAX)
+    }
+    fn tail(&self, used: usize, sink: &mut impl Sink) {
+        let ellipsis = inline(&self.ellipsis);
+        let width = ellipsis.width();
+        let gap = usize::from(used > 0);
+        if width > 0 && width.saturating_add(gap) <= self.limit().saturating_sub(used) {
+            if gap > 0 {
+                sink.span(" ", self.styles.ellipsis);
+            }
+            sink.span(&ellipsis, self.styles.ellipsis);
+        }
+    }
+    fn short_to(&self, items: &[HelpItem<'_>], sink: &mut impl Sink) {
+        if self.width == Some(0) {
+            return;
+        }
+        let separator = inline(&self.short_separator);
+        let mut used = 0usize;
+        let mut emitted = false;
+        for item in items.iter().filter(|item| item.enabled) {
+            let key = inline(item.key);
+            let description = inline(item.description);
+            let sep_width = if emitted { separator.width() } else { 0 };
+            let width = key
+                .width()
+                .saturating_add(1)
+                .saturating_add(description.width());
+            if used.saturating_add(sep_width).saturating_add(width) > self.limit() {
+                self.tail(used, sink);
+                break;
+            }
+            if emitted {
+                sink.span(&separator, self.styles.short_separator);
+            }
+            sink.span(&key, self.styles.short_key);
+            sink.span(" ", self.styles.short_gap);
+            sink.span(&description, self.styles.short_description);
+            used += sep_width + width;
+            emitted = true;
+        }
+    }
+    fn full_to(&self, groups: &[&[HelpItem<'_>]], sink: &mut impl Sink) {
+        if self.width == Some(0) {
+            return;
+        }
+        struct Column<'a> {
+            items: Vec<(Inline<'a>, Inline<'a>)>,
+            keys: usize,
+            descriptions: usize,
+        }
+        let separator = inline(&self.full_separator);
+        let mut columns = Vec::new();
+        let mut used = 0usize;
+        let mut truncated = false;
+        for group in groups {
+            let mut items = Vec::with_capacity(group.iter().filter(|item| item.enabled).count());
+            items.extend(
+                group
+                    .iter()
+                    .filter(|item| item.enabled)
+                    .map(|item| (inline(item.key), inline(item.description))),
+            );
+            if items.is_empty() {
+                continue;
+            }
+            let keys = items.iter().map(|(key, _)| key.width()).max().unwrap_or(0);
+            let descriptions = items
+                .iter()
+                .map(|(_, description)| description.width())
+                .max()
+                .unwrap_or(0);
+            let gap = if columns.is_empty() {
+                0
+            } else {
+                separator.width()
+            };
+            let width = keys
+                .saturating_add(1)
+                .saturating_add(descriptions)
+                .saturating_add(gap);
+            if used.saturating_add(width) > self.limit() {
+                truncated = true;
+                break;
+            }
+            used += width;
+            columns.push(Column {
+                items,
+                keys,
+                descriptions,
+            });
+        }
+        let height = columns
+            .iter()
+            .map(|column| column.items.len())
+            .max()
+            .unwrap_or(1);
+        let mut bytes = used.saturating_mul(height).saturating_add(height - 1);
+        for column in &columns {
+            for (key, description) in &column.items {
+                bytes = bytes
+                    .saturating_add(key.len().saturating_sub(key.width()))
+                    .saturating_add(description.len().saturating_sub(description.width()));
+            }
+        }
+        if columns.len() > 1 {
+            bytes = bytes.saturating_add(
+                (separator.len().saturating_sub(separator.width()))
+                    .saturating_mul(columns.len() - 1),
+            );
+        }
+        if truncated {
+            bytes = bytes.saturating_add(self.ellipsis.len()).saturating_add(1);
+        }
+        sink.reserve(bytes);
+        for row in 0..height {
+            if row > 0 {
+                sink.newline();
+            }
+            for (index, column) in columns.iter().enumerate() {
+                if index > 0 {
+                    // The reference places the separator at the top only.
+                    if row == 0 {
+                        sink.span(&separator, self.styles.full_separator);
+                    } else {
+                        sink.spaces(separator.width(), self.styles.full_separator);
+                    }
+                }
+                let (key, description, key_width, description_width) = column
+                    .items
+                    .get(row)
+                    .map(|(key, description)| {
+                        (
+                            key.text.as_ref(),
+                            description.text.as_ref(),
+                            key.width(),
+                            description.width(),
+                        )
+                    })
+                    .unwrap_or(("", "", 0, 0));
+                sink.span(key, self.styles.full_key);
+                sink.spaces(column.keys - key_width, self.styles.full_key);
+                sink.span(" ", self.styles.full_gap);
+                sink.span(description, self.styles.full_description);
+                sink.spaces(
+                    column.descriptions - description_width,
+                    self.styles.full_description,
+                );
+            }
+            if truncated && row == 0 {
+                self.tail(used, sink);
+            }
+        }
+    }
+}
+
+struct Inline<'a> {
+    text: Cow<'a, str>,
+    width: usize,
+}
+impl std::ops::Deref for Inline<'_> {
+    type Target = str;
+    fn deref(&self) -> &str {
+        &self.text
+    }
+}
+impl Inline<'_> {
+    fn width(&self) -> usize {
+        self.width
+    }
+}
+fn display_width(text: &str) -> usize {
+    if text.is_ascii() {
+        text.len()
+    } else {
+        text.graphemes(true).map(UnicodeWidthStr::width).sum()
+    }
+}
+fn inline(text: &str) -> Inline<'_> {
+    let text = sanitized(text);
+    let text = if text.contains('\n') {
+        Cow::Owned(text.replace('\n', " "))
+    } else {
+        text
+    };
+    if text.is_ascii() {
+        let width = text.len();
+        return Inline { text, width };
+    }
+    let mut width = 0usize;
+    let mut zero = false;
+    for cluster in text.graphemes(true) {
+        let cells = cluster.width();
+        width += cells;
+        zero |= cells == 0;
+    }
+    let text = if zero {
+        Cow::Owned(
+            text.graphemes(true)
+                .filter(|cluster| cluster.width() > 0)
+                .collect(),
+        )
+    } else {
+        text
+    };
+    Inline { text, width }
+}
+trait Sink {
+    fn reserve(&mut self, _: usize) {}
+    fn span(&mut self, text: &str, style: Style);
+    fn newline(&mut self);
+    fn spaces(&mut self, count: usize, style: Style) {
+        const SPACES: &str = "                                                                ";
+        let mut remaining = count;
+        while remaining > 0 {
+            let chunk = remaining.min(SPACES.len());
+            self.span(&SPACES[..chunk], style);
+            remaining -= chunk;
+        }
+    }
+}
+struct TextSink<'a>(&'a mut String);
+impl Sink for TextSink<'_> {
+    fn reserve(&mut self, bytes: usize) {
+        self.0.reserve(bytes);
+    }
+    fn span(&mut self, text: &str, _: Style) {
+        self.0.push_str(text);
+    }
+    fn newline(&mut self) {
+        self.0.push('\n');
+    }
+}
+#[derive(Default)]
+struct ViewSink {
+    rows: Vec<View>,
+    spans: Vec<View>,
+}
+impl Sink for ViewSink {
+    fn span(&mut self, text: &str, style: Style) {
+        if !text.is_empty() {
+            self.spans.push(
+                View::styled(text, style).width(display_width(text).min(u16::MAX as usize) as u16),
+            );
+        }
+    }
+    fn newline(&mut self) {
+        self.rows.push(View::row(std::mem::take(&mut self.spans)));
+    }
+}
+impl ViewSink {
+    fn finish(mut self) -> View {
+        self.newline();
+        View::column(self.rows)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use matea_core::{Key, KeyCode};
+    use matea_render::Size;
+    fn item<'a>(key: &'a str, description: &'a str) -> HelpItem<'a> {
+        HelpItem {
+            key,
+            description,
+            enabled: true,
+        }
+    }
+    #[test]
+    fn all_widths_fit_complete_items_and_columns_including_exact_tail_fit() {
+        let a = [item("enter", "continue")];
+        let b = [item("esc", "back"), item("?", "help")];
+        let c = [
+            item("H", "home"),
+            item("ctrl+c", "quit"),
+            item("ctrl+l", "log"),
+        ];
+        let groups = [&a[..], &b[..], &c[..]];
+        for width in 0..=60 {
+            let help = Help {
+                width: Some(width),
+                full_separator: " | ".into(),
+                ..Help::default()
+            };
+            for text in [help.short_text(&a), help.full_text(&groups)] {
+                assert!(
+                    text.lines().all(|line| line.width() <= usize::from(width)),
+                    "{width}: {text:?}"
+                );
+            }
+        }
+        let tiny = Help {
+            width: Some(1),
+            ..Help::default()
+        };
+        assert_eq!(tiny.short_text(&a), "…");
+        let exact = Help {
+            width: Some(16),
+            ..Help::default()
+        };
+        assert_eq!(exact.short_text(&[a[0], b[0]]), "enter continue …");
+        let empty_tail = Help {
+            width: Some(1),
+            ellipsis: String::new(),
+            ..Help::default()
+        };
+        assert!(empty_tail.full_text(&groups).is_empty());
+    }
+    #[test]
+    fn reference_columns_are_top_aligned_and_disabled_groups_are_omitted() {
+        let a = [item("enter", "continue")];
+        let b = [item("esc", "back"), item("?", "help")];
+        let c = [
+            item("H", "home"),
+            item("ctrl+c", "quit"),
+            item("ctrl+l", "log"),
+        ];
+        let disabled = [HelpItem {
+            enabled: false,
+            ..item("x", "hidden")
+        }];
+        let help = Help {
+            width: Some(40),
+            full_separator: " | ".into(),
+            ..Help::default()
+        };
+        let groups = [&a[..], &disabled[..], &b[..], &c[..]];
+        let expected = "enter continue | esc back | H      home\n                 ?   help   ctrl+c quit\n                            ctrl+l log ";
+        assert_eq!(help.full_text(&groups), expected);
+        let surface = help.full_view(&groups).render(Size::new(40, 3)).unwrap();
+        assert_eq!(
+            surface.plain(),
+            expected
+                .lines()
+                .map(str::trim_end)
+                .collect::<Vec<_>>()
+                .join("\n")
+        );
+        let map = HelpMap {
+            short: &a,
+            full: &groups,
+        };
+        let mut help = help;
+        help.show_all = true;
+        assert_eq!(help.view(map).render(Size::new(40, 3)).unwrap(), surface);
+    }
+    #[test]
+    fn shared_binding_state_unicode_safety_and_gap_styles_reach_cells() {
+        let mut binding = Binding::new([Key::new(KeyCode::Enter)], "茶", "e\u{301}を選ぶ");
+        let mut help = Help::default();
+        help.styles.short_gap = Style::default().bg(Color::Indexed(3)).underline();
+        let items = [HelpItem::from(&binding)];
+        assert_eq!(help.short_text(&items), "茶 e\u{301}を選ぶ");
+        let surface = help.short_view(&items).render(Size::new(15, 1)).unwrap();
+        assert_eq!(surface.row(0)[2].style(), help.styles.short_gap);
+        assert_eq!(surface.row(0)[3].symbol(), "e\u{301}");
+        help.styles.full_gap = help.styles.short_gap;
+        let full = help.full_view(&[&items]).render(Size::new(15, 1)).unwrap();
+        assert_eq!(full.row(0)[2].style(), help.styles.full_gap);
+        binding.enabled = false;
+        assert!(help.short_text(&[HelpItem::from(&binding)]).is_empty());
+        binding.enabled = true;
+        binding.keys.clear();
+        assert!(help.short_text(&[HelpItem::from(&binding)]).is_empty());
+        let unsafe_item = [item("\x1b[31m", "new\nline\tend")];
+        let text = help.short_text(&unsafe_item);
+        assert!(!text.contains(['\x1b', '\n', '\t']));
+        assert!(text.contains("new line    end"));
+        assert_eq!(help.short_text(&[item("\u{301}", "visible")]), " visible");
+        help.ellipsis = "👩‍💻".into();
+        help.width = Some(1);
+        assert!(help.short_text(&[item("enter", "continue")]).is_empty());
+        help.width = Some(2);
+        assert_eq!(help.short_text(&[item("enter", "continue")]), "👩‍💻");
+        let items = [item("茶", "e\u{301}を選ぶ")];
+        for width in 0..=15 {
+            help.width = Some(width);
+            assert!(help.short_text(&items).width() <= usize::from(width));
+        }
+        let mut output = "prefix:".to_owned();
+        help.width = None;
+        help.short_text_into(&items, &mut output);
+        assert_eq!(output, "prefix:茶 e\u{301}を選ぶ");
+        // Whole-string Arabic shaping width can differ from our compositor's
+        // independent grapheme cells. Help must use the compositor's contract.
+        let arabic = [item("لا", "pick")];
+        let surface = help.short_view(&arabic).render(Size::new(10, 1)).unwrap();
+        assert_eq!(surface.row(0)[0].symbol(), "ل");
+        assert_eq!(surface.row(0)[1].symbol(), "ا");
+        assert_eq!(surface.row(0)[2].style(), help.styles.short_gap);
+        let response = help.event(&Input::Key(Key::new(KeyCode::Enter)));
+        assert!(!response.consumed && response.message.is_none());
+    }
+}

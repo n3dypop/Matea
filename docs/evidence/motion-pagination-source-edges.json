@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "command": "upstream probe --source-regressions",
+  "source_pins": {
+    "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+    "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+    "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+    "harness": "tools/perf-upstream/main.go"
+  },
+  "upstream_observed": {
+    "pages_after_setting_zero_items": 10,
+    "paginator_zero_per_page_panics": true,
+    "spring_extreme_overdamping": {
+      "damping": 1000000000000,
+      "dt": 0.016,
+      "initial_position": 1000000000000,
+      "omega": 12,
+      "position": 1000000000000,
+      "target": 0,
+      "velocity": 0
+    },
+    "stale_items_on_page": -23,
+    "stale_slice_bounds": [
+      27,
+      4
+    ]
+  },
+  "notes": "Source-derived edge cases; not maintainer-confirmed bugs. Matea regression tests cover clamped slices, NonZero per-page, clearing state and non-cancelling slow spring decay.",
+  "harness_sha256": "f854abfc2e6c378a339da0d68ef4cce4b8faa260ac4656409ac86b8110fbe1e5"
+}

@@ -1,0 +1,4523 @@
+{
+  "all_high": false,
+  "programs": 86,
+  "review_units": 40,
+  "below_high": [
+    {
+      "unit": "matea-core/input",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-core/input",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-core/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-core/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-render/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-render/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-render/text",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-render/text",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-style/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-style/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
+    },
+    {
+      "unit": "matea-terminal/ansi",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/ansi",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "matea-terminal/frame",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/frame",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-terminal/input",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/input",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-terminal/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/lib",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "matea-terminal/modes",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/modes",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "matea-terminal/protocol",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/protocol",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+    },
+    {
+      "unit": "matea-terminal/signals_unix",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/signals_unix",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "matea-widgets/clocks",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/clocks",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/help",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/help",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/lib",
+      "dimension": "behavior",
+      "score": 50,
+      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+    },
+    {
+      "unit": "matea-widgets/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/spinner",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/spinner",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/textinput",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/textinput",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea/lib",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "examples",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "tools/api-audit",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+    },
+    {
+      "unit": "tools/perf-probe",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "tools/go-auditor",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "tools/go-performance-probe",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "tools/go-performance-probe",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+    },
+    {
+      "unit": "scripts/compiler-export-audit",
+      "dimension": "behavior",
+      "score": 50,
+      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+    },
+    {
+      "unit": "scripts/compiler-export-audit",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "scripts/compiler-export-audit",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+    },
+    {
+      "unit": "scripts/coverage-and-issues",
+      "dimension": "behavior",
+      "score": 50,
+      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+    },
+    {
+      "unit": "scripts/coverage-and-issues",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "scripts/coverage-and-issues",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+    },
+    {
+      "unit": "scripts/independent-terminal-oracles",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "scripts/performance-reporters",
+      "dimension": "behavior",
+      "score": 50,
+      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+    },
+    {
+      "unit": "scripts/performance-reporters",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "scripts/performance-reporters",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+    },
+    {
+      "unit": "scripts/test-and-acceptance-drivers",
+      "dimension": "behavior",
+      "score": 50,
+      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+    },
+    {
+      "unit": "scripts/test-and-acceptance-drivers",
+      "dimension": "performance",
+      "score": 0,
+      "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+    },
+    {
+      "unit": "scripts/test-and-acceptance-drivers",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+    }
+  ],
+  "schema": 1,
+  "method": "docs/quality-evaluation.md",
+  "units": [
+    {
+      "id": "matea-core/input",
+      "files": [
+        "crates/matea-core/src/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/lib",
+      "files": [
+        "crates/matea-core/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-motion/lib",
+      "files": [
+        "crates/matea-motion/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/lib",
+      "files": [
+        "crates/matea-render/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/text",
+      "files": [
+        "crates/matea-render/src/text.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/lib",
+      "files": [
+        "crates/matea-style/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/ansi",
+      "files": [
+        "crates/matea-terminal/src/ansi.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/frame",
+      "files": [
+        "crates/matea-terminal/src/frame.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/input",
+      "files": [
+        "crates/matea-terminal/src/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/lib",
+      "files": [
+        "crates/matea-terminal/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/modes",
+      "files": [
+        "crates/matea-terminal/src/modes.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/protocol",
+      "files": [
+        "crates/matea-terminal/src/protocol.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/signals_unix",
+      "files": [
+        "crates/matea-terminal/src/signals_unix.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Only production unsafe boundary: initialized sigaction/masks, successful-call-only assume_init, static allocation-free AtomicBool handler, exclusive sessions and exact restore. POSIX FFI is outside Miri; native PTY restoration is separate evidence."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-terminal/src/signals_unix.rs",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/clocks",
+      "files": [
+        "crates/matea-widgets/src/clocks.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/help",
+      "files": [
+        "crates/matea-widgets/src/help.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/key",
+      "files": [
+        "crates/matea-widgets/src/key.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/lib",
+      "files": [
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/evidence/viewport-before.log",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
+        "Viewport parsing/resident-memory cost and matched Bubbles rendering/scheduling remain unmeasured; basic List/Table/Form breadth is incomplete."
+      ]
+    },
+    {
+      "id": "matea-widgets/pagination",
+      "files": [
+        "crates/matea-widgets/src/pagination.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/paginator",
+      "files": [
+        "crates/matea-widgets/src/paginator.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 75,
+          "reason": "Finite pinned reference fixtures/declarations are covered; limitations remain explicit."
+        },
+        "performance": {
+          "score": 75,
+          "reason": "Matched finite workloads have distributions/allocations; this is not a universal optimum."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/spinner",
+      "files": [
+        "crates/matea-widgets/src/spinner.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/textinput",
+      "files": [
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea/lib",
+      "files": [
+        "crates/matea/src/lib.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/integration-tests",
+      "files": [
+        "crates/matea-core/tests/subscription_atomicity.rs",
+        "crates/matea-core/tests/subscription_identity.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/integration-tests",
+      "files": [
+        "crates/matea-render/tests/invariants.rs",
+        "crates/matea-render/tests/text.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-motion/integration-tests",
+      "files": [
+        "crates/matea-motion/tests/reference.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/integration-tests",
+      "files": [
+        "crates/matea-style/tests/layout.rs",
+        "crates/matea-style/tests/colors.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/integration-tests",
+      "files": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "crates/matea-widgets/tests/spinner.rs",
+        "crates/matea-widgets/tests/viewport.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/integration-tests",
+      "files": [
+        "crates/matea-terminal/tests/graphics_encoding.rs",
+        "crates/matea-terminal/tests/input.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "examples",
+      "files": [
+        "crates/matea/examples/clocks.rs",
+        "crates/matea/examples/counter.rs",
+        "crates/matea/examples/dashboard.rs",
+        "crates/matea/examples/effects.rs",
+        "crates/matea/examples/form.rs",
+        "crates/matea/examples/help.rs",
+        "crates/matea/examples/input.rs",
+        "crates/matea/examples/lifecycle.rs",
+        "crates/matea/examples/list.rs",
+        "crates/matea/examples/motion.rs",
+        "crates/matea/examples/pagination.rs",
+        "crates/matea/examples/render_probe.rs",
+        "crates/matea/examples/spinners.rs",
+        "crates/matea/examples/support/mod.rs",
+        "examples/external-widget/src/main.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/example-smoke.log",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Snapshot/PTY examples run; application latency and physical terminal behavior remain unmeasured."
+      ]
+    },
+    {
+      "id": "tools/api-audit",
+      "files": [
+        "tools/api-audit/src/main.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "scripts/test_source_auditors.py",
+        "docs/evidence/quality/auditors-before.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/auditor/before.jsonl",
+        "docs/evidence/optimization/auditor/after.jsonl",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Nested cfg loss fixed; compiler-resolved exports remain a separate audit; more parser/error/scale fixtures needed.",
+        "Regenerated inventories correct 80 Crossterm and 42 Ratatui cfg records without changing declaration IDs/counts."
+      ]
+    },
+    {
+      "id": "tools/perf-probe",
+      "files": [
+        "tools/perf-probe/src/main.rs",
+        "tools/perf-probe/src/protocol.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Measurement-only GlobalAlloc forwards pointers/layouts to System without allocation in counters. Not linked into production libraries; Miri does not prove all allocator executions."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/performance.md",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified."
+      ]
+    },
+    {
+      "id": "tools/go-auditor",
+      "files": [
+        "tools/audit-go/main.go"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "scripts/test_source_auditors.py",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Standalone Go parser fixture validates exports/build tags; malformed input and scale distributions remain pending."
+      ]
+    },
+    {
+      "id": "tools/go-performance-probe",
+      "files": [
+        "tools/perf-upstream/main.go"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/performance.md"
+      ],
+      "remaining": [
+        "Pinned external references and fixture outputs validated; Go allocation accounting differs from requested System bytes."
+      ]
+    },
+    {
+      "id": "scripts/compiler-export-audit",
+      "files": [
+        "scripts/collect_rustdoc.py",
+        "scripts/collect_rustdoc_batch.py",
+        "scripts/fetch_rust_references.py",
+        "scripts/import_rustdoc.py",
+        "scripts/rustdoc_exports.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/coverage-and-issues",
+      "files": [
+        "scripts/audit_references.py",
+        "scripts/check_coverage.py",
+        "scripts/fetch_upstream_issues.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/independent-terminal-oracles",
+      "files": [
+        "scripts/check_color_trace.py",
+        "scripts/check_terminal_trace.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/performance-reporters",
+      "files": [
+        "scripts/prepare_upstream_bench.py",
+        "scripts/report_clock_format_performance.py",
+        "scripts/report_performance.py",
+        "scripts/report_subscription_performance.py",
+        "scripts/report_view_performance.py",
+        "scripts/report_viewport_performance.py",
+        "scripts/optimization_evidence.py",
+        "scripts/measure_auditor_performance.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/test-and-acceptance-drivers",
+      "files": [
+        "scripts/check_quality.py",
+        "scripts/example_smoke.py",
+        "scripts/measure_rust_coverage.py",
+        "scripts/pty_smoke.py",
+        "scripts/verify_foundation.py",
+        "scripts/evidence_checks.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 50,
+          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": 0,
+          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/regression-tests",
+      "files": [
+        "scripts/test_color_trace.py",
+        "scripts/test_quality.py",
+        "scripts/test_rustdoc_exports.py",
+        "scripts/test_rustdoc_import.py",
+        "scripts/test_source_auditors.py",
+        "scripts/test_evidence_checks.py",
+        "scripts/test_optimization_evidence.py"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "ci/workflow",
+      "files": [
+        ".github/workflows/foundation.yml"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": null,
+          "reason": "Not Rust code; schema/input and failure handling assessed under behavior."
+        },
+        "memory_safety": {
+          "score": null,
+          "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": null,
+          "reason": "Original tooling/type contract without a standalone upstream equivalent."
+        },
+        "performance": {
+          "score": null,
+          "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
+        },
+        "portability": {
+          "score": 75,
+          "reason": "Implementation 9ce5564ad525d047594c5e1debecabd7c3bb4e37 passed Linux, Windows, macOS and Rust 1.88 CI. Required Go source fixtures run on all 3 OSes; Windows PTY/physical emulator behavior is unverified and Unix-only code is tested on Linux/macOS."
+        }
+      },
+      "evidence": [
+        ".github/workflows/foundation.yml",
+        "docs/evidence/text-ci-run.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json"
+      ],
+      "remaining": [
+        "Run current changed source on all 3 OSes/MSRV; nightly Miri and physical emulator matrix are separate."
+      ]
+    }
+  ],
+  "plan_sha256": "56b9e600f2a7ddd45c555e56b9f0dc184a99e01522d95bbb4d3edf6338b892c3",
+  "validation": "docs/evidence/local-validation.json",
+  "files": [
+    {
+      "file": ".github/workflows/foundation.yml",
+      "sha256": "1527a2f75768343f41b4b0392beceaee333166cc2feef75ec850522c869d99db",
+      "units": [
+        "ci/workflow"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "crates/matea-core/src/input.rs",
+      "sha256": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+      "units": [
+        "matea-core/input"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-core/src/input.rs",
+        "lines": {
+          "count": 100,
+          "covered": 100,
+          "percent": 100
+        },
+        "functions": {
+          "count": 12,
+          "covered": 12,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 22,
+          "covered": 22,
+          "percent": 100
+        },
+        "regions": {
+          "count": 143,
+          "covered": 143,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-core/src/lib.rs",
+      "sha256": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+      "units": [
+        "matea-core/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-core/src/lib.rs",
+        "lines": {
+          "count": 670,
+          "covered": 632,
+          "percent": 94.32835820895522
+        },
+        "functions": {
+          "count": 94,
+          "covered": 84,
+          "percent": 89.36170212765957
+        },
+        "instantiations": {
+          "count": 861,
+          "covered": 531,
+          "percent": 61.672473867595826
+        },
+        "regions": {
+          "count": 1047,
+          "covered": 991,
+          "notcovered": 56,
+          "percent": 94.65138490926456
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-core/tests/subscription_atomicity.rs",
+      "sha256": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+      "units": [
+        "matea-core/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-core/tests/subscription_atomicity.rs",
+        "lines": {
+          "count": 31,
+          "covered": 28,
+          "percent": 90.32258064516128
+        },
+        "functions": {
+          "count": 4,
+          "covered": 3,
+          "percent": 75
+        },
+        "instantiations": {
+          "count": 4,
+          "covered": 3,
+          "percent": 75
+        },
+        "regions": {
+          "count": 53,
+          "covered": 50,
+          "notcovered": 3,
+          "percent": 94.33962264150944
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-core/tests/subscription_identity.rs",
+      "sha256": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+      "units": [
+        "matea-core/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-core/tests/subscription_identity.rs",
+        "lines": {
+          "count": 104,
+          "covered": 98,
+          "percent": 94.23076923076923
+        },
+        "functions": {
+          "count": 9,
+          "covered": 7,
+          "percent": 77.77777777777779
+        },
+        "instantiations": {
+          "count": 9,
+          "covered": 7,
+          "percent": 77.77777777777779
+        },
+        "regions": {
+          "count": 164,
+          "covered": 158,
+          "notcovered": 6,
+          "percent": 96.34146341463415
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-motion/src/lib.rs",
+      "sha256": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+      "units": [
+        "matea-motion/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-motion/src/lib.rs",
+        "lines": {
+          "count": 344,
+          "covered": 335,
+          "percent": 97.38372093023256
+        },
+        "functions": {
+          "count": 24,
+          "covered": 23,
+          "percent": 95.83333333333334
+        },
+        "instantiations": {
+          "count": 53,
+          "covered": 43,
+          "percent": 81.13207547169812
+        },
+        "regions": {
+          "count": 522,
+          "covered": 510,
+          "notcovered": 12,
+          "percent": 97.70114942528735
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-motion/tests/reference.rs",
+      "sha256": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+      "units": [
+        "matea-motion/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-motion/tests/reference.rs",
+        "lines": {
+          "count": 57,
+          "covered": 57,
+          "percent": 100
+        },
+        "functions": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "regions": {
+          "count": 99,
+          "covered": 99,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-render/src/lib.rs",
+      "sha256": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+      "units": [
+        "matea-render/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/src/lib.rs",
+        "lines": {
+          "count": 572,
+          "covered": 555,
+          "percent": 97.02797202797203
+        },
+        "functions": {
+          "count": 69,
+          "covered": 65,
+          "percent": 94.20289855072464
+        },
+        "instantiations": {
+          "count": 186,
+          "covered": 170,
+          "percent": 91.39784946236558
+        },
+        "regions": {
+          "count": 1042,
+          "covered": 1009,
+          "notcovered": 33,
+          "percent": 96.83301343570058
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-render/src/text.rs",
+      "sha256": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+      "units": [
+        "matea-render/text"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/src/text.rs",
+        "lines": {
+          "count": 74,
+          "covered": 71,
+          "percent": 95.94594594594594
+        },
+        "functions": {
+          "count": 20,
+          "covered": 19,
+          "percent": 95
+        },
+        "instantiations": {
+          "count": 40,
+          "covered": 24,
+          "percent": 60
+        },
+        "regions": {
+          "count": 113,
+          "covered": 110,
+          "notcovered": 3,
+          "percent": 97.34513274336283
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-render/tests/invariants.rs",
+      "sha256": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+      "units": [
+        "matea-render/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/tests/invariants.rs",
+        "lines": {
+          "count": 66,
+          "covered": 66,
+          "percent": 100
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "regions": {
+          "count": 144,
+          "covered": 143,
+          "notcovered": 1,
+          "percent": 99.30555555555556
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-render/tests/text.rs",
+      "sha256": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+      "units": [
+        "matea-render/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/tests/text.rs",
+        "lines": {
+          "count": 101,
+          "covered": 101,
+          "percent": 100
+        },
+        "functions": {
+          "count": 9,
+          "covered": 9,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 9,
+          "covered": 9,
+          "percent": 100
+        },
+        "regions": {
+          "count": 209,
+          "covered": 209,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-style/src/lib.rs",
+      "sha256": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+      "units": [
+        "matea-style/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/src/lib.rs",
+        "lines": {
+          "count": 198,
+          "covered": 195,
+          "percent": 98.48484848484848
+        },
+        "functions": {
+          "count": 19,
+          "covered": 19,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 38,
+          "covered": 35,
+          "percent": 92.10526315789474
+        },
+        "regions": {
+          "count": 315,
+          "covered": 311,
+          "notcovered": 4,
+          "percent": 98.73015873015873
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-style/tests/colors.rs",
+      "sha256": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+      "units": [
+        "matea-style/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/tests/colors.rs",
+        "lines": {
+          "count": 101,
+          "covered": 91,
+          "percent": 90.0990099009901
+        },
+        "functions": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "instantiations": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "regions": {
+          "count": 197,
+          "covered": 175,
+          "notcovered": 22,
+          "percent": 88.83248730964468
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-style/tests/layout.rs",
+      "sha256": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+      "units": [
+        "matea-style/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/tests/layout.rs",
+        "lines": {
+          "count": 31,
+          "covered": 31,
+          "percent": 100
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "regions": {
+          "count": 58,
+          "covered": 58,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/ansi.rs",
+      "sha256": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+      "units": [
+        "matea-terminal/ansi"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/ansi.rs",
+        "lines": {
+          "count": 52,
+          "covered": 47,
+          "percent": 90.38461538461539
+        },
+        "functions": {
+          "count": 11,
+          "covered": 9,
+          "percent": 81.81818181818183
+        },
+        "instantiations": {
+          "count": 122,
+          "covered": 41,
+          "percent": 33.60655737704918
+        },
+        "regions": {
+          "count": 93,
+          "covered": 82,
+          "notcovered": 11,
+          "percent": 88.17204301075269
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/frame.rs",
+      "sha256": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+      "units": [
+        "matea-terminal/frame"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/frame.rs",
+        "lines": {
+          "count": 440,
+          "covered": 432,
+          "percent": 98.18181818181819
+        },
+        "functions": {
+          "count": 42,
+          "covered": 39,
+          "percent": 92.85714285714286
+        },
+        "instantiations": {
+          "count": 114,
+          "covered": 80,
+          "percent": 70.17543859649122
+        },
+        "regions": {
+          "count": 918,
+          "covered": 881,
+          "notcovered": 37,
+          "percent": 95.96949891067538
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/input.rs",
+      "sha256": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+      "units": [
+        "matea-terminal/input"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/input.rs",
+        "lines": {
+          "count": 127,
+          "covered": 127,
+          "percent": 100
+        },
+        "functions": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 12,
+          "covered": 11,
+          "percent": 91.66666666666666
+        },
+        "regions": {
+          "count": 151,
+          "covered": 151,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/lib.rs",
+      "sha256": "cf7603b76cdbac6a1e118cff7617d10954c0e8db35c472d63a6509b1d81218b4",
+      "units": [
+        "matea-terminal/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/lib.rs",
+        "lines": {
+          "count": 459,
+          "covered": 428,
+          "percent": 93.24618736383442
+        },
+        "functions": {
+          "count": 51,
+          "covered": 50,
+          "percent": 98.0392156862745
+        },
+        "instantiations": {
+          "count": 183,
+          "covered": 127,
+          "percent": 69.39890710382514
+        },
+        "regions": {
+          "count": 704,
+          "covered": 649,
+          "notcovered": 55,
+          "percent": 92.1875
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/modes.rs",
+      "sha256": "2d5f9d09118ffd7e74185c82883969e3170767bbbeb3ea9cae372fc8aba56b35",
+      "units": [
+        "matea-terminal/modes"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/modes.rs",
+        "lines": {
+          "count": 233,
+          "covered": 227,
+          "percent": 97.42489270386267
+        },
+        "functions": {
+          "count": 22,
+          "covered": 21,
+          "percent": 95.45454545454545
+        },
+        "instantiations": {
+          "count": 43,
+          "covered": 41,
+          "percent": 95.34883720930233
+        },
+        "regions": {
+          "count": 264,
+          "covered": 258,
+          "notcovered": 6,
+          "percent": 97.72727272727273
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/protocol.rs",
+      "sha256": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+      "units": [
+        "matea-terminal/protocol"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/protocol.rs",
+        "lines": {
+          "count": 357,
+          "covered": 341,
+          "percent": 95.51820728291317
+        },
+        "functions": {
+          "count": 31,
+          "covered": 30,
+          "percent": 96.7741935483871
+        },
+        "instantiations": {
+          "count": 79,
+          "covered": 51,
+          "percent": 64.55696202531645
+        },
+        "regions": {
+          "count": 557,
+          "covered": 521,
+          "notcovered": 36,
+          "percent": 93.53680430879713
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/signals_unix.rs",
+      "sha256": "d0368019942ac1514f1adbe5fba6ff9439983c2740bda3e446539020dc77cc6f",
+      "units": [
+        "matea-terminal/signals_unix"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/signals_unix.rs",
+        "lines": {
+          "count": 39,
+          "covered": 35,
+          "percent": 89.74358974358975
+        },
+        "functions": {
+          "count": 5,
+          "covered": 5,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 15,
+          "covered": 9,
+          "percent": 60
+        },
+        "regions": {
+          "count": 69,
+          "covered": 62,
+          "notcovered": 7,
+          "percent": 89.85507246376811
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/tests/graphics_encoding.rs",
+      "sha256": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+      "units": [
+        "matea-terminal/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/tests/graphics_encoding.rs",
+        "lines": {
+          "count": 182,
+          "covered": 180,
+          "percent": 98.9010989010989
+        },
+        "functions": {
+          "count": 12,
+          "covered": 12,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 12,
+          "covered": 12,
+          "percent": 100
+        },
+        "regions": {
+          "count": 279,
+          "covered": 277,
+          "notcovered": 2,
+          "percent": 99.2831541218638
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-terminal/tests/input.rs",
+      "sha256": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+      "units": [
+        "matea-terminal/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/tests/input.rs",
+        "lines": {
+          "count": 150,
+          "covered": 147,
+          "percent": 98
+        },
+        "functions": {
+          "count": 5,
+          "covered": 5,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 5,
+          "covered": 5,
+          "percent": 100
+        },
+        "regions": {
+          "count": 190,
+          "covered": 186,
+          "notcovered": 4,
+          "percent": 97.89473684210527
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/clocks.rs",
+      "sha256": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+      "units": [
+        "matea-widgets/clocks"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/clocks.rs",
+        "lines": {
+          "count": 364,
+          "covered": 348,
+          "percent": 95.6043956043956
+        },
+        "functions": {
+          "count": 68,
+          "covered": 65,
+          "percent": 95.58823529411765
+        },
+        "instantiations": {
+          "count": 204,
+          "covered": 116,
+          "percent": 56.86274509803921
+        },
+        "regions": {
+          "count": 524,
+          "covered": 503,
+          "notcovered": 21,
+          "percent": 95.99236641221374
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/help.rs",
+      "sha256": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+      "units": [
+        "matea-widgets/help"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/help.rs",
+        "lines": {
+          "count": 422,
+          "covered": 415,
+          "percent": 98.34123222748815
+        },
+        "functions": {
+          "count": 42,
+          "covered": 41,
+          "percent": 97.61904761904762
+        },
+        "instantiations": {
+          "count": 97,
+          "covered": 91,
+          "percent": 93.81443298969072
+        },
+        "regions": {
+          "count": 778,
+          "covered": 767,
+          "notcovered": 11,
+          "percent": 98.58611825192803
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/key.rs",
+      "sha256": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+      "units": [
+        "matea-widgets/key"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/key.rs",
+        "lines": {
+          "count": 114,
+          "covered": 114,
+          "percent": 100
+        },
+        "functions": {
+          "count": 16,
+          "covered": 16,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 44,
+          "covered": 44,
+          "percent": 100
+        },
+        "regions": {
+          "count": 235,
+          "covered": 235,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/lib.rs",
+      "sha256": "d2a2af9f149969e805769d7af9f75235ae33b7bd43273dc0e77a684b0ac98994",
+      "units": [
+        "matea-widgets/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/lib.rs",
+        "lines": {
+          "count": 427,
+          "covered": 418,
+          "percent": 97.89227166276346
+        },
+        "functions": {
+          "count": 50,
+          "covered": 50,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 96,
+          "covered": 78,
+          "percent": 81.25
+        },
+        "regions": {
+          "count": 786,
+          "covered": 754,
+          "notcovered": 32,
+          "percent": 95.92875318066157
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/pagination.rs",
+      "sha256": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+      "units": [
+        "matea-widgets/pagination"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/pagination.rs",
+        "lines": {
+          "count": 169,
+          "covered": 163,
+          "percent": 96.44970414201184
+        },
+        "functions": {
+          "count": 24,
+          "covered": 22,
+          "percent": 91.66666666666666
+        },
+        "instantiations": {
+          "count": 46,
+          "covered": 35,
+          "percent": 76.08695652173914
+        },
+        "regions": {
+          "count": 350,
+          "covered": 344,
+          "notcovered": 6,
+          "percent": 98.28571428571429
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/paginator.rs",
+      "sha256": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+      "units": [
+        "matea-widgets/paginator"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/paginator.rs",
+        "lines": {
+          "count": 156,
+          "covered": 145,
+          "percent": 92.94871794871796
+        },
+        "functions": {
+          "count": 15,
+          "covered": 14,
+          "percent": 93.33333333333333
+        },
+        "instantiations": {
+          "count": 26,
+          "covered": 21,
+          "percent": 80.76923076923077
+        },
+        "regions": {
+          "count": 250,
+          "covered": 227,
+          "notcovered": 23,
+          "percent": 90.8
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/spinner.rs",
+      "sha256": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+      "units": [
+        "matea-widgets/spinner"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/spinner.rs",
+        "lines": {
+          "count": 184,
+          "covered": 170,
+          "percent": 92.3913043478261
+        },
+        "functions": {
+          "count": 36,
+          "covered": 32,
+          "percent": 88.88888888888889
+        },
+        "instantiations": {
+          "count": 89,
+          "covered": 54,
+          "percent": 60.67415730337079
+        },
+        "regions": {
+          "count": 257,
+          "covered": 233,
+          "notcovered": 24,
+          "percent": 90.6614785992218
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/textinput.rs",
+      "sha256": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+      "units": [
+        "matea-widgets/textinput"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/textinput.rs",
+        "lines": {
+          "count": 1109,
+          "covered": 1078,
+          "percent": 97.20468890892697
+        },
+        "functions": {
+          "count": 92,
+          "covered": 89,
+          "percent": 96.73913043478261
+        },
+        "instantiations": {
+          "count": 176,
+          "covered": 153,
+          "percent": 86.93181818181817
+        },
+        "regions": {
+          "count": 1863,
+          "covered": 1818,
+          "notcovered": 45,
+          "percent": 97.58454106280193
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/tests/clocks.rs",
+      "sha256": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+      "units": [
+        "matea-widgets/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/tests/clocks.rs",
+        "lines": {
+          "count": 255,
+          "covered": 255,
+          "percent": 100
+        },
+        "functions": {
+          "count": 19,
+          "covered": 19,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 19,
+          "covered": 19,
+          "percent": 100
+        },
+        "regions": {
+          "count": 704,
+          "covered": 704,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/tests/spinner.rs",
+      "sha256": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+      "units": [
+        "matea-widgets/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/tests/spinner.rs",
+        "lines": {
+          "count": 197,
+          "covered": 197,
+          "percent": 100
+        },
+        "functions": {
+          "count": 14,
+          "covered": 14,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 14,
+          "covered": 14,
+          "percent": 100
+        },
+        "regions": {
+          "count": 505,
+          "covered": 504,
+          "notcovered": 1,
+          "percent": 99.8019801980198
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea-widgets/tests/viewport.rs",
+      "sha256": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+      "units": [
+        "matea-widgets/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/tests/viewport.rs",
+        "lines": {
+          "count": 113,
+          "covered": 113,
+          "percent": 100
+        },
+        "functions": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "regions": {
+          "count": 191,
+          "covered": 191,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/clocks.rs",
+      "sha256": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/clocks.rs",
+        "lines": {
+          "count": 87,
+          "covered": 85,
+          "percent": 97.70114942528735
+        },
+        "functions": {
+          "count": 8,
+          "covered": 8,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 16,
+          "covered": 8,
+          "percent": 50
+        },
+        "regions": {
+          "count": 150,
+          "covered": 145,
+          "notcovered": 5,
+          "percent": 96.66666666666667
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/counter.rs",
+      "sha256": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/counter.rs",
+        "lines": {
+          "count": 25,
+          "covered": 15,
+          "percent": 60
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 6,
+          "covered": 3,
+          "percent": 50
+        },
+        "regions": {
+          "count": 42,
+          "covered": 19,
+          "notcovered": 23,
+          "percent": 45.23809523809524
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/dashboard.rs",
+      "sha256": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/dashboard.rs",
+        "lines": {
+          "count": 69,
+          "covered": 53,
+          "percent": 76.81159420289855
+        },
+        "functions": {
+          "count": 5,
+          "covered": 5,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 10,
+          "covered": 5,
+          "percent": 50
+        },
+        "regions": {
+          "count": 103,
+          "covered": 73,
+          "notcovered": 30,
+          "percent": 70.87378640776699
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/effects.rs",
+      "sha256": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/effects.rs",
+        "lines": {
+          "count": 63,
+          "covered": 48,
+          "percent": 76.19047619047619
+        },
+        "functions": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 14,
+          "covered": 7,
+          "percent": 50
+        },
+        "regions": {
+          "count": 85,
+          "covered": 65,
+          "notcovered": 20,
+          "percent": 76.47058823529412
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/form.rs",
+      "sha256": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/form.rs",
+        "lines": {
+          "count": 35,
+          "covered": 35,
+          "percent": 100
+        },
+        "functions": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 8,
+          "covered": 4,
+          "percent": 50
+        },
+        "regions": {
+          "count": 61,
+          "covered": 61,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/help.rs",
+      "sha256": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/help.rs",
+        "lines": {
+          "count": 48,
+          "covered": 47,
+          "percent": 97.91666666666666
+        },
+        "functions": {
+          "count": 5,
+          "covered": 5,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 10,
+          "covered": 5,
+          "percent": 50
+        },
+        "regions": {
+          "count": 72,
+          "covered": 69,
+          "notcovered": 3,
+          "percent": 95.83333333333334
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/input.rs",
+      "sha256": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/input.rs",
+        "lines": {
+          "count": 52,
+          "covered": 50,
+          "percent": 96.15384615384616
+        },
+        "functions": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 14,
+          "covered": 7,
+          "percent": 50
+        },
+        "regions": {
+          "count": 82,
+          "covered": 78,
+          "notcovered": 4,
+          "percent": 95.1219512195122
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/lifecycle.rs",
+      "sha256": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/lifecycle.rs",
+        "lines": {
+          "count": 63,
+          "covered": 57,
+          "percent": 90.47619047619048
+        },
+        "functions": {
+          "count": 10,
+          "covered": 10,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 20,
+          "covered": 10,
+          "percent": 50
+        },
+        "regions": {
+          "count": 90,
+          "covered": 85,
+          "notcovered": 5,
+          "percent": 94.44444444444444
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/list.rs",
+      "sha256": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/list.rs",
+        "lines": {
+          "count": 39,
+          "covered": 26,
+          "percent": 66.66666666666666
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 6,
+          "covered": 3,
+          "percent": 50
+        },
+        "regions": {
+          "count": 68,
+          "covered": 36,
+          "notcovered": 32,
+          "percent": 52.94117647058824
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/motion.rs",
+      "sha256": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/motion.rs",
+        "lines": {
+          "count": 38,
+          "covered": 30,
+          "percent": 78.94736842105263
+        },
+        "functions": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 8,
+          "covered": 4,
+          "percent": 50
+        },
+        "regions": {
+          "count": 48,
+          "covered": 31,
+          "notcovered": 17,
+          "percent": 64.58333333333334
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/pagination.rs",
+      "sha256": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/pagination.rs",
+        "lines": {
+          "count": 57,
+          "covered": 53,
+          "percent": 92.98245614035088
+        },
+        "functions": {
+          "count": 6,
+          "covered": 6,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 12,
+          "covered": 6,
+          "percent": 50
+        },
+        "regions": {
+          "count": 68,
+          "covered": 62,
+          "notcovered": 6,
+          "percent": 91.17647058823529
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/render_probe.rs",
+      "sha256": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/render_probe.rs",
+        "lines": {
+          "count": 24,
+          "covered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 2,
+          "covered": 0,
+          "percent": 0
+        },
+        "instantiations": {
+          "count": 4,
+          "covered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 52,
+          "covered": 0,
+          "notcovered": 52,
+          "percent": 0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/spinners.rs",
+      "sha256": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/spinners.rs",
+        "lines": {
+          "count": 89,
+          "covered": 89,
+          "percent": 100
+        },
+        "functions": {
+          "count": 8,
+          "covered": 8,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 16,
+          "covered": 8,
+          "percent": 50
+        },
+        "regions": {
+          "count": 127,
+          "covered": 127,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/examples/support/mod.rs",
+      "sha256": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea/examples/support/mod.rs",
+        "lines": {
+          "count": 8,
+          "covered": 8,
+          "percent": 100
+        },
+        "functions": {
+          "count": 2,
+          "covered": 2,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 28,
+          "covered": 14,
+          "percent": 50
+        },
+        "regions": {
+          "count": 21,
+          "covered": 19,
+          "notcovered": 2,
+          "percent": 90.47619047619048
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "crates/matea/src/lib.rs",
+      "sha256": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+      "units": [
+        "matea/lib"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "examples/external-widget/src/main.rs",
+      "sha256": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+      "units": [
+        "examples"
+      ],
+      "native_execution_coverage": {
+        "file": "examples/external-widget/src/main.rs",
+        "lines": {
+          "count": 48,
+          "covered": 43,
+          "percent": 89.58333333333334
+        },
+        "functions": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 13,
+          "covered": 8,
+          "percent": 61.53846153846154
+        },
+        "regions": {
+          "count": 87,
+          "covered": 69,
+          "notcovered": 18,
+          "percent": 79.3103448275862
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "scripts/audit_references.py",
+      "sha256": "c5b00055aebc6043e26783de4827bd84955212ba42c8e96041cadf2b1db80c66",
+      "units": [
+        "scripts/coverage-and-issues"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/check_color_trace.py",
+      "sha256": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+      "units": [
+        "scripts/independent-terminal-oracles"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/check_coverage.py",
+      "sha256": "041fe2c22f41bba3674c62b65f7d775f17f37b293e10eca416aa5377a30b062b",
+      "units": [
+        "scripts/coverage-and-issues"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/check_quality.py",
+      "sha256": "486cfbb2233060bcdeb7fc8a61cee21de5c7354c38407a998d1e51408793b12e",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/check_terminal_trace.py",
+      "sha256": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+      "units": [
+        "scripts/independent-terminal-oracles"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/collect_rustdoc.py",
+      "sha256": "1dbdb3107ec3eca5060fca70f2809c91c660d0d94cec42bb132fcf730295350c",
+      "units": [
+        "scripts/compiler-export-audit"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/collect_rustdoc_batch.py",
+      "sha256": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+      "units": [
+        "scripts/compiler-export-audit"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/evidence_checks.py",
+      "sha256": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/example_smoke.py",
+      "sha256": "fb2a1518708eaf31874f73282c1d77faa92eb07b31a2f0c869836ecf8b6e3749",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/fetch_rust_references.py",
+      "sha256": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+      "units": [
+        "scripts/compiler-export-audit"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/fetch_upstream_issues.py",
+      "sha256": "7f87937118aea26c66d0e28e32fd31c6d408605f949cbaf174f29665ea894a8e",
+      "units": [
+        "scripts/coverage-and-issues"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/import_rustdoc.py",
+      "sha256": "ab86e85705134e664ccc7f107872c457f892bf3d2a26e6e2d5003721a541fa16",
+      "units": [
+        "scripts/compiler-export-audit"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/measure_auditor_performance.py",
+      "sha256": "adcefaa11229db65f79c2c62fb874d9a9de46e19cae7f4296a4a1c534d0008ea",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/measure_rust_coverage.py",
+      "sha256": "3f454b7f66c89bea3323f5154128a55e843c599f660b818ef33a9316c4b1a6d4",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/optimization_evidence.py",
+      "sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/prepare_upstream_bench.py",
+      "sha256": "b2006f551f366a483e8cd039d012d18e4389fe8b2d097218a659735eadd0092d",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/pty_smoke.py",
+      "sha256": "af501c0778f10b9b5e6b0a14b24fdbdc8a820a95d339cc0ede9a16e839b1633e",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/report_clock_format_performance.py",
+      "sha256": "aa192680cfe5e65f1cb2cdea9919ff204b3bc138dd86c6e50e41550b2fcff3a8",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/report_performance.py",
+      "sha256": "088ac4b0ea2836cf9da9be4a0e0abb84de507a1e0cc7ccd0c46615910ac974fd",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/report_subscription_performance.py",
+      "sha256": "8929cdd131482a2ce42aa6d4d9ad92dd69c1a47c9e33630c042582c1da3c6e77",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/report_view_performance.py",
+      "sha256": "5289b32b9a25073bf24d6d05f099153b207586515cbf8106d3707a6c24a873e5",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/report_viewport_performance.py",
+      "sha256": "4fdaa8fdaee07372b9c7444380704a8b64ccdc156f412f44414e569327795706",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/rustdoc_exports.py",
+      "sha256": "54e5d81a2e3f5134cff6a887ae6ea05b1f7131bfd1a856c92e50153603846710",
+      "units": [
+        "scripts/compiler-export-audit"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_color_trace.py",
+      "sha256": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_evidence_checks.py",
+      "sha256": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_optimization_evidence.py",
+      "sha256": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_quality.py",
+      "sha256": "61d4f57494489fe6d81f11b2ece2492599541453d7766d9701e5211bb3a2ae70",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_rustdoc_exports.py",
+      "sha256": "495c10c1ea668ac714adf832519379ae9158419ddf2b0daa7ac9c2febf54037f",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_rustdoc_import.py",
+      "sha256": "5becd11f7fc089fde2d71abad62f4ba13d6a4dc93877643eb12b5fe7180f2300",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/test_source_auditors.py",
+      "sha256": "66baa2af33f3a68e9d872b06987cc11fa1cc80abd250aefdad99e1ee08a85f11",
+      "units": [
+        "scripts/regression-tests"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/verify_foundation.py",
+      "sha256": "da95f3e954db1001889f384e3d4796dc469bdba4f5210d2a6f18eab4c7f9300d",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "tools/api-audit/src/main.rs",
+      "sha256": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+      "units": [
+        "tools/api-audit"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/api-audit/src/main.rs",
+        "lines": {
+          "count": 327,
+          "covered": 276,
+          "percent": 84.40366972477065
+        },
+        "functions": {
+          "count": 27,
+          "covered": 24,
+          "percent": 88.88888888888889
+        },
+        "instantiations": {
+          "count": 59,
+          "covered": 45,
+          "percent": 76.27118644067797
+        },
+        "regions": {
+          "count": 585,
+          "covered": 499,
+          "notcovered": 86,
+          "percent": 85.2991452991453
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "tools/audit-go/main.go",
+      "sha256": "e579ff7fe67e38a25e5fa4c7391ef016a6ad2a6c8e6fc1cdfcbd24006dafc033",
+      "units": [
+        "tools/go-auditor"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "tools/perf-probe/src/main.rs",
+      "sha256": "038252d42bdce3ef1ba0af5db415659264a2fa0df3d3772da2fbcf5375d04acd",
+      "units": [
+        "tools/perf-probe"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/perf-probe/src/main.rs",
+        "lines": {
+          "count": 1383,
+          "covered": 1379,
+          "percent": 99.71077368040491
+        },
+        "functions": {
+          "count": 106,
+          "covered": 105,
+          "percent": 99.05660377358491
+        },
+        "instantiations": {
+          "count": 270,
+          "covered": 166,
+          "percent": 61.48148148148148
+        },
+        "regions": {
+          "count": 2199,
+          "covered": 2193,
+          "notcovered": 6,
+          "percent": 99.72714870395635
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "tools/perf-probe/src/protocol.rs",
+      "sha256": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+      "units": [
+        "tools/perf-probe"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/perf-probe/src/protocol.rs",
+        "lines": {
+          "count": 102,
+          "covered": 102,
+          "percent": 100
+        },
+        "functions": {
+          "count": 9,
+          "covered": 9,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 18,
+          "covered": 9,
+          "percent": 50
+        },
+        "regions": {
+          "count": 186,
+          "covered": 186,
+          "notcovered": 0,
+          "percent": 100
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        }
+      }
+    },
+    {
+      "file": "tools/perf-upstream/main.go",
+      "sha256": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb",
+      "units": [
+        "tools/go-performance-probe"
+      ],
+      "native_execution_coverage": null
+    }
+  ],
+  "limits": [
+    "Scores are bounded review assessments, not benchmark results, percentages of upstream APIs, or mathematical safety proofs.",
+    "Native coverage includes embedded unit tests. Unlisted files have no LLVM evidence; Python/Go/config coverage is separate.",
+    "A passing inventory check is not a passing quality gate. No averaging and no unmeasured maximum-performance claim."
+  ]
+}

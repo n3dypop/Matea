@@ -1,0 +1,135 @@
+{
+  "recorded_at_utc": "2026-10-17T06:53:00.812630+00:00",
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "before_context": {
+    "recorded_at_utc": "2026-10-17T06:46:23.748472+00:00",
+    "git_head": "d774b9f9a9a4a3cd4b1b53f56af34d24b3d82bdf",
+    "host": "macOS-27.0.1-arm64-arm-64bit",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+    "raw_sha256": "8fda7321a7908ee792742f20fcb9ae3984a6df08bcf414129ebfed7475ae3f7d",
+    "binary_sha256": "fc991b224d8228ab546cacbc7d7738be0be0b603a2ed17d6895cc3e9c759191e",
+    "source_sha256": {
+      "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+      "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+      "crates/matea-core/src/lib.rs": "f480295810a021c1da4352ca88cdf544b729812128a690b56d0fe0afca51e8af",
+      "crates/matea-widgets/src/clocks.rs": "59c3c1f42ea4349ed0838ac64fb1b6e3811cd8056f1f23647bbe7656f98f411e",
+      "tools/perf-probe/src/main.rs": "e173d8d1f5f1e6ac006947afab567755d228f63dd073e7db73e36a2f481868c8"
+    },
+    "scope": "Rust-only adapter construction and headless ignored-focus dispatch/reconciliation. No Go comparison, real timer wakeup, frame rendering or terminal I/O."
+  },
+  "before_context_sha256": "24a99b669c557dc46a98835ed771b52cc3b0cfdf98bdac3d012f4648547db933",
+  "after_git_head_before_uncommitted_changes": "d774b9f9a9a4a3cd4b1b53f56af34d24b3d82bdf",
+  "after_source_sha256": {
+    "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+    "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+    "crates/matea-core/src/lib.rs": "d7e2dead82eed5c2b1dbdec868e4d622f9fd588dba014c03ddda6fc4fb6f9971",
+    "crates/matea-widgets/src/clocks.rs": "11782aa9eb46b4def7a040ccfd2aaed62d1b94e6a131241525be9107c559b1cc",
+    "tools/perf-probe/src/main.rs": "e173d8d1f5f1e6ac006947afab567755d228f63dd073e7db73e36a2f481868c8",
+    "crates/matea/src/lib.rs": "e792fb9a5bcbd74d2fb26610cd63ba8d62d15be965688031dd82536a605b32bd",
+    "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+    "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+    "scripts/report_subscription_performance.py": "f4660f4876e1b62f0463f98912656a38f3e82277aed8ff65902855b92d67d7af"
+  },
+  "after_binary_sha256": "ff2fa5a430481932d5debe87cbcb82ad8e6696520ed39d786c3d76f4d65fd2c3",
+  "after_rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "raw_sha256": {
+    "subscriptions-before.jsonl": "8fda7321a7908ee792742f20fcb9ae3984a6df08bcf414129ebfed7475ae3f7d",
+    "subscriptions-after.jsonl": "b911c64b2396f9799cb2199b8a81f8a9a242ad00b12d2c55f78824ad94e952c0"
+  },
+  "negative_regression_sha256": "002e2f5f274adc34caf22dc76b8b1a0cab6ed407ec47fab0fb65c4b0c9647b1f",
+  "cases": [
+    {
+      "case": "subscriptions/clock_adapter",
+      "semantics": "construct and drop one clock subscription adapter with captured monotonic clock; no runtime, worker or timer wakeup",
+      "output": "one clock subscription descriptor; callback not invoked",
+      "before": {
+        "p50_ns": 163.041,
+        "p95_ns": 186.292,
+        "allocations": 2,
+        "allocated_bytes": 76
+      },
+      "after": {
+        "p50_ns": 51.625,
+        "p95_ns": 52.375,
+        "allocations": 1,
+        "allocated_bytes": 48
+      }
+    },
+    {
+      "case": "subscriptions/reconcile_0",
+      "semantics": "dispatch ignored focus event and retain unchanged clock subscriptions; callbacks recreated but not invoked; no frame or terminal I/O",
+      "output": "0 configured subscriptions; no timer fired",
+      "before": {
+        "p50_ns": 20.958,
+        "p95_ns": 21.416,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 24.959,
+        "p95_ns": 25.375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "subscriptions/reconcile_1",
+      "semantics": "dispatch ignored focus event and retain unchanged clock subscriptions; callbacks recreated but not invoked; no frame or terminal I/O",
+      "output": "1 configured subscriptions; no timer fired",
+      "before": {
+        "p50_ns": 334.833,
+        "p95_ns": 346.958,
+        "allocations": 5,
+        "allocated_bytes": 1230
+      },
+      "after": {
+        "p50_ns": 136.333,
+        "p95_ns": 154.167,
+        "allocations": 2,
+        "allocated_bytes": 144
+      }
+    },
+    {
+      "case": "subscriptions/reconcile_12",
+      "semantics": "dispatch ignored focus event and retain unchanged clock subscriptions; callbacks recreated but not invoked; no frame or terminal I/O",
+      "output": "12 configured subscriptions; no timer fired",
+      "before": {
+        "p50_ns": 2283.959,
+        "p95_ns": 3297.666,
+        "allocations": 40,
+        "allocated_bytes": 5213
+      },
+      "after": {
+        "p50_ns": 1380.083,
+        "p95_ns": 1814.75,
+        "allocations": 13,
+        "allocated_bytes": 1728
+      }
+    },
+    {
+      "case": "subscriptions/reconcile_64",
+      "semantics": "dispatch ignored focus event and retain unchanged clock subscriptions; callbacks recreated but not invoked; no frame or terminal I/O",
+      "output": "64 configured subscriptions; no timer fired",
+      "before": {
+        "p50_ns": 14106.5,
+        "p95_ns": 14282.5,
+        "allocations": 203,
+        "allocated_bytes": 20992
+      },
+      "after": {
+        "p50_ns": 7758.5,
+        "p95_ns": 8186.25,
+        "allocations": 65,
+        "allocated_bytes": 9216
+      }
+    }
+  ],
+  "upstream_parity": false,
+  "limits": [
+    "One macOS arm64 host, sequential Rust release runs, 31 samples; no affinity/frequency control or discarded outliers.",
+    "Only adapter construction/drop and ignored focus dispatch with retained subscriptions. Runtime construction occurs outside measurement; no timer notification, render, terminal I/O or Go comparison.",
+    "The probe asserts that every configured timer still fires after the retained-reconciliation measurement.",
+    "Allocation counts/bytes describe one operation, not total retained memory or startup. Inline IDs enlarge descriptors/map nodes; initial resident memory is unmeasured.",
+    "Callbacks and the model subscription Vec still allocate. Named-string IDs can still allocate/clone. This is not end-to-end zero allocation."
+  ]
+}

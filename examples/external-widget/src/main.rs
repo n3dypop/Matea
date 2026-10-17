@@ -15,7 +15,7 @@ impl Component for Badge {
     }
     fn view(&self, theme: &Theme, focused: bool) -> View {
         View::styled(
-            format!(
+            format_args!(
                 "[{}] Third-party badge",
                 if self.enabled { "x" } else { " " }
             ),

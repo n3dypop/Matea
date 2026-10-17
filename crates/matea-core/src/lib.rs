@@ -3,59 +3,23 @@
 use matea_render::{GeometryError, Size, Surface, View};
 use matea_style::Theme;
 use std::{
+    any::{TypeId, type_name},
     collections::{BTreeMap, HashMap},
+    hash::BuildHasher,
     sync::{
         Arc, Condvar, Mutex,
+        atomic::{AtomicBool, Ordering},
         mpsc::{self, Receiver, SyncSender, TrySendError},
     },
     thread::{self, JoinHandle},
     time::Duration,
 };
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum KeyCode {
-    Char(char),
-    Enter,
-    Esc,
-    Backspace,
-    Delete,
-    Left,
-    Right,
-    Up,
-    Down,
-    Home,
-    End,
-    Tab,
-    BackTab,
-    PageUp,
-    PageDown,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Key {
-    pub code: KeyCode,
-    pub ctrl: bool,
-    pub alt: bool,
-    pub shift: bool,
-}
-impl Key {
-    pub const fn new(code: KeyCode) -> Self {
-        Self {
-            code,
-            ctrl: false,
-            alt: false,
-            shift: false,
-        }
-    }
-    pub fn is_char(self, c: char) -> bool {
-        self.code == KeyCode::Char(c) && !self.ctrl && !self.alt
-    }
-}
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Input {
-    Key(Key),
-    Paste(String),
-    Focus(bool),
-}
+pub mod input;
+pub use input::{
+    Input, Key, KeyCode, KeyKind, KeyState, MediaKey, ModifierKey, Modifiers, Mouse, MouseButton,
+    MouseKind, ScrollDirection,
+};
 #[derive(Debug)]
 pub enum Event<M> {
     Input(Input),
@@ -160,9 +124,58 @@ impl<M> Effect<M> {
     }
 }
 
+/// In-process subscription identity. Named and type-scoped keys never collide.
+/// A scoped key is not a stable serialization or cross-build ordering format.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct SubscriptionId(SubscriptionIdentity);
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+enum SubscriptionIdentity {
+    Named(String),
+    Scoped {
+        namespace: &'static str,
+        type_id: TypeId,
+        instance: u64,
+        revision: u64,
+        variant: u128,
+    },
+}
+impl SubscriptionId {
+    pub fn named(name: impl Into<String>) -> Self {
+        Self(SubscriptionIdentity::Named(name.into()))
+    }
+    /// Use a private tag type for an independently owned component namespace.
+    /// The full tuple is retained and compared, without formatting or hashing it
+    /// down to a lossy short ID. Changing behavior requires changing the tuple.
+    pub fn scoped<Tag: 'static>(instance: u64, revision: u64, variant: u128) -> Self {
+        Self(SubscriptionIdentity::Scoped {
+            namespace: type_name::<Tag>(),
+            type_id: TypeId::of::<Tag>(),
+            instance,
+            revision,
+            variant,
+        })
+    }
+}
+impl std::fmt::Display for SubscriptionId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self.0 {
+            SubscriptionIdentity::Named(name) => f.write_str(name),
+            SubscriptionIdentity::Scoped {
+                namespace,
+                type_id,
+                instance,
+                revision,
+                variant,
+            } => write!(
+                f,
+                "{namespace}[{type_id:?}]:{instance}:{revision}:{variant}"
+            ),
+        }
+    }
+}
 /// Stable ID identifies behavior. To restart/change a subscription, change its ID.
 pub struct Subscription<M> {
-    id: String,
+    id: SubscriptionId,
     interval: Duration,
     message: Box<dyn Fn() -> M>,
 }
@@ -172,16 +185,25 @@ impl<M> Subscription<M> {
         interval: Duration,
         message: impl Fn() -> M + 'static,
     ) -> Self {
+        Self::every_with_id(SubscriptionId::named(id), interval, message)
+    }
+    pub fn every_with_id(
+        id: SubscriptionId,
+        interval: Duration,
+        message: impl Fn() -> M + 'static,
+    ) -> Self {
         Self {
-            id: id.into(),
+            id,
             interval,
             message: Box::new(message),
         }
     }
 }
 struct Timer<M> {
-    subscription: Subscription<M>,
-    next: Duration,
+    interval: Duration,
+    message: Box<dyn Fn() -> M>,
+    // None means no future deadline fits in the logical Duration domain.
+    next: Option<Duration>,
 }
 struct Worker {
     id: String,
@@ -219,8 +241,9 @@ pub struct Runtime<A: Model> {
     workers: Vec<Worker>,
     current: HashMap<String, u64>,
     generation: u64,
-    timers: BTreeMap<String, Timer<A::Message>>,
+    timers: BTreeMap<SubscriptionId, Timer<A::Message>>,
     now: Duration,
+    worker_panic: Arc<AtomicBool>,
 }
 impl<A: Model> Runtime<A> {
     pub fn new(mut model: A, size: Size, theme: Theme) -> Result<Self, RuntimeError> {
@@ -238,6 +261,7 @@ impl<A: Model> Runtime<A> {
             generation: 0,
             timers: BTreeMap::new(),
             now: Duration::ZERO,
+            worker_panic: Arc::new(AtomicBool::new(false)),
         };
         r.schedule(effect)?;
         r.dispatch(Event::Resize(size))?;
@@ -251,6 +275,12 @@ impl<A: Model> Runtime<A> {
     }
     pub fn size(&self) -> Size {
         self.size
+    }
+    /// Observe a caught worker panic once, including canceled/stale effects.
+    /// The normal panic hook may have written outside the application's view.
+    /// Drivers can invalidate output caches without installing a global hook.
+    pub fn take_worker_panic_notice(&self) -> bool {
+        self.worker_panic.swap(false, Ordering::Acquire)
     }
     pub fn frame(&self) -> Result<Surface, GeometryError> {
         self.model
@@ -275,48 +305,68 @@ impl<A: Model> Runtime<A> {
         self.reconcile()
     }
     fn reconcile(&mut self) -> Result<(), RuntimeError> {
-        let subscriptions = self.model.subscriptions();
+        let mut subscriptions = self.model.subscriptions();
+        if subscriptions.is_empty() {
+            self.timers.clear();
+            return Ok(());
+        }
         if subscriptions.len() > 64 {
             return Err(RuntimeError("subscription limit is 64".into()));
         }
-        let mut next = BTreeMap::new();
-        for s in subscriptions {
+        subscriptions.sort_unstable_by(|a, b| a.id.cmp(&b.id));
+        for s in &subscriptions {
             if s.interval.is_zero() {
                 return Err(RuntimeError(format!(
                     "subscription {} requires a nonzero interval",
                     s.id
                 )));
             }
-            if next.contains_key(&s.id) {
-                return Err(RuntimeError(format!("duplicate subscription ID: {}", s.id)));
-            }
-            let id = s.id.clone();
-            let t = self.timers.remove(&id).unwrap_or_else(|| Timer {
-                next: self.now.saturating_add(s.interval),
-                subscription: s,
-            });
-            next.insert(id, t);
         }
-        self.timers = next;
+        for pair in subscriptions.windows(2) {
+            if pair[0].id == pair[1].id {
+                return Err(RuntimeError(format!(
+                    "duplicate subscription ID: {}",
+                    pair[0].id
+                )));
+            }
+        }
+        // Validate everything before mutating the table. Retain unchanged nodes,
+        // deadlines and callbacks; a rejected configuration cannot postpone them.
+        self.timers
+            .retain(|id, _| subscriptions.binary_search_by(|s| s.id.cmp(id)).is_ok());
+        let now = self.now;
+        for s in subscriptions {
+            let Subscription {
+                id,
+                interval,
+                message,
+            } = s;
+            self.timers.entry(id).or_insert_with(|| Timer {
+                next: now.checked_add(interval),
+                interval,
+                message,
+            });
+        }
         Ok(())
     }
     /// Advance logical time. Delayed timers coalesce to one message per call.
+    /// A deadline beyond Duration::MAX cannot fire; the exact maximum fires once.
     pub fn advance(&mut self, elapsed: Duration) -> Result<bool, RuntimeError> {
         self.now = self.now.saturating_add(elapsed);
         let due: Vec<_> = self
             .timers
             .iter()
-            .filter(|(_, t)| t.next <= self.now)
+            .filter(|(_, t)| t.next.is_some_and(|next| next <= self.now))
             .map(|(id, _)| id.clone())
             .collect();
         let mut changed = false;
         for id in due {
             if let Some(t) = self.timers.get_mut(&id) {
-                if t.next > self.now {
+                if t.next.is_none_or(|next| next > self.now) {
                     continue;
                 }
-                t.next = self.now.saturating_add(t.subscription.interval);
-                let message = (t.subscription.message)();
+                t.next = self.now.checked_add(t.interval);
+                let message = (t.message)();
                 self.dispatch(Event::Message(message))?;
                 changed = true;
             }
@@ -408,6 +458,7 @@ impl<A: Model> Runtime<A> {
         let c = token.clone();
         let tx = self.tx.clone();
         let worker_id = id.clone();
+        let worker_panic = self.worker_panic.clone();
         let handle = thread::Builder::new()
             .name(format!("matea:{id}"))
             .spawn(move || {
@@ -437,11 +488,14 @@ impl<A: Model> Runtime<A> {
                             message,
                             panicked: false,
                         }),
-                        Err(_) => Completion::Failure(EffectFailure {
-                            id: task.id,
-                            message: "effect panicked".into(),
-                            panicked: true,
-                        }),
+                        Err(_) => {
+                            worker_panic.store(true, Ordering::Release);
+                            Completion::Failure(EffectFailure {
+                                id: task.id,
+                                message: "effect panicked".into(),
+                                panicked: true,
+                            })
+                        }
                     };
                     let failed = matches!(completion, Completion::Failure(_));
                     if !send(completion) || failed {
@@ -519,15 +573,15 @@ pub struct FocusRing {
     index: usize,
 }
 impl FocusRing {
+    #[inline]
     pub fn new(ids: impl IntoIterator<Item = impl Into<String>>) -> Self {
-        let mut out = Vec::new();
-        for id in ids {
-            let id = id.into();
-            if !out.contains(&id) {
-                out.push(id);
-            }
+        Self {
+            ids: focus_ids(
+                ids.into_iter().map(Into::into),
+                std::collections::hash_map::RandomState::new,
+            ),
+            index: 0,
         }
-        Self { ids: out, index: 0 }
     }
     pub fn current(&self) -> Option<&str> {
         self.ids.get(self.index).map(String::as_str)
@@ -536,24 +590,116 @@ impl FocusRing {
         if self.ids.is_empty() {
             return false;
         }
-        if let Input::Key(k) = input {
-            match k.code {
-                KeyCode::Tab if !k.shift => self.index = (self.index + 1) % self.ids.len(),
-                KeyCode::BackTab | KeyCode::Tab => {
-                    self.index = (self.index + self.ids.len() - 1) % self.ids.len()
-                }
-                _ => return false,
+        match input.key_down().and_then(Key::focus_direction) {
+            Some(1) => self.index = (self.index + 1) % self.ids.len(),
+            Some(-1) => self.index = (self.index + self.ids.len() - 1) % self.ids.len(),
+            _ => return false,
+        }
+        true
+    }
+}
+
+/// Keep small rings and duplicate-heavy streams on the allocation-light scan.
+/// For larger unique sets, hashes select a linked chain of indices. Strings stay
+/// owned once in `out`; full equality verifies every hash match. No pointers or
+/// self-referential borrows survive Vec growth, and collisions never lose IDs.
+#[inline]
+fn focus_ids<H: BuildHasher>(
+    mut input: impl Iterator<Item = String>,
+    make_hasher: impl FnOnce() -> H,
+) -> Vec<String> {
+    let mut out = Vec::new();
+    for id in input.by_ref() {
+        if !out.contains(&id) {
+            out.push(id);
+            if out.len() > 128 {
+                return indexed_focus_ids(out, input, make_hasher());
             }
-            true
-        } else {
-            false
         }
     }
+    out
+}
+
+// Keep the hash table's stack/drop machinery out of the common small ring path.
+#[inline(never)]
+fn indexed_focus_ids<H: BuildHasher>(
+    mut out: Vec<String>,
+    input: impl Iterator<Item = String>,
+    hasher: H,
+) -> Vec<String> {
+    let mut heads = HashMap::with_capacity(out.capacity());
+    let mut links = Vec::with_capacity(out.capacity());
+    for (index, id) in out.iter().enumerate() {
+        let key = hasher.hash_one(id.as_str());
+        links.push(heads.insert(key, index).unwrap_or(usize::MAX));
+    }
+    for id in input {
+        let key = hasher.hash_one(id.as_str());
+        let head = heads.get(&key).copied().unwrap_or(usize::MAX);
+        let mut index = head;
+        while index != usize::MAX && out[index] != id {
+            index = links[index];
+        }
+        if index == usize::MAX {
+            heads.insert(key, out.len());
+            links.push(head);
+            out.push(id);
+        }
+    }
+    out
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn large_focus_rings_preserve_first_order_even_with_total_hash_collision() {
+        #[derive(Default)]
+        struct ZeroHasher;
+        impl std::hash::Hasher for ZeroHasher {
+            fn write(&mut self, _: &[u8]) {}
+            fn finish(&self) -> u64 {
+                0
+            }
+        }
+        let (count, modulus) = if cfg!(miri) { (160, 137) } else { (900, 257) };
+        let input: Vec<_> = (0..count)
+            .map(|i| format!("field-{}", i * 73 % modulus))
+            .collect();
+        let mut expected = Vec::new();
+        for name in &input {
+            if !expected.contains(name) {
+                expected.push(name.clone());
+            }
+        }
+        let actual = focus_ids(
+            input.clone().into_iter(),
+            std::hash::BuildHasherDefault::<ZeroHasher>::default,
+        );
+        assert_eq!(actual, expected);
+        let mut ring = FocusRing::new(input);
+        assert_eq!(ring.ids, expected);
+        for name in expected.iter().cycle().take(expected.len() * 2) {
+            assert_eq!(ring.current(), Some(name.as_str()));
+            assert!(ring.handle(&Input::Key(Key::new(KeyCode::Tab))));
+        }
+        assert_eq!(ring.current(), Some(expected[0].as_str()));
+    }
+    #[test]
+    fn small_or_duplicate_heavy_focus_rings_never_construct_a_hash_table() {
+        for count in [0, 3, 128, 1000] {
+            let mut i = 0usize;
+            let actual = focus_ids(
+                (0..count).map(|_| {
+                    i += 1;
+                    "same".to_owned()
+                }),
+                || -> std::collections::hash_map::RandomState { panic!("unneeded hasher") },
+            );
+            assert_eq!(i, count);
+            assert_eq!(actual.len(), usize::from(count != 0));
+        }
+    }
     struct App {
         values: Vec<i32>,
         effect: Option<Effect<i32>>,
@@ -624,6 +770,16 @@ mod tests {
         let mut r = app(Effect::perform("panic", |_| panic!("fixture")));
         drain(&mut r);
         assert!(r.model.failures[0].panicked);
+        assert!(r.take_worker_panic_notice());
+        assert!(!r.take_worker_panic_notice());
+        let mut r = app(Effect::perform("stale-panic", |_| panic!("stale fixture")));
+        while !r.workers[0].handle.is_finished() {
+            thread::yield_now();
+        }
+        r.schedule(Effect::cancel("stale-panic")).unwrap();
+        drain(&mut r);
+        assert!(r.model.failures.is_empty());
+        assert!(r.take_worker_panic_notice());
     }
     #[test]
     fn cancelled_queued_results_are_discarded() {
@@ -732,5 +888,22 @@ mod tests {
         assert_eq!(f.current(), Some("a"));
         f.handle(&Input::Key(Key::new(KeyCode::BackTab)));
         assert_eq!(f.current(), Some("b"));
+    }
+    #[test]
+    fn saturated_clock_never_refires_or_rounds_down_unrepresentable_deadlines() {
+        let mut r = app(Effect::None);
+        r.advance(Duration::MAX - Duration::from_secs(1)).unwrap();
+        r.model.ticks = true;
+        r.reconcile().unwrap();
+        assert!(r.advance(Duration::from_secs(1)).unwrap());
+        assert_eq!(r.model.values, [7]);
+        assert!(!r.advance(Duration::ZERO).unwrap());
+        assert!(!r.advance(Duration::from_secs(1)).unwrap());
+        let mut r = app(Effect::None);
+        r.advance(Duration::MAX - Duration::from_nanos(1)).unwrap();
+        r.model.ticks = true;
+        r.reconcile().unwrap();
+        assert!(!r.advance(Duration::from_nanos(1)).unwrap());
+        assert!(r.model.values.is_empty());
     }
 }

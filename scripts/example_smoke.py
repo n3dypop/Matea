@@ -1,4 +1,5 @@
 """Portable examples and reviewed dashboard golden. Run from any directory."""
+from evidence_checks import require
 import os
 from pathlib import Path
 import subprocess
@@ -8,21 +9,22 @@ WORKSPACE = ROOT
 env = dict(os.environ, NO_COLOR="1", MATEA_REDUCED_MOTION="1")
 for name, expected in [("counter", "Count: 0"), ("list", "Matcha"),
                        ("form", "Favorite tea"), ("dashboard", "Tea studio"),
-                       ("effects", "Loading tea")]:
+                       ("effects", "Loading tea"), ("motion", "Matea motion"), ("input", "Matea input"),
+                       ("pagination", "Page 1 of 4"), ("help", "Matea key help"), ("clocks", "Matea clocks"), ("spinners", "Matea spinners")]:
     result = subprocess.run(
         ["cargo", "run", "--locked", "--quiet", "-p", "matea", "--example", name,
          "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
         capture_output=True, text=True, encoding="utf-8", timeout=60)
-    assert expected in result.stdout, (name, result.stdout)
-    assert "\x1b" not in result.stdout, name
+    require(expected in result.stdout, lambda: (name, result.stdout))
+    require("\x1b" not in result.stdout, lambda: name)
     if name == "dashboard":
         golden = (WORKSPACE / "tests/golden/dashboard.txt").read_text(encoding="utf-8")
-        assert result.stdout == golden, "dashboard golden mismatch"
+        require(result.stdout == golden, lambda: "dashboard golden mismatch")
     print(f"PASS {name} snapshot")
 result = subprocess.run(
     ["cargo", "run", "--locked", "--quiet", "-p", "matea-example-external-widget",
      "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
     capture_output=True, text=True, encoding="utf-8", timeout=60)
-assert "Third-party badge" in result.stdout
-assert "\x1b" not in result.stdout
+require("Third-party badge" in result.stdout)
+require("\x1b" not in result.stdout)
 print("PASS external widget snapshot")
