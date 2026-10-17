@@ -374,6 +374,20 @@ impl Stopwatch {
     pub fn reset_at(&mut self, at: Instant) -> ClockUpdate {
         self.0.set(Duration::ZERO, at)
     }
+    /// One transactional phase restart for owner-controlled animation state.
+    /// Unlike reset followed by start/stop, no intermediate clock state escapes
+    /// and the generation needs to change only once.
+    #[inline]
+    pub(crate) fn reset_running_at(&mut self, at: Instant, running: bool) -> ClockUpdate {
+        if at < self.0.anchor {
+            return ClockUpdate::Ignored;
+        }
+        self.0.bump();
+        self.0.value = Duration::ZERO;
+        self.0.anchor = at;
+        self.0.running = running;
+        ClockUpdate::Changed
+    }
 }
 impl Countdown {
     pub fn new(timeout: Duration) -> Self {

@@ -91,45 +91,31 @@ impl VirtualCursor {
     }
     /// Focus, reveal and restart the phase, including when already focused.
     /// Backward-time controls return false and leave all state unchanged.
+    #[inline]
     pub fn focus_at(&mut self, at: Instant) -> bool {
-        if !self.clock.reset_at(at).changed() {
-            return false;
-        }
-        self.focused = true;
-        self.reconcile(at);
-        true
+        self.configure(true, self.mode, at)
     }
     pub fn blur(&mut self) -> bool {
         self.blur_at(Instant::now())
     }
+    #[inline]
     pub fn blur_at(&mut self, at: Instant) -> bool {
-        if !self.clock.reset_at(at).changed() {
-            return false;
-        }
-        self.focused = false;
-        self.reconcile(at);
-        true
+        self.configure(false, self.mode, at)
     }
     pub fn set_mode(&mut self, mode: CursorMode) -> bool {
         self.set_mode_at(mode, Instant::now())
     }
     pub fn set_mode_at(&mut self, mode: CursorMode, at: Instant) -> bool {
-        if !self.clock.reset_at(at).changed() {
-            return false;
-        }
-        self.mode = mode;
-        self.reconcile(at);
-        true
+        self.configure(self.focused, mode, at)
     }
     pub fn set_interval(&mut self, interval: TickInterval) -> bool {
         self.set_interval_at(interval, Instant::now())
     }
     pub fn set_interval_at(&mut self, interval: TickInterval, at: Instant) -> bool {
-        if !self.clock.reset_at(at).changed() {
+        if !self.configure(self.focused, self.mode, at) {
             return false;
         }
         self.clock.set_interval_at(interval, at);
-        self.reconcile(at);
         true
     }
     pub fn restart(&mut self) -> bool {
@@ -143,13 +129,19 @@ impl VirtualCursor {
         }
         self.focus_at(at)
     }
-    fn reconcile(&mut self, at: Instant) {
-        self.blinked = !self.focused || self.mode == CursorMode::Hidden;
-        if self.focused && self.mode == CursorMode::Blink {
-            self.clock.start_at(at);
-        } else {
-            self.clock.stop_at(at);
+    #[inline]
+    fn configure(&mut self, focused: bool, mode: CursorMode, at: Instant) -> bool {
+        if !self
+            .clock
+            .reset_running_at(at, focused && mode == CursorMode::Blink)
+            .changed()
+        {
+            return false;
         }
+        self.focused = focused;
+        self.mode = mode;
+        self.blinked = !focused || mode == CursorMode::Hidden;
+        true
     }
     pub fn visible(&self, theme: &Theme) -> bool {
         self.focused
