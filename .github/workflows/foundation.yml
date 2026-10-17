@@ -41,6 +41,7 @@ jobs:
           RUSTDOCFLAGS: -D warnings
       - run: cargo build --locked --workspace --examples
       - run: python scripts/check_coverage.py
+      - run: python scripts/test_coverage.py
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/test_rustdoc_import.py
       - run: python scripts/test_source_snapshot.py
