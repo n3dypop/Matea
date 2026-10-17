@@ -417,9 +417,30 @@ impl DurationText {
         self.start -= 1;
         self.bytes[self.start] = b'0' + value;
     }
-    fn integer(&mut self, value: u64) {
-        let mut digits = itoa::Buffer::new();
-        self.prepend(digits.format(value).as_bytes());
+    fn integer(&mut self, mut value: u64) {
+        // Decimal pairs halve division and bounds-check work for long segments.
+        // The table is generated from digits, not a borrowed implementation.
+        const PAIRS: [u8; 200] = {
+            let mut pairs = [0; 200];
+            let mut n = 0;
+            while n < 100 {
+                pairs[n * 2] = b'0' + (n / 10) as u8;
+                pairs[n * 2 + 1] = b'0' + (n % 10) as u8;
+                n += 1;
+            }
+            pairs
+        };
+        while value >= 100 {
+            let pair = (value % 100) as usize * 2;
+            self.prepend(&PAIRS[pair..pair + 2]);
+            value /= 100;
+        }
+        if value >= 10 {
+            let pair = value as usize * 2;
+            self.prepend(&PAIRS[pair..pair + 2]);
+        } else {
+            self.digit(value as u8);
+        }
     }
     fn fraction(&mut self, mut value: u32, width: usize) {
         if value == 0 {
