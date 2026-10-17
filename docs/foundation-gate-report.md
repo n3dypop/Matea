@@ -75,7 +75,7 @@ Spinner実装 `8ee28f9cf9e0ecec750bbd516937a1d14ceeb5b4` は[Linux・Windows・m
 
 逆順時計書式化 `b6dfcca442e1a4bc810cc8655065065c81d232ac` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39012460120)の4ジョブに成功しました。[ジョブ・step証拠](evidence/clock-format-ci-run.json)。WindowsのPTY、通常runの参照元再収集はskipです。
 
-Textの追補CIは送信前です。直前の時計書式化成功とは実装コミットを分けて記録します。
+Text実装 `e91b0a5b9a03e4460f48dbc276a5ee8ed061861a` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39014877580)の4ジョブに成功しました。[ジョブ・step証拠](evidence/text-ci-run.json)。Unicode全スカラー値、formatter error、独立widgetとサイズ／style検証を含みます。Unix PTYはLinux/macOSで実行し、Windowsはskip。通常runの参照元再収集もskipです。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。
