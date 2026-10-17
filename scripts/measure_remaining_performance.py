@@ -68,6 +68,7 @@ def measure(name, unit, operation, inputs, semantics, python_heap=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", type=Path, required=True)
+    parser.add_argument("--only", help="repeat one exact workload without rerunning completed paths")
     args = parser.parse_args()
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     sources = [p for base in ["crates", "tools", "scripts"] for p in (ROOT/base).rglob("*")
@@ -83,6 +84,9 @@ def main():
     build = ["cargo", "build", "--offline", "--locked", "--release", "--workspace", "--examples", "--bins"]
     subprocess.run(build, cwd=ROOT, check=True, env=dict(os.environ, CARGO_TARGET_DIR=str(ROOT/"target")))
     cases = []
+    def record(name, *arguments, **keywords):
+        if args.only is None or name == args.only:
+            cases.append(measure(name, *arguments, **keywords))
     binary_hashes = {}
     environment = dict(os.environ, NO_COLOR="1", MATEA_REDUCED_MOTION="1")
     suffix = ".exe" if os.name == "nt" else ""
@@ -99,8 +103,8 @@ def main():
             if name=="dashboard" and output != (ROOT/"tests/golden/dashboard.txt").read_bytes():
                 raise ValueError("dashboard golden mismatch")
             return output
-        cases.append(measure("examples/"+name, "examples", example, binary_hashes[name],
-                             "complete release example snapshot process; includes spawn, runtime/frame construction, serialization, pipe and exit; expected content/no ESC and dashboard golden checked; no Cargo or interactive I/O"))
+        record("examples/"+name, "examples", example, binary_hashes[name],
+                             "complete release example snapshot process; includes spawn, runtime/frame construction, serialization, pipe and exit; expected content/no ESC and dashboard golden checked; no Cargo or interactive I/O")
     base = ROOT/"docs/evidence/performance/2026-10-16"
     for name, source, function in [
         ("ascii", base/"matea-trace.json", lambda d: replay(d)),
@@ -113,8 +117,8 @@ def main():
         def oracle(function=function, document=document):
             value = function(document)
             return canonical(value)
-        cases.append(measure("oracles/"+name, "scripts/independent-terminal-oracles", oracle, digest(data),
-                             "complete finite independent replay/verification with existing parsed trace input; includes oracle result serialization; no subprocess or input file read", True))
+        record("oracles/"+name, "scripts/independent-terminal-oracles", oracle, digest(data),
+                             "complete finite independent replay/verification with existing parsed trace input; includes oracle result serialization; no subprocess or input file read", True)
     pins = {p["name"]:p["sha"] for p in json.loads((ROOT/"docs/upstream-lock.json").read_bytes())}
     with tempfile.TemporaryDirectory(prefix="matea-tool-load-") as temporary:
         destination=Path(temporary)/"never-published"
@@ -126,8 +130,8 @@ def main():
                 raise ValueError("incomplete profile import")
             return canonical({name:digest(data) for name,data in files.items()})
         inputs=canonical({p.name:digest(p.read_bytes()) for p in sorted(folder.iterdir()) if p.is_file()})
-        cases.append(measure("compiler/validate-all-profile-imports", "scripts/compiler-export-audit", compiler, digest(inputs),
-                             "complete validation/canonicalization/import planning of all retained compiler profiles; reads actual normalized facts, hashes planned files; no external compiler/network or publication", True))
+        record("compiler/validate-all-profile-imports", "scripts/compiler-export-audit", compiler, digest(inputs),
+                             "complete validation/canonicalization/import planning of all retained compiler profiles; reads actual normalized facts, hashes planned files; no external compiler/network or publication", True)
     source=ROOT/"docs/coverage/upstream-issues.json";data=source.read_bytes(); previous=json.loads(data)
     pages={r["repository"]:[[{"number":i["number"],"title":i["title"],"html_url":i["url"],"updated_at":i["updated_at"],"labels":[{"name":n} for n in i["labels"]]} for i in r["issues"]]] for r in previous["repositories"]}
     expected=sum(len(r["issues"]) for r in previous["repositories"])
@@ -136,45 +140,47 @@ def main():
         if sum(r["open_issue_count"] for r in result["repositories"])!=expected:
             raise ValueError("issue counts changed")
         return canonical(result)
-    cases.append(measure("issues/preserve-all-retained-reviews", "scripts/coverage-and-issues", issues, digest(data),
-                         "merge/validate/serialize all retained issue records with simulated unchanged API pages; preserves reviews; excludes real network/pagination transport and file publication", True))
+    record("issues/preserve-all-retained-reviews", "scripts/coverage-and-issues", issues, digest(data),
+                         "merge/validate/serialize all retained issue records with simulated unchanged API pages; preserves reviews; excludes real network/pagination transport and file publication", True)
     def coverage():
         result=subprocess.check_output([sys.executable,"scripts/check_coverage.py"],cwd=ROOT,timeout=30)
         if b"F5 CLOSED" not in result:raise ValueError("unexpected coverage gate state")
         return result
-    cases.append(measure("coverage/complete-current-ledger-cli", "scripts/coverage-and-issues", coverage,
+    record("coverage/complete-current-ledger-cli", "scripts/coverage-and-issues", coverage,
                          digest(canonical({p.relative_to(ROOT).as_posix():digest(p.read_bytes()) for p in sorted((ROOT/"docs/coverage").rglob("*.json"))})),
-                         "complete ledger validation CLI including spawn, all reference/profile JSON parsing, hash/link checks and exit; pending scope must remain closed"))
+                         "complete ledger validation CLI including spawn, all reference/profile JSON parsing, hash/link checks and exit; pending scope must remain closed")
     def reporter():
         files, document=generate(base)
         result=json.loads(files["report.json"]);result.pop("recorded_at_utc")
         if len(result["cases"])!=84:raise ValueError("incomplete retained matched comparison")
         return canonical({"report":result,"document_sha256":digest(document)})
-    cases.append(measure("reporters/generate-complete-retained-comparison", "scripts/performance-reporters", reporter,
+    record("reporters/generate-complete-retained-comparison", "scripts/performance-reporters", reporter,
                          digest(canonical({p.name:digest(p.read_bytes()) for p in sorted(base.iterdir()) if p.is_file()})),
-                         "validate retained raw/history, replay independent traces and generate full 84-case comparison/document in memory; includes read/hash/compiler-version metadata subprocesses; excludes publication; timestamp omitted only from output identity", True))
+                         "validate retained raw/history, replay independent traces and generate full 84-case comparison/document in memory; includes read/hash/compiler-version metadata subprocesses; excludes publication; timestamp omitted only from output identity", True)
     current=json.loads((ROOT/"docs/quality-plan.json").read_bytes())
     def quality():
         result=assess(current,programs(ROOT))
         if result["review_units"]!=40 or result["all_high"]:raise ValueError("unexpected assessment scope/gate")
         return canonical(result)
-    cases.append(measure("acceptance/inventory-and-assess-all-programs", "scripts/test-and-acceptance-drivers", quality,
+    record("acceptance/inventory-and-assess-all-programs", "scripts/test-and-acceptance-drivers", quality,
                          digest((ROOT/"docs/quality-plan.json").read_bytes()),
-                         "complete Git source discovery and all six-dimension unit assessments; includes Git process and JSON result serialization; excludes LLVM profiling, PTY and full acceptance suite", True))
+                         "complete Git source discovery and all six-dimension unit assessments; includes Git process and JSON result serialization; excludes LLVM profiling, PTY and full acceptance suite", True)
     optimization=ROOT/"docs/evidence/optimization/style"
     before_bytes=(optimization/"before.jsonl").read_bytes();after_bytes=(optimization/"after.jsonl").read_bytes()
     def measurement_report():
         before=records(before_bytes.decode());after=records(after_bytes.decode())
         return canonical(compare(before,after,46))
-    cases.append(measure("reporters/strict-46-case-comparison", "scripts/performance-reporters", measurement_report,
+    record("reporters/strict-46-case-comparison", "scripts/performance-reporters", measurement_report,
                          digest(before_bytes+after_bytes),
-                         "decode/validate 92 modern probe records and compare all 46 matched cases, preserving p50/p95/allocation regressions; serialized result; no Git provenance check or publication", True))
+                         "decode/validate 92 modern probe records and compare all 46 matched cases, preserving p50/p95/allocation regressions; serialized result; no Git provenance check or publication", True)
     # Exercise the shared historical reader separately, including Go averages.
     data=(base/"upstream-current.jsonl").read_bytes()
     def historical():
         return canonical({name:summary(item) for name,item in read_records(data.decode()).items()})
-    cases.append(measure("reporters/historical-84-case-reader", "scripts/performance-reporters", historical, digest(data),
-                         "decode/validate/summarize every retained Go reference case; preserve fractional average counters; no Rust/Go execution", True))
+    record("reporters/historical-84-case-reader", "scripts/performance-reporters", historical, digest(data),
+                         "decode/validate/summarize every retained Go reference case; preserve fractional average counters; no Rust/Go execution", True)
+    if not cases:
+        raise ValueError("no selected workload")
     args.directory.mkdir(parents=True,exist_ok=True)
     raw=args.directory/"current.jsonl";raw.write_text("".join(json.dumps(c)+"\n" for c in cases),encoding="utf-8")
     context={"schema":1,"stage":"individual_modules","git_head":revision,"platform":platform.platform(),

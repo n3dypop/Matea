@@ -11,6 +11,28 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/evidence/quality"
 
 
+def canonical_files(data, root):
+    """Keep compilation instances separate when path includes alias one file."""
+    logical_root = root.absolute()
+    root = root.resolve()
+    grouped = {}
+    for unit_index, unit in enumerate(data["data"]):
+        for item in unit["files"]:
+            observed = Path(item["filename"])
+            try:
+                path = observed.resolve().relative_to(root).as_posix()
+            except ValueError:
+                continue
+            try:
+                observed_name = observed.relative_to(logical_root).as_posix()
+            except ValueError:
+                observed_name = observed.relative_to(root).as_posix()
+            if path.startswith(("crates/", "tools/", "examples/")):
+                grouped.setdefault(path, []).append({"unit": unit_index, "compiler_filename": observed_name,
+                                                    "summary": item["summary"]})
+    return [{"file": path, "instances": grouped[path]} for path in sorted(grouped)]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--existing", action="store_true", help="reuse this invocation's captured test JSON/profile files")
@@ -62,20 +84,13 @@ def main():
     for path in sorted(objects):
         command += ["-object", path]
     data = json.loads(subprocess.check_output(command, text=True))
-    files = []
-    for unit in data["data"]:
-        for item in unit["files"]:
-            try:
-                path = Path(item["filename"]).relative_to(ROOT).as_posix()
-            except ValueError:
-                continue
-            if path.startswith(("crates/", "tools/", "examples/")):
-                files.append({"file": path, **item["summary"]})
-    report = {"schema": 1, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
+    files = canonical_files(data, ROOT)
+    report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
               "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol; execution coverage only"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
-                         "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages."],
+                         "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",
+                         "Canonical source paths group separate compiler instances. Their counters/percentages are retained, never averaged, summed or replaced by the most favorable instance."],
               "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in sorted(f["file"] for f in files)},
               "files": sorted(files, key=lambda f: f["file"])}
     (OUT / "rust-execution-coverage.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

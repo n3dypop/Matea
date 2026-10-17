@@ -5,9 +5,32 @@ import subprocess
 import tempfile
 import unittest
 from check_quality import DIMENSIONS, assess, programs
+from measure_rust_coverage import canonical_files
 
 
 class QualityGateTests(unittest.TestCase):
+    def test_alias_coverage_preserves_every_compiler_instance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "crates/terminal/src/modes.rs"
+            source.parent.mkdir(parents=True); source.write_text("// fixture")
+            alias = root / "crates/terminal/benches/../src/modes.rs"
+            (root / "crates/terminal/benches").mkdir()
+            value = {"data": [{"files": [{"filename": str(source), "summary": {"lines": {"percent": 0}}},
+                                        {"filename": str(alias), "summary": {"lines": {"percent": 100}}},
+                                        {"filename": str(root.parent / "external.rs"), "summary": {}}]}]}
+            files = canonical_files(value, root)
+            self.assertEqual(len(files), 1)
+            self.assertEqual(files[0]["file"], "crates/terminal/src/modes.rs")
+            self.assertEqual([i["summary"]["lines"]["percent"] for i in files[0]["instances"]], [0, 100])
+            self.assertIn("/../", files[0]["instances"][1]["compiler_filename"])
+
+    def test_noninteger_scores_cannot_enter_the_gate(self):
+        for score in [False, 75.0, "75", -1, 76]:
+            plan = self.fixture(); plan["units"][0]["criteria"]["behavior"]["score"] = score
+            with self.subTest(score=score), self.assertRaises(ValueError):
+                assess(plan, {"a.rs"})
+
     def test_source_inventory_covers_new_root_and_benchmark_programs(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

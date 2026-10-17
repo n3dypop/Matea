@@ -34,7 +34,8 @@ def assess(plan, actual):
         if set(unit["criteria"]) != DIMENSIONS:
             raise ValueError("missing assessment dimension: " + unit["id"])
         for dimension, value in unit["criteria"].items():
-            if value["score"] not in (None, 0, 25, 50, 75, 100) or not value["reason"]:
+            score = value["score"]
+            if (score is not None and (type(score) is not int or score not in (0, 25, 50, 75, 100))) or not value["reason"]:
                 raise ValueError("invalid score or missing explanation: " + dimension)
     if covered != actual:
         raise ValueError(f"program inventory mismatch: missing={sorted(actual-covered)} stale={sorted(covered-actual)}")
@@ -64,6 +65,8 @@ def main():
             if hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != expected:
                 raise ValueError("stale execution coverage: " + path)
         by_file = {f["file"]: f for f in coverage["files"]}
+        if len(by_file) != len(coverage["files"]):
+            raise ValueError("duplicate execution-coverage paths; retain compiler instances explicitly")
         result.update({"schema": 1, "method": "docs/quality-evaluation.md", "units": plan["units"],
                        "plan_sha256": hashlib.sha256((ROOT / "docs/quality-plan.json").read_bytes()).hexdigest(),
                        "validation": "docs/evidence/local-validation.json",

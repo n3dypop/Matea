@@ -11,10 +11,13 @@ ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "docs/coverage/rustdoc"
 
 
-def canonical_fact_bytes(path):
-    text = Path(path).read_text(encoding="utf-8")
+def canonical_fact_bytes(path, parsed=None):
     if Path(path).suffix == ".json":
-        text = json.dumps(json.loads(text), indent=2, ensure_ascii=False) + "\n"
+        if parsed is None:
+            parsed = json.loads(Path(path).read_text(encoding="utf-8"))
+        text = json.dumps(parsed, indent=2, ensure_ascii=False) + "\n"
+    else:
+        text = Path(path).read_text(encoding="utf-8")
     return text.encode("utf-8")
 
 
@@ -35,8 +38,8 @@ def plan_import(folders, destination, pins):
     require(len(batches) == len(index.get("batches", [])), "duplicate indexed batch")
     pending = {}
 
-    def stage(path):
-        value = canonical_fact_bytes(path)
+    def stage(path, parsed=None):
+        value = canonical_fact_bytes(path, parsed)
         if path.name in pending:
             require(pending[path.name] == value, "conflicting input file: " + path.name)
         pending[path.name] = value
@@ -48,7 +51,7 @@ def plan_import(folders, destination, pins):
         for batch_path in sorted(folder.rglob("*-batch.json")):
             batch = json.loads(batch_path.read_text(encoding="utf-8"))
             require(pins[batch["reference"]] == batch["sha"])
-            stage(batch_path)
+            stage(batch_path, batch)
             batches[batch_path.name] = {"file": batch_path.name, "path": f"docs/coverage/rustdoc/{batch_path.name}",
                                         "reference": batch["reference"], "sha": batch["sha"], "target": batch["target"]}
         for run_path in sorted(folder.rglob("*-run.json")):
@@ -69,14 +72,14 @@ def plan_import(folders, destination, pins):
                 require(all("profile_item_key" in i and "docs" not in i for i in graph["items"]))
                 keys = [i["profile_item_key"] for i in graph["items"]]
                 require(len(keys) == len(set(keys)), "duplicate compiler item key")
-                graph_bytes = stage(graph_path)
+                graph_bytes = stage(graph_path, graph)
                 entry.update({"graph": f"docs/coverage/rustdoc/{graph_path.name}",
                               "graph_sha256": hashlib.sha256(graph_bytes).hexdigest(),
                               "local_items": len(graph["items"]), "external_exports": len(graph["external_exports"])})
             for suffix in ("-run.json", ".log", "-dependencies.txt"):
                 source = run_path.with_name(stem + suffix)
                 if source.exists():
-                    stage(source)
+                    stage(source, report if suffix == "-run.json" else None)
             snapshots[stem] = entry
     require(runs > 0, "no profile reports found")
     index["snapshots"] = sorted(snapshots.values(), key=lambda s: s["stem"])
