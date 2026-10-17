@@ -10,17 +10,19 @@ import (
 
 func captureMeasure(t *testing.T, run func()) []byte {
 	t.Helper()
-	reader, writer, err := os.Pipe()
+	writer, err := os.CreateTemp(t.TempDir(), "record-*.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { reader.Close(); writer.Close() })
+	t.Cleanup(func() { writer.Close() })
 	previous := os.Stdout
 	os.Stdout = writer
 	defer func() { os.Stdout = previous }()
 	run()
-	writer.Close()
-	raw, err := io.ReadAll(reader)
+	if _, err := writer.Seek(0, 0); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := io.ReadAll(writer)
 	if err != nil {
 		t.Fatal(err)
 	}
