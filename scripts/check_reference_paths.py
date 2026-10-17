@@ -73,22 +73,26 @@ def check_trajectories(output, fixture, spring):
 
 
 def check_timing_mode(destination, go_binary, environment, correctness):
-    environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS="1000000")
+    target=20_000_000
+    environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
     checked=[]
     for flag, expected in correctness:
-        output=subprocess.check_output([str(go_binary),*flag],env=environment,timeout=120)
+        output=subprocess.check_output([str(go_binary),*flag],env=environment,timeout=300)
         records=read_records(output.decode("utf-8"))
         require(records.keys()==expected.keys(), "calibrated case set changed")
         for name,item in records.items():
             require(all(item[key]==expected[name][key] for key in ["semantics","output","first_return_value"]),
                     "calibrated output changed: "+name)
             require("calibration" in item and len(item["samples_ns"])==31, "calibrated measurement mode not executed")
+            require(item["calibration"]["target_ns"]==target and
+                    all(len(b.get("confirmations_ns",[]))==2 for b in item["calibration"]["batches"]),
+                    "requested confirmed timing target not executed")
             checked.append({"case":name,"iterations_per_sample":item["iterations_per_sample"],
                             "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
                             "allocation_schema_valid":True})
     require(len(checked)==91 and len({r["case"] for r in checked})==91, "incomplete calibrated probe")
-    result={"schema":1,"checked_cases":checked,"target_ns":1000000,"zero_or_invalid_samples":0,
+    result={"schema":1,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
     (destination/"timing-mode-checks.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 

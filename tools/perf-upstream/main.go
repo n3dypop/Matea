@@ -104,13 +104,25 @@ func calibratedIterations(n int, target int64, limit int, batch func(int) int64)
 
 func sampleTarget(value string, specified bool) (int64, error) {
 	if !specified {
-		return 1_000_000, nil
+		return 20_000_000, nil
 	}
 	target, err := strconv.ParseInt(value, 10, 64)
 	if err != nil || target < 0 || target > 1_000_000_000 {
 		return 0, fmt.Errorf("MATEA_PERF_MIN_SAMPLE_NS must be 0..1000000000; 0 explicitly selects fixed batches")
 	}
 	return target, nil
+}
+
+// Calibration and retained samples must execute exactly the same hot loop.
+// Prevent context-dependent inlining/dispatch from changing that cost.
+//
+//go:noinline
+func timedBatch(count int, f func() uint64) int64 {
+	start := time.Now()
+	for i := 0; i < count; i++ {
+		sink = f()
+	}
+	return time.Since(start).Nanoseconds()
 }
 
 func measure(id string, n int, f func() uint64, output, semantics string) {
@@ -140,11 +152,7 @@ func measure(id string, n int, f func() uint64, output, semantics string) {
 	var history []calibrationBatch
 	if target > 0 {
 		n, history, err = calibratedIterations(n, target, limit, func(count int) int64 {
-			start := time.Now()
-			for i := 0; i < count; i++ {
-				sink = f()
-			}
-			return time.Since(start).Nanoseconds()
+			return timedBatch(count, f)
 		})
 		if err != nil {
 			panic(err)
@@ -152,13 +160,9 @@ func measure(id string, n int, f func() uint64, output, semantics string) {
 	}
 	samples := make([]float64, 31)
 	for sample := range samples {
-		start := time.Now()
-		for i := 0; i < n; i++ {
-			sink = f()
-		}
-		elapsed := time.Since(start).Nanoseconds()
+		elapsed := timedBatch(n, f)
 		if elapsed <= 0 {
-			panic("nonpositive timing sample: use calibrated batches or increase the fixed iteration count")
+			panic(fmt.Sprintf("nonpositive timing sample: index=%d iterations=%d target_ns=%d calibration=%v; increase the target/fixed count", sample, n, target, history))
 		}
 		samples[sample] = float64(elapsed) / float64(n)
 	}

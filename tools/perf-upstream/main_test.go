@@ -31,7 +31,7 @@ func captureMeasure(t *testing.T, run func()) []byte {
 
 func TestRecordedIterationsMatchActualWorkAcrossAllPasses(t *testing.T) {
 	t.Setenv("MATEA_PROBE_OUTPUT_ONLY", "0")
-	t.Setenv("MATEA_PERF_MIN_SAMPLE_NS", "1000000")
+	t.Setenv("MATEA_PERF_MIN_SAMPLE_NS", "20000000")
 	calls := 0
 	raw := captureMeasure(t, func() {
 		measure("counted", 1, func() uint64 { calls++; return uint64(calls) }, "counted", "independent call counter")
@@ -133,7 +133,7 @@ func TestCalibrationBoundsFailuresAndSaturatedGrowth(t *testing.T) {
 }
 
 func TestSampleTargetRequiresExplicitFixedModeAndRejectsInvalidValues(t *testing.T) {
-	if n, err := sampleTarget("", false); err != nil || n != 1_000_000 {
+	if n, err := sampleTarget("", false); err != nil || n != 20_000_000 {
 		t.Fatal(n, err)
 	}
 	for _, value := range []string{"0", "1", "1000000", "1000000000"} {
