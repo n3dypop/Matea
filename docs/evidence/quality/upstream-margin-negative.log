@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 163, in <module>
+    main()
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 158, in main
+    verify(document, nondefault_margins=True)
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 128, in verify
+    require(cell == ("a", foreground, background, 0), lambda: (trace["profile"], x, y, cell))
+  File "${REPOSITORY}/scripts/evidence_checks.py", line 8, in require
+    raise AssertionError(message() if callable(message) else message)
+AssertionError: ('ansi16', 0, 8, (' ', None, None, 0))

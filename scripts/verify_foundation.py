@@ -7,6 +7,7 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+import tempfile
 import time
 
 parser = argparse.ArgumentParser()
@@ -21,6 +22,7 @@ checks = [
     ("clippy", ["cargo", "clippy", "--locked", "--workspace", "--all-targets", "--", "-D", "warnings"]),
     ("test", ["cargo", "test", "--locked", "--workspace"]),
     ("all-targets", ["cargo", "test", "--locked", "--workspace", "--all-targets"]),
+    ("release-tests", ["cargo", "test", "--locked", "--release", "--workspace"]),
     ("docs", ["cargo", "doc", "--locked", "--workspace", "--no-deps"]),
     ("build-examples", ["cargo", "build", "--locked", "--workspace", "--examples"]),
     ("example-smoke", [sys.executable, str(root / "scripts/example_smoke.py")]),
@@ -28,6 +30,13 @@ checks = [
     ("rustdoc-audit-tests", [sys.executable, str(root / "scripts/test_rustdoc_exports.py")]),
     ("rustdoc-import-tests", [sys.executable, str(root / "scripts/test_rustdoc_import.py")]),
     ("color-oracle-tests", [sys.executable, str(root / "scripts/test_color_trace.py")]),
+    ("build-source-auditor", ["cargo", "build", "--locked", "-p", "matea-api-audit"]),
+    ("source-auditor-tests", [sys.executable, str(root / "scripts/test_source_auditors.py")]),
+    ("quality-gate-tests", [sys.executable, str(root / "scripts/test_quality.py")]),
+    ("evidence-guard-tests", [sys.executable, str(root / "scripts/test_evidence_checks.py")]),
+    ("optimized-python-tests", [sys.executable, "-O", "-m", "unittest", "discover", "-s", str(root / "scripts"), "-p", "test_*.py"]),
+    ("quality-inventory", [sys.executable, str(root / "scripts/check_quality.py")]),
+    ("python-syntax", [sys.executable, "-m", "compileall", "-q", str(root / "scripts")]),
     ("build-color-probe", ["cargo", "build", "--locked", "--release", "-p", "matea-perf-probe"]),
     ("color-trace", [sys.executable, str(root / "scripts/check_color_trace.py"),
                      "--probe", str(root / "target/release" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")),
@@ -53,6 +62,8 @@ for name, command in checks:
     if args.offline and command[0] == "cargo" and command[1] != "fmt":
         command.insert(command.index("--") if "--" in command else len(command), "--offline")
     env = dict(os.environ)
+    env["GOCACHE"] = str(Path(tempfile.gettempdir()) / "matea-quality-go-cache")
+    env["PYTHONPYCACHEPREFIX"] = str(Path(tempfile.gettempdir()) / "matea-quality-python-cache")
     if name == "docs":
         env["RUSTDOCFLAGS"] = "-D warnings"
     start = time.monotonic()

@@ -1,4 +1,5 @@
 """Fetch fixed public reference snapshots outside the Matea checkout for CI."""
+from evidence_checks import require
 import argparse
 import json
 from pathlib import Path
@@ -25,7 +26,7 @@ def main():
                     ["git", "checkout", "--detach", "FETCH_HEAD"]]:
         subprocess.run(command, cwd=checkout, check=True)
     actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=checkout, text=True).strip()
-    assert actual == pin["sha"]
+    require(actual == pin["sha"])
     print(f"{args.reference} at {actual}")
 
 

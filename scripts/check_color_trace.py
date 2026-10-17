@@ -1,4 +1,5 @@
 """Independent ASCII cell/SGR replay for the finite colored-frame fixtures."""
+from evidence_checks import require
 import argparse
 import json
 import os
@@ -16,7 +17,7 @@ def replay(trace):
     fg = bg = None
     visible, last = True, " "
     top, bottom = trace.get("scroll_region", [0, height - 1])
-    assert 0 <= top < bottom < height
+    require(0 <= top < bottom < height)
     def linefeed():
         nonlocal y
         if y == bottom:
@@ -40,18 +41,18 @@ def replay(trace):
                 elif char == "\n": linefeed()
                 elif char == "\b": x = max(0, x - 1)
                 else:
-                    assert " " <= char <= "~", repr(char)
+                    require(" " <= char <= "~", lambda: repr(char))
                     put(char)
                 offset += 1
                 continue
             match = CSI.match(stream, offset)
-            assert match, repr(stream[offset:offset + 40])
+            require(match, lambda: repr(stream[offset:offset + 40]))
             body, intermediate, final = match.groups()
-            assert not intermediate, repr(match.group())
+            require(not intermediate, lambda: repr(match.group()))
             values = [int(n or 0) for n in body.lstrip("?").split(";")]
             n = values[0] or 1
             if body.startswith("?"):
-                assert final in "hl" and all(v in (25, 1049, 7, 2026) for v in values)
+                require(final in "hl" and all(v in (25, 1049, 7, 2026) for v in values))
                 if 25 in values: visible = final == "h"
                 if 1049 in values and final == "h":
                     cells = [[(" ", None, None, 0) for _ in range(width)] for _ in range(height)]
@@ -83,7 +84,7 @@ def replay(trace):
                             color = values[i + 2]
                             i += 2
                         else:
-                            assert values[i + 1] == 2, repr(match.group())
+                            require(values[i + 1] == 2, lambda: repr(match.group()))
                             color = ("rgb", *values[i + 2:i + 5])
                             i += 4
                         if code == 38: fg = color
@@ -95,7 +96,7 @@ def replay(trace):
                     i += 1
             elif final in "JK":
                 mode = values[0]
-                assert mode in (0, 1, 2)
+                require(mode in (0, 1, 2))
                 for row in range(height):
                     for col in range(width):
                         position = row * width + col if final == "J" else col
@@ -111,24 +112,24 @@ def replay(trace):
 
 
 def verify(document, nondefault_margins=False):
-    assert {t["profile"] for t in document["traces"]} == {"ansi16", "ansi256", "truecolor", "none"}
+    require({t["profile"] for t in document["traces"]} == {"ansi16", "ansi256", "truecolor", "none"})
     for trace in document["traces"]:
-        assert (trace["width"], trace["height"]) == (80, 24)
+        require((trace["width"], trace["height"]) == (80, 24))
         foreground, background = {"ansi16": (15, 0), "ansi256": (67, 132),
                                   "truecolor": (("rgb", 95, 135, 175), ("rgb", 175, 95, 135)),
                                   "none": (None, None)}[trace["profile"]]
         for end in range(1, len(trace["sequences"]) + 1):
             configuration = {"scroll_region": [3, 7]} if nondefault_margins else {}
             cells, visible = replay({**trace, **configuration, "sequences": trace["sequences"][:end]})
-            assert not visible
+            require(not visible)
             for y, row in enumerate(cells):
                 for x, cell in enumerate(row):
                     if y < 20:
-                        assert cell == ("a", foreground, background, 0), (trace["profile"], x, y, cell)
+                        require(cell == ("a", foreground, background, 0), lambda: (trace["profile"], x, y, cell))
                     else:
                         # Foreground on blanks is invisible; background/attrs
                         # must still be at the default erasure state.
-                        assert cell[0] == " " and cell[2] is None and cell[3] == 0, (x, y, cell)
+                        require(cell[0] == " " and cell[2] is None and cell[3] == 0, lambda: (x, y, cell))
 
 
 def main():
@@ -138,7 +139,7 @@ def main():
     parser.add_argument("--output", type=Path)
     parser.add_argument("--nondefault-margins", action="store_true")
     args = parser.parse_args()
-    assert args.traces or args.probe, "provide trace paths or a built probe"
+    require(args.traces or args.probe, lambda: "provide trace paths or a built probe")
     if args.probe:
         # A fresh process observes NO_COLOR before Crossterm initializes its
         # global policy. Explicit capabilities must still encode every profile.

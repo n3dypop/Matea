@@ -1,4 +1,5 @@
 """Publish raw samples and a narrow, output-checked Foundation comparison."""
+from evidence_checks import require
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -32,7 +33,7 @@ def command(*args):
 
 def summary(record):
     samples = sorted(record["samples_ns"])
-    assert len(samples) >= 31 and all(n > 0 for n in samples)
+    require(len(samples) >= 31 and all(n > 0 for n in samples))
     return {"p50_ns": statistics.median(samples),
             "p95_ns": samples[math.ceil(len(samples) * .95) - 1],
             "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
@@ -46,18 +47,18 @@ for name in names:
     shutil.copy2(args.artifacts / name, destination / name)
 traces = [json.loads((destination / name).read_text()) for name in names[4:6]]
 expected = [c + "a" * 79 + "\n" * 23 for c in "aba"]
-assert all(replay(trace) == expected for trace in traces)
+require(all(replay(trace) == expected for trace in traces))
 cursor_traces = [json.loads((destination / name).read_text()) for name in names[6:8]]
 cursor_expected = [{"screen": "a" * 80 + "\n" * 23, "cursor": [x, 3], "visible": show}
                    for x, show in [(2, True), (4, True), (2, True), (2, False)]]
-assert all(replay(trace, include_cursor=True) == cursor_expected for trace in cursor_traces)
+require(all(replay(trace, include_cursor=True) == cursor_expected for trace in cursor_traces))
 color_traces = [json.loads((destination / name).read_text()) for name in names[8:10]]
 for trace in color_traces:
     verify_colors(trace)
 verify_colors(color_traces[0], nondefault_margins=True)
 margin_before_path = destination / "matea-color-before-margin-trace.json"
 margin_proof = json.loads((ROOT / "docs/evidence/row-margin-before.json").read_text())
-assert digest(margin_before_path) == margin_proof["before_trace_sha256"]
+require(digest(margin_before_path) == margin_proof["before_trace_sha256"])
 try:
     verify_colors(json.loads(margin_before_path.read_text()), nondefault_margins=True)
 except AssertionError:
@@ -67,7 +68,7 @@ else:
 records = []
 for name in names[:2]:
     records.append({r["case"]: r for r in map(json.loads, (destination / name).read_text().splitlines())})
-assert records[0].keys() == records[1].keys()
+require(records[0].keys() == records[1].keys())
 comparison = []
 for case, matea in records[0].items():
     upstream = records[1][case]
@@ -85,7 +86,7 @@ for case, matea in records[0].items():
     if case.startswith("terminal/colored_full_"):
         item["measured_full_frame_bytes"] = {"matea": matea["first_return_value"], "upstream": upstream["first_return_value"]}
     comparison.append(item)
-assert all(item["output_equivalent_for_this_fixture"] for item in comparison), "fixture semantics/output mismatch; do not publish a parity claim"
+require(all(item["output_equivalent_for_this_fixture"] for item in comparison), lambda: "fixture semantics/output mismatch; do not publish a parity claim")
 
 inputs = [ROOT / "Cargo.toml", ROOT / "Cargo.lock"]
 for folder in ("crates", "tools/perf-probe", "tools/perf-upstream"):
@@ -123,12 +124,12 @@ baseline = destination / "matea-motion-pagination-before.jsonl"
 baseline_report = destination / "motion-pagination-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     optimized = {}
     for case in ("motion/projectile_checked_update", "pagination/range", "pagination/dots_32", "pagination/dots_256"):
         before, after = previous[case], records[0][case]
-        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
         optimized[case] = {"before": summary(before), "after": summary(after)}
     metadata["motion_pagination_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
@@ -137,11 +138,11 @@ baseline = destination / "matea-textinput-before.jsonl"
 baseline_report = destination / "textinput-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     case = "textinput/suggestions_edit_pair"
     before, after = previous[case], records[0][case]
-    assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+    require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
     metadata["textinput_query_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
         "before_report_sha256": digest(baseline_report), "case": case,
@@ -150,13 +151,13 @@ baseline = destination / "matea-cursor-before.jsonl"
 baseline_report = destination / "cursor-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     case = "cursor/visible_move_80x24"
     before, after = previous[case], records[0][case]
-    assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+    require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
     old_trace = json.loads((destination / "matea-cursor-before-trace.json").read_text())
-    assert replay(old_trace, include_cursor=True) == cursor_expected
+    require(replay(old_trace, include_cursor=True) == cursor_expected)
     metadata["cursor_move_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
         "before_report_sha256": digest(baseline_report), "case": case,
@@ -167,12 +168,12 @@ baseline = destination / "matea-key-before.jsonl"
 baseline_report = destination / "key-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     optimized = {}
     for case in ("binding/construct", "binding/value_hit", "binding/value_miss", "binding/value_disabled"):
         before, after = previous[case], records[0][case]
-        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
         optimized[case] = {"before": summary(before), "after": summary(after)}
     metadata["key_binding_optimization"] = {"before_raw": baseline.name,
         "before_source_report": baseline_report.name, "before_raw_sha256": digest(baseline),
@@ -185,14 +186,14 @@ for stage, raw_name, report_name in [
 ]:
     baseline, baseline_report = destination / raw_name, destination / report_name
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     cases = {}
     for case, after in records[0].items():
         if not case.startswith("terminal/colored_full_"):
             continue
         before = previous[case]
-        assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+        require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
         cases[case] = {"before": summary(before), "after": summary(after),
                        "frame_bytes_before": before["first_return_value"],
                        "frame_bytes_after": after["first_return_value"]}
@@ -208,13 +209,13 @@ metadata["color_frame_optimization"] = {
 baseline, baseline_report = destination / "matea-help-before.jsonl", destination / "help-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     optimized = {}
     for case, after in records[0].items():
         if case.startswith("help/"):
             before = previous[case]
-            assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+            require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
             optimized[case] = {"before": summary(before), "after": summary(after)}
     metadata["help_text_optimization"] = {"before_raw": baseline.name, "before_source_report": baseline_report.name,
         "before_raw_sha256": digest(baseline), "before_report_sha256": digest(baseline_report), "cases": optimized,
@@ -222,10 +223,10 @@ if baseline.is_file() and baseline_report.is_file():
     intermediate = destination / "matea-help-capacity-intermediate.jsonl"
     intermediate_report = destination / "help-capacity-intermediate-report.json"
     stage = json.loads(intermediate_report.read_text())
-    assert digest(intermediate) == stage["raw_sha256"]["matea-current.jsonl"]
+    require(digest(intermediate) == stage["raw_sha256"]["matea-current.jsonl"])
     records_between = {r["case"]: r for r in map(json.loads, intermediate.read_text().splitlines())}
     for case in optimized:
-        assert records_between[case]["output"] == records[0][case]["output"]
+        require(records_between[case]["output"] == records[0][case]["output"])
         optimized[case]["capacity_intermediate"] = summary(records_between[case])
     metadata["help_text_optimization"]["intermediate"] = {
         "raw": intermediate.name, "source_report": intermediate_report.name,
@@ -235,23 +236,23 @@ baseline = destination / "matea-clock-format-before.jsonl"
 baseline_report = destination / "clock-format-before-report.json"
 if baseline.is_file() and baseline_report.is_file():
     old = json.loads(baseline_report.read_text())
-    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    require(digest(baseline) == old["raw_sha256"]["matea-current.jsonl"])
     previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
     optimized = {}
     for case, after in records[0].items():
         if case.startswith("clocks/format_"):
             before = previous[case]
-            assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+            require(before["semantics"] == after["semantics"] and before["output"] == after["output"])
             optimized[case] = {"before": summary(before), "after": summary(after)}
     metadata["clock_format_optimization"] = {"before_raw": baseline.name, "before_source_report": baseline_report.name,
         "before_raw_sha256": digest(baseline), "before_report_sha256": digest(baseline_report), "cases": optimized,
         "scope": "Fresh owned strings: fragmented Display/ToString before; bounded safe stack preparation and exact-size String after. Same visible output. Relative source timing regressions remain visible."}
     stage_raw, stage_report = destination / "matea-clock-format-stack.jsonl", destination / "clock-format-stack-report.json"
     stage = json.loads(stage_report.read_text())
-    assert digest(stage_raw) == stage["raw_sha256"]["matea-current.jsonl"]
+    require(digest(stage_raw) == stage["raw_sha256"]["matea-current.jsonl"])
     stage_records = {r["case"]: r for r in map(json.loads, stage_raw.read_text().splitlines())}
     for case in optimized:
-        assert stage_records[case]["output"] == records[0][case]["output"]
+        require(stage_records[case]["output"] == records[0][case]["output"])
         optimized[case]["stack_before_zero_fast_path"] = summary(stage_records[case])
     metadata["clock_format_optimization"]["intermediate"] = {"raw": stage_raw.name, "source_report": stage_report.name,
         "raw_sha256": digest(stage_raw), "report_sha256": digest(stage_report),
@@ -264,7 +265,7 @@ checkpoint = destination / "clocks-checkpoint-report.json"
 checkpoint_data = json.loads(checkpoint.read_text())
 checkpoint_raw = [destination / "matea-clocks-checkpoint.jsonl", destination / "upstream-clocks-checkpoint.jsonl"]
 for raw, key in zip(checkpoint_raw, ("matea-current.jsonl", "upstream-current.jsonl")):
-    assert digest(raw) == checkpoint_data["raw_sha256"][key]
+    require(digest(raw) == checkpoint_data["raw_sha256"][key])
 metadata["clock_checkpoint"] = {"report": checkpoint.name, "report_sha256": digest(checkpoint),
     "raw_sha256": {raw.name: digest(raw) for raw in checkpoint_raw},
     "scope": "Retain the 70-case clock implementation checkpoint before adding spinner cases; current raw records are a new full sequential run."}
@@ -276,7 +277,7 @@ view_checkpoint = destination / "views-reference-checkpoint-report.json"
 view_checkpoint_data = json.loads(view_checkpoint.read_text())
 view_checkpoint_raw = [destination / "matea-views-reference-before.jsonl", destination / "upstream-views-reference-before.jsonl"]
 for raw, key in zip(view_checkpoint_raw, ("matea-current.jsonl", "upstream-current.jsonl")):
-    assert digest(raw) == view_checkpoint_data["raw_sha256"][key]
+    require(digest(raw) == view_checkpoint_data["raw_sha256"][key])
 metadata["view_text_followup"] = {"reference_checkpoint": view_checkpoint.name,
     "checkpoint_sha256": digest(view_checkpoint), "raw_sha256": {raw.name: digest(raw) for raw in view_checkpoint_raw},
     "paired_rust_report": "views-report.json", "paired_rust_report_sha256": digest(destination / "views-report.json"),

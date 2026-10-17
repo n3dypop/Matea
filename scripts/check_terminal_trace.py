@@ -3,6 +3,7 @@
 Reject unknown control sequences. This limited oracle does not validate Unicode,
 styles, terminal timing, or actual emulator behavior.
 """
+from evidence_checks import require
 import argparse
 import json
 import re
@@ -31,14 +32,14 @@ def replay(trace, include_cursor=False):
                     offset += 2
                     continue
                 match = CSI.match(stream, offset)
-                assert match, repr(stream[offset:])
+                require(match, lambda: repr(stream[offset:]))
                 body, intermediate, final = match.groups()
-                assert not intermediate, repr(match.group())
+                require(not intermediate, lambda: repr(match.group()))
                 private = body.startswith("?")
                 values = [int(n or 0) for n in body.lstrip("?").split(";")]
                 n = values[0] or 1
                 if private:
-                    assert final in "hl" and all(v in (25, 1049, 7, 2026) for v in values), repr(match.group())
+                    require(final in "hl" and all(v in (25, 1049, 7, 2026) for v in values), lambda: repr(match.group()))
                     if 1049 in values and final == "h":
                         cells = [[" "] * width for _ in range(height)]
                         x = y = 0
@@ -58,7 +59,7 @@ def replay(trace, include_cursor=False):
                     pass  # This workload uses default styles only.
                 elif final in "JK":
                     mode = values[0]
-                    assert mode in (0, 1, 2)
+                    require(mode in (0, 1, 2))
                     for row in range(height):
                         for col in range(width):
                             position = row * width + col if final == "J" else col
@@ -75,7 +76,7 @@ def replay(trace, include_cursor=False):
             elif char == "\n": y = min(height - 1, y + 1)
             elif char == "\b": x = max(0, x - 1)
             else:
-                assert " " <= char <= "~", repr(char)
+                require(" " <= char <= "~", lambda: repr(char))
                 if x == width:
                     x = 0
                     y = min(height - 1, y + 1)
@@ -97,9 +98,9 @@ def main():
         if "cursor-trace" in path.name:
             cursor_expected = [{"screen": "a" * 80 + "\n" * 23, "cursor": [x, 3], "visible": show}
                                for x, show in [(2, True), (4, True), (2, True), (2, False)]]
-            assert replay(trace, include_cursor=True) == cursor_expected, path
+            require(replay(trace, include_cursor=True) == cursor_expected, lambda: path)
         else:
-            assert replay(trace) == expected, path
+            require(replay(trace) == expected, lambda: path)
         print(f"{path.name}: exact states; frame bytes {[len(s.encode()) for s in trace['sequences']]}")
 
 

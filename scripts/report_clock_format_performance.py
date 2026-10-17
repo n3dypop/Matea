@@ -1,4 +1,5 @@
 """Compare forward/reverse clock text, preserving short and longer paired runs."""
+from evidence_checks import require
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -18,7 +19,7 @@ def digest(path):
 
 def summary(record):
     samples = sorted(record["samples_ns"])
-    assert len(samples) >= 31 and all(math.isfinite(n) and n > 0 for n in samples)
+    require(len(samples) >= 31 and all(math.isfinite(n) and n > 0 for n in samples))
     return {"p50_ns": statistics.median(samples), "p95_ns": samples[math.ceil(.95 * len(samples)) - 1],
             "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
 
@@ -26,26 +27,26 @@ def summary(record):
 context = json.loads((BASE / "clocks-forward-context.json").read_text())
 for name, expected in context["source_sha256"].items():
     data = subprocess.check_output(["git", "show", context["git_head"] + ":" + name], cwd=ROOT)
-    assert hashlib.sha256(data).hexdigest() == expected, name
+    require(hashlib.sha256(data).hexdigest() == expected, lambda: name)
 for name, expected in context["raw_sha256"].items():
-    assert digest(BASE / name) == expected, name
+    require(digest(BASE / name) == expected, lambda: name)
 groups = [["clocks-forward-before.jsonl", "clocks-forward-upstream.jsonl", "clocks-reverse-after.jsonl", "clocks-reverse-upstream.jsonl"],
           ["clocks-forward-long.jsonl", "clocks-forward-go-long.jsonl", "clocks-reverse-long.jsonl", "clocks-reverse-go-long.jsonl"]]
 comparisons = []
 for names in groups:
     records = [{r["case"]: r for r in map(json.loads, (BASE / name).read_text().splitlines())} for name in names]
-    assert len(records[0]) == 16 and all(r.keys() == records[0].keys() for r in records)
+    require(len(records[0]) == 16 and all(r.keys() == records[0].keys() for r in records))
     cases = []
     for case, before in records[0].items():
         for r in records:
-            assert (r[case]["semantics"], r[case]["output"], r[case]["iterations_per_sample"]) == (before["semantics"], before["output"], before["iterations_per_sample"]), case
+            require((r[case]["semantics"], r[case]["output"], r[case]["iterations_per_sample"]) == (before["semantics"], before["output"], before["iterations_per_sample"]), lambda: case)
         cases.append({"case": case, "semantics": before["semantics"], "output": before["output"],
                       "iterations_per_sample": before["iterations_per_sample"],
                       **{label: summary(r[case]) for label, r in zip(["forward", "go_before", "reverse", "go_after"], records)}})
     comparisons.append({"raw_sha256": {name: digest(BASE / name) for name in names}, "cases": cases})
 for short, longer in zip(comparisons[0]["cases"], comparisons[1]["cases"]):
-    assert longer["iterations_per_sample"] == 20 * short["iterations_per_sample"]
-    assert (short["case"], short["output"], short["semantics"]) == (longer["case"], longer["output"], longer["semantics"])
+    require(longer["iterations_per_sample"] == 20 * short["iterations_per_sample"])
+    require((short["case"], short["output"], short["semantics"]) == (longer["case"], longer["output"], longer["semantics"]))
 binary_paths = {"forward_rebuild": Path("/private/tmp/matea-clock-forward-probe"),
                 "reverse": Path("/private/tmp/matea-clock-reverse-probe"),
                 "go": Path("/private/tmp/matea-foundation-upstream/probe")}

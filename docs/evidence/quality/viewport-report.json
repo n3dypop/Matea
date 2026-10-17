@@ -1,0 +1,213 @@
+{
+  "baseline": {
+    "head": "be51cf27c222e36025229f594b60b4dd4acb4268",
+    "sha256": {
+      "crates/matea-widgets/src/lib.rs": "2755994519b494d3283cb0ba8bc9c6d66532c7cd5b03a52acf850f2075872cde",
+      "tools/perf-probe/src/main.rs": "7f63875fecde3162d51fb8612b0ae711009a5d7de7368e81d90b043b2108c8f3",
+      "target/release/matea-perf-probe": "6201430e492d9073e50c2c1fd3479788a0a967bdad3484670ddb8d02eef7925a"
+    },
+    "harness_patch_sha256": "2d016fdb119ce09498f9de2feb6218217c7b0be7f8494f6aee84705ad8902a8e"
+  },
+  "cases": [
+    {
+      "case": "viewport/view_ascii_1",
+      "before": {
+        "p50_ns": 146.22233333333332,
+        "p95_ns": 163.30533333333332,
+        "allocations": 3,
+        "allocated_bytes": 64
+      },
+      "after": {
+        "p50_ns": 20.514,
+        "p95_ns": 21.014,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "viewport/view_render_ascii_1",
+      "before": {
+        "p50_ns": 635,
+        "p95_ns": 759.7083333333334,
+        "allocations": 4,
+        "allocated_bytes": 3264
+      },
+      "after": {
+        "p50_ns": 519.9026666666666,
+        "p95_ns": 540.5693333333334,
+        "allocations": 1,
+        "allocated_bytes": 3200
+      }
+    },
+    {
+      "case": "viewport/view_ascii_6",
+      "before": {
+        "p50_ns": 321.1526666666667,
+        "p95_ns": 340.3333333333333,
+        "allocations": 8,
+        "allocated_bytes": 389
+      },
+      "after": {
+        "p50_ns": 115.139,
+        "p95_ns": 117.97233333333334,
+        "allocations": 1,
+        "allocated_bytes": 125
+      }
+    },
+    {
+      "case": "viewport/view_render_ascii_6",
+      "before": {
+        "p50_ns": 3058.8613333333333,
+        "p95_ns": 3107.25,
+        "allocations": 9,
+        "allocated_bytes": 19589
+      },
+      "after": {
+        "p50_ns": 2877.0553333333332,
+        "p95_ns": 10870.125,
+        "allocations": 2,
+        "allocated_bytes": 19325
+      }
+    },
+    {
+      "case": "viewport/view_ascii_24",
+      "before": {
+        "p50_ns": 1096.2083333333333,
+        "p95_ns": 1149.0136666666667,
+        "allocations": 26,
+        "allocated_bytes": 1559
+      },
+      "after": {
+        "p50_ns": 363.986,
+        "p95_ns": 384.764,
+        "allocations": 1,
+        "allocated_bytes": 503
+      }
+    },
+    {
+      "case": "viewport/view_render_ascii_24",
+      "before": {
+        "p50_ns": 11916.916666666666,
+        "p95_ns": 12585.403,
+        "allocations": 27,
+        "allocated_bytes": 78359
+      },
+      "after": {
+        "p50_ns": 11103.597333333333,
+        "p95_ns": 11341.527666666667,
+        "allocations": 2,
+        "allocated_bytes": 77303
+      }
+    },
+    {
+      "case": "viewport/view_unicode_1",
+      "before": {
+        "p50_ns": 112.79166666666667,
+        "p95_ns": 123.625,
+        "allocations": 3,
+        "allocated_bytes": 68
+      },
+      "after": {
+        "p50_ns": 29.027666666666665,
+        "p95_ns": 33.916666666666664,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "viewport/view_render_unicode_1",
+      "before": {
+        "p50_ns": 687.486,
+        "p95_ns": 719.0556666666666,
+        "allocations": 4,
+        "allocated_bytes": 3268
+      },
+      "after": {
+        "p50_ns": 607.4303333333334,
+        "p95_ns": 633.0276666666666,
+        "allocations": 1,
+        "allocated_bytes": 3200
+      }
+    },
+    {
+      "case": "viewport/view_unicode_6",
+      "before": {
+        "p50_ns": 388.11133333333333,
+        "p95_ns": 411.38866666666667,
+        "allocations": 8,
+        "allocated_bytes": 413
+      },
+      "after": {
+        "p50_ns": 182.889,
+        "p95_ns": 295.93033333333335,
+        "allocations": 1,
+        "allocated_bytes": 137
+      }
+    },
+    {
+      "case": "viewport/view_render_unicode_6",
+      "before": {
+        "p50_ns": 3599.2083333333335,
+        "p95_ns": 3656.3613333333333,
+        "allocations": 9,
+        "allocated_bytes": 19613
+      },
+      "after": {
+        "p50_ns": 3386.7083333333335,
+        "p95_ns": 3426.764,
+        "allocations": 2,
+        "allocated_bytes": 19337
+      }
+    },
+    {
+      "case": "viewport/view_unicode_24",
+      "before": {
+        "p50_ns": 1345.5276666666666,
+        "p95_ns": 1395.389,
+        "allocations": 26,
+        "allocated_bytes": 1655
+      },
+      "after": {
+        "p50_ns": 582.1666666666666,
+        "p95_ns": 599.0276666666666,
+        "allocations": 1,
+        "allocated_bytes": 551
+      }
+    },
+    {
+      "case": "viewport/view_render_unicode_24",
+      "before": {
+        "p50_ns": 14049.444333333333,
+        "p95_ns": 14445.291666666666,
+        "allocations": 27,
+        "allocated_bytes": 78455
+      },
+      "after": {
+        "p50_ns": 13243.222333333333,
+        "p95_ns": 13543.25,
+        "allocations": 2,
+        "allocated_bytes": 77351
+      }
+    }
+  ],
+  "source_sha256": {
+    "crates/matea-widgets/src/lib.rs": "d2a2af9f149969e805769d7af9f75235ae33b7bd43273dc0e77a684b0ac98994",
+    "tools/perf-probe/src/main.rs": "7f9eea5c515368e9bf2a690b4e5680b0c2eb74fa08b115b980b06f92062b1bc6",
+    "scripts/report_viewport_performance.py": "4fdaa8fdaee07372b9c7444380704a8b64ccdc156f412f44414e569327795706"
+  },
+  "binary_sha256": "c379d77a782ce51e79e52058d286e5fb303cc00879b7bdaa65cf9c97c4a6f664",
+  "raw_sha256": {
+    "viewport-before.jsonl": "14871086fadae6248fb7b2f1ac11d5391b946d2683095a1013fa2f9df5685ca4",
+    "viewport-after.jsonl": "d12e8647db0e7a414fc4ab856dcfef9422009f8fe30d32fbef4c3d9cce5df7d0"
+  },
+  "intermediate": {
+    "report": "viewport-first-report.json",
+    "report_sha256": "d1817291c62f317ed85539bcd93db0e822638c617bda783e928bb63652b7cf69",
+    "patch_sha256": "2d69f92f1ec27cbbf2ec1038cbd0be951985c2ed4af6db610280eb53add5232f"
+  },
+  "limits": [
+    "Rust-only sequential before/after, macOS arm64, 31 samples at 3000 iterations; no affinity/frequency control or upstream parity.",
+    "Initial parsing and resident memory excluded. View generation and complete fresh render have separate workloads. Output fixtures match; boundary/CRLF correctness is tested separately.",
+    "First measurements and source patch are retained, including an adverse p95. Timing distributions are not universal maximum-performance proof."
+  ]
+}

@@ -361,7 +361,7 @@
       "line": 161,
       "kind": "method",
       "symbol": "<CopyToClipboard < T > as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "df4f6bf453096ba5bfd4",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/clipboard.rs#L161",
       "coverage": "unmapped"
@@ -411,7 +411,7 @@
       "line": 21,
       "kind": "trait_member",
       "symbol": "Command::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "0b01c259b95744d670b2",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/command.rs#L21",
       "coverage": "unmapped"
@@ -421,7 +421,7 @@
       "line": 31,
       "kind": "trait_member",
       "symbol": "Command::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "660562131f7801a437c7",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/command.rs#L31",
       "coverage": "unmapped"
@@ -441,7 +441,7 @@
       "line": 46,
       "kind": "method",
       "symbol": "<& T as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "c64bbabd9ed4a7f00c01",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/command.rs#L46",
       "coverage": "unmapped"
@@ -451,7 +451,7 @@
       "line": 52,
       "kind": "method",
       "symbol": "<& T as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "267e0c489b5f0dd61a09",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/command.rs#L52",
       "coverage": "unmapped"
@@ -591,7 +591,7 @@
       "line": 3,
       "kind": "reexport",
       "symbol": "self :: unix :: position",
-      "cfg": "",
+      "cfg": " # [cfg (unix)] # [cfg (feature = \"events\")]",
       "id": "d099909c9e274a4fcc02",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor/sys.rs#L3",
       "coverage": "unmapped"
@@ -601,7 +601,7 @@
       "line": 6,
       "kind": "reexport",
       "symbol": "self :: windows :: position",
-      "cfg": "",
+      "cfg": " # [cfg (windows)] # [cfg (feature = \"events\")]",
       "id": "4f589378ed6afb18f87a",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor/sys.rs#L6",
       "coverage": "unmapped"
@@ -611,7 +611,7 @@
       "line": 53,
       "kind": "reexport",
       "symbol": "sys :: position",
-      "cfg": "",
+      "cfg": " # [cfg (feature = \"events\")]",
       "id": "b2fa192b997ca007d992",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L53",
       "coverage": "unmapped"
@@ -661,7 +661,7 @@
       "line": 69,
       "kind": "method",
       "symbol": "<MoveTo as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "6e0077c00541e2085a9e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L69",
       "coverage": "unmapped"
@@ -701,7 +701,7 @@
       "line": 91,
       "kind": "method",
       "symbol": "<MoveToNextLine as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "6c0508ccf9c8c3296b73",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L91",
       "coverage": "unmapped"
@@ -741,7 +741,7 @@
       "line": 116,
       "kind": "method",
       "symbol": "<MoveToPreviousLine as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "c905e50f9932b704548f",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L116",
       "coverage": "unmapped"
@@ -781,7 +781,7 @@
       "line": 139,
       "kind": "method",
       "symbol": "<MoveToColumn as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "5762fbced6d9c7610650",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L139",
       "coverage": "unmapped"
@@ -821,7 +821,7 @@
       "line": 159,
       "kind": "method",
       "symbol": "<MoveToRow as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "784d20b29ad27f33ff17",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L159",
       "coverage": "unmapped"
@@ -861,7 +861,7 @@
       "line": 180,
       "kind": "method",
       "symbol": "<MoveUp as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "ee10e21268862ed10c30",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L180",
       "coverage": "unmapped"
@@ -901,7 +901,7 @@
       "line": 201,
       "kind": "method",
       "symbol": "<MoveRight as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "e1b56312eaf1863fe7dd",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L201",
       "coverage": "unmapped"
@@ -941,7 +941,7 @@
       "line": 222,
       "kind": "method",
       "symbol": "<MoveDown as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "ffffc40c9a84d049cb70",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L222",
       "coverage": "unmapped"
@@ -981,7 +981,7 @@
       "line": 243,
       "kind": "method",
       "symbol": "<MoveLeft as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "0352c146c2831be1d43e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L243",
       "coverage": "unmapped"
@@ -1011,7 +1011,7 @@
       "line": 265,
       "kind": "method",
       "symbol": "<SavePosition as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "e43246d89165b516f4a0",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L265",
       "coverage": "unmapped"
@@ -1041,7 +1041,7 @@
       "line": 287,
       "kind": "method",
       "symbol": "<RestorePosition as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "dfe22bf9127e66a5a8c3",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L287",
       "coverage": "unmapped"
@@ -1071,7 +1071,7 @@
       "line": 306,
       "kind": "method",
       "symbol": "<Hide as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "01845a0dd640f848ac61",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L306",
       "coverage": "unmapped"
@@ -1101,7 +1101,7 @@
       "line": 325,
       "kind": "method",
       "symbol": "<Show as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "095cea0a576704183ee5",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L325",
       "coverage": "unmapped"
@@ -1131,7 +1131,7 @@
       "line": 344,
       "kind": "method",
       "symbol": "<EnableBlinking as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "4093e5155959200af8f8",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L344",
       "coverage": "unmapped"
@@ -1161,7 +1161,7 @@
       "line": 363,
       "kind": "method",
       "symbol": "<DisableBlinking as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "96b23bea98ddfaf67053",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L363",
       "coverage": "unmapped"
@@ -1261,7 +1261,7 @@
       "line": 406,
       "kind": "method",
       "symbol": "<SetCursorStyle as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "967ca894317b9c6b0284",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/cursor.rs#L406",
       "coverage": "unmapped"
@@ -1461,7 +1461,7 @@
       "line": 53,
       "kind": "method",
       "symbol": "<EventFilter as Filter>::eval",
-      "cfg": " ",
+      "cfg": "  # [cfg (unix)]",
       "id": "8ea087e10a8bc6a836f0",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/filter.rs#L53",
       "coverage": "unmapped"
@@ -1471,7 +1471,7 @@
       "line": 58,
       "kind": "method",
       "symbol": "<EventFilter as Filter>::eval",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "a74ac5b83fd085f7a2c5",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/filter.rs#L58",
       "coverage": "unmapped"
@@ -1511,7 +1511,7 @@
       "line": 151,
       "kind": "method",
       "symbol": "<UnixInternalEventSource as EventSource>::waker",
-      "cfg": " ",
+      "cfg": "  # [cfg (feature = \"event-stream\")]",
       "id": "c621c4669d39721cb822",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/source/unix/mio.rs#L151",
       "coverage": "unmapped"
@@ -1571,7 +1571,7 @@
       "line": 184,
       "kind": "method",
       "symbol": "<UnixInternalEventSource as EventSource>::waker",
-      "cfg": " ",
+      "cfg": "  # [cfg (feature = \"event-stream\")]",
       "id": "bfcb8887bfe2702eddaf",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/source/unix/tty.rs#L184",
       "coverage": "unmapped"
@@ -1621,7 +1621,7 @@
       "line": 97,
       "kind": "method",
       "symbol": "<WindowsEventSource as EventSource>::waker",
-      "cfg": " ",
+      "cfg": "  # [cfg (feature = \"event-stream\")]",
       "id": "a73dafac7ab913b8b3cc",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/source/windows.rs#L97",
       "coverage": "unmapped"
@@ -1731,7 +1731,7 @@
       "line": 81,
       "kind": "method",
       "symbol": "<WinApiPoll>::waker",
-      "cfg": " ",
+      "cfg": "  # [cfg (feature = \"event-stream\")]",
       "id": "e6a8d20b59fe4a888fba",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event/sys/windows/poll.rs#L81",
       "coverage": "unmapped"
@@ -1781,7 +1781,7 @@
       "line": 134,
       "kind": "reexport",
       "symbol": "stream :: EventStream",
-      "cfg": "",
+      "cfg": " # [cfg (feature = \"event-stream\")]",
       "id": "d863e2b5ed6ed1b5e169",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L134",
       "coverage": "unmapped"
@@ -1851,7 +1851,7 @@
       "line": 323,
       "kind": "method",
       "symbol": "<EnableMouseCapture as Command>::execute_winapi",
-      "cfg": " # [cfg (feature = \"events\")]",
+      "cfg": " # [cfg (feature = \"events\")] # [cfg (windows)]",
       "id": "002653437f694c2bbd7b",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L323",
       "coverage": "unmapped"
@@ -1861,7 +1861,7 @@
       "line": 328,
       "kind": "method",
       "symbol": "<EnableMouseCapture as Command>::is_ansi_code_supported",
-      "cfg": " # [cfg (feature = \"events\")]",
+      "cfg": " # [cfg (feature = \"events\")] # [cfg (windows)]",
       "id": "ba8e310c862a26582dd7",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L328",
       "coverage": "unmapped"
@@ -1891,7 +1891,7 @@
       "line": 352,
       "kind": "method",
       "symbol": "<DisableMouseCapture as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "35b72062b9db47fbf560",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L352",
       "coverage": "unmapped"
@@ -1901,7 +1901,7 @@
       "line": 357,
       "kind": "method",
       "symbol": "<DisableMouseCapture as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "ca3180de9658de3fa559",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L357",
       "coverage": "unmapped"
@@ -1931,7 +1931,7 @@
       "line": 376,
       "kind": "method",
       "symbol": "<EnableFocusChange as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "faa699cbfdc6bf1d2d96",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L376",
       "coverage": "unmapped"
@@ -1961,7 +1961,7 @@
       "line": 392,
       "kind": "method",
       "symbol": "<DisableFocusChange as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "e13750556f01a439c9c4",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L392",
       "coverage": "unmapped"
@@ -1991,7 +1991,7 @@
       "line": 415,
       "kind": "method",
       "symbol": "<EnableBracketedPaste as Command>::execute_winapi",
-      "cfg": " # [cfg (feature = \"bracketed-paste\")]",
+      "cfg": " # [cfg (feature = \"bracketed-paste\")] # [cfg (windows)]",
       "id": "7297ce8c0992956227e0",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L415",
       "coverage": "unmapped"
@@ -2021,7 +2021,7 @@
       "line": 435,
       "kind": "method",
       "symbol": "<DisableBracketedPaste as Command>::execute_winapi",
-      "cfg": " # [cfg (feature = \"bracketed-paste\")]",
+      "cfg": " # [cfg (feature = \"bracketed-paste\")] # [cfg (windows)]",
       "id": "9ea08338a7d0e703ba27",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L435",
       "coverage": "unmapped"
@@ -2061,7 +2061,7 @@
       "line": 482,
       "kind": "method",
       "symbol": "<PushKeyboardEnhancementFlags as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "17d84bd3c73de1c8698a",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L482",
       "coverage": "unmapped"
@@ -2071,7 +2071,7 @@
       "line": 492,
       "kind": "method",
       "symbol": "<PushKeyboardEnhancementFlags as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "4078e0b1286ec292a19d",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L492",
       "coverage": "unmapped"
@@ -2101,7 +2101,7 @@
       "line": 511,
       "kind": "method",
       "symbol": "<PopKeyboardEnhancementFlags as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "8ad140cc6f36d2ad9a62",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L511",
       "coverage": "unmapped"
@@ -2111,7 +2111,7 @@
       "line": 521,
       "kind": "method",
       "symbol": "<PopKeyboardEnhancementFlags as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "7407ca392f398d610f75",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L521",
       "coverage": "unmapped"
@@ -2191,7 +2191,7 @@
       "line": 540,
       "kind": "variant",
       "symbol": "Event::Paste",
-      "cfg": " # [cfg_attr (feature = \"serde\" , derive (serde :: Serialize , serde :: Deserialize))] # [cfg_attr (not (feature = \"bracketed-paste\") , derive (Copy))]",
+      "cfg": " # [cfg_attr (feature = \"serde\" , derive (serde :: Serialize , serde :: Deserialize))] # [cfg_attr (not (feature = \"bracketed-paste\") , derive (Copy))] # [cfg (feature = \"bracketed-paste\")]",
       "id": "d9c22bdd00cc3cd52df6",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L540",
       "coverage": "unmapped"
@@ -2201,7 +2201,7 @@
       "line": 543,
       "kind": "field",
       "symbol": "Event::Paste.0",
-      "cfg": " # [cfg_attr (feature = \"serde\" , derive (serde :: Serialize , serde :: Deserialize))] # [cfg_attr (not (feature = \"bracketed-paste\") , derive (Copy))]",
+      "cfg": " # [cfg_attr (feature = \"serde\" , derive (serde :: Serialize , serde :: Deserialize))] # [cfg_attr (not (feature = \"bracketed-paste\") , derive (Copy))] # [cfg (feature = \"bracketed-paste\")]",
       "id": "c963273d8c78c8de184a",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L543",
       "coverage": "unmapped"
@@ -2341,7 +2341,7 @@
       "line": 751,
       "kind": "method",
       "symbol": "<Event>::as_paste_event",
-      "cfg": " ",
+      "cfg": "  # [cfg (feature = \"bracketed-paste\")]",
       "id": "9b4a452b5b70de6acde9",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/event.rs#L751",
       "coverage": "unmapped"
@@ -4041,7 +4041,7 @@
       "line": 59,
       "kind": "method",
       "symbol": "<StartHyperlink < T > as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "45f6571160261f605de5",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style/hyperlink.rs#L59",
       "coverage": "unmapped"
@@ -4071,7 +4071,7 @@
       "line": 80,
       "kind": "method",
       "symbol": "<EndHyperlink as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "6e2e4757464a8cea0bc6",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style/hyperlink.rs#L80",
       "coverage": "unmapped"
@@ -4971,7 +4971,7 @@
       "line": 223,
       "kind": "method",
       "symbol": "<SetForegroundColor as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "d40688799f04d489fc96",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L223",
       "coverage": "unmapped"
@@ -5011,7 +5011,7 @@
       "line": 250,
       "kind": "method",
       "symbol": "<SetBackgroundColor as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "db5a9c8fdf1eb1ec4dc0",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L250",
       "coverage": "unmapped"
@@ -5051,7 +5051,7 @@
       "line": 277,
       "kind": "method",
       "symbol": "<SetUnderlineColor as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "c558b524779f5f64a71e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L277",
       "coverage": "unmapped"
@@ -5091,7 +5091,7 @@
       "line": 338,
       "kind": "method",
       "symbol": "<SetColors as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "a35d0d3d1204b07ad992",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L338",
       "coverage": "unmapped"
@@ -5131,7 +5131,7 @@
       "line": 365,
       "kind": "method",
       "symbol": "<SetAttribute as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "1c00af9f63838f992aca",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L365",
       "coverage": "unmapped"
@@ -5171,7 +5171,7 @@
       "line": 392,
       "kind": "method",
       "symbol": "<SetAttributes as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "82c58470856442d6582e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L392",
       "coverage": "unmapped"
@@ -5211,7 +5211,7 @@
       "line": 425,
       "kind": "method",
       "symbol": "<SetStyle as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "4517723148a00b68aeec",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L425",
       "coverage": "unmapped"
@@ -5221,7 +5221,7 @@
       "line": 430,
       "kind": "method",
       "symbol": "<SetStyle as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "adaa57ffa08414fc4a89",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L430",
       "coverage": "unmapped"
@@ -5261,7 +5261,7 @@
       "line": 492,
       "kind": "method",
       "symbol": "<PrintStyledContent < D > as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "43f80dbab7f41269e84e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L492",
       "coverage": "unmapped"
@@ -5291,7 +5291,7 @@
       "line": 511,
       "kind": "method",
       "symbol": "<ResetColor as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "3ccb61e264880e056a73",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L511",
       "coverage": "unmapped"
@@ -5331,7 +5331,7 @@
       "line": 528,
       "kind": "method",
       "symbol": "<Print < T > as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "499885c711989d56f6af",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L528",
       "coverage": "unmapped"
@@ -5341,7 +5341,7 @@
       "line": 533,
       "kind": "method",
       "symbol": "<Print < T > as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "05e439b7bc3de998bee5",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/style.rs#L533",
       "coverage": "unmapped"
@@ -5581,7 +5581,7 @@
       "line": 3,
       "kind": "reexport",
       "symbol": "self :: unix :: supports_keyboard_enhancement",
-      "cfg": "",
+      "cfg": " # [cfg (unix)] # [cfg (feature = \"events\")]",
       "id": "027d55f07ebcf637980b",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal/sys.rs#L3",
       "coverage": "unmapped"
@@ -5591,7 +5591,7 @@
       "line": 10,
       "kind": "reexport",
       "symbol": "self :: windows :: supports_keyboard_enhancement",
-      "cfg": "",
+      "cfg": " # [cfg (windows)] # [cfg (feature = \"events\")]",
       "id": "5bd0893a680ea0c42f43",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal/sys.rs#L10",
       "coverage": "unmapped"
@@ -5611,7 +5611,7 @@
       "line": 103,
       "kind": "reexport",
       "symbol": "sys :: supports_keyboard_enhancement",
-      "cfg": "",
+      "cfg": " # [cfg (feature = \"events\")]",
       "id": "59ccc4e6cbe43919a57b",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L103",
       "coverage": "unmapped"
@@ -5741,7 +5741,7 @@
       "line": 168,
       "kind": "method",
       "symbol": "<DisableLineWrap as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "8acbac835b6dc7ee5ee6",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L168",
       "coverage": "unmapped"
@@ -5771,7 +5771,7 @@
       "line": 187,
       "kind": "method",
       "symbol": "<EnableLineWrap as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "21399c95a882727ca26a",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L187",
       "coverage": "unmapped"
@@ -5801,7 +5801,7 @@
       "line": 230,
       "kind": "method",
       "symbol": "<EnterAlternateScreen as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "9cc8070ccc1a908a40d4",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L230",
       "coverage": "unmapped"
@@ -5831,7 +5831,7 @@
       "line": 270,
       "kind": "method",
       "symbol": "<LeaveAlternateScreen as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "f29a1c9d638687755056",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L270",
       "coverage": "unmapped"
@@ -5861,7 +5861,7 @@
       "line": 311,
       "kind": "method",
       "symbol": "<EnableAlternateScrollMode as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "7e72aecc2415b0c96afa",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L311",
       "coverage": "unmapped"
@@ -5871,7 +5871,7 @@
       "line": 319,
       "kind": "method",
       "symbol": "<EnableAlternateScrollMode as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "9a8f5b994253f481362e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L319",
       "coverage": "unmapped"
@@ -5901,7 +5901,7 @@
       "line": 356,
       "kind": "method",
       "symbol": "<DisableAlternateScrollMode as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "ec4051d29f8b000e26f5",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L356",
       "coverage": "unmapped"
@@ -5911,7 +5911,7 @@
       "line": 364,
       "kind": "method",
       "symbol": "<DisableAlternateScrollMode as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "5b87e26b13bc43163802",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L364",
       "coverage": "unmapped"
@@ -6021,7 +6021,7 @@
       "line": 404,
       "kind": "method",
       "symbol": "<ScrollUp as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "19a98d69aa70fa025a98",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L404",
       "coverage": "unmapped"
@@ -6061,7 +6061,7 @@
       "line": 426,
       "kind": "method",
       "symbol": "<ScrollDown as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "2fd44fd7f0362817eb06",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L426",
       "coverage": "unmapped"
@@ -6101,7 +6101,7 @@
       "line": 454,
       "kind": "method",
       "symbol": "<Clear as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "78a9c5c516776088a7e2",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L454",
       "coverage": "unmapped"
@@ -6151,7 +6151,7 @@
       "line": 473,
       "kind": "method",
       "symbol": "<SetSize as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "af79e45b067bb7f88eeb",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L473",
       "coverage": "unmapped"
@@ -6191,7 +6191,7 @@
       "line": 492,
       "kind": "method",
       "symbol": "<SetTitle < T > as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "7771367dea73c1656d82",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L492",
       "coverage": "unmapped"
@@ -6221,7 +6221,7 @@
       "line": 544,
       "kind": "method",
       "symbol": "<BeginSynchronizedUpdate as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "a2e5e354969a1fe8bb00",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L544",
       "coverage": "unmapped"
@@ -6231,7 +6231,7 @@
       "line": 549,
       "kind": "method",
       "symbol": "<BeginSynchronizedUpdate as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "03820aab1f926150c452",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L549",
       "coverage": "unmapped"
@@ -6261,7 +6261,7 @@
       "line": 602,
       "kind": "method",
       "symbol": "<EndSynchronizedUpdate as Command>::execute_winapi",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "916442e8b21f76edbd5e",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L602",
       "coverage": "unmapped"
@@ -6271,7 +6271,7 @@
       "line": 607,
       "kind": "method",
       "symbol": "<EndSynchronizedUpdate as Command>::is_ansi_code_supported",
-      "cfg": " ",
+      "cfg": "  # [cfg (windows)]",
       "id": "70356bad06d7194dd0a9",
       "source_url": "https://github.com/crossterm-rs/crossterm/blob/9a397df6dc4f5bd3ff900bb6308b728186cb914c/src/terminal.rs#L607",
       "coverage": "unmapped"

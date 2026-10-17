@@ -1,4 +1,5 @@
 """Rust-only owned-scene costs, including construction plus rendering."""
+from evidence_checks import require
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -18,31 +19,31 @@ def digest(path):
 
 def summary(record):
     samples = sorted(record["samples_ns"])
-    assert len(samples) >= 31 and all(math.isfinite(n) and n > 0 for n in samples)
+    require(len(samples) >= 31 and all(math.isfinite(n) and n > 0 for n in samples))
     return {"p50_ns": statistics.median(samples), "p95_ns": samples[math.ceil(.95 * len(samples)) - 1],
             "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
 
 
 context = json.loads((BASE / "views-before-context.json").read_text())
-assert digest(BASE / "views-before.jsonl") == context["raw_sha256"]
+require(digest(BASE / "views-before.jsonl") == context["raw_sha256"])
 for name, expected in context["source_sha256"].items():
     data = subprocess.check_output(["git", "show", context["git_head"] + ":" + name], cwd=ROOT)
-    assert hashlib.sha256(data).hexdigest() == expected, name
+    require(hashlib.sha256(data).hexdigest() == expected, lambda: name)
 stage = json.loads((BASE / "views-normalized-stage-context.json").read_text())
-assert digest(BASE / "views-normalized-stage.jsonl") == stage["raw_sha256"]
+require(digest(BASE / "views-normalized-stage.jsonl") == stage["raw_sha256"])
 records = [{r["case"]: r for r in map(json.loads, (BASE / name).read_text().splitlines())}
            for name in ("views-before.jsonl", "views-normalized-stage.jsonl", "views-after.jsonl")]
-assert len(records[0]) == 20 and all(r.keys() == records[0].keys() for r in records)
+require(len(records[0]) == 20 and all(r.keys() == records[0].keys() for r in records))
 cases = []
 for name, before in records[0].items():
     for r in records:
-        assert (r[name]["semantics"], r[name]["output"], r[name]["iterations_per_sample"]) == (before["semantics"], before["output"], before["iterations_per_sample"]), name
+        require((r[name]["semantics"], r[name]["output"], r[name]["iterations_per_sample"]) == (before["semantics"], before["output"], before["iterations_per_sample"]), lambda: name)
     cases.append({"case": name, "semantics": before["semantics"], "output": before["output"],
                   **{label: summary(r[name]) for label, r in zip(["before", "normalized_stage", "after"], records)}})
 sources = list(context["source_sha256"]) + ["crates/matea-render/src/text.rs", "crates/matea-render/tests/text.rs",
            "crates/matea/src/lib.rs", "crates/matea-widgets/src/clocks.rs", "scripts/report_view_performance.py"]
 first = json.loads((BASE / "views-first-before-context.json").read_text())
-assert digest(BASE / "views-first-before.jsonl") == first["raw_sha256"]
+require(digest(BASE / "views-first-before.jsonl") == first["raw_sha256"])
 report = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "host": platform.platform(),
           "baseline": context, "baseline_context_sha256": digest(BASE / "views-before-context.json"),
           "initial_exploration": {"context": "views-first-before-context.json", "context_sha256": digest(BASE / "views-first-before-context.json"), "raw_sha256": first["raw_sha256"]},

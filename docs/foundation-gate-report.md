@@ -5,6 +5,12 @@
 
 ## 現在の範囲と進捗
 
+全実装の再評価として、81プログラムファイルを40評価単位へ登録し、Rust設計・メモリ安全性・動作・参照元一致・性能・移植性の6軸を採点しました。[評価項目と判定基準](quality-evaluation.md)、[ファイル別の証拠・未達項目](evidence/quality/report.json)。未測定を高評価とせず、平均点で不合格を隠しません。通常CIの台帳整合性チェックと、全軸75点以上を要求する`check_quality.py --gate`は別です。全高評価には未到達です。
+
+この評価でViewportの末尾空行・CRLF・リサイズ位置・無視入力の不整合を修正し、表示時の行ごとの複製を除去しました。12件のRust内前後測定では、ASCII 24行のView生成が26割り当てから1へ減少しました。初期測定のp95悪化も保存し、構築・描画込み・初期解析／常駐メモリ未測定を分けています。Rustの棚卸しツールではフィールド等の子`cfg`欠落を修正し、Crossterm 80件とRatatui 42件の条件を補正しました。宣言ID・件数は維持しています。Python `-O`が検証を省略する不具合も再現し、14スクリプトの138判定を明示検査へ変更しました。[ADR 0023](decisions/0023-indexed-viewport-and-evidence-based-quality-gates.md)。
+
+追加試験は1,296レイアウト組合せ、4,096連続描画の所有セル・差分不変条件、Kitty 20入力の分割・復元・出力上限、Sixel 54入力のバンド・透過・run、Viewportの独立行モデルを含みます。Miriは描画・購読・Textの合計9テストに成功しました。[正確な対象・seed・制約](evidence/quality/miri-context.json)。計測用ビルドでは49 Rustソースファイルの行・関数実行を記録しましたが、埋め込み単体テストを含む値であり、分岐・参照機能の網羅率や安全性の証明ではありません。[実行率](evidence/quality/rust-execution-coverage.json)。
+
 - 固定SHAの11参照単位を走査し、94モジュール、7,455件の宣言候補と117件のソース課題マーカーを記録。[台帳](coverage/summary.json)。マクロ展開・再公開・cfgを解決した正確な公開API一覧は未完成です。
 - 公開機能の対応付けは500候補までで、6,955候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
 - 841件のopen issueを収集しました。未確認報告を不具合と断定していません。[一覧](coverage/upstream-issues.json)、[初期分析と回帰対策](upstream-defects.md)。全件の分析・再現は未完了です。
@@ -27,7 +33,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は111 testsと2 doc tests（compile-only／compile-fail）成功、12サンプルsnapshot成功、Unix PTY 17ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
+今回のローカル結果は120 testsと2 doc tests（compile-only／compile-fail）成功、12サンプルsnapshot成功、Unix PTY 17ケース成功です。23検証コマンドが成功し、fmt、clippy（-D warnings）、all-targets、release、rustdocと、Python 16ケースの通常／最適化実行を含みます。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
 色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.78µs、測定割り当て2→0回です。行移動のCRLF短縮には、既存のスクロール領域内で画面を動かす不具合があり、失敗traceを保存して絶対指定へ修正しました。現在の無彩色出力は1,745→1,704バイトで、参照元の1,655バイトより49バイト多くなります。途中の性能後退と、標準／独自スクロール領域の再生検証も記録。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
 

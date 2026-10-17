@@ -1,4 +1,5 @@
 """Compile pinned references in temporary copies, keeping sources out of Matea."""
+from evidence_checks import require
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -36,8 +37,8 @@ def main():
     pin = next(p for p in json.loads((ROOT / "docs/upstream-lock.json").read_text(encoding="utf-8"))
                if p["name"] == args.reference)
     reference = (args.references / args.reference).resolve()
-    assert command("git", "rev-parse", "HEAD", cwd=reference) == pin["sha"]
-    assert not command("git", "status", "--porcelain", "--untracked-files=no", cwd=reference)
+    require(command("git", "rev-parse", "HEAD", cwd=reference) == pin["sha"])
+    require(not command("git", "status", "--porcelain", "--untracked-files=no", cwd=reference))
     snapshot = destination / "source" / args.reference
     marker = snapshot / ".matea-source-pin.json"
     if not marker.exists():
@@ -66,9 +67,9 @@ def main():
         marker.write_text(json.dumps({"reference": args.reference, "sha": pin["sha"],
                                      "source_hashes": hashes, "dereferenced_internal_symlinks": symlinks}, indent=2) + "\n", encoding="utf-8")
     provenance = json.loads(marker.read_text(encoding="utf-8"))
-    assert provenance["sha"] == pin["sha"]
-    assert all(hashlib.sha256((snapshot / name).read_bytes()).hexdigest() == value
-               for name, value in provenance["source_hashes"].items()), "snapshot source changed"
+    require(provenance["sha"] == pin["sha"])
+    require(all(hashlib.sha256((snapshot / name).read_bytes()).hexdigest() == value
+               for name, value in provenance["source_hashes"].items()), lambda: "snapshot source changed")
     target = destination / "target" / args.reference / args.profile
     reports = destination / "reports"
     reports.mkdir(parents=True, exist_ok=True)

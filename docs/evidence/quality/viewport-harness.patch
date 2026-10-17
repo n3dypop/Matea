@@ -1,0 +1,43 @@
+diff --git a/tools/perf-probe/src/main.rs b/tools/perf-probe/src/main.rs
+index 8dcecff..31aadcb 100644
+--- a/tools/perf-probe/src/main.rs
++++ b/tools/perf-probe/src/main.rs
+@@ -148,6 +148,10 @@ fn main() {
+         view_construction_costs(iterations);
+         return;
+     }
++    if std::env::args().any(|arg| arg == "--viewport") {
++        viewport_costs(iterations);
++        return;
++    }
+     input_bindings(iterations);
+     projectiles(iterations);
+     pagination(iterations);
+@@ -292,6 +296,27 @@ fn main() {
+         );
+     }
+ }
++fn viewport_costs(iterations: usize) {
++    let theme = Theme::plain();
++    for (name, line) in [("ascii", "Matea owns each line"), ("unicode", "抹茶 e\u{301} 👩‍💻")] {
++        for rows in [1u16, 6, 24] {
++            let text = std::iter::repeat_n(line, 100).collect::<Vec<_>>().join("\n");
++            let mut viewport = Viewport::new(&text);
++            viewport.rows = rows;
++            let size = Size::new(80, rows);
++            let output = viewport.view(&theme, false).render(size).unwrap().plain();
++            measure(&format!("viewport/view_{name}_{rows}"), iterations, || {
++                black_box(black_box(&viewport).view(black_box(&theme), false));
++                1
++            }, &output, "construct and drop an owned viewport scene of first visible rows from 100 lines; no rendering or terminal I/O");
++            measure(&format!("viewport/view_render_{name}_{rows}"), iterations, || {
++                black_box(black_box(&viewport).view(black_box(&theme), false).render(black_box(size)).unwrap());
++                1
++            }, &output, "construct, render and drop viewport scene and fresh 80-column surface; no terminal I/O");
++        }
++    }
++}
++
+ fn view_construction_costs(iterations: usize) {
+     let theme = Theme::default();
+     let size = Size::new(72, 4);

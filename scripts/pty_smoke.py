@@ -1,4 +1,5 @@
 """Unix PTY lifecycle tests; no claim about any real emulator's Unicode rendering."""
+from evidence_checks import require
 import errno
 import fcntl
 import os
@@ -79,7 +80,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                     if error.errno == errno.EIO:
                         break
                     raise
-        assert predicate(), (name, "timed out", bytes(output[-1500:]))
+        require(predicate(), lambda: (name, "timed out", bytes(output[-1500:])))
 
     def plain():
         return screen_text(bytes(output))
@@ -87,7 +88,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
     try:
         if not any(flag in args for flag in ("--panic-view", "--panic-format")):
             read_until(lambda: ready in plain())
-            assert not termios.tcgetattr(slave)[3] & termios.ICANON, name
+            require(not termios.tcgetattr(slave)[3] & termios.ICANON, lambda: name)
             if action == "post-signal":
                 os.write(master, b"q")
                 read_until(lambda: b"POST_RUN_READY" in output)
@@ -106,10 +107,10 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"w")
                 read_until(lambda:b"RECOVERED" in output)
                 visible=screen_text(output)
-                assert b"RECOVERED" in visible and b"worker panic hook fixture" not in visible,(name,visible)
+                require(b"RECOVERED" in visible and b"worker panic hook fixture" not in visible, lambda: (name,visible))
                 os.write(master,b"q")
             elif action == "enhanced-input":
-                assert b"\x1b[>15u" in output and b"\x1b[?1006h" in output
+                require(b"\x1b[>15u" in output and b"\x1b[?1006h" in output)
                 for data,expected in [
                     (b"\x1b[24~",b"F(12) Press"),
                     (b"\x1b[113;1:3u",b"Char('q') Release"),
@@ -126,7 +127,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 ]:
                     os.write(master,data)
                     read_until(lambda:expected in plain())
-                    assert child.poll() is None,(name,"release or delivered Ctrl-C exited")
+                    require(child.poll() is None, lambda: (name,"release or delivered Ctrl-C exited"))
                 os.write(master,b"\x1b[113u")
             elif action == "pagination":
                 os.write(master,b"\x1b[C")
@@ -159,7 +160,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"q")
             elif action == "clocks":
                 read_until(lambda:b"Timeouts: 1" in plain())
-                assert b"0s (expired)" in plain(), name
+                require(b"0s (expired)" in plain(), lambda: name)
                 os.write(master,b"r")
                 read_until(lambda:b"Countdown:" in plain() and b"(running)" in plain() and b"(expired)" not in plain())
                 os.write(master,b"c")
@@ -183,7 +184,7 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 offset = len(output)
                 os.write(master, b"\x1b[200~" + "あいう".encode() + b"\x1b[201~")
                 read_until(lambda: b"\x1b[4;9H\x1b[?25h" in output[offset:])
-                assert b"\x1b[?25l" in output[offset:], (name, "paint did not hide cursor")
+                require(b"\x1b[?25l" in output[offset:], lambda: (name, "paint did not hide cursor"))
                 os.write(master, b"\x1b")
             else:
                 os.write(master, {"panic": b"p", "ctrl-c": b"\x03"}.get(action, b"q"))
@@ -195,16 +196,16 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 if error.errno == errno.EIO:
                     break
                 raise
-        assert child.returncode == expected_status, (name, child.returncode, plain()[-1500:])
-        assert termios.tcgetattr(slave) == original, (name, "termios not restored")
+        require(child.returncode == expected_status, lambda: (name, child.returncode, plain()[-1500:]))
+        require(termios.tcgetattr(slave) == original, lambda: (name, "termios not restored"))
         for command in [b"\x1b[?1049l", b"\x1b[?25h", b"\x1b[?2004l", b"\x1b[?1004l"]:
-            assert command in output, (name, "cleanup command missing", command)
+            require(command in output, lambda: (name, "cleanup command missing", command))
         if expected_status == 0 and expect_cancelled:
-            assert b"CANCELLED" in output, (name, "effect cancellation not observed")
+            require(b"CANCELLED" in output, lambda: (name, "effect cancellation not observed"))
         if action=="enhanced-input":
-            assert output.count(b"\x1b[<1u")==1,(name,"keyboard stack popped twice")
-            assert output.index(b"\x1b[<1u")<output.index(b"\x1b[?1049l"),(name,"keyboard popped on wrong screen")
-            assert b"\x1b[?1006l" in output,(name,"mouse mode not disabled")
+            require(output.count(b"\x1b[<1u")==1, lambda: (name,"keyboard stack popped twice"))
+            require(output.index(b"\x1b[<1u")<output.index(b"\x1b[?1049l"), lambda: (name,"keyboard popped on wrong screen"))
+            require(b"\x1b[?1006l" in output, lambda: (name,"mouse mode not disabled"))
         print(f"PASS {name}: input, cleanup" + (", cancellation" if expected_status == 0 and expect_cancelled else ""))
     finally:
         if child.poll() is None:

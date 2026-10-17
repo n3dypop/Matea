@@ -1,4 +1,5 @@
 """Portable examples and reviewed dashboard golden. Run from any directory."""
+from evidence_checks import require
 import os
 from pathlib import Path
 import subprocess
@@ -14,16 +15,16 @@ for name, expected in [("counter", "Count: 0"), ("list", "Matcha"),
         ["cargo", "run", "--locked", "--quiet", "-p", "matea", "--example", name,
          "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
         capture_output=True, text=True, encoding="utf-8", timeout=60)
-    assert expected in result.stdout, (name, result.stdout)
-    assert "\x1b" not in result.stdout, name
+    require(expected in result.stdout, lambda: (name, result.stdout))
+    require("\x1b" not in result.stdout, lambda: name)
     if name == "dashboard":
         golden = (WORKSPACE / "tests/golden/dashboard.txt").read_text(encoding="utf-8")
-        assert result.stdout == golden, "dashboard golden mismatch"
+        require(result.stdout == golden, lambda: "dashboard golden mismatch")
     print(f"PASS {name} snapshot")
 result = subprocess.run(
     ["cargo", "run", "--locked", "--quiet", "-p", "matea-example-external-widget",
      "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
     capture_output=True, text=True, encoding="utf-8", timeout=60)
-assert "Third-party badge" in result.stdout
-assert "\x1b" not in result.stdout
+require("Third-party badge" in result.stdout)
+require("\x1b" not in result.stdout)
 print("PASS external widget snapshot")

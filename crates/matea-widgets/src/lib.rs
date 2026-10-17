@@ -198,20 +198,56 @@ impl Component for Table {
 
 #[derive(Clone, Debug)]
 pub struct Viewport {
-    lines: Vec<String>,
+    content: String,
+    line_starts: Vec<usize>,
     offset: usize,
     pub rows: u16,
 }
 impl Viewport {
     pub fn new(text: &str) -> Self {
+        // CRLF is a structural newline. Other controls follow the compositor's
+        // replacement policy rather than reaching the terminal as commands.
+        let normalized = if text.contains("\r\n") {
+            std::borrow::Cow::Owned(text.replace("\r\n", "\n"))
+        } else {
+            std::borrow::Cow::Borrowed(text)
+        };
+        let content = sanitize(&normalized);
+        let line_starts = if content.is_empty() {
+            Vec::new()
+        } else {
+            std::iter::once(0)
+                .chain(content.match_indices('\n').map(|(i, _)| i + 1))
+                .collect()
+        };
         Self {
-            lines: sanitize(text).lines().map(str::to_owned).collect(),
+            content,
+            line_starts,
             offset: 0,
             rows: 6,
         }
     }
     pub fn offset(&self) -> usize {
-        self.offset
+        self.offset.min(self.max_offset())
+    }
+    fn max_offset(&self) -> usize {
+        self.line_starts
+            .len()
+            .saturating_sub(usize::from(self.rows))
+    }
+    fn visible_text(&self) -> &str {
+        let start = self.offset();
+        let end = start
+            .saturating_add(usize::from(self.rows))
+            .min(self.line_starts.len());
+        if start == end {
+            return "";
+        }
+        let end_byte = self
+            .line_starts
+            .get(end)
+            .map_or(self.content.len(), |n| n - 1);
+        &self.content[self.line_starts[start]..end_byte]
     }
 }
 impl Component for Viewport {
@@ -226,34 +262,22 @@ impl Component for Viewport {
         if !k.is_plain() {
             return Response::ignored();
         }
-        let max = self.lines.len().saturating_sub(usize::from(self.rows));
-        match k.code {
-            KeyCode::Down => self.offset = self.offset.saturating_add(1),
-            KeyCode::Up => self.offset = self.offset.saturating_sub(1),
-            KeyCode::PageDown => self.offset = self.offset.saturating_add(usize::from(self.rows)),
-            KeyCode::PageUp => self.offset = self.offset.saturating_sub(usize::from(self.rows)),
-            KeyCode::Home => self.offset = 0,
-            KeyCode::End => self.offset = max,
+        let max = self.max_offset();
+        let offset = self.offset();
+        let next = match k.code {
+            KeyCode::Down => offset.saturating_add(1),
+            KeyCode::Up => offset.saturating_sub(1),
+            KeyCode::PageDown => offset.saturating_add(usize::from(self.rows)),
+            KeyCode::PageUp => offset.saturating_sub(usize::from(self.rows)),
+            KeyCode::Home => 0,
+            KeyCode::End => max,
             _ => return Response::ignored(),
-        }
-        self.offset = self.offset.min(max);
+        };
+        self.offset = next.min(max);
         Response::consumed(Some(Action::Changed))
     }
     fn view(&self, theme: &Theme, _: bool) -> View {
-        let offset = self
-            .offset
-            .min(self.lines.len().saturating_sub(usize::from(self.rows)));
-        View::styled(
-            self.lines
-                .iter()
-                .skip(offset)
-                .take(usize::from(self.rows))
-                .cloned()
-                .collect::<Vec<_>>()
-                .join("\n"),
-            theme.text,
-        )
-        .height(self.rows)
+        View::styled(self.visible_text(), theme.text).height(self.rows)
     }
 }
 

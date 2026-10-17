@@ -1,4 +1,5 @@
 """Publish Rust-only before/after subscription evidence; no upstream parity claim."""
+from evidence_checks import require
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -18,24 +19,24 @@ def digest(path):
 
 def summary(record):
     samples = sorted(record["samples_ns"])
-    assert len(samples) >= 31 and all(value > 0 for value in samples)
+    require(len(samples) >= 31 and all(value > 0 for value in samples))
     return {"p50_ns": statistics.median(samples),
             "p95_ns": samples[math.ceil(.95 * len(samples)) - 1],
             "allocations": record["allocations"], "allocated_bytes": record["allocated_bytes"]}
 
 
 before_context = json.loads((BASE / "subscriptions-before-context.json").read_text())
-assert digest(BASE / "subscriptions-before.jsonl") == before_context["raw_sha256"]
+require(digest(BASE / "subscriptions-before.jsonl") == before_context["raw_sha256"])
 for name, expected in before_context["source_sha256"].items():
     original = subprocess.check_output(["git", "show", before_context["git_head"] + ":" + name], cwd=ROOT)
-    assert hashlib.sha256(original).hexdigest() == expected, name
+    require(hashlib.sha256(original).hexdigest() == expected, lambda: name)
 records = [{record["case"]: record for record in map(json.loads, (BASE / name).read_text().splitlines())}
            for name in ("subscriptions-before.jsonl", "subscriptions-after.jsonl")]
-assert records[0].keys() == records[1].keys()
+require(records[0].keys() == records[1].keys())
 cases = []
 for name, before in records[0].items():
     after = records[1][name]
-    assert (before["semantics"], before["output"], before["first_return_value"]) == (after["semantics"], after["output"], after["first_return_value"]), name
+    require((before["semantics"], before["output"], before["first_return_value"]) == (after["semantics"], after["output"], after["first_return_value"]), lambda: name)
     cases.append({"case": name, "semantics": before["semantics"], "output": before["output"],
                   "before": summary(before), "after": summary(after)})
 intermediate = []
@@ -43,11 +44,11 @@ for stem, label in [("subscriptions-scoped-stage", "Scoped IDs and retained node
                     ("subscriptions-key-move-stage", "Single map-key ownership, before empty-configuration fast path")]:
     raw, context, patch = BASE / (stem + ".jsonl"), BASE / (stem + "-report.json"), BASE / (stem + ".patch")
     data = json.loads(context.read_text())
-    assert digest(raw) == data["raw_sha256"]["subscriptions-after.jsonl"]
+    require(digest(raw) == data["raw_sha256"]["subscriptions-after.jsonl"])
     stage = {record["case"]: record for record in map(json.loads, raw.read_text().splitlines())}
-    assert stage.keys() == records[0].keys()
+    require(stage.keys() == records[0].keys())
     for name, record in stage.items():
-        assert (record["semantics"], record["output"]) == (records[0][name]["semantics"], records[0][name]["output"])
+        require((record["semantics"], record["output"]) == (records[0][name]["semantics"], records[0][name]["output"]))
     intermediate.append({"label": label, "raw": raw.name, "raw_sha256": digest(raw),
                          "context": context.name, "context_sha256": digest(context),
                          "patch": patch.name, "patch_sha256": digest(patch),

@@ -1,4 +1,5 @@
 """Import normalized API facts/logs, never raw reference source or rustdoc docs."""
+from evidence_checks import require
 import argparse
 import hashlib
 import json
@@ -34,13 +35,13 @@ def main():
     for folder in args.reports:
         for batch_path in sorted(folder.rglob("*-batch.json")):
             batch = json.loads(batch_path.read_text(encoding="utf-8"))
-            assert pins[batch["reference"]] == batch["sha"]
+            require(pins[batch["reference"]] == batch["sha"])
             (DESTINATION / batch_path.name).write_bytes(canonical_fact_bytes(batch_path))
             batches[batch_path.name] = {"file": batch_path.name, "path": f"docs/coverage/rustdoc/{batch_path.name}",
                                         "reference": batch["reference"], "sha": batch["sha"], "target": batch["target"]}
         for run_path in sorted(folder.rglob("*-run.json")):
             report = json.loads(run_path.read_text(encoding="utf-8"))
-            assert pins[report["reference"]] == report["sha"], run_path
+            require(pins[report["reference"]] == report["sha"], lambda: run_path)
             stem = run_path.name.removesuffix("-run.json")
             entry = {"stem": stem, "reference": report["reference"], "sha": report["sha"],
                      "package": report["package"], "profile": report["profile"], "target": report["target"],
@@ -48,10 +49,10 @@ def main():
             graph_path = run_path.with_name(f"{stem}-exports.json")
             if report["status"] == "compiled_profile_only_not_full_scope":
                 graph = json.loads(graph_path.read_text(encoding="utf-8"))
-                assert graph["sha"] == report["sha"] and graph["reference"] == report["reference"]
-                assert graph["extractor_sha256"] == report["extractor_sha256"]
-                assert report["rustdoc_exit_code"] == report["dependency_tree_exit_code"] == 0
-                assert all("profile_item_key" in i and "docs" not in i for i in graph["items"])
+                require(graph["sha"] == report["sha"] and graph["reference"] == report["reference"])
+                require(graph["extractor_sha256"] == report["extractor_sha256"])
+                require(report["rustdoc_exit_code"] == report["dependency_tree_exit_code"] == 0)
+                require(all("profile_item_key" in i and "docs" not in i for i in graph["items"]))
                 graph_bytes = canonical_fact_bytes(graph_path)
                 (DESTINATION / graph_path.name).write_bytes(graph_bytes)
                 entry.update({"graph": f"docs/coverage/rustdoc/{graph_path.name}",

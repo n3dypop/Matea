@@ -39,6 +39,14 @@ fn attrs(attrs: &[syn::Attribute]) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
+fn conditions(parent: &str, own: &[syn::Attribute]) -> String {
+    let own = attrs(own);
+    if own.is_empty() {
+        parent.to_owned()
+    } else {
+        format!("{parent} {own}")
+    }
+}
 fn fields(file: &str, name: &str, fields: &Fields, cfg: &str, all: bool) {
     for (i, f) in fields.iter().enumerate() {
         if all || public(&f.vis) {
@@ -51,7 +59,7 @@ fn fields(file: &str, name: &str, fields: &Fields, cfg: &str, all: bool) {
                 f.span().start().line,
                 "field",
                 &format!("{name}.{n}"),
-                cfg,
+                &conditions(cfg, &f.attrs),
             );
         }
     }
@@ -81,17 +89,21 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                     .as_ref()
                     .map(|(_, p, _)| format!(" as {}", p.to_token_stream()));
                 for it in &v.items {
-                    let (vis, name, kind) = match it {
-                        ImplItem::Fn(m) => (&m.vis, m.sig.ident.to_string(), "method"),
-                        ImplItem::Const(c) => (&c.vis, c.ident.to_string(), "associated_const"),
-                        ImplItem::Type(t) => (&t.vis, t.ident.to_string(), "associated_type"),
+                    let (vis, name, kind, member_attrs) = match it {
+                        ImplItem::Fn(m) => (&m.vis, m.sig.ident.to_string(), "method", &m.attrs),
+                        ImplItem::Const(c) => {
+                            (&c.vis, c.ident.to_string(), "associated_const", &c.attrs)
+                        }
+                        ImplItem::Type(t) => {
+                            (&t.vis, t.ident.to_string(), "associated_type", &t.attrs)
+                        }
                         ImplItem::Macro(m) => {
                             emit(
                                 file,
                                 m.span().start().line,
                                 "impl_macro",
                                 &m.mac.path.to_token_stream().to_string(),
-                                &cfg,
+                                &conditions(&cfg, &m.attrs),
                             );
                             continue;
                         }
@@ -103,7 +115,7 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                             it.span().start().line,
                             kind,
                             &format!("{prefix}<{ty}{}>::{name}", tr.as_deref().unwrap_or("")),
-                            &cfg,
+                            &conditions(&cfg, member_attrs),
                         );
                     }
                 }
@@ -119,6 +131,7 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                 let name = format!("{prefix}{}", v.ident);
                 emit(file, line, "enum", &name, &cfg);
                 for variant in &v.variants {
+                    let cfg = conditions(&cfg, &variant.attrs);
                     let n = format!("{name}::{}", variant.ident);
                     emit(file, variant.span().start().line, "variant", &n, &cfg);
                     fields(file, &n, &variant.fields, &cfg, true);
@@ -129,10 +142,10 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                 let name = format!("{prefix}{}", v.ident);
                 emit(file, line, "trait", &name, &cfg);
                 for it in &v.items {
-                    let id = match it {
-                        TraitItem::Fn(f) => f.sig.ident.to_string(),
-                        TraitItem::Type(t) => t.ident.to_string(),
-                        TraitItem::Const(c) => c.ident.to_string(),
+                    let (id, member_attrs) = match it {
+                        TraitItem::Fn(f) => (f.sig.ident.to_string(), &f.attrs),
+                        TraitItem::Type(t) => (t.ident.to_string(), &t.attrs),
+                        TraitItem::Const(c) => (c.ident.to_string(), &c.attrs),
                         _ => continue,
                     };
                     emit(
@@ -140,7 +153,7 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                         it.span().start().line,
                         "trait_member",
                         &format!("{name}::{id}"),
-                        &cfg,
+                        &conditions(&cfg, member_attrs),
                     );
                 }
             }
@@ -156,28 +169,28 @@ fn items(file: &str, declarations: &[Item], prefix: &str, parent_cfg: &str) {
                 line,
                 "const",
                 &format!("{prefix}{}", v.ident),
-                parent_cfg,
+                &conditions(parent_cfg, &v.attrs),
             ),
             Item::Static(v) if public(&v.vis) => emit(
                 file,
                 line,
                 "static",
                 &format!("{prefix}{}", v.ident),
-                parent_cfg,
+                &conditions(parent_cfg, &v.attrs),
             ),
             Item::Type(v) if public(&v.vis) => emit(
                 file,
                 line,
                 "type",
                 &format!("{prefix}{}", v.ident),
-                parent_cfg,
+                &conditions(parent_cfg, &v.attrs),
             ),
             Item::Use(v) if public(&v.vis) => emit(
                 file,
                 line,
                 "reexport",
                 &v.tree.to_token_stream().to_string(),
-                parent_cfg,
+                &conditions(parent_cfg, &v.attrs),
             ),
             Item::Macro(v) => {
                 let name = v.ident.as_ref().map_or_else(

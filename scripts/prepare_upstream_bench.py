@@ -1,4 +1,5 @@
 """Prepare a disposable pinned Go module without modifying/vendoring references."""
+from evidence_checks import require
 import argparse
 import json
 from pathlib import Path
@@ -16,17 +17,17 @@ motion=args.references.resolve()/"harmonica"
 bindings=args.references.resolve()/"bubbles"
 tea=args.references.resolve()/"bubbletea"
 lip=args.references.resolve()/"lipgloss"
-assert subprocess.check_output(["git","-C",str(lip),"rev-parse","HEAD"],text=True).strip()==lock["lipgloss"]["sha"]
-assert not subprocess.check_output(["git","-C",str(lip),"status","--porcelain"],text=True)
-assert subprocess.check_output(["git","-C",str(tea),"rev-parse","HEAD"],text=True).strip()==lock["bubbletea"]["sha"]
-assert not subprocess.check_output(["git","-C",str(tea),"status","--porcelain"],text=True)
-assert subprocess.check_output(["git","-C",str(bindings),"rev-parse","HEAD"],text=True).strip()==lock["bubbles"]["sha"]
-assert not subprocess.check_output(["git","-C",str(bindings),"status","--porcelain"],text=True)
-assert subprocess.check_output(["git","-C",str(motion),"rev-parse","HEAD"],text=True).strip()==lock["harmonica"]["sha"]
-assert not subprocess.check_output(["git","-C",str(motion),"status","--porcelain"],text=True)
+require(subprocess.check_output(["git","-C",str(lip),"rev-parse","HEAD"],text=True).strip()==lock["lipgloss"]["sha"])
+require(not subprocess.check_output(["git","-C",str(lip),"status","--porcelain"],text=True))
+require(subprocess.check_output(["git","-C",str(tea),"rev-parse","HEAD"],text=True).strip()==lock["bubbletea"]["sha"])
+require(not subprocess.check_output(["git","-C",str(tea),"status","--porcelain"],text=True))
+require(subprocess.check_output(["git","-C",str(bindings),"rev-parse","HEAD"],text=True).strip()==lock["bubbles"]["sha"])
+require(not subprocess.check_output(["git","-C",str(bindings),"status","--porcelain"],text=True))
+require(subprocess.check_output(["git","-C",str(motion),"rev-parse","HEAD"],text=True).strip()==lock["harmonica"]["sha"])
+require(not subprocess.check_output(["git","-C",str(motion),"status","--porcelain"],text=True))
 actual=subprocess.check_output(["git","-C",str(source),"rev-parse","HEAD"],text=True).strip()
-assert actual==lock["ultraviolet"]["sha"]
-assert not subprocess.check_output(["git","-C",str(source),"status","--porcelain"],text=True)
+require(actual==lock["ultraviolet"]["sha"])
+require(not subprocess.check_output(["git","-C",str(source),"status","--porcelain"],text=True))
 destination=args.destination.resolve();destination.mkdir(parents=True,exist_ok=True)
 shutil.copy2(ROOT/"tools/perf-upstream/main.go",destination/"main.go")
 (destination/"go.mod").write_text(f'''module matea-foundation-comparison
