@@ -132,6 +132,28 @@ def verify(document, nondefault_margins=False):
                         require(cell[0] == " " and cell[2] is None and cell[3] == 0, lambda: (x, y, cell))
 
 
+def verify_fallback(document):
+    require(document["kind"] == "unicode_fallback")
+    require({t["profile"] for t in document["traces"]} == {"none", "truecolor"})
+    for trace in document["traces"]:
+        require((trace["width"], trace["height"]) == (8, 2))
+        require(len(trace["sequences"]) == 4)
+        fg, bg = (None, None) if trace["profile"] == "none" else (("rgb", 95, 135, 175), ("rgb", 175, 95, 135))
+        for stage in range(4):
+            cells, visible = replay({**trace, "sequences": trace["sequences"][:stage + 1]})
+            expected = [[(" ", None, None, 0) for _ in range(8)] for _ in range(2)]
+            if stage == 0:
+                for x, char in enumerate("? x?"): expected[0][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            elif stage == 1:
+                expected[0][0] = ("q", None, None, 0)
+            elif stage == 2:
+                for x, char in [(6, "?"), (7, " ")]: expected[1][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            else:
+                for x, y, char in [(0, 0, "a"), (0, 1, "?"), (1, 1, " ")]: expected[y][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            require(cells == expected, lambda: (trace["profile"], stage, cells, expected))
+            require(visible == (stage == 3))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("traces", type=Path, nargs="*")
@@ -148,11 +170,17 @@ def main():
         document = json.loads(output)
         verify(document)
         verify(document, nondefault_margins=True)
+        fallback = json.loads(subprocess.check_output([str(args.probe.resolve()), "--fallback-trace"], env=env))
+        verify_fallback(fallback)
         if args.output:
             args.output.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
-        print("NO_COLOR=1: explicit four-profile capabilities preserved in a fresh process")
+        print("NO_COLOR=1: four-profile capabilities and styled Unicode fallback preserved")
     for path in args.traces:
         document = json.loads(path.read_text(encoding="utf-8"))
+        if document.get("kind") == "unicode_fallback":
+            verify_fallback(document)
+            print(f"{path.name}: exact fallback cells/styles/visibility")
+            continue
         verify(document)
         if args.nondefault_margins:
             verify(document, nondefault_margins=True)

@@ -121,6 +121,10 @@ fn measure(
     );
 }
 fn main() {
+    if std::env::args().any(|arg| arg == "--fallback-trace") {
+        fallback_trace();
+        return;
+    }
     if std::env::args().any(|arg| arg == "--trace") {
         trace();
         return;
@@ -301,6 +305,56 @@ fn main() {
         );
     }
 }
+fn fallback_trace() {
+    let style = Style::default()
+        .fg(Color::Rgb(95, 135, 175))
+        .bg(Color::Rgb(175, 95, 135))
+        .bold()
+        .reverse();
+    let frames = [
+        View::styled("茶xe\u{301}", style)
+            .render(Size::new(8, 2))
+            .unwrap(),
+        View::text("q").render(Size::new(8, 2)).unwrap(),
+        View::layers(vec![(Rect::new(6, 1, 2, 1), View::styled("茶", style))])
+            .render(Size::new(8, 2))
+            .unwrap(),
+        View::styled("a\n茶", style)
+            .with_cursor(Cursor::new(0, 1))
+            .render(Size::new(8, 2))
+            .unwrap(),
+    ];
+    let mut traces = Vec::new();
+    for (profile, color) in [
+        ("none", ColorLevel::None),
+        ("truecolor", ColorLevel::TrueColor),
+    ] {
+        let caps = Capabilities {
+            color,
+            unicode: false,
+            reduced_motion: true,
+        };
+        let mut encoder = FrameEncoder::default();
+        let mut previous = None;
+        let mut sequences = Vec::new();
+        for frame in &frames {
+            let mut bytes = Vec::new();
+            encoder.write(&mut bytes, frame, previous, caps).unwrap();
+            sequences.push(quote(&String::from_utf8(bytes).unwrap()));
+            previous = Some(frame);
+        }
+        traces.push(format!(
+            "{{\"profile\":{},\"width\":8,\"height\":2,\"sequences\":[{}]}}",
+            quote(profile),
+            sequences.join(",")
+        ));
+    }
+    println!(
+        "{{\"kind\":\"unicode_fallback\",\"traces\":[{}]}}",
+        traces.join(",")
+    );
+}
+
 fn style_costs(iterations: usize) {
     let inputs = [
         ("default", Color::Default),
