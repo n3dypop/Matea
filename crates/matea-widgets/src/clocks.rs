@@ -418,28 +418,12 @@ impl DurationText {
         self.bytes[self.start] = b'0' + value;
     }
     fn integer(&mut self, mut value: u64) {
-        // Decimal pairs halve division and bounds-check work for long segments.
-        // The table is generated from digits, not a borrowed implementation.
-        const PAIRS: [u8; 200] = {
-            let mut pairs = [0; 200];
-            let mut n = 0;
-            while n < 100 {
-                pairs[n * 2] = b'0' + (n / 10) as u8;
-                pairs[n * 2 + 1] = b'0' + (n % 10) as u8;
-                n += 1;
+        loop {
+            self.digit((value % 10) as u8);
+            value /= 10;
+            if value == 0 {
+                break;
             }
-            pairs
-        };
-        while value >= 100 {
-            let pair = (value % 100) as usize * 2;
-            self.prepend(&PAIRS[pair..pair + 2]);
-            value /= 100;
-        }
-        if value >= 10 {
-            let pair = value as usize * 2;
-            self.prepend(&PAIRS[pair..pair + 2]);
-        } else {
-            self.digit(value as u8);
         }
     }
     fn fraction(&mut self, mut value: u32, width: usize) {
@@ -457,6 +441,7 @@ impl DurationText {
         }
         self.prepend(b".");
     }
+    #[inline]
     fn as_str(&self) -> &str {
         std::str::from_utf8(&self.bytes[self.start..])
             .expect("clock text uses digits and static UTF-8 units")
@@ -471,6 +456,7 @@ impl ClockText {
         }
         String::from(self.formatted().as_str())
     }
+    #[inline]
     fn formatted(self) -> DurationText {
         // Duration::MAX needs at most 33 bytes. Fill backward to avoid separate
         // integer/fraction arrays, scans and copies. Only complete static UTF-8
