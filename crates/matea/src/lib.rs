@@ -37,8 +37,9 @@ pub mod prelude {
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{
         Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, EchoMode,
-        Field, Form, Help, HelpItem, HelpMap, HelpStyles, InputStyleState, InputStyles, List,
-        PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Spinner, Stopwatch, Table,
-        TextEditKeys, TextInput, TickInterval, Viewport, required,
+        EmptySpinnerFrames, Field, Form, Help, HelpItem, HelpMap, HelpStyles, InputStyleState,
+        InputStyles, List, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Spinner,
+        SpinnerAnimation, SpinnerPreset, Stopwatch, Table, TextEditKeys, TextInput, TickInterval,
+        Viewport, required,
     };
 }

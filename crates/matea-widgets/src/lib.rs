@@ -5,6 +5,7 @@ mod help;
 pub mod key;
 mod pagination;
 mod paginator;
+mod spinner;
 mod textinput;
 pub use clocks::{
     ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, Stopwatch, TickInterval,
@@ -16,6 +17,7 @@ use matea_render::{View, sanitize};
 use matea_style::Theme;
 pub use pagination::Pagination;
 pub use paginator::{PageDisplay, PageKeys, PageNumbers, Paginator};
+pub use spinner::{EmptySpinnerFrames, Spinner, SpinnerAnimation, SpinnerPreset};
 pub use textinput::{EchoMode, InputStyleState, InputStyles, TextEditKeys, TextInput};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -252,37 +254,6 @@ impl Component for Viewport {
             theme.text,
         )
         .height(self.rows)
-    }
-}
-
-#[derive(Clone, Debug, Default)]
-pub struct Spinner {
-    frame: usize,
-}
-impl Spinner {
-    pub fn tick(&mut self, theme: &Theme) {
-        if !theme.reduced_motion {
-            self.frame = (self.frame + 1) % 4;
-        }
-    }
-}
-impl Component for Spinner {
-    type Message = Action;
-    fn event(&mut self, _: &Input, _: bool) -> Response<Action> {
-        Response::ignored()
-    }
-    fn view(&self, theme: &Theme, _: bool) -> View {
-        View::styled(
-            format!(
-                "{} Working",
-                if theme.reduced_motion {
-                    "*"
-                } else {
-                    ["|", "/", "-", "\\"][self.frame]
-                }
-            ),
-            theme.accent,
-        )
     }
 }
 
@@ -571,6 +542,6 @@ mod tests {
         let theme = Theme::plain();
         let mut s = Spinner::default();
         s.tick(&theme);
-        assert_eq!(s.frame, 0);
+        assert_eq!(s.frame_index(), 0);
     }
 }

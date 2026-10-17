@@ -87,7 +87,7 @@ Colors are optional.
 Resize safely.
 Enjoy your tea.",
         ),
-        spinner: Spinner::default(),
+        spinner: Spinner::default().with_label("Working"),
         ticks: 0,
         focus: FocusRing::new(["table", "notes"]),
         motion: !snapshot && !reduced,

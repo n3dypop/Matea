@@ -142,6 +142,21 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"\t\r")
                 read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
                 os.write(master,b"\x1b")
+            elif action == "spinners":
+                os.write(master,b"p")
+                read_until(lambda:b"Animation: paused" in plain())
+                os.write(master,b"r")
+                read_until(lambda:b"Resets: 1" in plain())
+                os.write(master,b"n")
+                read_until(lambda:b"Manual: 1" in plain())
+                os.write(master,b"m")
+                read_until(lambda:b"Motion: reduced" in plain())
+                os.write(master,b"p")
+                read_until(lambda:b"Animation: running" in plain())
+                os.write(master,b"m")
+                read_until(lambda:b"Motion: normal" in plain())
+                read_until(lambda:re.search(rb"Updates: [1-9][0-9]*",plain()) is not None)
+                os.write(master,b"q")
             elif action == "clocks":
                 read_until(lambda:b"Timeouts: 1" in plain())
                 assert b"0s (expired)" in plain(), name
@@ -217,3 +232,5 @@ case("form completion and submission", "form-completion",example="form",ready=b"
 case("native cursor composition and CJK paste", "native-cursor",example="form",args=("--native",),ready=b"Tea tasting registration",expect_cancelled=False)
 case("dynamic short and full key help", "key-help",example="help",ready=b"Matea key help",expect_cancelled=False)
 case("monotonic clocks, pause, rearm and exactly-once timeout", "clocks",example="clocks",ready=b"Matea clocks",expect_cancelled=False)
+
+case("spinner presets, pause, manual phase and reduced-motion schedules", "spinners",example="spinners",ready=b"Matea spinners",expect_cancelled=False)

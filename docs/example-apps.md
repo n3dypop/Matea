@@ -13,10 +13,11 @@ cargo run -p matea --example input
 cargo run -p matea --example pagination
 cargo run -p matea --example help
 cargo run -p matea --example clocks
+cargo run -p matea --example spinners
 cargo run -p matea-example-external-widget
 ```
 
-All eleven accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All twelve accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -64,3 +65,8 @@ provides placeholder/prompt, typed edit keys, word deletion, live validators and
 normal/password/hidden echo. Run `cargo run -p matea --example form -- --native`
 to use a native cursor whose position composes through the panel. Appearance,
 blink and OS clipboard remain pending; see the input editing audit for limits.
+
+`cargo run -p matea --example spinners` displays twelve independent presets.
+Use p to pause/resume, r to reset phases, n for manual stepping, m to toggle
+reduced motion and q to quit. The stable `--snapshot` form acquires no terminal.
+The example adds a twelfth snapshot and a sixteenth Unix PTY control/cleanup case.

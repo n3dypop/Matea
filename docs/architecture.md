@@ -103,3 +103,10 @@ metadata. It reuses edit/match buffers and stores optional non-Send UI callbacks
 in Rc. The parent owns focus, Tab traversal and effect scheduling. Input changes
 and completion share limit/validation paths; form submission rechecks callbacks.
 Terminal/native cursor and clipboard lifecycle are still separate pending work.
+
+Spinner state reuses the UI-thread clock identity/generation contract. Immutable
+validated animation data is shared independently from non-Clone live state; plain
+frame text can be borrowed. Total active elapsed time determines phase after late
+updates, avoiding catch-up loops and nominal tick drift. Reduced-motion views are
+static and their subscription adapters omit schedules. Explicit manual cadence
+remains available. See [ADR 0020](decisions/0020-validated-spinner-animations.md).

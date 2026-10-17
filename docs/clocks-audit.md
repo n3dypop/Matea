@@ -94,9 +94,9 @@ the longest shared duration changes from three allocations to one (56 to 24
 requested bytes), with retained p50 148.167 to 54.417 ns. The initial stack version
 regressed zero from 26.959 to 39.292 ns; a zero fast path brings it to 22.625 ns.
 All before/intermediate samples are retained under clock_format_optimization in
-[report.json](evidence/performance/2026-10-16/report.json).
+[the retained clock checkpoint](evidence/performance/2026-10-16/clocks-checkpoint-report.json).
 
-Fresh formatting remains slower than Go in these fixtures (for example maximum
+At that clock checkpoint, fresh formatting remains slower than Go in these fixtures (for example maximum
 shared duration p50 54.417 versus 32.084 ns). Reused buffers allocate zero in both
 languages, but most Rust formatter timings still exceed source. Ignored typed
 ticks allocate zero and have lower measured p50 in these four narrow guards.

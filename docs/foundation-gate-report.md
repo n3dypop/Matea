@@ -6,10 +6,10 @@
 ## 現在の範囲と進捗
 
 - 固定SHAの11参照単位を走査し、94モジュール、7,455件の宣言候補と117件のソース課題マーカーを記録。[台帳](coverage/summary.json)。マクロ展開・再公開・cfgを解決した正確な公開API一覧は未完成です。
-- 公開機能の対応付けは471候補までで、6,984候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
+- 公開機能の対応付けは500候補までで、6,955候補は未対応付けです。実装済みと部分対応を区別しています。[能力台帳](coverage/capabilities.json)、[手順](coverage-plan.md)。
 - 841件のopen issueを収集しました。未確認報告を不具合と断定していません。[一覧](coverage/upstream-issues.json)、[初期分析と回帰対策](upstream-defects.md)。全件の分析・再現は未完了です。
 - 7 crateにRuntime、描画、スタイル、基本widget、端末、facade、独立motionを配置。Harmonica相当のバネ・投射体、カスタムfilter/keymap、ページ分割を追加しました。公開APIとcrate名は暫定です。
-- 描画の割り当てを削減し、70ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。キー照合は型付き比較で文字列化を省き、6ケースで検証しました。[測定条件と生データ](performance.md)。
+- 描画の割り当てを削減し、84ケースを固定参照元と比較。出力fixtureは一致しましたが、全モジュールの同等性能は未達です。1セル更新の通信量は当初37対2バイトから、状態付きエンコーダにより双方2バイトへ改善しました。バネは参照元と同じIEEE演算のsampleと、双方で入力・結果を検査するchecked updateを分けて測定しています。キー照合は型付き比較で文字列化を省き、6ケースで検証しました。[測定条件と生データ](performance.md)。
 - キーのPress/Repeat/Release、6修飾子、ロック状態、機能キー、マウスを公開型で保持。widgetのRelease誤操作、修飾Tabによるフォーカス移動、無視イベントによるForm状態消失を修正しました。端末モードを個別管理し、復旧リトライでキーボードスタックを二重popしないよう改善しました。自動能力交渉、物理キー、IME、WindowsのKitty要求などは残課題です。[入力監査](input-audit.md)、[ADR 0011](decisions/0011-input-events-and-mode-leases.md)。
 - オーナーの例外承認により、Kitty/Sixelの純粋なエンコーダをFoundationへ追加。画像エンジン、画像デコード・変換、CUDAは未実装です。[ADR 0009](decisions/0009-foundation-protocol-encoders.md)。実端末、完全な公開機能、Runtimeの自動能力交渉・資源管理は未検証／未実装です。
 
@@ -27,7 +27,7 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 ローカル検証の最新の実コマンド・終了コードは[local-validation.json](evidence/local-validation.json)と各ログに保存します。`python3 scripts/verify_foundation.py --offline`で再実行できます。
 
-今回のローカル結果は98 testsと1 compile-only doc test成功、11サンプルsnapshot成功、Unix PTY 15ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
+今回のローカル結果は103 testsと1 compile-only doc test成功、12サンプルsnapshot成功、Unix PTY 16ケース成功です。fmt、clippy（-D warnings）、all-targets、rustdocも成功しました。端末差分の独立再生では、初回出力97対95バイト、更新2対2バイトで同じ画面を確認しました。初回は可視性が不明なためHideを明示します。別のcursor-only traceは移動4対6バイトで同じ位置・可視性です。
 
 色出力では、明示した能力が依存のNO_COLOR設定に上書きされるMateaの統合不具合を修正しました。4色モードを独立再生し、固定サイズの量子化キャッシュ、属性・行移動の出力改善を検証。ANSI256の全画面fixtureはp50 1.58ms→28.78µs、測定割り当て2→0回です。行移動のCRLF短縮には、既存のスクロール領域内で画面を動かす不具合があり、失敗traceを保存して絶対指定へ修正しました。現在の無彩色出力は1,745→1,704バイトで、参照元の1,655バイトより49バイト多くなります。途中の性能後退と、標準／独自スクロール領域の再生検証も記録。任意のパレット・キャッシュ分布・実端末の性能は未検証です。[監査](frame-color-audit.md)、[ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)。
 
@@ -35,7 +35,9 @@ Bubbles keyの17宣言もレビューし、3モジュール・66宣言分の実�
 
 stopwatch／countdownの43宣言を対応付けました。実際の単調経過時間、正のtick間隔、世代付きschedule、部分経過を保持するpause、ゼロに止める一度限りのtimeoutを実装。固定参照元のゼロ既定値、stale tick、重複start、負のtimeout表示を実行して分析しました。8件の時計テスト、269件の書式fixture、2回の満了と再開を含むUnix PTYが成功。RuntimeのDuration::MAXでは、表現できない次回期限をNoneにして同一期限の無限再通知を防ぐ回帰テストも追加しています。[監査](clocks-audit.md)、[ADR 0019](decisions/0019-monotonic-clocks-and-generation-safe-schedules.md)。
 
-時計の16比較ケースを追加し、計70ケースの出力が一致しました。owned書式化の最大共有durationは3回／56バイトから1回／24バイト、p50 148.17→54.42nsへ改善しましたが、参照元32.08nsには未達です。呼び出し側バッファ再利用は双方0割り当て。停止中／別IDのtickの4比較は双方0割り当てです。active schedulingはGo側の実timer作成と同じ意味の測定が未実施で、遅延通知・購読作成を含む性能はpendingです。時計2モジュールを性能同等と扱わず、台帳の部分対応／未測定能力は10件、未分析issue報告は825件です。
+時計実装時点では16比較ケースを追加し、計70ケースの出力が一致しました。owned書式化の最大共有durationは3回／56バイトから1回／24バイト、p50 148.17→54.42nsへ改善しましたが、参照元32.08nsには未達です。呼び出し側バッファ再利用は双方0割り当て。停止中／別IDのtickの4比較は双方0割り当てです。active schedulingはGo側の実timer作成と同じ意味の測定が未実施で、遅延通知・購読作成を含む性能はpendingです。時計2モジュールを性能同等と扱わず、現在の台帳の部分対応／未測定能力は11件、未分析issue報告は824件です。
+
+Spinnerの29宣言を対応付け、12プリセット・66フレーム、検証済みカスタムフレーム、共有データ、世代付き更新と単調時間による位相を実装しました。初回zero-tag tickの再送による追加回転、空／短縮フレームのerror表示、ゼロ周期の受理を参照元で実行して分析。Mateaは重複・古いtickを無視し、設定変更で位相をリセットします。5件の統合テストと、12プリセットのサンプル・操作PTYが成功しました。ラベルなし文字列はCowで借用し、14件の有限比較で双方割り当て0回。active schedulingと任意のLip Gloss装飾は未完了です。[監査](spinner-audit.md)、[ADR 0020](decisions/0020-validated-spinner-animations.md)。
 
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
@@ -56,6 +58,8 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 最新のスクロール領域の追補修正 `80b3570e18e8ed3849006e80ecac4b30bfcb35a0` は[Linux・Windows・macOS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856755912)に成功しました。[ジョブ・step証拠](evidence/margin-ci-run.json)。独立再生oracleの3回帰テストと、独自スクロール領域での初回・復旧出力も通常CIへ含めています。参照元再収集ジョブはこの通常runではskipで、上記の専用runが証拠です。
 
 時計実装 `783b1e77f489fdd7a47e103c9c0df2d6975ef0be` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39010247644)の4ジョブに成功しました。[ジョブ・step証拠](evidence/clocks-ci-run.json)。Unix PTYはLinux/macOSで実行し、Windowsではskipです。参照元再収集はこの通常runではskipです。
+
+Spinner追補実装の3 OS + MSRV CIは送信前です。時計実装の成功は追補実装の成功を意味しません。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

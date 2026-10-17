@@ -260,8 +260,20 @@ metadata["clock_performance_pending"] = {
     "active_update": "Go Update arms a time.Timer and returns commands; Rust Update changes state and exposes a reusable schedule descriptor. These cannot be fairly compared as isolated pure state updates. Matched end-to-end scheduling/notification latency, cancellation and subscription construction remain pending.",
     "measured": "Six fresh and six reused-output compact formatters plus four paused/foreign guards; source setup timers drained outside measurements. No active-tick or module parity claim.",
     "allocation_bytes": "Rust counts allocator-requested bytes; Go MemStats includes allocator rounding/tiny-object effects. Counts/bytes are not physical-memory equivalence."}
+checkpoint = destination / "clocks-checkpoint-report.json"
+checkpoint_data = json.loads(checkpoint.read_text())
+checkpoint_raw = [destination / "matea-clocks-checkpoint.jsonl", destination / "upstream-clocks-checkpoint.jsonl"]
+for raw, key in zip(checkpoint_raw, ("matea-current.jsonl", "upstream-current.jsonl")):
+    assert digest(raw) == checkpoint_data["raw_sha256"][key]
+metadata["clock_checkpoint"] = {"report": checkpoint.name, "report_sha256": digest(checkpoint),
+    "raw_sha256": {raw.name: digest(raw) for raw in checkpoint_raw},
+    "scope": "Retain the 70-case clock implementation checkpoint before adding spinner cases; current raw records are a new full sequential run."}
+metadata["spinner_performance_pending"] = {
+    "measured": "Twelve plain immutable preset frames (storage sharing allowed) and two rejected-ID/generation guards; no actual timer creation in either measured operation.",
+    "pending": "Active scheduling, notification latency, custom frame construction/reconfiguration, labels, rich styled views and full module equivalence remain pending.",
+    "allocation_contract": "Rust Cow borrows unlabeled frames. Go unstyled View may share its immutable string. Neither operation requires a fresh owned copy. Source Model.View still goes through default Lip Gloss Style.Render; guard cases include plain frame retrieval/rendering and do not isolate guard speed."}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
-lines = ["# Foundation performance evidence — 2026-10-16", "",
+lines = ["# Foundation performance evidence", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
          "Raw samples, source hashes, compilers, pins and limitations: [report.json](evidence/performance/2026-10-16/report.json).",
          "One macOS arm64 host, sequential release executables, memory sinks, 31 batches. Figures are nanoseconds per operation.", "",
@@ -285,6 +297,7 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "Key bindings add three custom-token matches plus construction and metadata access. Existing-string custom tokens do not format/allocate in either language. Constructors retain their result through black_box/global storage; Go escape analysis and Rust ownership differ. Short help storage is inline after the retained baseline.",
           "Four help fixtures render fresh unstyled strings from existing metadata, excluding binding construction and structured-view/cell encoding in both. Ordinary outputs match byte-for-byte; narrow-width overflow and terminal-control safety deviations have separate regressions. Rich Lip Gloss style decorators and whole help-module coverage remain pending.",
           "Clock fixtures cover six fresh compact duration strings, six caller-owned buffer reuse cases and four ignored-event guards. Go setup timers are drained outside timing. Go active Update arms a timer; Rust exposes a reusable schedule descriptor, so isolated active-update comparisons would be mismatched. End-to-end scheduling and full clock-module performance remain pending. Rust allocation bytes are requested sizes; Go includes rounding/tiny-object accounting.",
+          "Spinner fixtures cover twelve unstyled preset frame strings and two ignored-ID/generation guards. Both may share immutable frame storage; Rust exposes borrowed Cow output. Labels, rich styles, custom construction, active timer creation and notification latency remain outside this finite comparison.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",

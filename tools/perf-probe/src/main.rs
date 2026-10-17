@@ -144,6 +144,7 @@ fn main() {
     colored_frames(iterations);
     help_cases(iterations);
     clock_cases(iterations);
+    spinner_cases(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -278,6 +279,68 @@ fn main() {
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
     }
+}
+fn spinner_cases(iterations: usize) {
+    let theme = Theme::default();
+    let names = [
+        "line",
+        "dot",
+        "mini_dot",
+        "jump",
+        "pulse",
+        "points",
+        "globe",
+        "moon",
+        "monkey",
+        "meter",
+        "hamburger",
+        "ellipsis",
+    ];
+    for (preset, name) in SpinnerPreset::ALL.into_iter().zip(names) {
+        let spinner = Spinner::new(preset.animation());
+        measure(
+            &format!("spinner/plain_{name}"),
+            iterations * 10,
+            || black_box(&spinner).text(black_box(&theme)).len() as u64,
+            &spinner.text(&theme),
+            "plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling",
+        );
+    }
+    let origin = Instant::now();
+    let mut spinner = Spinner::new_at(SpinnerPreset::Line.animation(), origin);
+    spinner.start_at(origin);
+    let mut other = Spinner::default();
+    other.start();
+    let foreign = other.schedule(&theme).unwrap().tick();
+    let output = spinner.text(&theme).into_owned();
+    measure(
+        "spinner/foreign",
+        iterations * 10,
+        || {
+            assert!(!black_box(&mut spinner).update(black_box(foreign)));
+            spinner.text(black_box(&theme)).len() as u64
+        },
+        &output,
+        "ignore foreign spinner tick; return unchanged plain frame; no new scheduling request",
+    );
+    let stale = spinner
+        .schedule(&theme)
+        .unwrap()
+        .tick_at(origin + std::time::Duration::from_millis(100));
+    spinner.reset_at(origin);
+    spinner.tick(&theme);
+    spinner.tick(&theme);
+    let output = spinner.text(&theme).into_owned();
+    measure(
+        "spinner/stale",
+        iterations * 10,
+        || {
+            assert!(!black_box(&mut spinner).update(black_box(stale)));
+            spinner.text(black_box(&theme)).len() as u64
+        },
+        &output,
+        "ignore old positive-generation spinner tick; return unchanged plain frame; no new scheduling request",
+    );
 }
 fn clock_cases(iterations: usize) {
     use std::fmt::Write as _;

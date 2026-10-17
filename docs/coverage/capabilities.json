@@ -745,6 +745,52 @@
       "performance": "pending",
       "partial_performance_evidence": "docs/performance.md",
       "notes": "All source public declarations reviewed; Rust uses explicit mutable UI controls, monotonic Instant projections, positive intervals, typed identity/generations, schedule descriptors and filtered exactly-once timeout outcomes. Counter default/duplicate/stale/overshoot deviations are documented. Six fresh/six reused string and four ignored-event cases are measured, but fresh formatting is still slower than source in this host, and matched active scheduling/subscription/latency measurement remains pending. No module parity claim."
+    },
+    {
+      "id": "widgets/spinner",
+      "status": "partial",
+      "reference_ids": [
+        "07d8b587ddff36556bd0",
+        "db6e33c0f77fa2b34fc4",
+        "e336fb22eb2d6d910762",
+        "1d66d0c800cfd4b03b7d",
+        "48d1dd8942cb3ea2d9f5",
+        "6ef6f4b53e56ee0a5921",
+        "dce59f328a38bbbd8dda",
+        "aef5c41870663d377564",
+        "9c153946d0ac7ca039a4",
+        "28b77f622c40e2114abe",
+        "60dedce78b33611af41c",
+        "1421dd558157b63d82b9",
+        "0d257d62b97ba42c0b5c",
+        "55a2f8713e55775466bf",
+        "dcf7f4b400ec4572d439",
+        "c0185522f2bdb33370e0",
+        "eb03919f27f850c6007c",
+        "21e4c5e6fb522f0fc253",
+        "d34d1957285d15bb9806",
+        "3b32086f432f240f95a3",
+        "551867d9405b6e0e5bdf",
+        "56b505f906d2d2de2dc3",
+        "355d8ba0e8b1bfd9bfc2",
+        "88fd88f1a9e3b8074753",
+        "9e1977eea51d90025aae",
+        "29f99f99c898952830df",
+        "dd10a4f0b32138c2eee5",
+        "7d112d2a0805e8986460",
+        "a4df6016a3a716f0794c"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/spinner.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/spinner.rs",
+        "crates/matea-widgets/tests/fixtures/spinners.tsv",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "partial_performance_evidence": "docs/performance.md",
+      "notes": "Twelve immutable presets, custom shared validated frames, monotonic phase, opaque IDs/generations, controls and borrowed text implemented. Basic Style override and label composition work; arbitrary Lip Gloss Model.Style/WithStyle decorators and matched active scheduling/styled-view performance remain pending. See spinner-audit.md and ADR 0020."
     }
   ]
 }

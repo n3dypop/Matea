@@ -6,6 +6,7 @@ import (
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
+	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/stopwatch"
 	"charm.land/bubbles/v2/textinput"
 	bubbletimer "charm.land/bubbles/v2/timer"
@@ -147,6 +148,18 @@ func main() {
 		durationFixtures()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--spinner-fixtures" {
+		for _, item := range spinnerPresets() {
+			for index, frame := range item.animation.Frames {
+				fmt.Printf("%s\t%d\t%d\t%s\n", item.name, item.animation.FPS.Nanoseconds(), index, frame)
+			}
+		}
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--spinner-source-edges" {
+		spinnerSourceEdges()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
@@ -159,6 +172,7 @@ func main() {
 	coloredFrames(n)
 	helpCases(n)
 	clockCases(n)
+	spinnerCases(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -234,6 +248,72 @@ func startStopwatchForProbe() stopwatch.Model {
 	m, _ = m.Update(sequence.Index(0).Interface().(tea.Cmd)())
 	sequence.Index(1).Interface().(tea.Cmd)() // Drain setup timer outside measurement.
 	return m
+}
+
+type spinnerPreset struct {
+	name      string
+	animation spinner.Spinner
+}
+
+func spinnerPresets() []spinnerPreset {
+	return []spinnerPreset{{"line", spinner.Line}, {"dot", spinner.Dot}, {"mini_dot", spinner.MiniDot},
+		{"jump", spinner.Jump}, {"pulse", spinner.Pulse}, {"points", spinner.Points},
+		{"globe", spinner.Globe}, {"moon", spinner.Moon}, {"monkey", spinner.Monkey},
+		{"meter", spinner.Meter}, {"hamburger", spinner.Hamburger}, {"ellipsis", spinner.Ellipsis}}
+}
+func spinnerSourceEdges() {
+	m := spinner.New()
+	initial := m.Tick()
+	var cmd tea.Cmd
+	m, cmd = m.Update(initial)
+	first := m.View()
+	m, _ = m.Update(initial)
+	second := m.View()
+	// This real callback has a positive tag, unlike the initial Tick's zero tag.
+	positive := cmd()
+	before := m.View()
+	m, rejected := m.Update(positive)
+	positiveRejected := m.View() == before && rejected == nil
+	empty := spinner.New(spinner.WithSpinner(spinner.Spinner{Frames: []string{}, FPS: time.Second}))
+	empty, _ = empty.Update(empty.Tick())
+	m.Spinner.Frames = []string{"only"}
+	zero := spinner.New(spinner.WithSpinner(spinner.Spinner{Frames: []string{"a", "b"}, FPS: 0}))
+	broadcast := spinner.New()
+	broadcast, _ = broadcast.Update(spinner.TickMsg{})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{
+		"replayed_initial_tick_first": first, "replayed_initial_tick_second": second,
+		"old_positive_tag_rejected": positiveRejected, "empty_frames_view": empty.View(),
+		"shortened_frames_view": m.View(), "zero_period_accepted_ns": zero.Spinner.FPS.Nanoseconds(),
+		"id_zero_broadcast_view": broadcast.View(),
+	})
+}
+func spinnerCases(n int) {
+	for _, item := range spinnerPresets() {
+		m := spinner.New(spinner.WithSpinner(item.animation))
+		measure("spinner/plain_"+item.name, n*10, func() uint64 { return uint64(len(m.View())) }, m.View(),
+			"plain spinner frame string from existing immutable animation; storage sharing allowed; no label, style, terminal I/O or scheduling")
+	}
+	m := spinner.New()
+	foreign := spinner.New().Tick()
+	measure("spinner/foreign", n*10, func() uint64 {
+		var cmd tea.Cmd
+		m, cmd = m.Update(foreign)
+		if cmd != nil {
+			panic("foreign spinner tick accepted")
+		}
+		return uint64(len(m.View()))
+	}, m.View(), "ignore foreign spinner tick; return unchanged plain frame; no new scheduling request")
+	m, cmd := m.Update(m.Tick())
+	positive := cmd()
+	m, _ = m.Update(positive)
+	measure("spinner/stale", n*10, func() uint64 {
+		var cmd tea.Cmd
+		m, cmd = m.Update(positive)
+		if cmd != nil {
+			panic("stale spinner tick accepted")
+		}
+		return uint64(len(m.View()))
+	}, m.View(), "ignore old positive-generation spinner tick; return unchanged plain frame; no new scheduling request")
 }
 func clockCases(n int) {
 	for _, item := range []struct {

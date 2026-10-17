@@ -88,3 +88,11 @@ reproduced. Fresh duration formatting still trails source despite fewer growth
 allocations, and active scheduling comparisons remain pending. Core's logical
 Duration::MAX rescheduling boundary also has a regression and checked deadline
 representation. These results do not close clock module performance.
+
+Spinner source observations reproduce initial zero-tag replay (`/` then `-`),
+zero-ID broadcast, empty/shortened frame error output and an accepted zero period;
+a stale positive tag is correctly rejected. Matea validates animation data, resets
+phase on replacement and reuses generation/timestamp filtering. Bubbles #999 is
+actually a Huh title-spacing report; source inspection and Matea label regressions
+are recorded separately, without claiming an executed Huh reproduction. See
+[spinner audit](spinner-audit.md) and its pinned harness/fixture evidence.

@@ -133,9 +133,30 @@
       "reference": "bubbles",
       "source_group": "spinner",
       "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "correctness": [
+        "crates/matea-widgets/tests/spinner.rs",
+        "docs/evidence/spinner-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "spinner/plain_line",
+        "spinner/plain_dot",
+        "spinner/plain_mini_dot",
+        "spinner/plain_jump",
+        "spinner/plain_pulse",
+        "spinner/plain_points",
+        "spinner/plain_globe",
+        "spinner/plain_moon",
+        "spinner/plain_monkey",
+        "spinner/plain_meter",
+        "spinner/plain_hamburger",
+        "spinner/plain_ellipsis",
+        "spinner/foreign",
+        "spinner/stale"
+      ],
+      "notes": "All 29 source candidates linked; full Lip Gloss style decorators and active scheduling/custom/styled performance remain pending. Plain preset/ignored tick fixtures alone do not establish module parity.",
+      "source_audit": "docs/spinner-audit.md",
+      "declarations_reviewed": 29
     },
     {
       "reference": "bubbles",
