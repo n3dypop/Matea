@@ -72,6 +72,15 @@ widths; style roles include the key-description gap. Bound zero-width views emit
 nothing, disabled bindings disappear, and untrusted controls are sanitized.
 Rich per-field decorators remain pending. [ADR 0018](decisions/0018-borrowed-and-width-bounded-key-help.md).
 
+Stopwatch/countdown state lives in widgets, using monotonic Instant observations,
+typed identities/generations and positive refresh intervals. UI controls mutate
+state directly; schedules adapt to core subscriptions without per-clock workers.
+Late ticks account for actual elapsed time, stale/duplicate messages are ignored,
+and timeout is a filtered update outcome. Cached values and pure projections are
+distinct. Subscription construction and matched active-scheduler performance
+remain pending. Logical deadlines beyond Duration::MAX are represented as absent,
+avoiding repeat ticks at a saturated timestamp. [ADR 0019](decisions/0019-monotonic-clocks-and-generation-safe-schedules.md).
+
 Cursor hints are local render metadata, translated through the same clip/layout
 as their view. A later opaque glyph/panel covering a hint suppresses it. Wide-cell
 continuations normalize to the lead. The terminal applies native visibility and

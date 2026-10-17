@@ -78,3 +78,13 @@ modes. Borrowed metadata, retained fragment widths and caller-owned output avoid
 unnecessary key cloning and repeated width work. Plain-string fixtures agree;
 the safety-scan timing regression and subsequent width-cache revision are retained.
 Arbitrary rich style decorators and full module parity remain pending.
+
+The [clock audit](clocks-audit.md) records executed Bubbles default-zero interval,
+duplicate initial tick, stale pause/resume tick, multiple-start scheduling and
+negative overshoot observations. Monotonic elapsed values, positive intervals,
+generations and one filtered timeout outcome address these classes with tests.
+Five related reports were assessed; the old real-machine timing figures were not
+reproduced. Fresh duration formatting still trails source despite fewer growth
+allocations, and active scheduling comparisons remain pending. Core's logical
+Duration::MAX rescheduling boundary also has a regression and checked deadline
+representation. These results do not close clock module performance.

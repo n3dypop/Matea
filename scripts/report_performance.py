@@ -15,6 +15,8 @@ from check_color_trace import verify as verify_colors
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("--artifacts", type=Path, required=True)
+parser.add_argument("--matea-binary", type=Path)
+parser.add_argument("--upstream-binary", type=Path)
 args = parser.parse_args()
 destination = ROOT / "docs/evidence/performance/2026-10-16"
 destination.mkdir(parents=True, exist_ok=True)
@@ -85,7 +87,7 @@ for case, matea in records[0].items():
     comparison.append(item)
 assert all(item["output_equivalent_for_this_fixture"] for item in comparison), "fixture semantics/output mismatch; do not publish a parity claim"
 
-inputs = [ROOT / "Cargo.lock"]
+inputs = [ROOT / "Cargo.toml", ROOT / "Cargo.lock"]
 for folder in ("crates", "tools/perf-probe", "tools/perf-upstream"):
     inputs.extend(p for p in (ROOT / folder).rglob("*") if p.suffix in (".rs", ".go", ".toml"))
 metadata = {"schema": 1, "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -106,6 +108,9 @@ metadata = {"schema": 1, "recorded_at_utc": datetime.now(timezone.utc).isoformat
                        "Both current terminal encoders retain cursor/style state; stateless helper measured only in historical baseline",
                        "Old baseline files predate motion cases and anti-specialization changes; use for render/transport only"],
             "cases": comparison, "full_reference_parity": False}
+metadata["binary_sha256"] = {name: digest(path) for name, path in
+    [("matea", args.matea_binary), ("upstream", args.upstream_binary)] if path is not None}
+metadata["source_hashes_scope"] = "Source snapshots at report generation include test/example context; release probes do not compile those targets. Optional binary hashes identify the measured executables."
 metadata["vertical_margin_recovery"] = {
     "before_proof": "docs/evidence/row-margin-before.json",
     "before_trace": margin_before_path.name, "before_trace_sha256": digest(margin_before_path),
@@ -226,6 +231,35 @@ if baseline.is_file() and baseline_report.is_file():
         "raw": intermediate.name, "source_report": intermediate_report.name,
         "raw_sha256": digest(intermediate), "report_sha256": digest(intermediate_report),
         "finding": "Unicode p50 regressed from 299.875 to 518.417 ns after a separate grapheme safety scan; final layout caches cell widths during the same scan and uses ASCII fast paths."}
+baseline = destination / "matea-clock-format-before.jsonl"
+baseline_report = destination / "clock-format-before-report.json"
+if baseline.is_file() and baseline_report.is_file():
+    old = json.loads(baseline_report.read_text())
+    assert digest(baseline) == old["raw_sha256"]["matea-current.jsonl"]
+    previous = {r["case"]: r for r in map(json.loads, baseline.read_text().splitlines())}
+    optimized = {}
+    for case, after in records[0].items():
+        if case.startswith("clocks/format_"):
+            before = previous[case]
+            assert before["semantics"] == after["semantics"] and before["output"] == after["output"]
+            optimized[case] = {"before": summary(before), "after": summary(after)}
+    metadata["clock_format_optimization"] = {"before_raw": baseline.name, "before_source_report": baseline_report.name,
+        "before_raw_sha256": digest(baseline), "before_report_sha256": digest(baseline_report), "cases": optimized,
+        "scope": "Fresh owned strings: fragmented Display/ToString before; bounded safe stack preparation and exact-size String after. Same visible output. Relative source timing regressions remain visible."}
+    stage_raw, stage_report = destination / "matea-clock-format-stack.jsonl", destination / "clock-format-stack-report.json"
+    stage = json.loads(stage_report.read_text())
+    assert digest(stage_raw) == stage["raw_sha256"]["matea-current.jsonl"]
+    stage_records = {r["case"]: r for r in map(json.loads, stage_raw.read_text().splitlines())}
+    for case in optimized:
+        assert stage_records[case]["output"] == records[0][case]["output"]
+        optimized[case]["stack_before_zero_fast_path"] = summary(stage_records[case])
+    metadata["clock_format_optimization"]["intermediate"] = {"raw": stage_raw.name, "source_report": stage_report.name,
+        "raw_sha256": digest(stage_raw), "report_sha256": digest(stage_report),
+        "finding": "Initial stack formatting regressed zero duration p50 from 26.959 to 39.292 ns; retain it and specialize the zero case. Fresh-string source comparisons can still be slower."}
+metadata["clock_performance_pending"] = {
+    "active_update": "Go Update arms a time.Timer and returns commands; Rust Update changes state and exposes a reusable schedule descriptor. These cannot be fairly compared as isolated pure state updates. Matched end-to-end scheduling/notification latency, cancellation and subscription construction remain pending.",
+    "measured": "Six fresh and six reused-output compact formatters plus four paused/foreign guards; source setup timers drained outside measurements. No active-tick or module parity claim.",
+    "allocation_bytes": "Rust counts allocator-requested bytes; Go MemStats includes allocator rounding/tiny-object effects. Counts/bytes are not physical-memory equivalence."}
 (destination / "report.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
 lines = ["# Foundation performance evidence — 2026-10-16", "",
          "Status: measured workloads only. All-reference/module performance parity remains pending.", "",
@@ -250,6 +284,7 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "The text-input baseline retains samples/source hashes before ASCII query-buffer reuse. Unicode filtering keeps contextual lowercase semantics; that path is not covered by the ASCII allocation claim.",
           "Key bindings add three custom-token matches plus construction and metadata access. Existing-string custom tokens do not format/allocate in either language. Constructors retain their result through black_box/global storage; Go escape analysis and Rust ownership differ. Short help storage is inline after the retained baseline.",
           "Four help fixtures render fresh unstyled strings from existing metadata, excluding binding construction and structured-view/cell encoding in both. Ordinary outputs match byte-for-byte; narrow-width overflow and terminal-control safety deviations have separate regressions. Rich Lip Gloss style decorators and whole help-module coverage remain pending.",
+          "Clock fixtures cover six fresh compact duration strings, six caller-owned buffer reuse cases and four ignored-event guards. Go setup timers are drained outside timing. Go active Update arms a timer; Rust exposes a reusable schedule descriptor, so isolated active-update comparisons would be mismatched. End-to-end scheduling and full clock-module performance remain pending. Rust allocation bytes are requested sizes; Go includes rounding/tiny-object accounting.",
           "Raw spring samples use IEEE arithmetic; checked-update cases validate inputs/results in both languages. Rust constructor validation is included. Very short timings are sensitive to harness effects.", "",
           "## Reproduction", "", "```sh", "cargo build --release -p matea-perf-probe --locked",
           "python3 scripts/prepare_upstream_bench.py --references ../references --destination /tmp/matea-foundation-upstream",

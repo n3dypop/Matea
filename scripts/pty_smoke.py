@@ -142,6 +142,17 @@ def case(name, action=None, args=(), expected_status=0, example="lifecycle",
                 os.write(master,b"\t\r")
                 read_until(lambda:b"Saved. Esc to close." in plain() and b"sencha" in plain())
                 os.write(master,b"\x1b")
+            elif action == "clocks":
+                read_until(lambda:b"Timeouts: 1" in plain())
+                assert b"0s (expired)" in plain(), name
+                os.write(master,b"r")
+                read_until(lambda:b"Countdown:" in plain() and b"(running)" in plain() and b"(expired)" not in plain())
+                os.write(master,b"c")
+                read_until(lambda:b"(paused)" in plain())
+                os.write(master,b"c")
+                read_until(lambda:b"(paused)" not in plain())
+                read_until(lambda:b"Timeouts: 2" in plain())
+                os.write(master,b"q")
             elif action == "key-help":
                 read_until(lambda:b"d toggle tea action" in plain())
                 os.write(master,b"d")
@@ -205,3 +216,4 @@ case("interactive pagination", "pagination",example="pagination",ready=b"Page 1 
 case("form completion and submission", "form-completion",example="form",ready=b"Tea tasting registration",expect_cancelled=False)
 case("native cursor composition and CJK paste", "native-cursor",example="form",args=("--native",),ready=b"Tea tasting registration",expect_cancelled=False)
 case("dynamic short and full key help", "key-help",example="help",ready=b"Matea key help",expect_cancelled=False)
+case("monotonic clocks, pause, rearm and exactly-once timeout", "clocks",example="clocks",ready=b"Matea clocks",expect_cancelled=False)

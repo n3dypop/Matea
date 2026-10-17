@@ -1,10 +1,15 @@
 #![forbid(unsafe_code)]
 //! Stateful components sharing input, theme and focus contracts.
+mod clocks;
 mod help;
 pub mod key;
 mod pagination;
 mod paginator;
 mod textinput;
+pub use clocks::{
+    ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, Stopwatch, TickInterval,
+    ZeroTickInterval,
+};
 pub use help::{Help, HelpItem, HelpMap, HelpStyles};
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::{View, sanitize};

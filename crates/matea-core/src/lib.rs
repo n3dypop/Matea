@@ -143,7 +143,8 @@ impl<M> Subscription<M> {
 }
 struct Timer<M> {
     subscription: Subscription<M>,
-    next: Duration,
+    // None means no future deadline fits in the logical Duration domain.
+    next: Option<Duration>,
 }
 struct Worker {
     id: String,
@@ -262,7 +263,7 @@ impl<A: Model> Runtime<A> {
             }
             let id = s.id.clone();
             let t = self.timers.remove(&id).unwrap_or_else(|| Timer {
-                next: self.now.saturating_add(s.interval),
+                next: self.now.checked_add(s.interval),
                 subscription: s,
             });
             next.insert(id, t);
@@ -271,21 +272,22 @@ impl<A: Model> Runtime<A> {
         Ok(())
     }
     /// Advance logical time. Delayed timers coalesce to one message per call.
+    /// A deadline beyond Duration::MAX cannot fire; the exact maximum fires once.
     pub fn advance(&mut self, elapsed: Duration) -> Result<bool, RuntimeError> {
         self.now = self.now.saturating_add(elapsed);
         let due: Vec<_> = self
             .timers
             .iter()
-            .filter(|(_, t)| t.next <= self.now)
+            .filter(|(_, t)| t.next.is_some_and(|next| next <= self.now))
             .map(|(id, _)| id.clone())
             .collect();
         let mut changed = false;
         for id in due {
             if let Some(t) = self.timers.get_mut(&id) {
-                if t.next > self.now {
+                if t.next.is_none_or(|next| next > self.now) {
                     continue;
                 }
-                t.next = self.now.saturating_add(t.subscription.interval);
+                t.next = self.now.checked_add(t.subscription.interval);
                 let message = (t.subscription.message)();
                 self.dispatch(Event::Message(message))?;
                 changed = true;
@@ -710,5 +712,22 @@ mod tests {
         assert_eq!(f.current(), Some("a"));
         f.handle(&Input::Key(Key::new(KeyCode::BackTab)));
         assert_eq!(f.current(), Some("b"));
+    }
+    #[test]
+    fn saturated_clock_never_refires_or_rounds_down_unrepresentable_deadlines() {
+        let mut r = app(Effect::None);
+        r.advance(Duration::MAX - Duration::from_secs(1)).unwrap();
+        r.model.ticks = true;
+        r.reconcile().unwrap();
+        assert!(r.advance(Duration::from_secs(1)).unwrap());
+        assert_eq!(r.model.values, [7]);
+        assert!(!r.advance(Duration::ZERO).unwrap());
+        assert!(!r.advance(Duration::from_secs(1)).unwrap());
+        let mut r = app(Effect::None);
+        r.advance(Duration::MAX - Duration::from_nanos(1)).unwrap();
+        r.model.ticks = true;
+        r.reconcile().unwrap();
+        assert!(!r.advance(Duration::from_nanos(1)).unwrap());
+        assert!(r.model.values.is_empty());
     }
 }

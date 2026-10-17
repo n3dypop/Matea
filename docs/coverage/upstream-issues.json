@@ -1975,8 +1975,9 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/1007",
           "updated_at": "2026-06-26T01:41:30Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
+          "disposition": "assessed_stale_generation_reproduced",
+          "analysis": "Pinned timer tag never advances; a pre-pause/resume tick was accepted. Typed generations and stale/duplicate/backward-time guards have regressions."
         },
         {
           "number": 1001,
@@ -2159,8 +2160,9 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/867",
           "updated_at": "2026-03-19T21:33:25Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
+          "disposition": "reproduced_multiple_starts_corrected",
+          "analysis": "Executed two Start commands; source schedules two ticks and reduces 5ms to 3ms. Matea start is idempotent and clocks use retained UI subscriptions."
         },
         {
           "number": 865,
@@ -2188,8 +2190,9 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/862",
           "updated_at": "2026-03-11T03:50:44Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
+          "disposition": "reproduced_zero_default_corrected",
+          "analysis": "Executed pinned constructor interval=0. Matea defaults to one second and rejects zero intervals."
         },
         {
           "number": 857,
@@ -3020,8 +3023,9 @@
           "labels": [
             "bug"
           ],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
+          "disposition": "assessed_nominal_step_drift_corrected",
+          "analysis": "Pinned code increments/subtracts nominal intervals. Injected delayed/coalesced clocks verify real elapsed accounting in Matea; issue author wall-clock numbers were not reproduced and wake latency remains pending."
         },
         {
           "number": 231,
@@ -3133,8 +3137,9 @@
           "labels": [
             "enhancement"
           ],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "crates/matea-widgets/tests/clocks.rs; docs/evidence/clocks-source-edges.json",
+          "disposition": "assessed_formatting_composition",
+          "analysis": "Expose Duration and ClockText independently of scheduling; applications can render custom formats. Month/calendar policy is not inferred from elapsed Duration; this is an extension request, not a pinned missing public declaration."
         },
         {
           "number": 125,

@@ -6,7 +6,9 @@ import (
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
+	"charm.land/bubbles/v2/stopwatch"
 	"charm.land/bubbles/v2/textinput"
+	bubbletimer "charm.land/bubbles/v2/timer"
 	tea "charm.land/bubbletea/v2"
 	"encoding/json"
 	"fmt"
@@ -17,6 +19,7 @@ import (
 	"image/color" // Terminal style colors only; no image processing/decoding.
 	"math"
 	"os"
+	"reflect"
 	"runtime"
 	"runtime/debug"
 	"strconv"
@@ -35,6 +38,8 @@ var projectilePoint = harmonica.Point{X: 1, Y: 10, Z: -2}
 var projectileVelocity = harmonica.Vector{X: 2, Y: -3, Z: 4}
 var motionFPS = 60
 var bindingSink key.Binding
+var clockTextSink string
+var clockByteSink []byte
 
 type keyToken string
 
@@ -134,6 +139,14 @@ func main() {
 		helpSourceEdges()
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--clock-source-edges" {
+		clockSourceEdges()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--duration-fixtures" {
+		durationFixtures()
+		return
+	}
 	n := 300
 	if value, err := strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS")); err == nil && value > 0 {
 		n = value
@@ -145,6 +158,7 @@ func main() {
 	cursorEncoding(n)
 	coloredFrames(n)
 	helpCases(n)
+	clockCases(n)
 	for _, item := range []struct{ name, text string }{{"empty", ""}, {"ascii", strings.TrimSuffix(strings.Repeat("Matea tea studio: identical ASCII row\n", 20), "\n")}, {"unicode", strings.TrimSuffix(strings.Repeat("抹茶 e\u0301 👩‍💻 tea\n", 20), "\n")}} {
 		view := uv.NewStyledString(item.text)
 		sample := uv.NewScreenBuffer(80, 24)
@@ -213,6 +227,113 @@ func main() {
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
 	}
+}
+func startStopwatchForProbe() stopwatch.Model {
+	m := stopwatch.New(stopwatch.WithInterval(time.Nanosecond))
+	sequence := reflect.ValueOf(m.Start()())
+	m, _ = m.Update(sequence.Index(0).Interface().(tea.Cmd)())
+	sequence.Index(1).Interface().(tea.Cmd)() // Drain setup timer outside measurement.
+	return m
+}
+func clockCases(n int) {
+	for _, item := range []struct {
+		name  string
+		nanos int64
+	}{{"zero", 0}, {"nanoseconds", 42}, {"microseconds", 1500}, {"seconds", 1234567890}, {"hours", 3723400000000}, {"maximum_go", 9223372036854775807}} {
+		value := time.Duration(item.nanos)
+		measure("clocks/format_"+item.name, n, func() uint64 { clockTextSink = value.String(); return uint64(len(clockTextSink)) }, value.String(), "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O")
+		clockByteSink = make([]byte, 0, 40)
+		measure("clocks/reused_format_"+item.name, n, func() uint64 {
+			clockByteSink = append(clockByteSink[:0], value.String()...)
+			return uint64(len(clockByteSink))
+		}, value.String(), "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O")
+	}
+	for _, foreign := range []bool{false, true} {
+		sw := startStopwatchForProbe()
+		other := stopwatch.New()
+		var swTick tea.Msg = stopwatch.TickMsg{ID: sw.ID()}
+		name := "stopwatch_paused"
+		if foreign {
+			swTick = stopwatch.TickMsg{ID: other.ID()}
+			name = "stopwatch_foreign"
+		} else {
+			sw, _ = sw.Update(sw.Stop()())
+		}
+		sw, cmd := sw.Update(swTick)
+		output := fmt.Sprintf("value=%dns,running=%t,accepted=%t", sw.Elapsed().Nanoseconds(), sw.Running(), cmd != nil)
+		runtime.GC()
+		measure("clocks/"+name, n*10, func() uint64 {
+			sw, cmd = sw.Update(swTick)
+			if cmd != nil {
+				panic("ignored tick scheduled work")
+			}
+			return 0
+		}, output, "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution")
+		timer := bubbletimer.New(10*time.Second, bubbletimer.WithInterval(time.Nanosecond))
+		otherTimer := bubbletimer.New(10 * time.Second)
+		var timerTick tea.Msg = bubbletimer.TickMsg{ID: timer.ID()}
+		name = "countdown_paused"
+		if foreign {
+			timerTick = bubbletimer.TickMsg{ID: otherTimer.ID()}
+			name = "countdown_foreign"
+		} else {
+			timer, cmd = timer.Update(timer.Stop()())
+			if cmd != nil {
+				cmd()
+			} // Drain pause command's source timer.
+		}
+		timer, cmd = timer.Update(timerTick)
+		output = fmt.Sprintf("value=%dns,running=%t,accepted=%t", timer.Timeout.Nanoseconds(), timer.Running(), cmd != nil)
+		runtime.GC()
+		measure("clocks/"+name, n*10, func() uint64 {
+			timer, cmd = timer.Update(timerTick)
+			if cmd != nil {
+				panic("ignored tick scheduled work")
+			}
+			return 0
+		}, output, "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution")
+	}
+}
+func durationFixtures() {
+	for _, n := range []int64{0, 1, 999, 1000, 1001, 999999, 1000000, 1000001, 999999999, 1000000000, 60000000000, 3600000000000, 9223372036854775807} {
+		fmt.Printf("%d\t%s\n", n, time.Duration(n).String())
+	}
+	seed := uint64(237)
+	for i := 0; i < 256; i++ {
+		seed = seed*6364136223846793005 + 1
+		n := int64(seed >> 1)
+		fmt.Printf("%d\t%s\n", n, time.Duration(n).String())
+	}
+}
+func clockSourceEdges() {
+	result := map[string]any{"stopwatch_default_interval_ns": stopwatch.New().Interval.Nanoseconds()}
+	sw := stopwatch.New(stopwatch.WithInterval(time.Millisecond))
+	// Reflection only consumes the unexported sequence slice returned by the
+	// public Start command. No private fields/tags or modified source are used.
+	sequence := reflect.ValueOf(sw.Start()())
+	start := sequence.Index(0).Interface().(tea.Cmd)()
+	tick := sequence.Index(1).Interface().(tea.Cmd)()
+	sw, _ = sw.Update(start)
+	sw, _ = sw.Update(tick)
+	once := sw.Elapsed()
+	sw, _ = sw.Update(tick)
+	result["stopwatch_duplicate_initial_tick"] = map[string]any{"once_ns": once.Nanoseconds(), "twice_ns": sw.Elapsed().Nanoseconds()}
+	timer := bubbletimer.New(5*time.Millisecond, bubbletimer.WithInterval(time.Millisecond))
+	timer, first := timer.Update(timer.Start()())
+	timer, second := timer.Update(timer.Start()())
+	timer, _ = timer.Update(first())
+	timer, _ = timer.Update(second())
+	result["timer_two_starts"] = map[string]any{"remaining_ns": timer.Timeout.Nanoseconds(), "scheduled_ticks": 2}
+	timer = bubbletimer.New(10*time.Millisecond, bubbletimer.WithInterval(time.Millisecond))
+	old := timer.Init()
+	timer, _ = timer.Update(timer.Stop()())
+	timer, _ = timer.Update(timer.Start()())
+	timer, _ = timer.Update(old())
+	result["timer_tick_from_before_pause_resume_remaining_ns"] = timer.Timeout.Nanoseconds()
+	timer = bubbletimer.New(time.Millisecond, bubbletimer.WithInterval(2*time.Millisecond))
+	timer, cmd := timer.Update(bubbletimer.TickMsg{ID: timer.ID()})
+	result["timer_overshoot"] = map[string]any{"remaining_ns": timer.Timeout.Nanoseconds(), "view": timer.View(), "followup_command": cmd != nil}
+	json.NewEncoder(os.Stdout).Encode(result)
 }
 func helpData() ([][]key.Binding, []key.Binding) {
 	bind := func(k, desc string) key.Binding { return key.NewBinding(key.WithKeys(k), key.WithHelp(k, desc)) }

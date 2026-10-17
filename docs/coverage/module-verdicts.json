@@ -141,9 +141,31 @@
       "reference": "bubbles",
       "source_group": "stopwatch",
       "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "correctness": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "clocks/format_zero",
+        "clocks/format_nanoseconds",
+        "clocks/format_microseconds",
+        "clocks/format_seconds",
+        "clocks/format_hours",
+        "clocks/format_maximum_go",
+        "clocks/reused_format_zero",
+        "clocks/reused_format_nanoseconds",
+        "clocks/reused_format_microseconds",
+        "clocks/reused_format_seconds",
+        "clocks/reused_format_hours",
+        "clocks/reused_format_maximum_go",
+        "clocks/stopwatch_paused",
+        "clocks/stopwatch_foreign"
+      ],
+      "notes": "Public functionality implemented under documented monotonic/nonnegative/typed-control contract. Active scheduling/subscription latency and remaining fresh-formatter performance gaps are pending; keep module status pending.",
+      "source_audit": "docs/clocks-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 21
     },
     {
       "reference": "bubbles",
@@ -173,9 +195,31 @@
       "reference": "bubbles",
       "source_group": "timer",
       "status": "pending",
-      "correctness": [],
-      "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "correctness": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance_cases": [
+        "clocks/format_zero",
+        "clocks/format_nanoseconds",
+        "clocks/format_microseconds",
+        "clocks/format_seconds",
+        "clocks/format_hours",
+        "clocks/format_maximum_go",
+        "clocks/reused_format_zero",
+        "clocks/reused_format_nanoseconds",
+        "clocks/reused_format_microseconds",
+        "clocks/reused_format_seconds",
+        "clocks/reused_format_hours",
+        "clocks/reused_format_maximum_go",
+        "clocks/countdown_paused",
+        "clocks/countdown_foreign"
+      ],
+      "notes": "Public functionality implemented under documented monotonic/nonnegative/typed-control contract. Active scheduling/subscription latency and remaining fresh-formatter performance gaps are pending; keep module status pending.",
+      "source_audit": "docs/clocks-audit.md",
+      "performance_report": "docs/evidence/performance/2026-10-16/report.json",
+      "declarations_reviewed": 22
     },
     {
       "reference": "bubbles",

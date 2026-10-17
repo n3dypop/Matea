@@ -143,6 +143,7 @@ fn main() {
     cursor_encoding(iterations);
     colored_frames(iterations);
     help_cases(iterations);
+    clock_cases(iterations);
     let size = Size::new(80, 24);
     for (name, text) in [
         ("empty", String::new()),
@@ -275,6 +276,101 @@ fn main() {
             },
             &expected,
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+        );
+    }
+}
+fn clock_cases(iterations: usize) {
+    use std::fmt::Write as _;
+    use std::time::Duration;
+    for (name, nanos) in [
+        ("zero", 0),
+        ("nanoseconds", 42),
+        ("microseconds", 1500),
+        ("seconds", 1_234_567_890),
+        ("hours", 3_723_400_000_000),
+        ("maximum_go", 9_223_372_036_854_775_807),
+    ] {
+        let value = Duration::from_nanos(nanos);
+        let output = ClockText(value).to_string();
+        measure(
+            &format!("clocks/format_{name}"),
+            iterations,
+            || black_box(ClockText(black_box(value)).into_string()).len() as u64,
+            &output,
+            "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+        );
+        let mut buffer = String::with_capacity(40);
+        write!(&mut buffer, "{}", ClockText(value)).unwrap();
+        let output = buffer.clone();
+        measure(
+            &format!("clocks/reused_format_{name}"),
+            iterations,
+            || {
+                buffer.clear();
+                write!(&mut buffer, "{}", ClockText(black_box(value))).unwrap();
+                black_box(&buffer).len() as u64
+            },
+            &output,
+            "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+        );
+    }
+    let origin = Instant::now();
+    for foreign in [false, true] {
+        let mut sw = Stopwatch::new_at(origin);
+        sw.set_interval_at(TickInterval::new(Duration::from_nanos(1)).unwrap(), origin);
+        sw.start_at(origin);
+        let other = Countdown::new_at(Duration::from_secs(10), origin);
+        let tick = if foreign {
+            other.schedule().unwrap().tick_at(origin)
+        } else {
+            let tick = sw.schedule().unwrap().tick_at(origin);
+            sw.stop_at(origin);
+            tick
+        };
+        let accepted = sw.update(tick).changed();
+        let output = format!(
+            "value={}ns,running={},accepted={accepted}",
+            sw.elapsed().as_nanos(),
+            sw.running()
+        );
+        let name = if foreign {
+            "stopwatch_foreign"
+        } else {
+            "stopwatch_paused"
+        };
+        measure(
+            &format!("clocks/{name}"),
+            iterations * 10,
+            || black_box(&mut sw).update(black_box(tick)).changed() as u64,
+            &output,
+            "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+        );
+        let mut timer = Countdown::new_at(Duration::from_secs(10), origin);
+        timer.set_interval_at(TickInterval::new(Duration::from_nanos(1)).unwrap(), origin);
+        let tick = if foreign {
+            sw.schedule().unwrap().tick_at(origin)
+        } else {
+            let tick = timer.schedule().unwrap().tick_at(origin);
+            timer.stop_at(origin);
+            tick
+        };
+        let accepted = timer.update(tick).changed();
+        let output = format!(
+            "value={}ns,running={},accepted={accepted}",
+            timer.remaining().as_nanos(),
+            timer.running()
+        );
+        let name = if foreign {
+            "countdown_foreign"
+        } else {
+            "countdown_paused"
+        };
+        measure(
+            &format!("clocks/{name}"),
+            iterations * 10,
+            || black_box(&mut timer).update(black_box(tick)).changed() as u64,
+            &output,
+            "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
         );
     }
 }

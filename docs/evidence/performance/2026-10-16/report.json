@@ -1,14 +1,16 @@
 {
   "schema": 1,
-  "recorded_at_utc": "2026-10-16T05:34:32.368620+00:00",
+  "recorded_at_utc": "2026-10-16T09:04:57.196660+00:00",
   "host": "macOS-27.0.1-arm64-arm-64bit",
   "architecture": "arm64",
   "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1",
   "go": "go version go1.27.2 darwin/arm64",
-  "git_head_before_uncommitted_changes": "456308057196036ce8106823273da6bae27f7c2f",
+  "git_head_before_uncommitted_changes": "3f691b2a934623628a545baf2a446da7a58be36a",
   "source_hashes": {
     "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+    "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
     "crates/matea/Cargo.toml": "e9937c29e2d73e187c15ffc93cbd382cd3d178a2c935ca9f7e6b74e43bb538c0",
+    "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
     "crates/matea/examples/counter.rs": "55db2e5c9ecb35956f43c32e81ac136809603e34e3d43a072339b28a44eaa351",
     "crates/matea/examples/dashboard.rs": "234c9edf91b0ac5bc344c98d9fa180427fcdec519f8f52464d1117a6e3f91655",
     "crates/matea/examples/effects.rs": "23abbe6d8a73a9491c452e68df591a960d9a49beefbba421a957332bbfd8f4e4",
@@ -21,10 +23,10 @@
     "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
     "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
     "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
-    "crates/matea/src/lib.rs": "20a3bd39de9d75fe598a959e82b5945369585843466ac398f8024159940201a4",
+    "crates/matea/src/lib.rs": "4d067614ba6c72831ea43a0146a64303656762dce2b40b1c987390722ea3e1dc",
     "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
     "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
-    "crates/matea-core/src/lib.rs": "8bff269072ab1b9b43724246ec94d4055d37fdea7e7704affbfcbc2365200b13",
+    "crates/matea-core/src/lib.rs": "f480295810a021c1da4352ca88cdf544b729812128a690b56d0fe0afca51e8af",
     "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
     "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
     "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
@@ -42,19 +44,21 @@
     "crates/matea-terminal/src/signals_unix.rs": "d0368019942ac1514f1adbe5fba6ff9439983c2740bda3e446539020dc77cc6f",
     "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
     "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+    "crates/matea-widgets/src/clocks.rs": "59c3c1f42ea4349ed0838ac64fb1b6e3811cd8056f1f23647bbe7656f98f411e",
     "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
     "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
-    "crates/matea-widgets/src/lib.rs": "7283dd676c744a4e5f9a6b80d74e2a0fb06c62749fa3dc4ae540ec65dfc103ad",
+    "crates/matea-widgets/src/lib.rs": "2b0fc07a09121785017f588047c36db686511180ffe4566c251008df101e9371",
     "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
     "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
     "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+    "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
     "tools/perf-probe/Cargo.toml": "d1651dea291bf6a32e0117883d321580e95348d353ef7dab179db35e61b3da00",
-    "tools/perf-probe/src/main.rs": "af7bde0ac269e820f6d49096da8d4c30e06fd1ada5571cf0a1b246c635850233",
-    "tools/perf-upstream/main.go": "eea145b2808308afef73f5180019804a3ae01de450789606db38be948f512a4d"
+    "tools/perf-probe/src/main.rs": "ee07cc0eacfd4e3a4eaf607acfb22d194dc762b8c381d2fb6e9e5d8fcf01db3d",
+    "tools/perf-upstream/main.go": "0913905949291d8990de2d21ab39d53478e7eff58b9e2db7c03206d76dbb8b43"
   },
   "raw_sha256": {
-    "matea-current.jsonl": "318bafd62c1f3a3c968bac6d8714a628c8d9e091376944e817980404118fa3eb",
-    "upstream-current.jsonl": "7ef86c0416dfd847e897a1b0dbff06c5ebbed8cef2e5d8951cb3e6c2fd836904",
+    "matea-current.jsonl": "c1c7fefa35c6c1ce576050ca4fb7075b4927e534bdced41fc701a92d0b93b0f3",
+    "upstream-current.jsonl": "f979471337bd3dd133ae1a5bf0e4868d1100b1493694d43174b98694f6528bee",
     "matea-before-controlled.jsonl": "bb3de25d65d13dcde670f8f4d4677b78a83e4fa81656396fed16bce9cf727182",
     "matea-after.jsonl": "8000ee4b594702ddba0c09e4e0692c34fa73eaf494ca81ee98354bb4a66dbb17",
     "matea-trace.json": "00e1bfead5148738769dd4c7df086f7f2b30b4bd2e686d20b9b20f126d47a5d2",
@@ -163,540 +167,540 @@
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 3.8625,
-        "p95_ns": 3.961133333333333,
+        "p50_ns": 5.405566666666667,
+        "p95_ns": 5.9097333333333335,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 28.054166666666667,
-        "p95_ns": 40.881933333333336,
+        "p50_ns": 29.294433333333334,
+        "p95_ns": 39.85,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 7.263214670981662
+      "upstream_p50_divided_by_matea_p50": 5.419308490630029
     },
     {
       "case": "input/binding_f12",
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 4.3375,
-        "p95_ns": 5.6778,
+        "p50_ns": 6.1625,
+        "p95_ns": 6.995833333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 30.398633333333333,
-        "p95_ns": 33.6264,
+        "p50_ns": 29.7,
+        "p95_ns": 33.5264,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 7.008330451488952
+      "upstream_p50_divided_by_matea_p50": 4.8194726166328605
     },
     {
       "case": "input/binding_miss",
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 4.633333333333334,
-        "p95_ns": 4.811133333333333,
+        "p50_ns": 6.234733333333334,
+        "p95_ns": 6.333333333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 27.251366666666666,
-        "p95_ns": 40.4111,
+        "p50_ns": 25.980533333333334,
+        "p95_ns": 39.694433333333336,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 5.881589928057553
+      "upstream_p50_divided_by_matea_p50": 4.167064081863966
     },
     {
       "case": "input/binding_disabled",
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 1.3055666666666668,
-        "p95_ns": 1.3347,
+        "p50_ns": 1.7555666666666667,
+        "p95_ns": 1.7847333333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 27.9639,
-        "p95_ns": 38.79723333333333,
+        "p50_ns": 28.884733333333333,
+        "p95_ns": 38.6139,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 21.41897515765823
+      "upstream_p50_divided_by_matea_p50": 16.453224979588736
     },
     {
       "case": "input/binding_repeat",
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 3.2625,
-        "p95_ns": 3.2722,
+        "p50_ns": 4.316666666666666,
+        "p95_ns": 4.3278,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 27.16946666666667,
-        "p95_ns": 40.5861,
+        "p50_ns": 27.926366666666667,
+        "p95_ns": 39.9014,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 8.327805874840358
+      "upstream_p50_divided_by_matea_p50": 6.469428571428572
     },
     {
       "case": "input/binding_release",
       "semantics": "two typed/string shortcuts ctrl+x,F12; down-event policy; matching only; no construction or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 1.4111,
-        "p95_ns": 1.5166666666666666,
+        "p50_ns": 1.8389,
+        "p95_ns": 1.8444333333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2.033333333333333,
-        "p95_ns": 2.0361,
+        "p50_ns": 2.1041666666666665,
+        "p95_ns": 2.1153,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.4409562280017951
+      "upstream_p50_divided_by_matea_p50": 1.144252904816285
     },
     {
       "case": "binding/value_hit",
       "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 4.093066666666667,
-        "p95_ns": 4.434733333333333,
+        "p50_ns": 5.338866666666667,
+        "p95_ns": 5.373633333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 6.770833333333333,
-        "p95_ns": 6.925,
+        "p50_ns": 6.980566666666666,
+        "p95_ns": 7.645833333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.6542201446348295
+      "upstream_p50_divided_by_matea_p50": 1.3074997190414943
     },
     {
       "case": "binding/value_miss",
       "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 3.581933333333333,
-        "p95_ns": 3.7180666666666666,
+        "p50_ns": 4.672233333333334,
+        "p95_ns": 4.683333333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 6.6375,
-        "p95_ns": 7.658333333333333,
+        "p50_ns": 6.681966666666667,
+        "p95_ns": 7.016666666666667,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.8530495635504105
+      "upstream_p50_divided_by_matea_p50": 1.4301440424636327
     },
     {
       "case": "binding/value_disabled",
       "semantics": "two custom string tokens ctrl+x,F12; borrowed exact case-sensitive equality; enabled policy; no key formatting or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 0.7694666666666666,
-        "p95_ns": 0.7708333333333334,
+        "p50_ns": 0.8722,
+        "p95_ns": 0.8777666666666667,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 6.886133333333333,
-        "p95_ns": 7.297233333333334,
+        "p50_ns": 6.795833333333333,
+        "p95_ns": 6.943066666666667,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 8.949228903136373
+      "upstream_p50_divided_by_matea_p50": 7.791599785981809
     },
     {
       "case": "binding/construct",
       "semantics": "construct binding with owned two-token vector/slice and short help metadata; retain result through black_box/global sink; borrowed static token text",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 36.42223333333333,
-        "p95_ns": 44.21946666666667,
+        "p50_ns": 43.3111,
+        "p95_ns": 54.80696666666667,
         "allocations": 1,
         "allocated_bytes": 32
       },
       "upstream": {
-        "p50_ns": 44.54443333333333,
-        "p95_ns": 51.22083333333333,
+        "p50_ns": 45.9597,
+        "p95_ns": 56.906933333333335,
         "allocations": 2,
         "allocated_bytes": 96
       },
-      "upstream_p50_divided_by_matea_p50": 1.2230011522266162
+      "upstream_p50_divided_by_matea_p50": 1.061152914610804
     },
     {
       "case": "binding/value_hit_owned",
       "semantics": "two custom string tokens ctrl+x,F12; equal F12 query has distinct owned storage; borrowed equality; no query construction, formatting or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 6.0264,
-        "p95_ns": 6.175,
+        "p50_ns": 6.495833333333334,
+        "p95_ns": 6.498633333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 6.959733333333333,
-        "p95_ns": 7.2819666666666665,
+        "p50_ns": 7.001366666666667,
+        "p95_ns": 7.5375,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.1548741094738706
+      "upstream_p50_divided_by_matea_p50": 1.0778242463117382
     },
     {
       "case": "binding/metadata",
       "semantics": "borrow enabled binding keys, help and enabled status; no mutation, formatting or I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 1.2444333333333333,
-        "p95_ns": 1.2486333333333333,
+        "p50_ns": 1.3416666666666666,
+        "p95_ns": 1.3514,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2.033333333333333,
-        "p95_ns": 2.365266666666667,
+        "p50_ns": 2.1041666666666665,
+        "p95_ns": 2.183333333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.6339431602067875
+      "upstream_p50_divided_by_matea_p50": 1.5683229813664596
     },
     {
       "case": "motion/frame_duration",
       "semantics": "positive fps=60; integer nanosecond period converted to seconds",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 0.7115266666666666,
-        "p95_ns": 0.8718066666666666,
+        "p50_ns": 0.7125,
+        "p95_ns": 0.7736133333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2.089166666666667,
-        "p95_ns": 2.1679166666666667,
+        "p50_ns": 2.1283333333333334,
+        "p95_ns": 2.2018066666666667,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 2.9361747978525052
+      "upstream_p50_divided_by_matea_p50": 2.9871345029239764
     },
     {
       "case": "motion/projectile_update",
       "semantics": "copy initial projectile; raw forward Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 2.4431933333333333,
-        "p95_ns": 2.50486,
+        "p50_ns": 2.4830566666666667,
+        "p95_ns": 2.58375,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 5.488333333333333,
-        "p95_ns": 5.696113333333333,
+        "p50_ns": 5.46,
+        "p95_ns": 5.682776666666666,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 2.246377009323863
+      "upstream_p50_divided_by_matea_p50": 2.1989026965420306
     },
     {
       "case": "motion/projectile_checked_update",
       "semantics": "copy initial projectile; forward Euler and six finite result checks; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0); read all getters",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 2.7868066666666667,
-        "p95_ns": 2.9344433333333333,
+        "p50_ns": 2.7979166666666666,
+        "p95_ns": 3.10889,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 6.116806666666666,
-        "p95_ns": 6.298333333333333,
+        "p50_ns": 6.139723333333333,
+        "p95_ns": 6.354026666666667,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 2.1949160448876968
+      "upstream_p50_divided_by_matea_p50": 2.1943910647803424
     },
     {
       "case": "motion/projectile_construct",
       "semantics": "construct with nine finite input checks then checked Euler; dt=16ms p=(1,10,-2) v=(2,-3,4) a=(0,9.81,0)",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 7.211666666666667,
-        "p95_ns": 8.02764,
+        "p50_ns": 7.527776666666667,
+        "p95_ns": 8.661943333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 19.380276666666667,
-        "p95_ns": 21.308056666666666,
+        "p50_ns": 20.307083333333335,
+        "p95_ns": 22.251943333333333,
         "allocations": 1,
         "allocated_bytes": 80
       },
-      "upstream_p50_divided_by_matea_p50": 2.6873505893228566
+      "upstream_p50_divided_by_matea_p50": 2.6976203243720036
     },
     {
       "case": "pagination/range",
       "semantics": "collection length=101 per_page=10 page=10; slice bounds only",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 0.9369433333333334,
-        "p95_ns": 0.9619433333333334,
+        "p50_ns": 0.9369466666666667,
+        "p95_ns": 0.95278,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 0.9544466666666667,
-        "p95_ns": 1.00472,
+        "p50_ns": 0.9366666666666666,
+        "p95_ns": 0.9795833333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.0186813147717935
+      "upstream_p50_divided_by_matea_p50": 0.9997011569495239
     },
     {
       "case": "pagination/navigation",
       "semantics": "next then previous from page=4 total_pages=11 per_page=10; state helpers only",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 1.75778,
-        "p95_ns": 1.9469433333333332,
+        "p50_ns": 1.74722,
+        "p95_ns": 1.97611,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 5.28528,
-        "p95_ns": 5.41722,
+        "p50_ns": 5.341666666666667,
+        "p95_ns": 5.5356966666666665,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 3.0067926589220497
+      "upstream_p50_divided_by_matea_p50": 3.057237592671024
     },
     {
       "case": "pagination/arabic",
       "semantics": "Arabic label only current=5 total=11; no view/render/I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 50.5,
-        "p95_ns": 55.25,
+        "p50_ns": 49.209,
+        "p95_ns": 57,
         "allocations": 1,
         "allocated_bytes": 8
       },
       "upstream": {
-        "p50_ns": 66.333,
-        "p95_ns": 71,
+        "p50_ns": 67,
+        "p95_ns": 70.041,
         "allocations": 1,
         "allocated_bytes": 4.8
       },
-      "upstream_p50_divided_by_matea_p50": 1.3135247524752476
+      "upstream_p50_divided_by_matea_p50": 1.361539555772318
     },
     {
       "case": "pagination/dots_32",
       "semantics": "dot label only all pages current=10 zero-based; active=• inactive=○; no view/render/I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 137.75,
-        "p95_ns": 147.042,
+        "p50_ns": 137.667,
+        "p95_ns": 150.916,
         "allocations": 1,
         "allocated_bytes": 96
       },
       "upstream": {
-        "p50_ns": 733.125,
-        "p95_ns": 805.625,
+        "p50_ns": 751.083,
+        "p95_ns": 859.209,
         "allocations": 31,
         "allocated_bytes": 1768
       },
-      "upstream_p50_divided_by_matea_p50": 5.322141560798548
+      "upstream_p50_divided_by_matea_p50": 5.45579550654841
     },
     {
       "case": "pagination/dots_256",
       "semantics": "dot label only all pages current=10 zero-based; active=• inactive=○; no view/render/I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 909.167,
-        "p95_ns": 1011.208,
+        "p50_ns": 909.208,
+        "p95_ns": 970.584,
         "allocations": 1,
         "allocated_bytes": 768
       },
       "upstream": {
-        "p50_ns": 12936.542,
-        "p95_ns": 13574.166,
+        "p50_ns": 13367.833,
+        "p95_ns": 13530.292,
         "allocations": 255,
         "allocated_bytes": 103288
       },
-      "upstream_p50_divided_by_matea_p50": 14.22900523226206
+      "upstream_p50_divided_by_matea_p50": 14.702722589330495
     },
     {
       "case": "pagination/key_dispatch",
       "semantics": "next/right then previous/left key dispatch; initial page=4 total_pages=11; no view/render/I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 8.119433333333333,
-        "p95_ns": 9.452766666666667,
+        "p50_ns": 9.1486,
+        "p95_ns": 10.086133333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 147.5097,
-        "p95_ns": 168.33056666666667,
+        "p50_ns": 149.79166666666666,
+        "p95_ns": 164.6764,
         "allocations": 3,
         "allocated_bytes": 24
       },
-      "upstream_p50_divided_by_matea_p50": 18.1674870577996
+      "upstream_p50_divided_by_matea_p50": 16.373179138520282
     },
     {
       "case": "textinput/left_right_ascii_64",
       "semantics": "left_right_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 36.8292,
-        "p95_ns": 37.3167,
+        "p50_ns": 35.8833,
+        "p95_ns": 37.2667,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2741.5917,
-        "p95_ns": 2777.3875,
+        "p50_ns": 2747.2,
+        "p95_ns": 2777.0083,
         "allocations": 13,
         "allocated_bytes": 176
       },
-      "upstream_p50_divided_by_matea_p50": 74.44070737349712
+      "upstream_p50_divided_by_matea_p50": 76.55929081216053
     },
     {
       "case": "textinput/insert_end_ascii_64",
       "semantics": "insert_end_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 68.6708,
-        "p95_ns": 73,
+        "p50_ns": 69.2375,
+        "p95_ns": 71.9875,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2880.9917,
-        "p95_ns": 3011.9209,
+        "p50_ns": 2875.8708,
+        "p95_ns": 2930.4209,
         "allocations": 5,
         "allocated_bytes": 136
       },
-      "upstream_p50_divided_by_matea_p50": 41.953664439616254
+      "upstream_p50_divided_by_matea_p50": 41.53631774688572
     },
     {
       "case": "textinput/insert_middle_ascii_64",
       "semantics": "insert_middle_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 75.4875,
-        "p95_ns": 80.5375,
+        "p50_ns": 75.5209,
+        "p95_ns": 82.5292,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2919.2291,
-        "p95_ns": 2948.4,
+        "p50_ns": 2929.9792,
+        "p95_ns": 2969.3958,
         "allocations": 6,
         "allocated_bytes": 264
       },
-      "upstream_p50_divided_by_matea_p50": 38.671688690180495
+      "upstream_p50_divided_by_matea_p50": 38.79693171029477
     },
     {
       "case": "textinput/word_roundtrip_ascii_63",
       "semantics": "word_roundtrip_ascii_63; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 118.5625,
-        "p95_ns": 121.9084,
+        "p50_ns": 116.1125,
+        "p95_ns": 122.4375,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2777.725,
-        "p95_ns": 2803.7208,
+        "p50_ns": 2806.3,
+        "p95_ns": 2944.0458,
         "allocations": 17,
         "allocated_bytes": 256
       },
-      "upstream_p50_divided_by_matea_p50": 23.428360569319977
+      "upstream_p50_divided_by_matea_p50": 24.168801808590807
     },
     {
       "case": "textinput/paste_clear_ascii_64",
       "semantics": "paste_clear_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 92.0333,
-        "p95_ns": 97.9,
+        "p50_ns": 91.95,
+        "p95_ns": 95.6584,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 3040.65,
-        "p95_ns": 3081.625,
+        "p50_ns": 3082.0166,
+        "p95_ns": 3118.3084,
         "allocations": 19,
         "allocated_bytes": 856
       },
-      "upstream_p50_divided_by_matea_p50": 33.03858494697028
+      "upstream_p50_divided_by_matea_p50": 33.51839695486677
     },
     {
       "case": "textinput/ignored_focus_ascii_64",
       "semantics": "ignored_focus_ascii_64; two events; ASCII editing only, no view, virtual cursor, clipboard, validator or suggestions; steady state with capacity reuse",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 4.7,
-        "p95_ns": 4.7167,
+        "p50_ns": 4.6667,
+        "p95_ns": 4.85,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2316.375,
-        "p95_ns": 2338.6625,
+        "p50_ns": 2331.0417,
+        "p95_ns": 2358.4209,
         "allocations": 1,
         "allocated_bytes": 80
       },
-      "upstream_p50_divided_by_matea_p50": 492.84574468085106
+      "upstream_p50_divided_by_matea_p50": 499.5053678188014
     },
     {
       "case": "textinput/word_roundtrip_unicode",
       "semantics": "Unicode whitespace word left-right; same value and cursor at end verified outside timing; no view, virtual cursor, clipboard, validator or suggestions",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 156.2083,
-        "p95_ns": 168.3959,
+        "p50_ns": 154.8334,
+        "p95_ns": 162.4333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 2331.4875,
-        "p95_ns": 2396.8792,
+        "p50_ns": 2314.075,
+        "p95_ns": 2348.05,
         "allocations": 16,
         "allocated_bytes": 176
       },
-      "upstream_p50_divided_by_matea_p50": 14.925503318325594
+      "upstream_p50_divided_by_matea_p50": 14.94558021718828
     },
     {
       "case": "textinput/suggestions_edit_pair",
       "semantics": "ASCII t -> te -> t with suggestions tea,team,toast; lowercase prefix filtering; no view, virtual cursor, clipboard or validator",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 111.125,
-        "p95_ns": 115.9833,
+        "p50_ns": 111.6334,
+        "p95_ns": 116.35,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 3033.7666,
-        "p95_ns": 3136.55,
+        "p50_ns": 3018.7916,
+        "p95_ns": 3065.1708,
         "allocations": 18,
         "allocated_bytes": 480
       },
-      "upstream_p50_divided_by_matea_p50": 27.300486839145105
+      "upstream_p50_divided_by_matea_p50": 27.042010724388938
     },
     {
       "case": "cursor/visible_move_80x24",
@@ -709,12 +713,12 @@
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 42684.375,
-        "p95_ns": 44450.375,
+        "p50_ns": 42479.166,
+        "p95_ns": 42799.041,
         "allocations": 1,
         "allocated_bytes": 8
       },
-      "upstream_p50_divided_by_matea_p50": 1552.159090909091,
+      "upstream_p50_divided_by_matea_p50": 1544.6969454545454,
       "replayed_move_bytes": {
         "matea": 4,
         "upstream": 6
@@ -725,18 +729,18 @@
       "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; ansi16; hidden cursor; reused memory sink; no terminal I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 28671.66,
-        "p95_ns": 32164.16,
+        "p50_ns": 29279.18,
+        "p95_ns": 36566.66,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 351848.32,
-        "p95_ns": 430865,
+        "p50_ns": 353371.68,
+        "p95_ns": 385704.16,
         "allocations": 429,
         "allocated_bytes": 3440
       },
-      "upstream_p50_divided_by_matea_p50": 12.271641056011406,
+      "upstream_p50_divided_by_matea_p50": 12.069042917185522,
       "measured_full_frame_bytes": {
         "matea": 1718,
         "upstream": 1875
@@ -747,18 +751,18 @@
       "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; ansi256; hidden cursor; reused memory sink; no terminal I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 28780.84,
-        "p95_ns": 29974.16,
+        "p50_ns": 28761.66,
+        "p95_ns": 29892.5,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 352928.32,
-        "p95_ns": 397525.82,
+        "p50_ns": 354726.66,
+        "p95_ns": 386627.5,
         "allocations": 489,
         "allocated_bytes": 4241.6
       },
-      "upstream_p50_divided_by_matea_p50": 12.262613599881032,
+      "upstream_p50_divided_by_matea_p50": 12.333316644449589,
       "measured_full_frame_bytes": {
         "matea": 1729,
         "upstream": 2095
@@ -769,18 +773,18 @@
       "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; truecolor; hidden cursor; reused memory sink; no terminal I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 24939.16,
-        "p95_ns": 25890,
+        "p50_ns": 24622.5,
+        "p95_ns": 25502.5,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 134913.32,
-        "p95_ns": 258633.32,
+        "p50_ns": 135874.18,
+        "p95_ns": 214095.84,
         "allocations": 549,
         "allocated_bytes": 5665.6
       },
-      "upstream_p50_divided_by_matea_p50": 5.409697840665043,
+      "upstream_p50_divided_by_matea_p50": 5.518293430805158,
       "measured_full_frame_bytes": {
         "matea": 1744,
         "upstream": 2395
@@ -791,18 +795,18 @@
       "semantics": "recover unknown cursor/style/visibility with full repaint existing 80x24 frame; 20 ASCII rows, uniform RGB foreground/background; none; hidden cursor; reused memory sink; no terminal I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 23140,
-        "p95_ns": 24106.66,
+        "p50_ns": 24365,
+        "p95_ns": 25660,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 122350.84,
-        "p95_ns": 144911.68,
+        "p50_ns": 122745.82,
+        "p95_ns": 226416.68,
         "allocations": 349,
         "allocated_bytes": 2160
       },
-      "upstream_p50_divided_by_matea_p50": 5.287417458945549,
+      "upstream_p50_divided_by_matea_p50": 5.037792735481223,
       "measured_full_frame_bytes": {
         "matea": 1704,
         "upstream": 1655
@@ -813,180 +817,468 @@
       "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 302.75,
-        "p95_ns": 312.792,
+        "p50_ns": 285.166,
+        "p95_ns": 298.958,
         "allocations": 1,
         "allocated_bytes": 85
       },
       "upstream": {
-        "p50_ns": 11242,
-        "p95_ns": 11533.208,
+        "p50_ns": 11548.875,
+        "p95_ns": 12247.166,
         "allocations": 23,
         "allocated_bytes": 440
       },
-      "upstream_p50_divided_by_matea_p50": 37.13294797687861
+      "upstream_p50_divided_by_matea_p50": 40.49877965816402
     },
     {
       "case": "help/short_40",
       "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 261.125,
-        "p95_ns": 286.667,
+        "p50_ns": 245.834,
+        "p95_ns": 275.542,
         "allocations": 1,
         "allocated_bytes": 85
       },
       "upstream": {
-        "p50_ns": 8653.209,
-        "p95_ns": 8879.25,
+        "p50_ns": 9224.666,
+        "p95_ns": 10300.542,
         "allocations": 18,
         "allocated_bytes": 264
       },
-      "upstream_p50_divided_by_matea_p50": 33.13818669219722
+      "upstream_p50_divided_by_matea_p50": 37.52396332484522
     },
     {
       "case": "help/full_40",
       "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 384.792,
-        "p95_ns": 412.833,
+        "p50_ns": 384.875,
+        "p95_ns": 413.416,
         "allocations": 5,
         "allocated_bytes": 663
       },
       "upstream": {
-        "p50_ns": 11102.875,
-        "p95_ns": 11283.125,
+        "p50_ns": 12485.833,
+        "p95_ns": 13026.083,
         "allocations": 62,
         "allocated_bytes": 2104
       },
-      "upstream_p50_divided_by_matea_p50": 28.8542251398158
+      "upstream_p50_divided_by_matea_p50": 32.44126794413771
     },
     {
       "case": "help/short_unicode_80",
       "semantics": "render fresh plain key help string; existing metadata; no ANSI styling, terminal I/O or binding construction",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 511.917,
-        "p95_ns": 536.75,
+        "p50_ns": 468.5,
+        "p95_ns": 498.833,
         "allocations": 1,
         "allocated_bytes": 53
       },
       "upstream": {
-        "p50_ns": 6156.417,
-        "p95_ns": 6308,
+        "p50_ns": 6497.208,
+        "p95_ns": 6634.25,
         "allocations": 12,
         "allocated_bytes": 184
       },
-      "upstream_p50_divided_by_matea_p50": 12.02620151313592
+      "upstream_p50_divided_by_matea_p50": 13.868106723585912
+    },
+    {
+      "case": "clocks/format_zero",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 22.625,
+        "p95_ns": 22.667,
+        "allocations": 1,
+        "allocated_bytes": 2
+      },
+      "upstream": {
+        "p50_ns": 10.625,
+        "p95_ns": 11.833,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "upstream_p50_divided_by_matea_p50": 0.4696132596685083
+    },
+    {
+      "case": "clocks/reused_format_zero",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 7.25,
+        "p95_ns": 7.334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 7.459,
+        "p95_ns": 7.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.0288275862068965
+    },
+    {
+      "case": "clocks/format_nanoseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 31.792,
+        "p95_ns": 33.084,
+        "allocations": 1,
+        "allocated_bytes": 4
+      },
+      "upstream": {
+        "p50_ns": 15.958,
+        "p95_ns": 16.75,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "upstream_p50_divided_by_matea_p50": 0.5019501761449421
+    },
+    {
+      "case": "clocks/reused_format_nanoseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 16.875,
+        "p95_ns": 16.917,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 10.667,
+        "p95_ns": 10.708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 0.6321185185185185
+    },
+    {
+      "case": "clocks/format_microseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 38.667,
+        "p95_ns": 38.792,
+        "allocations": 1,
+        "allocated_bytes": 6
+      },
+      "upstream": {
+        "p50_ns": 17.083,
+        "p95_ns": 19.334,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "upstream_p50_divided_by_matea_p50": 0.44179791553521086
+    },
+    {
+      "case": "clocks/reused_format_microseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 25.917,
+        "p95_ns": 25.959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 12.917,
+        "p95_ns": 13.375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 0.4983987344214222
+    },
+    {
+      "case": "clocks/format_seconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 45.542,
+        "p95_ns": 47.083,
+        "allocations": 1,
+        "allocated_bytes": 11
+      },
+      "upstream": {
+        "p50_ns": 23.542,
+        "p95_ns": 26.834,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "upstream_p50_divided_by_matea_p50": 0.5169294277809495
+    },
+    {
+      "case": "clocks/reused_format_seconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 27.792,
+        "p95_ns": 30.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 16.833,
+        "p95_ns": 17.5,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 0.6056778929188255
+    },
+    {
+      "case": "clocks/format_hours",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 48.125,
+        "p95_ns": 48.541,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "upstream": {
+        "p50_ns": 22.333,
+        "p95_ns": 34.917,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "upstream_p50_divided_by_matea_p50": 0.4640623376623376
+    },
+    {
+      "case": "clocks/reused_format_hours",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 31.875,
+        "p95_ns": 31.917,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 18.25,
+        "p95_ns": 28.042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 0.5725490196078431
+    },
+    {
+      "case": "clocks/format_maximum_go",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 54.417,
+        "p95_ns": 54.542,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "upstream": {
+        "p50_ns": 32.084,
+        "p95_ns": 33.167,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "upstream_p50_divided_by_matea_p50": 0.5895951632761821
+    },
+    {
+      "case": "clocks/reused_format_maximum_go",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 39.375,
+        "p95_ns": 39.458,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 27.5,
+        "p95_ns": 27.542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 0.6984126984126984
+    },
+    {
+      "case": "clocks/stopwatch_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 6.325,
+        "p95_ns": 7.3208,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 5.043457459532733
+    },
+    {
+      "case": "clocks/countdown_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 1.5666,
+        "p95_ns": 1.5708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 6.6583,
+        "p95_ns": 6.9291,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 4.250159581258777
+    },
+    {
+      "case": "clocks/stopwatch_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 6.35,
+        "p95_ns": 6.3708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 5.063392073997289
+    },
+    {
+      "case": "clocks/countdown_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 1.5666,
+        "p95_ns": 1.5708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 6.7041,
+        "p95_ns": 6.7125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 4.279394867866718
     },
     {
       "case": "render/empty_80x24",
       "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 6212.542,
-        "p95_ns": 6689.166,
+        "p50_ns": 6207.708,
+        "p95_ns": 6315.833,
         "allocations": 1,
         "allocated_bytes": 76800
       },
       "upstream": {
-        "p50_ns": 70797.083,
-        "p95_ns": 71531.75,
+        "p50_ns": 73803.667,
+        "p95_ns": 76536.125,
         "allocations": 54,
         "allocated_bytes": 228920
       },
-      "upstream_p50_divided_by_matea_p50": 11.395831690151953
+      "upstream_p50_divided_by_matea_p50": 11.889036501072539
     },
     {
       "case": "render/ascii_80x24",
       "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 13442.25,
-        "p95_ns": 13583.833,
+        "p50_ns": 13360.416,
+        "p95_ns": 13466.917,
         "allocations": 1,
         "allocated_bytes": 76800
       },
       "upstream": {
-        "p50_ns": 109107.667,
-        "p95_ns": 111433.834,
+        "p50_ns": 115715.666,
+        "p95_ns": 126562.5,
         "allocations": 54,
         "allocated_bytes": 228920
       },
-      "upstream_p50_divided_by_matea_p50": 8.116771150663022
+      "upstream_p50_divided_by_matea_p50": 8.661082559105944
     },
     {
       "case": "render/unicode_80x24",
       "semantics": "fresh clipped grapheme cell surface, default style, non-CJK ambiguous width",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 13919.917,
-        "p95_ns": 14097.75,
+        "p50_ns": 13925.542,
+        "p95_ns": 14035.709,
         "allocations": 1,
         "allocated_bytes": 76800
       },
       "upstream": {
-        "p50_ns": 86687.042,
-        "p95_ns": 87882.542,
+        "p50_ns": 90423.583,
+        "p95_ns": 96188.166,
         "allocations": 54,
         "allocated_bytes": 228920
       },
-      "upstream_p50_divided_by_matea_p50": 6.227554517746047
+      "upstream_p50_divided_by_matea_p50": 6.493361838268126
     },
     {
       "case": "unicode/width",
       "semantics": "grapheme display width, no control characters, non-CJK ambiguous width",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 663.5458,
-        "p95_ns": 685.225,
+        "p50_ns": 663.9625,
+        "p95_ns": 678.1875,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 3465.4916,
-        "p95_ns": 3488.475,
+        "p50_ns": 3650.9208,
+        "p95_ns": 3666.35,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 5.222686361664862
+      "upstream_p50_divided_by_matea_p50": 5.498685242012915
     },
     {
       "case": "terminal/unchanged_80x24",
       "semantics": "encode unchanged existing frame to reused memory sink; no terminal I/O",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 4.542,
-        "p95_ns": 4.959,
+        "p50_ns": 4.959,
+        "p95_ns": 5.208,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 42930.75,
-        "p95_ns": 43818.375,
+        "p50_ns": 43637.458,
+        "p95_ns": 45118.75,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 9451.948480845444
+      "upstream_p50_divided_by_matea_p50": 8799.648719499899
     },
     {
       "case": "terminal/one_cell_80x24",
       "semantics": "toggle one existing ASCII cell, encode to reused memory sink; output encoding may differ",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 9717.042,
-        "p95_ns": 9882.708,
+        "p50_ns": 9717.417,
+        "p95_ns": 9786,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 44553.542,
-        "p95_ns": 44847.292,
+        "p50_ns": 45163,
+        "p95_ns": 45411.708,
         "allocations": 5,
         "allocated_bytes": 24
       },
-      "upstream_p50_divided_by_matea_p50": 4.5850930766790965,
+      "upstream_p50_divided_by_matea_p50": 4.647634242721086,
       "replayed_update_bytes": {
         "matea": 2,
         "upstream": 2
@@ -997,8 +1289,116 @@
       "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
       "output_equivalent_for_this_fixture": true,
       "matea": {
+        "p50_ns": 0.8208333333333333,
+        "p95_ns": 1.1555333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 1.3333333333333333,
+        "p95_ns": 1.3958333333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.6243654822335025
+    },
+    {
+      "case": "motion/spring_checked_update_0.2",
+      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 2.1805666666666665,
+        "p95_ns": 2.6708333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 3.0694333333333335,
+        "p95_ns": 3.1736,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.4076310439182478
+    },
+    {
+      "case": "motion/spring_construct_0.2",
+      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 16.802766666666667,
+        "p95_ns": 17.45,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 27.779166666666665,
+        "p95_ns": 28.483333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.6532495640598868
+    },
+    {
+      "case": "motion/spring_update_1",
+      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 0.8527666666666667,
+        "p95_ns": 0.8847333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 1.3333333333333333,
+        "p95_ns": 1.3361333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.5635382871438064
+    },
+    {
+      "case": "motion/spring_checked_update_1",
+      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 2.1069333333333335,
+        "p95_ns": 2.2611333333333334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 3.0694333333333335,
+        "p95_ns": 3.1597,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.4568250854322238
+    },
+    {
+      "case": "motion/spring_construct_1",
+      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
+        "p50_ns": 11.4889,
+        "p95_ns": 12.216666666666667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream": {
+        "p50_ns": 13.8361,
+        "p95_ns": 14.593033333333333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "upstream_p50_divided_by_matea_p50": 1.2043015432286817
+    },
+    {
+      "case": "motion/spring_update_2",
+      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
+      "output_equivalent_for_this_fixture": true,
+      "matea": {
         "p50_ns": 0.8194666666666667,
-        "p95_ns": 0.8236,
+        "p95_ns": 0.8222333333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
@@ -1011,151 +1411,48 @@
       "upstream_p50_divided_by_matea_p50": 1.6033192320208267
     },
     {
-      "case": "motion/spring_checked_update_0.2",
+      "case": "motion/spring_checked_update_2",
       "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
       "output_equivalent_for_this_fixture": true,
       "matea": {
         "p50_ns": 2.1069666666666667,
-        "p95_ns": 2.1139,
+        "p95_ns": 2.7625,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
         "p50_ns": 3.0222333333333333,
-        "p95_ns": 3.1194333333333333,
+        "p95_ns": 3.1680333333333333,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream_p50_divided_by_matea_p50": 1.4344001645335316
     },
     {
-      "case": "motion/spring_construct_0.2",
-      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 16.8,
-        "p95_ns": 17.7889,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 27.416666666666668,
-        "p95_ns": 28.425,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.6319444444444444
-    },
-    {
-      "case": "motion/spring_update_1",
-      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 0.8194666666666667,
-        "p95_ns": 0.9555666666666667,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 1.3138666666666667,
-        "p95_ns": 1.3180666666666667,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.6033192320208267
-    },
-    {
-      "case": "motion/spring_checked_update_1",
-      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 2.1472333333333333,
-        "p95_ns": 2.148633333333333,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 3.0222333333333333,
-        "p95_ns": 3.120833333333333,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.4075011254792988
-    },
-    {
-      "case": "motion/spring_construct_1",
-      "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 11.683333333333334,
-        "p95_ns": 12.197233333333333,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 13.8361,
-        "p95_ns": 15.645833333333334,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.184259629101284
-    },
-    {
-      "case": "motion/spring_update_2",
-      "semantics": "cached spring update dt=16ms omega=12 state=(2,0) target=1; finite inputs",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 0.8361,
-        "p95_ns": 0.8375,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 1.3138666666666667,
-        "p95_ns": 1.3166666666666667,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.5714228760515092
-    },
-    {
-      "case": "motion/spring_checked_update_2",
-      "semantics": "cached spring update with finite input/result checks dt=16ms omega=12 state=(2,0) target=1",
-      "output_equivalent_for_this_fixture": true,
-      "matea": {
-        "p50_ns": 2.1472333333333333,
-        "p95_ns": 2.15,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream": {
-        "p50_ns": 3.0222333333333333,
-        "p95_ns": 3.066666666666667,
-        "allocations": 0,
-        "allocated_bytes": 0
-      },
-      "upstream_p50_divided_by_matea_p50": 1.4075011254792988
-    },
-    {
       "case": "motion/spring_construct_2",
       "semantics": "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
       "output_equivalent_for_this_fixture": true,
       "matea": {
-        "p50_ns": 17.181966666666668,
-        "p95_ns": 17.7528,
+        "p50_ns": 16.984733333333335,
+        "p95_ns": 17.766666666666666,
         "allocations": 0,
         "allocated_bytes": 0
       },
       "upstream": {
-        "p50_ns": 25.5778,
-        "p95_ns": 63.4236,
+        "p50_ns": 49.45,
+        "p95_ns": 62.293033333333334,
         "allocations": 0,
         "allocated_bytes": 0
       },
-      "upstream_p50_divided_by_matea_p50": 1.488642161646222
+      "upstream_p50_divided_by_matea_p50": 2.91143811501309
     }
   ],
   "full_reference_parity": false,
+  "binary_sha256": {
+    "matea": "54734d9162026f66a74e12464d5ef89b19d1617cd02569ad2903255b068758ff",
+    "upstream": "81e83e62e05300b3b95a6f200bc3cf20d75811c992a80071387bee5385a7dd16"
+  },
+  "source_hashes_scope": "Source snapshots at report generation include test/example context; release probes do not compile those targets. Optional binary hashes identify the measured executables.",
   "vertical_margin_recovery": {
     "before_proof": "docs/evidence/row-margin-before.json",
     "before_trace": "matea-color-before-margin-trace.json",
@@ -1183,8 +1480,8 @@
           "allocated_bytes": 0
         },
         "after": {
-          "p50_ns": 2.7868066666666667,
-          "p95_ns": 2.9344433333333333,
+          "p50_ns": 2.7979166666666666,
+          "p95_ns": 3.10889,
           "allocations": 0,
           "allocated_bytes": 0
         }
@@ -1197,8 +1494,8 @@
           "allocated_bytes": 0
         },
         "after": {
-          "p50_ns": 0.9369433333333334,
-          "p95_ns": 0.9619433333333334,
+          "p50_ns": 0.9369466666666667,
+          "p95_ns": 0.95278,
           "allocations": 0,
           "allocated_bytes": 0
         }
@@ -1211,8 +1508,8 @@
           "allocated_bytes": 248
         },
         "after": {
-          "p50_ns": 137.75,
-          "p95_ns": 147.042,
+          "p50_ns": 137.667,
+          "p95_ns": 150.916,
           "allocations": 1,
           "allocated_bytes": 96
         }
@@ -1225,8 +1522,8 @@
           "allocated_bytes": 2040
         },
         "after": {
-          "p50_ns": 909.167,
-          "p95_ns": 1011.208,
+          "p50_ns": 909.208,
+          "p95_ns": 970.584,
           "allocations": 1,
           "allocated_bytes": 768
         }
@@ -1246,8 +1543,8 @@
       "allocated_bytes": 3
     },
     "after": {
-      "p50_ns": 111.125,
-      "p95_ns": 115.9833,
+      "p50_ns": 111.6334,
+      "p95_ns": 116.35,
       "allocations": 0,
       "allocated_bytes": 0
     }
@@ -1287,8 +1584,8 @@
           "allocated_bytes": 49
         },
         "after": {
-          "p50_ns": 36.42223333333333,
-          "p95_ns": 44.21946666666667,
+          "p50_ns": 43.3111,
+          "p95_ns": 54.80696666666667,
           "allocations": 1,
           "allocated_bytes": 32
         }
@@ -1301,8 +1598,8 @@
           "allocated_bytes": 0
         },
         "after": {
-          "p50_ns": 4.093066666666667,
-          "p95_ns": 4.434733333333333,
+          "p50_ns": 5.338866666666667,
+          "p95_ns": 5.373633333333333,
           "allocations": 0,
           "allocated_bytes": 0
         }
@@ -1315,8 +1612,8 @@
           "allocated_bytes": 0
         },
         "after": {
-          "p50_ns": 3.581933333333333,
-          "p95_ns": 3.7180666666666666,
+          "p50_ns": 4.672233333333334,
+          "p95_ns": 4.683333333333334,
           "allocations": 0,
           "allocated_bytes": 0
         }
@@ -1329,8 +1626,8 @@
           "allocated_bytes": 0
         },
         "after": {
-          "p50_ns": 0.7694666666666666,
-          "p95_ns": 0.7708333333333334,
+          "p50_ns": 0.8722,
+          "p95_ns": 0.8777666666666667,
           "allocations": 0,
           "allocated_bytes": 0
         }
@@ -1354,8 +1651,8 @@
               "allocated_bytes": 10
             },
             "after": {
-              "p50_ns": 28671.66,
-              "p95_ns": 32164.16,
+              "p50_ns": 29279.18,
+              "p95_ns": 36566.66,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1370,8 +1667,8 @@
               "allocated_bytes": 10
             },
             "after": {
-              "p50_ns": 28780.84,
-              "p95_ns": 29974.16,
+              "p50_ns": 28761.66,
+              "p95_ns": 29892.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1386,8 +1683,8 @@
               "allocated_bytes": 10
             },
             "after": {
-              "p50_ns": 24939.16,
-              "p95_ns": 25890,
+              "p50_ns": 24622.5,
+              "p95_ns": 25502.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1402,8 +1699,8 @@
               "allocated_bytes": 5
             },
             "after": {
-              "p50_ns": 23140,
-              "p95_ns": 24106.66,
+              "p50_ns": 24365,
+              "p95_ns": 25660,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1426,8 +1723,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 28671.66,
-              "p95_ns": 32164.16,
+              "p50_ns": 29279.18,
+              "p95_ns": 36566.66,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1442,8 +1739,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 28780.84,
-              "p95_ns": 29974.16,
+              "p50_ns": 28761.66,
+              "p95_ns": 29892.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1458,8 +1755,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 24939.16,
-              "p95_ns": 25890,
+              "p50_ns": 24622.5,
+              "p95_ns": 25502.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1474,8 +1771,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 23140,
-              "p95_ns": 24106.66,
+              "p50_ns": 24365,
+              "p95_ns": 25660,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1498,8 +1795,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 28671.66,
-              "p95_ns": 32164.16,
+              "p50_ns": 29279.18,
+              "p95_ns": 36566.66,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1514,8 +1811,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 28780.84,
-              "p95_ns": 29974.16,
+              "p50_ns": 28761.66,
+              "p95_ns": 29892.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1530,8 +1827,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 24939.16,
-              "p95_ns": 25890,
+              "p50_ns": 24622.5,
+              "p95_ns": 25502.5,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1546,8 +1843,8 @@
               "allocated_bytes": 0
             },
             "after": {
-              "p50_ns": 23140,
-              "p95_ns": 24106.66,
+              "p50_ns": 24365,
+              "p95_ns": 25660,
               "allocations": 0,
               "allocated_bytes": 0
             },
@@ -1574,8 +1871,8 @@
           "allocated_bytes": 248
         },
         "after": {
-          "p50_ns": 302.75,
-          "p95_ns": 312.792,
+          "p50_ns": 285.166,
+          "p95_ns": 298.958,
           "allocations": 1,
           "allocated_bytes": 85
         },
@@ -1594,8 +1891,8 @@
           "allocated_bytes": 120
         },
         "after": {
-          "p50_ns": 261.125,
-          "p95_ns": 286.667,
+          "p50_ns": 245.834,
+          "p95_ns": 275.542,
           "allocations": 1,
           "allocated_bytes": 85
         },
@@ -1614,8 +1911,8 @@
           "allocated_bytes": 984
         },
         "after": {
-          "p50_ns": 384.792,
-          "p95_ns": 412.833,
+          "p50_ns": 384.875,
+          "p95_ns": 413.416,
           "allocations": 5,
           "allocated_bytes": 663
         },
@@ -1634,8 +1931,8 @@
           "allocated_bytes": 120
         },
         "after": {
-          "p50_ns": 511.917,
-          "p95_ns": 536.75,
+          "p50_ns": 468.5,
+          "p95_ns": 498.833,
           "allocations": 1,
           "allocated_bytes": 53
         },
@@ -1655,5 +1952,146 @@
       "report_sha256": "988a4de076c65e823b06a0482f51f60ec48f326ff38ddc3c3f030d5c8ac29b1c",
       "finding": "Unicode p50 regressed from 299.875 to 518.417 ns after a separate grapheme safety scan; final layout caches cell widths during the same scan and uses ASCII fast paths."
     }
+  },
+  "clock_format_optimization": {
+    "before_raw": "matea-clock-format-before.jsonl",
+    "before_source_report": "clock-format-before-report.json",
+    "before_raw_sha256": "6600470ea06cedc607e1bdbf114afe4c836d78c1f0b646911331060254fb84d0",
+    "before_report_sha256": "0183ea630993ef9492f854d97d3625fe4a2e488a3271d0677cb7aa565a227ff0",
+    "cases": {
+      "clocks/format_zero": {
+        "before": {
+          "p50_ns": 26.959,
+          "p95_ns": 27.208,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "after": {
+          "p50_ns": 22.625,
+          "p95_ns": 22.667,
+          "allocations": 1,
+          "allocated_bytes": 2
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 39.292,
+          "p95_ns": 40.583,
+          "allocations": 1,
+          "allocated_bytes": 2
+        }
+      },
+      "clocks/format_nanoseconds": {
+        "before": {
+          "p50_ns": 34.417,
+          "p95_ns": 34.5,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "after": {
+          "p50_ns": 31.792,
+          "p95_ns": 33.084,
+          "allocations": 1,
+          "allocated_bytes": 4
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 33.375,
+          "p95_ns": 33.542,
+          "allocations": 1,
+          "allocated_bytes": 4
+        }
+      },
+      "clocks/format_microseconds": {
+        "before": {
+          "p50_ns": 49.5,
+          "p95_ns": 49.625,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "after": {
+          "p50_ns": 38.667,
+          "p95_ns": 38.792,
+          "allocations": 1,
+          "allocated_bytes": 6
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 39.208,
+          "p95_ns": 39.25,
+          "allocations": 1,
+          "allocated_bytes": 6
+        }
+      },
+      "clocks/format_seconds": {
+        "before": {
+          "p50_ns": 73.125,
+          "p95_ns": 73.708,
+          "allocations": 2,
+          "allocated_bytes": 24
+        },
+        "after": {
+          "p50_ns": 45.542,
+          "p95_ns": 47.083,
+          "allocations": 1,
+          "allocated_bytes": 11
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 42.625,
+          "p95_ns": 43.791,
+          "allocations": 1,
+          "allocated_bytes": 11
+        }
+      },
+      "clocks/format_hours": {
+        "before": {
+          "p50_ns": 75.875,
+          "p95_ns": 90.459,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "after": {
+          "p50_ns": 48.125,
+          "p95_ns": 48.541,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 49.5,
+          "p95_ns": 49.917,
+          "allocations": 1,
+          "allocated_bytes": 8
+        }
+      },
+      "clocks/format_maximum_go": {
+        "before": {
+          "p50_ns": 148.167,
+          "p95_ns": 161.583,
+          "allocations": 3,
+          "allocated_bytes": 56
+        },
+        "after": {
+          "p50_ns": 54.417,
+          "p95_ns": 54.542,
+          "allocations": 1,
+          "allocated_bytes": 24
+        },
+        "stack_before_zero_fast_path": {
+          "p50_ns": 57.291,
+          "p95_ns": 68.416,
+          "allocations": 1,
+          "allocated_bytes": 24
+        }
+      }
+    },
+    "scope": "Fresh owned strings: fragmented Display/ToString before; bounded safe stack preparation and exact-size String after. Same visible output. Relative source timing regressions remain visible.",
+    "intermediate": {
+      "raw": "matea-clock-format-stack.jsonl",
+      "source_report": "clock-format-stack-report.json",
+      "raw_sha256": "839a9e3c2cd077b58d86d579a385454517f94c1d61a027311278a10f10d91d9d",
+      "report_sha256": "6e6a68b0422a0a6e76167d5f98dfdaa7f67dc7ffca3e78ee6427989e66082da1",
+      "finding": "Initial stack formatting regressed zero duration p50 from 26.959 to 39.292 ns; retain it and specialize the zero case. Fresh-string source comparisons can still be slower."
+    }
+  },
+  "clock_performance_pending": {
+    "active_update": "Go Update arms a time.Timer and returns commands; Rust Update changes state and exposes a reusable schedule descriptor. These cannot be fairly compared as isolated pure state updates. Matched end-to-end scheduling/notification latency, cancellation and subscription construction remain pending.",
+    "measured": "Six fresh and six reused-output compact formatters plus four paused/foreign guards; source setup timers drained outside measurements. No active-tick or module parity claim.",
+    "allocation_bytes": "Rust counts allocator-requested bytes; Go MemStats includes allocator rounding/tiny-object effects. Counts/bytes are not physical-memory equivalence."
   }
 }

@@ -664,6 +664,87 @@
       ],
       "performance": "docs/performance.md",
       "notes": "All 27 source declaration candidates reviewed and linked. Borrowed short/full help, mode switch, cell width, enable/unbind, independent gap style and theme/light/dark roles implemented. Four ordinary plain-string fixtures measured; deliberate narrow overflow/control/zero-width safety changes have regressions. Arbitrary Lip Gloss per-field decorators (padding/borders/wrapping/etc.), rich styled-layout equivalence and their performance remain pending, so the module is not complete."
+    },
+    {
+      "id": "widgets/stopwatch",
+      "status": "implemented",
+      "reference_ids": [
+        "662b3294234adf4a8866",
+        "5f1288280bbbcd104630",
+        "94fc23595d365d32da99",
+        "0e6066efa5e3c82dee8f",
+        "531e08191d3238f0e443",
+        "725fd0eee4370bdae94e",
+        "5ee6142275ecde9194fb",
+        "d26332affc92cb1fe85a",
+        "2748d1ea406b7727c787",
+        "c941c44ca9c329b308fa",
+        "a94d5a0c2e38fc2d75c4",
+        "c95b20cea696cf2d12f8",
+        "7ab102f1701ddca04db5",
+        "f000f2b023fba2d1370a",
+        "3b6e98959e91df68aa8f",
+        "42ddfe540e174282727f",
+        "27be5d2a4d8d0c14eb5a",
+        "77ec315c5d5c7613f25b",
+        "b2fb85ec3132d1fe0170",
+        "3fdf95b5adcaaebecadc",
+        "baad24b409eb5f24544b"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/clocks.rs",
+        "crates/matea-core/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "crates/matea-widgets/tests/fixtures/durations.tsv",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "partial_performance_evidence": "docs/performance.md",
+      "notes": "All source public declarations reviewed; Rust uses explicit mutable UI controls, monotonic Instant projections, positive intervals, typed identity/generations, schedule descriptors and filtered exactly-once timeout outcomes. Counter default/duplicate/stale/overshoot deviations are documented. Six fresh/six reused string and four ignored-event cases are measured, but fresh formatting is still slower than source in this host, and matched active scheduling/subscription/latency measurement remains pending. No module parity claim."
+    },
+    {
+      "id": "widgets/countdown",
+      "status": "implemented",
+      "reference_ids": [
+        "e031ff68ca9e244dbb9f",
+        "30da0f35dc41b95df399",
+        "c3da5f39bb04fa90b129",
+        "654352323d32f0ce0a88",
+        "ffae627a8c8291bb2149",
+        "813c2dd0141728353d34",
+        "a8be3f6c603ed7546649",
+        "5002899c8525bda8525d",
+        "9e64a9e0b80f29c64801",
+        "299eba547ee40abe46db",
+        "0a10d20cfe47e0f84e9e",
+        "804615fcbf8650f6625e",
+        "a9a9048a78a45ca9f997",
+        "a13bbb806f0863c07280",
+        "ba97f361e0f031750c11",
+        "b17625a278bcf458cd90",
+        "163fad6b24d36ca66e6a",
+        "c2f0015577fe175e2256",
+        "90796e54f1ae59243fa8",
+        "ecfecef48de3c1b61768",
+        "cdb087434388df04d3e1",
+        "fbf70ec37b51a72fa7ce"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/clocks.rs",
+        "crates/matea-core/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/clocks.rs",
+        "crates/matea-widgets/tests/fixtures/durations.tsv",
+        "docs/evidence/clocks-source-edges.json",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "partial_performance_evidence": "docs/performance.md",
+      "notes": "All source public declarations reviewed; Rust uses explicit mutable UI controls, monotonic Instant projections, positive intervals, typed identity/generations, schedule descriptors and filtered exactly-once timeout outcomes. Counter default/duplicate/stale/overshoot deviations are documented. Six fresh/six reused string and four ignored-event cases are measured, but fresh formatting is still slower than source in this host, and matched active scheduling/subscription/latency measurement remains pending. No module parity claim."
     }
   ]
 }

@@ -12,10 +12,11 @@ cargo run -p matea --example motion
 cargo run -p matea --example input
 cargo run -p matea --example pagination
 cargo run -p matea --example help
+cargo run -p matea --example clocks
 cargo run -p matea-example-external-widget
 ```
 
-All ten accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All eleven accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -51,6 +52,11 @@ state and its displayed help together, and `q` exits. Borrow metadata into HelpI
 per view call and configure Help.width for whole-item fitting. Gap colors/attributes
 can be styled independently. Rich per-field decorators remain pending; see the
 [help audit](key-help-audit.md).
+
+Clocks: `s` pauses/resumes the stopwatch, `c` pauses/resumes the countdown,
+`r` resets/rearms and `q` exits. Expired countdowns need rearming. Both use existing
+UI-thread subscriptions, with no worker per clock. The example counts filtered
+timeout outcomes, including those returned by controls. See the [clock audit](clocks-audit.md).
 
 The form offers tea-name completion: type a prefix in Favorite tea, then Tab to
 accept a suggestion before moving focus. Up/down selects a match. TextInput also
