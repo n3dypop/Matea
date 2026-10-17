@@ -79,9 +79,28 @@ impl VirtualCursor {
     pub fn interval(&self) -> TickInterval {
         self.clock.interval()
     }
+    /// Keep the cursor inline: remove LF/CRLF and expand tabs to four spaces,
+    /// matching the reference's default inline style. Other controls still
+    /// follow the framework View sanitization policy, never terminal commands.
     pub fn set_char(&mut self, text: impl AsRef<str>) {
         self.text.clear();
-        self.text.push_str(text.as_ref());
+        let text = text.as_ref();
+        if !text
+            .bytes()
+            .any(|byte| matches!(byte, b'\r' | b'\n' | b'\t'))
+        {
+            self.text.push_str(text);
+            return;
+        }
+        let mut chars = text.chars().peekable();
+        while let Some(ch) = chars.next() {
+            match ch {
+                '\r' if chars.peek() == Some(&'\n') => {}
+                '\n' => {}
+                '\t' => self.text.push_str("    "),
+                ch => self.text.push(ch),
+            }
+        }
     }
     pub fn text(&self) -> &str {
         &self.text

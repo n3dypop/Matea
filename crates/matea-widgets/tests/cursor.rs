@@ -13,6 +13,36 @@ fn period(ms: u64) -> TickInterval {
 }
 
 #[test]
+fn cursor_text_is_inline_before_grapheme_clipping() {
+    let mut cursor = VirtualCursor::new();
+    for (input, expected) in [
+        ("a\nb", "ab"),
+        ("a\r\nb", "ab"),
+        ("a\tb", "a    b"),
+        ("抹\n茶\r\ne\u{301}\t👩‍💻", "抹茶e\u{301}    👩‍💻"),
+        ("\n\r\n", ""),
+    ] {
+        cursor.set_char(input);
+        assert_eq!(cursor.text(), expected);
+        let frame = cursor
+            .view(&Theme::plain())
+            .render(Size::new(24, 2))
+            .unwrap();
+        assert_eq!(frame.plain(), format!("{expected}\n"));
+        assert!(frame.row(1).iter().all(|cell| cell.symbol() == " "));
+    }
+    cursor.set_char("抹\n茶");
+    assert_eq!(
+        cursor
+            .view(&Theme::plain())
+            .render(Size::new(2, 1))
+            .unwrap()
+            .plain(),
+        "抹"
+    );
+}
+
+#[test]
 fn modes_focus_and_styles_follow_the_reference_contract() {
     let normal = Theme::default();
     let reduced = Theme::plain();

@@ -1018,6 +1018,13 @@ func virtualCursorEdges() {
 	cancelled.Focus()
 	result["prior_command_cancelled"] = fmt.Sprintf("%T", old()) == "cursor.blinkCanceled"
 	result["mode_names"] = []string{cursor.CursorBlink.String(), cursor.CursorStatic.String(), cursor.CursorHide.String()}
+	inline := cursor.New()
+	texts := map[string]string{}
+	for name, text := range map[string]string{"newline": "a\nb", "crlf": "a\r\nb", "tab": "a\tb", "unicode": "抹\n茶\r\ne\u0301\t👩‍💻", "empty": "\n\r\n"} {
+		inline.SetChar(text)
+		texts[name] = inline.View()
+	}
+	result["inline_text"] = texts
 	json.NewEncoder(os.Stdout).Encode(result)
 }
 func virtualCursorCells(m cursor.Model) string {
