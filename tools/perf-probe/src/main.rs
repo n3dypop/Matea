@@ -136,6 +136,10 @@ fn main() {
         .ok()
         .and_then(|n| n.parse().ok())
         .unwrap_or(300);
+    if std::env::args().any(|arg| arg == "--subscriptions") {
+        subscription_costs(iterations);
+        return;
+    }
     input_bindings(iterations);
     projectiles(iterations);
     pagination(iterations);
@@ -278,6 +282,72 @@ fn main() {
             &expected,
             "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs",
         );
+    }
+}
+fn subscription_costs(iterations: usize) {
+    let origin = Instant::now();
+    let make_schedule = || {
+        let mut clock = Stopwatch::new_at(origin);
+        clock.start_at(origin);
+        clock.schedule().unwrap()
+    };
+    let schedule = make_schedule();
+    measure(
+        "subscriptions/clock_adapter",
+        iterations,
+        || {
+            black_box(black_box(schedule).subscription_with_clock(move || origin, |tick| tick));
+            1
+        },
+        "one clock subscription descriptor; callback not invoked",
+        "construct and drop one clock subscription adapter with captured monotonic clock; no runtime, worker or timer wakeup",
+    );
+    struct App {
+        schedules: Vec<ClockSchedule>,
+        origin: Instant,
+        seen: usize,
+    }
+    impl Model for App {
+        type Message = ClockTick;
+        fn update(&mut self, event: Event<ClockTick>) -> Effect<ClockTick> {
+            if matches!(event, Event::Message(_)) {
+                self.seen += 1;
+            }
+            Effect::none()
+        }
+        fn view(&self, _: ViewContext<'_>) -> View {
+            View::text("")
+        }
+        fn subscriptions(&self) -> Vec<Subscription<ClockTick>> {
+            let origin = self.origin;
+            self.schedules
+                .iter()
+                .map(|schedule| schedule.subscription_with_clock(move || origin, |tick| tick))
+                .collect()
+        }
+    }
+    for count in [0, 1, 12, 64] {
+        let app = App {
+            schedules: (0..count).map(|_| make_schedule()).collect(),
+            origin,
+            seen: 0,
+        };
+        let mut runtime = Runtime::new(app, Size::new(1, 1), Theme::plain()).unwrap();
+        measure(
+            &format!("subscriptions/reconcile_{count}"),
+            iterations,
+            || {
+                black_box(&mut runtime)
+                    .dispatch(Event::Input(Input::Focus(true)))
+                    .unwrap();
+                black_box(runtime.model().schedules.len()) as u64
+            },
+            &format!("{count} configured subscriptions; no timer fired"),
+            "dispatch ignored focus event and retain unchanged clock subscriptions; callbacks recreated but not invoked; no frame or terminal I/O",
+        );
+        assert_eq!(runtime.model().seen, 0);
+        runtime.advance(std::time::Duration::from_secs(1)).unwrap();
+        assert_eq!(runtime.model().seen, count);
     }
 }
 fn spinner_cases(iterations: usize) {
