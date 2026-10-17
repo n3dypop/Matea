@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       reference_api:
-        description: Compile pinned reference public API snapshots
+        description: Compile reference APIs and execute pinned source/probe paths
         type: boolean
         default: false
 permissions:
@@ -118,11 +118,45 @@ jobs:
       - run: python scripts/test_rustdoc_exports.py
       - run: python scripts/fetch_rust_references.py --reference ${{ matrix.reference }} --destination "${{ runner.temp }}/matea-api-inputs"
       - run: python scripts/collect_rustdoc_batch.py --reference ${{ matrix.reference }} --references "${{ runner.temp }}/matea-api-inputs" --destination "${{ runner.temp }}/matea-rustdoc" --toolchain nightly-2026-10-11
+      - run: python scripts/import_rustdoc.py --reports "${{ runner.temp }}/matea-rustdoc/reports" --destination "${{ runner.temp }}/matea-rustdoc/imported"
       # Official actions/upload-artifact v4 tag resolved via GitHub on 2026-10-16.
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: reference-api-${{ matrix.os }}-${{ matrix.reference }}
           path: ${{ runner.temp }}/matea-rustdoc/reports
+          if-no-files-found: warn
+          retention-days: 14
+  reference-probes:
+    if: github.event_name == 'workflow_dispatch' && inputs.reference_api
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: stable
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.26.0"
+          cache: false
+      - run: python scripts/check_reference_paths.py --destination "${{ runner.temp }}/matea-reference-paths"
+      # Source checkouts, raw issue bodies and shared-runner timing records are
+      # deliberately not uploaded as performance/compatibility evidence.
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reference-paths-${{ matrix.os }}
+          path: ${{ runner.temp }}/matea-reference-paths/path-checks.json
           if-no-files-found: warn
           retention-days: 14

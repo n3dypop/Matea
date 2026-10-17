@@ -16,11 +16,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--references", type=Path, required=True)
 parser.add_argument("--go-tool", type=Path, default=Path(tempfile.gettempdir()) / "matea-audit-go")
 parser.add_argument("--rust-tool", type=Path, default=ROOT / "target/debug/matea-api-audit")
+parser.add_argument("--destination", type=Path, default=ROOT / "docs/coverage")
 args = parser.parse_args()
 refs = args.references.resolve()
 lock = json.loads((ROOT / "docs/upstream-lock.json").read_text())
-out = ROOT / "docs/coverage"
-out.mkdir(exist_ok=True)
+out = args.destination.resolve()
+out.mkdir(parents=True, exist_ok=True)
 repositories = []
 for entry in lock:
     name = entry["name"]

@@ -288,8 +288,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "26 native private color/command cases, exact literal outputs, 31 samples and requested allocations. Arbitrary Command implementations and policy-matched pinned source/OS workloads remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -300,7 +300,9 @@
         "docs/evidence/local-validation.json",
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -416,8 +418,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "12 complete mock-backend event-loop/lifecycle cases include idle, resize, quit and five I/O failures, with 31 samples and allocation passes. Native terminal input/output, effects and scheduling/resident memory remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -428,7 +430,9 @@
         "docs/evidence/local-validation.json",
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/foundation-paths/current.jsonl"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -457,8 +461,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "Three lease and three Unix command cycles have exact before/after bytes, 31 samples, allocations and logical writes/flushes. Fixed reset removes two allocations; physical I/O, failure timing and Windows native modes remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -469,7 +473,9 @@
         "docs/evidence/local-validation.json",
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -540,8 +546,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 native successful sigaction install/restore samples remove one 96-byte requested allocation. Four synthetic restoration/ownership tests cover failure records, but actual syscall failure timing, signal-delivery latency and OS matrix performance remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -554,7 +560,9 @@
         "crates/matea-terminal/src/signals_unix.rs",
         "docs/evidence/pty-smoke.log",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -686,7 +694,8 @@
     {
       "id": "matea-widgets/lib",
       "files": [
-        "crates/matea-widgets/src/lib.rs"
+        "crates/matea-widgets/src/lib.rs",
+        "crates/matea-widgets/tests/collections.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -698,8 +707,8 @@
           "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
         },
         "behavior": {
-          "score": 50,
-          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+          "score": 75,
+          "reason": "Public List/Table/Form boundary fixtures cover 96 list size/height combinations, 30 ragged/empty table combinations, zero-to-five-field validation/focus/submission states and every four-item predicate-panic point. Known-negative selection regression is fixed; native tests support the implemented component slice, not all Bubbles/Huh reference capabilities."
         },
         "reference": {
           "score": 50,
@@ -721,7 +730,9 @@
         "docs/evidence/viewport-before.log",
         "docs/evidence/quality/viewport-report.json",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "crates/matea-widgets/tests/collections.rs",
+        "docs/evidence/optimization/collections/filter-before.log"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
@@ -916,8 +927,8 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 75,
+          "reason": "The current facade contains only crate/item reexports. Executed identities cover prelude types and all function aliases; direct/module/prelude text construction uses the same underlying implementation in three 31-sample cases. There is no wrapper allocation/runtime dispatch introduced by these reexports. This does not award underlying modules or missing upstream features parity."
         },
         "portability": {
           "score": 75,
@@ -928,7 +939,8 @@
         "docs/evidence/local-validation.json",
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/foundation-paths/current.jsonl"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1217,8 +1229,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 release-process samples for all 12 snapshot examples, complete deterministic outputs, expected content and dashboard golden. Includes spawn/pipe/exit; interactive lifecycle, resident memory and physical terminals remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -1230,7 +1242,8 @@
         "docs/evidence/pty-smoke.log",
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Snapshot/PTY examples run; application latency and physical terminal behavior remain unmeasured."
@@ -1349,8 +1362,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
         },
         "portability": {
           "score": 75,
@@ -1360,7 +1373,8 @@
       "evidence": [
         "scripts/test_source_auditors.py",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Standalone Go parser fixture validates exports/build tags; malformed input and scale distributions remain pending."
@@ -1431,8 +1445,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 complete validations/canonicalizations of all 20 retained compiler profiles, full output hashes and separate Python traced peak. Duplicate parsing removed with an identical-output repeat. External compiler/network latency, extraction/profile scale and native RSS remain unmeasured."
         },
         "portability": {
           "score": 50,
@@ -1440,7 +1454,8 @@
         }
       },
       "evidence": [
-        "docs/evidence/local-validation.json"
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -1471,8 +1486,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 complete current-ledger CLI samples plus all 824 retained issue records merged/serialized with simulated pages; stable complete outputs and separate Python heap. External fetch/audit paths, network distributions and native residency remain unmeasured."
         },
         "portability": {
           "score": 50,
@@ -1480,7 +1495,8 @@
         }
       },
       "evidence": [
-        "docs/evidence/local-validation.json"
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -1510,8 +1526,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
         },
         "portability": {
           "score": 75,
@@ -1521,7 +1537,8 @@
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
-        "docs/evidence/optimization/ci-run.json"
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -1559,8 +1576,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 complete 84-case retained report generations, 46-case strict comparisons and 84-case historical-reader samples, with exact outputs and separate Python heap. Other reporter/prepare/external paths and native residency remain unmeasured."
         },
         "portability": {
           "score": 50,
@@ -1568,7 +1585,8 @@
         }
       },
       "evidence": [
-        "docs/evidence/local-validation.json"
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -1582,7 +1600,8 @@
         "scripts/measure_rust_coverage.py",
         "scripts/pty_smoke.py",
         "scripts/verify_foundation.py",
-        "scripts/evidence_checks.py"
+        "scripts/evidence_checks.py",
+        "scripts/check_reference_paths.py"
       ],
       "criteria": {
         "rust_design": {
@@ -1602,8 +1621,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 0,
-          "reason": "No matched measurement for this unit; do not infer efficiency from Rust or passing tests."
+          "score": 50,
+          "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
         },
         "portability": {
           "score": 50,
@@ -1611,7 +1630,8 @@
         }
       },
       "evidence": [
-        "docs/evidence/local-validation.json"
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."

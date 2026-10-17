@@ -1,6 +1,6 @@
 """Publish Rust-only before/after subscription evidence; no upstream parity claim."""
 from evidence_checks import require
-from performance_records import read_records, summary
+from performance_records import read_records, summary, probe_path, write_report
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -52,7 +52,7 @@ report = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "host": pla
           "before_context": before_context, "before_context_sha256": digest(BASE / "subscriptions-before-context.json"),
           "after_git_head_before_uncommitted_changes": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
           "after_source_sha256": {name: digest(ROOT / name) for name in sources},
-          "after_binary_sha256": digest(ROOT / "target/release/matea-perf-probe"),
+          "after_binary_sha256": digest(probe_path(ROOT)),
           "after_rustc": subprocess.check_output(["rustc", "-vV"], text=True),
           "raw_sha256": {name: digest(BASE / name) for name in ("subscriptions-before.jsonl", "subscriptions-after.jsonl")},
           "negative_regression_sha256": digest(ROOT / "docs/evidence/subscription-atomicity-before.log"),
@@ -62,7 +62,7 @@ report = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "host": pla
                      "The probe asserts that every configured timer still fires after the retained-reconciliation measurement.",
                      "Allocation counts/bytes describe one operation, not total retained memory or startup. Inline IDs enlarge descriptors/map nodes; initial resident memory is unmeasured.",
                      "Callbacks and the model subscription Vec still allocate. Named-string IDs can still allocate/clone. This is not end-to-end zero allocation."]}
-(BASE / "subscriptions-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+write_report(BASE / "subscriptions-report.json", json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 lines = ["# Retained subscription costs", "", "Rust-only before/after measurements; no upstream or real-time parity claim.", "",
          "Baseline commit: `" + before_context["git_head"] + "`. [Raw data, hashes and limitations](evidence/performance/2026-10-16/subscriptions-report.json).", "",
          "| Workload | p50 / p95 ns before | p50 / p95 ns after | allocations before → after | requested bytes before → after |",
@@ -77,5 +77,5 @@ lines += ["", "Scoped identities replace repeated formatted clock IDs; validatio
           "See [ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md) and the full validation log for correctness. The model/effects are not rolled back on configuration errors.", "",
           "Reproduce baseline by building the probe at the baseline commit, running `MATEA_PERF_ITERATIONS=1000 target/release/matea-perf-probe --subscriptions`, then repeat on the changed tree with no compilation/tests running concurrently.",
           "Keep before context/raw files, collect after raw as subscriptions-after.jsonl, then run `python3 scripts/report_subscription_performance.py`. All 31 samples and p95 outliers are retained."]
-(ROOT / "docs/subscription-performance.md").write_text("\n".join(lines) + "\n")
+write_report(ROOT / "docs/subscription-performance.md", "\n".join(lines) + "\n")
 print(f"{len(cases)} Rust-only subscription fixtures validated; no upstream parity claimed")

@@ -1,6 +1,6 @@
 """Rust-only owned-scene costs, including construction plus rendering."""
 from evidence_checks import require
-from performance_records import read_records, summary
+from performance_records import read_records, summary, probe_path, write_report
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -14,7 +14,6 @@ BASE = ROOT / "docs/evidence/performance/2026-10-16"
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
 
 
 context = json.loads((BASE / "views-before-context.json").read_text())
@@ -43,7 +42,7 @@ report = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "host": pla
           "intermediate": stage, "intermediate_patch_sha256": digest(BASE / "views-normalized-stage.patch"),
           "after_git_head_before_uncommitted_changes": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
           "source_sha256": {name: digest(ROOT / name) for name in sources},
-          "binary_sha256": digest(ROOT / "target/release/matea-perf-probe"),
+          "binary_sha256": digest(probe_path(ROOT)),
           "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
           "raw_sha256": {name: digest(BASE / name) for name in ("views-before.jsonl", "views-normalized-stage.jsonl", "views-after.jsonl")},
           "cases": cases, "upstream_parity": False,
@@ -53,7 +52,7 @@ report = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "host": pla
                      "Formatted counter intentionally changes format! to format_args! through the new Text conversion; the output and operation purpose match, not the caller expression.",
                      "Rendered plain output fixtures match; separate tests compare complete cells/styles, ownership, all Unicode scalar control policies and Display errors.",
                      "Short inline allocation is an implementation detail. Large strings, surfaces, panels and arbitrary user formatting can still allocate; no whole-module parity claim."]}
-(BASE / "views-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+write_report(BASE / "views-report.json", json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 lines = ["# Owned scene text costs", "", "Rust-only measurements; no upstream or whole-module parity claim.",
          "Baseline commit: `" + context["git_head"] + "`. [Raw samples, contexts, intermediate patch and limits](evidence/performance/2026-10-16/views-report.json).", "",
          "| Workload | before p50 / p95 ns | after p50 / p95 ns | allocations before → after | requested bytes before → after |",
@@ -67,5 +66,5 @@ lines += ["", "Immutable Text normalizes controls once, stores small values inli
           "All twenty rendered-output fixtures match. Correctness tests additionally compare full cells/styles across themes/focus/size, immediate owned formatting and failure semantics. The independent-widget example uses only facade contracts.",
           "Constructor bounds are provisionally Into<Text>; custom Into<String>-only types need explicit conversion or Into<Text>. See [ADR 0022](decisions/0022-owned-normalized-scene-text.md) and [Text API](text-api.md).", "",
           "Reproduce baseline/current release probes using `MATEA_PERF_ITERATIONS=20000 target/release/matea-perf-probe --views` with no compilation/tests running concurrently. Retain before context/raw and the intermediate data, then run `python3 scripts/report_view_performance.py`."]
-(ROOT / "docs/view-performance.md").write_text("\n".join(lines) + "\n")
+write_report(ROOT / "docs/view-performance.md", "\n".join(lines) + "\n")
 print("20 Rust-only owned-scene fixtures match; full module coverage remains pending")

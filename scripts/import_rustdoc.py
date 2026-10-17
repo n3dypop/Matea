@@ -105,9 +105,10 @@ def import_reports(folders, destination, pins):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--reports", type=Path, action="append", required=True)
+    parser.add_argument("--destination", type=Path, default=DESTINATION)
     args = parser.parse_args()
     pins = {p["name"]: p["sha"] for p in json.loads((ROOT / "docs/upstream-lock.json").read_text(encoding="utf-8"))}
-    index = import_reports(args.reports, DESTINATION, pins)
+    index = import_reports(args.reports, args.destination, pins)
     print(f"Imported {len(index['snapshots'])} profile snapshots; full target/feature closure remains unreviewed")
 
 

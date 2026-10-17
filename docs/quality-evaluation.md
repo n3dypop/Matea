@@ -116,3 +116,15 @@ Final implementation `9ce5564ad525d047594c5e1debecabd7c3bb4e37` passed [Linux, W
 The individual optimization follow-up adds 127 measured fixtures (124 Rust primitive/packet fixtures plus three complete auditor processes). [Results and retained regressions](individual-optimization.md) include exact all-RGB ANSI256 checking, adaptive owned focus indexing, bounded stack protocol headers, fallback style restoration and streaming source inventories. Eleven additional distinct targeted Miri tests passed: [commands, seeds, target hashes and logs](evidence/optimization/miri-context.json). The current native suite runs 129 Rust cases plus two doctests, one explicit ignored exhaustive case, 24 Python regression cases in normal/optimized mode, 12 snapshots and 17 Unix PTY cases. Six performance assessments move from 0 to 50; no dimension is promoted to high by these partial measurements. Of 86 program files in 40 units, 56 assessments remain below 75 (performance 28, reference 18, behavior 5, portability 5). Fully unmeasured performance units decrease from 18 to 12. The whole-framework optimization stage has not started.
 
 Implementation `203ba5d7c56f3588a2dadb14410e3aafe3ead59f` passed [all three OSes plus MSRV 1.88](https://github.com/n3dypop/Matea/actions/runs/39049417573). [Step/log evidence](evidence/optimization/ci-run.json) confirms two Go/Rust auditor fixtures, 24 optimized Python cases and 46/37/41 current module records on each OS. This is ordinary Foundation CI; reference recollection and Windows PTY remain separate exclusions. The 56 below-high assessments and both gates remain unchanged.
+
+
+## 未測定12単位への追補
+
+[76件の追加測定と修正](remaining-optimization.md)により完全未測定の性能単位は0です。
+現在のfacade再公開に追加のruntime処理がないことを型・関数別名と3測定経路で確認し、
+この単位の性能を75へ更新しました。List/Table/Formは96+30+6境界構成と4panic位置の
+独立試験を追加し、再現した無効選択を修正したため、実装済み動作を75へ更新しました。
+その他11単位の新しい性能測定は部分証拠の50で、元の範囲を縮めて高評価とはしません。
+97プログラム・40単位で54軸が未達です。LLVM report schema 2はcanonical sourceごとに
+全compiler instanceを保持し、合計・平均・最大値を作りません。
+新規sourceに対するCI・native検証結果は実行後に追記します。

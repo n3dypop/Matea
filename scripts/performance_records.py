@@ -5,7 +5,19 @@ counts/bytes. Those fields are not fabricated or rounded by this reader.
 """
 import json
 import math
+import os
 import statistics
+import sys
+
+
+def probe_path(root):
+    return root / "target/release" / ("matea-perf-probe.exe" if os.name == "nt" else "matea-perf-probe")
+
+
+def write_report(path, text):
+    """--check executes historical validation without replacing any evidence."""
+    if "--check" not in sys.argv:
+        path.write_text(text, encoding="utf-8")
 
 
 def numeric(value, *, positive=False):

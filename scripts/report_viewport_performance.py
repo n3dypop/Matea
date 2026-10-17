@@ -1,6 +1,6 @@
 """Verify finite Viewport before/after outputs, raw hashes and baseline source."""
 from evidence_checks import require
-from performance_records import read_records, summary
+from performance_records import read_records, summary, probe_path, write_report
 import hashlib
 import json
 from pathlib import Path
@@ -13,7 +13,6 @@ BASE = ROOT / "docs/evidence/quality"
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
 
 
 def main():
@@ -39,14 +38,14 @@ def main():
         cases.append({"case": name, "before": summary(before), "after": summary(after)})
     report = {"baseline": context, "cases": cases,
               "source_sha256": {p: digest(ROOT / p) for p in [source, harness, "scripts/report_viewport_performance.py"]},
-              "binary_sha256": digest(ROOT / "target/release/matea-perf-probe"),
+              "binary_sha256": digest(probe_path(ROOT)),
               "raw_sha256": {n: digest(BASE / n) for n in ["viewport-before.jsonl", "viewport-after.jsonl"]},
               "intermediate": {"report": "viewport-first-report.json", "report_sha256": digest(BASE / "viewport-first-report.json"),
                                "patch_sha256": digest(BASE / "viewport-first-stage.patch")},
               "limits": ["Rust-only sequential before/after, macOS arm64, 31 samples at 3000 iterations; no affinity/frequency control or upstream parity.",
                          "Initial parsing and resident memory excluded. View generation and complete fresh render have separate workloads. Output fixtures match; boundary/CRLF correctness is tested separately.",
                          "First measurements and source patch are retained, including an adverse p95. Timing distributions are not universal maximum-performance proof."]}
-    (BASE / "viewport-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    write_report(BASE / "viewport-report.json", json.dumps(report, indent=2) + "\n")
     print("12 Viewport fixture outputs/semantics and baseline hashes match")
 
 

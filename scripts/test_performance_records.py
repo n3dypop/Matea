@@ -4,11 +4,22 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from performance_records import read_records, summary
+from unittest.mock import patch
+from performance_records import read_records, summary, write_report
 from report_performance import generate
 
 
 class RecordTests(unittest.TestCase):
+    def test_check_mode_never_rewrites_or_creates_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary)/"report.json"
+            with patch("performance_records.sys.argv", ["reporter", "--check"]):
+                write_report(path, "new")
+                self.assertFalse(path.exists())
+                path.write_bytes(b"reviewed")
+                write_report(path, "new")
+                self.assertEqual(path.read_bytes(), b"reviewed")
+
     def fixture(self):
         return {"case": "one", "semantics": "one operation", "output": "value", "iterations_per_sample": 10,
                 "samples_ns": list(range(1, 32)), "allocations": .25, "allocated_bytes": 8.5}

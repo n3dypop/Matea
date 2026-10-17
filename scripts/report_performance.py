@@ -322,9 +322,13 @@ def main():
     parser.add_argument("--artifacts", type=Path, required=True)
     parser.add_argument("--matea-binary", type=Path)
     parser.add_argument("--upstream-binary", type=Path)
+    parser.add_argument("--check", action="store_true", help="validate/generate in memory without publishing")
     args = parser.parse_args()
     destination = ROOT / "docs/evidence/performance/2026-10-16"
     files, document = generate(args.artifacts, args.matea_binary, args.upstream_binary, destination)
+    if args.check:
+        print("84 retained cases validated without publication; no new measurement")
+        return
     # No invalid record/trace can replace published raw evidence. Individual
     # files are atomic; process interruption during publication is not a
     # multi-file transaction, as documented for compiler evidence imports.

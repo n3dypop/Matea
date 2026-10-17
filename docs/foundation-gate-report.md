@@ -102,3 +102,13 @@ GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Mate
 [Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39049417573)の4ジョブ成功です。
 各OSのGo収集2テスト、最適化Python 24テスト、46／37／41の追加CLIケースをログで確認しました。
 [ジョブ・stepと除外範囲](evidence/optimization/ci-run.json)。品質ゲート56未達とF5閉鎖は維持します。
+
+
+### 未測定12単位への追補
+
+[追加76件の測定と修正](remaining-optimization.md)を実施しました。
+完全未測定の性能単位は0ですが、品質の未達は54軸で、参照機能の全件実装・一致も
+未完了です。Foundation F5、横断最適化Stage B、画像エンジン／CUDAのgateは閉じています。
+新しいCIでは通常3 OS/MSRVに加え、任意実行の6 compiler profile jobsと3 source/probe jobsで
+取込、全11 source inventories、84比較出力、補助dispatch、全5報告CLI、issue API経路を
+確認します。CIの時間値を新しい性能結果には使用しません。
