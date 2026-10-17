@@ -57,6 +57,25 @@ fn palette(n: u8) -> (u8, u8, u8) {
     }
 }
 
+fn distance((r, g, b): (u8, u8, u8), (a, c, d): (u8, u8, u8)) -> u32 {
+    let dr = i32::from(r) - i32::from(a);
+    let dg = i32::from(g) - i32::from(c);
+    let db = i32::from(b) - i32::from(d);
+    (dr * dr + dg * dg + db * db) as u32
+}
+
+/// Nearest cube channel, breaking exact midpoint ties toward the smaller index.
+fn cube_channel(n: u8) -> u8 {
+    match n {
+        0..=47 => 0,
+        48..=115 => 1,
+        116..=155 => 2,
+        156..=195 => 3,
+        196..=235 => 4,
+        _ => 5,
+    }
+}
+
 impl Color {
     /// Quantize by RGB distance; actual ANSI16 palette remains terminal configurable.
     pub fn adapt(self, level: ColorLevel) -> Self {
@@ -71,21 +90,44 @@ impl Color {
         {
             return self;
         }
-        let (r, g, b) = match self {
+        let rgb = match self {
             Self::Rgb(r, g, b) => (r, g, b),
             Self::Indexed(n) => palette(n),
             Self::Default => unreachable!(),
         };
-        let count = if level == ColorLevel::Ansi16 { 16 } else { 256 };
-        let n = (0..count)
-            .min_by_key(|&n| {
-                let (a, c, d) = palette(n as u8);
-                (r as i32 - a as i32).pow(2)
-                    + (g as i32 - c as i32).pow(2)
-                    + (b as i32 - d as i32).pow(2)
-            })
-            .unwrap_or(0);
-        Self::Indexed(n as u8)
+        // The configurable ANSI16 prefix must participate, including duplicates
+        // of cube/gray colors. Strict improvement preserves the first-index tie.
+        let mut nearest = 0u8;
+        let mut best = u32::MAX;
+        for (n, &candidate) in ANSI.iter().enumerate() {
+            let d = distance(rgb, candidate);
+            if d < best {
+                best = d;
+                nearest = n as u8;
+            }
+        }
+        if level == ColorLevel::Ansi16 || best == 0 {
+            return Self::Indexed(nearest);
+        }
+        // Squared RGB distance separates by channel, so only one of the 216
+        // cube points can improve the winner (ties choose the lower channel).
+        let (r, g, b) = rgb;
+        let cube = 16 + 36 * cube_channel(r) + 6 * cube_channel(g) + cube_channel(b);
+        let d = distance(rgb, palette(cube));
+        if d < best {
+            best = d;
+            nearest = cube;
+        }
+        if best != 0 {
+            // Minimize (r-v)^2+(g-v)^2+(b-v)^2 for v=8+10k.
+            // k is nearest to (r+g+b-24)/30; +14 rounds exact ties down.
+            let sum = u16::from(r) + u16::from(g) + u16::from(b);
+            let gray = 232 + (sum.saturating_sub(10) / 30).min(23) as u8;
+            if distance(rgb, palette(gray)) < best {
+                nearest = gray;
+            }
+        }
+        Self::Indexed(nearest)
     }
 }
 
