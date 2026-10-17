@@ -405,46 +405,44 @@ impl Countdown {
 pub struct ClockText(pub Duration);
 struct DurationText {
     bytes: [u8; 40],
-    len: usize,
+    start: usize,
 }
 impl DurationText {
-    fn push(&mut self, text: &[u8]) {
-        let end = self.len + text.len();
-        self.bytes[self.len..end].copy_from_slice(text);
-        self.len = end;
+    fn prepend(&mut self, text: &[u8]) {
+        let start = self.start - text.len();
+        self.bytes[start..self.start].copy_from_slice(text);
+        self.start = start;
+    }
+    fn digit(&mut self, value: u8) {
+        self.start -= 1;
+        self.bytes[self.start] = b'0' + value;
     }
     fn integer(&mut self, mut value: u64) {
-        let mut digits = [0u8; 20];
-        let mut start = digits.len();
         loop {
-            start -= 1;
-            digits[start] = b'0' + (value % 10) as u8;
+            self.digit((value % 10) as u8);
             value /= 10;
             if value == 0 {
                 break;
             }
         }
-        self.push(&digits[start..]);
     }
     fn fraction(&mut self, mut value: u32, width: usize) {
         if value == 0 {
             return;
         }
-        let mut digits = [b'0'; 9];
-        for byte in digits[..width].iter_mut().rev() {
-            *byte += (value % 10) as u8;
+        let mut significant = false;
+        for _ in 0..width {
+            let digit = (value % 10) as u8;
             value /= 10;
+            significant |= digit != 0;
+            if significant {
+                self.digit(digit);
+            }
         }
-        let end = digits[..width]
-            .iter()
-            .rposition(|byte| *byte != b'0')
-            .unwrap()
-            + 1;
-        self.push(b".");
-        self.push(&digits[..end]);
+        self.prepend(b".");
     }
     fn as_str(&self) -> &str {
-        std::str::from_utf8(&self.bytes[..self.len])
+        std::str::from_utf8(&self.bytes[self.start..])
             .expect("clock text uses digits and static UTF-8 units")
     }
 }
@@ -458,47 +456,49 @@ impl ClockText {
         String::from(self.formatted().as_str())
     }
     fn formatted(self) -> DurationText {
-        // Duration::MAX needs at most 33 bytes: 16 hour digits, unit fields,
-        // fractional seconds and suffix. No user-controlled text enters here.
+        // Duration::MAX needs at most 33 bytes. Fill backward to avoid separate
+        // integer/fraction arrays, scans and copies. Only complete static UTF-8
+        // units and ASCII digits enter the final checked string slice.
         let mut out = DurationText {
             bytes: [0; 40],
-            len: 0,
+            start: 40,
         };
         let seconds = self.0.as_secs();
         let nanos = self.0.subsec_nanos();
         if seconds == 0 {
             if nanos == 0 {
-                out.push(b"0s");
+                out.prepend(b"0s");
             } else if nanos < 1_000 {
+                out.prepend(b"ns");
                 out.integer(u64::from(nanos));
-                out.push(b"ns");
             } else if nanos < 1_000_000 {
-                out.integer(u64::from(nanos / 1_000));
+                out.prepend("µs".as_bytes());
                 out.fraction(nanos % 1_000, 3);
-                out.push("µs".as_bytes());
+                out.integer(u64::from(nanos / 1_000));
             } else {
-                out.integer(u64::from(nanos / 1_000_000));
+                out.prepend(b"ms");
                 out.fraction(nanos % 1_000_000, 6);
-                out.push(b"ms");
+                out.integer(u64::from(nanos / 1_000_000));
             }
             return out;
         }
+        out.prepend(b"s");
+        out.fraction(nanos, 9);
+        out.integer(seconds % 60);
         let hours = seconds / 3_600;
         let minutes = seconds / 60 % 60;
-        if hours > 0 {
-            out.integer(hours);
-            out.push(b"h");
-        }
         if hours > 0 || minutes > 0 {
+            out.prepend(b"m");
             out.integer(minutes);
-            out.push(b"m");
         }
-        out.integer(seconds % 60);
-        out.fraction(nanos, 9);
-        out.push(b"s");
+        if hours > 0 {
+            out.prepend(b"h");
+            out.integer(hours);
+        }
         out
     }
 }
+
 impl fmt::Display for ClockText {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.0.is_zero() {

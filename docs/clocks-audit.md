@@ -110,3 +110,19 @@ descriptor. Matched end-to-end scheduling/notification latency, subscription
 construction/cancellation, variable-duration workloads and remaining format
 optimization are pending. Do not compare these different isolated operations and
 claim a speedup. Three-OS CI validates builds/logic, not performance across hosts.
+
+## Reverse-buffer follow-up
+
+The later reverse preparation writes integer/fraction digits directly into the
+existing safe forty-byte buffer. It removes separate per-field temporary arrays
+and copies while retaining checked UTF-8, exact-size allocation and the zero path.
+All 269 source outputs and Rust Duration::MAX still pass.
+
+Short runs varied substantially on unchanged zero/Go paths, so all four runs were
+repeated with twenty-times-longer batches; the short runs were retained too. The
+reconstructed forward binary exactly matches its original baseline hash, and the
+current reverse binary matches the measured one. In that longer run, maximum
+shared owned output changes from p50 54.97 to 49.05 ns (Go 32.50); reused output
+changes from 39.13 to 28.25 ns (Go 26.57). Fresh formatting remains slower than
+source in all six fixtures. [Detailed follow-up](clock-format-performance.md).
+These sixteen cases overlap the prior 84-case set, not sixteen new capabilities.

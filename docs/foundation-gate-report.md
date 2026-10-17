@@ -43,6 +43,8 @@ Spinnerの29宣言を対応付け、12プリセット・66フレーム、検証�
 
 同時に、重複IDを拒否する途中で既存timerを失うMateaの不具合を実行して再現しました。設定全体の検証後に表を更新し、元の期限を保持します。既知の失敗ログと3件の回帰テストで、重複・ゼロ周期・件数超過、名前空間とrevision、既存callback保持を検証。モデル状態・effect全体を巻き戻す保証ではありません。
 
+時計の文字列化は、安全な固定バッファへ逆順に直接桁を書き込み、一時配列とコピーを減らしました。269件の参照元出力とRust Duration::MAXを維持。短い測定は未変更の経路にも揺れが大きかったため、旧／新版のバイナリを分離し、両言語の全16ケースを20倍のバッチで再測定しました。最大共有durationのowned書式化はp50 54.97→49.05nsですが、Go 32.50nsには未達です。短い結果も保持し、時計全体の性能判定はpendingのままです。これらは既存84ケース中の16ケースの再測定です。[詳細](clock-format-performance.md)。
+
 `python3 scripts/check_coverage.py`は台帳の参照整合性を検査します。`--gate`を付けた厳格検査は、未対応付け、部分対応、未測定、未解決のRust公開exportがある間は失敗します。通常CIの成功をF5通過と扱いません。
 
 初回候補 `48ea6e978d69838f9b6a55c460368dba2d223f2c` は[Linux/Windows/macOSとMSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38811891109)に成功しました。これは旧スコープの履歴です。前回の実装コミット `8697d5454a39512f4b76df153dca87e7127f4279` も[3 OS + MSRV 1.88のCI](https://github.com/n3dypop/Matea/actions/runs/38819360615)に成功しました。[GitHubから取得したjob/step証拠](evidence/coverage-ci-run.json)を保存しています。WindowsのPTYは対象外です。
@@ -66,6 +68,8 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 Spinner実装 `8ee28f9cf9e0ecec750bbd516937a1d14ceeb5b4` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39010918504)の4ジョブに成功しました。[ジョブ・step証拠](evidence/spinner-ci-run.json)。Unix PTYはLinux/macOSで実行、Windowsはskipです。通常runの参照元再収集もskipで、専用の20構成収集結果とは区別します。
 
 購読改善 `fcf97f1a6e3065d8e01e4f6044191114a4f9c7d0` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39011713186)の4ジョブに成功しました。[ジョブ・step証拠](evidence/subscriptions-ci-run.json)。WindowsのPTYと通常runの参照元再収集はskipです。
+
+逆順時計書式化の追補CIは送信前です。直前の購読改善CIとは実装コミットを分けて記録します。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。

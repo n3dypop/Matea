@@ -134,3 +134,5 @@ Keep reference checkouts clean and at docs/upstream-lock.json revisions. The pre
 No image processing, GPU or real terminal performance claim is made.
 
 Additional [Rust-only subscription before/after costs](subscription-performance.md) measure adapter construction and retained timer tables. These five cases are separate from the 84 matched source fixtures.
+
+A [clock-format follow-up](clock-format-performance.md) repeats the existing sixteen clock cases with forward/reverse binaries and twenty-times-longer batches, retaining the noisy short runs. These overlap the 84 cases.

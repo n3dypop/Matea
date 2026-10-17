@@ -57,3 +57,11 @@ The finite Go formatting fixtures match, but measured fresh-string performance
 remains slower in all six shared cases. Reused-buffer allocation is zero in both
 languages. Preserve before/intermediate/final samples and keep module performance
 review pending; ignored-update microbenchmarks do not cover active scheduling.
+
+Follow-up formatter decision: retain the forward-buffer baseline at
+ac6fb99fac63d61ca3fcc25869b6d32965905b33, then fill the same bounded safe stack
+buffer from the end. Write decimal digits directly and omit trailing fractional
+zeros during that pass, eliminating per-field temporary arrays and their copies.
+Keep checked UTF-8 conversion, exact-size String allocation and the zero fast
+path. Re-run all duration fixtures and compare identical clock workloads; keep
+any regressions and active-scheduling limits explicit. No unsafe code is needed.

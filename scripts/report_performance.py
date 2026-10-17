@@ -316,5 +316,6 @@ lines += ["", "All listed output fixtures match. ASCII transport is independentl
           "Keep reference checkouts clean and at docs/upstream-lock.json revisions. The preparation script verifies pins.",
           "No image processing, GPU or real terminal performance claim is made."]
 lines += ["", "Additional [Rust-only subscription before/after costs](subscription-performance.md) measure adapter construction and retained timer tables, separately from the matched source fixtures."]
+lines += ["", "The [clock-format follow-up](clock-format-performance.md) repeats the existing sixteen clock cases with longer batches and retains all short runs; these overlap the matched case set."]
 (ROOT / "docs/performance.md").write_text("\n".join(lines) + "\n")
 print(f"{len(comparison)} narrow cases; {sum(r['output_equivalent_for_this_fixture'] for r in comparison)} output matches")
