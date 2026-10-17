@@ -9,13 +9,96 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import collect_rustdoc as collector
+import collect_rustdoc_batch as batch
+import fetch_rust_references as fetcher
+import io
+
+
+class DriverTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary=tempfile.TemporaryDirectory(prefix="matea-compiler-driver-")
+        self.addCleanup(self.temporary.cleanup)
+        self.root=Path(self.temporary.name).resolve()
+        self.repo=self.root/"Matea";(self.repo/"docs").mkdir(parents=True)
+        self.pins=[{"name":name,"sha":"a"*40,"remote":"https://example.invalid/"+name+".git"}
+                   for name in ["crossterm","ratatui"]]
+        (self.repo/"docs/upstream-lock.json").write_text(json.dumps(self.pins),encoding="utf-8")
+
+    def batch_arguments(self, reference):
+        return ["collector","--reference",reference,"--references",str(self.root/"references"),
+                "--destination",str(self.root/"audit"),"--toolchain","fixture","--offline"]
+
+    def test_batch_keeps_every_failed_profile_and_cannot_close_feature_scope(self):
+        statuses=iter([0,7,0])
+        def run(command):return subprocess.CompletedProcess(command,next(statuses))
+        with patch.object(batch,"ROOT",self.repo),patch("sys.argv",self.batch_arguments("crossterm")),\
+             patch.object(batch.platform,"platform",return_value="fixture host"),\
+             patch.object(batch.subprocess,"check_output",return_value="host: fixture-target\n"),\
+             patch.object(batch.subprocess,"run",side_effect=run) as calls:
+            self.assertEqual(batch.main(),1)
+        report=json.loads(next((self.root/"audit/reports").glob("*-batch.json")).read_text())
+        self.assertEqual([r["exit_code"] for r in report["results"]],[0,7,0])
+        self.assertFalse(report["all_requested_profiles_passed"])
+        self.assertFalse(report["target_feature_closure_reviewed"])
+        self.assertEqual(len(calls.call_args_list),3)
+        self.assertTrue(all("--offline" in call.args[0] for call in calls.call_args_list))
+
+    def test_windows_batch_reports_unreviewed_backend_exclusion_even_when_profiles_pass(self):
+        with patch.object(batch,"ROOT",self.repo),patch("sys.argv",self.batch_arguments("ratatui")),\
+             patch.object(batch.sys,"platform","win32"),patch.object(batch.platform,"platform",return_value="fixture Windows"),\
+             patch.object(batch.subprocess,"check_output",return_value="host: fixture-target\n"),\
+             patch.object(batch.subprocess,"run",return_value=subprocess.CompletedProcess([],0)):
+            self.assertEqual(batch.main(),0)
+        report=json.loads(next((self.root/"audit/reports").glob("*-batch.json")).read_text())
+        self.assertEqual(len(report["results"]),3)
+        self.assertTrue(report["all_requested_profiles_passed"])
+        self.assertEqual(report["exclusions"][0]["status"],"platform_review_pending")
+        self.assertFalse(report["target_feature_closure_reviewed"])
+
+    def fetch_arguments(self, destination):
+        return ["fetcher","--reference","crossterm","--destination",str(destination)]
+
+    def test_fetch_rejects_owned_or_in_repository_destination_before_git(self):
+        destination=self.root/"references";owned=destination/"crossterm/owner.txt"
+        owned.parent.mkdir(parents=True);owned.write_bytes(b"preserve")
+        for target in [destination,self.repo/"references"]:
+            with self.subTest(target=target):
+                with patch.object(fetcher,"ROOT",self.repo),patch("sys.argv",self.fetch_arguments(target)),\
+                     patch.object(fetcher.subprocess,"run") as run,contextlib.redirect_stderr(io.StringIO()),\
+                     self.assertRaises(SystemExit) as error:
+                    fetcher.main()
+                self.assertEqual(error.exception.code,2);run.assert_not_called()
+        self.assertEqual(owned.read_bytes(),b"preserve")
+
+    def test_network_failure_is_non_success_and_retry_never_resets_partial_checkout(self):
+        destination=self.root/"references"
+        def run(command,**kwargs):
+            if command[1]=="fetch":raise subprocess.CalledProcessError(128,command)
+            return subprocess.CompletedProcess(command,0)
+        with patch.object(fetcher,"ROOT",self.repo),patch("sys.argv",self.fetch_arguments(destination)),\
+             patch.object(fetcher.subprocess,"run",side_effect=run) as calls,self.assertRaises(subprocess.CalledProcessError):
+            fetcher.main()
+        self.assertEqual(len(calls.call_args_list),3)
+        self.assertTrue((destination/"crossterm").is_dir())
+        with patch.object(fetcher,"ROOT",self.repo),patch("sys.argv",self.fetch_arguments(destination)),\
+             patch.object(fetcher.subprocess,"run") as retry,contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):
+            fetcher.main()
+        retry.assert_not_called()
+
+    def test_git_success_with_wrong_pin_never_reports_fetch_success(self):
+        with patch.object(fetcher,"ROOT",self.repo),patch("sys.argv",self.fetch_arguments(self.root/"references")),\
+             patch.object(fetcher.subprocess,"run",return_value=subprocess.CompletedProcess([],0)),\
+             patch.object(fetcher.subprocess,"check_output",return_value="b"*40),\
+             contextlib.redirect_stdout(io.StringIO()) as output,self.assertRaises(AssertionError):
+            fetcher.main()
+        self.assertEqual(output.getvalue(),"")
 
 
 class SnapshotTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="matea-snapshot-test-")
         self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name)
+        self.root = Path(self.temporary.name).resolve()
         self.reference = self.root/"references/crossterm"
         self.reference.mkdir(parents=True)
         (self.reference/"src").mkdir(); (self.reference/"assets").mkdir()
