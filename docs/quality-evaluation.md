@@ -125,6 +125,10 @@ Implementation `203ba5d7c56f3588a2dadb14410e3aafe3ead59f` passed [all three OSes
 この単位の性能を75へ更新しました。List/Table/Formは96+30+6境界構成と4panic位置の
 独立試験を追加し、再現した無効選択を修正したため、実装済み動作を75へ更新しました。
 その他11単位の新しい性能測定は部分証拠の50で、元の範囲を縮めて高評価とはしません。
-97プログラム・40単位で54軸が未達です。LLVM report schema 2はcanonical sourceごとに
+100プログラム・40単位で51軸が未達です。LLVM report schema 2はcanonical sourceごとに
 全compiler instanceを保持し、合計・平均・最大値を作りません。
-新規sourceに対するCI・native検証結果は実行後に追記します。
+compiler抽出2件を加え、追補は78固有workloadとなりました。独立26 compiler監査fixtureと
+全20 profileのgraph一致、3 OSの実source/API経路を確認し、compiler監査の動作・移植性と
+coverage/issuesの移植性を75へ更新しました。内訳は性能27・参照18・動作3・移植性3です。
+出力専用CI recordには計時値を作らず、性能record readerはこの型を拒否します。
+[最新CI・native検証・途中失敗と残件](remaining-optimization.md)。

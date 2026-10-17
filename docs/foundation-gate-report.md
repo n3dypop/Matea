@@ -106,9 +106,21 @@ GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Mate
 
 ### 未測定12単位への追補
 
-[追加76件の測定と修正](remaining-optimization.md)を実施しました。
-完全未測定の性能単位は0ですが、品質の未達は54軸で、参照機能の全件実装・一致も
+[追加78件の測定と修正](remaining-optimization.md)を実施しました。
+完全未測定の性能単位は0ですが、品質の未達は51軸で、参照機能の全件実装・一致も
 未完了です。Foundation F5、横断最適化Stage B、画像エンジン／CUDAのgateは閉じています。
 新しいCIでは通常3 OS/MSRVに加え、任意実行の6 compiler profile jobsと3 source/probe jobsで
 取込、全11 source inventories、84比較出力、補助dispatch、全5報告CLI、issue API経路を
 確認します。CIの時間値を新しい性能結果には使用しません。
+
+100プログラム・40単位の未達内訳は性能27・参照元一致18・動作3・移植性3です。
+[最新の3 OS／MSRV通常CI](https://github.com/n3dypop/Matea/actions/runs/39069122055)は4ジョブ成功。
+[参照専用run](https://github.com/n3dypop/Matea/actions/runs/39068619681)の9参照ジョブも成功し、
+全20 compiler graphの一致を確認しました。この専用runの本体3 OSは測定reportの未同梱で
+失敗しており、同梱後の前者で修正を確認しています。単一runの13/13成功という意味ではありません。
+[sourceとの対応と制約](evidence/optimization/ci-source-bindings.json)。
+
+ローカル30検証、Rust 137＋2 doctest、Python 72、全RGB、12 snapshot、17 Unix PTYに成功。
+新しい7 Miri実行はtarget限定で、全実行順序やFFIの証明ではありません。
+[改善・全分布・不利な結果・未達](remaining-optimization.md)、ADR 0028–0034へ記録しました。
+参照全件実装・性能条件は未達で、Stage B・F5・画像エンジン／CUDAへは進めていません。

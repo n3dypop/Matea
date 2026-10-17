@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "additional_test_executions": 7,
+  "toolchain": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "miri": "miri 0.1.0 (6f5da406b5 2026-10-10)",
+  "runs": [
+    {
+      "log": "terminal-internals/miri-0.log",
+      "log_sha256": "289b92764ad67a942bce23934017fb10bf0a3eb1f0eed51bdadb7efb759b1da4",
+      "passed_tests": 2,
+      "target": "matea-terminal session::tests",
+      "production_source_revision": "5e63b18575a973f1633fa7c3756cd91550dcb426",
+      "source_sha256": {
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40"
+      }
+    },
+    {
+      "log": "terminal-internals/miri-1.log",
+      "log_sha256": "75fab7af322ea0162b399345107072047a932424325af40e1ecace9779f76253",
+      "passed_tests": 2,
+      "target": "matea-terminal signals_unix::tests",
+      "production_source_revision": "5e63b18575a973f1633fa7c3756cd91550dcb426",
+      "source_sha256": {
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f"
+      }
+    },
+    {
+      "log": "collections/miri-0.log",
+      "log_sha256": "a55bafa0e9c5ee53b845824514eacd2e575f0fc2a86649c1333ac9fa571af587",
+      "passed_tests": 1,
+      "target": "matea-widgets --test collections caught_filter_panics_leave_a_valid_visible_prefix_and_selection",
+      "production_source_revision": "49b5a6117e8e9c4cf086be6d3e34f1a2fbe95c2d",
+      "source_sha256": {
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336"
+      }
+    },
+    {
+      "log": "collections/miri-1.log",
+      "log_sha256": "ac3b9f23aad5727dcb1b59a9e39096d77f797a2f35ce9bcce7905da96574082f",
+      "passed_tests": 1,
+      "target": "matea-widgets --test collections forms_validate_all_fields_focus_first_failure_and_clear_stale_submission",
+      "production_source_revision": "49b5a6117e8e9c4cf086be6d3e34f1a2fbe95c2d",
+      "source_sha256": {
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336"
+      }
+    },
+    {
+      "log": "clock-integers/miri.log",
+      "log_sha256": "3d34af1dfc19f493500f5ea2fa58d6a16aa12a514c789cc5ac21f65345bb2f5e",
+      "passed_tests": 1,
+      "target": "matea-widgets --test clocks compact_duration_display_matches_fixed_reference_fixtures",
+      "production_source_revision": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "source_sha256": {
+        "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575"
+      }
+    }
+  ],
+  "limits": [
+    "These earlier completed targeted Miri runs are not repeated; all logs/hashes retained. Targets/source versions are bound here after execution.",
+    "The exact per-run command environment and seed were not retained in these five raw logs; no multi-seed or exhaustive execution claim.",
+    "Portable ownership/journal fixtures do not execute every native FFI/kernel failure or thread schedule."
+  ]
+}

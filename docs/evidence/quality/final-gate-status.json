@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "quality_plan_sha256": "cd2a1f1dddd919b8ea708b2525c4d35ab260d6c4335fd32c9673eb277caf7cd3",
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_quality.py",
+        "--gate"
+      ],
+      "exit_code": 1,
+      "stdout": "100 program files; 40 review units; 51 assessments below 75; all_high=False\n",
+      "stderr": "",
+      "expected": "closed while required assessments/capabilities remain pending"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_coverage.py",
+        "--gate"
+      ],
+      "exit_code": 1,
+      "stdout": "11 reference inventories; 7455 declaration candidates; 6955 unlinked; 11 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 828 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
+      "stderr": "",
+      "expected": "closed while required assessments/capabilities remain pending"
+    }
+  ]
+}

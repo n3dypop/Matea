@@ -1,0 +1,39 @@
+JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+ValueError: review rustdoc format 999; expected 61
+
+======================================================================
+ERROR: test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code (__main__.SnapshotTests) (mode='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/test_source_snapshot.py", line 84, in test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code
+    self.assertEqual(collector.main(),1)
+  File "${REPOSITORY}/scripts/collect_rustdoc.py", line 189, in main
+    data = raw.read_bytes()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1249, in read_bytes
+    with self.open(mode='rb') as f:
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1242, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1110, in _opener
+    return self._accessor.open(self, flags, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/cf/3bzvt6h1395clx_42fxpsbw00000gn/T/matea-snapshot-test-em0flfbu/audit/target/crossterm/default/fixture-target/doc/crossterm.json'
+
+======================================================================
+ERROR: test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code (__main__.SnapshotTests) (mode='recursive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/test_source_snapshot.py", line 84, in test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code
+    self.assertEqual(collector.main(),1)
+  File "${REPOSITORY}/scripts/collect_rustdoc.py", line 191, in main
+    graph = exports(json.loads(data), snapshot)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1093, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1097, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1152, in _execute_mock_call
+    raise effect
+RecursionError: fixture nesting
+
+----------------------------------------------------------------------
+Ran 1 test in 0.205s
+
+FAILED (errors=2)

@@ -1,24 +1,26 @@
 # 未測定12単位の測定と改善
 
 個別評価Stage Aを継続中。全項目高評価・Stage B・F5の条件は未達です。
-現在は97プログラム、40評価単位、54軸が75未満です。
+現在は100プログラム、40評価単位、51軸が75未満です。
 完全未測定の性能単位は12から0になりました。11単位は部分証拠の50、
 facadeの性能は現在の再公開APIに限定して75へ更新しました。
 List/Table/Formの実装済み動作も追加の独立境界試験で75へ更新しました。
-性能27、参照元一致18、動作4、外部ツールの移植性5が引き続き未達です。
-移植性の更新は新しいCIの実行結果を確認してから行います。
+性能27、参照元一致18、動作3、外部ツールの移植性3が引き続き未達です。
+compiler収集の動作・移植性、台帳／課題処理の移植性を、後述の実行証拠に基づいて75へ更新しました。
 
 ## 測定対象
 
-追加した固有ケースは76件です。すべて単一macOS arm64上で31標本を保持しました。
-コンパイル、テスト、Miri、LLVM計測と性能測定を重ねていません。
+先行分76件にcompiler抽出2件を加え、固有ケースは78件です。すべて単一macOS arm64上で31標本を保持しました。
+比較にはコンパイル・テスト・Miri・LLVM計測から分離した実行を使っています。
+分離を確認できなかった実行も、生データと除外理由を保存してから再測定しています。
 
 | 対象 | 件数 | 検査範囲・限界 |
 | --- | ---: | --- |
 | ANSI・モード・Unix signal | 33 | private production sourceを直接使用。色とcommandは既存byte sink。モードはliteral全出力とlogical write/flush数。signalは隔離プロセス内の実sigaction。実端末の遅延・物理write数は未測定 |
 | 端末イベントループ・facade | 15 | mock backendで開始、終了、idle、resize、キー、5種のI/O失敗。復旧回数と状態を検査。facade/module/preludeの型と関数別名を検査し、同じ文字列構築を3経路で測定 |
 | Goソース監査CLI | 4 | Bubble Tea 405、Bubbles 873、Ultraviolet 968、独立生成10,000宣言。起動からpipe出力・終了まで、改善前後の全byteを照合 |
-| examples・収集・検証・報告 | 24 | release snapshot 12、独立oracle 5、全20compiler profileの取込計画、全824保存issueのmerge、台帳CLI、全84ケースの報告生成、品質対象列挙、46ケースの厳密比較、Go84ケースの読込 |
+| examples・収集・検証・報告 | 24 | release snapshot 12、独立oracle 5、全20compiler profileの取込計画、全841保存issueのmerge、台帳CLI、全84ケースの報告生成、品質対象列挙、46ケースの厳密比較、Go84ケースの読込 |
+| compiler抽出 | 2 | 保存したnative Crossterm/allとRatatui Core/allのJSON読込・解析・抽出・canonical出力。既存graphの全fieldと照合。compiler実行・通信は対象外 |
 
 コンパイラ取込だけを改善後に再測定しました。他の23経路は繰り返していません。
 [全出力・入力・Gitソースhashの照合結果](evidence/optimization/remaining-report.json)、
@@ -67,7 +69,7 @@ GoのBubble Tea経路のp95は13.31→13.87msへ悪化しており、速度の�
 判断は[ADR 0028](decisions/0028-terminal-ownership-and-phase-flushing.md)、
 [0029](decisions/0029-research-evidence-refresh-integrity.md)、
 [0030](decisions/0030-filter-panic-state-guarantee.md)に記録しました。
-新規の6件のtargeted Miriは端末所有権・journal・filter panic・Formを対象とします。
+新規の7件のtargeted Miriは端末所有権・journal・filter panic・Formを対象とします。
 FFI syscall失敗や全実行順序をMiriで証明したという意味ではありません。
 
 ## 継続する評価
@@ -75,5 +77,71 @@ FFI syscall失敗や全実行順序をMiriで証明したという意味では�
 [明示台帳](quality-plan.json)の未達軸を残しています。全94参照module groupのうち
 未対応・未連結の公開機能、platform/feature closure、実際の入力・timer・effect、
 常駐メモリ、故障経路、同じ意味と入出力での参照元比較が必要です。
-今回の76件は部分経路の測定であり、この範囲を縮めたり閾値を変えたりしていません。
+今回の78件は部分経路の測定であり、この範囲を縮めたり閾値を変えたりしていません。
 全体最適化Stage Bと、画像エンジン／CUDAへの実装着手は行っていません。
+
+
+## 時計整形の追加検証
+
+既存16ケースを200000反復・31標本で再実行しました。整数整形crate利用、2桁table、
+親関数だけのinline化は十分な改善がなく、全データを残して不採用としました。
+最終案は元の算法・UTF-8検証・所有文字列の型を保ち、private helper全体のinline可能性を
+渡します。同じ場所で再構築したbaseline binaryは最初のSHA256と一致し、
+old/new/new/oldの順でも再測定しました。再利用bufferのns表示は13.89→12.89nsと
+13.66→12.99nsで改善しましたが、所有文字列や最大値は混在しています。
+text sectionは1600byte増えました。速度の一律改善・最大化・clock全体の高評価は主張しません。
+[全分布と不採用・除外理由](evidence/optimization/clock-integers/report.json)、
+[ADR 0031](decisions/0031-reviewed-integer-formatting-reuse.md)。これは16/84既存ケースへの追補で、
+新しい参照機能やStage Bの試験数には加えていません。
+
+## 証拠の追加検証
+
+compiler snapshotはRust以外も含む全追跡入力とmodeを照合し、コピー完了後に公開します。
+出力欠落・破損、未対応形式、再帰エラー、起動失敗・timeout、依存tree失敗も非成功として
+記録します。16件の故障・境界試験は実compiler／通信をmockした試験で、実profile収集とは区別します。
+判断は[ADR 0032](decisions/0032-complete-atomic-reference-snapshots.md)に記録しました。
+
+台帳の重複caseによる失敗上書きと、文字列`"false"`の一致扱いを再現して修正しました。
+古いSHA、証拠の欠落・外部path、重複JSON field、compiler identity/key/exitの不整合を拒否し、
+正常な部分台帳でもgateを閉じる10件の独立試験を追加しています。
+[ADR 0033](decisions/0033-strict-capability-evidence-validation.md)、
+[改善前の失敗ログ](evidence/optimization/coverage-guard/before.log)。
+
+既存の17件の課題評価には、参照SHA・upstream更新時刻・証拠hashを追加しました。
+証拠の変更で評価をpendingへ戻し、4件の部分評価も閉鎖条件へ含めます。
+総数841件のうち824未調査と4部分評価の計828件に作業が残ります。
+これは新しい17件の再現を行ったという意味ではありません。
+
+厳密な台帳検証のJSON処理は、同じ検査・入力・出力でp50 634.10→532.12ms、
+p95 680.29→539.67msでした。[全標本と除外した重複実行](evidence/optimization/coverage-guard/report.json)。
+検査の弱い旧版との速度比較には使用しません。
+
+compiler抽出は、同じfilenameのpath解決を抽出内で再利用します。
+Crosstermはp50 103.73→95.68ms、Ratatui Coreは233.30→192.73msとなり、
+それぞれgraph全体が一致しました。Python traced peakは変わらず、RSSは未測定です。
+[ADR 0034](decisions/0034-local-source-path-reuse-in-api-extraction.md)、
+[全分布・compiler入力hash・別実行profile](evidence/optimization/compiler-extraction/report.json)。
+
+## 最終検証と残件
+
+ローカルの30受入検証、Rust 137テスト＋2 doctest、Python 72テストの通常／最適化実行、
+全RGB検証、12 snapshot、17 Unix PTYが成功しました。LLVMは56 source／61 compiler instanceを
+区別して保持し、出力専用84 recordも検査しました。追加Miriの7実行は
+[対象・source hash・制約](evidence/optimization/remaining-miri-context.json)へ結び付けています。
+
+[最新の3 OS＋MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39069122055)は4ジョブ成功です。
+[参照元の専用run](https://github.com/n3dypop/Matea/actions/runs/39068619681)では参照9ジョブが成功し、
+本体3 OSは未同梱の測定reportによる証拠欠落で失敗しました。そのreportは同梱済みで、
+前者が修正後の結果です。単一runの13ジョブ成功とは表現しません。
+[全programのsource hashによる対応付け](evidence/optimization/ci-source-bindings.json)で、
+現在の本体と参照実行のprogramを確認できます。参照6ジョブの全20 graphは
+[以前のcohortと全fieldが一致](evidence/optimization/compiler-extraction/ci-cohort-comparison.json)しました。
+Windowsの改行設定による履歴patchの復元失敗も、Git設定を局所指定して修正しています。
+途中の失敗は[CI履歴](evidence/optimization/ci-attempts/)へ保持しています。
+
+この追加証拠でcompiler収集の動作・移植性と、台帳／課題処理の移植性を75へ更新しました。
+100プログラム・40単位で未達は51軸です。内訳は性能27、参照元一致18、動作3、移植性3で、
+平均や評価範囲の縮小は用いていません。GoのWindows計時、測定driverやLLVMのOS別実行、
+残る故障経路・性能分布・RSSは未確認分を維持します。参照宣言6,955件とcompiler keyの
+6,902件（重複する集合）は未対応付けで、91 module groupもpendingです。
+Stage A、Stage B移行条件、Foundation F5の条件は引き続き未達です。

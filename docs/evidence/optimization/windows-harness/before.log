@@ -1,0 +1,13 @@
+....F.
+======================================================================
+FAIL: test_historical_patch_reconstruction_preserves_bytes_with_windows_git_defaults (__main__.RecordTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/test_performance_records.py", line 23, in test_historical_patch_reconstruction_preserves_bytes_with_windows_git_defaults
+    self.assertEqual(source.read_bytes(),b"after\n")
+AssertionError: b'after\r\n' != b'after\n'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.013s
+
+FAILED (failures=1)
