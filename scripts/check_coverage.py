@@ -10,10 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def load_json(path):
     def unique_fields(pairs):
-        value = {}
-        for key, item in pairs:
-            require(key not in value, "duplicate JSON field: " + key)
-            value[key] = item
+        # JSON object keys are strings. Building the dictionary in C and
+        # comparing lengths rejects every duplicate without a Python call and
+        # temporary error string for each field in large compiler graphs.
+        value = dict(pairs)
+        require(len(value) == len(pairs), "duplicate JSON field")
         return value
     def invalid_constant(value):
         raise ValueError("nonfinite JSON constant: " + value)
