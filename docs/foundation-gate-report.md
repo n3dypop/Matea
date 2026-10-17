@@ -55,7 +55,7 @@ motion・paginator改善 `9ce1b4ff51405a5f5114f444729c057ad1a356ca` は[3 OS + R
 
 最新のスクロール領域の追補修正 `80b3570e18e8ed3849006e80ecac4b30bfcb35a0` は[Linux・Windows・macOS + MSRV CI](https://github.com/n3dypop/Matea/actions/runs/38856755912)に成功しました。[ジョブ・step証拠](evidence/margin-ci-run.json)。独立再生oracleの3回帰テストと、独自スクロール領域での初回・復旧出力も通常CIへ含めています。参照元再収集ジョブはこの通常runではskipで、上記の専用runが証拠です。
 
-時計実装の3 OS + MSRV CIは送信前です。直前のスクロール領域修正の成功を、新実装の成功とは扱いません。
+時計実装 `783b1e77f489fdd7a47e103c9c0df2d6975ef0be` は[Linux・Windows・macOS + MSRV 1.88 CI](https://github.com/n3dypop/Matea/actions/runs/39010247644)の4ジョブに成功しました。[ジョブ・step証拠](evidence/clocks-ci-run.json)。Unix PTYはLinux/macOSで実行し、Windowsではskipです。参照元再収集はこの通常runではskipです。
 
 1. 全宣言から利用者機能への対応付け、Rustマクロ・再公開・platform/feature条件と基盤依存の範囲（128宣言辺）の解決、全機能の実装と正しさの証拠。
 2. 全モジュールの条件を揃えた性能検証、課題分析、遅い経路・出力量の改善と再測定。現測定は一台のmacOS arm64、メモリsinkであり、実端末応答の検証ではありません。
