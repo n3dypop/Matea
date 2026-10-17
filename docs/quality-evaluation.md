@@ -101,4 +101,12 @@ a successful execution cannot prove soundness or explore all thread schedules.
 Do not loosen thresholds or drop adverse cases to make the report green.
 Address the generated below-threshold queue with independent regression tests
 and fresh measurements, then update only assessments supported by that evidence.
+The initial four-job CI succeeded but skipped one Go fixture on macOS. The
+[initial excerpt](evidence/quality/initial-source-auditor-ci-excerpt.log) preserves
+that gap. Pin official setup-go v6 to commit
+`924ae3a1cded613372ab5595356fb5720e22ba16`, install Go 1.26.0 and make a missing Go
+CLI fail the fixture. Require fresh CI with all two source-auditor cases and all
+16 optimized Python cases executed on every OS. Windows PTY and the optional
+reference recollection remain separate exclusions.
+
 F5 and the image-engine/CUDA gate remain closed.

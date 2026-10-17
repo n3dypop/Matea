@@ -41,8 +41,8 @@ pub trait T { #[cfg(feature="member")] fn run(); }
                 self.assertIn("windows", entry["cfg"])
         self.assertNotIn("nested::S.private", [e["symbol"] for e in entries])
 
-    @unittest.skipUnless(shutil.which("go"), "Go CLI unavailable; source-auditor execution remains pending")
     def test_go_platform_exports_embedded_types_and_benchmarks(self):
+        self.assertIsNotNone(shutil.which("go"), "Go is required to execute the source-auditor fixture")
         with tempfile.TemporaryDirectory() as folder:
             Path(folder, "module_windows.go").write_text('''//go:build windows && amd64
 package fixture
