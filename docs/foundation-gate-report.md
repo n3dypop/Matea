@@ -3,6 +3,10 @@
 状態: **F0–F4を継続中。F5へ未到達、承認依頼は保留。**
 オーナーが全参照元・基盤ライブラリの公開機能、モジュールごとの性能比較と課題分析を追加したため、以前の小規模候補は受け入れ対象から外しました。
 
+最新の評価範囲は103プログラム・41単位、未達53軸です。追加カーソルの
+[最終3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39075023243)は7ジョブ成功ですが、
+参照公開機能の全件実装と性能条件は未達です。[現在の証拠・残件](remaining-optimization.md)。
+
 ## 現在の範囲と進捗
 
 全実装の再評価として、86プログラムファイルを40評価単位へ登録し、Rust設計・メモリ安全性・動作・参照元一致・性能・移植性の6軸を採点しました。[評価項目と判定基準](quality-evaluation.md)、[ファイル別の証拠・未達項目](evidence/quality/report.json)。未測定を高評価とせず、平均点で不合格を隠しません。通常CIの台帳整合性チェックと、全軸75点以上を要求する`check_quality.py --gate`は別です。全高評価には未到達です。
@@ -124,3 +128,13 @@ GitルートはMatea/、remoteは[n3dypop/Matea](https://github.com/n3dypop/Mate
 新しい7 Miri実行はtarget限定で、全実行順序やFFIの証明ではありません。
 [改善・全分布・不利な結果・未達](remaining-optimization.md)、ADR 0028–0034へ記録しました。
 参照全件実装・性能条件は未達で、Stage B・F5・画像エンジン／CUDAへは進めていません。
+
+仮想カーソルでは21宣言を対応付け、点滅・モード・focus・文字入力合成とinline表示を実装しました。
+新規6統合試験、最終6 Miri、ローカル30検証、Rust 143＋2 doctest、Python 72、全RGB、
+13 snapshot、18 Unix PTYが成功。LLVMは59 source／64 compiler instanceを区別しています。
+[ADR 0035](decisions/0035-owned-virtual-cursor-and-expiring-notifications.md)、
+[全分布と失敗を含む証拠](evidence/cursor/performance/report.json)、
+[CI source対応](evidence/cursor/ci-source-bindings.json)を記録しました。
+新規独立単位の性能・参照一致は50のため、現在の未達は53軸です。
+参照候補6,934件とcompiler key 6,902件（重複あり）の対応付け、12部分capability、
+91 module groupなどが残り、全体最適化・F5への移行承認を求める段階ではありません。

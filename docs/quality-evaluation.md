@@ -26,7 +26,8 @@ The assessments are conservative reviewer judgments, with limitations in
 each row. Passing a native test does not establish reference parity. Passing an
 inventory check does not establish a passing quality gate. Tests/configuration
 have no production latency acceptance criterion, so performance is N/A there;
-auditors, report programs and examples still have unmeasured work and receive 0.
+auditors, report programs and examples need their own performance evidence;
+entirely unmeasured units receive 0 and partially measured units remain at 50.
 
 ## Evaluation and test items
 
@@ -34,9 +35,9 @@ auditors, report programs and examples still have unmeasured work and receive 0.
 | --- | --- | --- |
 | Rust design | Are state and resources owned once? Can invalid states be represented? Are borrows/lifetimes simple, cancellation and errors explicit, and extension contracts independent? | All-target Clippy with warnings denied, documentation, compile-fail immutability, standalone widget; targeted runtime identity/deadline tests. Public API/registry review remains open. |
 | Memory safety | Is unsafe isolated and justified? Are arithmetic, indexing, UTF-8 slices, aliasing, mutation, cleanup and thread ownership valid? | Safe-code crate policies, bounded paint/layout models, exhaustive Unicode scalar policy, targeted Miri. The Unix sigaction boundary and performance-only System allocator wrapper are explicitly unsafe; transitive dependencies are not asserted unsafe-free. |
-| Behavior | Are boundaries, empty input, control characters, wide glyph overlap, resize, stale messages, failures/panics and recovery correct? | Debug/all-target/release tests, snapshots, independent terminal trace interpreters, 17 Unix PTY cases, graphics protocol round trips, before/fix regression logs. These do not validate every physical emulator. |
+| Behavior | Are boundaries, empty input, control characters, wide glyph overlap, resize, stale messages, failures/panics and recovery correct? | Debug/all-target/release tests, snapshots, independent terminal trace interpreters, 18 Unix PTY cases, graphics protocol round trips, before/fix regression logs. These do not validate every physical emulator. |
 | Reference equivalence | Are semantics/outputs equal at the pinned SHAs? Are deliberate improvements documented and unavailable features visible? | Finite Harmonica/paginator/key groups, clock/spinner fixtures and matched performance output checks. Revised whole-reference coverage remains incomplete; see the separate declaration/compiler ledger. |
-| Performance | Are constructor and complete pipeline costs both measured? Are p50/p95, allocations, output bytes and regressions retained? | 84 reference-matched finite cases, 5 subscription and 20 scene Rust-only cases, 12 new Viewport before/after cases; long clock repeats overlap the 84. No instrumented timing is performance evidence. Missing resident memory, scheduling/application latency and module workloads remain pending. |
+| Performance | Are constructor and complete pipeline costs both measured? Are p50/p95, allocations, output bytes and regressions retained? | Original 84 reference-matched finite cases plus seven virtual-cursor cases, 5 subscription and 20 scene Rust-only cases, 12 Viewport before/after cases; long clock repeats overlap the 84. No instrumented timing is performance evidence. Missing resident memory, scheduling/application latency and module workloads remain pending. |
 | Portability | Does this exact implementation run on Linux, Windows, macOS and MSRV? Are terminal/FFI limits explicit? | Foundation CI plus MSRV. Native host coverage/Miri is additional evidence, not another OS. Windows PTY and physical emulator behavior remain unverified. |
 
 ## Redevelopment performed
@@ -132,3 +133,13 @@ compiler抽出2件を加え、追補は78固有workloadとなりました。独�
 coverage/issuesの移植性を75へ更新しました。内訳は性能27・参照18・動作3・移植性3です。
 出力専用CI recordには計時値を作らず、性能record readerはこの型を拒否します。
 [最新CI・native検証・途中失敗と残件](remaining-optimization.md)。
+
+## 仮想カーソル追加後の評価
+
+21公開宣言を対応付けたVirtualCursor、文字入力との合成、inline表示修正を追加しました。
+現在の範囲は103プログラム・41単位、未達53軸（性能28・参照19・動作3・移植性3）です。
+51→53は新しい独立単位の性能／参照一致が部分評価であるためです。閾値や既存範囲は変更していません。
+新規6統合試験、Miri、13 snapshot、18 Unix PTYと
+[3 OS・MSRV・参照照合7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39075023243)に成功しました。
+制御の改善、遅いGo比、p95悪化、全分布は[追補](remaining-optimization.md)に保持しています。
+F5と横断最適化の条件は未達で、画像エンジン／CUDAは着手していません。

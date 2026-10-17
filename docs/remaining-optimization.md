@@ -1,11 +1,13 @@
 # 未測定12単位の測定と改善
 
 個別評価Stage Aを継続中。全項目高評価・Stage B・F5の条件は未達です。
-現在は100プログラム、40評価単位、51軸が75未満です。
+現在は103プログラム・41評価単位で53軸が75未満です。性能28、参照元一致19、動作3、移植性3です。
+新規カーソルを独立単位へ加えたため、従来の51軸に部分評価2軸が加わりました。
+カーソル追加前は100プログラム、40評価単位、51軸が75未満でした。
 完全未測定の性能単位は12から0になりました。11単位は部分証拠の50、
 facadeの性能は現在の再公開APIに限定して75へ更新しました。
 List/Table/Formの実装済み動作も追加の独立境界試験で75へ更新しました。
-性能27、参照元一致18、動作3、外部ツールの移植性3が引き続き未達です。
+その時点の内訳は性能27、参照元一致18、動作3、外部ツールの移植性3です。
 compiler収集の動作・移植性、台帳／課題処理の移植性を、後述の実行証拠に基づいて75へ更新しました。
 
 ## 測定対象
@@ -122,7 +124,7 @@ Crosstermはp50 103.73→95.68ms、Ratatui Coreは233.30→192.73msとなり、
 [ADR 0034](decisions/0034-local-source-path-reuse-in-api-extraction.md)、
 [全分布・compiler入力hash・別実行profile](evidence/optimization/compiler-extraction/report.json)。
 
-## 最終検証と残件
+## カーソル追加前の検証と残件
 
 ローカルの30受入検証、Rust 137テスト＋2 doctest、Python 72テストの通常／最適化実行、
 全RGB検証、12 snapshot、17 Unix PTYが成功しました。LLVMは56 source／61 compiler instanceを
@@ -145,3 +147,56 @@ Windowsの改行設定による履歴patchの復元失敗も、Git設定を局�
 残る故障経路・性能分布・RSSは未確認分を維持します。参照宣言6,955件とcompiler keyの
 6,902件（重複する集合）は未対応付けで、91 module groupもpendingです。
 Stage A、Stage B移行条件、Foundation F5の条件は引き続き未達です。
+
+## 仮想カーソルの実装・測定
+
+未対応のBubbles cursor groupを調査し、21公開宣言を新しいVirtualCursorと文字入力への
+合成APIへ対応付けました。点滅・固定・非表示、focus/blur、正の周期、style、表示文字を
+実装しています。任意のLip Gloss decoratorや実際のtimer配送比較は部分対応のままです。
+[監査と明示した差分](cursor-audit.md)、[ADR 0035](decisions/0035-owned-virtual-cursor-and-expiring-notifications.md)。
+
+参照元では、期限後の通知を保持したまま固定→点滅へ戻すと、初期化broadcastを処理する
+前に古い通知を受理する場合がありました。公開APIと実timer callbackで再現しています。
+Mateaは制御時に世代を更新し、古い通知を拒否します。参照元の過去のclosure raceは
+固定リビジョンでは修正済みで、未修正の問題とは扱いません。
+
+7つの追加workloadについて意味・全出力・戻り値を照合し、各31標本を採取しました。
+この追補の固有測定は78→85件、参照元比較の集合は既存84＋新規7ケースです。
+制御の初版はGoより遅かったため、resetとstart/stopを1回の時刻・世代検査を伴う遷移へ
+まとめました。旧binaryを同じsource pathで再構築し、元のSHA256一致も確認しました。
+
+| 経路 | 旧→新の中央値（ns） | 注意 |
+| --- | --- | --- |
+| 固定focus/blur・初回比較 | 5.83→3.64 | Goは2.43→2.37。Mateaは追加の時刻・世代保証を持つ |
+| 非表示focus/blur・初回比較 | 5.95→3.86 | Goは2.43→2.41。双方0割り当て |
+| 固定・旧/新/新/旧の順序反転 | 5.94 / 3.64 / 3.55 / 5.95 | 同一hashのbinary、同じ全出力 |
+| 非表示・同じ順序反転 | 5.55 / 3.64 / 3.64 / 5.56 | 全標本を保持 |
+
+4描画ケースの初回中央値はMatea 298–544ns、Go 1,879–2,199nsでした。GoのANSIから
+セルへの処理とMateaの構造化Viewを含めた限定比較で、guard単体の倍率ではありません。
+改善後のASCII描画p95は一組で311→482nsへ悪化し、順序反転でも描画の結果は混在しました。
+制御の改善を全描画の高速化や性能最大化とは主張しません。
+[最終版を含む10実行分の全分布・hash・制約](evidence/cursor/performance/report.json)。
+
+一行表示の追加レビューでは改行・CRLF・タブの差分も修正し、修正前の実装に新試験を
+適用して失敗を確認しました。最終6試験を通常・release・Miriで検証しています。
+Miriは初版5・遷移改善5・最終6実行を保存し、ソースとの対応とseedを記録しました。
+ローカル30受入チェック、Rust 143＋2 doctest、
+Python 72、全RGB、13 snapshot、18 Unix PTYが成功。LLVMは59 source／64 compiler instanceを
+別々に保持します。既存の文字入力14試験・時計8試験と実参照元の境界ケースも再確認し、
+変更でstaleとなった既存10 issueレビューの証拠を更新しました。新たな10件の問題発見や
+実端末の再現を行ったという意味ではありません。
+
+一行正規化を含む最終版でも7ケースを再測定し、全出力の一致を確認しました。
+固定／非表示制御の中央値は3.43／3.43ns、Goは2.42／2.42nsでした。
+描画4件は286–535nsでした。文字設定そのものやconstructorの性能は、この7件の対象外です。
+
+[最終CI](https://github.com/n3dypop/Matea/actions/runs/39075023243)は本体3 OS・MSRV・参照照合3 OSの
+7ジョブ成功です。[全103 programのsource対応](evidence/cursor/ci-source-bindings.json)、
+[3 OS artifactの独立照合](evidence/cursor/ci-reference-comparison.json)を保存しました。
+参照compiler profileは再収集せず、同一の5 programで収集済みの20 profileを継続使用しています。
+現在のscore更新後も[品質・公開機能gateは実際にexit 1](evidence/quality/final-gate-status.json)です。
+ローカル検証時のquality logは更新前の54軸を記録し、CI後の移植性更新で53軸となりました。
+参照元宣言は521件が連結、6,934件は未対応付けで、compiler key 6,902件とは重複する集合です。
+12部分capability、91 pending module group、828 issueと115 marker、feature/signature閉包が残ります。
+Stage A完了・Stage B移行・Foundation F5承認の条件は満たしていません。

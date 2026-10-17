@@ -16,7 +16,7 @@ remain partial; linking declarations does not close their equivalence review.
 | BlinkMsg, Update | opaque ClockTick, schedule, update; foreign, duplicate, old-generation and backward notifications rejected |
 | method Blink, function Blink | owner-scoped restart/schedule/subscription; explicit focus/restart replaces the global initial broadcast |
 | Focus, Blur | explicit controls and injected-time variants; reset phase and remove inactive schedules |
-| SetChar | retained owned String with reusable capacity and borrowed text accessor |
+| SetChar | retained owned String with reusable capacity and borrowed text accessor; default inline LF/CRLF removal and four-space tab expansion |
 
 [Executed source observations](evidence/cursor-source-edges.json) use public
 constructors and actual timer callbacks, without reflection or upstream edits.
@@ -39,6 +39,14 @@ editing, as demonstrated by the `cursor` example. InputStyles controls input
 colors. Password, hidden echo, suggestions, combining characters, CJK, emoji,
 native cursor hints, clipping and escape sanitization have integration checks.
 
+An additional source fixture checks LF, CRLF, tabs, Unicode and empty multiline
+text. The initial Matea implementation incorrectly retained structural newlines
+in a normal View. Normalize to one line when setting cursor text, matching
+Lip Gloss's default Inline policy before cell clipping; tabs expand to four
+spaces. Other control characters retain Matea's safe View sanitization policy,
+and arbitrary tab-width/style transforms remain part of the shared style work.
+This regression brings the cursor integration suite to six tests.
+
 Seven optional `--virtual-cursor` cases compare fresh 16x1 grapheme cells plus
 owned plain text/reverse flags, nonblinking focus/blur, and ignored foreign
 notifications. Both languages return exactly the same semantics, output and
@@ -46,3 +54,13 @@ first value. The original 84-case cohort remains unchanged. No active Go timer
 is compared to a Rust descriptor. Basic cell rendering is not arbitrary style
 equivalence, and control comparisons include Matea's stronger time/epoch guards.
 See [ADR 0035](decisions/0035-owned-virtual-cursor-and-expiring-notifications.md).
+
+[All distributions and source/binary hashes](evidence/cursor/performance/report.json)
+retain the initial pair, improved pair and balanced Rust repeats. Initial four
+render medians are 298–544 ns in Matea and 1,879–2,199 ns in source; this includes
+the language-specific structured/ANSI-to-cell paths described above. Initial
+static/hidden control medians of 5.83/5.95 ns improve to 3.64/3.86 ns, then repeat
+at 3.55–3.64 ns in balanced order. Go controls remain around 2.4 ns. The improved
+ASCII render p95 increases from 311 to 482 ns in one pair, and other render
+repetitions are mixed. Do not infer a rendering improvement from the control
+change, allocator bytes as residency, or these seven fixtures as module parity.

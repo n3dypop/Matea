@@ -43,3 +43,21 @@ example supplies editing restarts and focus handling; snapshot and Unix PTY
 checks exercise authoring and terminal restoration. Source timer fixtures and
 seven matched finite render/control workloads provide bounded evidence; full
 timer delivery, resident memory and module performance remain open.
+
+A sixth regression follows an executed source boundary check: cursor text must
+stay inline. Normalize LF/CRLF away and expand tabs to the reference's default
+four spaces at text replacement, keeping retained capacity and a fast path for
+ordinary text. Rendering does not repeatedly normalize unchanged cursor text.
+The source does richer style transforms; only the default inline policy is
+covered here, with other controls still using Matea's safe View policy.
+
+The first measurement found nonblinking focus/blur slower than Go. Replace
+reset-then-start/stop with a private checked clock transition that resets phase,
+sets running state and advances the generation once. Keep backward-time rejection
+and generation exhaustion checks. This exposes no new public clock API. Balanced
+old/new/new/old repetitions with byte-identical reconstructed release binaries
+reduce static control p50 from 5.94/5.95 to 3.64/3.55 ns and hidden control from
+5.55/5.56 to 3.64/3.64 ns. Both allocate zero; source controls remain faster at
+about 2.4 ns and provide fewer time/epoch guarantees. Rendering results are mixed,
+including an adverse p95; retain all samples. This is a measured control-path
+improvement, not a whole-module high performance verdict.

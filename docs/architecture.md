@@ -127,3 +127,13 @@ provisionally Into<Text>; custom Into<String>-only conversions need adaptation.
 The facade/counter and independent widget demonstrate ownership, theme/focus and
 formatting ergonomics. [ADR 0022](decisions/0022-owned-normalized-scene-text.md),
 [API](text-api.md), [measured costs and regressions](view-performance.md).
+
+VirtualCursor owns one non-Clone clock identity and blink phase. Typed modes and
+positive periods avoid invalid settings; controls invalidate queued generations
+and reject backward time before mutation. Elapsed time determines coalesced blink
+phase. Reduced motion, static mode and blur omit subscriptions. TextInput borrows
+this state through view_with_cursor so text models can still clone independently;
+the owner forwards focus/ticks and restarts after editing. See
+[ADR 0035](decisions/0035-owned-virtual-cursor-and-expiring-notifications.md) and
+the executable `cursor` example. Structured rendering retains compositor ownership
+of Unicode, clipping, fallback and native cursor hints.

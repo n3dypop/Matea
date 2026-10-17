@@ -7,6 +7,7 @@ Matea is an experimental framework inspired by Charm's approachable developer ex
 ```sh
 cargo run -p matea --example counter
 cargo run -p matea --example dashboard
+cargo run -p matea --example cursor
 # Plain non-TTY output:
 cargo run -p matea --example form -- --snapshot
 ```

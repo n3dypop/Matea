@@ -14,6 +14,7 @@ cargo run -p matea --example pagination
 cargo run -p matea --example help
 cargo run -p matea --example clocks
 cargo run -p matea --example spinners
+cargo run -p matea --example cursor
 cargo run -p matea-example-external-widget
 ```
 
@@ -74,3 +75,13 @@ The example adds a twelfth snapshot and a sixteenth Unix PTY control/cleanup cas
 The counter and independent widget use format_args! through owned Text, without a
 separate String allocation for short formatted content. A lifecycle formatter
 error joins the direct view/update panic checks in Unix PTY cleanup tests.
+
+## Virtual cursor composition
+
+`cargo run -p matea --example cursor` composes independently owned VirtualCursor
+state with a clonable TextInput. Editing restarts the blink phase; terminal focus
+events focus/blur it. Ctrl+B switches blinking/static mode, Ctrl+R toggles reduced
+motion and Esc exits. Subscription reconciliation removes inactive timers; native
+cursor mode remains a separate TextInput setting. Use `-- --snapshot` for plain
+non-TTY output. This example is covered by snapshots and Unix PTY restoration
+checks, without claiming physical emulator or IME validation.

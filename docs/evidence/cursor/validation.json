@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "source_revision": "97fd9b178bf429155cea30f33197ff11f572e9a4",
+  "scope": "Native macOS only; no other OS or complete public API parity inferred",
+  "acceptance": {
+    "checks": 30,
+    "all_passed": true,
+    "report": "docs/evidence/local-validation.json",
+    "report_sha256": "8fbffcb16b1d651fe8f9888996e49d71679028cd92f8fb6c5916b4885732b0ae",
+    "rust_tests": 143,
+    "doctests": 2,
+    "python_tests_normal_and_optimized": 72,
+    "snapshot_examples": 13,
+    "unix_pty_cases": 18
+  },
+  "llvm": {
+    "unique_sources": 59,
+    "compiler_instances": 64,
+    "report": "docs/evidence/quality/rust-execution-coverage.json",
+    "report_sha256": "dd4fdc8420eec594f7fb3df1dcb9a8780572808e16fb3748b1d87cc340ae79b8"
+  },
+  "targeted_miri": {
+    "unique_tests": 6,
+    "final_run": "docs/evidence/cursor/miri-context.json",
+    "initial_run": "docs/evidence/cursor/initial-miri-context.json",
+    "transition_run": "docs/evidence/cursor/transition-miri-context.json",
+    "all_runs_test_executions": 16
+  },
+  "limits": [
+    "Full RGB test is an explicit separate ignored-test execution, not another ordinary workspace test.",
+    "Existing textinput/clock issue reviews were revalidated; these are not ten newly reproduced issue reports.",
+    "Coverage and native verification logs are timestamped executions; later ledger score/evidence updates do not rewrite their historical counters."
+  ],
+  "inline_regression": {
+    "before_source_revision": "05a6bb36fc489525cd74817806663dacb9ea5695",
+    "test_revision": "97fd9b178bf429155cea30f33197ff11f572e9a4",
+    "before_expected_exit_code": 101,
+    "before_log_sha256": "a697d3a5c5b732bd026ec282a50d6c906114376b4b250f4a57a2b0b3e46a6087",
+    "after_passed_tests": 6,
+    "after_log_sha256": "27316ec8b0b3788cd14a77e1bbbb606eb400e7c0b512af77502732e0a43719c9"
+  }
+}
