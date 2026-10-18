@@ -42,3 +42,12 @@ Explicit set_height commits clamping, while direct rows assignment retains the
 previous lazy observation behavior. Programmatic controls return observed-position
 change; zero movement does not commit a hidden resize. No full viewport parity or
 new performance result is inferred. See ../evidence/viewport-controls/source-review.json.
+
+The first 9d3f9b9 content measurements identify repeated CRLF String growth and
+copying: 12 requests for construction/owned snapshot and 11 for replacement/owned
+snapshot. Reserve the original byte length, normalize CRLF by borrowed chunks,
+reuse the shared sanitizer's borrowed result, and move the first normalized
+line buffer into content. This avoids duplicating control policy or retaining
+caller references. Capacity may include removed CR bytes; do not claim a resident
+memory improvement. Full source-bound repeats and adverse controls are retained
+separately; whole-module parity/performance remains pending.

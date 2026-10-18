@@ -16,7 +16,7 @@ pub use clocks::{
 pub use cursor::{CursorMode, VirtualCursor};
 pub use help::{Help, HelpItem, HelpMap, HelpStyles};
 use matea_core::{Component, Input, KeyCode, Response};
-use matea_render::{View, sanitize};
+use matea_render::View;
 use matea_style::Theme;
 pub use pagination::Pagination;
 pub use paginator::{PageDisplay, PageKeys, PageNumbers, Paginator};
@@ -255,10 +255,15 @@ impl Viewport {
     {
         let mut content = String::new();
         for (index, line) in lines.into_iter().enumerate() {
-            if index != 0 {
+            let normalized = normalize_viewport_text(line.as_ref());
+            if index == 0 {
+                // A whole document is commonly passed as a single element.
+                // Move its normalized buffer instead of immediately copying it.
+                content = normalized.into_owned();
+            } else {
                 content.push('\n');
+                content.push_str(&normalized);
             }
-            content.push_str(&normalize_viewport_text(line.as_ref()));
         }
         self.install_content(content);
     }
@@ -400,9 +405,22 @@ impl Viewport {
 fn normalize_viewport_text(text: &str) -> std::borrow::Cow<'_, str> {
     use std::borrow::Cow;
     if text.contains("\r\n") {
-        // Structural CRLF is normalized before applying the compositor's
-        // shared C0/C1/tab policy. The common clean path can stay borrowed.
-        Cow::Owned(sanitize(&text.replace("\r\n", "\n")))
+        // CRLF removal cannot increase byte length. One reservation avoids
+        // repeated String growth, while the shared sanitizer remains the only
+        // authority for C0/C1/tab replacement.
+        let mut normalized = String::with_capacity(text.len());
+        for segment in text.split_inclusive("\r\n") {
+            if let Some(line) = segment.strip_suffix("\r\n") {
+                normalized.push_str(line);
+                normalized.push('\n');
+            } else {
+                normalized.push_str(segment);
+            }
+        }
+        match matea_render::sanitized(&normalized) {
+            Cow::Borrowed(_) => Cow::Owned(normalized),
+            Cow::Owned(clean) => Cow::Owned(clean),
+        }
     } else {
         matea_render::sanitized(text)
     }

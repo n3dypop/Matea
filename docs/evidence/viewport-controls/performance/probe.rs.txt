@@ -1,0 +1,44 @@
+#[allow(dead_code)]
+#[path = "/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"] mod measurement;
+use matea_widgets::Viewport;
+use std::hint::black_box;
+fn checksum(text: &str, lines: usize) -> u64 {
+    let mut hash=14695981039346656037u64;
+    for byte in text.as_bytes().iter().copied().chain((lines as u64).to_le_bytes()) {
+        hash=(hash ^ u64::from(byte)).wrapping_mul(1099511628211);
+    }
+    hash
+}
+fn main() {
+    let iterations=measurement::iterations(300);
+    for (name,line,separator) in [("ascii","Matea owns each line","\n"),("unicode","抹茶 e\u{301} 👩‍💻","\n"),("crlf","tea and coffee","\r\n")] {
+        let text=std::iter::repeat_n(line,100).collect::<Vec<_>>().join(separator);
+        let normalized=text.replace("\r\n","\n");
+        let expected=checksum(&normalized,100);
+        let mut initial=Viewport::new("");initial.set_content_lines([text.as_str()]);
+        assert_eq!(initial.content(),normalized);
+        let output=format!("lines=100;content={normalized}");
+        let construct=|| {
+            let mut viewport=Viewport::new("");
+            viewport.set_content_lines([black_box(text.as_str())]);
+            let owned=viewport.content().to_owned();
+            checksum(black_box(&owned),black_box(viewport.line_count()))
+        };
+        assert_eq!(construct(),expected);
+        measurement::measure(&format!("viewport-content/construct_{name}"),iterations,construct,&output,
+            "fresh default viewport and one existing text element; set line content and create independent owned normalized content snapshot; consume every UTF-8 byte and logical line count with FNV64; include construction and drop; exclude view/render/input/terminal I/O; other viewport capabilities not exercised");
+        let mut viewport=initial.clone();
+        measurement::measure(&format!("viewport-content/replace_{name}"),iterations,|| {
+            viewport.set_content_lines([black_box(text.as_str())]);
+            let owned=viewport.content().to_owned();
+            checksum(black_box(&owned),black_box(viewport.line_count()))
+        },&output,"existing viewport; replace from one existing text element and create independent owned normalized content snapshot; consume every UTF-8 byte and logical line count with FNV64; include replacement and result drop; exclude view/render/input/terminal I/O; other viewport capabilities not exercised");
+        measurement::measure(&format!("viewport-content/snapshot_{name}"),iterations,|| {
+            let owned=black_box(&initial).content().to_owned();
+            checksum(black_box(&owned),black_box(initial.line_count()))
+        },&output,"existing normalized viewport; create and drop independent owned content snapshot; consume every UTF-8 byte and logical line count with FNV64; exclude construction/replacement/view/render/terminal I/O");
+        measurement::measure(&format!("viewport-content/borrowed_{name}"),iterations,|| {
+            checksum(black_box(initial.content()),black_box(initial.line_count()))
+        },&output,"Rust-only borrowed content/count control; consume every UTF-8 byte with FNV64; no owned snapshot, viewport construction/replacement/view/render/terminal I/O; no upstream ratio");
+    }
+}
