@@ -49,3 +49,21 @@ RGB vector. Actual ANSI16 palettes remain terminal-configurable. This is a
 terminal-style constructor, with no image engine/codec/CUDA dependency. Require
 all 256 indexed starting colors against pinned eight-sample Go gradients and
 preserve the existing 548 RGB8 fixtures.
+
+Initial source a51f9a3 passes all 33 native checks, 178 Rust tests plus two
+doctests, 115 Python tests, 16 snapshots, 21 Unix PTY cases and LLVM collection
+(71 files/76 compiler instances). Targeted Miri executes eight progress widget,
+two facade/runtime/fallback and four gradient tests, including all 120 progress
+fixtures plus the existing finite gradient subsets. All six complete frame
+outputs/first returns match. The first two balanced performance pairs are
+retained, with observed p50 at 4.6–23.2% of the reference for these finite cases.
+No constructor/scheduling/whole-module verdict follows from those frames.
+
+The separate cell controls reveal two requested heap operations for the default
+percentage label. Replace its private String with existing CompactString inline
+UTF-8 storage and format_compact, preserving public borrowed-str access and
+custom formatter signatures. This adds no dependency. Keep the a51f9a3
+native/Miri/performance cohort, and rerun validation and the complete balanced
+measurement for the changed source. A long Unicode custom label must still
+exercise heap ownership and grapheme-safe clipping; no blanket zero-allocation
+promise applies to custom formatters.

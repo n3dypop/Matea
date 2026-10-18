@@ -217,6 +217,12 @@ fn narrow_formatting_is_single_line_sanitized_and_grapheme_clipped() {
     p.reset_percentage_formatter();
     p.set_width(40);
     assert_eq!(p.frame_as(0.125, &theme()).unwrap().label(), "  12%");
+    // Custom formatting exercises owned heap storage, then UTF-8-safe clipping.
+    p.set_percentage_formatter(|_| "茶".repeat(32));
+    p.set_width(3);
+    let frame = p.frame_as(0.5, &theme()).unwrap();
+    assert_eq!(frame.label(), "茶");
+    assert_eq!(frame.view().render(Size::new(3, 1)).unwrap().plain(), "▌茶");
 }
 #[test]
 fn reduced_motion_uses_target_suppresses_schedules_and_can_snap_state() {

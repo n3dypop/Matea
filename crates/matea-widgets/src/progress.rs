@@ -1,6 +1,7 @@
 //! Themed static/animated progress, independent of runtime and terminal I/O.
 //! Behavior informed by pinned Bubbles progress; see ADR 0046 and notices.
 use crate::{ClockId, ClockSchedule, ClockTick, Stopwatch, TickInterval};
+use compact_str::{CompactString, format_compact};
 use matea_core::{Component, Input, Response, Subscription};
 use matea_motion::{Motion, MotionError, Spring};
 use matea_render::{View, sanitize};
@@ -250,7 +251,8 @@ impl Progress {
         }
         Ok(true)
     }
-    /// Borrow the bar configuration; formatting the optional label owns a String.
+    /// Borrow the bar configuration. The default short label uses inline UTF-8
+    /// storage; custom formatting or long labels may allocate.
     pub fn frame_as<'a>(
         &'a self,
         percent: f64,
@@ -258,17 +260,17 @@ impl Progress {
     ) -> Result<ProgressFrame<'a>, ProgressError> {
         let percent = finite_percent(percent)?;
         let mut label = if !self.show_percentage {
-            String::new()
+            CompactString::default()
         } else if let Some(format) = &self.formatter {
-            format(percent)
+            format(percent).into()
         } else {
-            format!(" {:3.0}%", percent * 100.0)
+            format_compact!(" {:3.0}%", percent * 100.0)
         };
         if label.contains(['\n', '\r']) {
-            label = label.replace(['\n', '\r'], " ");
+            label = label.replace(['\n', '\r'], " ").into();
         }
         if label.chars().any(char::is_control) {
-            label = sanitize(&label);
+            label = sanitize(&label).into();
         }
         let mut label_width = 0;
         let mut end = 0;
@@ -341,7 +343,7 @@ pub struct ProgressFrame<'a> {
     percent: f64,
     width: usize,
     filled: usize,
-    label: String,
+    label: CompactString,
     full_style: Style,
     empty_style: Style,
     label_style: Style,
