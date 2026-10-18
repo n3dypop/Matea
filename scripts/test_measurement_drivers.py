@@ -8,9 +8,18 @@ import unittest
 from unittest.mock import patch
 from check_quality import DIMENSIONS, execution_inputs
 from measure_remaining_performance import measure, quality_snapshot
+from measure_reader_performance import compile_reader
 
 
 class MeasurementDriverTests(unittest.TestCase):
+    def test_frozen_reader_keeps_its_globals_and_never_enters_its_cli(self):
+        source='''\nVALUE = "frozen"\nif __name__ == "__main__":\n    raise RuntimeError("CLI must not execute")\ndef records(text):\n    return VALUE + text\ndef compare(a,b,count):\n    return (a,b,count,VALUE)\n'''
+        reader=compile_reader(source,"fixture.py")
+        self.assertEqual(reader.records(" input"),"frozen input")
+        self.assertEqual(reader.compare(1,2,46),(1,2,46,"frozen"))
+        for bad in ["records=1\ncompare=2", "def records(text): return text"]:
+            with self.assertRaises(ValueError):compile_reader(bad,"fixture.py")
+
     def test_all_31_intervals_and_separate_heap_pass_are_retained(self):
         times=[value for n in range(1,32) for value in [1000*n,1000*n+n]]
         traced=[]

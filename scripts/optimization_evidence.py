@@ -2,10 +2,10 @@
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 import statistics
 import subprocess
+from performance_records import parse_json, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -13,16 +13,16 @@ ROOT = Path(__file__).resolve().parents[1]
 def records(text):
     result = {}
     for line in text.splitlines():
-        item = json.loads(line)
+        item = validate(parse_json(line))
         name = item["case"]
         if not isinstance(name, str) or not name or name in result:
             raise ValueError("empty/duplicate case identifier")
         for field in ["iterations_per_sample", "allocations", "allocated_bytes", "first_return_value"]:
-            value = item[field]
+            value = item.get(field)
             if type(value) is not int or value < (1 if field == "iterations_per_sample" else 0):
                 raise ValueError("invalid counter: " + field)
         samples = item["samples_ns"]
-        if len(samples) != 31 or any(type(n) not in (int, float) or not math.isfinite(n) or n <= 0 for n in samples):
+        if len(samples) != 31:
             raise ValueError("31 positive finite timing samples required")
         if not isinstance(item["semantics"], str) or not item["semantics"] or not isinstance(item["output"], str):
             raise ValueError("missing semantics/output")
@@ -67,7 +67,7 @@ def main():
         return
     contexts, data = [], []
     for stage in ["before", "after"]:
-        context = json.loads((args.directory / (stage + "-context.json")).read_text(encoding="utf-8"))
+        context = parse_json((args.directory / (stage + "-context.json")).read_text(encoding="utf-8"))
         raw = (args.directory / (stage + ".jsonl")).read_bytes()
         if hashlib.sha256(raw).hexdigest() != context["raw_sha256"]:
             raise ValueError("raw hash mismatch: " + stage)

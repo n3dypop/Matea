@@ -7,10 +7,22 @@ import sys
 import tempfile
 import unittest
 from optimization_evidence import compare, records
-from report_attribute_performance import legacy_comparison, normalize_legacy_theme
+from report_attribute_performance import legacy_comparison, normalize_legacy_theme, load_stage
 
 
 class OptimizationEvidenceTests(unittest.TestCase):
+    def test_recorded_malformed_inputs_cannot_become_measurements(self):
+        fixtures=json.loads((Path(__file__).resolve().parents[1]/"docs/evidence/measurement-integrity/negative-fixtures.json").read_text(encoding="utf-8"))
+        for name,payload in fixtures.items():
+            with self.subTest(case=name),self.assertRaises(ValueError):records(payload)
+
+    def test_duplicate_context_fields_fail_before_report_generation(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            folder=Path(temporary)
+            (folder/"before-context.json").write_text('{"raw_sha256": {}, "raw_sha256": {}}',encoding="utf-8")
+            with self.assertRaisesRegex(ValueError,"duplicate JSON field"):
+                load_stage(folder,"before")
+
     def test_theme_schema_change_requires_all_seven_exact_legacy_styles(self):
         old = "Style { fg: Default, bg: Indexed(9), bold: true, underline: true, reverse: true }"
         new = "Style { fg: Default, bg: Indexed(9), underline_color: Default, attributes: TextAttributes { flags: {Bold, Reverse}, underline: Single, blink: None, frame: None } }"

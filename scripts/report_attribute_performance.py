@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 from optimization_evidence import compare, records, summary
+from performance_records import parse_json
 
 ROOT = Path(__file__).resolve().parents[1]
 COLOR = r"(?:Default|Indexed\(\d+\)|Rgb\(\d+, \d+, \d+\))"
@@ -47,7 +48,7 @@ def legacy_comparison(before, after):
 
 
 def load_stage(directory, stage):
-    context = json.loads((directory/(stage+"-context.json")).read_text(encoding="utf-8"))
+    context = parse_json((directory/(stage+"-context.json")).read_text(encoding="utf-8"))
     labels = ["style", "views", "default", "cursor"] + ([] if stage=="before" else ["attributes"])
     expected = {stage+"-"+label+".jsonl" for label in labels}
     if set(context["raw_sha256"]) != expected:

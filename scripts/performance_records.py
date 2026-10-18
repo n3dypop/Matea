@@ -21,7 +21,10 @@ def write_report(path, text):
 
 
 def numeric(value, *, positive=False):
-    return type(value) in (int, float) and math.isfinite(value) and (value > 0 if positive else value >= 0)
+    # Python integers are finite without a lossy float conversion (which can
+    # overflow for a malformed/large input before validation can reject it).
+    finite = type(value) is int or (type(value) is float and math.isfinite(value))
+    return finite and (value > 0 if positive else value >= 0)
 
 
 def validate(record):
@@ -72,6 +75,8 @@ def validate(record):
             raise ValueError("invalid counter: " + key)
     if "first_return_value" in record and not numeric(record["first_return_value"]):
         raise ValueError("invalid first_return_value")
+    if "cold_ns" in record and not numeric(record["cold_ns"]):
+        raise ValueError("invalid cold_ns")
     return record
 
 
@@ -84,10 +89,21 @@ def unique_object(pairs):
     return result
 
 
+def parse_json(text):
+    def invalid_constant(value):
+        raise ValueError("nonfinite JSON constant: " + value)
+    def finite_float(text):
+        value = float(text)
+        if not math.isfinite(value):
+            raise ValueError("nonfinite JSON number: " + text)
+        return value
+    return json.loads(text, object_pairs_hook=unique_object, parse_constant=invalid_constant, parse_float=finite_float)
+
+
 def read_records(text):
     records = {}
     for line in text.splitlines():
-        item = validate(json.loads(line, object_pairs_hook=unique_object))
+        item = validate(parse_json(line))
         if item["case"] in records:
             raise ValueError("duplicate performance case: " + item["case"])
         records[item["case"]] = item
@@ -100,7 +116,7 @@ def read_probe_outputs(text):
     """Correctness records are intentionally not accepted as measurements."""
     records = {}
     for line in text.splitlines():
-        item = json.loads(line, object_pairs_hook=unique_object)
+        item = parse_json(line)
         if not isinstance(item, dict) or set(item) != {"record_kind", "case", "semantics", "first_return_value", "output"}:
             raise ValueError("invalid output-only record schema")
         if item["record_kind"] != "probe-output" or not isinstance(item["case"], str) or not item["case"]:

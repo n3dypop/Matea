@@ -6,12 +6,24 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from performance_records import read_records, read_probe_outputs, summary, write_report
+from performance_records import read_records, read_probe_outputs, summary, write_report, parse_json
 from report_performance import generate
 from report_viewport_performance import apply_harness_patch
 
 
 class RecordTests(unittest.TestCase):
+    def test_optional_cold_counter_preserves_zero_and_rejects_invalid_values(self):
+        for value in [0,1,0.5]:
+            record={**self.fixture(),"cold_ns":value}
+            self.assertEqual(read_records(json.dumps(record))["one"]["cold_ns"],value)
+        for value in [-1,True,None,float("nan"),float("inf")]:
+            with self.subTest(value=value),self.assertRaises(ValueError):read_records(json.dumps({**self.fixture(),"cold_ns":value}))
+
+    def test_nested_duplicate_and_nonfinite_metadata_are_invalid_json(self):
+        for text in ['{"source": {"hash": "a", "hash": "b"}}','{"metadata": NaN}','{"metadata": Infinity}','{"metadata": -Infinity}','{"metadata": 1e999}']:
+            with self.subTest(text=text),self.assertRaises(ValueError):parse_json(text)
+        self.assertEqual(parse_json('{"text":"NaN", "duration":0}'),{"text":"NaN","duration":0})
+
     def test_historical_patch_reconstruction_preserves_bytes_with_windows_git_defaults(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary);source=root/"source.txt";source.write_bytes(b"before\n")
