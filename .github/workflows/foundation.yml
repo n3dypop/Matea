@@ -110,10 +110,12 @@ jobs:
           python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==7)"
           cargo run --locked --quiet --release -p matea-perf-probe -- --attributes > artifacts/attributes-outputs.jsonl
           python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/attributes-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==14)"
+          python -c "from pathlib import Path; Path('docs/evidence/attributes-outputs.jsonl').write_bytes(Path('artifacts/attributes-outputs.jsonl').read_bytes())"
         shell: bash
         env:
           MATEA_PROBE_OUTPUT_ONLY: "1"
-      - run: cargo bench --locked -p matea --bench foundation_paths -- --representations
+      - run: cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json
+        shell: bash
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release
@@ -135,6 +137,8 @@ jobs:
             docs/evidence/local-validation.json
             docs/evidence/quality/rust-execution-coverage.json
             docs/evidence/*-tests.log
+            docs/evidence/representations.json
+            docs/evidence/attributes-outputs.jsonl
           if-no-files-found: warn
           retention-days: 14
   msrv:

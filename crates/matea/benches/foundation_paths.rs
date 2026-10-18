@@ -288,11 +288,14 @@ fn identity() {
 fn main() {
     if std::env::args().any(|a| a == "--representations") {
         println!(
-            "{{\"style_bytes\":{},\"style_alignment\":{},\"cell_bytes\":{},\"cell_alignment\":{}}}",
+            "{{\"style_bytes\":{},\"style_alignment\":{},\"cell_bytes\":{},\"cell_alignment\":{},\"view_bytes\":{},\"view_alignment\":{},\"theme_bytes\":{}}}",
             std::mem::size_of::<Style>(),
             std::mem::align_of::<Style>(),
             std::mem::size_of::<matea::render::Cell>(),
-            std::mem::align_of::<matea::render::Cell>()
+            std::mem::align_of::<matea::render::Cell>(),
+            std::mem::size_of::<View>(),
+            std::mem::align_of::<View>(),
+            std::mem::size_of::<Theme>()
         );
         return;
     }

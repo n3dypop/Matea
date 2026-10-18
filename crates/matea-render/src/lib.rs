@@ -345,7 +345,7 @@ fn write_sanitized(s: &str, out: &mut impl fmt::Write) -> fmt::Result {
 }
 
 /// The owned panel needs three tokens, not the complete application Theme.
-/// Keep this boxed so every View/stack element retains its current stride.
+/// Keep this inside the boxed panel payload, outside every View/stack element.
 #[derive(Clone, Debug)]
 struct PanelTheme {
     surface: Style,
@@ -367,6 +367,12 @@ impl From<&Theme> for PanelTheme {
 }
 
 #[derive(Clone, Debug)]
+struct PanelContent {
+    child: View,
+    theme: PanelTheme,
+}
+
+#[derive(Clone, Debug)]
 enum Node {
     Text(Text, Style),
     Stack {
@@ -376,8 +382,7 @@ enum Node {
     },
     Panel {
         title: Text,
-        child: Box<View>,
-        theme: Box<PanelTheme>,
+        content: Box<PanelContent>,
     },
     Layers(Vec<(Rect, View)>),
     Cursor {
@@ -439,8 +444,10 @@ impl View {
     pub fn panel(self, title: impl Into<Text>, theme: &Theme) -> Self {
         Self::new(Node::Panel {
             title: title.into(),
-            child: Box::new(self),
-            theme: Box::new(PanelTheme::from(theme)),
+            content: Box::new(PanelContent {
+                child: self,
+                theme: PanelTheme::from(theme),
+            }),
         })
     }
     pub fn gap(mut self, gap: u16) -> Self {
@@ -483,10 +490,11 @@ impl View {
                         ))
                 }
             }
-            Node::Panel { child, theme, .. } => child
+            Node::Panel { content, .. } => content
+                .child
                 .natural_height()
                 .saturating_add(2)
-                .saturating_add(theme.padding.saturating_mul(2)),
+                .saturating_add(content.theme.padding.saturating_mul(2)),
             Node::Layers(c) => c.iter().map(|(r, _)| r.bottom()).max().unwrap_or(0),
             Node::Cursor { child, .. } => child.natural_height(),
         }
@@ -541,11 +549,8 @@ impl View {
                     offset = offset.saturating_add(n).saturating_add(*gap);
                 }
             }
-            Node::Panel {
-                title,
-                child,
-                theme,
-            } => {
+            Node::Panel { title, content } => {
+                let PanelContent { child, theme } = content.as_ref();
                 s.canvas(clip).fill(theme.surface);
                 let (tl, tr, bl, br, h, v) = match theme.border_kind {
                     Border::Rounded => ("╭", "╮", "╰", "╯", "─", "│"),
@@ -620,6 +625,12 @@ mod tests {
     #[test]
     fn panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout() {
         use matea_style::{Color, TextFrame, UnderlineStyle};
+        if cfg!(target_pointer_width = "64") {
+            assert!(
+                std::mem::size_of::<View>() <= 56,
+                "panel ownership must not grow every scene node"
+            );
+        }
         let border_style = Style::default()
             .italic()
             .fg(Color::Indexed(9))
