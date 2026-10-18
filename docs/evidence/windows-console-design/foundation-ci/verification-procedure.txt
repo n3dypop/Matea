@@ -1,0 +1,60 @@
+import hashlib,json,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea')
+sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import parse_json,read_probe_outputs
+from test_windows_console import validate_trace,validate_result
+RAW=Path('/private/tmp/matea-console-foundation-ci-artifacts')
+OUT=ROOT/'docs/evidence/windows-console-design/foundation-ci'
+def check(value,message):
+    if not value:raise ValueError(message)
+def sha(data):return hashlib.sha256(data).hexdigest()
+def read(path):return parse_json(path.read_bytes())
+run=read(Path('/private/tmp/matea-console-foundation-ci-run.json'));head=run['headSha']
+check(run['status']=='completed' and run['conclusion']=='success','run incomplete')
+required={'msrv'}|{'foundation ('+host+'-latest)' for host in ['ubuntu','windows','macos']}
+check({j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required,'job success set')
+reference=read(ROOT/'docs/evidence/viewport-controls/buffer-optimization/ci-source-bindings.json')
+known=read(RAW/'native-drivers-macos-latest/local-validation.json')['source_sha256']
+check(len(known)==151,'known input count')
+for path,digest in known.items():check(sha(subprocess.check_output(['git','show',head+':'+path],cwd=ROOT))==digest,'source mismatch '+path)
+program={p:v for p,v in known.items() if Path(p).suffix in {'.rs','.go','.py','.yml','.yaml','.sh','.ps1','.js','.mjs','.ts'}}
+check(len(program)==126,'program count')
+report={'schema':1,'source_head':head,'run':run['url'],'four_required_jobs_passed':True,'program_sha256':program,'execution_input_sha256':known,'hosts':{},'raw_artifact_sha256':{},'retained_LF_artifact_sha256':{},'limits':['151 explicitly recorded build/check/fixture inputs, not every indirect data dependency.','Reference paths and measurement-driver qualification were not rerun here; unchanged paths retain the prior c198c86/c5069e0 evidence.','Console observations are isolated legacy native Windows console VT/readback, not all physical or modern emulators. No timing claims.','Raw bytes are checked before LF normalization for retention.']}
+for host in ['ubuntu','windows','macos']:
+    folder=RAW/('native-drivers-'+host+'-latest')
+    validation=read(folder/'local-validation.json');coverage=read(folder/'quality/rust-execution-coverage.json')
+    check(validation['status']=='complete' and validation['all_local_checks_passed'] is True and validation['source_changed_during_run']==[],'native validation '+host)
+    check(validation['source_sha256']==known and len(validation['checks'])==33 and all(c['exit_code']==0 for c in validation['checks']),'native inputs/checks '+host)
+    check(coverage['status']=='complete' and coverage['input_sha256']==known,'LLVM inputs '+host)
+    check(all(known[p]==v for p,v in coverage['source_sha256'].items()),'LLVM source '+host)
+    check(len(coverage['files'])==(70 if host=='windows' else 71),'LLVM files '+host)
+    logs=0
+    for c in validation['checks']:
+        path=folder/c['log']
+        if path.is_file():check(sha(path.read_bytes())==c['log_sha256'],'log hash '+str(path));logs+=1
+    check(logs==(18 if host=='windows' else 17),'uploaded logs '+host)
+    attrs=read_probe_outputs((folder/'attributes-outputs.jsonl').read_text(encoding='utf-8'))
+    expected=read_probe_outputs((ROOT/'docs/evidence/progress/attributes-outputs.jsonl').read_text(encoding='utf-8'))
+    check(attrs==expected and len(attrs)==14,'attribute outputs '+host)
+    representation=read(folder/'representations.json')
+    check(all(representation[k]==v for k,v in [('style_bytes',14),('cell_bytes',40),('view_bytes',48),('theme_bytes',104)]),'representation '+host)
+    facts={'acceptance_checks':33,'uploaded_log_hashes_checked':logs,'LLVM_source_files':len(coverage['files']),'LLVM_instances':sum(len(f['instances']) for f in coverage['files']),'exact_attribute_outputs':14,'representation':representation}
+    if host=='windows':
+        context=read(folder/'windows-console/context.json');attempt=folder/'windows-console'/context['attempt']
+        check(context==read(attempt/'context.json') and context['status']=='complete' and context['child_exit_code']==0,'console journal')
+        stream=(attempt/'input.json').read_bytes();observed=(attempt/'observed.json').read_bytes()
+        check(sha(stream)==context['input_sha256'] and sha(observed)==context['observed_sha256'],'console hashes')
+        check(stream==subprocess.check_output(['git','show',head+':docs/evidence/windows-console-design/native-input.json'],cwd=ROOT),'independent console input')
+        check(context['source_sha256']['oracle']==known['scripts/windows_console_oracle.ps1'],'console oracle source')
+        validate_result(parse_json(observed),validate_trace(parse_json(stream)))
+        facts['console_exact_cases']=36;facts['console_exact_cells']=2160;facts['console_restored']=True
+    report['hosts'][host]=facts
+    for path in sorted(folder.rglob('*')):
+        if not path.is_file():continue
+        rel=path.relative_to(folder);data=path.read_bytes();target=OUT/host/rel;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data.replace(b'\r\n',b'\n'))
+        key=host+'/'+rel.as_posix();report['raw_artifact_sha256'][key]=sha(data);report['retained_LF_artifact_sha256'][key]=sha(target.read_bytes())
+    print(host,facts,flush=True)
+OUT.mkdir(parents=True,exist_ok=True)
+(OUT/'ci-run.json').write_bytes(Path('/private/tmp/matea-console-foundation-ci-run.json').read_bytes())
+(OUT/'source-bindings.json').write_text(json.dumps(report,indent=2)+'\n')

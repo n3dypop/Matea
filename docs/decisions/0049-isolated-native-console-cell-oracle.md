@@ -1,6 +1,7 @@
 # ADR 0049: Isolated native Windows console cell oracle
 
-Status: planned; no native console result or score promotion yet.
+Status: implemented; 36 native Windows Server 2025 rows / 2160 cells pass.
+Source and observations: ../evidence/windows-console-design/ci-source-bindings.json.
 
 Synthetic cell geometry and three-OS output fixtures do not exercise Windows'
 console interpretation of UTF-8 block glyphs and cursor/erase commands. Progress
@@ -30,3 +31,9 @@ and [output modes](https://learn.microsoft.com/en-us/windows/console/setconsolem
 define the written stream. No modern Windows Terminal, SSH/ConPTY, font appearance,
 IME, supplementary glyph or historical 2022 reference environment equivalence
 follows. This is correctness/portability work, not Stage B performance work.
+
+The exact input stream matches the independently generated macOS fixture. The
+child restores output code page 437 after temporary UTF-8, mode 7, cursor shape/
+visibility/position and text attributes. All runtime sources/manifests match the
+prior bound c198c86 three-OS cohort. Progress portability moves from 50 to 75 for
+this explicitly bounded output scope; its other two dimensions remain partial.

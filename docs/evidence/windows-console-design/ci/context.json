@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "scope": "isolated Windows native console VT output and exact BMP/ASCII cell readback; not font/modern emulator/IME coverage",
+  "attempt": "attempts/7387c7df45714cd097e2a18eadc325b7",
+  "child_exit_code": 0,
+  "source_sha256": {
+    "probe": "7b93742fa5c17ea16324bc3e590f6d1f20226fb1b86d60618a33f8fa63f08f53",
+    "oracle": "d7cbd91edd7d91c9c1f89af92aa085105e5149929c07367cb3440e98741655f9"
+  },
+  "input_sha256": "03a2c4e3ef1370202f926d5c8fcaa0ba954ba0ec7b85043eed5bc4935f941b0d",
+  "observed_sha256": "486e4cf5e6d1ec204a6216d4a842f90a97a4662626d8cc43a34d195d6a44b7be",
+  "exact_cases": 36,
+  "observed_cells_per_case": 60,
+  "restoration_verified": true,
+  "limits": [
+    "Native console buffer output only; no keyboard/input mode, modern Windows Terminal/ConPTY, SSH, visual font or supplementary glyph claim.",
+    "No timing/latency/performance values are produced. Historical reference Windows reports remain separate assessments."
+  ]
+}

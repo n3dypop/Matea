@@ -361,3 +361,27 @@ p95の悪化も保存し、全モジュール性能の得点は昇格しませ�
 [試験・全生データ・CI照合と残条件](measurement-lifecycle.md)。
 ANSIインデックスのグラデーション要望も既存の256色・3 OS証拠から判定し、
 要確認issueは827件です。旧APIの不具合再現・修正とは区別しています。
+
+## Content/control closure and native Windows readback
+
+Viewport now links 27 public declarations as partial equivalents. Eleven native
+and Miri methods include 220 source observations: 180 exact complete rows and
+40 literal CRLF differences. Public callers reproduce Go's MaxInt scroll wrapping
+to zero; Matea saturates to the bottom. No full viewport verdict follows.
+
+Two complete balanced content cohorts bind 9d3f9b9/c198c86 to nine matched narrow
+operations and three separate borrowed controls. CRLF construction requests
+12→3 allocations (8,867→3,897 requested bytes), replacement 11→2
+(8,067→3,097); some unrelated p95 values worsen and remain retained. The complete
+Go default object has capabilities Matea still lacks, so this is not full-object
+or module performance equivalence. Original-byte reservation may retain extra CR
+capacity; requested traffic is not RSS. [All raw runs/limits](evidence/viewport-controls/buffer-optimization/performance-review.json).
+
+The independently bound c198c86 CI passes seven jobs. An actual isolated native
+Windows console then reads back 36 frames/2,160 cells and restores cursor,
+attributes, output mode and CP437 after UTF-8 output. Progress portability moves
+50→75; current quality has 49 low axes (performance29/reference20), 126 programs
+and 42 units. Modern terminal/font/IME/SSH and the historical Go environment stay
+unverified. The new test/orchestration source is still completing normal 3 OS CI;
+its native observations and unchanged runtime source are bound separately.
+[Console evidence](evidence/windows-console-design/ci-source-bindings.json).

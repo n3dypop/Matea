@@ -1,5 +1,28 @@
 # Matea Foundation gate report
 
+現在のチェックポイント（2026-10-19）: 126プログラム・42評価単位、未達49軸
+（性能29・参照元一致20）。未対応付け6,832宣言、部分／未測定16能力、
+91モジュール判定・827 issue報告などが残ります。compiler export 6,902 keyは
+ソース棚卸しと重複するため加算しません。Stage Aは未達、Stage BとF5は閉じています。
+
+c198c86は[必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39151131973)に成功し、
+123プログラム・148実行入力と各OSの17ログを独立照合しました。
+Viewportの220参照条件は180完全一致・40明示的CRLF差分です。
+さらに3258166の[隔離Windows実コンソール試験](https://github.com/n3dypop/Matea/actions/runs/39153261255)
+で36フレーム・2,160セルと状態復旧が成功し、進捗バーの移植性を75へ更新しました。
+[生の観測・ソース照合・適用範囲](evidence/windows-console-design/ci-source-bindings.json)。
+3258166の[通常3 OS・MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39153265244)も4必須ジョブに成功し、
+126プログラム・151入力、各OSの33検証、Windowsを含むLLVMとログを
+[独立照合](evidence/windows-console-design/foundation-ci/source-bindings.json)しました。
+Windowsでは通常CIでも36フレーム・2,160セルと復旧に成功しています。評価メタデータの更新は、
+過去のCIソースhashを書き換えて試験済みと見なす扱いにはしません。
+
+Viewportの限定内容操作ではCRLF構築の確保12→3、置換11→2、各4,970要求byteを削減。
+全9比較出力と3借用対照は一致し、不利なp95も保存しています。
+完全なViewport機能や実メモリ全体の性能判定とは区別しています。
+[両順序・全生分布・比較の制約](evidence/viewport-controls/buffer-optimization/performance-review.json)。
+以下は各時点の実装・検証履歴です。
+
 状態: **F0–F4を継続中。F5へ未到達、承認依頼は保留。**
 オーナーが全参照元・基盤ライブラリの公開機能、モジュールごとの性能比較と課題分析を追加したため、以前の小規模候補は受け入れ対象から外しました。
 
