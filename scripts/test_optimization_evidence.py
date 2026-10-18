@@ -11,6 +11,21 @@ from report_attribute_performance import legacy_comparison, normalize_legacy_the
 
 
 class OptimizationEvidenceTests(unittest.TestCase):
+    def test_cli_requires_requested_calibration_without_relaxing_fixed_comparisons(self):
+        item=self.fixture()
+        tool=str(Path(__file__).with_name("optimization_evidence.py"))
+        with tempfile.TemporaryDirectory() as temporary:
+            path=Path(temporary)/"probe.jsonl"
+            for flags in [[],["-O"]]:
+                for kind,success in [("missing",False),("legacy",False),("confirmed",True),("wrong-target",False)]:
+                    value=copy.deepcopy(item)
+                    if kind!="missing":
+                        value['calibration']={"target_ns":10,"start_n":10,"max_n":20,"batches":[{"iterations":10,"elapsed_ns":10}]}
+                        if kind in ["confirmed","wrong-target"]:value['calibration']['batches'][0]['confirmations_ns']=[10,10]
+                    path.write_text(json.dumps(value),encoding="utf-8")
+                    result=subprocess.run([sys.executable,*flags,tool,str(path),"--validate-current","--expected","1","--target-ns","11" if kind=="wrong-target" else "10"],capture_output=True)
+                    self.assertEqual(result.returncode==0,success,kind)
+
     def test_recorded_malformed_inputs_cannot_become_measurements(self):
         fixtures=json.loads((Path(__file__).resolve().parents[1]/"docs/evidence/measurement-integrity/negative-fixtures.json").read_text(encoding="utf-8"))
         for name,payload in fixtures.items():

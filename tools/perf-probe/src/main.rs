@@ -53,10 +53,7 @@ fn main() {
         colored_frames(0);
         return;
     }
-    let iterations = std::env::var("MATEA_PERF_ITERATIONS")
-        .ok()
-        .and_then(|n| n.parse().ok())
-        .unwrap_or(300);
+    let iterations = measurement::iterations(300);
     if std::env::args().any(|arg| arg == "--attributes" || arg == "--attribute-trace") {
         attributes::costs(iterations);
         return;

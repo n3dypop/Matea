@@ -94,14 +94,15 @@ jobs:
       # CLI/serialization checks only; shared CI runner timings are not benchmark evidence.
       - run: |
           cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl
-          python scripts/optimization_evidence.py artifacts/style.jsonl --validate-current --expected 46
+          python scripts/optimization_evidence.py artifacts/style.jsonl --validate-current --expected 46 --target-ns 20000000
           cargo run --locked --quiet --release -p matea-perf-probe -- --input > artifacts/input.jsonl
-          python scripts/optimization_evidence.py artifacts/input.jsonl --validate-current --expected 37
+          python scripts/optimization_evidence.py artifacts/input.jsonl --validate-current --expected 37 --target-ns 20000000
           cargo run --locked --quiet --release -p matea-perf-probe -- --protocol > artifacts/protocol.jsonl
-          python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41
+          python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41 --target-ns 20000000
         shell: bash
         env:
           MATEA_PERF_ITERATIONS: "20000"
+          MATEA_PERF_MIN_SAMPLE_NS: "20000000"
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"
@@ -114,6 +115,8 @@ jobs:
         shell: bash
         env:
           MATEA_PROBE_OUTPUT_ONLY: "1"
+          MATEA_PERF_ITERATIONS: "invalid"
+          MATEA_PERF_MIN_SAMPLE_NS: "invalid"
       - run: cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json
         shell: bash
       - if: runner.os != 'Windows'
@@ -214,5 +217,6 @@ jobs:
             ${{ runner.temp }}/matea-reference-paths/upstream-cursor-outputs.jsonl
             ${{ runner.temp }}/matea-reference-paths/cursor-source-edges.txt
             ${{ runner.temp }}/matea-reference-paths/timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/rust-timing-mode-checks.json
           if-no-files-found: warn
           retention-days: 14

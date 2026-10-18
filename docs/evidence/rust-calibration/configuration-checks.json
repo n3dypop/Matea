@@ -1,0 +1,42 @@
+{
+  "binary_sha256": "2a72afcbb9081b497edfd83971597be097ddd912f6f1a739321af0ccb4ad1982",
+  "checks": [
+    {
+      "variable": "MATEA_PERF_ITERATIONS",
+      "value": "0",
+      "exit_code": 101,
+      "stdout_bytes": 0,
+      "stderr": "\nthread 'main' (3886458) panicked at tools/perf-probe/src/measurement.rs:65:61:\nstarting iterations must be 1..=6710886 (before caller scaling)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "variable": "MATEA_PERF_ITERATIONS",
+      "value": "invalid",
+      "exit_code": 101,
+      "stdout_bytes": 0,
+      "stderr": "\nthread 'main' (3886466) panicked at tools/perf-probe/src/measurement.rs:65:61:\ninvalid iteration count\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "variable": "MATEA_PERF_ITERATIONS",
+      "value": "6710887",
+      "exit_code": 101,
+      "stdout_bytes": 0,
+      "stderr": "\nthread 'main' (3886468) panicked at tools/perf-probe/src/measurement.rs:65:61:\nstarting iterations must be 1..=6710886 (before caller scaling)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "variable": "MATEA_PERF_MIN_SAMPLE_NS",
+      "value": "-1",
+      "exit_code": 101,
+      "stdout_bytes": 0,
+      "stderr": "\nthread 'main' (3886470) panicked at tools/perf-probe/src/measurement.rs:96:51:\ninvalid sample target\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    },
+    {
+      "variable": "MATEA_PERF_MIN_SAMPLE_NS",
+      "value": "1000000001",
+      "exit_code": 101,
+      "stdout_bytes": 0,
+      "stderr": "\nthread 'main' (3886472) panicked at tools/perf-probe/src/measurement.rs:96:51:\nMATEA_PERF_MIN_SAMPLE_NS must be 0..=1000000000; 0 selects fixed batches\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"
+    }
+  ],
+  "output_only_records": 14,
+  "scope": "CLI correctness only; source commit/build context follows before calibrated collection"
+}

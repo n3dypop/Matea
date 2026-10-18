@@ -2,6 +2,7 @@
 import unittest
 import json
 from pathlib import Path
+from types import SimpleNamespace
 import tempfile
 from unittest.mock import patch
 from check_reference_paths import check_trajectories, check_timing_mode
@@ -20,12 +21,18 @@ class TrajectoryChecks(unittest.TestCase):
             values=expected[int(len(command)>1)][1]
             return "\n".join(json.dumps({**v,"samples_ns":[1]*31,"iterations_per_sample":1,"allocations":0,"allocated_bytes":0,
                 "calibration":{"target_ns":20_000_000,"start_n":1,"max_n":2,"batches":[{"iterations":1,"elapsed_ns":20_000_000,"confirmations_ns":[20_000_000]*2}]}}) for v in values.values()).encode()
-        with tempfile.TemporaryDirectory() as directory,patch("check_reference_paths.subprocess.check_output",side_effect=output):
+        with tempfile.TemporaryDirectory() as directory,patch("check_reference_paths.subprocess.check_output",side_effect=output),patch("check_reference_paths.subprocess.run",return_value=SimpleNamespace(returncode=2,stdout=b"")) as run:
             target=Path(directory)
             check_timing_mode(target,Path("fixture"),{"MATEA_PROBE_OUTPUT_ONLY":"1"},expected)
             report=json.loads((target/"timing-mode-checks.json").read_text())
             self.assertEqual(len(report["checked_cases"]),91)
             self.assertTrue(all(c["positive_samples"]==31 for c in report["checked_cases"]))
+            check_timing_mode(target,Path("fixture"),{},expected,label="matea")
+            rust=json.loads((target/"rust-timing-mode-checks.json").read_text())
+            self.assertEqual(rust["probe"],"matea")
+            self.assertEqual(rust["checked_cases"],report["checked_cases"])
+            self.assertEqual(len(rust["invalid_configurations_rejected"]),5)
+            self.assertEqual(run.call_count,5)
     def test_spring_input_identity_and_existing_absolute_bound(self):
         fixture="1.000001,12,1,0\n"
         result=check_trajectories("1.000001,12,1.0000005,0.0000005\n",fixture,True)

@@ -60,10 +60,7 @@ fn command<C: Command + Copy>(id: &str, command: C, expected: &str, n: usize) {
 }
 fn main() {
     let n = if std::env::args().any(|a| a == "--measure") {
-        std::env::var("MATEA_PERF_ITERATIONS")
-            .ok()
-            .and_then(|n| n.parse().ok())
-            .unwrap_or(20000)
+        measurement::iterations(20000)
     } else {
         0
     };

@@ -1,6 +1,7 @@
 # ADR 0043: Calibrate Rust micro-workload batches before comparing tiny paths
 
-Status: proposed; no new Rust calibration implementation or measurements yet.
+Status: implemented; eight deterministic boundary tests and local CLI checks pass.
+Full native, Miri, calibrated collection and three-OS verification pending.
 
 The shared Rust probe currently runs caller-chosen fixed batches, warms 100
 operations, retains 31 per-operation averages and counts allocations separately.
@@ -40,3 +41,20 @@ hosts. It establishes neither a universal optimum nor all-feature/module parity,
 and does not advance Stage B or F5. Implement and verify this measurement utility
 after the in-progress panel slice is recorded; do not reinterpret its older
 observations as calibrated measurements.
+
+The shared Rust utility now defaults to 20 ms confirmed by three observations,
+with a 2^26 iteration cap and a 0..=1 second target. An explicit target of zero
+selects fixed batches for execution coverage; existing historical measurements
+are unchanged. Starting CLI counts are bounded before the callers' at-most-tenfold
+scaling. Invalid configuration fails before a workload prints a timing record;
+correctness-only mode bypasses timing configuration, clocks and allocation
+tracking. The allocator pass uses a guard that disables tracking on unwind and
+rejects nested passes. Calibration failures preserve all attempted observations,
+and a zero retained interval fails at its original index without retrying it.
+
+The 29ffeea binary accepts zero iterations and prints NaN with successful exit;
+the [reproduction](../evidence/rust-calibration/before-context.json) is retained.
+This is a confirmed utility defect, distinct from the earlier host-noise limits.
+CI will require the exact calibration target for the current style/input/protocol
+records and execute all 91 existing matched Rust/Go timing-mode cases separately.
+Shared-runner values are schema/output checks, not comparative speed evidence.

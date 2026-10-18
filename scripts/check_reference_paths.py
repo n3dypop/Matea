@@ -72,13 +72,22 @@ def check_trajectories(output, fixture, spring):
             "criterion": "existing matea-motion/tests/reference.rs; no Rust test threshold changed"}
 
 
-def check_timing_mode(destination, go_binary, environment, correctness):
+def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream"):
+    require(label in ["upstream","matea"],"unknown timing-mode probe label")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
+    rejected=[]
+    if label=="matea":
+        for key,value in [("MATEA_PERF_ITERATIONS","0"),("MATEA_PERF_ITERATIONS","invalid"),
+                          ("MATEA_PERF_ITERATIONS","6710887"),("MATEA_PERF_MIN_SAMPLE_NS","-1"),
+                          ("MATEA_PERF_MIN_SAMPLE_NS","1000000001")]:
+            failed=subprocess.run([str(probe_binary),"--style"],env={**environment,key:value},capture_output=True,timeout=30)
+            require(failed.returncode!=0 and not failed.stdout,"invalid configuration printed successful/partial records")
+            rejected.append({"variable":key,"value":value,"exit_code":failed.returncode,"stdout_bytes":len(failed.stdout)})
     checked=[]
     for flag, expected in correctness:
-        output=subprocess.check_output([str(go_binary),*flag],env=environment,timeout=300)
+        output=subprocess.check_output([str(probe_binary),*flag],env=environment,timeout=300)
         records=read_records(output.decode("utf-8"))
         require(records.keys()==expected.keys(), "calibrated case set changed")
         for name,item in records.items():
@@ -92,9 +101,11 @@ def check_timing_mode(destination, go_binary, environment, correctness):
                             "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
                             "allocation_schema_valid":True})
     require(len(checked)==91 and len({r["case"] for r in checked})==91, "incomplete calibrated probe")
-    result={"schema":1,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
+    result={"schema":1,"probe":label,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
+            "invalid_configurations_rejected":rejected,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
-    (destination/"timing-mode-checks.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
+    filename="timing-mode-checks.json" if label=="upstream" else "rust-timing-mode-checks.json"
+    (destination/filename).write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 
 
 def check_probes(destination, go_binary, rust_binary, environment):
@@ -126,6 +137,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
         require((a["semantics"],a["output"],a["first_return_value"])==
                 (b["semantics"],b["output"],b["first_return_value"]), "virtual cursor mismatch: "+name)
     check_timing_mode(destination,go_binary,environment,[([],records[1]),(["--virtual-cursor"],cursors[1])])
+    check_timing_mode(destination,rust_binary,environment,[([],records[0]),(["--virtual-cursor"],cursors[0])],label="matea")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),

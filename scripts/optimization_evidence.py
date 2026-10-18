@@ -56,11 +56,21 @@ def main():
     parser.add_argument("--expected", type=int, required=True)
     parser.add_argument("--validate-current", action="store_true",
                         help="validate one probe JSONL file without making a historical performance comparison")
+    parser.add_argument("--target-ns", type=int,
+                        help="require confirmed calibration at this target for every current record")
     args = parser.parse_args()
+    if args.target_ns is not None and (not args.validate_current or args.target_ns <= 0):
+        parser.error("--target-ns requires --validate-current and a positive target")
     if args.validate_current:
         data = records(args.directory.read_text(encoding="utf-8"))
         if len(data) != args.expected:
             raise ValueError("current probe case count changed")
+        if args.target_ns is not None:
+            for item in data.values():
+                calibration=item.get("calibration",{})
+                if calibration.get("target_ns")!=args.target_ns or not all(
+                        len(batch.get("confirmations_ns",[]))==2 for batch in calibration.get("batches",[])):
+                    raise ValueError("required confirmed calibration missing/changed: "+item["case"])
         print(f"{len(data)} valid current cases; timing is not cross-platform performance evidence")
         return
     contexts, data = [], []

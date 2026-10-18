@@ -305,10 +305,7 @@ fn main() {
     }
     identity();
     let n = if std::env::args().any(|a| a == "--measure") {
-        std::env::var("MATEA_PERF_ITERATIONS")
-            .ok()
-            .and_then(|v| v.parse().ok())
-            .unwrap_or(1000)
+        measurement::iterations(1000)
     } else {
         0
     };
