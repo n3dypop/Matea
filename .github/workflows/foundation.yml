@@ -107,7 +107,7 @@ jobs:
           PYTHONUTF8: "1"
       - run: |
           cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl
-          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); assert len(records)==7"
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==7)"
         shell: bash
         env:
           MATEA_PROBE_OUTPUT_ONLY: "1"
@@ -116,7 +116,7 @@ jobs:
       - run: cargo run --locked --quiet -p matea --example render_probe --release
       - run: |
           cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl
-          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; records=read_probe_outputs(Path('artifacts/deadlines.jsonl').read_text(encoding='utf-8')); assert set(records)=={f'terminal/first_notification_{ms}ms' for ms in [1,5,16,50]}"
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/deadlines.jsonl').read_text(encoding='utf-8')); require(set(records)=={f'terminal/first_notification_{ms}ms' for ms in [1,5,16,50]})"
         shell: bash
         env:
           MATEA_PROBE_OUTPUT_ONLY: "1"

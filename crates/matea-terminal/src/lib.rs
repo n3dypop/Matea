@@ -149,7 +149,7 @@ pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
                 previous = Some(frame);
             }
             let timeout =
-                subscription_poll_timeout(runtime.next_subscription_delay(), last.elapsed());
+                subscription_poll_timeout(runtime.next_subscription_delay(), || last.elapsed());
             if let Some(event) = session.backend.poll(timeout)? {
                 match event {
                     TerminalEvent::Interrupt => break,
@@ -190,9 +190,9 @@ pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
     }
 }
 
-fn subscription_poll_timeout(next: Option<Duration>, spent: Duration) -> Duration {
+fn subscription_poll_timeout(next: Option<Duration>, spent: impl FnOnce() -> Duration) -> Duration {
     let maximum = Duration::from_millis(16);
-    next.map_or(maximum, |delay| delay.saturating_sub(spent).min(maximum))
+    next.map_or(maximum, |delay| delay.saturating_sub(spent()).min(maximum))
 }
 
 static EXCLUSIVE: AtomicBool = AtomicBool::new(false);
@@ -363,8 +363,12 @@ mod tests {
     fn subscription_wait_subtracts_render_time_and_preserves_idle_cap() {
         let maximum = Duration::from_millis(16);
         for spent in [Duration::ZERO, Duration::from_millis(1), Duration::MAX] {
-            assert_eq!(subscription_poll_timeout(None, spent), maximum);
+            assert_eq!(subscription_poll_timeout(None, || spent), maximum);
         }
+        assert_eq!(
+            subscription_poll_timeout(None, || panic!("idle path must not read the clock")),
+            maximum
+        );
         for delay in [
             Duration::ZERO,
             Duration::from_nanos(1),
@@ -384,7 +388,7 @@ mod tests {
                 } else {
                     (delay - spent).min(maximum)
                 };
-                assert_eq!(subscription_poll_timeout(Some(delay), spent), expected);
+                assert_eq!(subscription_poll_timeout(Some(delay), || spent), expected);
             }
         }
     }

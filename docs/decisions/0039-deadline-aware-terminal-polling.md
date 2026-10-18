@@ -38,3 +38,9 @@ and an unrepresentable future deadline remain distinct. Independent logical
 fixtures cover nearest deadlines, removal/restart, coalescing and the maximum
 duration boundary. The transport helper covers time spent rendering, overdue
 deadlines and the unchanged idle cap without sleeps.
+
+The initial implementation read the platform clock even when no subscription
+existed. Initial 64-key/idle control cases regressed. Retain those distributions
+and use a lazy clock closure, invoked only for an active deadline; a panic-on-call
+fixture verifies that the idle path does not read it. Repeat both complete timer
+latencies and unchanged-path controls before assessing the result.
