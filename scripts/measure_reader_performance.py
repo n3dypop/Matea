@@ -1,5 +1,6 @@
 """Compare trusted Git reader code on the same finite retained valid corpus."""
 import argparse
+import builtins
 import hashlib
 import json
 from pathlib import Path
@@ -7,7 +8,7 @@ import platform
 import re
 import subprocess
 import sys
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 import optimization_evidence
 from check_quality import execution_inputs
 from fetch_upstream_issues import atomic_json
@@ -20,10 +21,19 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def compile_reader(source, filename):
+def compile_reader(source, filename, record_source=None):
     # Repository-owned historical sources run with their CLI guard off.
     # Functions keep their own globals instead of using the current parser.
     namespace = {"__name__":"_matea_baseline_reader", "__file__":str(filename)}
+    if record_source is not None:
+        dependency = ModuleType("performance_records")
+        dependency.__file__ = str(Path(filename).with_name("performance_records.py"))
+        exec(compile(record_source, dependency.__file__, "exec"), dependency.__dict__)
+        def frozen_import(name, globals=None, locals=None, fromlist=(), level=0):
+            if name == "performance_records" and level == 0:
+                return dependency
+            return builtins.__import__(name, globals, locals, fromlist, level)
+        namespace["__builtins__"] = {**vars(builtins), "__import__":frozen_import}
     exec(compile(source, str(filename), "exec"), namespace)
     if not all(callable(namespace.get(name)) for name in ["records", "compare"]):
         raise ValueError("baseline requires records and compare functions")
@@ -57,7 +67,9 @@ def main():
         sources=source_snapshot(revision)
         path="scripts/optimization_evidence.py"
         old_source=subprocess.check_output(["git","show",args.before+":"+path],cwd=ROOT)
-        baseline=compile_reader(old_source,ROOT/path)
+        dependency_path="scripts/performance_records.py"
+        dependency_source=subprocess.check_output(["git","show",args.before+":"+dependency_path],cwd=ROOT)
+        baseline=compile_reader(old_source,ROOT/path,dependency_source)
         folder=ROOT/"docs/evidence/optimization/style"
         inputs={name:(folder/name).read_bytes() for name in ["before.jsonl","after.jsonl"]}
         before,after=(inputs[name].decode("utf-8") for name in ["before.jsonl","after.jsonl"])
@@ -70,7 +82,8 @@ def main():
         if operations["before"]()!=operations["after"]():
             raise ValueError("valid-corpus complete report output changed")
         context.update(git_head=revision,source_sha256=sources,
-                       baseline={"git_head":args.before,"source":path,"source_sha256":digest(old_source)},
+                       baseline={"git_head":args.before,"source":path,"source_sha256":digest(old_source),
+                                 "dependency_source":dependency_path,"dependency_sha256":digest(dependency_source)},
                        input_sha256={name:digest(raw) for name,raw in inputs.items()},
                        platform=platform.platform(),python=sys.version,
                        limits=["31 samples and a separate Python heap pass per run; no build/test/Miri/coverage/download overlap during timing.",

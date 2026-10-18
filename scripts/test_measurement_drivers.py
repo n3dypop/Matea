@@ -20,6 +20,16 @@ class MeasurementDriverTests(unittest.TestCase):
         for bad in ["records=1\ncompare=2", "def records(text): return text"]:
             with self.assertRaises(ValueError):compile_reader(bad,"fixture.py")
 
+    def test_reader_dependencies_are_frozen_without_global_module_replacement(self):
+        import performance_records
+        original=performance_records.parse_json
+        source='from performance_records import parse_json\ndef records(text): return parse_json(text)\ndef compare(a,b,count): return records(a)'
+        dependency='VALUE="historical"\ndef parse_json(text): return VALUE + text'
+        reader=compile_reader(source,"fixture.py",dependency)
+        self.assertEqual(reader.records(" input"),"historical input")
+        self.assertIs(performance_records.parse_json,original)
+        self.assertEqual(performance_records.parse_json('{"n":1}'),{"n":1})
+
     def test_all_31_intervals_and_separate_heap_pass_are_retained(self):
         times=[value for n in range(1,32) for value in [1000*n,1000*n+n]]
         traced=[]

@@ -6,12 +6,31 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from performance_records import read_records, read_probe_outputs, summary, write_report, parse_json
+from performance_records import read_records, read_probe_outputs, summary, write_report, parse_json, validate
 from report_performance import generate
 from report_viewport_performance import apply_harness_patch
 
 
 class RecordTests(unittest.TestCase):
+    def test_direct_sample_validation_keeps_exact_integers_and_float_bounds(self):
+        for number in [1, 10**400, 0.5, 5e-324]:
+            record={**self.fixture(),"samples_ns":[number]*31}
+            self.assertIs(validate(record),record)
+        for number in [0, -1, True, None, "1", float("nan"), float("inf"), -float("inf")]:
+            with self.subTest(number=number),self.assertRaises(ValueError):
+                validate({**self.fixture(),"samples_ns":[number]*31})
+
+    def test_reused_decoder_keeps_encoding_and_error_isolation(self):
+        expected={"text":"抹茶", "duration":0.5}
+        text=json.dumps(expected,ensure_ascii=False)
+        for encoding in ["utf-8", "utf-8-sig", "utf-16", "utf-32"]:
+            raw=text.encode(encoding)
+            for value in [raw,bytearray(raw)]:
+                self.assertEqual(parse_json(value),expected)
+        for invalid in ['{"n":1,"n":2}', '{"n":1e999}', text+' trailing', '{']:
+            with self.assertRaises(ValueError):parse_json(invalid)
+            self.assertEqual(parse_json(' \n'+text+'\t'),expected)
+
     def test_optional_cold_counter_preserves_zero_and_rejects_invalid_values(self):
         for value in [0,1,0.5]:
             record={**self.fixture(),"cold_ns":value}

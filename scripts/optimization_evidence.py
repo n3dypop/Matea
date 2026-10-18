@@ -15,17 +15,15 @@ def records(text):
     for line in text.splitlines():
         item = validate(parse_json(line))
         name = item["case"]
-        if not isinstance(name, str) or not name or name in result:
+        if name in result:
             raise ValueError("empty/duplicate case identifier")
-        for field in ["iterations_per_sample", "allocations", "allocated_bytes", "first_return_value"]:
+        for field in ["allocations", "allocated_bytes", "first_return_value"]:
             value = item.get(field)
-            if type(value) is not int or value < (1 if field == "iterations_per_sample" else 0):
+            if type(value) is not int or value < 0:
                 raise ValueError("invalid counter: " + field)
         samples = item["samples_ns"]
         if len(samples) != 31:
             raise ValueError("31 positive finite timing samples required")
-        if not isinstance(item["semantics"], str) or not item["semantics"] or not isinstance(item["output"], str):
-            raise ValueError("missing semantics/output")
         result[name] = item
     if not result:
         raise ValueError("empty measurement file")

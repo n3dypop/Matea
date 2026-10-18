@@ -35,8 +35,18 @@ def validate(record):
     if not isinstance(record.get("semantics"), str) or not record["semantics"] or not isinstance(record.get("output"), str):
         raise ValueError("missing semantics/output")
     samples = record.get("samples_ns")
-    if not isinstance(samples, list) or len(samples) < 31 or not all(numeric(n, positive=True) for n in samples):
+    if not isinstance(samples, list) or len(samples) < 31:
         raise ValueError("at least 31 positive finite timing samples required")
+    # Validate the hot array in one loop, without a generator and a Python
+    # function call for each sample. The float bounds also reject NaN/inf;
+    # integers stay exact, including values too large to convert to float.
+    for sample in samples:
+        if type(sample) is float:
+            valid = 0 < sample < math.inf
+        else:
+            valid = type(sample) is int and sample > 0
+        if not valid:
+            raise ValueError("at least 31 positive finite timing samples required")
     iterations = record.get("iterations_per_sample")
     if type(iterations) is not int or iterations <= 0:
         raise ValueError("invalid iterations_per_sample")
@@ -89,15 +99,26 @@ def unique_object(pairs):
     return result
 
 
+def invalid_constant(value):
+    raise ValueError("nonfinite JSON constant: " + value)
+
+
+def finite_float(text):
+    value = float(text)
+    if not math.isfinite(value):
+        raise ValueError("nonfinite JSON number: " + text)
+    return value
+
+
+_STRICT_DECODER = json.JSONDecoder(object_pairs_hook=unique_object, parse_constant=invalid_constant, parse_float=finite_float)
+
+
 def parse_json(text):
-    def invalid_constant(value):
-        raise ValueError("nonfinite JSON constant: " + value)
-    def finite_float(text):
-        value = float(text)
-        if not math.isfinite(value):
-            raise ValueError("nonfinite JSON number: " + text)
-        return value
-    return json.loads(text, object_pairs_hook=unique_object, parse_constant=invalid_constant, parse_float=finite_float)
+    # Reuse immutable decoder configuration across records. Keep json.loads'
+    # bytes/encoding behavior for callers that supply a raw context file.
+    if isinstance(text, (bytes, bytearray)):
+        text = text.decode(json.detect_encoding(text), "surrogatepass")
+    return _STRICT_DECODER.decode(text)
 
 
 def read_records(text):
