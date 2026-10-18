@@ -904,8 +904,8 @@
         "crates/matea-style/tests/fixtures/gradients.tsv",
         "scripts/pty_smoke.py"
       ],
-      "performance": "docs/gradient-audit.md",
-      "notes": "RGB8 stop/output subset: owned cached Lab coordinates, reference segment distribution and prefix shortcut, cached diagonal grid palette, immutable borrowed iteration. 548 native reference fixtures and 19 selected Miri cases. High-depth/fractional/alpha/custom color inputs and empty/nil source semantics remain pending; measurements/three-OS acceptance not yet complete. No full declaration or module parity."
+      "performance": "docs/evidence/gradients/performance/report.json",
+      "notes": "RGB8 stop/output subset: owned cached Lab coordinates, reference segment distribution and prefix shortcut, cached diagonal palette and borrowed zero-output-allocation iteration. 548 native reference fixtures, 19 selected Miri cases, six matched fresh workloads and six separate streaming controls. Seven required CI jobs pass at 1202535 with 116 program/138 input binding. High-depth/fractional/alpha/custom color inputs, other constructor/prefix/error performance and full styled rendering remain pending. No full declaration/module parity; see docs/gradient-audit.md."
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "context_sha256": "e24e120d9c68d40915f53f89ab0b7cc693458c8a3350d28008460f29eca4a22f",
+  "report_sha256": "7fb6a707b7fd9560383967583e6c4db99a298a7322ba376c7613953a7b13d339",
+  "metric_clarification": "Rust allocations/bytes are requested System allocation/reallocation calls and Layout bytes; Go allocations use testing.AllocsPerRun(10), bytes average runtime.MemStats.TotalAlloc deltas with GC disabled for that separate pass. Allocator rounding and representations differ; neither metric is RSS. Timing uses normal Go GC.",
+  "remaining_performance_scope": [
+    "single-stop/prefix constructors, empty/error paths and other palettes",
+    "whole styled View/render/transport pipeline",
+    "all high-depth/alpha/custom color semantics"
+  ],
+  "score_promotion": false,
+  "percentile_interpretation": "p50/p95 over 31 per-operation batch averages; not individual-call tail latency"
+}
