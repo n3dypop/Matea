@@ -177,6 +177,14 @@ def check_probes(destination, go_binary, rust_binary, environment):
         require(all(geometry[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"viewport geometry mismatch: "+name)
     check_timing_mode(destination,go_binary,environment,[(["--viewport-geometry"],geometry[1])],group="viewport-geometry")
     check_timing_mode(destination,rust_binary,environment,[(["--viewport-geometry"],geometry[0])],label="matea",group="viewport-geometry")
+    varied=[]
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output=subprocess.check_output([str(binary),"--viewport-geometry-varied"],env=environment,timeout=30)
+        varied.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-viewport-geometry-varied-outputs.jsonl")).write_bytes(output)
+    require(varied[0].keys()==geometry[0].keys() and varied[1].keys()==geometry[1].keys(),"varied viewport fixture set changed")
+    for name,b in varied[1].items():
+        require(all(varied[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"varied viewport geometry mismatch: "+name)
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -287,7 +295,7 @@ def main():
     (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
         "gradient_matched_cases":6,"gradient_fixture_cases":548,"rust_gradient_timing_cases":12,"go_gradient_timing_cases":6,
         "indexed_gradient_fixture_cases":256,"progress_matched_cases":6,"progress_fixture_cases":120,"rust_progress_timing_cases":12,"go_progress_timing_cases":6,
-        "viewport_content_fixture_cases":220,"viewport_horizontal_fixture_cases":1404,"viewport_cut_fixture_cases":200,"viewport_input_fixture_cases":34,"viewport_geometry_edge_cases":10,"viewport_geometry_matched_cases":14,"rust_viewport_geometry_timing_cases":18,"go_viewport_geometry_timing_cases":14,"source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
+        "viewport_content_fixture_cases":220,"viewport_horizontal_fixture_cases":1404,"viewport_cut_fixture_cases":200,"viewport_input_fixture_cases":34,"viewport_geometry_edge_cases":10,"viewport_geometry_matched_cases":14,"viewport_geometry_varied_matched_cases":14,"rust_viewport_geometry_timing_cases":18,"go_viewport_geometry_timing_cases":14,"source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")
     print("11 pinned inventories, 84 retained and seven cursor output cases validated; no performance verdict")

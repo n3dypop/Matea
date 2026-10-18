@@ -1204,3 +1204,44 @@ fn source_resize_replace_overflow_edges_have_explicit_bounded_rust_outcomes() {
     }
     assert_eq!((exact_nonnegative, signed_only, improved), (5, 2, 3));
 }
+
+#[test]
+fn longest_width_handles_repeated_varied_ascii_indexes_and_replacement() {
+    let mut viewport = Viewport::new("");
+    assert_eq!(viewport.longest_line_width(), 0);
+    for empty in ["\n", "\n\n", "\n\n\n"] {
+        viewport.set_content(empty);
+        assert_eq!(viewport.longest_line_width(), 0);
+    }
+    let ascii = [
+        "".to_owned(),
+        "a".to_owned(),
+        "X".repeat(1024),
+        "tail".to_owned(),
+        "".to_owned(),
+    ]
+    .join("\n");
+    viewport.set_content(&ascii);
+    assert_eq!(viewport.longest_line_width(), 1024);
+    let repeated = std::iter::repeat_n("茶e\u{301}👩‍💻", 100)
+        .collect::<Vec<_>>()
+        .join("\n");
+    viewport.set_content(&repeated);
+    assert_eq!(viewport.longest_line_width(), 5);
+    let mut expected = 0;
+    let varied = (0..97usize)
+        .map(|index| {
+            let digits = index.to_string();
+            expected = expected.max(2 * (index % 13) + 1 + digits.len());
+            format!("{}e\u{301}{digits}", "茶".repeat(index % 13))
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    viewport.set_content(&varied);
+    assert_eq!(viewport.longest_line_width(), expected);
+    assert_eq!(expected, 27);
+    viewport.set_content(&format!("{repeated}\n{ascii}\n{varied}\n{repeated}"));
+    assert_eq!(viewport.longest_line_width(), 1024);
+    viewport.set_content("X\n");
+    assert_eq!(viewport.longest_line_width(), 1);
+}
