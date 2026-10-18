@@ -27,7 +27,9 @@ are the audited references. The MIT attribution is retained in
 THIRD_PARTY_NOTICES.md. [Source hashes and finite output checks](evidence/gradients/reference-source.json)
 bind 548 generated fixture cases to the reference. All match natively, and
 19 selected cases plus iterator/ownership tests pass Miri at seed 197. Native
-tests also cover maximum u16 grid dimensions; those are skipped in Miri.
+tests also construct the 65,535-entry diagonal palette at maximum u16 dimensions,
+check logical length and sample the last cell. They do not traverse or materialize
+the whole logical grid; the maximum case is skipped in Miri.
 The CLI's six fresh workloads match complete RGB8 output and FNV64 return values;
 six Rust streaming controls are a separate workload, not an upstream speed ratio.
 At 1202535 all 33 native checks pass: 167 Rust tests plus two doctests, 115 Python
