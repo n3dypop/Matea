@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "source_head": "3f69cc8ccf05050bbaa655d5cccf9f5b9d7bba6e",
+  "source_sha256": {
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
+    "scripts/optimization_evidence.py": "f1667b655f6046a4021263421895288f6fa6a09f2e7e2d99141ecd545805b3a0"
+  },
+  "fixtures_sha256": "da134d76b2f2fe180af0b0d341b63b12187061e5f95ba223f2f2f6d515a3be96",
+  "checks": [
+    {
+      "reader": "optimization_evidence.records",
+      "fixture": "duplicate_json_field",
+      "rejected": true,
+      "error": "duplicate JSON field: allocations"
+    },
+    {
+      "reader": "optimization_evidence.records",
+      "fixture": "correctness_record_with_forged_timings",
+      "rejected": true,
+      "error": "typed correctness records are not measurements"
+    },
+    {
+      "reader": "optimization_evidence.records",
+      "fixture": "unreached_calibration_target",
+      "rejected": true,
+      "error": "calibration did not reach the recorded sample count/target"
+    },
+    {
+      "reader": "optimization_evidence.records",
+      "fixture": "negative_cold_counter",
+      "rejected": true,
+      "error": "invalid cold_ns"
+    },
+    {
+      "reader": "performance_records.read_records",
+      "fixture": "negative_cold_counter",
+      "rejected": true,
+      "error": "invalid cold_ns"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 111,
+  "programs": 112,
   "review_units": 41,
   "below_high": [
     {
@@ -1954,7 +1954,8 @@
         "scripts/measure_auditor_performance.py",
         "scripts/performance_records.py",
         "scripts/measure_remaining_performance.py",
-        "scripts/report_attribute_performance.py"
+        "scripts/report_attribute_performance.py",
+        "scripts/measure_reader_performance.py"
       ],
       "criteria": {
         "rust_design": {
@@ -2136,7 +2137,7 @@
       ]
     }
   ],
-  "plan_sha256": "876f751a7595e3c82b884478f28362ec83fc38e7585814f845043c6ccfea6111",
+  "plan_sha256": "c67dd059c7f5d657680fbf6013effe90acb3e09b17d599fe77b0bc27d6d841fc",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2213,8 +2214,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 708,
-                "percent": 94.5260347129506
+                "covered": 709,
+                "percent": 94.65954606141523
               },
               "functions": {
                 "count": 101,
@@ -2228,9 +2229,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1124,
-                "notcovered": 59,
-                "percent": 95.01267962806425
+                "covered": 1125,
+                "notcovered": 58,
+                "percent": 95.09721048182587
               },
               "branches": {
                 "count": 0,
@@ -5292,6 +5293,14 @@
       "native_execution_coverage": null
     },
     {
+      "file": "scripts/measure_reader_performance.py",
+      "sha256": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
       "file": "scripts/measure_remaining_performance.py",
       "sha256": "5f02bba67f9bb4dcb58216f1af68024a894f6e38a519a2473e20208d853e1e83",
       "units": [
@@ -5309,7 +5318,7 @@
     },
     {
       "file": "scripts/optimization_evidence.py",
-      "sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+      "sha256": "f1667b655f6046a4021263421895288f6fa6a09f2e7e2d99141ecd545805b3a0",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5317,7 +5326,7 @@
     },
     {
       "file": "scripts/performance_records.py",
-      "sha256": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+      "sha256": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5341,7 +5350,7 @@
     },
     {
       "file": "scripts/report_attribute_performance.py",
-      "sha256": "023ccc59494ece7ecfe2a28be3f3f4675a43d876d246ff91b9477f96220ae3ef",
+      "sha256": "694e3f15ed49cabd4b13040a2cd5a7e3682fc70d226711f9978a72de8362514d",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5437,7 +5446,7 @@
     },
     {
       "file": "scripts/test_measurement_drivers.py",
-      "sha256": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
+      "sha256": "d9b2ca20c810291916c8c35075322c76a010a11bf43ef84ead5b2624e855b157",
       "units": [
         "scripts/regression-tests"
       ],
@@ -5445,7 +5454,7 @@
     },
     {
       "file": "scripts/test_optimization_evidence.py",
-      "sha256": "2943ef0edebfabd80b43ac02d1729bb6ff218973abfa2f97284d21aaa0672497",
+      "sha256": "3eaa623b8c27fffd55b0f86f215142aa6fc6a8d990cd260f59f87222aa045362",
       "units": [
         "scripts/regression-tests"
       ],
@@ -5453,7 +5462,7 @@
     },
     {
       "file": "scripts/test_performance_records.py",
-      "sha256": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+      "sha256": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
       "units": [
         "scripts/regression-tests"
       ],

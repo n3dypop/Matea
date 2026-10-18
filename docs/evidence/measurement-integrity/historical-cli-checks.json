@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "source_head": "3f69cc8ccf05050bbaa655d5cccf9f5b9d7bba6e",
+  "checks": [
+    {
+      "command": [
+        "report_performance.py",
+        "--artifacts",
+        "docs/evidence/performance/2026-10-16",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "84 retained cases validated without publication; no new measurement\n"
+    },
+    {
+      "command": [
+        "report_view_performance.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "20 Rust-only owned-scene fixtures match; full module coverage remains pending\n"
+    },
+    {
+      "command": [
+        "report_subscription_performance.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "5 Rust-only subscription fixtures validated; no upstream parity claimed\n"
+    },
+    {
+      "command": [
+        "report_viewport_performance.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "12 Viewport fixture outputs/semantics and baseline hashes match\n"
+    },
+    {
+      "command": [
+        "report_clock_format_performance.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "16 clock fixtures match in all eight retained runs; clock module parity pending\n"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "started_at_utc": "2026-10-18T03:17:06.632189+00:00",
+  "started_at_utc": "2026-10-18T06:55:07.131163+00:00",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "architecture": "arm64",
   "scope": "local host only; no other OS/CI execution inferred",
@@ -14,7 +14,7 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.385,
+      "elapsed_seconds": 0.23,
       "log": "fmt.log",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -32,9 +32,9 @@
         "warnings"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.25,
+      "elapsed_seconds": 0.326,
       "log": "clippy.log",
-      "log_sha256": "4f27ac380b22e1d975eee20ce727fa8cbc09061177f6253af0777fd4de7b7506"
+      "log_sha256": "5604fc8f0c276397a55db4bd7008236712075c0ad37d3b3a0f1fe362b1b85a36"
     },
     {
       "name": "test",
@@ -46,9 +46,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 23.25,
+      "elapsed_seconds": 5.357,
       "log": "test.log",
-      "log_sha256": "2a1d42b83c784aeb1b5f1e99ad40a225d06e630a6a94853be65cf34e421123a1"
+      "log_sha256": "0ea4c33f87d8b3910bbd7e79d8c487fd4b7b796d61a95122f628ba7d9e03e4c9"
     },
     {
       "name": "all-targets",
@@ -61,9 +61,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 20.192,
+      "elapsed_seconds": 6.628,
       "log": "all-targets.log",
-      "log_sha256": "884f08be6162fab0618a97db218d88fbdb7dfefc9d41f938ac2e876a8d965b7e"
+      "log_sha256": "104826d8444620b49c2326f5aa68eb2296b702895cfa5d67e9f9a3ec2cc120ae"
     },
     {
       "name": "release-tests",
@@ -76,9 +76,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 17.587,
+      "elapsed_seconds": 1.543,
       "log": "release-tests.log",
-      "log_sha256": "fbb37090d717655ec27657e3b6149835aa79b930c4ee98acdbb9de5b348f21ec"
+      "log_sha256": "a0d7305b09dc1f4c77161fcfbd64f88cf544ebd87bbe93a07219fbd9b3e84ac6"
     },
     {
       "name": "style-exhaustive",
@@ -97,9 +97,9 @@
         "--ignored"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 3.937,
+      "elapsed_seconds": 3.901,
       "log": "style-exhaustive.log",
-      "log_sha256": "71b1f3433fa93a2e9f67b9da684b4c663a3b3dc94c8a2909ac7b3781be6a1c70"
+      "log_sha256": "7f26eb9b1656bfff881443310274ee237579bf08f29c42a36ffdc96df773c0e9"
     },
     {
       "name": "docs",
@@ -112,9 +112,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 2.64,
+      "elapsed_seconds": 0.086,
       "log": "docs.log",
-      "log_sha256": "27dc65a75de83cb1f4d9f3563c99ef68abc64329127bf8625dc954ee196ebb02"
+      "log_sha256": "0d472e74e2630df11903e70a6333f82a3112f4af46dd7c955fce0447f66d82d6"
     },
     {
       "name": "build-examples",
@@ -127,9 +127,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 2.966,
+      "elapsed_seconds": 0.067,
       "log": "build-examples.log",
-      "log_sha256": "139cd9e232fccb2fbef5721994c3bd1e593e7e4b8ca1cac76bb324fb309ce573"
+      "log_sha256": "736e2582f563605dd272e5fb977840b0c0767377d27b6940c440caf75eec7157"
     },
     {
       "name": "example-smoke",
@@ -138,7 +138,7 @@
         "${REPOSITORY}/scripts/example_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 16.236,
+      "elapsed_seconds": 14.867,
       "log": "example-smoke.log",
       "log_sha256": "3c8ba00635e5d016f213d861d7f85e8c1053da31dd499759de5a1df6ffe8a788"
     },
@@ -149,7 +149,7 @@
         "${REPOSITORY}/scripts/check_coverage.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.589,
+      "elapsed_seconds": 0.598,
       "log": "coverage-integrity.log",
       "log_sha256": "ce593012c3fffe216db437106c5b5a1462c9cb77eb260bc7ee9b8db3d93ed858"
     },
@@ -160,9 +160,9 @@
         "${REPOSITORY}/scripts/test_coverage.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.056,
+      "elapsed_seconds": 1.061,
       "log": "coverage-guard-tests.log",
-      "log_sha256": "46b5171f65a2f02ddafac72f7137b369da957a0d6b8e705c631b1ac431a67d67"
+      "log_sha256": "7956a78ef3f4a44562a17f25f270744e55b3cbb3e0c5b0d37789581747fd95a2"
     },
     {
       "name": "reference-audit-tests",
@@ -171,9 +171,9 @@
         "${REPOSITORY}/scripts/test_reference_audit.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 2.736,
+      "elapsed_seconds": 2.602,
       "log": "reference-audit-tests.log",
-      "log_sha256": "453f7e60bb9c52c44ab166a4245f90511cd93865c67d2a1a6a06603d4535cc8a"
+      "log_sha256": "3e9751aee96c45289275e1297ff8a111b7afe0a8bd97cf88bab6f2c8077162b8"
     },
     {
       "name": "rustdoc-audit-tests",
@@ -182,7 +182,7 @@
         "${REPOSITORY}/scripts/test_rustdoc_exports.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.048,
+      "elapsed_seconds": 0.045,
       "log": "rustdoc-audit-tests.log",
       "log_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad"
     },
@@ -193,9 +193,9 @@
         "${REPOSITORY}/scripts/test_source_snapshot.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.564,
+      "elapsed_seconds": 1.456,
       "log": "source-snapshot-tests.log",
-      "log_sha256": "fb60b029e2e345734f8b092d947dc25bf01b125b049fd07286b815c5f7a28528"
+      "log_sha256": "f911129329ade73ad34f94cf5292782520fc2a4def096b07741bad1bc77f9a02"
     },
     {
       "name": "rustdoc-import-tests",
@@ -204,9 +204,9 @@
         "${REPOSITORY}/scripts/test_rustdoc_import.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.059,
+      "elapsed_seconds": 0.056,
       "log": "rustdoc-import-tests.log",
-      "log_sha256": "f96363f8d8dff4c4abed7197c63606ead0bd955ea4259bdcb5fb6f47dbe53992"
+      "log_sha256": "38bf320bde0206302c1e57a1b42621b895232f0c74ebfec8c7b81ec6681fa5a0"
     },
     {
       "name": "issue-refresh-tests",
@@ -215,7 +215,7 @@
         "${REPOSITORY}/scripts/test_issue_refresh.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.083,
+      "elapsed_seconds": 0.076,
       "log": "issue-refresh-tests.log",
       "log_sha256": "35649ccb7621214ac024bd31428022d326fb76b6926043ad7d6527b41cd3c0f8"
     },
@@ -226,9 +226,9 @@
         "${REPOSITORY}/scripts/test_color_trace.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.069,
+      "elapsed_seconds": 0.063,
       "log": "color-oracle-tests.log",
-      "log_sha256": "c1dffb70dba98c39f6d3160dd8d69611f73e43edb30cec9880171bd2fc48adf8"
+      "log_sha256": "a2e97b7515932007aa3d038fcfa41fdd107cb2467ff84d182512ff3c7e24f045"
     },
     {
       "name": "build-source-auditor",
@@ -241,9 +241,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.048,
+      "elapsed_seconds": 0.044,
       "log": "build-source-auditor.log",
-      "log_sha256": "a13905646e2aed93ec6ea9ed6ac91490a4e01f91af0215c3965279a910612149"
+      "log_sha256": "6d77f64dfc8c5325b90fdbe05d8be367bdd578bcccec24f275c5ffee7d03dd6e"
     },
     {
       "name": "source-auditor-tests",
@@ -252,9 +252,9 @@
         "${REPOSITORY}/scripts/test_source_auditors.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.441,
+      "elapsed_seconds": 1.087,
       "log": "source-auditor-tests.log",
-      "log_sha256": "4c47a2d37809f3caf14f4e978a3a62f0171eca0e770e2e43a0f7eea4ad5ded11"
+      "log_sha256": "e0a5e5691fa1fda016a8f3144de385357da2dad47c7f3bcbe686800aa6087f0a"
     },
     {
       "name": "quality-gate-tests",
@@ -263,9 +263,9 @@
         "${REPOSITORY}/scripts/test_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.301,
+      "elapsed_seconds": 0.306,
       "log": "quality-gate-tests.log",
-      "log_sha256": "3150ca0c9d649d46168f65f47f22cf6fcc0deee0ed8b4fd401fcc4ebbe14a965"
+      "log_sha256": "3b504f0da70ce6522c60be19d2eea00bc3c1671d77ffd20e4b17d902b9719708"
     },
     {
       "name": "evidence-guard-tests",
@@ -276,7 +276,7 @@
       "exit_code": 0,
       "elapsed_seconds": 0.194,
       "log": "evidence-guard-tests.log",
-      "log_sha256": "40f52161d5c338daa51ea6c4d5e63438da514e406717d65abbdc4ffea8c291d8"
+      "log_sha256": "703b99d9161b29bd7d60908c527dee9e5660257ad2b5168bbab9479863ca7302"
     },
     {
       "name": "reference-path-tests",
@@ -285,9 +285,9 @@
         "${REPOSITORY}/scripts/test_reference_paths.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.075,
+      "elapsed_seconds": 0.081,
       "log": "reference-path-tests.log",
-      "log_sha256": "2c37d50a88147ca2ebd5197d74ee37d462dab650d793512e849814c28d5a38f0"
+      "log_sha256": "5279d1fc9a1ced44f9c96da1414ef59e4676f963fbad52e7a1a2903538819b0d"
     },
     {
       "name": "performance-record-tests",
@@ -296,9 +296,9 @@
         "${REPOSITORY}/scripts/test_performance_records.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.087,
+      "elapsed_seconds": 0.097,
       "log": "performance-record-tests.log",
-      "log_sha256": "c9f2c1b54e73f254402bb1a5b42d7d0ba1341d1dcb01aa3cc77c43238566aaf5"
+      "log_sha256": "f41f027eb8de778295ce32988da832be6619310d72b84bd0c842ca544e1496d2"
     },
     {
       "name": "optimization-evidence-tests",
@@ -307,9 +307,9 @@
         "${REPOSITORY}/scripts/test_optimization_evidence.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.212,
+      "elapsed_seconds": 0.218,
       "log": "optimization-evidence-tests.log",
-      "log_sha256": "6ca8b9db1e32654b4583d45a1f5f2c77dcd7ae9e2dff4765e46069072a85436d"
+      "log_sha256": "3618db4238830ab18d523d1dd5fcbfc1b6acc124de9cc0ec51778e3cc376d93c"
     },
     {
       "name": "measurement-driver-tests",
@@ -318,9 +318,9 @@
         "${REPOSITORY}/scripts/test_measurement_drivers.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.24,
+      "elapsed_seconds": 0.236,
       "log": "measurement-driver-tests.log",
-      "log_sha256": "28eac79fb0947c7f3163777550e5bd7f4390232c19e4ba316547a4ceb8e8bd1a"
+      "log_sha256": "7687e52d56869879fd3bd4f91f135395bf26f2e9191e51f4102c2d7fa710f157"
     },
     {
       "name": "acceptance-driver-tests",
@@ -329,9 +329,9 @@
         "${REPOSITORY}/scripts/test_acceptance_driver.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.907,
+      "elapsed_seconds": 1.029,
       "log": "acceptance-driver-tests.log",
-      "log_sha256": "556b2178512372fde22157e41e9ca1961c944fa8fc9cdfe6c9953fad982f9542"
+      "log_sha256": "9641f46ba93d601ecc0827cfcb17ac6e784318be95948a6e67d91f958098a6a4"
     },
     {
       "name": "optimized-python-tests",
@@ -347,9 +347,9 @@
         "test_*.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 7.004,
+      "elapsed_seconds": 7.092,
       "log": "optimized-python-tests.log",
-      "log_sha256": "902d06c221c8284fbcae50784643c38779121a2a72fdaffdd44b558bc4386950"
+      "log_sha256": "fa1537e9a5122691a7705d70b31a2fae28bf19064c6be7b985cde98fdf6e4bd9"
     },
     {
       "name": "quality-inventory",
@@ -358,9 +358,9 @@
         "${REPOSITORY}/scripts/check_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.064,
+      "elapsed_seconds": 0.059,
       "log": "quality-inventory.log",
-      "log_sha256": "8245a8b95014cb25d6462517033ea5bb9b6426f5723b6478dc08059bf14e138a"
+      "log_sha256": "028deee24f58d993aed376ebd420c7e6cf2d9fd0ed69993498c73127159479eb"
     },
     {
       "name": "python-syntax",
@@ -372,7 +372,7 @@
         "${REPOSITORY}/scripts"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.041,
+      "elapsed_seconds": 0.048,
       "log": "python-syntax.log",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -388,7 +388,7 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.078,
+      "elapsed_seconds": 0.081,
       "log": "build-color-probe.log",
       "log_sha256": "92434e198f27984c035c376ec77a7cf9e6ebdde782f8ccb1336ae3329b66ddb7"
     },
@@ -403,7 +403,7 @@
         "${REPOSITORY}/docs/evidence/color-policy-after.json"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.137,
+      "elapsed_seconds": 0.35,
       "log": "color-trace.log",
       "log_sha256": "2fda1254023407291920eb06a37919c8e46148f1db8ab9239f04c738c020ebc3"
     },
@@ -414,7 +414,7 @@
         "${REPOSITORY}/scripts/pty_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 7.431,
+      "elapsed_seconds": 7.395,
       "log": "pty-smoke.log",
       "log_sha256": "9dc4e88a6e73695f30067f2cfc29030b45916e38d024ba882b9c6cbba09b4471"
     },
@@ -433,9 +433,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.312,
+      "elapsed_seconds": 0.303,
       "log": "render-probe.log",
-      "log_sha256": "98c91cbafee90713a5ab4e015d028da0a782051059c990a23d457614d0d7026b"
+      "log_sha256": "296b3ae836a7121995aebdb0a74ad5b3b0e035abcb2b563d73868668824f9b5d"
     }
   ],
   "path_redaction": "Repository and home prefixes are replaced with placeholders.",
@@ -508,7 +508,7 @@
     "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
     "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
     "crates/matea/src/lib.rs": "5cce6d4217b437dcdc21704a639e5c41c6a7fb0820c76f305c89d73dc3a07da6",
-    "docs/quality-plan.json": "876f751a7595e3c82b884478f28362ec83fc38e7585814f845043c6ccfea6111",
+    "docs/quality-plan.json": "c67dd059c7f5d657680fbf6013effe90acb3e09b17d599fe77b0bc27d6d841fc",
     "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
     "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
     "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
@@ -526,13 +526,14 @@
     "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
     "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
     "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+    "scripts/measure_reader_performance.py": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
     "scripts/measure_remaining_performance.py": "5f02bba67f9bb4dcb58216f1af68024a894f6e38a519a2473e20208d853e1e83",
     "scripts/measure_rust_coverage.py": "ba6762339217260ea6bcbd19bd3d9e2f6c2dc851b8d6685fcd1e9426526d73d4",
-    "scripts/optimization_evidence.py": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
-    "scripts/performance_records.py": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+    "scripts/optimization_evidence.py": "f1667b655f6046a4021263421895288f6fa6a09f2e7e2d99141ecd545805b3a0",
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
     "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
     "scripts/pty_smoke.py": "fb7205b7393a3fccb0bd4596ab6fd14ab2079cbe051deea3b759cfb32c4c91ab",
-    "scripts/report_attribute_performance.py": "023ccc59494ece7ecfe2a28be3f3f4675a43d876d246ff91b9477f96220ae3ef",
+    "scripts/report_attribute_performance.py": "694e3f15ed49cabd4b13040a2cd5a7e3682fc70d226711f9978a72de8362514d",
     "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
     "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
     "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
@@ -544,9 +545,9 @@
     "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
     "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
     "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
-    "scripts/test_measurement_drivers.py": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
-    "scripts/test_optimization_evidence.py": "2943ef0edebfabd80b43ac02d1729bb6ff218973abfa2f97284d21aaa0672497",
-    "scripts/test_performance_records.py": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+    "scripts/test_measurement_drivers.py": "d9b2ca20c810291916c8c35075322c76a010a11bf43ef84ead5b2624e855b157",
+    "scripts/test_optimization_evidence.py": "3eaa623b8c27fffd55b0f86f215142aa6fc6a8d990cd260f59f87222aa045362",
+    "scripts/test_performance_records.py": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
     "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
     "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
     "scripts/test_reference_paths.py": "23f7faf55fcf8e52f41cdc05a008a4d704b5e555510578061b95c24e5ce66c31",
@@ -577,5 +578,5 @@
     "output": "cargo 1.99.0 (5f94df478 2026-08-27)"
   },
   "source_changed_during_run": [],
-  "finished_at_utc": "2026-10-18T03:18:59.077654+00:00"
+  "finished_at_utc": "2026-10-18T06:56:05.072947+00:00"
 }
