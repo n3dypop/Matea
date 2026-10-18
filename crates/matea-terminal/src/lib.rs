@@ -148,7 +148,9 @@ pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
                 session.backend.draw(&frame, previous.as_ref())?;
                 previous = Some(frame);
             }
-            if let Some(event) = session.backend.poll(Duration::from_millis(16))? {
+            let timeout =
+                subscription_poll_timeout(runtime.next_subscription_delay(), last.elapsed());
+            if let Some(event) = session.backend.poll(timeout)? {
                 match event {
                     TerminalEvent::Interrupt => break,
                     TerminalEvent::Input(Input::Key(k))
@@ -186,6 +188,11 @@ pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
             Ok(())
         }
     }
+}
+
+fn subscription_poll_timeout(next: Option<Duration>, spent: Duration) -> Duration {
+    let maximum = Duration::from_millis(16);
+    next.map_or(maximum, |delay| delay.saturating_sub(spent).min(maximum))
 }
 
 static EXCLUSIVE: AtomicBool = AtomicBool::new(false);
@@ -352,6 +359,35 @@ pub fn write_frame(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn subscription_wait_subtracts_render_time_and_preserves_idle_cap() {
+        let maximum = Duration::from_millis(16);
+        for spent in [Duration::ZERO, Duration::from_millis(1), Duration::MAX] {
+            assert_eq!(subscription_poll_timeout(None, spent), maximum);
+        }
+        for delay in [
+            Duration::ZERO,
+            Duration::from_nanos(1),
+            Duration::from_millis(1),
+            maximum,
+            Duration::MAX,
+        ] {
+            for spent in [
+                Duration::ZERO,
+                Duration::from_nanos(1),
+                Duration::from_millis(1),
+                Duration::from_millis(20),
+                Duration::MAX,
+            ] {
+                let expected = if spent >= delay {
+                    Duration::ZERO
+                } else {
+                    (delay - spent).min(maximum)
+                };
+                assert_eq!(subscription_poll_timeout(Some(delay), spent), expected);
+            }
+        }
+    }
     #[test]
     fn fixed_attribute_sequences_match_crossterm_for_every_supported_combination() {
         use crossterm::style::{Attribute, SetAttribute};

@@ -276,6 +276,17 @@ impl<A: Model> Runtime<A> {
     pub fn size(&self) -> Size {
         self.size
     }
+    /// Time from the last logical advance to the nearest active subscription.
+    /// Drivers should subtract wall time spent since that advance before waiting.
+    /// None means no subscription has a representable future deadline.
+    /// This does not report pending worker completions or read a platform clock.
+    pub fn next_subscription_delay(&self) -> Option<Duration> {
+        self.timers
+            .values()
+            .filter_map(|timer| timer.next)
+            .min()
+            .map(|deadline| deadline.saturating_sub(self.now))
+    }
     /// Observe a caught worker panic once, including canceled/stale effects.
     /// The normal panic hook may have written outside the application's view.
     /// Drivers can invalidate output caches without installing a global hook.
@@ -652,6 +663,93 @@ fn indexed_focus_ids<H: BuildHasher>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    struct DeadlineModel {
+        fast: Duration,
+        slow: Option<Duration>,
+        enabled: bool,
+    }
+    impl Model for DeadlineModel {
+        type Message = bool;
+        fn update(&mut self, event: Event<bool>) -> Effect<bool> {
+            if let Event::Message(enabled) = event {
+                self.enabled = enabled;
+            }
+            Effect::none()
+        }
+        fn view(&self, _: ViewContext<'_>) -> View {
+            View::text("deadline")
+        }
+        fn subscriptions(&self) -> Vec<Subscription<bool>> {
+            if !self.enabled {
+                return Vec::new();
+            }
+            let mut timers = vec![Subscription::every("fast", self.fast, || true)];
+            if let Some(slow) = self.slow {
+                timers.push(Subscription::every("slow", slow, || true));
+            }
+            timers
+        }
+    }
+    #[test]
+    fn subscription_deadline_tracks_nearest_logical_time_removal_and_coalescing() {
+        let model = DeadlineModel {
+            fast: Duration::from_millis(3),
+            slow: Some(Duration::from_millis(10)),
+            enabled: true,
+        };
+        let mut runtime = Runtime::new(model, Size::new(4, 1), Theme::plain()).unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_millis(3))
+        );
+        runtime.advance(Duration::from_millis(2)).unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_millis(1))
+        );
+        runtime.advance(Duration::from_millis(1)).unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_millis(3))
+        );
+        runtime.advance(Duration::from_millis(5)).unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_millis(2))
+        );
+        runtime.dispatch(Event::Message(false)).unwrap();
+        assert_eq!(runtime.next_subscription_delay(), None);
+        runtime.advance(Duration::from_secs(1)).unwrap();
+        assert_eq!(runtime.next_subscription_delay(), None);
+        runtime.dispatch(Event::Message(true)).unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_millis(3))
+        );
+        runtime.shutdown();
+        assert_eq!(runtime.next_subscription_delay(), None);
+    }
+    #[test]
+    fn subscription_deadline_distinguishes_maximum_from_unrepresentable_future() {
+        let model = DeadlineModel {
+            fast: Duration::MAX,
+            slow: None,
+            enabled: true,
+        };
+        let mut runtime = Runtime::new(model, Size::new(4, 1), Theme::plain()).unwrap();
+        assert_eq!(runtime.next_subscription_delay(), Some(Duration::MAX));
+        runtime
+            .advance(Duration::MAX - Duration::from_nanos(1))
+            .unwrap();
+        assert_eq!(
+            runtime.next_subscription_delay(),
+            Some(Duration::from_nanos(1))
+        );
+        runtime.advance(Duration::from_nanos(1)).unwrap();
+        assert_eq!(runtime.next_subscription_delay(), None);
+        runtime.advance(Duration::MAX).unwrap();
+        assert_eq!(runtime.next_subscription_delay(), None);
+    }
     #[test]
     fn large_focus_rings_preserve_first_order_even_with_total_hash_collision() {
         #[derive(Default)]

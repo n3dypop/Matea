@@ -39,6 +39,13 @@ See the runnable counter at `crates/matea/examples/counter.rs` and the facade ru
 
 The live loop reads one input per poll, dispatches it, advances timers, drains up to 32 completions and draws if state may have changed. The renderer suppresses unchanged rows. Update/View remain on the calling thread; only effect closures/messages must be Send. Update must not perform blocking I/O.
 
+Input waiting is capped by `Runtime::next_subscription_delay()` and the existing
+16ms idle bound. Subtract time spent since the last logical advance, including
+rendering; an already due subscription requests a nonblocking poll. This avoids
+quantizing short subscription periods to the idle wait. It does not provide a
+unified wake source for worker completions or hard real-time delivery. See
+[ADR 0039](decisions/0039-deadline-aware-terminal-polling.md).
+
 ## Effects and shutdown
 
 `Effect::perform(id, closure)` produces one typed result. `Effect::batch` starts independent tasks; result ordering is unspecified. `Effect::sequence` consumes one worker slot and emits child results in order; it does not wait for Update before starting the next child. The first child failure stops the sequence. Replacing or canceling an ID invalidates its generation, so queued old results are discarded. At eight workers, new work fails with RuntimeError; canceled workers still count until they actually finish.
