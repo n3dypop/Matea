@@ -3329,8 +3329,25 @@
           "labels": [
             "enhancement"
           ],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "historical_API_enhancement_assessed_with_pinned_output_fixtures",
+          "disposition": "assessed_typed_indexed_gradient_composition",
+          "analysis": "Historical WithGradient string/Hex input limitation is addressed by explicit typed xterm-index/RGB stops. All 256 starting indices have eight pinned samples; actual terminal ANSI16 palettes require caller-resolved RGB. No claim that the old API or historical black fallback was reproduced on the v2 pin.",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2022-06-02T01:13:22Z",
+            "notes": "Historical WithGradient string/Hex input limitation is addressed by explicit typed xterm-index/RGB stops. All 256 starting indices have eight pinned samples; actual terminal ANSI16 palettes require caller-resolved RGB. No claim that the old API or historical black fallback was reproduced on the v2 pin.",
+            "scope": "Bounded indexed-color gradient enhancement, not full progress/Lip Gloss color parity, historical Go API compatibility, alpha/high-depth support or a physical-terminal appearance claim. Source 0199793 passes all 256 exact fixtures on Linux, Windows and macOS.",
+            "evidence_sha256": {
+              "docs/progress-audit.md": "ff7a48dd2b90626ba7a00d8e75b60c5eaa5b53484f03321824c7355409ba5f2b",
+              "docs/evidence/progress/source-review.json": "da441191697e2688de0981b3b4f253481c93c50313c17ec3ece5675300e32b78",
+              "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483",
+              "crates/matea-style/src/gradient.rs": "34ae5ae284dec93a1bbd44ea8ce3219e0057a14b514406c0631f13dca48be65f",
+              "crates/matea-style/tests/gradients.rs": "e4a597aa505d221f7354ac2bb03f4eaa708809d7cb0aa87e6f3236341786827b",
+              "crates/matea-style/tests/fixtures/indexed-gradients.tsv": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff"
+            }
+          }
         },
         {
           "number": 129,

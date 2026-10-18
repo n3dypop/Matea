@@ -354,3 +354,10 @@ does not erase the behavioral gap. The 111-program/41-unit inventory still has
 追加で見つけた既定ラベルの2要求・12 byteを除き、別条件のセル反復6例は確保0です。
 p95の悪化も保存し、全モジュール性能の得点は昇格しません。
 [ソース・試験・生分布・残件](progress-audit.md)。[0199793の3 OS・MSRV・参照プローブCI](https://github.com/n3dypop/Matea/actions/runs/39118299105)は必須7ジョブ成功です。121プログラム・145実行入力と各OSの17ログを独立照合しました。[対応証拠](evidence/progress/ci-source-bindings.json)。現在は42評価単位・52未達軸で、Stage A／B・F5は閉じたままです。
+
+計測ツールの失敗記録・入力保全を修正し、3 OSの完全実行を照合しました。
+動作・移植性の2評価軸を75へ上げ、現在の未達は52→50です（123プログラム・42単位）。
+未測定の性能軸は50を維持し、F5とStage Bは閉じています。
+[試験・全生データ・CI照合と残条件](measurement-lifecycle.md)。
+ANSIインデックスのグラデーション要望も既存の256色・3 OS証拠から判定し、
+要確認issueは827件です。旧APIの不具合再現・修正とは区別しています。

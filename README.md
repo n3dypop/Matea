@@ -25,11 +25,13 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current scope is 121 programs in 42 units, with 52 assessments still below
-the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39118299105)
-validates native drivers, LLVM collection and reference output/measurement modes
+The current scope is 123 programs in 42 units, with 50 assessments still below
+the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39126579378)
+validates native acceptance/LLVM collection and complete measurement-tool paths
 on all three OSes. [Recent work and remaining limitations](docs/remaining-optimization.md)
 include deadline-aware input waits, typed text attributes, a color-only palette cache
-smaller owned panel payloads, indexed gradients and generation-safe progress.
+smaller owned panel payloads, indexed gradients, generation-safe progress and
+source-checked measurement attempts. Detailed component reference outputs retain
+their separate earlier source bindings.
 
 This repository contains source, tests, examples, CI and engineering documentation. External source checkouts and agent instructions are not part of it. Upstream revisions and declared dependency licenses are recorded in docs; Matea's distribution license and public naming availability remain owner review items.

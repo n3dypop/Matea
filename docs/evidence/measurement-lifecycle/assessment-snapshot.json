@@ -1,0 +1,313 @@
+{
+  "all_high": false,
+  "programs": 123,
+  "review_units": 42,
+  "below_high": [
+    {
+      "unit": "matea-core/input",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-core/input",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-core/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-core/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-render/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-render/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-render/text",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-render/text",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-style/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-style/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete."
+    },
+    {
+      "unit": "matea-terminal/ansi",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/ansi",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "26 native private color/command cases, exact literal outputs, 31 samples and requested allocations. Arbitrary Command implementations and policy-matched pinned source/OS workloads remain incomplete."
+    },
+    {
+      "unit": "matea-terminal/frame",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/frame",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-terminal/input",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/input",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+    },
+    {
+      "unit": "matea-terminal/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "12 complete mock-backend event-loop/lifecycle cases include idle, resize, quit and five I/O failures, with 31 samples and allocation passes. Native terminal input/output, effects and scheduling/resident memory remain incomplete."
+    },
+    {
+      "unit": "matea-terminal/modes",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/modes",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Three lease and three Unix command cycles have exact before/after bytes, 31 samples, allocations and logical writes/flushes. Fixed reset removes two allocations; physical I/O, failure timing and Windows native modes remain unmeasured."
+    },
+    {
+      "unit": "matea-terminal/protocol",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/protocol",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+    },
+    {
+      "unit": "matea-terminal/signals_unix",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-terminal/signals_unix",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 native successful sigaction install/restore samples remove one 96-byte requested allocation. Four synthetic restoration/ownership tests cover failure records, but actual syscall failure timing, signal-delivery latency and OS matrix performance remain incomplete."
+    },
+    {
+      "unit": "matea-widgets/clocks",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/clocks",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/help",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/help",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/lib",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/cursor",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "All 21 pinned cursor declarations linked to the typed cursor/composition API; executed source edge fixtures reproduce a mode-roundtrip stale-tick defect. Arbitrary Lip Gloss style decorators and complete physical terminal behavior remain partial."
+    },
+    {
+      "unit": "matea-widgets/cursor",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Seven exact-output finite cases, 31 samples each, matched Go controls and balanced byte-identical old/new binaries. Single checked phase transitions reduce control medians; they remain slower than Go. Active timer delivery, scale, rich styling and RSS remain unmeasured."
+    },
+    {
+      "unit": "matea-widgets/spinner",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/spinner",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea-widgets/progress",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
+    },
+    {
+      "unit": "matea-widgets/progress",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
+    },
+    {
+      "unit": "matea-widgets/progress",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "Synthetic cell geometry and fallback tests cover the implemented subset. The historical native Windows width report and physical-emulator behavior remain unverified; this unit retains a partial portability verdict."
+    },
+    {
+      "unit": "matea-widgets/textinput",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "matea-widgets/textinput",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "matea/lib",
+      "dimension": "reference",
+      "score": 50,
+      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+    },
+    {
+      "unit": "examples",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 release-process samples for all 12 snapshot examples, complete deterministic outputs, expected content and dashboard golden. Includes spawn/pipe/exit; interactive lifecycle, resident memory and physical terminals remain unmeasured."
+    },
+    {
+      "unit": "tools/api-audit",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+    },
+    {
+      "unit": "tools/perf-probe",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "tools/go-auditor",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
+    },
+    {
+      "unit": "tools/go-performance-probe",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+    },
+    {
+      "unit": "scripts/compiler-export-audit",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 complete validations/canonicalizations of all 20 retained profiles plus two captured native compiler JSON read/parse/extract/serialize paths. Full graph outputs match; repeated path resolution removed with before/after distributions and separate Python traced peak. External compiler/network latency, other profile scale and native RSS remain unmeasured."
+    },
+    {
+      "unit": "scripts/coverage-and-issues",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 complete current-ledger CLI samples plus all 841 retained issue records merged/serialized with simulated pages; stable complete outputs and separate Python heap. External fetch/audit paths, network distributions and native residency remain unmeasured."
+    },
+    {
+      "unit": "scripts/independent-terminal-oracles",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
+    },
+    {
+      "unit": "scripts/performance-reporters",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 complete 84-case retained report generations, 46-case strict comparisons and 84-case historical-reader samples, with exact outputs and separate Python heap. Other reporter/prepare/external paths and native residency remain unmeasured."
+    },
+    {
+      "unit": "scripts/test-and-acceptance-drivers",
+      "dimension": "performance",
+      "score": 50,
+      "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
+    }
+  ],
+  "schema": 1,
+  "kind": "assessment-only update after unchanged-tool source qualification",
+  "plan_sha256": "e8b0dd9ef9234d98908b5060584c53f3ddbe1a1ab04ef05eca4b2ba91c68ecc7",
+  "execution_source": "c5069e07ebe913a632cb3adb269721b5d65c818d",
+  "evidence": "ci-source-bindings.json",
+  "limits": "Only quality-plan assessment metadata changes after the executed source; no historical native/LLVM source hash is rewritten. docs/evidence/quality/report.json remains its older source-bound cohort until the next implementation validation."
+}

@@ -1,6 +1,7 @@
 # ADR 0048: Source-checked measurement attempts
 
-Status: implemented; three-OS qualification pending.
+Status: implemented; source c5069e0 qualifies on Linux, Windows and macOS.
+Evidence: ../evidence/measurement-lifecycle/ci-source-bindings.json.
 
 A rejected invocation of the auditor and remaining-workload collectors left the
 previous successful context untouched. Two independent failing tests reproduce
