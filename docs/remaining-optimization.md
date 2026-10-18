@@ -385,3 +385,20 @@ and 42 units. Modern terminal/font/IME/SSH and the historical Go environment sta
 unverified. The new test/orchestration source is still completing normal 3 OS CI;
 its native observations and unchanged runtime source are bound separately.
 [Console evidence](evidence/windows-console-design/ci-source-bindings.json).
+
+
+## 2026-10-19 Viewport cell geometry/input and bounded optimization
+
+現在は127 program／42単位、未達49軸（性能29・参照一致20）。23参照宣言を
+部分対応へ追加して未対応付けは6,809、部分能力16です。Viewport 70候補のうち
+50を部分対応へ連結し、wrap/fill/gutter/styles/highlights等20候補を残します。
+現在のソース53cf699はローカル33検証、Rust200＋3 doctest、Python129、
+Miri25＋cache/thread1、LLVM72 source／77 instanceが成功しています。
+
+横方向の位置操作1,404行は完全一致、View200条件は161 plain一致と39明示的差分、
+入力34条件は33状態一致とCtrl-wheel方針差1です。幅拡大・内容置換後の古い横位置、
+大きな正方向移動の符号付きoverflowを公開APIで観測し、Rust側は補正・飽和します。
+同じハーネスの反復／非反復2文書で16 raw runを保存し、全出力・Git・binary・
+校正・31標本・確保値を照合しました。Unicode反復構築約26.5→7.2µs、標準キー
+約65→26ns。非反復Unicodeの0.3–1.3%増や不利なp95も保持し、性能を一律昇格しません。
+[設計と全証拠](viewport-cell-geometry.md)。Stage A／B／F5の閉鎖は維持します。

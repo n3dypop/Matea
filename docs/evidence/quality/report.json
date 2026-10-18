@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 123,
+  "programs": 127,
   "review_units": 42,
   "below_high": [
     {
@@ -218,12 +218,6 @@
       "dimension": "performance",
       "score": 50,
       "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
-    },
-    {
-      "unit": "matea-widgets/progress",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "Synthetic cell geometry and fallback tests cover the implemented subset. The historical native Windows width report and physical-emulator behavior remain unverified; this unit retains a partial portability verdict."
     },
     {
       "unit": "matea-widgets/textinput",
@@ -1017,7 +1011,8 @@
       "id": "matea-widgets/lib",
       "files": [
         "crates/matea-widgets/src/lib.rs",
-        "crates/matea-widgets/tests/collections.rs"
+        "crates/matea-widgets/tests/collections.rs",
+        "crates/matea-widgets/src/viewport.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1055,7 +1050,8 @@
         "docs/evidence/optimization/ci-run.json",
         "crates/matea-widgets/tests/collections.rs",
         "docs/evidence/optimization/collections/filter-before.log",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
@@ -1259,17 +1255,18 @@
           "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
         },
         "portability": {
-          "score": 50,
-          "reason": "Synthetic cell geometry and fallback tests cover the implemented subset. The historical native Windows width report and physical-emulator behavior remain unverified; this unit retains a partial portability verdict."
+          "score": 75,
+          "reason": "Production sources and manifests match independently bound Linux/Windows/macOS/MSRV c198c86 CI. Added actual Windows Server 2025 console readback at 3258166 verifies 36 ASCII/BMP-block frames and 2160 native cells through FrameEncoder, including model-width shrink/growth; modes, cursor, attributes and CP437/UTF-8/CP437 restoration pass. Native input bytes exactly match the independently generated macOS fixture. The bounded implemented output paths qualify; modern emulator/font/IME/SSH and the historical 2022 Go environment remain unverified."
         }
       },
       "evidence": [
         "docs/progress-audit.md",
         "crates/matea-widgets/tests/progress.rs",
-        "crates/matea/tests/progress.rs"
+        "crates/matea/tests/progress.rs",
+        "docs/evidence/windows-console-design/ci-source-bindings.json"
       ],
       "remaining": [
-        "Finish matched native measurements, current-source cross-platform verification and remaining color/format/style/lifecycle conditions."
+        "Full color/format/style/input/lifecycle conditions and matched scheduling/constructor/RSS/scale performance remain pending. Native console evidence covers one Windows Server build, BMP/ASCII and no color; it does not reproduce the historical Windows Go report or establish modern terminal/font/IME coverage."
       ]
     },
     {
@@ -1565,7 +1562,8 @@
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1763,7 +1761,8 @@
         "docs/evidence/quality/viewport-report.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md"
       ],
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified."
@@ -2058,7 +2057,9 @@
         "scripts/pty_smoke.py",
         "scripts/verify_foundation.py",
         "scripts/evidence_checks.py",
-        "scripts/check_reference_paths.py"
+        "scripts/check_reference_paths.py",
+        "scripts/test_windows_console.py",
+        "scripts/windows_console_oracle.ps1"
       ],
       "criteria": {
         "rust_design": {
@@ -2155,7 +2156,8 @@
     {
       "id": "ci/workflow",
       "files": [
-        ".github/workflows/foundation.yml"
+        ".github/workflows/foundation.yml",
+        ".github/workflows/windows-console.yml"
       ],
       "criteria": {
         "rust_design": {
@@ -2195,12 +2197,20 @@
       ]
     }
   ],
-  "plan_sha256": "e8b0dd9ef9234d98908b5060584c53f3ddbe1a1ab04ef05eca4b2ba91c68ecc7",
+  "plan_sha256": "2cfe8c5d22389ea91427f39c56a6a08644d72c35591620c3b4866100283f8fc9",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "08f132bb67b8f6cd5e18845361e5723f8ab76fbd227020703e616d419040a83a",
+      "sha256": "c78340dd1b78ac76a31e5ff5ec7c86f31cb4db98cc3823122a281d2037145065",
+      "units": [
+        "ci/workflow"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": ".github/workflows/windows-console.yml",
+      "sha256": "72f05e3b35adc0afa1a868c1883642a6dd844f11f1a6c67a169d815530880977",
       "units": [
         "ci/workflow"
       ],
@@ -2536,9 +2546,9 @@
                 "percent": 94.44444444444444
               },
               "instantiations": {
-                "count": 199,
-                "covered": 184,
-                "percent": 92.46231155778895
+                "count": 201,
+                "covered": 185,
+                "percent": 92.03980099502488
               },
               "regions": {
                 "count": 1251,
@@ -3877,9 +3887,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 52,
-                "covered": 44,
-                "percent": 84.61538461538461
+                "count": 54,
+                "covered": 47,
+                "percent": 87.03703703703704
               },
               "regions": {
                 "count": 235,
@@ -3906,7 +3916,7 @@
     },
     {
       "file": "crates/matea-widgets/src/lib.rs",
-      "sha256": "c077a66035a02556aacabb284283b4eb5baf037863d96959789623080a3e28bc",
+      "sha256": "359ae5d9ad699f434661f24dbacccf48df8c0933c71799737c10eb07b238a2f7",
       "units": [
         "matea-widgets/lib"
       ],
@@ -3918,25 +3928,25 @@
             "compiler_filename": "crates/matea-widgets/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 563,
-                "covered": 555,
-                "percent": 98.57904085257549
+                "count": 361,
+                "covered": 359,
+                "percent": 99.44598337950139
               },
               "functions": {
-                "count": 79,
-                "covered": 78,
-                "percent": 98.73417721518987
+                "count": 42,
+                "covered": 42,
+                "percent": 100
               },
               "instantiations": {
-                "count": 173,
-                "covered": 133,
-                "percent": 76.878612716763
+                "count": 92,
+                "covered": 80,
+                "percent": 86.95652173913044
               },
               "regions": {
-                "count": 1011,
-                "covered": 988,
-                "notcovered": 23,
-                "percent": 97.72502472799208
+                "count": 680,
+                "covered": 663,
+                "notcovered": 17,
+                "percent": 97.5
               },
               "branches": {
                 "count": 0,
@@ -4192,6 +4202,57 @@
                 "covered": 1835,
                 "notcovered": 45,
                 "percent": 97.6063829787234
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-widgets/src/viewport.rs",
+      "sha256": "49c7c2a581be7845a4dd6b8466958045cea90f249ec763fd134a3aaa6b90ce27",
+      "units": [
+        "matea-widgets/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-widgets/src/viewport.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-widgets/src/viewport.rs",
+            "summary": {
+              "lines": {
+                "count": 535,
+                "covered": 525,
+                "percent": 98.13084112149532
+              },
+              "functions": {
+                "count": 81,
+                "covered": 80,
+                "percent": 98.76543209876543
+              },
+              "instantiations": {
+                "count": 166,
+                "covered": 115,
+                "percent": 69.27710843373494
+              },
+              "regions": {
+                "count": 818,
+                "covered": 807,
+                "notcovered": 11,
+                "percent": 98.65525672371638
               },
               "branches": {
                 "count": 0,
@@ -4467,7 +4528,7 @@
     },
     {
       "file": "crates/matea-widgets/tests/viewport.rs",
-      "sha256": "b091f9ff71b9931256054eee40c830b511d24794c8e193270e8d9f6ca3c8e6a8",
+      "sha256": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
       "units": [
         "matea-widgets/integration-tests"
       ],
@@ -4479,25 +4540,25 @@
             "compiler_filename": "crates/matea-widgets/tests/viewport.rs",
             "summary": {
               "lines": {
-                "count": 341,
-                "covered": 341,
-                "percent": 100
+                "count": 1062,
+                "covered": 1060,
+                "percent": 99.81167608286252
               },
               "functions": {
-                "count": 17,
-                "covered": 17,
+                "count": 44,
+                "covered": 44,
                 "percent": 100
               },
               "instantiations": {
-                "count": 17,
-                "covered": 17,
+                "count": 44,
+                "covered": 44,
                 "percent": 100
               },
               "regions": {
-                "count": 640,
-                "covered": 640,
-                "notcovered": 0,
-                "percent": 100
+                "count": 1994,
+                "covered": 1989,
+                "notcovered": 5,
+                "percent": 99.74924774322969
               },
               "branches": {
                 "count": 0,
@@ -5487,7 +5548,7 @@
     },
     {
       "file": "crates/matea/src/lib.rs",
-      "sha256": "082d7aaae1ced6f962d65579eeeb87098b1c21a7638b73fbd4b12cab0b781b82",
+      "sha256": "570136a2054c32d656b29e285bcdcb95d53d1491b48b8383d4ade7aaa2b54e6c",
       "units": [
         "matea/lib"
       ],
@@ -5629,7 +5690,7 @@
     },
     {
       "file": "scripts/check_reference_paths.py",
-      "sha256": "315d57e21e53cefc46c6adf53eca7db9c973785cebb4931f12cd9ceed0fd4b1c",
+      "sha256": "66a1d88287264ed15e01f12fba23af5d4928759695ae8449eb8d159e132c102c",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -5725,7 +5786,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "4ff3e45e2e516c1f7673e28b039fa864a3f71fdf9af96565cd43b684f8e7d9ed",
+      "sha256": "b8598a5766fdf952495c279c4dbdf041eb82a79b9d09f2cbddd8d344a37a2a89",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -5837,7 +5898,7 @@
     },
     {
       "file": "scripts/test_acceptance_driver.py",
-      "sha256": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+      "sha256": "d459379fe72b03b343d4af03c440e7a2ccc3c77c4c43d97bdf3bc3197c788630",
       "units": [
         "scripts/regression-tests"
       ],
@@ -5917,7 +5978,7 @@
     },
     {
       "file": "scripts/test_reference_paths.py",
-      "sha256": "77f02b529f481c87a52d9890869363908cf9228539c555edcf15a855bb0ced87",
+      "sha256": "e67b3698e2e168912973c7f61eb9c78ada048269690a883875a22fb12a8f6090",
       "units": [
         "scripts/regression-tests"
       ],
@@ -5956,8 +6017,24 @@
       "native_execution_coverage": null
     },
     {
+      "file": "scripts/test_windows_console.py",
+      "sha256": "f9f053c342e882ff26f7a4307879d17faca972e9d7b60f553b924248597de34e",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
       "file": "scripts/verify_foundation.py",
-      "sha256": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+      "sha256": "b843b611863343804ec016d3fd82f9926d53e3c044c4ec4528d330bfeabe248b",
+      "units": [
+        "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/windows_console_oracle.ps1",
+      "sha256": "d7cbd91edd7d91c9c1f89af92aa085105e5149929c07367cb3440e98741655f9",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6134,7 +6211,7 @@
     },
     {
       "file": "tools/perf-probe/src/main.rs",
-      "sha256": "8c54b38088fd77820d7d3f3b8bf2ad9b3f4399f2264f57e3736d0aab145fa5b4",
+      "sha256": "78725aaedffefe24d5322d78d8058e22957816582c7e5a09b2b475441a8ea2cc",
       "units": [
         "tools/perf-probe"
       ],
@@ -6146,25 +6223,25 @@
             "compiler_filename": "tools/perf-probe/src/main.rs",
             "summary": {
               "lines": {
-                "count": 1400,
-                "covered": 1397,
-                "percent": 99.78571428571429
+                "count": 1585,
+                "covered": 1580,
+                "percent": 99.6845425867508
               },
               "functions": {
-                "count": 109,
-                "covered": 108,
-                "percent": 99.08256880733946
+                "count": 125,
+                "covered": 124,
+                "percent": 99.2
               },
               "instantiations": {
-                "count": 218,
-                "covered": 108,
-                "percent": 49.54128440366973
+                "count": 250,
+                "covered": 124,
+                "percent": 49.6
               },
               "regions": {
-                "count": 2235,
-                "covered": 2232,
-                "notcovered": 3,
-                "percent": 99.86577181208054
+                "count": 2538,
+                "covered": 2533,
+                "notcovered": 5,
+                "percent": 99.80299448384555
               },
               "branches": {
                 "count": 0,
@@ -6285,9 +6362,9 @@
                 "percent": 83.72093023255815
               },
               "instantiations": {
-                "count": 895,
-                "covered": 393,
-                "percent": 43.910614525139664
+                "count": 991,
+                "covered": 433,
+                "percent": 43.69323915237134
               },
               "regions": {
                 "count": 509,
@@ -6314,7 +6391,7 @@
     },
     {
       "file": "tools/perf-probe/src/progress.rs",
-      "sha256": "bb349663cc8aa10d54fe152f5b2177a67ded41fb50c1ea25b01c33c51323ec6f",
+      "sha256": "fc4de10255a7181bf8df7e69a3b21e8108a65fa7b6ea54789940a0e770f06b48",
       "units": [
         "tools/perf-probe"
       ],
@@ -6326,25 +6403,25 @@
             "compiler_filename": "tools/perf-probe/src/progress.rs",
             "summary": {
               "lines": {
-                "count": 115,
+                "count": 159,
                 "covered": 113,
-                "percent": 98.26086956521739
+                "percent": 71.0691823899371
               },
               "functions": {
-                "count": 10,
+                "count": 12,
                 "covered": 10,
-                "percent": 100
+                "percent": 83.33333333333334
               },
               "instantiations": {
-                "count": 20,
+                "count": 24,
                 "covered": 10,
-                "percent": 50
+                "percent": 41.66666666666667
               },
               "regions": {
-                "count": 192,
+                "count": 273,
                 "covered": 190,
-                "notcovered": 2,
-                "percent": 98.95833333333334
+                "notcovered": 83,
+                "percent": 69.59706959706959
               },
               "branches": {
                 "count": 0,
@@ -6416,7 +6493,7 @@
     },
     {
       "file": "tools/perf-upstream/main.go",
-      "sha256": "78bf2659dd935fd1b7feb3d3ac2d7dc124e849c00dd711828ab2d0588c8be20e",
+      "sha256": "8522e62bd15a4ec60e2ae97842cde9c25d482460b624c50d3704069c9b795bd1",
       "units": [
         "tools/go-performance-probe"
       ],

@@ -1,0 +1,23 @@
+use ratatui_core::{buffer::Buffer,layout::Rect,style::{Style,Color},text::{Line,Span},widgets::Widget};
+fn main(){
+    let cases: &[(&str,&[&str])]=&[
+        ("combining_split", &["e","\u{301}","x"]),
+        ("combining_joined", &["e\u{301}","x"]),
+        ("zwj_split", &["👩","\u{200d}","💻","!"]),
+        ("zwj_joined", &["👩‍💻","!"]),
+        ("flag_split", &["🇯","🇵","!"]),
+        ("flag_joined", &["🇯🇵","!"]),
+        ("keycap_split", &["1","\u{fe0f}\u{20e3}","X"]),
+        ("keycap_joined", &["1️⃣","X"]),
+    ];
+    let colors=[Color::Red,Color::Blue,Color::Green,Color::Yellow];
+    for (name,parts) in cases {
+        let spans=parts.iter().enumerate().map(|(index,text)|Span::styled(*text,Style::default().fg(if name.ends_with("joined") && index==1 { if *name=="zwj_joined" {Color::Yellow} else {Color::Green} } else {colors[index]}))).collect::<Vec<_>>();
+        let line=Line::from(spans);let width=line.width();let area=Rect::new(0,0,10,1);let mut buffer=Buffer::empty(area);
+        line.render(area,&mut buffer);
+        for x in 0..10 {
+            let cell=&buffer[(x,0)];let hex=cell.symbol().bytes().map(|b|format!("{b:02x}")).collect::<String>();
+            println!("{name}\t{width}\t{x}\t{hex}\t{:?}",cell.fg);
+        }
+    }
+}

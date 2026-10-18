@@ -1,0 +1,611 @@
+{
+  "started_at_utc": "2026-10-18T19:32:01.044600+00:00",
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "architecture": "AMD64",
+  "scope": "local host only; no other OS/CI execution inferred",
+  "status": "complete",
+  "all_local_checks_passed": true,
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.484,
+      "log": "fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.281,
+      "log": "clippy.log",
+      "log_sha256": "f48d1bb2c7c922e31b1c99bc283e08f462a4882494dbac8201289d0303d857f9"
+    },
+    {
+      "name": "test",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.984,
+      "log": "test.log",
+      "log_sha256": "2f3f7e6c4fe7b9c22c208c28d43bd21a2bd196cc7baa08b20363353726d2908b"
+    },
+    {
+      "name": "all-targets",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.641,
+      "log": "all-targets.log",
+      "log_sha256": "ec8cacc15445a11033f933bae92879b9588930e14e42bc55afba90873a35b1e2"
+    },
+    {
+      "name": "release-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--workspace",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.39,
+      "log": "release-tests.log",
+      "log_sha256": "7d816cd2343b850295a5b02bc36980dffe4f57d3d65588c55ee735d7cbf1e0f3"
+    },
+    {
+      "name": "style-exhaustive",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "matea-style",
+        "--test",
+        "colors",
+        "every_rgb_triple_matches_full_palette_search",
+        "--offline",
+        "--",
+        "--ignored"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.672,
+      "log": "style-exhaustive.log",
+      "log_sha256": "af144dfb18c14f4c4cfa6e59dbea59640be0915e52727263e9470ef9f1bf81bc"
+    },
+    {
+      "name": "docs",
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--no-deps",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.203,
+      "log": "docs.log",
+      "log_sha256": "ef60322c481300423b5c96622cad8c66715d97e633cdb3b26a2a81fc5a6d309d"
+    },
+    {
+      "name": "build-examples",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--workspace",
+        "--examples",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.954,
+      "log": "build-examples.log",
+      "log_sha256": "2a35448f536ae2a8cbe865980b4a6acace98beef5b90ba198b81d8b3c475137f"
+    },
+    {
+      "name": "example-smoke",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\example_smoke.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.906,
+      "log": "example-smoke.log",
+      "log_sha256": "7031fff1e9f62ec1bed695c7fa7d633f37ef57e59e90aed499546493505fad0c"
+    },
+    {
+      "name": "coverage-integrity",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\check_coverage.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.032,
+      "log": "coverage-integrity.log",
+      "log_sha256": "49623c22adbf19caf02f7dee8773273658f8f93742e9668b5c4d366a3cb9082b"
+    },
+    {
+      "name": "coverage-guard-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_coverage.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.468,
+      "log": "coverage-guard-tests.log",
+      "log_sha256": "492cc5a0a9cf873202920c16df91bf7b9ccd4002f64d69f5827b7de0818382b3"
+    },
+    {
+      "name": "reference-audit-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_reference_audit.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.984,
+      "log": "reference-audit-tests.log",
+      "log_sha256": "cecb30c8d4e16f4ba0891ff4fea0f38aa7b2a2c104d2f10490a0cd3ab50e113a"
+    },
+    {
+      "name": "rustdoc-audit-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_rustdoc_exports.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.11,
+      "log": "rustdoc-audit-tests.log",
+      "log_sha256": "9f169aa04896ef0203477ff61d8d57406ec0dab00b71ec15cf38cdae22509147"
+    },
+    {
+      "name": "source-snapshot-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_source_snapshot.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.812,
+      "log": "source-snapshot-tests.log",
+      "log_sha256": "5d340c04462707b7e1b65466d6642f6234797a23dfb8db27e44031007976a902"
+    },
+    {
+      "name": "rustdoc-import-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_rustdoc_import.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.391,
+      "log": "rustdoc-import-tests.log",
+      "log_sha256": "6b6873d6eefb5e64a70b75f477069eeb501bde1447175046dc1c4276ac17dd9d"
+    },
+    {
+      "name": "issue-refresh-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_issue_refresh.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.203,
+      "log": "issue-refresh-tests.log",
+      "log_sha256": "c57e833f026773c218c965cc8726b7bfb3b9b889adb427cb6bf285f303c799de"
+    },
+    {
+      "name": "color-oracle-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_color_trace.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.125,
+      "log": "color-oracle-tests.log",
+      "log_sha256": "58eca5ce8535a77628fb9cdfecc2d75dc7649f463d20db8714856be99a65444e"
+    },
+    {
+      "name": "build-source-auditor",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "matea-api-audit",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.094,
+      "log": "build-source-auditor.log",
+      "log_sha256": "f1d091f0bc4bf919658b552d34d46d270976a5b68c38b480fa107922d928383b"
+    },
+    {
+      "name": "source-auditor-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_source_auditors.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.64,
+      "log": "source-auditor-tests.log",
+      "log_sha256": "2293f091f1da234151fa8d6d24e2e54167f0772f304f1eccdbaceb173daec176"
+    },
+    {
+      "name": "quality-gate-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_quality.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.984,
+      "log": "quality-gate-tests.log",
+      "log_sha256": "41fb212dd3871c7afce831fa882e1079ac5400f32b0fe774d9fea519a727fba6"
+    },
+    {
+      "name": "evidence-guard-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_evidence_checks.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.829,
+      "log": "evidence-guard-tests.log",
+      "log_sha256": "d502e25223b7009afe414b85f7c4fc87be9658f543bfab8d6bff99861b8a19a4"
+    },
+    {
+      "name": "reference-path-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_reference_paths.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.343,
+      "log": "reference-path-tests.log",
+      "log_sha256": "256e590ba9183f73cc663d8cfa132c3c8611787f5bb806ea54e951f3d8a7d3ca"
+    },
+    {
+      "name": "performance-record-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_performance_records.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.219,
+      "log": "performance-record-tests.log",
+      "log_sha256": "88d487dc414a75918fa656a16be00516aa76d98a77e8c3dfc740baa47de5ed6b"
+    },
+    {
+      "name": "optimization-evidence-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_optimization_evidence.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.188,
+      "log": "optimization-evidence-tests.log",
+      "log_sha256": "af3968c8ec935d6c5cbe925a869593d603d53295622999380cfb2312742ed306"
+    },
+    {
+      "name": "measurement-driver-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_measurement_drivers.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.328,
+      "log": "measurement-driver-tests.log",
+      "log_sha256": "a199eb5d79c3eaccf143db1db72ed16d67b13f40361ddd31be012d093e483058"
+    },
+    {
+      "name": "acceptance-driver-tests",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_acceptance_driver.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.781,
+      "log": "acceptance-driver-tests.log",
+      "log_sha256": "f802a4460b268221563f47ccc4e2452b3ff049d071437163ec0403839bf753e3"
+    },
+    {
+      "name": "optimized-python-tests",
+      "command": [
+        "python",
+        "-O",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "${REPOSITORY}\\scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 37.375,
+      "log": "optimized-python-tests.log",
+      "log_sha256": "2c075ab4714ff2ac4b2252531c36d3dcc35e91d403b5f70ab611f3898a045719"
+    },
+    {
+      "name": "quality-inventory",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\check_quality.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.141,
+      "log": "quality-inventory.log",
+      "log_sha256": "aa0da84560d4b660c47f125a6a0f236e9a7524890aaf44ec642b51a5d79ff48b"
+    },
+    {
+      "name": "python-syntax",
+      "command": [
+        "python",
+        "-m",
+        "compileall",
+        "-q",
+        "${REPOSITORY}\\scripts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.171,
+      "log": "python-syntax.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-color-probe",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "matea-perf-probe",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.11,
+      "log": "build-color-probe.log",
+      "log_sha256": "3f6cf4cfff25d193910e7fe8f9d2133cb42ca59b846e4e8d1f189380c1d1e020"
+    },
+    {
+      "name": "color-trace",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\check_color_trace.py",
+        "--probe",
+        "${REPOSITORY}\\target\\release\\matea-perf-probe.exe",
+        "--output",
+        "${REPOSITORY}\\docs\\evidence\\color-policy-after.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.109,
+      "log": "color-trace.log",
+      "log_sha256": "2fda1254023407291920eb06a37919c8e46148f1db8ab9239f04c738c020ebc3"
+    },
+    {
+      "name": "windows-console",
+      "command": [
+        "python",
+        "${REPOSITORY}\\scripts\\test_windows_console.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.219,
+      "log": "windows-console.log",
+      "log_sha256": "0b29aef51abcc8ed9a9c09ff6c7a77d833d0b122a7787d2ac30bfdf4c10c5f96"
+    },
+    {
+      "name": "render-probe",
+      "command": [
+        "cargo",
+        "run",
+        "--locked",
+        "--quiet",
+        "-p",
+        "matea",
+        "--example",
+        "render_probe",
+        "--release",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.171,
+      "log": "render-probe.log",
+      "log_sha256": "264750121255194d1bac0d76dcd9576442be5f8fa9f8e32a435f820f26e026bc"
+    }
+  ],
+  "path_redaction": "Repository and home prefixes are replaced with placeholders.",
+  "source_sha256": {
+    ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+    ".github/workflows/foundation.yml": "c78340dd1b78ac76a31e5ff5ec7c86f31cb4db98cc3823122a281d2037145065",
+    ".github/workflows/windows-console.yml": "72f05e3b35adc0afa1a868c1883642a6dd844f11f1a6c67a169d815530880977",
+    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097",
+    "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+    "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+    "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+    "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+    "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+    "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+    "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+    "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+    "crates/matea-motion/tests/harmonica-motion.csv": "c9d7eec51c3c2eea0defc3a39e6d8e3bbf52ef64cc49a4be82404fe87af1684c",
+    "crates/matea-motion/tests/harmonica-projectiles.csv": "7e586e838c34b31497d064bd9b6768ef27203aa7e55f98d1cb56d36d9f8208f1",
+    "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+    "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+    "crates/matea-render/src/lib.rs": "9f72f151e6bce83f8c03b31c1aada67e7d1246d7d080b99dbe845b94e4eedda1",
+    "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+    "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+    "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+    "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+    "crates/matea-style/src/attributes.rs": "fd17850e753de9b242cb14eb902a42bee329c74427ec650a0dabd176d39b8d4a",
+    "crates/matea-style/src/gradient.rs": "34ae5ae284dec93a1bbd44ea8ce3219e0057a14b514406c0631f13dca48be65f",
+    "crates/matea-style/src/lib.rs": "51fa03c59f444445843a192807797b889447d46b743999e1a14292582bedf519",
+    "crates/matea-style/tests/colors.rs": "85d67a5bb8dbdd6e82822693b2b1a2c7291b8765adea4c3045c6e4160a0edb17",
+    "crates/matea-style/tests/fixtures/gradients.tsv": "2e30647a2de1e5ac078b68ca5ca0780e604f3189cb12279c23989c1b088d59ff",
+    "crates/matea-style/tests/fixtures/indexed-gradients.tsv": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff",
+    "crates/matea-style/tests/gradients.rs": "e4a597aa505d221f7354ac2bb03f4eaa708809d7cb0aa87e6f3236341786827b",
+    "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+    "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+    "crates/matea-terminal/benches/terminal_primitives.rs": "2dbcae24c0f54838cd4da3b217fc9e00082cc4cead6e00d6f933af5cc7567857",
+    "crates/matea-terminal/src/ansi.rs": "3ab8e4670c3f43cd2c707fe362d005b0e386f90751c994248d34a54334a1bf82",
+    "crates/matea-terminal/src/frame.rs": "ddc1318acaaf710cd61cc9521da39b9441ccd9821fd65fb7a1fcb46444066269",
+    "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+    "crates/matea-terminal/src/lib.rs": "4991f9ef67ba0ad9bb7b65c105248f44539335cd4f952f931088dd8393c2d847",
+    "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+    "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+    "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+    "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+    "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+    "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+    "crates/matea-widgets/Cargo.toml": "98443ad24c27317073ba70aa4506ac997bc5fec547345948a1b90dc0bcf06377",
+    "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+    "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+    "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+    "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+    "crates/matea-widgets/src/lib.rs": "359ae5d9ad699f434661f24dbacccf48df8c0933c71799737c10eb07b238a2f7",
+    "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+    "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+    "crates/matea-widgets/src/progress.rs": "cd273a4d906fe212521edb429c1be674ebcb3b1cd01b5850c8b74708fcb05f6d",
+    "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+    "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+    "crates/matea-widgets/src/viewport.rs": "49c7c2a581be7845a4dd6b8466958045cea90f249ec763fd134a3aaa6b90ce27",
+    "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+    "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+    "crates/matea-widgets/tests/cursor.rs": "7c2a2180f3b21fa40265f51337b53ee9d7a2c4c1579d69ed4631e1c2435dafa5",
+    "crates/matea-widgets/tests/fixtures/durations.tsv": "bbe4f99b2d21709377fd35cf2b6a8d5c0b294a0fd94988ae96c2954fe15c30c1",
+    "crates/matea-widgets/tests/fixtures/progress.tsv": "255c1e220d1efc6a2be0d249c11f71a9151630b0b4a0beb90f2fdc083a9c3d56",
+    "crates/matea-widgets/tests/fixtures/spinners.tsv": "fea4f37aa40429e051c8ad6965277694cdf7c908a4d9486b3c9a9279dd87049c",
+    "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+    "crates/matea-widgets/tests/fixtures/viewport-cut-deviations.tsv": "f3b9a59076ec3aa1aea3162a5c0a25690201d627b4a0359f29cf79962e44b057",
+    "crates/matea-widgets/tests/fixtures/viewport-cuts.tsv": "13755321d54750cb6e5f5fa83437981d8f2a3a6a22e5a35bcedb2371afcd9849",
+    "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
+    "crates/matea-widgets/tests/fixtures/viewport-horizontal.tsv": "5280770ef31a72e17238d7591af21394516def2822d6e5892574a4acb6d49697",
+    "crates/matea-widgets/tests/fixtures/viewport-input.tsv": "c9e4d9470c61d319fabca35230fa6ecb057620c555523855a9fe20056edbc7f8",
+    "crates/matea-widgets/tests/progress.rs": "a8dea1626d93071cf789aab6ee1d2386d6da0c49f128d4d31fe7e1147a2c1a89",
+    "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+    "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
+    "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+    "crates/matea/benches/foundation_paths.rs": "455c5a0c5eb43d90bd15b2c157977b06e2ed3895bfcb96f5e7ad531ef95d7077",
+    "crates/matea/examples/attributes.rs": "08e4aca6c72bb27822491fe666dd7f848ed499d43e33f40e30c3e6f18fc9d884",
+    "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+    "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+    "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+    "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+    "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+    "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+    "crates/matea/examples/gradients.rs": "2d95281afacf61357286de28a76ac4fb56b7a725c6c37a1e5c59a51dd572f708",
+    "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+    "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+    "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+    "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+    "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+    "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+    "crates/matea/examples/progress.rs": "9c1b45406c21beb38715dc2ba29605a8ccf8922a8736a620451b74a3039752c7",
+    "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+    "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+    "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+    "crates/matea/src/lib.rs": "570136a2054c32d656b29e285bcdcb95d53d1491b48b8383d4ade7aaa2b54e6c",
+    "crates/matea/tests/progress.rs": "242c227c90a4a07209a3ae717edd5fbc5cb3eb293f32d63941c54b84203fcdf0",
+    "docs/quality-plan.json": "2cfe8c5d22389ea91427f39c56a6a08644d72c35591620c3b4866100283f8fc9",
+    "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+    "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+    "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+    "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+    "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+    "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+    "scripts/check_quality.py": "5110677d8f3e5919654aa982aaf14c9a16a6d7e5ff7ada442d3c433ade532a7a",
+    "scripts/check_reference_paths.py": "66a1d88287264ed15e01f12fba23af5d4928759695ae8449eb8d159e132c102c",
+    "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+    "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+    "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+    "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+    "scripts/example_smoke.py": "1c575a9e6ba7ff47deefddd15654f1a827736ea091010ae33f20b28c09863eef",
+    "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+    "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+    "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+    "scripts/measure_auditor_performance.py": "efdfcafd4eee6ee388127be541b2c478b7cc1efd2e50516dc0bf57dfdfa8e0a7",
+    "scripts/measure_reader_performance.py": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
+    "scripts/measure_remaining_performance.py": "b6f2513397fb78221d977ef3cf18be951f05b5bdd37eb774a95fcd1ce7b4bb4c",
+    "scripts/measure_rust_coverage.py": "b8598a5766fdf952495c279c4dbdf041eb82a79b9d09f2cbddd8d344a37a2a89",
+    "scripts/measurement_run.py": "4983fc477a512b068d253a15f4e37664f2d0b1fefc6f846993ed7180d77f064d",
+    "scripts/optimization_evidence.py": "820f7093815c234dc405c99fc68f14a75294e4daf66d03bbe0ec0a4441738711",
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
+    "scripts/prepare_upstream_bench.py": "d29f2baee5706747bba0959a9a8def8f31ae66218825a2509af7232988a22b0c",
+    "scripts/pty_smoke.py": "ed3e2a334f8f1eb9a0648ca179ce0b00605e8acd1936da91619096c6ce99265b",
+    "scripts/qualify_measurement_drivers.py": "03bcc1c8c67c8f5431df223eb2b8d1dfa499998f6fbcf8fbba6aac79974021f8",
+    "scripts/report_attribute_performance.py": "6b13c09e1926b26cebbc4bf8f5d1be95fe3d9e53cf7bb6a247cea59c7d03bdcb",
+    "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+    "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+    "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+    "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+    "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+    "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+    "scripts/test_acceptance_driver.py": "d459379fe72b03b343d4af03c440e7a2ccc3c77c4c43d97bdf3bc3197c788630",
+    "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+    "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+    "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+    "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+    "scripts/test_measurement_drivers.py": "f991e4b20413cb40e74db9003421b44a39b18b1e0ab5cdf795ad334f9c73c143",
+    "scripts/test_optimization_evidence.py": "e0f064424bc042dddeb61bc743933074c7064deb6dd294c4b9587d83afbdb138",
+    "scripts/test_performance_records.py": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
+    "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+    "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+    "scripts/test_reference_paths.py": "e67b3698e2e168912973c7f61eb9c78ada048269690a883875a22fb12a8f6090",
+    "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+    "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+    "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+    "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+    "scripts/test_windows_console.py": "f9f053c342e882ff26f7a4307879d17faca972e9d7b60f553b924248597de34e",
+    "scripts/verify_foundation.py": "b843b611863343804ec016d3fd82f9926d53e3c044c4ec4528d330bfeabe248b",
+    "scripts/windows_console_oracle.ps1": "d7cbd91edd7d91c9c1f89af92aa085105e5149929c07367cb3440e98741655f9",
+    "tests/golden/dashboard.txt": "7f47d6f70fe2d00f77c796556d3ebf75062b9334ca1b27db60b6dffcb13cb9d5",
+    "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+    "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+    "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+    "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+    "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+    "tools/perf-probe/src/attributes.rs": "cce2cd3a6056220b9f6383c0c01d5149fad05a770b36edd8cf344961be7358fa",
+    "tools/perf-probe/src/gradients.rs": "76c737a37c74c442ec96e86331ae64b18a27ffdc918f96c5eab0c2bbea49e321",
+    "tools/perf-probe/src/main.rs": "78725aaedffefe24d5322d78d8058e22957816582c7e5a09b2b475441a8ea2cc",
+    "tools/perf-probe/src/measurement.rs": "7989695d112c46ae07ab87482c9077dc7909947b949f6d03ebd2cdad4bb7ece3",
+    "tools/perf-probe/src/progress.rs": "fc4de10255a7181bf8df7e69a3b21e8108a65fa7b6ea54789940a0e770f06b48",
+    "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+    "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+    "tools/perf-upstream/main.go": "8522e62bd15a4ec60e2ae97842cde9c25d482460b624c50d3704069c9b795bd1",
+    "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+  },
+  "rustc": {
+    "exit_code": 0,
+    "output": "rustc 1.99.1 (58cf8f9c3 2026-10-13)"
+  },
+  "cargo": {
+    "exit_code": 0,
+    "output": "cargo 1.99.1 (5f94df478 2026-08-27)"
+  },
+  "source_changed_during_run": [],
+  "finished_at_utc": "2026-10-18T19:34:09.103816+00:00"
+}

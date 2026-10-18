@@ -76,3 +76,61 @@ metadata differs because other viewport capabilities are still missing; Go
 GC/TotalAlloc and Rust requested-layout bytes are not resident memory. Preserve
 all cold calls, calibrated distributions, allocations, output checks and adverse
 controls before drawing any bounded speed conclusion.
+
+## Optimized source checkpoint
+
+Source 53cf699 keeps the root API while moving the component into
+`crates/matea-widgets/src/viewport.rs`. The typed default-code selection validates
+canonical chord modifiers, and custom overrides retain their original priority.
+ASCII maximum width comes from the LF index; adjacent equal Unicode rows skip
+repeated segmentation without another allocation. A varied-row fixture protects
+the ordinary width path, empty/trailing indexes and replacement invalidation.
+
+The final native cohort passes 33 checks: 200 Rust methods plus three doctests,
+129 Python methods, 16 snapshots and 21 Unix PTY cases. Miri seed 239 passes all
+25 viewport methods plus the cache/thread unit. LLVM retains 72 distinct Rust
+source paths and all 77 compiler instances. The 127-program/157-input source
+snapshot is preserved; three-host qualification is reported separately.
+
+Both finite corpora use the same tracked caller/dependency bytes and the same
+Go executable before/after. Sixteen complete raw runs retain reference/Matea/
+Matea/reference ordering, 31 calibrated positive batch means, cold calls and
+allocation passes. Every complete output, state and checksum matches. An
+independent verifier runs with Python `-O` and checks journals, all Git input
+hashes, raw/report hashes, case sets, samples and before/after comparability.
+
+| Workload | Before p50 | After p50 | Observation |
+| --- | ---: | ---: | --- |
+| Repeated Unicode construction | 26.46–26.47 µs | 7.18–7.19 µs | Reduced repeated segmentation |
+| Repeated Unicode replacement | 26.43 µs | 7.12–7.13 µs | Same requested allocations/bytes |
+| Default Right input, both corpora | 65.1–66.2 ns | 25.6–26.0 ns | Canonical-chord fast selection |
+| ASCII construction, repeated | 5.98–6.00 µs | 5.59–5.60 µs | Reuse LF index |
+| Varied Unicode construction/replacement | 32.15–32.55 µs | 32.42–32.64 µs | Observed p50 increases 0.3–1.3%; retained |
+
+Small movement/ensure/wheel differences and adverse p95 values are retained too.
+The varied Unicode comparison prevents treating the repeat case as universal.
+No causal/statistical claim is made for small differences without affinity or
+frequency control. Partial-wide borrowed Cow rows still allocate three times in
+the three-row Unicode control; aligned iterator controls allocate zero. There is
+no new RSS measurement. Full wrap/fill/gutter/styles/highlights, platform/font
+conditions and the module verdict remain pending; quality axes remain below-high.
+
+[All raw before/after distributions and source checks](evidence/viewport-horizontal/optimized/performance-comparison.json).
+
+
+The final [seven-job three-host/MSRV/reference cohort](https://github.com/n3dypop/Matea/actions/runs/39158524308)
+passes. An independent Python `-O` binder matches all 127 programs and 157 known
+inputs to Git 53cf699, verifies 17 native logs on Unix and 18 on Windows, every
+retained source fixture, both complete output corpora, calibrated-mode schemas,
+all 14 attribute outputs and fixed representation sizes. Linux/macOS LLVM keeps
+72 source files/77 instances; Windows keeps 71/75. The normal Windows acceptance
+cohort also verifies 36 native console frames/2,160 cells and restoration.
+Raw Windows hashes and retained LF hashes are separate. Compiler profiles and
+complete measurement-driver qualification remain their earlier recorded cohorts.
+[All host/source/log/fixture evidence](evidence/viewport-horizontal/optimized/ci/source-bindings.json).
+
+An earlier dispatch supplied `reference_probes_only` without the parent
+`reference_api` flag, so reference jobs were skipped. It is not used as reference
+qualification; the successful run above supplied both flags. Its conclusion does
+not change the coverage/quality gates: full public capability mapping and all-high
+Stage A remain open, and Stage B/F5 remain closed.

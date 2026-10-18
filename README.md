@@ -25,7 +25,7 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current scope is 126 programs in 42 units, with 49 assessments still below
+The current scope is 127 programs in 42 units, with 49 assessments still below
 the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39151131973)
 validates native acceptance/LLVM collection and all component reference/probe paths
 on all three OSes. [Recent work and remaining limitations](docs/remaining-optimization.md)

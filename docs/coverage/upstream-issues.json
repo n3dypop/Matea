@@ -42,7 +42,7 @@
         },
         {
           "number": 1857,
-          "title": "Keystrokes wait for the next frame tick (≈13 ms echo at 60 fps); render input at once and diff only changed lines",
+          "title": "Keystrokes wait for the next frame tick (\u224813 ms echo at 60 fps); render input at once and diff only changed lines",
           "url": "https://github.com/charmbracelet/bubbletea/issues/1857",
           "updated_at": "2026-10-11T08:15:58Z",
           "labels": [],
@@ -231,7 +231,7 @@
         },
         {
           "number": 1709,
-          "title": "tea.Println content bypasses color-profile downsampling — NO_COLOR and low-color terminals get full-color scrollback",
+          "title": "tea.Println content bypasses color-profile downsampling \u2014 NO_COLOR and low-color terminals get full-color scrollback",
           "url": "https://github.com/charmbracelet/bubbletea/issues/1709",
           "updated_at": "2026-07-04T05:05:15Z",
           "labels": [],
@@ -1324,7 +1324,7 @@
         },
         {
           "number": 570,
-          "title": "🦥  Easily display lists as \"auto-sizing\" multi-columns (📰 style)",
+          "title": "\ud83e\udda5  Easily display lists as \"auto-sizing\" multi-columns (\ud83d\udcf0 style)",
           "url": "https://github.com/charmbracelet/lipgloss/issues/570",
           "updated_at": "2025-09-30T23:16:40Z",
           "labels": [
@@ -2235,8 +2235,27 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/879",
           "updated_at": "2026-01-25T22:08:17Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "historical_report_not_reproduced_at_current_pin_bounded_native_and_three_host_tests",
+          "disposition": "assessed_current_pin_contract",
+          "analysis": "docs/viewport-cell-geometry.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-01-25T22:08:17Z",
+            "notes": "Older signed/zero-height slicing panic is absent in ten pinned public sequences. Five nonnegative height states/views match; two negative source cases do not panic. Negative dimensions cannot enter Matea u16 APIs; parent-derived available dimensions use saturating subtraction.",
+            "evidence_sha256": {
+              "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
+              "crates/matea-widgets/src/viewport.rs": "49c7c2a581be7845a4dd6b8466958045cea90f249ec763fd134a3aaa6b90ce27",
+              "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
+              "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+              "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
+              "docs/evidence/viewport-horizontal/issue-context.json": "1f2fa83d100264e5396192f5b019ec118f62cada101247fcb661321a04f20c16",
+              "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
+              "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c"
+            },
+            "scope": "Bounded current-pin source observations and 53cf699 native/three-host regressions. No reproduction of the original historical checkout or promise about unimplemented wrap/gutter/style/highlight combinations."
+          }
         },
         {
           "number": 878,
@@ -3059,8 +3078,27 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/288",
           "updated_at": "2023-02-22T08:17:01Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "historical_report_not_reproduced_at_current_pin_bounded_native_and_three_host_tests",
+          "disposition": "assessed_current_pin_contract",
+          "analysis": "docs/viewport-cell-geometry.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2023-02-22T08:17:01Z",
+            "notes": "Older near-fit/zero-offset NaN formula is absent at the pinned source; current denominator and retained zero/near-fit/empty cases are finite with exact fraction bits.",
+            "evidence_sha256": {
+              "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
+              "crates/matea-widgets/src/viewport.rs": "49c7c2a581be7845a4dd6b8466958045cea90f249ec763fd134a3aaa6b90ce27",
+              "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
+              "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+              "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
+              "docs/evidence/viewport-horizontal/issue-context.json": "1f2fa83d100264e5396192f5b019ec118f62cada101247fcb661321a04f20c16",
+              "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
+              "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c"
+            },
+            "scope": "Bounded current-pin source observations and 53cf699 native/three-host regressions. No reproduction of the original historical checkout or promise about unimplemented wrap/gutter/style/highlight combinations."
+          }
         },
         {
           "number": 573,
@@ -4058,7 +4096,7 @@
         },
         {
           "number": 563,
-          "title": "Tables cannot draw row dividers or an outer frame — border visibility is hardcoded",
+          "title": "Tables cannot draw row dividers or an outer frame \u2014 border visibility is hardcoded",
           "url": "https://github.com/charmbracelet/glamour/issues/563",
           "updated_at": "2026-05-27T15:36:14Z",
           "labels": [],
@@ -5027,7 +5065,7 @@
       "issues": [
         {
           "number": 214,
-          "title": "perf: full-width InsertLineArea/DeleteLineArea copy every cell, making each scroll O(width × height)",
+          "title": "perf: full-width InsertLineArea/DeleteLineArea copy every cell, making each scroll O(width \u00d7 height)",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/214",
           "updated_at": "2026-10-14T04:21:49Z",
           "labels": [],
@@ -5126,7 +5164,7 @@
         },
         {
           "number": 160,
-          "title": "Render() pads unstyled trailing cells since #128 — is width fidelity the intended contract?",
+          "title": "Render() pads unstyled trailing cells since #128 \u2014 is width fidelity the intended contract?",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/160",
           "updated_at": "2026-08-20T15:27:11Z",
           "labels": [],
@@ -5198,7 +5236,7 @@
         },
         {
           "number": 54,
-          "title": "Testing that’s sort of like playwright",
+          "title": "Testing that\u2019s sort of like playwright",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/54",
           "updated_at": "2025-10-22T05:30:53Z",
           "labels": [],
@@ -5286,7 +5324,7 @@
         },
         {
           "number": 949,
-          "title": "vt: IRM (insert mode, CSI 4 h) is not implemented — printed cells overwrite instead of shifting the line right",
+          "title": "vt: IRM (insert mode, CSI 4 h) is not implemented \u2014 printed cells overwrite instead of shifting the line right",
           "url": "https://github.com/charmbracelet/x/issues/949",
           "updated_at": "2026-08-17T23:07:36Z",
           "labels": [],
@@ -5443,8 +5481,21 @@
           "url": "https://github.com/charmbracelet/x/issues/541",
           "updated_at": "2025-08-30T17:04:42Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "partial_contract_review_raw_ansi_malformed_bytes_pending",
+          "disposition": "assessed_partial_raw_ansi_path_pending",
+          "analysis": "docs/viewport-cell-geometry.md",
+          "review": {
+            "status": "partial",
+            "reference": "charm-x-ansi",
+            "reference_sha": "faa4adf95555331dfb439b716cc83767ecdadeb4",
+            "reviewed_updated_at": "2025-08-30T17:04:42Z",
+            "notes": "Body read: proposed TruncateLeft fuzz condition treats removed-prefix length as a total output cap, contrary to that API contract. Malformed bytes/ANSI Truncate behavior has not been qualified in Matea; valid-text viewport window improvements do not close this raw-ANSI report.",
+            "evidence_sha256": {
+              "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
+              "docs/evidence/viewport-horizontal/issue-context.json": "1f2fa83d100264e5396192f5b019ec118f62cada101247fcb661321a04f20c16"
+            },
+            "scope": "Partial source/body assessment only, no full ANSI truncation fix or parity claim."
+          }
         },
         {
           "number": 485,
@@ -7304,7 +7355,7 @@
         },
         {
           "number": 1072,
-          "title": "Windows: emoji panel input (KEYEVENTF_UNICODE) is silently dropped — surrogate key-up halves poison the pairing",
+          "title": "Windows: emoji panel input (KEYEVENTF_UNICODE) is silently dropped \u2014 surrogate key-up halves poison the pairing",
           "url": "https://github.com/crossterm-rs/crossterm/issues/1072",
           "updated_at": "2026-07-25T12:51:28Z",
           "labels": [],

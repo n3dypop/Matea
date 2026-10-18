@@ -1,15 +1,19 @@
 # Matea Foundation gate report
 
-現在のチェックポイント（2026-10-19）: 126プログラム・42評価単位、未達49軸
+現在のチェックポイント（2026-10-19）: 127プログラム・42評価単位、未達49軸
 （性能29・参照元一致20）。未対応付け6,809宣言、部分／未測定16能力、
-91モジュール判定・827 issue報告などが残ります。compiler export 6,902 keyは
+91モジュール判定・825 issue報告などが残ります。compiler export 6,902 keyは
 ソース棚卸しと重複するため加算しません。Stage Aは未達、Stage BとF5は閉じています。
 
 Viewportに横方向のセル座標、型付きキー設定、フォーカス付きホイールを追加し、
-23宣言を部分対応へ追加しました。現在のソースはローカル33検証、24 Viewport試験と
-Miriの24試験＋キャッシュ並行参照試験に成功しています。
+23宣言を部分対応へ追加しました。現在の53cf699はローカル33検証、Rust200＋3 doctest、Python129、
+Miri25試験＋キャッシュ並行参照試験、LLVM72 source／77 instanceに成功しています。
 [1,404完全一致・39表示差分・参照元の位置補正課題と残件](viewport-cell-geometry.md)。
-新しいソースの3 OS・性能分布・LLVMの確認は継続中です。以下のCI結果は直前のソースの履歴です。
+反復／非反復2文書の全16 raw runと全出力を照合し、Unicode反復構築26.5→7.2µs、
+標準キー65→26nsを確認しました。非反復Unicodeの0.3–1.3%増や不利なp95も保持します。
+53cf699の[3 OS・MSRV・参照照合7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39158524308)も成功し、
+127 program／157入力と全fixture・ログ・LLVM・Windows実console復旧を
+[独立照合](evidence/viewport-horizontal/optimized/ci/source-bindings.json)しました。以下のCI結果は直前のソースの履歴です。
 
 c198c86は[必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39151131973)に成功し、
 123プログラム・148実行入力と各OSの17ログを独立照合しました。
