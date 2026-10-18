@@ -74,7 +74,7 @@ def check_trajectories(output, fixture, spring):
 
 def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream", group="foundation"):
     require(label in ["upstream","matea"],"unknown timing-mode probe label")
-    require(group in ["foundation","gradients","progress"],"unknown timing-mode fixture group")
+    require(group in ["foundation","gradients","progress","viewport-geometry"],"unknown timing-mode fixture group")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
@@ -101,13 +101,13 @@ def check_timing_mode(destination, probe_binary, environment, correctness, label
             checked.append({"case":name,"iterations_per_sample":item["iterations_per_sample"],
                             "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
                             "allocation_schema_valid":True})
-    count=91 if group=="foundation" else (12 if label=="matea" else 6)
+    count=91 if group=="foundation" else ((18 if label=="matea" else 14) if group=="viewport-geometry" else (12 if label=="matea" else 6))
     require(len(checked)==count and len({r["case"] for r in checked})==count, "incomplete calibrated probe")
     result={"schema":1,"probe":label,"group":group,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
             "invalid_configurations_rejected":rejected,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
     filename="timing-mode-checks.json" if label=="upstream" else "rust-timing-mode-checks.json"
-    if group!="foundation":filename=label+"-"+{"gradients":"gradient","progress":"progress"}[group]+"-timing-mode-checks.json"
+    if group!="foundation":filename=label+"-"+{"gradients":"gradient","progress":"progress","viewport-geometry":"viewport-geometry"}[group]+"-timing-mode-checks.json"
     (destination/filename).write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 
 
@@ -166,6 +166,17 @@ def check_probes(destination, go_binary, rust_binary, environment):
         require(all(a[key]==b[key] for key in ["semantics","output","first_return_value"]),"progress output mismatch: "+name)
     check_timing_mode(destination,go_binary,environment,[(["--progress"],progress[1])],group="progress")
     check_timing_mode(destination,rust_binary,environment,[(["--progress"],progress[0])],label="matea",group="progress")
+    geometry=[]
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output=subprocess.check_output([str(binary),"--viewport-geometry"],env=environment,timeout=30)
+        geometry.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-viewport-geometry-outputs.jsonl")).write_bytes(output)
+    require(len(geometry[0])==18 and len(geometry[1])==14,"viewport geometry fixture set changed")
+    require(set(geometry[0])==set(geometry[1])|{"viewport-geometry/borrowed_"+boundary+"_"+text for boundary in ["aligned","partial"] for text in ["ascii","unicode"]},"viewport geometry control set changed")
+    for name,b in geometry[1].items():
+        require(all(geometry[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"viewport geometry mismatch: "+name)
+    check_timing_mode(destination,go_binary,environment,[(["--viewport-geometry"],geometry[1])],group="viewport-geometry")
+    check_timing_mode(destination,rust_binary,environment,[(["--viewport-geometry"],geometry[0])],label="matea",group="viewport-geometry")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -174,7 +185,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures","--viewport-horizontal-fixtures","--viewport-cut-fixtures","--viewport-input-fixtures","--viewport-geometry-edges"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -199,6 +210,14 @@ def check_probes(destination, go_binary, rust_binary, environment):
             require(len(output.decode("utf-8").splitlines())==120 and output.decode("utf-8").splitlines()==fixture_text.splitlines(),"progress fixtures changed")
         if flag=="--viewport-content-fixtures":
             require(len(output.splitlines())==220 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-controls.tsv").read_bytes(),"viewport content fixtures changed")
+        if flag=="--viewport-horizontal-fixtures":
+            require(len(output.splitlines())==1404 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-horizontal.tsv").read_bytes(),"viewport horizontal fixtures changed")
+        if flag=="--viewport-cut-fixtures":
+            require(len(output.splitlines())==200 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-cuts.tsv").read_bytes(),"viewport cut fixtures changed")
+        if flag=="--viewport-input-fixtures":
+            require(len(output.splitlines())==34 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-input.tsv").read_bytes(),"viewport input fixtures changed")
+        if flag=="--viewport-geometry-edges":
+            require(len(output.splitlines())==10 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv").read_bytes(),"viewport geometry edges changed")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
@@ -268,7 +287,7 @@ def main():
     (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
         "gradient_matched_cases":6,"gradient_fixture_cases":548,"rust_gradient_timing_cases":12,"go_gradient_timing_cases":6,
         "indexed_gradient_fixture_cases":256,"progress_matched_cases":6,"progress_fixture_cases":120,"rust_progress_timing_cases":12,"go_progress_timing_cases":6,
-        "viewport_content_fixture_cases":220,"source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
+        "viewport_content_fixture_cases":220,"viewport_horizontal_fixture_cases":1404,"viewport_cut_fixture_cases":200,"viewport_input_fixture_cases":34,"viewport_geometry_edge_cases":10,"viewport_geometry_matched_cases":14,"rust_viewport_geometry_timing_cases":18,"go_viewport_geometry_timing_cases":14,"source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")
     print("11 pinned inventories, 84 retained and seven cursor output cases validated; no performance verdict")

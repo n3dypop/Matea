@@ -987,17 +987,45 @@
         "3875a8c172562c16fe14",
         "10550cff5036072ed65c",
         "e33648cb777757b9c5b7",
-        "8baa5a9ab6f1a2c9ad4f"
+        "8baa5a9ab6f1a2c9ad4f",
+        "791b499d6a1142a2be02",
+        "73385495797a85d97e42",
+        "8252032e1651d2a44bdc",
+        "921e23669319057c4404",
+        "072a51cfff8427535fee",
+        "c9c6bd9fdf58adefbcca",
+        "f1c0a68bf33766eaffce",
+        "11a3db69b56f08c98218",
+        "09577e3fd3432c94d42a",
+        "8cf02e99ef0b330334b2",
+        "08ce9841a6dc0d5ac0f8",
+        "efe14bb7143b45fe7245",
+        "a8b43e0b38dbbffdba05",
+        "999269b4604d441ef0c7",
+        "979210b5b5dbeb5df9bb",
+        "a82b8b106923a3c88fa4",
+        "b56e9eb9d3846ab7898d",
+        "95430a56e26f2f455d3f",
+        "4a4e80272358da352a01",
+        "2ec959ea24ddcb75270d",
+        "a29bd447ba213c3afe13",
+        "5976d4597f778c76312c",
+        "12dce52aa632805fa68c"
       ],
       "implementation": [
         "crates/matea-widgets/src/lib.rs"
       ],
       "tests": [
         "crates/matea-widgets/tests/viewport.rs",
-        "crates/matea-widgets/tests/fixtures/viewport-controls.tsv"
+        "crates/matea-widgets/tests/fixtures/viewport-controls.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-horizontal.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-cuts.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-cut-deviations.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-input.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv"
       ],
-      "performance": "pending",
-      "notes": "27 candidates link to bounded owned text replacement and vertical controls. 220 pinned public observations: 180 exact whole rows and 40 explicit CRLF content deviations with exact other state fields. Borrowed getters, owned clean-string move, panic-safe line iterator, clamp/zero/saturating controls tested. This is not full viewport parity; horizontal/wrap/gutter/highlight/style/input and constructor/replacement/control performance remain pending."
+      "performance": "docs/viewport-cell-geometry.md",
+      "notes": "50 candidates link partially to owned content, vertical/horizontal controls, typed default/override keys and focused wheel input. 1404 horizontal control observations match exactly, 200 View rows retain 161 plain matches and 39 literal cell-policy deviations; 34 input states retain 33 matches and one command-wheel policy difference, in addition to historical content fixtures. Default constant chords allocate no per-viewport key Vec. Lazy OnceLock width matches compositor grapheme policy and preserves Send/Sync. Full wrapping/fill/gutter/styles/highlights and source/platform/distribution coverage remain pending. No full module parity or high performance verdict."
     }
   ]
 }

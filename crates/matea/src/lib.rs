@@ -45,7 +45,8 @@ pub mod prelude {
         InputStyleState, InputStyles, List, PROGRESS_EMPTY_BLOCK, PROGRESS_FULL_BLOCK,
         PROGRESS_HALF_BLOCK, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Progress,
         ProgressCell, ProgressCells, ProgressError, ProgressFill, ProgressFrame, ProgressStyles,
-        Spinner, SpinnerAnimation, SpinnerPreset, Stopwatch, Table, TextEditKeys, TextInput,
-        TickInterval, Viewport, VirtualCursor, required,
+        ReversedViewportColumns, Spinner, SpinnerAnimation, SpinnerPreset, Stopwatch, Table,
+        TextEditKeys, TextInput, TickInterval, Viewport, ViewportKey, ViewportKeys, VirtualCursor,
+        required,
     };
 }

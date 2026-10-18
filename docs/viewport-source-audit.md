@@ -6,8 +6,8 @@ highlight helpers). [Every candidate is retained with its current partial/pendin
 The existing Matea Viewport implements a bounded vertical text slice only;
 previous native correctness/performance results do not cover this full module.
 The original audit introduced no declaration links or performance verdict. The
-subsequent bounded content/control implementation links 27 candidates as partial;
-43 remain unlinked. No whole-module verdict or quality promotion follows.
+subsequent content/cell-geometry/input implementations link 50 candidates as partial;
+20 remain unlinked. No whole-module verdict or quality promotion follows.
 
 | Public function group | Existing Matea scope / remaining work |
 | --- | --- |
@@ -78,3 +78,15 @@ from offset 1 in four lines/height 1, Go ScrollDown(MaxInt) returns to 0. The
 Matea caller uses the same positive count and reaches the saturated bottom 3;
 usize::MAX also reaches 3. [Both native outputs, original callers and source/library hashes](evidence/viewport-controls/overflow-context.json).
 This is a bounded arithmetic improvement, not a performance or full-module claim.
+
+## Cell geometry and focused input extension
+
+[The new geometry/input checkpoint](viewport-cell-geometry.md) adds explicit width,
+horizontal/ensure-visible controls, constant defaults with owned key overrides
+and focused wheel navigation. All 1,404 control rows match; 200 cut rows retain
+161 plain matches and 39 literal deviations; 34 input states retain 33 matches
+and one explicit command-wheel difference. The source edge sequence also exposes
+stale horizontal offsets after resize/replacement and signed positive-movement
+overflow; Matea clamps/saturates. Fifty candidates are partially linked and twenty
+remain unlinked. Wrap/fill/gutter/styles/highlights and the full module performance
+verdict remain pending. Historical content/control cohorts above are unchanged.

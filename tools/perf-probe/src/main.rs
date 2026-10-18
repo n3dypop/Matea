@@ -92,6 +92,10 @@ fn main() {
         viewport_costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--viewport-geometry") {
+        viewport_geometry_costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--style") {
         style_costs(iterations);
         return;
@@ -631,6 +635,190 @@ fn viewport_costs(iterations: usize) {
                 },
                 &output,
                 "construct, render and drop viewport scene and fresh 80-column surface; no terminal I/O",
+            );
+        }
+    }
+}
+
+fn viewport_digest(text: &str, x: usize, y: usize) -> u64 {
+    let mut value = 14695981039346656037u64;
+    for byte in text
+        .bytes()
+        .chain((x as u64).to_le_bytes())
+        .chain((y as u64).to_le_bytes())
+    {
+        value = (value ^ u64::from(byte)).wrapping_mul(1099511628211);
+    }
+    value
+}
+fn viewport_geometry_costs(iterations: usize) {
+    const CONSTRUCT: &str = "fresh default viewport; set explicit 6x3 content size, replace from one existing 100-line UTF-8 element, set horizontal maximum, create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include construction/drop, exclude terminal I/O; other default features not exercised";
+    const REPLACE: &str = "existing 6x3 viewport; reset positions, replace from one existing 100-line UTF-8 element, set horizontal maximum and create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include replacement/snapshot drop; exclude terminal I/O";
+    const MOVE: &str = "existing 6x3 viewport with initialized width geometry; reset positions, move right 3/left 1/right 3; consume final x/y positions with FNV64; no content replacement/view/terminal I/O";
+    const ENSURE: &str = "existing 6x3 viewport with initialized width geometry and horizontal step 2; reset positions, ensure logical line 50 and cells 6..8 visible; consume final x/y positions with FNV64; no view/terminal I/O";
+    const VIEW: &str = "existing 6x3 viewport at x=2,y=7 with plain style; construct complete owned plain frame, strip only ASCII right-padding spaces per row, consume all UTF-8 bytes and x/y positions with FNV64; include Rust scene/surface/plain conversion or Go View/plain adapter; no terminal I/O";
+    const KEY: &str = "existing 6x3 viewport with initialized geometry, default bindings and horizontal step 2; reset positions, dispatch one focused Right press and consume final x/y positions with FNV64; no view/terminal I/O";
+    const WHEEL: &str = "existing 6x3 viewport with initialized geometry and default wheel delta 3; reset positions, dispatch one focused unmodified Down wheel and consume final x/y positions with FNV64; no view/terminal I/O";
+    let theme = Theme::plain();
+    for (name, line) in [
+        ("ascii", "Matea owns each line"),
+        ("unicode", "抹茶 e\u{301} 👩‍💻"),
+    ] {
+        let text = std::iter::repeat_n(line, 100)
+            .collect::<Vec<_>>()
+            .join("\n");
+        let configured = || {
+            let mut m = Viewport::new("");
+            m.set_size(6, 3);
+            m.set_content_lines([text.as_str()]);
+            m.set_horizontal_step(2);
+            m.set_horizontal_offset(usize::MAX);
+            m
+        };
+        let initial = configured();
+        let maximum = initial.max_horizontal_offset();
+        let content_output = format!("x={maximum};y=0;text={text}");
+        measure(
+            &format!("viewport-geometry/construct_{name}"),
+            iterations,
+            || {
+                let m = configured();
+                let owned = m.content().to_owned();
+                viewport_digest(
+                    black_box(&owned),
+                    black_box(m.horizontal_offset()),
+                    black_box(m.offset()),
+                )
+            },
+            &content_output,
+            CONSTRUCT,
+        );
+        let mut m = initial.clone();
+        measure(
+            &format!("viewport-geometry/replace_{name}"),
+            iterations,
+            || {
+                m.set_horizontal_offset(0);
+                m.set_offset(0);
+                m.set_content_lines([black_box(text.as_str())]);
+                m.set_horizontal_offset(usize::MAX);
+                let owned = m.content().to_owned();
+                viewport_digest(
+                    black_box(&owned),
+                    black_box(m.horizontal_offset()),
+                    black_box(m.offset()),
+                )
+            },
+            &content_output,
+            REPLACE,
+        );
+        measure(
+            &format!("viewport-geometry/movement_{name}"),
+            iterations,
+            || {
+                m.set_horizontal_offset(0);
+                m.set_offset(0);
+                black_box(&mut m).scroll_right(3);
+                black_box(&mut m).scroll_left(1);
+                black_box(&mut m).scroll_right(3);
+                viewport_digest("", black_box(m.horizontal_offset()), black_box(m.offset()))
+            },
+            &format!("x={};y=0;text=", maximum.min(5)),
+            MOVE,
+        );
+        measure(
+            &format!("viewport-geometry/ensure_{name}"),
+            iterations,
+            || {
+                m.set_horizontal_offset(0);
+                m.set_offset(0);
+                black_box(&mut m).ensure_visible(50, 6..8).unwrap();
+                viewport_digest("", black_box(m.horizontal_offset()), black_box(m.offset()))
+            },
+            &format!("x={};y=50;text=", maximum.min(4)),
+            ENSURE,
+        );
+        m.set_horizontal_offset(2);
+        m.set_offset(7);
+        let expected = m
+            .view(&theme, true)
+            .render(Size::new(6, 3))
+            .unwrap()
+            .plain();
+        measure(
+            &format!("viewport-geometry/view_{name}"),
+            iterations,
+            || {
+                let plain = black_box(&m)
+                    .view(black_box(&theme), true)
+                    .render(black_box(Size::new(6, 3)))
+                    .unwrap()
+                    .plain();
+                viewport_digest(
+                    black_box(&plain),
+                    black_box(m.horizontal_offset()),
+                    black_box(m.offset()),
+                )
+            },
+            &format!("x=2;y=7;text={expected}"),
+            VIEW,
+        );
+        let right = Input::Key(Key::new(KeyCode::Right));
+        measure(
+            &format!("viewport-geometry/key_{name}"),
+            iterations,
+            || {
+                m.set_horizontal_offset(0);
+                m.set_offset(0);
+                black_box(&mut m).event(black_box(&right), true);
+                viewport_digest("", black_box(m.horizontal_offset()), black_box(m.offset()))
+            },
+            "x=2;y=0;text=",
+            KEY,
+        );
+        let down = Input::Mouse(Mouse {
+            kind: MouseKind::Scroll(ScrollDirection::Down),
+            column: 1,
+            row: 1,
+            modifiers: Modifiers::empty(),
+        });
+        measure(
+            &format!("viewport-geometry/wheel_{name}"),
+            iterations,
+            || {
+                m.set_horizontal_offset(0);
+                m.set_offset(0);
+                black_box(&mut m).event(black_box(&down), true);
+                viewport_digest("", black_box(m.horizontal_offset()), black_box(m.offset()))
+            },
+            "x=0;y=3;text=",
+            WHEEL,
+        );
+        for (label, left) in [("aligned", 2), ("partial", 1)] {
+            m.set_horizontal_offset(left);
+            m.set_offset(7);
+            let expected = m
+                .visible_lines()
+                .map(|line| line.into_owned())
+                .collect::<Vec<_>>()
+                .join("\n");
+            measure(
+                &format!("viewport-geometry/borrowed_{label}_{name}"),
+                iterations,
+                || {
+                    let mut value = 14695981039346656037u64;
+                    for (index, line) in black_box(&m).visible_lines().enumerate() {
+                        if index != 0 {
+                            value = (value ^ u64::from(b'\n')).wrapping_mul(1099511628211);
+                        }
+                        for byte in line.bytes() {
+                            value = (value ^ u64::from(byte)).wrapping_mul(1099511628211);
+                        }
+                    }
+                    black_box(value)
+                },
+                &expected,
+                "Rust-only lazy clipped visible-line iterator; consume every returned UTF-8 byte and structural LF with FNV64; no owned scene/surface/content snapshot or terminal I/O; distinct consumption, no upstream ratio",
             );
         }
     }

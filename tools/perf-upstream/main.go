@@ -204,6 +204,22 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-geometry-edges" {
+		viewportGeometryEdges()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-input-fixtures" {
+		viewportInputFixtures()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-horizontal-fixtures" {
+		viewportHorizontalFixtures()
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-cut-fixtures" {
+		viewportCutFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--viewport-content-fixtures" {
 		viewportContentFixtures()
 		return
@@ -293,6 +309,10 @@ func main() {
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--progress" {
 		progressCosts(n)
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-geometry" {
+		viewportGeometryCosts(n)
 		return
 	}
 
@@ -1428,5 +1448,237 @@ func viewportContentFixtures() {
 				fmt.Printf("%d\t%d\t%d\t%d\t%d\t%d\t%t\t%t\t%016x\t%x\n", index, height, step, m.YOffset(), m.TotalLineCount(), m.VisibleLineCount(), m.AtTop(), m.AtBottom(), math.Float64bits(m.ScrollPercent()), m.GetContent())
 			}
 		}
+	}
+}
+
+// Only public control state, with no hidden-field or rendering equivalence.
+func viewportHorizontalFixtures() {
+	texts := []string{"", "tea", "0123456789\nab\n", "茶ab茶c\n甲乙丙丁", "Ae\u0301👩‍💻B\né茶", "\u0301A\u200bBC"}
+	for index, text := range texts {
+		for _, width := range []int{0, 1, 2, 3, 6, 20} {
+			for _, height := range []int{0, 1, 2} {
+				m := viewport.New(viewport.WithWidth(width), viewport.WithHeight(height))
+				m.SetContentLines([]string{text})
+				for step := range 13 {
+					switch step {
+					case 1:
+						m.SetXOffset(math.MaxInt)
+					case 2:
+						m.ScrollLeft(1)
+					case 3:
+						m.ScrollRight(1)
+					case 4:
+						m.SetXOffset(0)
+					case 5:
+						m.ScrollRight(2)
+					case 6:
+						m.SetHorizontalStep(0)
+						m.ScrollRight(1)
+					case 7:
+						m.SetHorizontalStep(2)
+						m.EnsureVisible(1, 5, 8)
+					case 8:
+						m.EnsureVisible(0, 0, 1)
+					case 9:
+						m.ScrollLeft(math.MaxInt)
+					case 10:
+						m.ScrollRight(math.MaxInt)
+					case 11:
+						m.SetYOffset(math.MaxInt)
+					case 12:
+						m.EnsureVisible(0, 1, 2)
+					}
+					fmt.Printf("%d\t%d\t%d\t%d\t%d\t%d\t%016x\n", index, width, height, step, m.XOffset(), m.YOffset(), math.Float64bits(m.HorizontalScrollPercent()))
+				}
+			}
+		}
+	}
+}
+
+// Keep the complete raw View bytes, including padding and any overflow. The
+// extra line permits the tested X offsets even for a shorter first line.
+func viewportCutFixtures() {
+	for index, text := range []string{"ABCD", "茶ab界c", "Ae\u0301👩‍💻B", "\u0301A\u200bBC", "🇯🇵1️⃣Z"} {
+		for _, width := range []int{1, 2, 3, 4, 6} {
+			for left := range 8 {
+				m := viewport.New(viewport.WithWidth(width), viewport.WithHeight(1))
+				m.SetContentLines([]string{text, strings.Repeat("X", 20)})
+				m.SetXOffset(left)
+				fmt.Printf("%d\t%d\t%d\t%x\n", index, width, left, m.View())
+			}
+		}
+	}
+}
+
+func viewportInputFixtures() {
+	type inputCase struct {
+		name      string
+		message   tea.Msg
+		configure func(*viewport.Model)
+	}
+	cases := []inputCase{}
+	for index, press := range []tea.KeyPressMsg{
+		{Code: tea.KeyPgDown}, {Code: ' '}, {Code: 'f'}, {Code: tea.KeyPgUp}, {Code: 'b'},
+		{Code: 'u'}, {Code: 'u', Mod: tea.ModCtrl}, {Code: 'd'}, {Code: 'd', Mod: tea.ModCtrl},
+		{Code: tea.KeyDown}, {Code: 'j'}, {Code: tea.KeyUp}, {Code: 'k'}, {Code: tea.KeyLeft}, {Code: 'h'}, {Code: tea.KeyRight}, {Code: 'l'},
+	} {
+		cases = append(cases, inputCase{fmt.Sprintf("key-%d", index), press, nil})
+	}
+	cases = append(cases, inputCase{"release-down", tea.KeyReleaseMsg{Code: tea.KeyDown}, nil}, inputCase{"release-right", tea.KeyReleaseMsg{Code: tea.KeyRight}, nil}, inputCase{"ctrl-down", tea.KeyPressMsg{Code: tea.KeyDown, Mod: tea.ModCtrl}, nil})
+	for index, wheel := range []tea.MouseWheelMsg{
+		{Button: tea.MouseWheelDown}, {Button: tea.MouseWheelUp}, {Button: tea.MouseWheelRight}, {Button: tea.MouseWheelLeft},
+		{Button: tea.MouseWheelDown, Mod: tea.ModShift}, {Button: tea.MouseWheelUp, Mod: tea.ModShift},
+	} {
+		cases = append(cases, inputCase{fmt.Sprintf("wheel-%d", index), wheel, nil})
+	}
+	cases = append(cases,
+		inputCase{"wheel-disabled", tea.MouseWheelMsg{Button: tea.MouseWheelDown}, func(m *viewport.Model) { m.MouseWheelEnabled = false }},
+		inputCase{"wheel-zero-delta", tea.MouseWheelMsg{Button: tea.MouseWheelDown}, func(m *viewport.Model) { m.MouseWheelDelta = 0 }},
+		inputCase{"key-zero-step", tea.KeyPressMsg{Code: tea.KeyRight}, func(m *viewport.Model) { m.SetHorizontalStep(0) }},
+		inputCase{"custom-down", tea.KeyPressMsg{Code: tea.KeyF9, Mod: tea.ModAlt}, func(m *viewport.Model) { m.KeyMap.Down = key.NewBinding(key.WithKeys("alt+f9")) }},
+		inputCase{"custom-disabled", tea.KeyPressMsg{Code: tea.KeyF9, Mod: tea.ModAlt}, func(m *viewport.Model) {
+			m.KeyMap.Down = key.NewBinding(key.WithKeys("alt+f9"))
+			m.KeyMap.Down.SetEnabled(false)
+		}},
+		inputCase{"custom-empty", tea.KeyPressMsg{Code: tea.KeyDown}, func(m *viewport.Model) { m.KeyMap.Down.Unbind() }},
+		inputCase{"custom-priority", tea.KeyPressMsg{Code: tea.KeyF9, Mod: tea.ModAlt}, func(m *viewport.Model) {
+			m.KeyMap.PageDown = key.NewBinding(key.WithKeys("alt+f9"))
+			m.KeyMap.Up = key.NewBinding(key.WithKeys("alt+f9"))
+		}},
+		inputCase{"ctrl-wheel-policy", tea.MouseWheelMsg{Button: tea.MouseWheelDown, Mod: tea.ModCtrl}, nil},
+	)
+	text := strings.Repeat(strings.Repeat("X", 40)+"\n", 19) + strings.Repeat("X", 40)
+	for _, item := range cases {
+		m := viewport.New(viewport.WithWidth(5), viewport.WithHeight(4))
+		m.SetContent(text)
+		m.SetYOffset(8)
+		m.SetXOffset(8)
+		if item.configure != nil {
+			item.configure(&m)
+		}
+		m, _ = m.Update(item.message)
+		fmt.Printf("%s\t%d\t%d\n", item.name, m.XOffset(), m.YOffset())
+	}
+}
+
+func viewportGeometryDigest(text string, x, y int) uint64 {
+	value := uint64(14695981039346656037)
+	for _, b := range []byte(text) {
+		value = (value ^ uint64(b)) * 1099511628211
+	}
+	for _, position := range []int{x, y} {
+		for i := range 8 {
+			value = (value ^ uint64(byte(uint64(position)>>(8*i)))) * 1099511628211
+		}
+	}
+	return value
+}
+func viewportGeometryCosts(n int) {
+	const construct = "fresh default viewport; set explicit 6x3 content size, replace from one existing 100-line UTF-8 element, set horizontal maximum, create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include construction/drop, exclude terminal I/O; other default features not exercised"
+	const replace = "existing 6x3 viewport; reset positions, replace from one existing 100-line UTF-8 element, set horizontal maximum and create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include replacement/snapshot drop; exclude terminal I/O"
+	const move = "existing 6x3 viewport with initialized width geometry; reset positions, move right 3/left 1/right 3; consume final x/y positions with FNV64; no content replacement/view/terminal I/O"
+	const ensure = "existing 6x3 viewport with initialized width geometry and horizontal step 2; reset positions, ensure logical line 50 and cells 6..8 visible; consume final x/y positions with FNV64; no view/terminal I/O"
+	const view = "existing 6x3 viewport at x=2,y=7 with plain style; construct complete owned plain frame, strip only ASCII right-padding spaces per row, consume all UTF-8 bytes and x/y positions with FNV64; include Rust scene/surface/plain conversion or Go View/plain adapter; no terminal I/O"
+	const press = "existing 6x3 viewport with initialized geometry, default bindings and horizontal step 2; reset positions, dispatch one focused Right press and consume final x/y positions with FNV64; no view/terminal I/O"
+	const wheel = "existing 6x3 viewport with initialized geometry and default wheel delta 3; reset positions, dispatch one focused unmodified Down wheel and consume final x/y positions with FNV64; no view/terminal I/O"
+	for _, item := range []struct{ name, line string }{{"ascii", "Matea owns each line"}, {"unicode", "抹茶 e\u0301 👩‍💻"}} {
+		text := strings.TrimSuffix(strings.Repeat(item.line+"\n", 100), "\n")
+		configured := func() viewport.Model {
+			m := viewport.New(viewport.WithWidth(6), viewport.WithHeight(3))
+			m.SetContentLines([]string{text})
+			m.SetHorizontalStep(2)
+			m.SetXOffset(math.MaxInt)
+			return m
+		}
+		initial := configured()
+		maximum := initial.XOffset()
+		contentOutput := fmt.Sprintf("x=%d;y=0;text=%s", maximum, text)
+		measure("viewport-geometry/construct_"+item.name, n, func() uint64 {
+			m := configured()
+			owned := m.GetContent()
+			result := viewportGeometryDigest(owned, m.XOffset(), m.YOffset())
+			runtime.KeepAlive(m)
+			return result
+		}, contentOutput, construct)
+		m := initial
+		measure("viewport-geometry/replace_"+item.name, n, func() uint64 {
+			m.SetXOffset(0)
+			m.SetYOffset(0)
+			m.SetContentLines([]string{text})
+			m.SetXOffset(math.MaxInt)
+			owned := m.GetContent()
+			result := viewportGeometryDigest(owned, m.XOffset(), m.YOffset())
+			runtime.KeepAlive(owned)
+			return result
+		}, contentOutput, replace)
+		measure("viewport-geometry/movement_"+item.name, n, func() uint64 {
+			m.SetXOffset(0)
+			m.SetYOffset(0)
+			m.ScrollRight(3)
+			m.ScrollLeft(1)
+			m.ScrollRight(3)
+			return viewportGeometryDigest("", m.XOffset(), m.YOffset())
+		}, fmt.Sprintf("x=%d;y=0;text=", min(maximum, 5)), move)
+		measure("viewport-geometry/ensure_"+item.name, n, func() uint64 {
+			m.SetXOffset(0)
+			m.SetYOffset(0)
+			m.EnsureVisible(50, 6, 8)
+			return viewportGeometryDigest("", m.XOffset(), m.YOffset())
+		}, fmt.Sprintf("x=%d;y=50;text=", min(maximum, 4)), ensure)
+		m.SetXOffset(2)
+		m.SetYOffset(7)
+		plain := func() string {
+			rows := strings.Split(m.View(), "\n")
+			for i := range rows {
+				rows[i] = strings.TrimRight(rows[i], " ")
+			}
+			return strings.Join(rows, "\n")
+		}
+		expected := plain()
+		measure("viewport-geometry/view_"+item.name, n, func() uint64 { s := plain(); return viewportGeometryDigest(s, m.XOffset(), m.YOffset()) }, "x=2;y=7;text="+expected, view)
+		measure("viewport-geometry/key_"+item.name, n, func() uint64 {
+			m.SetXOffset(0)
+			m.SetYOffset(0)
+			m, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyRight})
+			return viewportGeometryDigest("", m.XOffset(), m.YOffset())
+		}, "x=2;y=0;text=", press)
+		measure("viewport-geometry/wheel_"+item.name, n, func() uint64 {
+			m.SetXOffset(0)
+			m.SetYOffset(0)
+			m, _ = m.Update(tea.MouseWheelMsg{Button: tea.MouseWheelDown, X: 1, Y: 1})
+			return viewportGeometryDigest("", m.XOffset(), m.YOffset())
+		}, "x=0;y=3;text=", wheel)
+	}
+}
+
+func viewportGeometryEdges() {
+	emit := func(name string, configure func(*viewport.Model)) {
+		var m viewport.Model
+		view, panicked := "", ""
+		func() {
+			defer func() {
+				if value := recover(); value != nil {
+					panicked = fmt.Sprint(value)
+				}
+			}()
+			m = viewport.New(viewport.WithWidth(3), viewport.WithHeight(1))
+			m.SetContent("0123456789")
+			m.SetXOffset(7)
+			configure(&m)
+			view = m.View()
+		}()
+		fmt.Printf("%s\t%d\t%d\t%d\t%d\t%016x\t%016x\t%x\t%x\n", name, m.Width(), m.Height(), m.XOffset(), m.YOffset(), math.Float64bits(m.ScrollPercent()), math.Float64bits(m.HorizontalScrollPercent()), view, panicked)
+	}
+	emit("width-grow", func(m *viewport.Model) { m.SetWidth(20) })
+	emit("replace-short", func(m *viewport.Model) { m.SetContent("tea") })
+	emit("positive-overflow", func(m *viewport.Model) { m.SetXOffset(1); m.ScrollRight(math.MaxInt) })
+	for _, height := range []int{-2, -1, 0, 1, 3, 4, 5} {
+		emit(fmt.Sprintf("height-%d", height), func(m *viewport.Model) {
+			m.SetXOffset(0)
+			m.SetContent("a\nb\nc\nd")
+			m.GotoBottom()
+			m.SetHeight(height)
+			m.GotoBottom()
+		})
 	}
 }

@@ -73,7 +73,7 @@ def collect(root):
     # Instrumented execution coverage is explicitly fixed-batch, never timing
     # evidence. Native CI exercises the real confirmed-calibration path.
     env["MATEA_PERF_MIN_SAMPLE_NS"] = "0"
-    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"], ["--virtual-cursor"], ["--attributes"], ["--gradients"], ["--progress"]]:
+    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--viewport-geometry"], ["--style"], ["--input"], ["--protocol"], ["--virtual-cursor"], ["--attributes"], ["--gradients"], ["--progress"]]:
         name = mode[0].removeprefix("--") if mode else "main"
         run([str(probe), *mode], "coverage-probe-" + name + ".log")
     env["MATEA_PROBE_OUTPUT_ONLY"] = "1"
