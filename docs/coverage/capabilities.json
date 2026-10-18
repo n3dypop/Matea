@@ -888,6 +888,24 @@
       ],
       "performance": "docs/evidence/attributes/report.json",
       "notes": "Resolved positive attributes, six underline choices, underline color, typed flag getters/clearing and reduced-motion blink suppression. Partial mapping: negative/reset command composition, Lip Gloss inheritance/unset-vs-false, arbitrary rich text/space decorators and terminal font support remain pending. See docs/text-attributes-audit.md; no full declaration or module parity."
+    },
+    {
+      "id": "style/rgb8-lab-gradients",
+      "status": "partial",
+      "reference_ids": [
+        "f36a6f61aad21b90ab23",
+        "099c9a38fd0ffe9372a6"
+      ],
+      "implementation": [
+        "crates/matea-style/src/gradient.rs"
+      ],
+      "tests": [
+        "crates/matea-style/tests/gradients.rs",
+        "crates/matea-style/tests/fixtures/gradients.tsv",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "docs/gradient-audit.md",
+      "notes": "RGB8 stop/output subset: owned cached Lab coordinates, reference segment distribution and prefix shortcut, cached diagonal grid palette, immutable borrowed iteration. 548 native reference fixtures and 19 selected Miri cases. High-depth/fractional/alpha/custom color inputs and empty/nil source semantics remain pending; measurements/three-OS acceptance not yet complete. No full declaration or module parity."
     }
   ]
 }

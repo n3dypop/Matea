@@ -34,8 +34,9 @@ pub mod prelude {
     };
     pub use matea_render::{Cursor, Rect, Size, Surface, Text, View};
     pub use matea_style::{
-        BlinkStyle, Border, Color, ColorLevel, Style, TextAttribute, TextAttributes, TextFrame,
-        Theme, UnderlineStyle,
+        BlinkStyle, Border, Color, ColorLevel, Gradient, GradientColors, GradientError,
+        GradientGrid, GradientGridColors, Style, TextAttribute, TextAttributes, TextFrame, Theme,
+        UnderlineStyle,
     };
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{

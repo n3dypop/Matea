@@ -9,6 +9,18 @@ from check_reference_paths import check_trajectories, check_timing_mode
 
 
 class TrajectoryChecks(unittest.TestCase):
+    def test_gradient_timing_groups_require_all_separate_probe_cases(self):
+        for label,count in [("upstream",6),("matea",12)]:
+            values={f"gradients/{i}":{"case":f"gradients/{i}","semantics":"finite","output":"colors","first_return_value":1} for i in range(count)}
+            raw="\n".join(json.dumps({**v,"samples_ns":[1]*31,"iterations_per_sample":1,"allocations":0,"allocated_bytes":0,
+                "calibration":{"target_ns":20_000_000,"start_n":1,"max_n":2,"batches":[{"iterations":1,"elapsed_ns":20_000_000,"confirmations_ns":[20_000_000]*2}]}}) for v in values.values()).encode()
+            with tempfile.TemporaryDirectory() as directory,patch("check_reference_paths.subprocess.check_output",return_value=raw):
+                destination=Path(directory)
+                check_timing_mode(destination,Path("fixture"),{},[(["--gradients"],values)],label=label,group="gradients")
+                report=json.loads((destination/(label+"-gradient-timing-mode-checks.json")).read_text())
+                self.assertEqual(len(report['checked_cases']),count)
+                self.assertEqual(report['group'],'gradients')
+                self.assertEqual(report['invalid_configurations_rejected'],[])
     def test_timing_mode_uses_confirmed_target_and_retains_all_91_case_checks(self):
         cohorts=[([],84),(["--virtual-cursor"],7)]
         expected=[]

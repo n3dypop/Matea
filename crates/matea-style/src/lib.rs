@@ -2,6 +2,8 @@
 //! Portable design tokens and deterministic integer layout. No terminal I/O.
 mod attributes;
 pub use attributes::{BlinkStyle, TextAttribute, TextAttributes, TextFrame, UnderlineStyle};
+mod gradient;
+pub use gradient::{Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]

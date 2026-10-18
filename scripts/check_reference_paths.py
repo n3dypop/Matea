@@ -72,13 +72,14 @@ def check_trajectories(output, fixture, spring):
             "criterion": "existing matea-motion/tests/reference.rs; no Rust test threshold changed"}
 
 
-def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream"):
+def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream", group="foundation"):
     require(label in ["upstream","matea"],"unknown timing-mode probe label")
+    require(group in ["foundation","gradients"],"unknown timing-mode fixture group")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
     rejected=[]
-    if label=="matea":
+    if label=="matea" and group=="foundation":
         for key,value in [("MATEA_PERF_ITERATIONS","0"),("MATEA_PERF_ITERATIONS","invalid"),
                           ("MATEA_PERF_ITERATIONS","6710887"),("MATEA_PERF_MIN_SAMPLE_NS","-1"),
                           ("MATEA_PERF_MIN_SAMPLE_NS","1000000001")]:
@@ -100,11 +101,13 @@ def check_timing_mode(destination, probe_binary, environment, correctness, label
             checked.append({"case":name,"iterations_per_sample":item["iterations_per_sample"],
                             "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
                             "allocation_schema_valid":True})
-    require(len(checked)==91 and len({r["case"] for r in checked})==91, "incomplete calibrated probe")
-    result={"schema":1,"probe":label,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
+    count=91 if group=="foundation" else (12 if label=="matea" else 6)
+    require(len(checked)==count and len({r["case"] for r in checked})==count, "incomplete calibrated probe")
+    result={"schema":1,"probe":label,"group":group,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
             "invalid_configurations_rejected":rejected,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
     filename="timing-mode-checks.json" if label=="upstream" else "rust-timing-mode-checks.json"
+    if group=="gradients":filename=label+"-gradient-timing-mode-checks.json"
     (destination/filename).write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 
 
@@ -136,8 +139,20 @@ def check_probes(destination, go_binary, rust_binary, environment):
         b=cursors[1][name]
         require((a["semantics"],a["output"],a["first_return_value"])==
                 (b["semantics"],b["output"],b["first_return_value"]), "virtual cursor mismatch: "+name)
+    gradients=[]
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output=subprocess.check_output([str(binary),"--gradients"],env=environment,timeout=30)
+        gradients.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-gradient-outputs.jsonl")).write_bytes(output)
+    require(len(gradients[0])==12 and len(gradients[1])==6,"gradient fixture set changed")
+    for name,b in gradients[1].items():
+        require(name.startswith("gradients/fresh_") and name in gradients[0],"unknown matched gradient")
+        a=gradients[0][name]
+        require(all(a[key]==b[key] for key in ["semantics","output","first_return_value"]),"gradient output mismatch: "+name)
     check_timing_mode(destination,go_binary,environment,[([],records[1]),(["--virtual-cursor"],cursors[1])])
     check_timing_mode(destination,rust_binary,environment,[([],records[0]),(["--virtual-cursor"],cursors[0])],label="matea")
+    check_timing_mode(destination,go_binary,environment,[(["--gradients"],gradients[1])],group="gradients")
+    check_timing_mode(destination,rust_binary,environment,[(["--gradients"],gradients[0])],label="matea",group="gradients")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -146,7 +161,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -160,6 +175,9 @@ def check_probes(destination, go_binary, rust_binary, environment):
             numeric[flag]=check_trajectories(output.decode(),(ROOT/"crates/matea-motion/tests"/filename).read_text(encoding="utf-8"),flag=="--motion-fixtures")
         if flag=="--clocks":
             require(len(read_probe_outputs(output.decode("utf-8")))==16, "incomplete clock probe")
+        if flag=="--gradient-fixtures":
+            retained=(ROOT/"crates/matea-style/tests/fixtures/gradients.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==548 and output.decode("utf-8").splitlines()==retained.splitlines(),"gradient fixtures changed")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
@@ -227,6 +245,7 @@ def main():
         command([sys.executable,"scripts/fetch_upstream_issues.py","--destination",destination/"issue-metadata.json",
                  "--cache",destination/"private-issue-cache"],env=environment)
     (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
+        "gradient_matched_cases":6,"gradient_fixture_cases":548,"rust_gradient_timing_cases":12,"go_gradient_timing_cases":6,
         "source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")

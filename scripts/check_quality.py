@@ -23,12 +23,14 @@ def programs(root):
 
 
 def execution_inputs(root):
-    """Programs and build/check manifests; exclude generated evidence."""
+    """Programs, manifests, native test fixtures and goldens; exclude generated evidence."""
     names = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
                                     cwd=root, stderr=subprocess.PIPE).decode("utf-8").split("\0")
     additional = {name for name in names if name and (root/name).is_file() and
                   (Path(name).suffix in {".toml", ".lock", ".sum", ".mod"} or
-                   name in {".gitattributes", "docs/quality-plan.json", "docs/upstream-lock.json"})}
+                   name in {".gitattributes", "docs/quality-plan.json", "docs/upstream-lock.json"} or
+                   (name.startswith(("crates/", "examples/", "tests/")) and
+                    Path(name).suffix in {".csv", ".tsv", ".txt", ".json"}))}
     return programs(root) | additional
 
 

@@ -12,6 +12,7 @@ import (
 	"charm.land/bubbles/v2/textinput"
 	bubbletimer "charm.land/bubbles/v2/timer"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"encoding/json"
 	"fmt"
 	"github.com/charmbracelet/colorprofile"
@@ -201,6 +202,10 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--gradient-fixtures" {
+		gradientFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--trace" {
 		trace()
 		return
@@ -268,6 +273,10 @@ func main() {
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--clocks" {
 		clockCases(n)
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--gradients" {
+		gradientCosts(n)
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--virtual-cursor" {
@@ -350,6 +359,87 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+
+func gradientHex(colors []color.Color) string {
+	parts := make([]string, len(colors))
+	for i, c := range colors {
+		r, g, b, _ := c.RGBA()
+		parts[i] = fmt.Sprintf("%02x%02x%02x", r>>8, g>>8, b>>8)
+	}
+	return strings.Join(parts, ",")
+}
+func gradientPalettes() [][]color.Color {
+	return [][]color.Color{
+		{color.RGBA{0, 0, 0, 255}},
+		{color.RGBA{255, 0, 0, 255}, color.RGBA{0, 255, 0, 255}},
+		{color.RGBA{90, 86, 224, 255}, color.RGBA{238, 111, 248, 255}, color.RGBA{7, 201, 33, 255}},
+		{color.RGBA{0, 0, 0, 255}, color.RGBA{255, 255, 255, 255}, color.RGBA{32, 127, 243, 255}, color.RGBA{4, 8, 16, 255}},
+	}
+}
+func gradientFixtures() {
+	palettes := gradientPalettes()
+	for _, stops := range palettes {
+		for count := 0; count <= 64; count++ {
+			fmt.Printf("L\t%d\t%s\t%s\n", count, gradientHex(stops), gradientHex(lipgloss.Blend1D(count, stops...)))
+		}
+	}
+	stops := palettes[2]
+	for _, width := range []int{0, 1, 2, 3, 5, 17} {
+		for _, height := range []int{0, 1, 2, 4} {
+			for _, angle := range []float64{-450, -90, 0, 30, 45, 90, 180, 270, 360, 405, 720, 1e9} {
+				fmt.Printf("G\t%d\t%d\t%g\t%s\t%s\n", width, height, angle, gradientHex(stops), gradientHex(lipgloss.Blend2D(width, height, angle, stops...)))
+			}
+		}
+	}
+}
+
+type gradientSpec struct {
+	name                 string
+	count, width, height int
+	angle                float64
+}
+
+func gradientSpecs() []gradientSpec {
+	return []gradientSpec{
+		{"linear_8", 8, 0, 0, 0}, {"multi_80", 80, 0, 0, 0}, {"multi_1024", 1024, 0, 0, 0},
+		{"grid_16x8_45", 0, 16, 8, 45}, {"grid_80x24_0", 0, 80, 24, 0}, {"grid_80x24_90", 0, 80, 24, 90},
+	}
+}
+func gradientValues(spec gradientSpec, stops []color.Color) []color.Color {
+	if spec.width == 0 {
+		return lipgloss.Blend1D(spec.count, stops...)
+	}
+	return lipgloss.Blend2D(spec.width, spec.height, spec.angle, stops...)
+}
+func gradientRGB(colors []color.Color) [][3]byte {
+	result := make([][3]byte, len(colors))
+	for i, c := range colors {
+		r, g, b, _ := c.RGBA()
+		result[i] = [3]byte{byte(r >> 8), byte(g >> 8), byte(b >> 8)}
+	}
+	return result
+}
+func gradientChecksum(colors [][3]byte) uint64 {
+	value := uint64(14695981039346656037)
+	for _, rgb := range colors {
+		for _, channel := range rgb {
+			value = (value ^ uint64(channel)) * 1099511628211
+		}
+	}
+	return value
+}
+func gradientCosts(n int) {
+	stops := gradientPalettes()[2]
+	for _, spec := range gradientSpecs() {
+		output := gradientHex(gradientValues(spec, stops))
+		measure("gradients/fresh_"+spec.name, max(1, n/100), func() uint64 {
+			values := gradientRGB(gradientValues(spec, stops))
+			value := gradientChecksum(values)
+			runtime.KeepAlive(values)
+			return value
+		}, output, "fresh RGB8-stop CIELAB configuration, complete normalized RGB8 vector and FNV64 checksum; include allocation and all output colors; no formatting or terminal I/O")
 	}
 }
 func startStopwatchForProbe() stopwatch.Model {

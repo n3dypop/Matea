@@ -77,7 +77,8 @@ class MeasurementDriverTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);subprocess.run(["git","init","--quiet"],cwd=root,check=True,capture_output=True)
             wanted={"build.rs","scripts/check.py","examples/external/src/main.rs","examples/external/Cargo.toml",
-                    "tools/probe/go.sum","Cargo.lock",".gitattributes","docs/quality-plan.json","docs/upstream-lock.json"}
+                    "tools/probe/go.sum","Cargo.lock",".gitattributes","docs/quality-plan.json","docs/upstream-lock.json",
+                    "crates/example/tests/fixtures/data.tsv","crates/example/tests/reference.csv","tests/golden/dashboard.txt"}
             for name in wanted|{"README.md"}:
                 path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text("fixture",encoding="utf-8")
             self.assertEqual(execution_inputs(root),wanted)

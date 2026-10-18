@@ -1,6 +1,7 @@
 //! Matched Foundation micro-workloads. No image or GPU processing.
 //! Allocation instrumentation is enabled only during the separate allocation pass.
 mod attributes;
+mod gradients;
 mod measurement;
 mod protocol;
 use matea::{
@@ -54,6 +55,10 @@ fn main() {
         return;
     }
     let iterations = measurement::iterations(300);
+    if std::env::args().any(|arg| arg == "--gradients") {
+        gradients::costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--attributes" || arg == "--attribute-trace") {
         attributes::costs(iterations);
         return;
