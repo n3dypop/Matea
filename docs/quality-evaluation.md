@@ -183,3 +183,23 @@ The Style API is provisional; bool-field migration is documented. A cell still
 occupies 40 bytes on the measured host. This does not establish complete style
 parity, native-terminal appearance, resident memory or universal maximum speed.
 The performance/reference scores and both strict gates remain unchanged.
+
+## Owned panel payload follow-up
+
+At 29ffeea, a panel snapshots only the three consumed style tokens and stores
+them with its child in one owned allocation. Short construction changes from
+2 allocations/160 requested bytes to 1/96; the token-only intermediate is
+retained. All 20 outputs match, while complete-render timings remain mixed.
+Six-run balanced repeats preserve every distribution. Native validation passes
+33 checks, 156 Rust tests plus two doctests, 105 Python tests and targeted Miri.
+[Three-OS/MSRV/reference CI](https://github.com/n3dypop/Matea/actions/runs/39093118277)
+passes seven jobs. All hosts observe View 48/Cell 40 bytes and match all 14
+extended-attribute outputs. [Evidence and limits](panel-performance.md).
+
+The default-underline guard experiment is not adopted: early and repeated
+results mix. Its data and expanded Default/RGB correctness fixture remain.
+A malformed-record follow-up reproduces five failures (duplicate fields,
+correctness records masquerading as timings, incomplete calibration and a
+negative cold counter). These are recorded pending fixes; ordinary green CI
+does not erase the behavioral gap. The 111-program/41-unit inventory still has
+49 low assessments. No threshold, scope or gate is relaxed.

@@ -1,0 +1,25 @@
+   Compiling matea-style v0.1.0 (${REPOSITORY}/crates/matea-style)
+   Compiling matea-render v0.1.0 (${REPOSITORY}/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.38s
+     Running unittests src/lib.rs (target/debug/deps/matea_render-69a88f959b835eb5)
+
+running 1 test
+test tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout ... FAILED
+
+failures:
+
+---- tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout stdout ----
+
+thread 'tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout' (3689523) panicked at crates/matea-render/src/lib.rs:629:13:
+assertion `left == right` failed: panel ownership must not grow every scene node
+  left: 48
+ right: 56
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p matea-render --lib`

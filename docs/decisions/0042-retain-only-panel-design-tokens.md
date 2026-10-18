@@ -1,6 +1,6 @@
 # ADR 0042: Retain only the design tokens consumed by a panel
 
-Status: proposed for measured implementation.
+Status: implemented and verified for the bounded slice; public APIs remain provisional.
 
 Attribute expansion preserves the 40-byte Cell stride but grows the complete
 Theme. The 4d1a397 controls show short panel construction still makes two
@@ -37,3 +37,12 @@ This avoids a second allocation and keeps the enum/stack stride bounded; actual
 padding can request a few more bytes than the two separate payloads. Prefer the
 single owner only if measured allocations, distributions and all behavior remain
 acceptable. Preserve the two-allocation intermediate and mixed results.
+
+At 29ffeea the single payload requests 96 bytes in one allocation, versus the
+4d1a397 full-theme baseline's 160 bytes/two allocations. All 20 controls match
+output, and six-run before/intermediate/after/after/intermediate/before repeats
+retain construction and complete-render tails. View is 48 bytes and Cell stays
+40 on all three CI hosts. Literal style/layout/ownership checks, targeted Miri,
+33 local acceptance checks and seven three-OS/MSRV/reference jobs pass. Complete
+render timing is mixed; no pipeline maximum or reference-completion claim is
+made. [All evidence and limits](../panel-performance.md).

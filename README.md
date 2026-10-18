@@ -8,6 +8,7 @@ Matea is an experimental framework inspired by Charm's approachable developer ex
 cargo run -p matea --example counter
 cargo run -p matea --example dashboard
 cargo run -p matea --example cursor
+cargo run -p matea --example attributes
 # Plain non-TTY output:
 cargo run -p matea --example form -- --snapshot
 ```
@@ -23,9 +24,10 @@ The workspace contains seven framework crates plus an independent example compon
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
 The current scope is 111 programs in 41 units, with 49 assessments still below
-the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39091736105)
+the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39093118277)
 validates native drivers, LLVM collection and reference output/measurement modes
 on all three OSes. [Recent work and remaining limitations](docs/remaining-optimization.md)
-include deadline-aware input waits, typed text attributes and a color-only palette cache.
+include deadline-aware input waits, typed text attributes, a color-only palette cache
+and smaller owned panel payloads.
 
 This repository contains source, tests, examples, CI and engineering documentation. External source checkouts and agent instructions are not part of it. Upstream revisions and declared dependency licenses are recorded in docs; Matea's distribution license and public naming availability remain owner review items.

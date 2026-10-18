@@ -1,0 +1,781 @@
+{
+  "schema": 1,
+  "order": "before/intermediate/after/after/intermediate/before",
+  "runs": [
+    {
+      "stage": "before",
+      "raw": "repeat-1-before.jsonl",
+      "raw_sha256": "4284ca272fa2b180cee0d31301b9b552990c04eda8ac539ae9e2bf07e92729f4",
+      "binary_sha256": "09b939b529db0f76cdb0f8738de98046c5c33770b0736f7209e3203fd7022ea0",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1088.0205,
+          "p95_ns": 1129.979,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1082.042,
+          "p95_ns": 1151.0625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 12.521,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1136.3545,
+          "p95_ns": 1173.5625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1121.875,
+          "p95_ns": 1172.479,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.7915,
+          "p95_ns": 81.9375,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.8955,
+          "p95_ns": 33.9585,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1707.208,
+          "p95_ns": 1773.0625,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1653.1875,
+          "p95_ns": 1729.2915,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.771,
+          "p95_ns": 105.833,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1487.0835,
+          "p95_ns": 1544.729,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1393,
+          "p95_ns": 1460.4165,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 30.0835,
+          "p95_ns": 31.8545,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1109.1665,
+          "p95_ns": 1172.5835,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.771,
+          "p95_ns": 68.229,
+          "allocations": 2,
+          "allocated_bytes": 160
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12316.104,
+          "p95_ns": 12604.7085,
+          "allocations": 3,
+          "allocated_bytes": 17440
+        }
+      }
+    },
+    {
+      "stage": "intermediate",
+      "raw": "repeat-2-intermediate.jsonl",
+      "raw_sha256": "7932a55d5803370c66792e26baddeb261a7fb40b08f31bcd461e3377d9c422ca",
+      "binary_sha256": "a8ec64036959b05aa02342991675e844a698c7dbf8aa021fde7d2ada4c4cad70",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.7295,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1092.604,
+          "p95_ns": 1247.25,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1083.75,
+          "p95_ns": 1153.3125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 12.479,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1137.583,
+          "p95_ns": 1215.5625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1125.5,
+          "p95_ns": 1153.5835,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.771,
+          "p95_ns": 83.729,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.6665,
+          "p95_ns": 38,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1707.729,
+          "p95_ns": 1772.354,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1661.375,
+          "p95_ns": 1688.3335,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.7705,
+          "p95_ns": 104.521,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1485.125,
+          "p95_ns": 1526.5205,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1389.208,
+          "p95_ns": 1434.125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 29.979,
+          "p95_ns": 30.021,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1109.3125,
+          "p95_ns": 1128.0835,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.833,
+          "p95_ns": 67.1455,
+          "allocations": 2,
+          "allocated_bytes": 102
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12267.5835,
+          "p95_ns": 12364.6875,
+          "allocations": 3,
+          "allocated_bytes": 17382
+        }
+      }
+    },
+    {
+      "stage": "after",
+      "raw": "repeat-3-after.jsonl",
+      "raw_sha256": "6dbcd689177dc7a44367535ba4dbcd0c97415c4966edf5f718b560c011952cdd",
+      "binary_sha256": "49508ee85bac66cb8c75e1926f4ace2932a43ab545889a483922b8574893023b",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.7705,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1094,
+          "p95_ns": 1170.4585,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1084.7085,
+          "p95_ns": 1116.5,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 12.5,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1139.604,
+          "p95_ns": 1173.479,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1131.729,
+          "p95_ns": 1159.1665,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.7705,
+          "p95_ns": 86.8335,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.8125,
+          "p95_ns": 32.9375,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1709.354,
+          "p95_ns": 1731.8545,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1660.5,
+          "p95_ns": 1702.146,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.7705,
+          "p95_ns": 106.917,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.479,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1488.2915,
+          "p95_ns": 1509.7705,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1387.708,
+          "p95_ns": 1412.5,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 29.979,
+          "p95_ns": 30.0205,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1110.25,
+          "p95_ns": 1137.604,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 42.3125,
+          "p95_ns": 42.7295,
+          "allocations": 1,
+          "allocated_bytes": 96
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12226.375,
+          "p95_ns": 12292.771,
+          "allocations": 2,
+          "allocated_bytes": 17376
+        }
+      }
+    },
+    {
+      "stage": "after",
+      "raw": "repeat-4-after.jsonl",
+      "raw_sha256": "b4531fcb242804cea1c3fa640f5bcedf866c4159705732c3c9313f189c96fc66",
+      "binary_sha256": "49508ee85bac66cb8c75e1926f4ace2932a43ab545889a483922b8574893023b",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.542,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1094.6665,
+          "p95_ns": 1183.646,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1084.479,
+          "p95_ns": 1137.375,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.458,
+          "p95_ns": 12.4795,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1135.1875,
+          "p95_ns": 1188.125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1128.104,
+          "p95_ns": 1169.6875,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 84.396,
+          "p95_ns": 86.7915,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 28.0625,
+          "p95_ns": 28.104,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1713.229,
+          "p95_ns": 1814.75,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1666.854,
+          "p95_ns": 1748.375,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.7705,
+          "p95_ns": 101.875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.4585,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1489.6875,
+          "p95_ns": 1529.9585,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1387.7915,
+          "p95_ns": 1473.479,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 29.979,
+          "p95_ns": 30.146,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1112.875,
+          "p95_ns": 1161.146,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 42.2915,
+          "p95_ns": 48.229,
+          "allocations": 1,
+          "allocated_bytes": 96
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12299.5205,
+          "p95_ns": 12464.9375,
+          "allocations": 2,
+          "allocated_bytes": 17376
+        }
+      }
+    },
+    {
+      "stage": "intermediate",
+      "raw": "repeat-5-intermediate.jsonl",
+      "raw_sha256": "3790ea67fdd40317d83a7ca51f81830e403d68d11270955b2d642c229742cca5",
+      "binary_sha256": "a8ec64036959b05aa02342991675e844a698c7dbf8aa021fde7d2ada4c4cad70",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.75,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1094.729,
+          "p95_ns": 1163.9585,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1083.0625,
+          "p95_ns": 1151.667,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.458,
+          "p95_ns": 12.479,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.604,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1139.354,
+          "p95_ns": 1194.6665,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1132.3545,
+          "p95_ns": 1189.3125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.7705,
+          "p95_ns": 85.771,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 33.979,
+          "p95_ns": 34.0205,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1712.5,
+          "p95_ns": 1771.6875,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1669.7295,
+          "p95_ns": 1716,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.771,
+          "p95_ns": 106.417,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.604,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1488.729,
+          "p95_ns": 1531.0625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1389.9375,
+          "p95_ns": 1413.208,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 29.979,
+          "p95_ns": 30.021,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1108.6045,
+          "p95_ns": 1135.7295,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.854,
+          "p95_ns": 62.229,
+          "allocations": 2,
+          "allocated_bytes": 102
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12278.479,
+          "p95_ns": 12311.354,
+          "allocations": 3,
+          "allocated_bytes": 17382
+        }
+      }
+    },
+    {
+      "stage": "before",
+      "raw": "repeat-6-before.jsonl",
+      "raw_sha256": "e330403561d46f196a172af9d858256f6e24c5d90e473d681ccaa2d75cbaad56",
+      "binary_sha256": "09b939b529db0f76cdb0f8738de98046c5c33770b0736f7209e3203fd7022ea0",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 9.0625,
+          "p95_ns": 9.104,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.7085,
+          "p95_ns": 4.9585,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1100.146,
+          "p95_ns": 1187.0625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1083.8335,
+          "p95_ns": 1101.1455,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 12.4795,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.6875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1136.5835,
+          "p95_ns": 1158.729,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1129.4375,
+          "p95_ns": 1168.979,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 82.1665,
+          "p95_ns": 85.979,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.8955,
+          "p95_ns": 33.021,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1707.7915,
+          "p95_ns": 1726,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1656.729,
+          "p95_ns": 1685,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.771,
+          "p95_ns": 108.5835,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.542,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1488.8335,
+          "p95_ns": 1516.3545,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1389.5625,
+          "p95_ns": 1418.8125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 30.0835,
+          "p95_ns": 30.146,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1109.3125,
+          "p95_ns": 1139.0835,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 70.271,
+          "p95_ns": 70.479,
+          "allocations": 2,
+          "allocated_bytes": 160
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12253.271,
+          "p95_ns": 12372.2085,
+          "allocations": 3,
+          "allocated_bytes": 17440
+        }
+      }
+    }
+  ],
+  "intermediate_raw": "../after.jsonl",
+  "intermediate_context": "../after-context.json",
+  "limits": [
+    "20 exact existing scene workloads, 31 retained samples; separate requested allocation pass.",
+    "No other owned local build/test/Miri/coverage/download during timing. Baseline/intermediate reuse completed records; all adverse results retained.",
+    "Native macOS arm64 only; no affinity/frequency control, resident-memory or full reference parity claim."
+  ]
+}
