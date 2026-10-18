@@ -3,10 +3,12 @@
 ## Terminal color gradients
 
 Matea's gradient color conversions are an altered Rust implementation informed
-by go-colorful v1.4.1 (colors.go), copyright (c) 2013 Lucas Beyer. Its MIT notice:
+by go-colorful v1.4.1 (colors.go). Segmented/grid sampling also follows Lip Gloss
+blending.go at 19f011f1. The common MIT notice for these adapted sections:
 
 ```
 Copyright (c) 2013 Lucas Beyer
+Copyright (c) 2021-2026 Charmbracelet, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
