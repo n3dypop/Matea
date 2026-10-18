@@ -492,7 +492,13 @@ mod tests {
         fn size(&self) -> io::Result<Size> {
             Ok(Size::new(4, 2))
         }
-        fn poll(&mut self, _: Duration) -> io::Result<Option<TerminalEvent>> {
+        fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>> {
+            if self.fail == "short-poll" {
+                assert!(
+                    timeout <= Duration::from_millis(1),
+                    "1ms subscription postponed by input wait {timeout:?}"
+                );
+            }
             Ok(Some(TerminalEvent::Interrupt))
         }
         fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
@@ -503,6 +509,37 @@ mod tests {
                 Ok(())
             }
         }
+    }
+    #[test]
+    fn input_wait_respects_a_short_subscription_deadline() {
+        struct ShortClock;
+        impl Model for ShortClock {
+            type Message = ();
+            fn update(&mut self, _: Event<()>) -> Effect<()> {
+                Effect::none()
+            }
+            fn subscriptions(&self) -> Vec<matea_core::Subscription<()>> {
+                vec![matea_core::Subscription::every(
+                    "short",
+                    Duration::from_millis(1),
+                    || (),
+                )]
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("tick")
+            }
+        }
+        let log = Arc::new(Mutex::new(Vec::new()));
+        run_with_backend(
+            ShortClock,
+            Theme::plain(),
+            Mock {
+                log: log.clone(),
+                fail: "short-poll",
+            },
+        )
+        .unwrap();
+        assert_eq!(log.lock().unwrap().last(), Some(&"restore"));
     }
     #[test]
     fn restoration_on_success_failure_and_unwind() {

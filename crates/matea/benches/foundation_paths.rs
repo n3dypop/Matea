@@ -6,7 +6,98 @@ mod measurement;
 use matea::prelude::*;
 use matea_terminal::{Backend, CtrlCBehavior, TerminalEvent};
 use measurement::measure;
-use std::{any::TypeId, cell::Cell, hint::black_box, io, time::Duration};
+use std::{any::TypeId, cell::Cell, hint::black_box, io, rc::Rc, time::Duration};
+
+#[derive(Default)]
+struct DeadlineStats {
+    notifications: Cell<u32>,
+    draws: Cell<u32>,
+    restores: Cell<u32>,
+}
+struct DeadlineApp {
+    period: Duration,
+    stats: Rc<DeadlineStats>,
+}
+impl Model for DeadlineApp {
+    type Message = ();
+    fn update(&mut self, event: Event<()>) -> Effect<()> {
+        if matches!(event, Event::Message(())) {
+            self.stats
+                .notifications
+                .set(self.stats.notifications.get() + 1);
+            Effect::quit()
+        } else {
+            Effect::none()
+        }
+    }
+    fn subscriptions(&self) -> Vec<Subscription<()>> {
+        vec![Subscription::every(
+            "first-notification",
+            self.period,
+            || (),
+        )]
+    }
+    fn view(&self, _: ViewContext<'_>) -> View {
+        View::text("tea")
+    }
+}
+struct DeadlineTransport(Rc<DeadlineStats>);
+impl Backend for DeadlineTransport {
+    fn enter(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+    fn restore(&mut self) -> io::Result<()> {
+        self.0.restores.set(self.0.restores.get() + 1);
+        Ok(())
+    }
+    fn size(&self) -> io::Result<Size> {
+        Ok(Size::new(8, 2))
+    }
+    fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>> {
+        // Real elapsed time, honoring the driver's requested input wait.
+        // No injected elapsed value, native terminal or fabricated wakeup.
+        std::thread::sleep(timeout);
+        Ok(None)
+    }
+    fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+        self.0.draws.set(self.0.draws.get() + 1);
+        Ok(())
+    }
+}
+fn first_notification(period: Duration) -> u64 {
+    let stats = Rc::new(DeadlineStats::default());
+    matea_terminal::run_with_backend(
+        DeadlineApp {
+            period,
+            stats: stats.clone(),
+        },
+        Theme::plain(),
+        DeadlineTransport(stats.clone()),
+    )
+    .unwrap();
+    assert_eq!(
+        (
+            stats.notifications.get(),
+            stats.draws.get(),
+            stats.restores.get()
+        ),
+        (1, 1, 1)
+    );
+    1
+}
+
+fn deadlines() {
+    for milliseconds in [1, 5, 16, 50] {
+        let period = Duration::from_millis(milliseconds);
+        measure(
+            &format!("terminal/first_notification_{milliseconds}ms"),
+            1,
+            || first_notification(black_box(period)),
+            "notifications=1; initial_frames=1; restorations=1",
+            "fresh headless TEA runtime and 8x2 initial frame; one periodic subscription message quits; backend honors requested poll timeout using real sleep; includes setup, wait, dispatch and restoration; no native terminal I/O",
+        );
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 enum Scenario {
@@ -195,6 +286,10 @@ fn identity() {
     ));
 }
 fn main() {
+    if std::env::args().any(|a| a == "--deadlines") {
+        deadlines();
+        return;
+    }
     identity();
     let n = if std::env::args().any(|a| a == "--measure") {
         std::env::var("MATEA_PERF_ITERATIONS")
