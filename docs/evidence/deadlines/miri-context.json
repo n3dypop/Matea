@@ -12,6 +12,24 @@
       "command": "MIRIFLAGS=-Zmiri-seed=103 cargo +nightly miri test --locked --offline -p matea-terminal --lib subscription",
       "tests_passed": 2,
       "log": "miri-terminal.log"
+    },
+    {
+      "source_head": "dd75b6d6707566903b3d7546b459b55ff93daf47",
+      "command": "MIRIFLAGS=-Zmiri-seed=107 cargo +nightly miri test --locked --offline -p matea-terminal --lib subscription",
+      "tests_passed": 2,
+      "log": "miri-terminal-final.log",
+      "source_sha256": {
+        "crates/matea-terminal/src/lib.rs": "ec9f665e30171167ed5de382bfd0247c116ebdd17f7136513206f66c69f10abb"
+      }
+    },
+    {
+      "source_head": "141c354648c8a087ba857e474d8893326992278d",
+      "command": "MIRIFLAGS=-Zmiri-seed=109 cargo +nightly miri test --locked --offline -p matea-terminal --lib subscription",
+      "tests_passed": 3,
+      "log": "miri-aligned-terminal.log",
+      "source_sha256": {
+        "crates/matea-terminal/src/lib.rs": "6625a1787797cd0a55b87e205417368cccff7138f0232fdb00e7b8efe865631e"
+      }
     }
   ],
   "source_sha256": {
@@ -21,10 +39,12 @@
   },
   "log_sha256": {
     "miri-core.log": "91312713221292e24b5cc9d7b24e5078429b6df46a7d7cab58d5339d88c51fb7",
-    "miri-terminal.log": "d942ae9317cb35257011d9e76184caefb272793b6f8f4945b344757c1303819b"
+    "miri-terminal.log": "d942ae9317cb35257011d9e76184caefb272793b6f8f4945b344757c1303819b",
+    "miri-terminal-final.log": "8675d5e959f5e43c824d9e337f64930c4770c9fb9f2c70e044bcda2bf983afd0",
+    "miri-aligned-terminal.log": "85fe125636e7c0544a8e20a3d0242723047c3acb84dccd2bbdc0309dc8add56f"
   },
   "limits": [
-    "Four deterministic selected tests only; no complete-workspace or all-schedules safety proof.",
+    "Five distinct selected tests, nine executions across the initial/idle/aligned helper versions; no workspace-wide or all-schedules safety proof.",
     "The terminal test uses a mock input backend; no native terminal/FFI or real-time delivery is validated by Miri."
   ]
 }

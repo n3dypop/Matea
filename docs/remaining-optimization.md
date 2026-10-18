@@ -235,5 +235,53 @@ Windows 58／62です。Windows PTYは対象外です。
 いずれも対応する性能軸は部分評価50を維持します。
 
 未対応候補6,934件、部分capability 12、pending module group 91などは残っています。
-次に、実装済みRuntimeの固定16ms入力待ちが短周期timerを遅延させる経路を独立に再現し、
-期限を考慮した待機と実測を進めます。横断最適化Stage BとF5へは移行していません。
+実装済みRuntimeの固定16ms入力待ちについては、次節の再現・修正・比較を追加しました。
+横断最適化Stage BとF5へは移行していません。
+
+## 購読期限を考慮する入力待機
+
+独立したbackend試験で、1ms購読があっても16msのinput waitを要求する不具合を再現しました。
+[修正前の失敗](evidence/deadlines/before-failure.log)を保存し、
+`Runtime::next_subscription_delay()`と、描画からの経過時間を差し引く待機選択を追加しました。
+購読数は64以下で、期限の検査は借用のみ、追加の割り当てやplatform clockの読み取りを
+coreへ持ち込みません。購読なしの経路では時計を読みません。
+[ADR 0039](decisions/0039-deadline-aware-terminal-polling.md)。
+
+実際のsleepを行うheadless backendで、開始・初期frame・通知・終了・復旧を含む4条件を
+新しく測定し、既存の入力・fault・facade 15条件を対照に再実行しました。
+元binaryのhashを保持したまま、旧／新／新／旧の順序で各31標本を収集しています。
+[全raw・3実装段階・source/binary hash・全対照結果](evidence/deadlines/report.json)。
+
+| 要求周期 | 旧の中央値（2実行、ms） | 新の中央値（2実行、ms） |
+| --- | ---: | ---: |
+| 1ms | 19.06 / 24.02 | 1.516 / 1.516 |
+| 5ms | 21.76 / 21.84 | 7.537 / 7.113 |
+| 16ms | 22.37 / 22.56 | 21.32 / 22.85 |
+| 50ms | 63.50 / 64.80 | 52.70 / 51.89 |
+
+16ms条件は改善を断定できません。初版では64キー処理とidleの中央値が悪化し、購読なしの
+不要な時計読み取りを除去しました。それでも最終の64キー処理は旧13.31–13.43µs対
+新13.60–13.65µs、idleは旧579–589ns対新593–614nsでした。fault経路にも悪化があり、
+全分布を保持しています。通知条件の割り当ては双方11回・要求6,108bytesのままです。
+OSのsleep超過を含む一台の結果で、RSS、実端末の応答、Goのtimerとの意味を揃えた比較、
+64購読時などの負荷条件は未測定です。性能軸を高評価へ変更しません。
+
+通常／Miriでは5つの独立試験が成功しました。Miriは初版4実行＋idle改善後2再実行＋
+入力時刻修正後3実行で、5固有テスト・9実行です。
+[対象・seed・sourceとlogのhash](evidence/deadlines/miri-context.json)。
+LLVMとCIには4通知条件の出力専用実行を追加しています。計測値を作らず、全条件と復旧の
+検査を通したことだけを確認します。worker完了通知の統合wake sourceは別の残課題です。
+
+追試では、入力で新しく開始した2ms購読に、その入力を待った10msが加算され、
+即座に発火する不具合も再現しました。
+[失敗](evidence/deadlines/input-start-before-failure.log)、
+[通知順序の決定](decisions/0040-align-logical-time-before-input-dispatch.md)。
+割り込みを先に扱い、期限済みtimerを進めてから通常入力をdispatchすることで、
+新規購読を同期済みの時刻から開始します。Goのあらゆるchannel選択順序の再現ではありません。
+
+入力時刻修正後も、新／旧／旧／新で再測定しました。1ms条件の中央値は旧21.58–24.02ms対
+新1.512–1.525ms、50msは旧63.64–65.10ms対新52.60–52.85msでした。16ms条件は引き続き混在します。
+旧・中間2段階・最終のsource/binary hashと全対照結果を同じreportに保持しています。
+[最終141c354のCI](https://github.com/n3dypop/Matea/actions/runs/39088967599)は7必須ジョブ成功です。
+ローカル33検証、Rust 148＋2 doctest、Python 103、13 snapshot、18 Unix PTY、
+LLVM 59 source／64 instanceが成功しました。未達49軸と両gateの閉鎖は維持します。

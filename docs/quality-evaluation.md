@@ -154,3 +154,10 @@ Goの短バッチ失敗2件を保持し、20ms校正でも31の計時標本を�
 103 Python／5 Go試験、Unix 33／Windows 32受入チェックと全3 OSのLLVM収集を実行済みです。
 品質reportの公開には、完走したnative journalと現在のsource/build/check入力・ログのhash一致を要求します。
 全参照機能・性能最大化・F5の完了を意味しません。残件は[追補](remaining-optimization.md)で継続します。
+
+期限対応の追加では、短周期購読を遅らせる16ms待機と、入力前の待機時間を新規購読へ
+加算する不具合を修正しました。[最終3 OS CI](https://github.com/n3dypop/Matea/actions/runs/39088967599)、
+ローカルRust 148＋2 doctest、Python 103、33受入チェックとLLVM収集、
+5固有テストのMiri 9実行が成功しています。
+[全分布・CPU対照の悪化・source/binaryの対応](evidence/deadlines/report.json)を保持し、
+性能の部分評価50と全49軸の未達を維持します。これはStage Bへの移行ではありません。

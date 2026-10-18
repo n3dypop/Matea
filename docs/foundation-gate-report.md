@@ -3,8 +3,8 @@
 状態: **F0–F4を継続中。F5へ未到達、承認依頼は保留。**
 オーナーが全参照元・基盤ライブラリの公開機能、モジュールごとの性能比較と課題分析を追加したため、以前の小規模候補は受け入れ対象から外しました。
 
-最新の評価範囲は107プログラム・41単位、未達49軸です。検証・計測器修正の
-[3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39079660329)は7ジョブ成功ですが、
+最新の評価範囲は107プログラム・41単位、未達49軸です。検証・タイマー修正の
+[3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39088967599)は7ジョブ成功ですが、
 参照公開機能の全件実装と性能条件は未達です。[現在の証拠・残件](remaining-optimization.md)。
 
 現検証ではUnix 33／Windows 32の全受入チェック、Python 103試験、Go 5試験、
@@ -14,6 +14,18 @@ Windowsの短い標本と改行変換を修正しています。動作・移植�
 性能28・参照一致19・動作1・移植性1の未達を維持します。
 [各OSのソース対応とartifact](evidence/measurement-drivers/ci-source-bindings.json)。
 以下には以前の実装段階の結果も時系列の証拠として保持しています。
+
+期限対応では固定16ms待機と、入力前の時間を新規購読へ加算する不具合をそれぞれ再現・修正しました。
+最短期限に合わせた待機、購読なしの時計読み取り省略、入力前の時刻同期を実装しています。
+ローカル33検証、Rust 148＋2 doctest、Python 103、13 snapshot、18 Unix PTY、
+新規5テストのMiri 9実行とLLVM収集が成功しました。
+1msのheadless通知条件は最終比較で旧21.58–24.02ms対新1.512–1.525msですが、
+16ms条件やCPU対照には混在・悪化が残ります。性能軸は50を維持します。
+[全分布と制約](evidence/deadlines/report.json)、
+[ADR 0039](decisions/0039-deadline-aware-terminal-polling.md)、
+[ADR 0040](decisions/0040-align-logical-time-before-input-dispatch.md)。
+[各OSの最終program/build/check入力・ログ・LLVM・参照照合の独立検査](evidence/deadlines/ci-source-bindings.json)
+でも、全107 programを同じCI commitへ対応付けています。
 
 ## 現在の範囲と進捗
 
