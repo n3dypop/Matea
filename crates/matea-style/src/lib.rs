@@ -134,6 +134,7 @@ impl Color {
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[must_use = "styles are values; use the returned style"]
 pub struct Style {
     pub fg: Color,
     pub bg: Color,

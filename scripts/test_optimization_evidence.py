@@ -7,9 +7,34 @@ import sys
 import tempfile
 import unittest
 from optimization_evidence import compare, records
+from report_attribute_performance import legacy_comparison, normalize_legacy_theme
 
 
 class OptimizationEvidenceTests(unittest.TestCase):
+    def test_theme_schema_change_requires_all_seven_exact_legacy_styles(self):
+        old = "Style { fg: Default, bg: Indexed(9), bold: true, underline: true, reverse: true }"
+        new = "Style { fg: Default, bg: Indexed(9), underline_color: Default, attributes: TextAttributes { flags: {Bold, Reverse}, underline: Single, blink: None, frame: None } }"
+        text = "Theme { text: " + ", ".join([old]*7) + " }"
+        expected = "Theme { text: " + ", ".join([new]*7) + " }"
+        self.assertEqual(normalize_legacy_theme(text), expected)
+        for bad in [text.replace(old, new, 1), text.replace("bold: true", "bold: unknown", 1), text+old]:
+            with self.assertRaises(ValueError): normalize_legacy_theme(bad)
+
+    def test_theme_normalization_never_hides_new_attributes_or_other_output_changes(self):
+        old = "Style { fg: Default, bg: Default, bold: false, underline: false, reverse: false }"
+        before = self.fixture(); before.update(case="style/theme_plain", output="Theme { text: "+", ".join([old]*7)+" }")
+        after = copy.deepcopy(before); after["output"] = normalize_legacy_theme(before["output"])
+        row = legacy_comparison({before["case"]:before}, {after["case"]:after})[0]
+        self.assertEqual(row["output_comparison"], "explicit_legacy_theme_defaults")
+        self.assertEqual(before["output"].count("bold: false"), 7)
+        for replacement in ["blink: Rapid", "underline_color: Indexed(9)", "frame: Framed"]:
+            changed=copy.deepcopy(after)
+            field=replacement.split(":")[0]
+            changed["output"]=changed["output"].replace(field+": "+("Default" if field=="underline_color" else "None"), replacement, 1)
+            with self.assertRaises(ValueError): legacy_comparison({before["case"]:before}, {changed["case"]:changed})
+        before["case"]=after["case"]="other"
+        with self.assertRaises(ValueError): legacy_comparison({"other":before},{"other":after})
+
     def test_current_cli_checks_expected_count_and_optimized_failure(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "probe.jsonl"

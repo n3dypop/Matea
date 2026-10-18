@@ -70,6 +70,7 @@ impl TextFrame {
 /// An owned, resolved attribute set. Numeric invalid choice combinations have
 /// no safe constructor. Storage is private and is not a public ABI contract.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
+#[must_use = "attribute sets are values; use the returned set"]
 pub struct TextAttributes {
     bits: u16,
 }

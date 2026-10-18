@@ -512,7 +512,7 @@ fn style_costs(iterations: usize) {
             &format!("style/adapt_pair_{profile}"),
             iterations,
             || {
-                black_box(black_box(style).adapt(black_box(level)));
+                let _ = black_box(black_box(style).adapt(black_box(level)));
                 1
             },
             &expected,

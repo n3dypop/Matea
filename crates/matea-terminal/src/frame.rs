@@ -12,7 +12,10 @@ use std::io::{self, Write};
 #[derive(Default, Debug)]
 struct QuantizedStyles {
     level: Option<ColorLevel>,
-    entries: [Option<(Style, Style)>; 8],
+    // Only these three colors determine palette conversion. Attribute changes
+    // must neither evict a palette result nor reuse another cell's attributes.
+    // Color order is foreground, background, underline.
+    entries: [Option<([Color; 3], [Color; 3])>; 8],
     next: usize,
 }
 impl QuantizedStyles {
@@ -28,6 +31,7 @@ impl QuantizedStyles {
         if !expensive(source.fg) && !expensive(source.bg) && !expensive(source.underline_color) {
             return source.adapt(level);
         }
+        let colors = [source.fg, source.bg, source.underline_color];
         if self.level != Some(level) {
             self.entries.fill(None);
             self.next = 0;
@@ -37,12 +41,17 @@ impl QuantizedStyles {
             .entries
             .iter()
             .flatten()
-            .find(|(key, _)| *key == source)
+            .find(|(key, _)| *key == colors)
         {
-            return *result;
+            return Style {
+                fg: result[0],
+                bg: result[1],
+                underline_color: result[2],
+                ..source
+            };
         }
         let result = source.adapt(level);
-        self.entries[self.next] = Some((source, result));
+        self.entries[self.next] = Some((colors, [result.fg, result.bg, result.underline_color]));
         self.next = (self.next + 1) % self.entries.len();
         result
     }
@@ -247,6 +256,40 @@ fn relative_is_shorter(distance: u16, x: u16, y: u16) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn palette_reuse_preserves_each_callers_attributes_across_eviction_and_color_levels() {
+        use matea_style::{TextAttribute, TextFrame, UnderlineStyle};
+        let mut cache = QuantizedStyles::default();
+        for level in [
+            ColorLevel::Ansi16,
+            ColorLevel::Ansi256,
+            ColorLevel::None,
+            ColorLevel::Ansi16,
+            ColorLevel::TrueColor,
+            ColorLevel::Ansi256,
+        ] {
+            for color in (0u8..16).chain([0, 15, 7, 0]) {
+                let masks: Vec<u8> = if cfg!(miri) {
+                    vec![0, 17, 31]
+                } else {
+                    (0..32).collect()
+                };
+                for mask in masks {
+                    let mut style = Style::default()
+                        .fg(Color::Rgb(41, 173, 227))
+                        .bg(Color::Rgb(color.wrapping_mul(17), 13, 39))
+                        .underline_color(Color::Rgb(217, 91, 43))
+                        .underline_style(UnderlineStyle::ALL[usize::from(mask) % 6])
+                        .blink(BlinkStyle::ALL[usize::from(mask) % 3])
+                        .text_frame(TextFrame::ALL[usize::from(mask) % 3]);
+                    for (index, flag) in TextAttribute::ALL.into_iter().enumerate() {
+                        style = style.attribute(flag, mask & (1 << index) != 0);
+                    }
+                    assert_eq!(cache.adapt(style, level), style.adapt(level));
+                }
+            }
+        }
+    }
     #[test]
     fn reduced_motion_suppresses_blink_but_preserves_other_decorations_and_repaints_on_change() {
         let style = Style::default()
