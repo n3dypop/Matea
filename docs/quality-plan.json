@@ -1485,12 +1485,14 @@
           "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
         },
         "portability": {
-          "score": 50,
-          "reason": "All 84 retained and seven cursor output-only fixtures plus twelve auxiliary source paths execute on all three OSes. A prior Windows short-batch timing run produced zero samples; output-only checks provide no timing data. Native Windows timing/allocator measurement-mode validation remains pending."
+          "score": 75,
+          "reason": "All three native source CI jobs execute five Go tests and actual timing/allocation mode for 84 retained plus seven cursor cases. Every case retains 31 positive samples with confirmed 20ms calibration and matched complete output. Two failed Windows short-batch attempts remain retained. Shared-runner distributions are not speed comparisons."
         }
       },
       "evidence": [
-        "docs/performance.md"
+        "docs/performance.md",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json"
       ],
       "remaining": [
         "Pinned external references and fixture outputs validated; Go allocation accounting differs from requested System bytes."
@@ -1563,8 +1565,8 @@
           "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
         },
         "behavior": {
-          "score": 50,
-          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+          "score": 75,
+          "reason": "Nine independent cohort/Git/publication fixtures, thirteen ledger corruption tests and eight issue-refresh tests reject wrong/dirty pins, malformed declarations/JSON, escaping paths, interrupted writes and transport failures. All eleven real pinned inventories and paginated issue paths execute on all three OSes. High is bounded to these executed contracts, not arbitrary schema evolution or complete upstream issue triage."
         },
         "reference": {
           "score": null,
@@ -1587,10 +1589,12 @@
         "scripts/test_issue_refresh.py",
         "docs/evidence/cursor/ci-source-bindings.json",
         "scripts/test_reference_audit.py",
-        "docs/evidence/reference-cohort/before-failure.json"
+        "docs/evidence/reference-cohort/before-failure.json",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json"
       ],
       "remaining": [
-        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+        "All required public declarations and issue dispositions remain pending separately from audit-tool correctness. External network latency, all-reference scale/allocation/residency and schema evolution remain incomplete."
       ]
     },
     {
@@ -1705,8 +1709,8 @@
           "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
         },
         "behavior": {
-          "score": 50,
-          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+          "score": 75,
+          "reason": "Six acceptance/coverage fault fixtures, five measurement-driver fixtures and eight quality-gate tests validate running/failed journals, launch/nonzero/timeout failures, partial output, source drift, stale/duplicate/hash evidence and changing review scope. Complete 33-check Unix / 32-check Windows acceptance and fresh LLVM collection succeed. This finite tested scope is not exhaustive process/filesystem fault coverage."
         },
         "reference": {
           "score": null,
@@ -1717,16 +1721,19 @@
           "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
         },
         "portability": {
-          "score": 50,
-          "reason": "Current normal CI compiles/checks this program but does not execute its complete external compiler/network/report/profiling path on all OSes. Earlier reference CI and local runs are partial evidence only."
+          "score": 75,
+          "reason": "Complete acceptance and LLVM drivers run natively on Linux, Windows and macOS, with identical committed program/build/check input hashes. Unix hosts retain 59 sources / 64 compiler instances; Windows retains 58 / 62. Source/probe wrapper paths also run on all three OSes. PTY execution remains Unix-only; no physical emulator or Windows console equivalence is inferred."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
-        "docs/evidence/optimization/remaining-report.json"
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json"
       ],
       "remaining": [
-        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+        "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
+        "Strict source/log binding intentionally requires native revalidation after changing program/build/check inputs; profiling is never performance evidence."
       ]
     },
     {

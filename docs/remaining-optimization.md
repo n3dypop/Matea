@@ -200,3 +200,40 @@ Python 72、全RGB、13 snapshot、18 Unix PTYが成功。LLVMは59 source／64 
 参照元宣言は521件が連結、6,934件は未対応付けで、compiler key 6,902件とは重複する集合です。
 12部分capability、91 pending module group、828 issueと115 marker、feature/signature閉包が残ります。
 Stage A完了・Stage B移行・Foundation F5承認の条件は満たしていません。
+
+## 棚卸し・測定・受入ドライバの再開検証
+
+現在は107プログラム・41単位、未達49軸です。性能28、参照一致19、動作1、移植性1で、
+全高評価には未到達です。今回の4軸の更新はツールの動作・移植性の実行証拠によるものです。
+参照機能や性能の範囲・閾値を変更していません。
+
+- 棚卸しを計画と公開に分離し、全11 inventoryのハッシュを含むsummaryを最後に公開します。
+  途中の失敗、古いxモジュールの残骸、重複宣言や不正なJSONを拒否し、既存のレビューを保持します。
+  全inventory本文は前の正しいcohortとbyte一致です。[ADR 0036](decisions/0036-hash-bound-source-inventory-publication.md)。
+- Go計測器は独立した校正で反復数を決定します。Windowsの短バッチ失敗を2回保存し、
+  同じ計測ループ・3回確認・20ms目標へ改修しました。標本の除外・補正・ゼロの置換は行いません。
+  [ADR 0037](decisions/0037-calibrated-reference-probe-batches.md)。
+- 受入／LLVM実行器は開始時に旧成功を無効化し、起動失敗・timeout・部分出力を記録します。
+  ソース変化、ログ不一致、未完了の結果をquality reportへ採用しません。40単位の固定条件も
+  除去し、41単位や将来の全高評価で測定が止まらないようにしました。
+  [ADR 0038](decisions/0038-source-bound-acceptance-journals.md)。
+
+[実装66e058cのCI](https://github.com/n3dypop/Matea/actions/runs/39079660329)は7必須ジョブ成功です。
+3 OSごとに全program/build/check入力のハッシュを照合し、Goの91ケースがそれぞれ31の正の
+標本を返し、出力・校正・割り当てschemaを検査したことをartifactで確認しました。
+共有runnerの時間分布を性能比較へ使用していません。
+受入チェックはLinux/macOSで33、Windowsで32、LLVMはUnix 59 source／64 instance、
+Windows 58／62です。Windows PTYは対象外です。
+[ソースとの対応・各OSの成果物・制約](evidence/measurement-drivers/ci-source-bindings.json)。
+新しいPython回帰試験は合計103件、Go単体試験は5件が通過しました。
+
+追加の各31標本では、評価台帳全体がp50 13.145ms／p95 13.553ms、
+カーソル例の起動・snapshot・終了が3.921ms／7.878msでした。
+[台帳処理](evidence/measurement-drivers/acceptance/current.jsonl)、
+[カーソル例](evidence/measurement-drivers/cursor-example/current.jsonl)と各contextに全分布・入力hashを保存しています。
+前者はPython heapを別実行で記録しています。native RSS・全受入処理の時間・対参照元比較ではなく、
+いずれも対応する性能軸は部分評価50を維持します。
+
+未対応候補6,934件、部分capability 12、pending module group 91などは残っています。
+次に、実装済みRuntimeの固定16ms入力待ちが短周期timerを遅延させる経路を独立に再現し、
+期限を考慮した待機と実測を進めます。横断最適化Stage BとF5へは移行していません。

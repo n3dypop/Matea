@@ -143,3 +143,14 @@ coverage/issuesの移植性を75へ更新しました。内訳は性能27・参�
 [3 OS・MSRV・参照照合7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39075023243)に成功しました。
 制御の改善、遅いGo比、p95悪化、全分布は[追補](remaining-optimization.md)に保持しています。
 F5と横断最適化の条件は未達で、画像エンジン／CUDAは着手していません。
+
+## 検証器の再開後の評価
+
+現在は107プログラム・41単位、未達49軸（性能28・参照一致19・動作1・移植性1）です。
+棚卸し／課題処理の動作、Go計測器の移植性、受入／LLVM実行器の動作と移植性の4軸を、
+独立故障試験と[7必須CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39079660329)に基づき75へ更新しました。
+[ソース対応・3 OS別の実成果物](evidence/measurement-drivers/ci-source-bindings.json)。
+Goの短バッチ失敗2件を保持し、20ms校正でも31の計時標本をそのまま検査します。
+103 Python／5 Go試験、Unix 33／Windows 32受入チェックと全3 OSのLLVM収集を実行済みです。
+品質reportの公開には、完走したnative journalと現在のsource/build/check入力・ログのhash一致を要求します。
+全参照機能・性能最大化・F5の完了を意味しません。残件は[追補](remaining-optimization.md)で継続します。
