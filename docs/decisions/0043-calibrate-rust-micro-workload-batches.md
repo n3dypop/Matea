@@ -1,7 +1,6 @@
 # ADR 0043: Calibrate Rust micro-workload batches before comparing tiny paths
 
-Status: implemented; eight deterministic boundary tests and local CLI checks pass.
-Full native, Miri, calibrated collection and three-OS verification pending.
+Status: implemented and verified at e54118d on Linux, Windows and macOS.
 
 The shared Rust probe currently runs caller-chosen fixed batches, warms 100
 operations, retains 31 per-operation averages and counts allocations separately.
@@ -58,3 +57,21 @@ This is a confirmed utility defect, distinct from the earlier host-noise limits.
 CI will require the exact calibration target for the current style/input/protocol
 records and execute all 91 existing matched Rust/Go timing-mode cases separately.
 Shared-runner values are schema/output checks, not comparative speed evidence.
+
+At e54118d, all 33 native checks, 164 Rust tests plus two doctests, 114 Python
+tests and LLVM collection pass. Eight calibration/guard tests pass Miri at the
+unchanged measurement-source hash from b2a3558. The first fixed-one LLVM attempt
+fails on a zero interval and is retained; a uniform fixed count of 1,000 completes
+62 source files/67 compiler instances. All ten release CLI modes then produce
+282 mode records (266 unique cases), each with 31 positive samples, matching
+correctness-only output/first return and confirmed target history. Sources and
+binary are unchanged throughout collection, and all owned local builds/tests/
+Miri/coverage/downloads finish before timing. This validates the measuring path;
+it is not a speed comparison against old fixed batches. [Evidence and limits](../rust-calibration.md).
+
+All seven required jobs pass in CI 39106571669. Independently retained artifacts
+bind all 112 programs/128 execution inputs and 17 uploaded logs per host to the
+commit. All three hosts execute 91 confirmed Rust and 91 confirmed Go cases,
+matching their own complete outputs, and reject five invalid Rust configurations.
+LLVM completes with the explicit fixed mode on each host. Physical terminals and
+Windows PTY remain separate unverified conditions.

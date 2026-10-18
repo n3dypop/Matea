@@ -1,0 +1,12 @@
+{
+  "source_head": "b2a35589f0e511df0d2f232a50f360f78b4caa6b",
+  "source_sha256": {
+    "tools/perf-probe/src/measurement.rs": "7989695d112c46ae07ab87482c9077dc7909947b949f6d03ebd2cdad4bb7ece3"
+  },
+  "command": "MIRIFLAGS=-Zmiri-seed=193 cargo +nightly miri test --locked --offline -p matea-perf-probe measurement::tests",
+  "tests_passed": 8,
+  "log_sha256": "cd8e941d62482beff222b65c99974aeea8d213e764a9e3e808cd8859c07b32a8",
+  "limits": [
+    "Eight deterministic private-utility tests, not a proof of clocks, native allocator or all schedules."
+  ]
+}

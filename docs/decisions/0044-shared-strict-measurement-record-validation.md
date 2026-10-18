@@ -1,6 +1,6 @@
 # ADR 0044: Share strict measurement validation without rewriting history
 
-Status: implemented and locally verified at 3f69cc8; three-OS CI pending.
+Status: implemented and verified at 3f69cc8 on Linux, Windows and macOS.
 
 Five failing assertions at source 29ffeea show the modern optimization reader
 accepts duplicate JSON fields, correctness records with forged timing fields,

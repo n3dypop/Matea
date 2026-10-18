@@ -36,8 +36,36 @@ the framework's safe-code policy is unaffected.
 Eight deterministic Rust tests cover bounds, three confirmations after a single
 scheduling pause, all coarse-clock observations at the cap, zero-work rejection,
 overflow-safe growth, all 31 intervals, failure without retry, exact stateful
-batch operation counts and allocation guard cleanup. Full native/LLVM/Miri and
-three-OS verification are pending. Calibrated distributions are not yet collected.
+batch operation counts and allocation guard cleanup. All eight pass Miri at seed
+193 with the same measurement source hash. At e54118d all 33 native checks pass:
+164 Rust tests plus two doctests, 114 Python tests, 14 snapshots and 19 Unix PTY
+cases. LLVM records 62 source files and 67 compiler instances. All source inputs
+and logs are retained in [the native cohort](evidence/rust-calibration/native/local-validation.json).
+
+All ten release CLI modes complete after owned local builds, tests, Miri, LLVM
+and downloads stop. They produce 282 mode records, covering 266 unique cases;
+the separately invoked clock mode repeats 16 main-mode cases. Each has 31 positive
+intervals, a complete three-observation calibration history at the 20 ms target,
+and exact semantics/output/first-return identity with its correctness-only run.
+All raw data and source/binary hashes are retained in
+[the collection context](evidence/rust-calibration/confirmed/context.json).
+The retained [collection procedure](evidence/rust-calibration/collection-procedure.txt)
+is also hash-bound. No individual interval is retried, filtered or clamped.
+This is one macOS arm64 host, without affinity/frequency control or RSS evidence.
+These distributions validate the new measuring path, not an improvement over an
+older measuring loop or complete module/feature coverage.
+
+The [three-OS/MSRV/reference run](https://github.com/n3dypop/Matea/actions/runs/39106571669)
+passes all seven required jobs. [Independent source/artifact binding](evidence/rust-calibration/ci-source-bindings.json)
+checks all 112 program/128 execution-input hashes, 17 uploaded log hashes per
+host, LLVM inputs, 14 attribute outputs and unchanged representation sizes.
+Each host executes 91 confirmed Rust cases and 91 confirmed Go cases at the
+20 ms target, matching each probe's own complete correctness outputs. All five
+invalid Rust configurations fail before any record. These are portability/schema
+checks, not cross-language speed measurements. Unix drivers pass 33 checks and
+LLVM 62 files/67 instances; Windows passes 32 and 61/65. Windows PTY and physical
+terminal behavior remain unverified. The b2a3558 run was superseded and cancelled
+after the local fixed-one failure; it is not a passing CI result.
 
 This changes the measuring loop and warmup work. Do not join old fixed-count data
 with new calibrated data as a speed comparison. Future before/after bodies must

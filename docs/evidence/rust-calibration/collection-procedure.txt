@@ -1,0 +1,67 @@
+import hashlib,json,os,platform,subprocess,sys
+from pathlib import Path
+
+ROOT=Path.cwd()
+sys.path.insert(0,str(ROOT/'scripts'))
+from measure_reader_performance import source_snapshot
+from optimization_evidence import records
+from performance_records import read_probe_outputs
+from fetch_upstream_issues import atomic_json
+
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+
+destination=ROOT/'docs/evidence/rust-calibration/confirmed'
+destination.mkdir(parents=True,exist_ok=True)
+context={'schema':1,'status':'running','runs':[],'scope':'all ten Rust CLI modes, calibration/schema and complete output controls; no before/after speed verdict'}
+path=destination/'context.json'
+atomic_json(path,context)
+try:
+    revision=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+    sources=source_snapshot(revision)
+    native=json.loads((ROOT/'docs/evidence/local-validation.json').read_text())
+    coverage=json.loads((ROOT/'docs/evidence/quality/rust-execution-coverage.json').read_text())
+    if native['status']!='complete' or not native['all_local_checks_passed'] or native['source_sha256']!=sources or coverage['status']!='complete' or coverage['input_sha256']!=sources:
+        raise ValueError('finish matching native/LLVM verification before calibrated collection')
+    binary=ROOT/'target/release/matea-perf-probe'
+    binary_hash=digest(binary.read_bytes())
+    environment={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'}
+    environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+    context.update(source_head=revision,source_sha256=sources,binary_sha256=binary_hash,
+                   collector_sha256=digest(Path(__file__).read_bytes()),platform=platform.platform(),
+                   environment={key:environment[key] for key in ['MATEA_PERF_ITERATIONS','MATEA_PERF_MIN_SAMPLE_NS']},
+                   limits=['No owned local build, tests, Miri, coverage or download overlapped collection. Remote CI is independent.',
+                           '31 intervals per mode-record; all calibration observations retained. No sample retry, filtering, clamping or same-count historical join.',
+                           'Requested System allocation counters are separate operations, not RSS. One macOS arm64 host with no affinity/frequency control.',
+                           'Repeated cases in separate CLI modes are not new capabilities or independent unique workloads.'])
+    atomic_json(path,context)
+    unique={}
+    for mode,expected in [('main',84),('views',20),('subscriptions',5),('clocks',16),('viewport',12),('style',46),('input',37),('protocol',41),('virtual-cursor',7),('attributes',14)]:
+        arguments=[] if mode=='main' else ['--'+mode]
+        output=subprocess.check_output([str(binary),*arguments],env={**environment,'MATEA_PROBE_OUTPUT_ONLY':'1'},timeout=60)
+        oracle=read_probe_outputs(output.decode())
+        (destination/(mode+'-outputs.jsonl')).write_bytes(output)
+        result=subprocess.run([str(binary),*arguments],env=environment,capture_output=True,timeout=300)
+        raw_name=mode+'.jsonl';error_name=mode+'.stderr'
+        (destination/raw_name).write_bytes(result.stdout)
+        (destination/error_name).write_bytes(result.stderr)
+        if result.returncode:raise ValueError(mode+' exited '+str(result.returncode)+'; raw/stderr retained')
+        data=records(result.stdout.decode())
+        if len(data)!=expected or data.keys()!=oracle.keys():raise ValueError(mode+' case set changed')
+        for name,item in data.items():
+            if any(item[key]!=oracle[name][key] for key in ['semantics','output','first_return_value']):raise ValueError('changed complete output '+name)
+            calibration=item.get('calibration',{})
+            if calibration.get('target_ns')!=20_000_000 or not all(len(batch.get('confirmations_ns',[]))==2 for batch in calibration.get('batches',[])):raise ValueError('missing confirmed target '+name)
+            comparable={key:item[key] for key in ['semantics','output','first_return_value']}
+            if name in unique and unique[name]!=comparable:raise ValueError('same case changed across CLI modes '+name)
+            unique[name]=comparable
+        context['runs'].append({'mode':mode,'case_count':len(data),'raw':raw_name,'raw_sha256':digest(result.stdout),'stderr_sha256':digest(result.stderr),'output_sha256':digest(output),'positive_samples_per_case':31,'target_ns':20_000_000})
+        atomic_json(path,context)
+        print(mode+': '+str(expected)+' complete-output and confirmed positive-sample records',flush=True)
+    if source_snapshot(revision)!=sources or digest(binary.read_bytes())!=binary_hash:raise ValueError('source/binary changed during collection')
+    context.update(status='complete',mode_records=sum(run['case_count'] for run in context['runs']),unique_cases=len(unique))
+    atomic_json(path,context)
+except Exception as error:
+    context.update(status='failed',error=str(error).replace(str(ROOT),'${REPOSITORY}').replace(str(Path.home()),'${HOME}'))
+    atomic_json(path,context)
+    print(context['error'],file=sys.stderr)
+    raise SystemExit(1)

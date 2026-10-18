@@ -48,6 +48,10 @@ At 3f69cc8, all 33 native checks pass: 156 Rust tests plus two doctests, 113 Pyt
 tests, 14 snapshots and 19 Unix PTY cases. LLVM collection records 62 source
 files and 67 compiler instances. The
 [three-OS/MSRV/reference CI](https://github.com/n3dypop/Matea/actions/runs/39105769194)
-is pending. Scores remain 49 axes below 75 across 112 programs and 41 units.
+passes all seven required jobs. [Independent artifact binding](evidence/measurement-integrity/ci-source-bindings.json)
+verifies all 112 program and 128 execution-input hashes, 17 uploaded logs per
+host, LLVM input/source hashes, 14 attribute outputs and 91 reference timing-mode
+cases. Unix drivers pass 33 checks/62 source files/67 compiler instances; Windows
+passes 32/61/65. Scores remain 49 axes below 75 across 112 programs and 41 units.
 The containing reporting unit still needs complete workload and portability
 evidence. This change does not advance Stage B or F5.

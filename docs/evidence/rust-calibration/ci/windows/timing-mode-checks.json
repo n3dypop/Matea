@@ -1,0 +1,647 @@
+{
+  "schema": 1,
+  "probe": "upstream",
+  "checked_cases": [
+    {
+      "case": "input/binding_ctrl_x",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "input/binding_f12",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "input/binding_miss",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "input/binding_disabled",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "input/binding_repeat",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "input/binding_release",
+      "iterations_per_sample": 15360000,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/value_hit",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/value_miss",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/value_disabled",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/construct",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/value_hit_owned",
+      "iterations_per_sample": 1920000,
+      "calibration_batches": 7,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "binding/metadata",
+      "iterations_per_sample": 15360000,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/frame_duration",
+      "iterations_per_sample": 4800000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/projectile_update",
+      "iterations_per_sample": 2400000,
+      "calibration_batches": 4,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/projectile_checked_update",
+      "iterations_per_sample": 2400000,
+      "calibration_batches": 4,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/projectile_construct",
+      "iterations_per_sample": 600000,
+      "calibration_batches": 2,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/range",
+      "iterations_per_sample": 19200000,
+      "calibration_batches": 7,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/navigation",
+      "iterations_per_sample": 4800000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/arabic",
+      "iterations_per_sample": 256000,
+      "calibration_batches": 9,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/dots_32",
+      "iterations_per_sample": 32000,
+      "calibration_batches": 6,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/dots_256",
+      "iterations_per_sample": 2000,
+      "calibration_batches": 2,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "pagination/key_dispatch",
+      "iterations_per_sample": 120000,
+      "calibration_batches": 3,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/left_right_ascii_64",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/insert_end_ascii_64",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/insert_middle_ascii_64",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/word_roundtrip_ascii_63",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/paste_clear_ascii_64",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/ignored_focus_ascii_64",
+      "iterations_per_sample": 20000,
+      "calibration_batches": 2,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/word_roundtrip_unicode",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "textinput/suggestions_edit_pair",
+      "iterations_per_sample": 10000,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "cursor/visible_move_80x24",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/colored_full_ansi16_80x24",
+      "iterations_per_sample": 50,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/colored_full_ansi256_80x24",
+      "iterations_per_sample": 50,
+      "calibration_batches": 1,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/colored_full_truecolor_80x24",
+      "iterations_per_sample": 100,
+      "calibration_batches": 2,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/colored_full_none_80x24",
+      "iterations_per_sample": 100,
+      "calibration_batches": 2,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "help/short_unbounded",
+      "iterations_per_sample": 2048,
+      "calibration_batches": 12,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "help/short_40",
+      "iterations_per_sample": 2048,
+      "calibration_batches": 12,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "help/full_40",
+      "iterations_per_sample": 2048,
+      "calibration_batches": 12,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "help/short_unicode_80",
+      "iterations_per_sample": 4096,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_zero",
+      "iterations_per_sample": 2097152,
+      "calibration_batches": 22,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_zero",
+      "iterations_per_sample": 2097152,
+      "calibration_batches": 22,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_nanoseconds",
+      "iterations_per_sample": 1048576,
+      "calibration_batches": 21,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_nanoseconds",
+      "iterations_per_sample": 2097152,
+      "calibration_batches": 22,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_microseconds",
+      "iterations_per_sample": 1048576,
+      "calibration_batches": 21,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_microseconds",
+      "iterations_per_sample": 1048576,
+      "calibration_batches": 21,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_seconds",
+      "iterations_per_sample": 524288,
+      "calibration_batches": 20,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_seconds",
+      "iterations_per_sample": 1048576,
+      "calibration_batches": 21,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_hours",
+      "iterations_per_sample": 524288,
+      "calibration_batches": 20,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_hours",
+      "iterations_per_sample": 1048576,
+      "calibration_batches": 21,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/format_maximum_go",
+      "iterations_per_sample": 524288,
+      "calibration_batches": 20,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/reused_format_maximum_go",
+      "iterations_per_sample": 524288,
+      "calibration_batches": 20,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/stopwatch_paused",
+      "iterations_per_sample": 1310720,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/countdown_paused",
+      "iterations_per_sample": 1310720,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/stopwatch_foreign",
+      "iterations_per_sample": 1310720,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "clocks/countdown_foreign",
+      "iterations_per_sample": 1310720,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_line",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_dot",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_mini_dot",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_jump",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_pulse",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_points",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_globe",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_moon",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_monkey",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_meter",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_hamburger",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/plain_ellipsis",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/foreign",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "spinner/stale",
+      "iterations_per_sample": 40960,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "render/empty_80x24",
+      "iterations_per_sample": 256,
+      "calibration_batches": 9,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "render/ascii_80x24",
+      "iterations_per_sample": 256,
+      "calibration_batches": 9,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "render/unicode_80x24",
+      "iterations_per_sample": 256,
+      "calibration_batches": 9,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "unicode/width",
+      "iterations_per_sample": 5120,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/unchanged_80x24",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "terminal/one_cell_80x24",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_update_0.2",
+      "iterations_per_sample": 15360000,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_checked_update_0.2",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_construct_0.2",
+      "iterations_per_sample": 480000,
+      "calibration_batches": 5,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_update_1",
+      "iterations_per_sample": 15360000,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_checked_update_1",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_construct_1",
+      "iterations_per_sample": 960000,
+      "calibration_batches": 6,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_update_2",
+      "iterations_per_sample": 15360000,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_checked_update_2",
+      "iterations_per_sample": 3840000,
+      "calibration_batches": 8,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "motion/spring_construct_2",
+      "iterations_per_sample": 960000,
+      "calibration_batches": 6,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/visible_ascii",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/visible_unicode",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/blurred",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/hidden",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/static_controls",
+      "iterations_per_sample": 8388608,
+      "calibration_batches": 24,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/hidden_controls",
+      "iterations_per_sample": 8388608,
+      "calibration_batches": 24,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "virtual_cursor/foreign",
+      "iterations_per_sample": 131072,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    }
+  ],
+  "target_ns": 20000000,
+  "zero_or_invalid_samples": 0,
+  "invalid_configurations_rejected": [],
+  "limits": "Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."
+}

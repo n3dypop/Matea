@@ -3,16 +3,16 @@
 状態: **F0–F4を継続中。F5へ未到達、承認依頼は保留。**
 オーナーが全参照元・基盤ライブラリの公開機能、モジュールごとの性能比較と課題分析を追加したため、以前の小規模候補は受け入れ対象から外しました。
 
-最新の評価範囲は112プログラム・41単位、未達49軸です。パネル改善の
-[3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39093118277)は7ジョブ成功ですが、
+最新の評価範囲は112プログラム・41単位、未達49軸です。Rust校正処理の
+[3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39106571669)は7ジョブ成功ですが、
 参照公開機能の全件実装と性能条件は未達です。[現在の証拠・残件](remaining-optimization.md)。
 
-現検証ではUnix 33／Windows 32の全受入チェック、Python 103試験、Go 5試験、
-3 OSでのLLVM収集とGo実計測モード91ケースを実行しました。
+現検証ではUnix 33／Windows 32の全受入チェック、Rust 164＋2 doctest、Python 114試験、Go 5試験、
+3 OSでのLLVM収集とRust・Goそれぞれの実計測モード91ケースを実行しました。
 棚卸し公開のハッシュ整合性、失敗時に旧成功を残さないjournal、計測の固定単位数、
 Windowsの短い標本と改行変換を修正しています。動作・移植性4軸を証拠により75へ更新し、
 性能28・参照一致19・動作1・移植性1の未達を維持します。
-[各OSのソース対応とartifact](evidence/measurement-drivers/ci-source-bindings.json)。
+[各OSのソース対応とartifact](evidence/rust-calibration/ci-source-bindings.json)。
 以下には以前の実装段階の結果も時系列の証拠として保持しています。
 
 期限対応では固定16ms待機と、入力前の時間を新規購読へ加算する不具合をそれぞれ再現・修正しました。
@@ -52,7 +52,15 @@ Windowsの短い標本と改行変換を修正しています。動作・移植�
 厳密な検証の追加による処理増加も測定し、初版の約2.08msを約1.60msへ改善しました。
 元の約1.31msとの差は残り、性能高評価への昇格は行いません。
 3f69cc8のローカル33検証、Rust 156＋2 doctest、Python 113、LLVM収集は成功、
-3 OS CIは実行中です。[全分布・回帰試験と制約](measurement-integrity.md)。
+3 OS CIの必須7ジョブと成果物のソース照合も成功しました。
+[全分布・回帰試験と制約](measurement-integrity.md)。
+
+Rust計測器の反復数0・NaN成功出力も再現し、上限付き校正・3回確認・panic時の計数解除を追加しました。
+e54118dでローカル33検証、Rust 164＋2 doctest、Python 114、LLVMが通過しました。
+新規8試験は同じRustソースでMiriも成功し、全10 CLIモード282レコード（266固有ケース）の
+全出力・戻り値・31標本・校正履歴を確認しました。新たな公開能力数には加算しません。
+3 OS CIの必須7ジョブと全program/build/check入力・成果物の照合も成功しました。
+[固定1反復の失敗を含む全証拠](rust-calibration.md)。
 
 ## 現在の範囲と進捗
 
