@@ -114,6 +114,12 @@ jobs:
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release
+      - run: |
+          cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; records=read_probe_outputs(Path('artifacts/deadlines.jsonl').read_text(encoding='utf-8')); assert set(records)=={f'terminal/first_notification_{ms}ms' for ms in [1,5,16,50]}"
+        shell: bash
+        env:
+          MATEA_PROBE_OUTPUT_ONLY: "1"
       # Exercise the complete drivers, including failure journals and profiling,
       # on the actual host. Instrumented numbers are never timing evidence.
       - run: python scripts/verify_foundation.py --offline

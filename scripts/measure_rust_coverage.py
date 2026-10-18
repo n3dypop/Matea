@@ -75,6 +75,7 @@ def collect(root):
         env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
 
     objects = set()
+    deadline_probes = set()
     for log in ["coverage-test.jsonl", "coverage-build.jsonl"]:
         for line in (OUT / log).read_text(encoding="utf-8").splitlines():
             try:
@@ -83,6 +84,18 @@ def collect(root):
                 continue
             if record.get("reason") == "compiler-artifact" and record.get("executable"):
                 objects.add(record["executable"])
+                if record.get("target",{}).get("name")=="foundation_paths":
+                    deadline_probes.add(record["executable"])
+    if len(deadline_probes)!=1:
+        raise ValueError("missing unique instrumented deadline probe")
+    env["MATEA_PROBE_OUTPUT_ONLY"]="1"
+    try:
+        run([next(iter(deadline_probes)),"--deadlines"],"coverage-deadlines.log")
+        values=read_probe_outputs((OUT/"coverage-deadlines.log").read_text(encoding="utf-8"))
+        if set(values)!={f"terminal/first_notification_{ms}ms" for ms in [1,5,16,50]}:
+            raise ValueError("incomplete instrumented deadline records")
+    finally:
+        env.pop("MATEA_PROBE_OUTPUT_ONLY",None)
     sysroot = Path(subprocess.check_output(["rustc", "--print", "sysroot"], text=True, timeout=30).strip())
     host = next(line.split(": ", 1)[1] for line in subprocess.check_output(["rustc", "-vV"], text=True, timeout=30).splitlines() if line.startswith("host: "))
     suffix = ".exe" if sys.platform == "win32" else ""
@@ -103,7 +116,7 @@ def collect(root):
     if not files:
         raise ValueError("no repository source instances in LLVM export")
     report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "source_head": "8b201e8f69427f3d1907cefd51e20253de6e3102",
+  "rustc": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "runs": [
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=101 cargo +nightly miri test --locked --offline -p matea-core --lib subscription_deadline",
+      "tests_passed": 2,
+      "log": "miri-core.log"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=103 cargo +nightly miri test --locked --offline -p matea-terminal --lib subscription",
+      "tests_passed": 2,
+      "log": "miri-terminal.log"
+    }
+  ],
+  "source_sha256": {
+    "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+    "crates/matea-terminal/src/lib.rs": "eac3f64b08f07e407d68bf69e9f9029fbd3058724f04a789eef7b444bb1cef0f",
+    "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318"
+  },
+  "log_sha256": {
+    "miri-core.log": "91312713221292e24b5cc9d7b24e5078429b6df46a7d7cab58d5339d88c51fb7",
+    "miri-terminal.log": "d942ae9317cb35257011d9e76184caefb272793b6f8f4945b344757c1303819b"
+  },
+  "limits": [
+    "Four deterministic selected tests only; no complete-workspace or all-schedules safety proof.",
+    "The terminal test uses a mock input backend; no native terminal/FFI or real-time delivery is validated by Miri."
+  ]
+}
