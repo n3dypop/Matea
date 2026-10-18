@@ -197,6 +197,7 @@ pub struct Viewport {
     longest_line_width: std::sync::OnceLock<usize>,
     soft_wrap: bool,
     wrapped_rows: std::sync::OnceLock<std::sync::Arc<WrappedRows>>,
+    recycled_rows: RecycledRows,
     pub rows: u16,
     /// Include empty padding rows in the visible iterator, including an empty
     /// document. Explicit zero width/height still yields no padding rows.
@@ -206,13 +207,42 @@ pub struct Viewport {
     pub mouse_wheel_delta: usize,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct WrappedRows {
     // Only UTF-8 byte starts are cached, not an allocation per displayed row.
     starts: Vec<usize>,
     // Rare oversized EGCs use a replacement row. Normal documents allocate no
     // replacement storage; sorted row numbers permit a binary lookup.
     replacements: Vec<usize>,
+}
+
+// A cache miss may recycle a previous allocation without making hot readers
+// lock or clone an Arc. Default/unused wrapping never creates/locks this mutex.
+// A clone gets a fresh spare slot: only published immutable geometry is shared.
+#[derive(Debug, Default)]
+struct RecycledRows(Option<std::sync::Mutex<Option<std::sync::Arc<WrappedRows>>>>);
+impl Clone for RecycledRows {
+    fn clone(&self) -> Self {
+        Self::default()
+    }
+}
+impl RecycledRows {
+    fn retain(&mut self, rows: std::sync::Arc<WrappedRows>) {
+        if let Some(slot) = self.0.as_mut() {
+            *slot
+                .get_mut()
+                .unwrap_or_else(std::sync::PoisonError::into_inner) = Some(rows);
+        } else {
+            self.0 = Some(std::sync::Mutex::new(Some(rows)));
+        }
+    }
+    fn take(&self) -> Option<std::sync::Arc<WrappedRows>> {
+        self.0
+            .as_ref()?
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .take()
+    }
 }
 
 /// An ensure-visible range must have its end at or after its start.
@@ -244,6 +274,7 @@ impl Viewport {
             longest_line_width: std::sync::OnceLock::new(),
             soft_wrap: false,
             wrapped_rows: std::sync::OnceLock::new(),
+            recycled_rows: RecycledRows::default(),
             rows: 6,
             fill_height: false,
             keys: ViewportKeys::default(),
@@ -316,6 +347,7 @@ impl Viewport {
         self.content = content;
         self.longest_line_width.take();
         self.wrapped_rows.take();
+        self.recycled_rows = RecycledRows::default();
         if self.offset != 0 {
             self.offset = self.offset.min(self.max_offset());
         }
@@ -353,8 +385,10 @@ impl Viewport {
     /// Enable horizontal navigation and commit a position that fits the new
     /// width. Zero means an empty viewport, not an inferred parent width.
     pub fn set_width(&mut self, width: u16) {
-        if self.width != Some(width) {
-            self.wrapped_rows.take();
+        if self.width != Some(width)
+            && let Some(previous) = self.wrapped_rows.take()
+        {
+            self.recycled_rows.retain(previous);
         }
         self.width = Some(width);
         if self.soft_wrap && self.offset != 0 {
@@ -369,6 +403,7 @@ impl Viewport {
         self.width = None;
         self.horizontal_offset = 0;
         self.wrapped_rows.take();
+        self.recycled_rows = RecycledRows::default();
         if self.soft_wrap && self.offset != 0 {
             self.offset = self.offset.min(self.max_offset());
         }
@@ -385,6 +420,7 @@ impl Viewport {
         if self.soft_wrap != enabled {
             self.soft_wrap = enabled;
             self.wrapped_rows.take();
+            self.recycled_rows = RecycledRows::default();
             if enabled {
                 self.horizontal_offset = 0;
             }
@@ -407,47 +443,57 @@ impl Viewport {
         }
         let width = usize::from(self.width?);
         Some(self.wrapped_rows.get_or_init(|| {
-            use unicode_segmentation::UnicodeSegmentation;
-            use unicode_width::UnicodeWidthStr;
-            let mut rows = WrappedRows {
-                starts: Vec::new(),
-                replacements: Vec::new(),
-            };
-            if width == 0 {
-                return std::sync::Arc::new(rows);
-            }
-            rows.starts.reserve(self.line_count());
-            for (number, line) in self.lines().enumerate() {
-                let start = self.line_starts[number];
-                rows.starts.push(start);
-                if line.is_ascii() {
-                    rows.starts.extend(
-                        (width..line.len())
-                            .step_by(width)
-                            .map(|offset| start + offset),
-                    );
-                    continue;
-                }
-                let mut column = 0;
-                for (index, grapheme) in line.grapheme_indices(true) {
-                    let cells = grapheme.width();
-                    if cells == 0 {
-                        continue;
-                    }
-                    if column != 0 && cells > width - column {
-                        rows.starts.push(start + index);
-                        column = 0;
-                    }
-                    if cells > width {
-                        rows.replacements.push(rows.starts.len() - 1);
-                        column = width;
-                    } else {
-                        column += cells;
-                    }
+            if let Some(mut previous) = self.recycled_rows.take() {
+                // Exclusive ownership is checked by Arc, never assumed from
+                // the application model. Shared clones retain the old index.
+                if let Some(rows) = std::sync::Arc::get_mut(&mut previous) {
+                    self.build_wrapped_rows(width, rows);
+                    return previous;
                 }
             }
+            let mut rows = WrappedRows::default();
+            self.build_wrapped_rows(width, &mut rows);
             std::sync::Arc::new(rows)
         }))
+    }
+    fn build_wrapped_rows(&self, width: usize, rows: &mut WrappedRows) {
+        use unicode_segmentation::UnicodeSegmentation;
+        use unicode_width::UnicodeWidthStr;
+        rows.starts.clear();
+        rows.replacements.clear();
+        if width == 0 {
+            return;
+        }
+        rows.starts.reserve(self.line_count());
+        for (number, line) in self.lines().enumerate() {
+            let start = self.line_starts[number];
+            rows.starts.push(start);
+            if line.is_ascii() {
+                rows.starts.extend(
+                    (width..line.len())
+                        .step_by(width)
+                        .map(|offset| start + offset),
+                );
+                continue;
+            }
+            let mut column = 0;
+            for (index, grapheme) in line.grapheme_indices(true) {
+                let cells = grapheme.width();
+                if cells == 0 {
+                    continue;
+                }
+                if column != 0 && cells > width - column {
+                    rows.starts.push(start + index);
+                    column = 0;
+                }
+                if cells > width {
+                    rows.replacements.push(rows.starts.len() - 1);
+                    column = width;
+                } else {
+                    column += cells;
+                }
+            }
+        }
     }
     fn display_line(&self, index: usize) -> Option<std::borrow::Cow<'_, str>> {
         use std::borrow::Cow;

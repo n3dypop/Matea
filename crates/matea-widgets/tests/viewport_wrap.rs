@@ -130,6 +130,13 @@ fn caches_clones_and_old_views_keep_independent_content_and_geometry() {
     view.set_width(4);
     assert_eq!(view.display_line_count(), 3);
     assert_eq!(clone.display_line_count(), 5);
+    for width in [1, 2, 5, 1, 3] {
+        view.set_width(width);
+    }
+    let pending = view.clone();
+    assert_eq!(pending.display_line_count(), 4);
+    assert_eq!(view.display_line_count(), 4);
+    assert_eq!(rows(&pending), ["abc", "def", "抹", "茶"]);
     view.set_content("new");
     assert_eq!(rows(&view), ["new"]);
     std::thread::scope(|scope| {

@@ -1,0 +1,28 @@
+import datetime,hashlib,json,os,platform,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_records,read_probe_outputs
+from evidence_checks import require
+out=ROOT/'docs/evidence/viewport-wrap'/sys.argv[1];out.mkdir(parents=True,exist_ok=False)
+binaries={'matea':ROOT/'target/release/matea-perf-probe','upstream':Path('/private/tmp/matea-wrap-upstream/probe')}
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();known={p:sha(ROOT/p) for p in sorted(execution_inputs(ROOT))}
+for p,h in known.items():require(hashlib.sha256(subprocess.check_output(['git','show',head+':'+p],cwd=ROOT)).hexdigest()==h,'uncommitted input '+p)
+require(sha(ROOT/'tools/perf-upstream/main.go')==sha(Path('/private/tmp/matea-wrap-upstream/main.go')),'Go caller mismatch')
+context={'schema':1,'status':'running','git_head':head,'source_sha256':known,'binary_sha256':{k:sha(p) for k,p in binaries.items()},'platform':platform.platform(),'architecture':platform.machine(),'rustc':subprocess.check_output(['rustc','-vV'],text=True),'go':subprocess.check_output(['go','version'],text=True),'source_pins':json.loads(Path('/private/tmp/matea-wrap-upstream/source-pin.json').read_text()),'go_module_sha256':sha(Path('/private/tmp/matea-wrap-upstream/go.mod')),'go_sum_sha256':sha(Path('/private/tmp/matea-wrap-upstream/go.sum')),'env':{'MATEA_PERF_ITERATIONS':'1000','MATEA_PERF_MIN_SAMPLE_NS':'20000000'},'orders':['upstream','matea','matea','upstream'],'runs':[],'started_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'limits':['Native host only; ten matched valid plain-text cases and two separate borrowed-iterator controls, not full-module/terminal performance.','100 equal lines, widths 4/8 with aligned ASCII/CJK clusters. No ratio for zero-size or deliberately different wrapping policies.','Fresh construct includes each library model defaults, ownership/geometry and an independent owned snapshot. Go/Rust representations differ.','Go total allocations/bytes are averaged; Rust measures one System allocation pass. RSS and GC residency are not measured.','31 calibrated batch means and all cold/tail/order observations retained; no universal max-speed or statistical causality claim.']}
+def save():(out/'context.json').write_text(json.dumps(context,ensure_ascii=False,indent=2)+'\n')
+save();env=dict(os.environ,**context['env']);env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+try:
+ outputs={}
+ for label,binary in binaries.items():
+  r=subprocess.run([str(binary),'--viewport-wrap'],env=dict(env,MATEA_PROBE_OUTPUT_ONLY='1'),stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=ROOT);(out/(label+'-outputs.jsonl')).write_bytes(r.stdout);(out/(label+'-outputs.stderr.log')).write_bytes(r.stderr);require(r.returncode==0,'output failure');outputs[label]=read_probe_outputs(r.stdout.decode());require(len(outputs[label])==(12 if label=='matea' else 10),'incomplete outputs')
+ require(set(outputs['matea'])==set(outputs['upstream'])|{'viewport-wrap/borrowed_ascii','viewport-wrap/borrowed_unicode'},'unmatched controls')
+ for k,v in outputs['upstream'].items():require(outputs['matea'][k]==v,'matched output mismatch '+k)
+ for i,label in enumerate(context['orders']):
+  name=f'{i+1}-{label}';path=out/(name+'.jsonl');started=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run([str(binaries[label]),'--viewport-wrap'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=ROOT);path.write_bytes(r.stdout);(out/(name+'.stderr.log')).write_bytes(r.stderr);context['runs'].append({'name':name,'label':label,'exit_code':r.returncode,'raw_sha256':sha(path),'started_at_utc':started,'finished_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()});save();require(r.returncode==0,'measurement failure');records=read_records(r.stdout.decode());require(set(records)==set(outputs[label]),'case set changed')
+  for k,v in records.items():
+   require(all(v[f]==outputs[label][k][f] for f in ['semantics','output','first_return_value']),'timed output mismatch '+k);require(v['calibration']['target_ns']==20000000,'wrong target')
+  print(name+' complete',flush=True)
+ context['source_changed']=[p for p,h in known.items() if sha(ROOT/p)!=h];require(not context['source_changed'],'source changed');require(context['binary_sha256']=={k:sha(p) for k,p in binaries.items()},'binary changed');context['status']='complete'
+except Exception as e:context['status']='failed';context['error']=str(e);raise
+finally:context['finished_at_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat();save()
