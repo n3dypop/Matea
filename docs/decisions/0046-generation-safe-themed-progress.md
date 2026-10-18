@@ -67,3 +67,12 @@ native/Miri/performance cohort, and rerun validation and the complete balanced
 measurement for the changed source. A long Unicode custom label must still
 exercise heap ownership and grapheme-safe clipping; no blanket zero-allocation
 promise applies to custom formatters.
+
+The inline-label Miri run (seed 211) exposes an overly strict test assertion:
+two independently constructed springs differ by about 2.2e-16 in position and
+1.3e-15 in velocity. Preserve the failed log/context. Compare only that
+independent one-step/cadence calculation within 1e-12 absolute error; retain
+exact equality for ignored/stale ticks and exact final snap. No fixture output
+or reference trajectory tolerance is relaxed. Rerun the same Miri seed after
+this test correction. Also upload the new progress/indexed fixture outputs and
+timing-mode checks so each host's results can be independently inspected.

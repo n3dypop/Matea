@@ -141,7 +141,10 @@ fn retargeting_rejects_stale_foreign_duplicate_and_backward_ticks() {
                 .tick_at(origin + Duration::from_secs(100)),
         )
         .unwrap();
-    assert_eq!(coalesced.motion(), state);
+    // Separate spring construction involves transcendental floating-point
+    // evaluation. Compare one-step behavior tightly, not identical rounding.
+    assert!((coalesced.motion().position - state.position).abs() < 1e-12);
+    assert!((coalesced.motion().velocity - state.velocity).abs() < 1e-12);
 }
 #[test]
 fn invalid_input_is_transactional_and_finite_values_clamp() {
