@@ -492,7 +492,13 @@ fn style_costs(iterations: usize) {
             .bg(Color::Rgb(13, 13, 13))
             .bold()
             .reverse();
-        let expected = format!("{:?}", style.adapt(level));
+        let adapted = style.adapt(level);
+        // Compare logical legacy attributes independently of private storage or
+        // derived Debug field names when the resolved style representation grows.
+        let expected = format!(
+            "fg={:?},bg={:?},bold={},underline={},reverse={}",
+            adapted.fg, adapted.bg, adapted.bold, adapted.underline, adapted.reverse
+        );
         measure(
             &format!("style/adapt_pair_{profile}"),
             iterations,

@@ -286,6 +286,16 @@ fn identity() {
     ));
 }
 fn main() {
+    if std::env::args().any(|a| a == "--representations") {
+        println!(
+            "{{\"style_bytes\":{},\"style_alignment\":{},\"cell_bytes\":{},\"cell_alignment\":{}}}",
+            std::mem::size_of::<Style>(),
+            std::mem::align_of::<Style>(),
+            std::mem::size_of::<matea::render::Cell>(),
+            std::mem::align_of::<matea::render::Cell>()
+        );
+        return;
+    }
     if std::env::args().any(|a| a == "--deadlines") {
         deadlines();
         return;
