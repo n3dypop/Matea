@@ -174,7 +174,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -189,14 +189,16 @@ def check_probes(destination, go_binary, rust_binary, environment):
         if flag=="--clocks":
             require(len(read_probe_outputs(output.decode("utf-8")))==16, "incomplete clock probe")
         if flag=="--gradient-fixtures":
-            retained=(ROOT/"crates/matea-style/tests/fixtures/gradients.tsv").read_text(encoding="utf-8")
-            require(len(output.decode("utf-8").splitlines())==548 and output.decode("utf-8").splitlines()==retained.splitlines(),"gradient fixtures changed")
+            fixture_text=(ROOT/"crates/matea-style/tests/fixtures/gradients.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==548 and output.decode("utf-8").splitlines()==fixture_text.splitlines(),"gradient fixtures changed")
         if flag=="--indexed-gradient-fixtures":
-            retained=(ROOT/"crates/matea-style/tests/fixtures/indexed-gradients.tsv").read_text(encoding="utf-8")
-            require(len(output.decode("utf-8").splitlines())==256 and output.decode("utf-8").splitlines()==retained.splitlines(),"indexed gradient fixtures changed")
+            fixture_text=(ROOT/"crates/matea-style/tests/fixtures/indexed-gradients.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==256 and output.decode("utf-8").splitlines()==fixture_text.splitlines(),"indexed gradient fixtures changed")
         if flag=="--progress-fixtures":
-            retained=(ROOT/"crates/matea-widgets/tests/fixtures/progress.tsv").read_text(encoding="utf-8")
-            require(len(output.decode("utf-8").splitlines())==120 and output.decode("utf-8").splitlines()==retained.splitlines(),"progress fixtures changed")
+            fixture_text=(ROOT/"crates/matea-widgets/tests/fixtures/progress.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==120 and output.decode("utf-8").splitlines()==fixture_text.splitlines(),"progress fixtures changed")
+        if flag=="--viewport-content-fixtures":
+            require(len(output.splitlines())==220 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-controls.tsv").read_bytes(),"viewport content fixtures changed")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
@@ -266,7 +268,7 @@ def main():
     (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
         "gradient_matched_cases":6,"gradient_fixture_cases":548,"rust_gradient_timing_cases":12,"go_gradient_timing_cases":6,
         "indexed_gradient_fixture_cases":256,"progress_matched_cases":6,"progress_fixture_cases":120,"rust_progress_timing_cases":12,"go_progress_timing_cases":6,
-        "source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
+        "viewport_content_fixture_cases":220,"source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")
     print("11 pinned inventories, 84 retained and seven cursor output cases validated; no performance verdict")

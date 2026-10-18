@@ -9,7 +9,7 @@ blending.go at 19f011f1. The common MIT notice for these adapted sections:
 ```
 Copyright (c) 2013 Lucas Beyer
 Copyright (c) 2021-2026 Charmbracelet, Inc.
-Copyright (c) 2020-2026 Charmbracelet, Inc. (Bubbles progress)
+Copyright (c) 2020-2026 Charmbracelet, Inc. (Bubbles progress and viewport behavioral references)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,11 @@ above also apply to those adapted sections; its original notice is Copyright
 (c) 2020-2026 Charmbracelet, Inc. Matea uses independently owned state, typed
 clock generations, semantic theme defaults, validated geometry and corrected
 absolute-velocity rest detection. See ADR 0046 for deliberate differences.
+
+Viewport content/vertical-control behavior and public fixtures are informed by
+Bubbles viewport/viewport.go at the same revision. The independent Rust state
+owns content, validates index/resize invariants and saturates movement; CRLF and
+overflow differences are recorded in ADR 0047 and the viewport source audit.
 
 ## Motion implementation attribution
 

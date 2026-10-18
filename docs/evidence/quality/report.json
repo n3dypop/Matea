@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 121,
+  "programs": 123,
   "review_units": 42,
   "below_high": [
     {
@@ -293,21 +293,9 @@
     },
     {
       "unit": "scripts/performance-reporters",
-      "dimension": "behavior",
-      "score": 50,
-      "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
-    },
-    {
-      "unit": "scripts/performance-reporters",
       "dimension": "performance",
       "score": 50,
       "reason": "31 complete 84-case retained report generations, 46-case strict comparisons and 84-case historical-reader samples, with exact outputs and separate Python heap. Other reporter/prepare/external paths and native residency remain unmeasured."
-    },
-    {
-      "unit": "scripts/performance-reporters",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "All five historical reporters in read-only mode and pinned Go preparation execute on all three OSes, including the Windows Git EOL regression. Full auditor/remaining measurement-driver executions and their new captured-extraction paths are native-macOS evidence only, so this entire unit remains partial."
     },
     {
       "unit": "scripts/test-and-acceptance-drivers",
@@ -2021,7 +2009,9 @@
         "scripts/performance_records.py",
         "scripts/measure_remaining_performance.py",
         "scripts/report_attribute_performance.py",
-        "scripts/measure_reader_performance.py"
+        "scripts/measure_reader_performance.py",
+        "scripts/measurement_run.py",
+        "scripts/qualify_measurement_drivers.py"
       ],
       "criteria": {
         "rust_design": {
@@ -2033,8 +2023,8 @@
           "reason": "Python/Go/config utility; Rust aliasing/FFI dimension does not apply."
         },
         "behavior": {
-          "score": 50,
-          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+          "score": 75,
+          "reason": "Within the documented measurement/reader/preparation/report scope, 126 Python tests (18 driver methods), two retained stale-success failures, atomic/partial/interruption/source/capture guards and all 18 complete qualification stages pass. Exact inputs/output determinism and log hashes are independently verified on three OSes at c5069e0. Not exhaustive arbitrary failures."
         },
         "reference": {
           "score": null,
@@ -2045,16 +2035,18 @@
           "reason": "31 complete 84-case retained report generations, 46-case strict comparisons and 84-case historical-reader samples, with exact outputs and separate Python heap. Other reporter/prepare/external paths and native residency remain unmeasured."
         },
         "portability": {
-          "score": 50,
-          "reason": "All five historical reporters in read-only mode and pinned Go preparation execute on all three OSes, including the Windows Git EOL regression. Full auditor/remaining measurement-driver executions and their new captured-extraction paths are native-macOS evidence only, so this entire unit remains partial."
+          "score": 75,
+          "reason": "Exact program source at c5069e0 executes complete Rust/Go auditor collectors, 30 remaining paths including both native captured-extraction paths, four balanced reader runs, Go preparation/tests and all six reporter CLIs on Linux, Windows and macOS. All 147 known inputs and artifact hashes independently bind to Git. Native stdout EOL, current host/toolchain report metadata and native compiler graphs are explicitly outside cross-host byte equality; 26 other complete outputs match. Shared-runner times are not speed evidence."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
-        "docs/evidence/optimization/remaining-report.json"
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/measurement-lifecycle.md",
+        "docs/evidence/measurement-lifecycle/ci-source-bindings.json"
       ],
       "remaining": [
-        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+        "Other reporter/preparation performance workloads and native residency remain unmeasured. Qualification collects two native all-feature profiles per host and does not close all twenty-profile/public-capability scope. Raw files qualify only with a matching complete attempt; one writer per directory and no power-loss durability guarantee."
       ]
     },
     {
@@ -2203,12 +2195,12 @@
       ]
     }
   ],
-  "plan_sha256": "d4238241abb2ee9650c65e774f947f602b31aa38d73586ec3ba7580cf5701266",
+  "plan_sha256": "e8b0dd9ef9234d98908b5060584c53f3ddbe1a1ab04ef05eca4b2ba91c68ecc7",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "7a4de3a9d302d8491115cc8b5f02d52d6fb8b6581df8812a21ced7ecb332b365",
+      "sha256": "08f132bb67b8f6cd5e18845361e5723f8ab76fbd227020703e616d419040a83a",
       "units": [
         "ci/workflow"
       ],
@@ -2280,8 +2272,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 709,
-                "percent": 94.65954606141523
+                "covered": 708,
+                "percent": 94.5260347129506
               },
               "functions": {
                 "count": 101,
@@ -2295,9 +2287,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1125,
-                "notcovered": 58,
-                "percent": 95.09721048182587
+                "covered": 1124,
+                "notcovered": 59,
+                "percent": 95.01267962806425
               },
               "branches": {
                 "count": 0,
@@ -3914,7 +3906,7 @@
     },
     {
       "file": "crates/matea-widgets/src/lib.rs",
-      "sha256": "d4ebce814af805f33ba786e0ca6b639253594992df0020ddfcfb4991378804b0",
+      "sha256": "30ed379dd29c73e4401983fa11d3e2907ee133030fde390366f32a456ac2fcf5",
       "units": [
         "matea-widgets/lib"
       ],
@@ -3926,25 +3918,25 @@
             "compiler_filename": "crates/matea-widgets/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 427,
-                "covered": 422,
-                "percent": 98.82903981264637
+                "count": 548,
+                "covered": 540,
+                "percent": 98.54014598540147
               },
               "functions": {
-                "count": 50,
-                "covered": 50,
-                "percent": 100
+                "count": 79,
+                "covered": 78,
+                "percent": 98.73417721518987
               },
               "instantiations": {
-                "count": 108,
-                "covered": 95,
-                "percent": 87.96296296296296
+                "count": 173,
+                "covered": 133,
+                "percent": 76.878612716763
               },
               "regions": {
-                "count": 786,
-                "covered": 766,
-                "notcovered": 20,
-                "percent": 97.45547073791349
+                "count": 992,
+                "covered": 969,
+                "notcovered": 23,
+                "percent": 97.68145161290323
               },
               "branches": {
                 "count": 0,
@@ -4475,7 +4467,7 @@
     },
     {
       "file": "crates/matea-widgets/tests/viewport.rs",
-      "sha256": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+      "sha256": "b091f9ff71b9931256054eee40c830b511d24794c8e193270e8d9f6ca3c8e6a8",
       "units": [
         "matea-widgets/integration-tests"
       ],
@@ -4487,23 +4479,23 @@
             "compiler_filename": "crates/matea-widgets/tests/viewport.rs",
             "summary": {
               "lines": {
-                "count": 113,
-                "covered": 113,
+                "count": 341,
+                "covered": 341,
                 "percent": 100
               },
               "functions": {
-                "count": 7,
-                "covered": 7,
+                "count": 17,
+                "covered": 17,
                 "percent": 100
               },
               "instantiations": {
-                "count": 7,
-                "covered": 7,
+                "count": 17,
+                "covered": 17,
                 "percent": 100
               },
               "regions": {
-                "count": 191,
-                "covered": 191,
+                "count": 640,
+                "covered": 640,
                 "notcovered": 0,
                 "percent": 100
               },
@@ -5637,7 +5629,7 @@
     },
     {
       "file": "scripts/check_reference_paths.py",
-      "sha256": "2b2e3c2a0869cf915fe07f952f879301dc1c140b809af7451f81887876d5ca5d",
+      "sha256": "315d57e21e53cefc46c6adf53eca7db9c973785cebb4931f12cd9ceed0fd4b1c",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -5709,7 +5701,7 @@
     },
     {
       "file": "scripts/measure_auditor_performance.py",
-      "sha256": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+      "sha256": "efdfcafd4eee6ee388127be541b2c478b7cc1efd2e50516dc0bf57dfdfa8e0a7",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5725,7 +5717,7 @@
     },
     {
       "file": "scripts/measure_remaining_performance.py",
-      "sha256": "5f02bba67f9bb4dcb58216f1af68024a894f6e38a519a2473e20208d853e1e83",
+      "sha256": "b6f2513397fb78221d977ef3cf18be951f05b5bdd37eb774a95fcd1ce7b4bb4c",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5736,6 +5728,14 @@
       "sha256": "4ff3e45e2e516c1f7673e28b039fa864a3f71fdf9af96565cd43b684f8e7d9ed",
       "units": [
         "scripts/test-and-acceptance-drivers"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "scripts/measurement_run.py",
+      "sha256": "4983fc477a512b068d253a15f4e37664f2d0b1fefc6f846993ed7180d77f064d",
+      "units": [
+        "scripts/performance-reporters"
       ],
       "native_execution_coverage": null
     },
@@ -5757,7 +5757,7 @@
     },
     {
       "file": "scripts/prepare_upstream_bench.py",
-      "sha256": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+      "sha256": "d29f2baee5706747bba0959a9a8def8f31ae66218825a2509af7232988a22b0c",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5772,8 +5772,16 @@
       "native_execution_coverage": null
     },
     {
+      "file": "scripts/qualify_measurement_drivers.py",
+      "sha256": "03bcc1c8c67c8f5431df223eb2b8d1dfa499998f6fbcf8fbba6aac79974021f8",
+      "units": [
+        "scripts/performance-reporters"
+      ],
+      "native_execution_coverage": null
+    },
+    {
       "file": "scripts/report_attribute_performance.py",
-      "sha256": "694e3f15ed49cabd4b13040a2cd5a7e3682fc70d226711f9978a72de8362514d",
+      "sha256": "6b13c09e1926b26cebbc4bf8f5d1be95fe3d9e53cf7bb6a247cea59c7d03bdcb",
       "units": [
         "scripts/performance-reporters"
       ],
@@ -5869,7 +5877,7 @@
     },
     {
       "file": "scripts/test_measurement_drivers.py",
-      "sha256": "fdbbc40b427fbf9dcc7acdb667e9f8b05ce41f97230c60fa0d0ad0358661bc80",
+      "sha256": "f991e4b20413cb40e74db9003421b44a39b18b1e0ab5cdf795ad334f9c73c143",
       "units": [
         "scripts/regression-tests"
       ],
@@ -6408,7 +6416,7 @@
     },
     {
       "file": "tools/perf-upstream/main.go",
-      "sha256": "f10e98b2c142217ccab4c5afe7a3035f7e32be6f9631409009f272a326ce7a08",
+      "sha256": "78bf2659dd935fd1b7feb3d3ac2d7dc124e849c00dd711828ab2d0588c8be20e",
       "units": [
         "tools/go-performance-probe"
       ],

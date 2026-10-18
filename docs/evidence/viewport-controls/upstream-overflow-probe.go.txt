@@ -1,0 +1,17 @@
+package main
+
+import (
+ "encoding/json"
+ "math"
+ "os"
+ "charm.land/bubbles/v2/viewport"
+)
+
+func main() {
+ m := viewport.New(viewport.WithWidth(8), viewport.WithHeight(1))
+ m.SetContent("a\nb\nc\nd")
+ m.SetYOffset(1)
+ before := m.YOffset()
+ m.ScrollDown(math.MaxInt)
+ json.NewEncoder(os.Stdout).Encode(map[string]any{"offset_before":before,"positive_scroll_count":math.MaxInt,"source_offset_after":m.YOffset(),"saturating_expected_offset":3,"content":m.GetContent()})
+}

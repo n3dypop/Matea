@@ -214,37 +214,174 @@ pub struct Viewport {
 }
 impl Viewport {
     pub fn new(text: &str) -> Self {
-        // CRLF is a structural newline. Other controls follow the compositor's
-        // replacement policy rather than reaching the terminal as commands.
-        let normalized = if text.contains("\r\n") {
-            std::borrow::Cow::Owned(text.replace("\r\n", "\n"))
-        } else {
-            std::borrow::Cow::Borrowed(text)
-        };
-        let content = sanitize(&normalized);
-        let line_starts = if content.is_empty() {
-            Vec::new()
-        } else {
-            std::iter::once(0)
-                .chain(content.match_indices('\n').map(|(i, _)| i + 1))
-                .collect()
-        };
-        Self {
-            content,
-            line_starts,
+        let mut viewport = Self {
+            content: String::new(),
+            line_starts: Vec::new(),
             offset: 0,
             rows: 6,
-        }
+        };
+        viewport.set_content(text);
+        viewport
     }
+    /// Consume clean owned text without copying its allocation. CRLF and
+    /// controls follow the same policy as [`Self::set_content`].
+    pub fn from_string(text: String) -> Self {
+        let mut viewport = Self::new("");
+        viewport.set_content_owned(text);
+        viewport
+    }
+    /// Replace content by copying borrowed text. External input cannot mutate
+    /// either the owned content or its cached line index after this call.
+    pub fn set_content(&mut self, text: &str) {
+        self.install_content(normalize_viewport_text(text).into_owned());
+    }
+    /// Replace content with owned text, retaining its allocation when already
+    /// normalized. Views created earlier keep their own immutable text.
+    pub fn set_content_owned(&mut self, text: String) {
+        let content = match normalize_viewport_text(&text) {
+            std::borrow::Cow::Borrowed(_) => text,
+            std::borrow::Cow::Owned(normalized) => normalized,
+        };
+        self.install_content(content);
+    }
+    /// Consume line inputs without retaining caller references or creating a
+    /// temporary Vec of owned lines. Embedded newlines split into real lines.
+    /// Normalize each input before inserting separators, so a bare CR at the
+    /// end of an input cannot combine with a generated LF separator.
+    pub fn set_content_lines<I, S>(&mut self, lines: I)
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        let mut content = String::new();
+        for (index, line) in lines.into_iter().enumerate() {
+            if index != 0 {
+                content.push('\n');
+            }
+            content.push_str(&normalize_viewport_text(line.as_ref()));
+        }
+        self.install_content(content);
+    }
+    fn install_content(&mut self, content: String) {
+        let count = if content.is_empty() {
+            0
+        } else {
+            1 + content.bytes().filter(|byte| *byte == b'\n').count()
+        };
+        // Reserve before changing either field. After this point rebuilding
+        // the index invokes no caller code and requires no further allocation.
+        self.line_starts
+            .reserve(count.saturating_sub(self.line_starts.len()));
+        self.line_starts.clear();
+        if count != 0 {
+            self.line_starts.push(0);
+            self.line_starts
+                .extend(content.match_indices('\n').map(|(index, _)| index + 1));
+        }
+        self.content = content;
+        self.offset = self.offset.min(self.max_offset());
+    }
+    pub fn content(&self) -> &str {
+        &self.content
+    }
+    pub fn line_count(&self) -> usize {
+        self.line_starts.len()
+    }
+    pub fn line(&self, index: usize) -> Option<&str> {
+        let start = *self.line_starts.get(index)?;
+        let end = self
+            .line_starts
+            .get(index + 1)
+            .map_or(self.content.len(), |next| next - 1);
+        self.content.get(start..end)
+    }
+    pub fn lines(
+        &self,
+    ) -> impl ExactSizeIterator<Item = &str> + DoubleEndedIterator + std::iter::FusedIterator {
+        (0..self.line_count()).map(|index| self.line(index).expect("owned line index is valid"))
+    }
+    pub fn height(&self) -> u16 {
+        self.rows
+    }
+    /// Explicit resize also commits the clamped position. Direct `rows`
+    /// assignment keeps the existing lazy observed-clamping behavior.
+    pub fn set_height(&mut self, rows: u16) {
+        self.rows = rows;
+        self.offset = self.offset();
+    }
+    /// Observed position always fits the current content and height, including
+    /// after direct assignment to the public `rows` field.
     pub fn offset(&self) -> usize {
         self.offset.min(self.max_offset())
     }
-    fn max_offset(&self) -> usize {
-        self.line_starts
-            .len()
-            .saturating_sub(usize::from(self.rows))
+    pub fn max_offset(&self) -> usize {
+        self.line_count().saturating_sub(usize::from(self.rows))
     }
-    fn visible_text(&self) -> &str {
+    /// Set a clamped position; return whether the observed position changed.
+    pub fn set_offset(&mut self, offset: usize) -> bool {
+        let before = self.offset();
+        self.offset = offset.min(self.max_offset());
+        self.offset != before
+    }
+    pub fn is_at_top(&self) -> bool {
+        self.offset() == 0
+    }
+    pub fn is_at_bottom(&self) -> bool {
+        self.offset() == self.max_offset()
+    }
+    /// Whether a direct `rows` assignment left a stored position past the new
+    /// maximum. The observed position remains clamped; navigation can commit it.
+    pub fn is_past_bottom(&self) -> bool {
+        self.offset > self.max_offset()
+    }
+    /// Fraction through the scrollable range. Empty/fitting content returns 1;
+    /// zero height uses the full line count as its scrollable range.
+    pub fn scroll_fraction(&self) -> f64 {
+        let maximum = self.max_offset();
+        if maximum == 0 {
+            1.0
+        } else {
+            self.offset() as f64 / maximum as f64
+        }
+    }
+    pub fn visible_line_count(&self) -> usize {
+        self.line_count()
+            .saturating_sub(self.offset())
+            .min(usize::from(self.rows))
+    }
+    pub fn scroll_down(&mut self, lines: usize) -> bool {
+        if lines == 0 {
+            return false;
+        }
+        self.set_offset(self.offset().saturating_add(lines))
+    }
+    pub fn scroll_up(&mut self, lines: usize) -> bool {
+        if lines == 0 {
+            return false;
+        }
+        self.set_offset(self.offset().saturating_sub(lines))
+    }
+    pub fn page_down(&mut self) -> bool {
+        self.scroll_down(usize::from(self.rows))
+    }
+    pub fn page_up(&mut self) -> bool {
+        self.scroll_up(usize::from(self.rows))
+    }
+    pub fn half_page_down(&mut self) -> bool {
+        self.scroll_down(usize::from(self.rows / 2))
+    }
+    pub fn half_page_up(&mut self) -> bool {
+        self.scroll_up(usize::from(self.rows / 2))
+    }
+    pub fn go_to_top(&mut self) -> bool {
+        self.set_offset(0)
+    }
+    pub fn go_to_bottom(&mut self) -> bool {
+        self.set_offset(self.max_offset())
+    }
+    /// Borrow the current vertical slice. Constructing an owned View is a
+    /// separate operation; this getter performs no allocation.
+    pub fn visible_text(&self) -> &str {
         let start = self.offset();
         let end = start
             .saturating_add(usize::from(self.rows))
@@ -257,6 +394,17 @@ impl Viewport {
             .get(end)
             .map_or(self.content.len(), |n| n - 1);
         &self.content[self.line_starts[start]..end_byte]
+    }
+}
+
+fn normalize_viewport_text(text: &str) -> std::borrow::Cow<'_, str> {
+    use std::borrow::Cow;
+    if text.contains("\r\n") {
+        // Structural CRLF is normalized before applying the compositor's
+        // shared C0/C1/tab policy. The common clean path can stay borrowed.
+        Cow::Owned(sanitize(&text.replace("\r\n", "\n")))
+    } else {
+        matea_render::sanitized(text)
     }
 }
 impl Component for Viewport {

@@ -2,11 +2,12 @@
 
 Pinned Bubbles c3bde0d166c2ca607d9864493453fd77bdcae7e4 exposes 70 viewport
 public declaration candidates across viewport.go/keymap.go (with private
-highlight helpers). [Every candidate is retained as pending](evidence/viewport-source-ownership/declarations.json).
+highlight helpers). [Every candidate is retained with its current partial/pending status](evidence/viewport-source-ownership/declarations.json).
 The existing Matea Viewport implements a bounded vertical text slice only;
 previous native correctness/performance results do not cover this full module.
-No new declaration links, performance verdict or quality promotion follows
-from this audit.
+The original audit introduced no declaration links or performance verdict. The
+subsequent bounded content/control implementation links 27 candidates as partial;
+43 remain unlinked. No whole-module verdict or quality promotion follows.
 
 | Public function group | Existing Matea scope / remaining work |
 | --- | --- |
@@ -46,3 +47,34 @@ until constructor/replacement/storage costs and complete output are measured.
 Validate zero/narrow widths, combining/CJK/emoji clipping, trailing empty lines,
 CRLF, controls, resize, style and highlight mapping before comparing timings.
 Keep the old 12 vertical-view measurements as their historical bounded cohort.
+
+## Bounded content and vertical-control implementation
+
+Viewport now owns normalized replacement content, consumes owned clean Strings
+without copying their text allocation, accepts borrowed/owned line iterators,
+and updates its index and clamped position together. Index capacity is reused.
+A caller iterator panic leaves content, position and index unchanged. Content,
+lines and the visible vertical slice have borrowed getters; old owned Views keep
+their snapshot. Explicit height/offset, page/half-page/top/bottom/saturating line
+controls share the existing geometry policy. Direct rows assignment preserves
+lazy observed clamping; explicit set_height commits it.
+
+Eleven native test methods cover these paths, including 220 pinned public
+observations. Exactly 180 complete rows match. The other 40 retain an explicit
+source CRLF deviation: SetContent's LF split happens before CRLF normalization,
+so GetContent preserves CR. Matea preserves the structural LF policy already
+used by its constructor. State/count/fraction fields still compare exactly;
+source and expected content bytes are literal assertions. No raw fixture is
+rewritten to hide the difference. SetContentLines does normalize embedded CRLF.
+[Raw fixture hash, source references, failed first comparison and Miri limits](evidence/viewport-controls/source-review.json).
+
+Content/replacement/control performance and new three-OS validation remain
+pending; the twelve historical vertical-view timings are not reassigned.
+Horizontal scrolling, wrap, fill height, mouse/key customization, gutter, styling
+and highlights remain unimplemented. This is a partial capability, not F5.
+
+A separate public caller also reproduces positive signed-overflow scrolling:
+from offset 1 in four lines/height 1, Go ScrollDown(MaxInt) returns to 0. The
+Matea caller uses the same positive count and reaches the saturated bottom 3;
+usize::MAX also reaches 3. [Both native outputs, original callers and source/library hashes](evidence/viewport-controls/overflow-context.json).
+This is a bounded arithmetic improvement, not a performance or full-module claim.

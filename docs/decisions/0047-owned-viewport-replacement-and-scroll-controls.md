@@ -1,6 +1,6 @@
 # ADR 0047: Owned viewport replacement and explicit scroll controls
 
-Status: proposed; implementation deferred while closing existing quality deficiencies; full 70-declaration viewport module remains
+Status: implemented bounded content/vertical slice; full 70-declaration viewport module remains
 pending. This extends the existing bounded vertical slice before horizontal
 scrolling, soft wrapping, gutters and highlights.
 
@@ -32,3 +32,13 @@ and pinned public reference observations. Existing old vertical view timings
 remain historical and cannot be reassigned to constructor/replacement costs.
 Soft wrap, horizontal geometry, mouse/key customization, gutters, highlights,
 styling and the full module performance verdict remain open.
+
+Public observations at the pinned source expose a separate CRLF difference:
+SetContent splits LF first, leaving bare CR in each line, despite its documented
+normalization. Retain all 220 raw observations: 180 complete rows match; 40 CRLF
+rows compare exact state plus explicit before/expected content bytes. Matea
+preserves its prior normalized constructor policy for every replacement path.
+Explicit set_height commits clamping, while direct rows assignment retains the
+previous lazy observation behavior. Programmatic controls return observed-position
+change; zero movement does not commit a hidden resize. No full viewport parity or
+new performance result is inferred. See ../evidence/viewport-controls/source-review.json.

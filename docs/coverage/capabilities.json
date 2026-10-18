@@ -956,6 +956,48 @@
       ],
       "performance": "docs/progress-audit.md",
       "notes": "35 candidates have bounded Rust equivalents; 120 RGB8 styled-cell fixtures and signed-velocity regression. Initial native tests only; new CI, distributions and additional color/style/lifecycle conditions pending. ADR 0046 documents intentional validated geometry, finite input, enum fill and rest differences."
+    },
+    {
+      "id": "widgets/viewport-content-controls",
+      "status": "partial",
+      "reference_ids": [
+        "4a30e62ec1ed9dc044a6",
+        "f9a007de01813d74de78",
+        "75737d70a7e3832ad7e8",
+        "90ec7a4e8ed323eea3f5",
+        "512a0e488852b4dc415a",
+        "d32ad186755d5dd15138",
+        "7111779b5d647510ab47",
+        "ecad5d2668df6d53b7ce",
+        "d70a135e70d75e4f9319",
+        "b306a9b002c28cf850df",
+        "3d0ba7712dc8350e6663",
+        "a957f7d1d48579ebd5d9",
+        "8e2edf18f2ea674af2b9",
+        "070042d6230507ce4fa1",
+        "6a73bcf1e7a6ba09efc3",
+        "6eece09706125f051f04",
+        "fc69e801f1750a391b20",
+        "47d5791558059f450e27",
+        "96008487cee1baa06037",
+        "eeec1b490ab12c6e6d9a",
+        "c40fb6bee88b76a60167",
+        "385e216313c944ccf769",
+        "b63228b00883c60d3843",
+        "3875a8c172562c16fe14",
+        "10550cff5036072ed65c",
+        "e33648cb777757b9c5b7",
+        "8baa5a9ab6f1a2c9ad4f"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/viewport.rs",
+        "crates/matea-widgets/tests/fixtures/viewport-controls.tsv"
+      ],
+      "performance": "pending",
+      "notes": "27 candidates link to bounded owned text replacement and vertical controls. 220 pinned public observations: 180 exact whole rows and 40 explicit CRLF content deviations with exact other state fields. Borrowed getters, owned clean-string move, panic-safe line iterator, clamp/zero/saturating controls tested. This is not full viewport parity; horizontal/wrap/gutter/highlight/style/input and constructor/replacement/control performance remain pending."
     }
   ]
 }

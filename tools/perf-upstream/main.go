@@ -12,6 +12,7 @@ import (
 	"charm.land/bubbles/v2/stopwatch"
 	"charm.land/bubbles/v2/textinput"
 	bubbletimer "charm.land/bubbles/v2/timer"
+	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"encoding/json"
@@ -203,6 +204,10 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-content-fixtures" {
+		viewportContentFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--indexed-gradient-fixtures" {
 		for index := range 256 {
 			fmt.Printf("%d\t%s\n", index, gradientHex(lipgloss.Blend1D(8, ansi.IndexedColor(index), ansi.IndexedColor(13))))
@@ -1386,5 +1391,42 @@ func progressCosts(n int) {
 			runtime.KeepAlive(frame)
 			return result
 		}, progressOutput(frame), "existing configured RGB8 progress bar at fraction 0.625; construct complete styled one-row frame and consume all UTF-8 symbols and foreground/background colors with FNV64; include frame allocation, formatting and rendering; no terminal I/O or animation")
+	}
+}
+
+// Public content/vertical-control observations only. No private fields, rendering
+// timing, ANSI styles, wrapping or mouse behavior are inferred from this table.
+func viewportContentFixtures() {
+	texts := []string{"", "tea", "tea\ncoffee\n", "tea\r\ncoffee", "茶\ne\u0301\n👩‍💻"}
+	for index, text := range texts {
+		for _, height := range []int{0, 1, 2, 6} {
+			m := viewport.New(viewport.WithWidth(80), viewport.WithHeight(height))
+			m.SetContent(text)
+			for step := range 11 {
+				switch step {
+				case 1:
+					m.SetYOffset(math.MaxInt)
+				case 2:
+					m.ScrollUp(1)
+				case 3:
+					m.HalfPageUp()
+				case 4:
+					m.PageUp()
+				case 5:
+					m.ScrollDown(1)
+				case 6:
+					m.HalfPageDown()
+				case 7:
+					m.PageDown()
+				case 8:
+					m.GotoTop()
+				case 9:
+					m.GotoBottom()
+				case 10:
+					m.SetContentLines([]string{"new", "tea\r\ncoffee", ""})
+				}
+				fmt.Printf("%d\t%d\t%d\t%d\t%d\t%d\t%t\t%t\t%016x\t%x\n", index, height, step, m.YOffset(), m.TotalLineCount(), m.VisibleLineCount(), m.AtTop(), m.AtBottom(), math.Float64bits(m.ScrollPercent()), m.GetContent())
+			}
+		}
 	}
 }
