@@ -62,6 +62,9 @@ def collect(root):
     if sys.platform != "win32":
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
+    if sys.platform == "win32":
+        run([sys.executable, "scripts/test_windows_console.py", "--probe", str(probe),
+             "--destination", str(profiles / "windows-console")], "coverage-windows-console.log")
     # A single operation can be below the host clock resolution, even with
     # instrumentation. Use one uniform fixed count; retain failures, never
     # selectively retry or replace individual intervals. These are not timings

@@ -1754,7 +1754,9 @@
         "scripts/pty_smoke.py",
         "scripts/verify_foundation.py",
         "scripts/evidence_checks.py",
-        "scripts/check_reference_paths.py"
+        "scripts/check_reference_paths.py",
+        "scripts/test_windows_console.py",
+        "scripts/windows_console_oracle.ps1"
       ],
       "criteria": {
         "rust_design": {
@@ -1851,7 +1853,8 @@
     {
       "id": "ci/workflow",
       "files": [
-        ".github/workflows/foundation.yml"
+        ".github/workflows/foundation.yml",
+        ".github/workflows/windows-console.yml"
       ],
       "criteria": {
         "rust_design": {

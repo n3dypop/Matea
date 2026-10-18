@@ -55,6 +55,8 @@ def acceptance_commands(root):
     ]
     if sys.platform != "win32":
         commands.append(("pty-smoke", [sys.executable, str(root / "scripts/pty_smoke.py")]))
+    else:
+        commands.append(("windows-console", [sys.executable, str(root / "scripts/test_windows_console.py")]))
     commands.append(("render-probe", ["cargo", "run", "--locked", "--quiet", "-p", "matea", "--example", "render_probe", "--release"]))
     return commands
 

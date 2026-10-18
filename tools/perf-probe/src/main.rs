@@ -55,6 +55,10 @@ fn main() {
         colored_frames(0);
         return;
     }
+    if std::env::args().any(|arg| arg == "--windows-console-trace") {
+        progress::console_trace();
+        return;
+    }
     let iterations = measurement::iterations(300);
     if std::env::args().any(|arg| arg == "--progress") {
         progress::costs(iterations);

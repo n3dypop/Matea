@@ -3,6 +3,63 @@ use crate::measurement::measure;
 use matea::prelude::*;
 use std::hint::black_box;
 
+/// Transport input for an independent native console readback test, without
+/// clock calibration or timing records. All selected symbols occupy one BMP
+/// cell; supplementary glyph/font appearance is a separate validation domain.
+pub(crate) fn console_trace() {
+    use crate::measurement::quote;
+    use matea::terminal::{Capabilities, FrameEncoder};
+    let mut previous = None;
+    let mut encoder = FrameEncoder::default();
+    let theme = Theme::plain();
+    let mut records = Vec::new();
+    for (name, full, empty, unicode) in [
+        ("ascii", '#', '-', false),
+        ("block", '█', '░', true),
+        ("half", '▄', '░', true),
+    ] {
+        for width in [40, 8, 60, 17] {
+            for (step, fraction) in [(0, 0.0), (625, 0.625), (1000, 1.0)] {
+                let mut model = Progress::new();
+                model.set_width(width);
+                model.set_glyphs(full, empty).unwrap();
+                model.fill = ProgressFill::Solid(Color::Rgb(117, 113, 249));
+                let frame = model
+                    .view_as(fraction, &theme)
+                    .unwrap()
+                    .render(Size::new(width, 1))
+                    .unwrap();
+                let expected: String = frame.row(0).iter().map(|cell| cell.symbol()).collect();
+                assert_eq!(expected.chars().count(), usize::from(width));
+                let mut bytes = Vec::new();
+                encoder
+                    .write(
+                        &mut bytes,
+                        &frame,
+                        previous.as_ref(),
+                        Capabilities {
+                            color: ColorLevel::None,
+                            unicode,
+                            reduced_motion: true,
+                        },
+                    )
+                    .unwrap();
+                records.push(format!(
+                    "{{\"case\":{},\"width\":{width},\"ansi\":{},\"expected\":{}}}",
+                    quote(&format!("{name}/{width}/{step}")),
+                    quote(&String::from_utf8(bytes).unwrap()),
+                    quote(&expected)
+                ));
+                previous = Some(frame);
+            }
+        }
+    }
+    println!(
+        "{{\"schema\":1,\"kind\":\"native-windows-console-input\",\"read_width\":60,\"frames\":[{}]}}",
+        records.join(",")
+    );
+}
+
 pub(crate) const SEMANTICS: &str = "existing configured RGB8 progress bar at fraction 0.625; construct complete styled one-row frame and consume all UTF-8 symbols and foreground/background colors with FNV64; include frame allocation, formatting and rendering; no terminal I/O or animation";
 fn configured(mode: usize, width: u16) -> Progress {
     let mut p = Progress::new();
