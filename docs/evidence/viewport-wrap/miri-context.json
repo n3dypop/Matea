@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "seed": 257,
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097",
+    "crates/matea-widgets/src/lib.rs": "359ae5d9ad699f434661f24dbacccf48df8c0933c71799737c10eb07b238a2f7",
+    "crates/matea-widgets/src/viewport.rs": "0749def80fb3edd59bfd1f6029e0c888e87e0efc4a5881a0373c26ab90b8ce79",
+    "crates/matea-widgets/tests/viewport_wrap.rs": "cad688cfd9bb59dbf2499871ba025349b1d432a3de15eb6ac861201e6d6009c1",
+    "crates/matea-render/src/lib.rs": "bd50b80a07ed77212917903625085545a8c2347759b1c4cb354f51a2a58d054d",
+    "crates/matea-render/src/text.rs": "1ca05fdb98ba892367f305185e17cf4e694bd7ca6de0e2e342b52a0593b930cc"
+  },
+  "started_at_utc": "2026-10-18T23:18:55.281498+00:00",
+  "runs": [
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "miri",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-widgets",
+        "--test",
+        "viewport_wrap"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_changed": [],
+  "log_sha256": "5ed9064332f9a62f07e276e5f6edee211e31b0ce3e69882deae1e1364fbb1c4b",
+  "finished_at_utc": "2026-10-18T23:22:37.484744+00:00"
+}

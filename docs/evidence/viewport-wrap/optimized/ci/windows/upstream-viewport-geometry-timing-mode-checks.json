@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "probe": "upstream",
+  "group": "viewport-geometry",
+  "checked_cases": [
+    {
+      "case": "viewport-geometry/construct_ascii",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/replace_ascii",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/movement_ascii",
+      "iterations_per_sample": 65536,
+      "calibration_batches": 17,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/ensure_ascii",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/view_ascii",
+      "iterations_per_sample": 4096,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/key_ascii",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/wheel_ascii",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/construct_unicode",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/replace_unicode",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/movement_unicode",
+      "iterations_per_sample": 65536,
+      "calibration_batches": 17,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/ensure_unicode",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/view_unicode",
+      "iterations_per_sample": 4096,
+      "calibration_batches": 13,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/key_unicode",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "viewport-geometry/wheel_unicode",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    }
+  ],
+  "target_ns": 20000000,
+  "zero_or_invalid_samples": 0,
+  "invalid_configurations_rejected": [],
+  "limits": "Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."
+}

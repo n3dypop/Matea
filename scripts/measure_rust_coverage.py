@@ -58,6 +58,7 @@ def collect(root):
     run(["cargo", "test", "--locked", "--offline", "--workspace", "--all-targets", "--message-format=json"], "coverage-test.jsonl")
     run(["cargo", "build", "--locked", "--offline", "--workspace", "--examples", "--bins", "--message-format=json"], "coverage-build.jsonl")
     run(["cargo", "build", "--locked", "--offline", "--manifest-path", "tools/reference-text/Cargo.toml", "--message-format=json"], "coverage-reference-text-build.jsonl")
+    run(["cargo", "test", "--locked", "--offline", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets", "--message-format=json"], "coverage-reference-text-test.jsonl")
     reference_text = ROOT / "target/quality-coverage/debug" / ("matea-reference-text-probe.exe" if sys.platform == "win32" else "matea-reference-text-probe")
     run([str(reference_text), "--check"], "coverage-reference-text-check.log")
     env["MATEA_PROBE_OUTPUT_ONLY"] = "1"
@@ -103,7 +104,7 @@ def collect(root):
 
     objects = set()
     deadline_probes = set()
-    for log in ["coverage-test.jsonl", "coverage-build.jsonl", "coverage-reference-text-build.jsonl"]:
+    for log in ["coverage-test.jsonl", "coverage-build.jsonl", "coverage-reference-text-build.jsonl", "coverage-reference-text-test.jsonl"]:
         for line in (OUT / log).read_text(encoding="utf-8").splitlines():
             try:
                 record = json.loads(line)

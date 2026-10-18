@@ -16,7 +16,7 @@ contains only original caller/measurement code, not vendored reference sources.
 No Ratatui runtime dependency is added to Matea's libraries.
 
 The ordinary native acceptance/CI flow explicitly formats, checks and executes
-the reference package, including MSRV. Its default conformance mode reproduces
+the reference package, including its own unit tests and MSRV. Its default conformance mode reproduces
 the full raw 80-cell reference table; comparison tests retain four exact aligned
 cases and four literal cross-span cluster deviations. Measurement is an explicit
 mode with the shared calibrated, output-checked instrumentation. LLVM collection

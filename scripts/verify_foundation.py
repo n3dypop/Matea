@@ -30,6 +30,7 @@ def acceptance_commands(root):
         ("build-examples", ["cargo", "build", "--locked", "--workspace", "--examples"]),
         ("reference-text-fmt", ["cargo", "fmt", "--manifest-path", "tools/reference-text/Cargo.toml", "--check"]),
         ("reference-text-clippy", ["cargo", "clippy", "--locked", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets", "--", "-D", "warnings"]),
+        ("reference-text-tests", ["cargo", "test", "--locked", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets"]),
         ("reference-text", ["cargo", "run", "--locked", "--manifest-path", "tools/reference-text/Cargo.toml", "--", "--check"]),
         ("example-smoke", [sys.executable, str(root / "scripts/example_smoke.py")]),
         ("coverage-integrity", [sys.executable, str(root / "scripts/check_coverage.py")]),

@@ -1,17 +1,22 @@
 # Matea Foundation gate report
 
-現在のチェックポイント（2026-10-19）: 130プログラム・42評価単位、未達49軸
-（性能29・参照元一致20）。未対応付け6,795宣言、部分／未測定17能力、
+現在の検証済み実装チェックポイント（32a67c0）: 132プログラム・42評価単位、
+未達49軸（性能29・参照元一致20）。未対応付け6,793宣言、部分／未測定17能力、
 91モジュール判定・825 issue報告が残ります。Stage Aを継続し、Stage BとF5は閉じています。
 
-RichTextに所有・不変共有、スタイル付き完全grapheme、View/Canvas描画を追加し、
-14宣言を部分対応へ追加しました。15b9284はローカル37検証、Rust211＋4 doctest、
-Python129、Miri10、LLVM75 source／81 instanceに成功しています。
-80参照セル・4明示差分、全80計測／40出力レコードを独立照合しました。
+Viewportの完全grapheme折り返し、空行補充、論理位置からの表示行対応を追加しました。
+ローカル37検証、Rust220＋4 doctest、Python130、Miri8、LLVM77 source／83 instanceが成功。
+[3 OS／MSRV／参照照合7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39175858811)も成功し、
+132 program／168入力と全ログ・観測を独立照合しました。1,008 Source/Matea状態は
+586一致・422明示差分です。全88計測／44出力を独立構成した内容・状態digestと照合し、
+初期化済みの幅変更2回の確保5→0、ASCII reflow 0.88→0.72µsを確認しています。
+[全測定・ゼロ幅の参照元課題・条件と残件](viewport-wrapping-audit.md)。
+比較用の独立workspaceのユニット試験8件も既定経路へ追加し、検証の補完を進めています。
+
+RichTextの先行15b9284も[7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39173451153)が成功。
 Unicode構築4.5→2.1µs、確保10→3へ改善しましたが、参照元1.42µsには未達です。
-[実装・全測定・残件](rich-text-audit.md)。3 OS／MSRV／参照照合の
-[CI](https://github.com/n3dypop/Matea/actions/runs/39173451153)は実行中です。
-以下は各ソース時点の履歴です。
+追加のC2走査変更はASCII退行を確認して撤回し、全試行を保持しています。
+[詳細](rich-text-audit.md)。以下は各ソース時点の履歴です。
 
 直前のViewportチェックポイント（2026-10-19）: 127プログラム・42評価単位、未達49軸
 （性能29・参照元一致20）。未対応付け6,809宣言、部分／未測定16能力、
