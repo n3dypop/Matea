@@ -312,7 +312,11 @@ func main() {
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--viewport-geometry" {
-		viewportGeometryCosts(n)
+		viewportGeometryCosts(n, false)
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-geometry-varied" {
+		viewportGeometryCosts(n, true)
 		return
 	}
 
@@ -1573,7 +1577,7 @@ func viewportGeometryDigest(text string, x, y int) uint64 {
 	}
 	return value
 }
-func viewportGeometryCosts(n int) {
+func viewportGeometryCosts(n int, varied bool) {
 	const construct = "fresh default viewport; set explicit 6x3 content size, replace from one existing 100-line UTF-8 element, set horizontal maximum, create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include construction/drop, exclude terminal I/O; other default features not exercised"
 	const replace = "existing 6x3 viewport; reset positions, replace from one existing 100-line UTF-8 element, set horizontal maximum and create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include replacement/snapshot drop; exclude terminal I/O"
 	const move = "existing 6x3 viewport with initialized width geometry; reset positions, move right 3/left 1/right 3; consume final x/y positions with FNV64; no content replacement/view/terminal I/O"
@@ -1583,6 +1587,13 @@ func viewportGeometryCosts(n int) {
 	const wheel = "existing 6x3 viewport with initialized geometry and default wheel delta 3; reset positions, dispatch one focused unmodified Down wheel and consume final x/y positions with FNV64; no view/terminal I/O"
 	for _, item := range []struct{ name, line string }{{"ascii", "Matea owns each line"}, {"unicode", "抹茶 e\u0301 👩‍💻"}} {
 		text := strings.TrimSuffix(strings.Repeat(item.line+"\n", 100), "\n")
+		if varied {
+			rows := make([]string, 100)
+			for index := range rows {
+				rows[index] = fmt.Sprintf("%s %d", item.line, index)
+			}
+			text = strings.Join(rows, "\n")
+		}
 		configured := func() viewport.Model {
 			m := viewport.New(viewport.WithWidth(6), viewport.WithHeight(3))
 			m.SetContentLines([]string{text})

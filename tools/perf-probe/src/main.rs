@@ -93,7 +93,11 @@ fn main() {
         return;
     }
     if std::env::args().any(|arg| arg == "--viewport-geometry") {
-        viewport_geometry_costs(iterations);
+        viewport_geometry_costs(iterations, false);
+        return;
+    }
+    if std::env::args().any(|arg| arg == "--viewport-geometry-varied") {
+        viewport_geometry_costs(iterations, true);
         return;
     }
     if std::env::args().any(|arg| arg == "--style") {
@@ -651,7 +655,7 @@ fn viewport_digest(text: &str, x: usize, y: usize) -> u64 {
     }
     value
 }
-fn viewport_geometry_costs(iterations: usize) {
+fn viewport_geometry_costs(iterations: usize, varied: bool) {
     const CONSTRUCT: &str = "fresh default viewport; set explicit 6x3 content size, replace from one existing 100-line UTF-8 element, set horizontal maximum, create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include construction/drop, exclude terminal I/O; other default features not exercised";
     const REPLACE: &str = "existing 6x3 viewport; reset positions, replace from one existing 100-line UTF-8 element, set horizontal maximum and create independent owned normalized content snapshot; consume all snapshot bytes and x/y positions with FNV64; include replacement/snapshot drop; exclude terminal I/O";
     const MOVE: &str = "existing 6x3 viewport with initialized width geometry; reset positions, move right 3/left 1/right 3; consume final x/y positions with FNV64; no content replacement/view/terminal I/O";
@@ -664,9 +668,16 @@ fn viewport_geometry_costs(iterations: usize) {
         ("ascii", "Matea owns each line"),
         ("unicode", "抹茶 e\u{301} 👩‍💻"),
     ] {
-        let text = std::iter::repeat_n(line, 100)
-            .collect::<Vec<_>>()
-            .join("\n");
+        let text = if varied {
+            (0..100)
+                .map(|index| format!("{line} {index}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        } else {
+            std::iter::repeat_n(line, 100)
+                .collect::<Vec<_>>()
+                .join("\n")
+        };
         let configured = || {
             let mut m = Viewport::new("");
             m.set_size(6, 3);
