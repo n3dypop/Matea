@@ -99,28 +99,34 @@ fn profiles_preserve_indices_attributes_and_first_index_ties() {
         ColorLevel::TrueColor,
     ] {
         assert_eq!(Color::Default.adapt(level), Color::Default);
-        let s = Style::default()
-            .fg(Color::Rgb(27, 160, 230))
-            .bg(Color::Indexed(200))
-            .underline_color(Color::Rgb(13, 13, 13))
-            .bold()
-            .underline()
-            .reverse();
-        let out = s.adapt(level);
-        assert_eq!(out.fg, s.fg.adapt(level));
-        assert_eq!(out.bg, s.bg.adapt(level));
-        let underline = match level {
-            ColorLevel::None => Color::Default,
-            ColorLevel::Ansi16 => Color::Indexed(closest([13, 13, 13], &p[..16])),
-            ColorLevel::Ansi256 => Color::Indexed(closest([13, 13, 13], &p)),
-            ColorLevel::TrueColor => Color::Rgb(13, 13, 13),
-        };
-        assert_eq!(out.underline_color, underline);
-        assert!(
-            out.has(TextAttribute::Bold)
-                && out.attributes.underline() == UnderlineStyle::Single
-                && out.has(TextAttribute::Reverse)
-        );
+        for underline_color in [Color::Default, Color::Rgb(13, 13, 13)] {
+            let s = Style::default()
+                .fg(Color::Rgb(27, 160, 230))
+                .bg(Color::Indexed(200))
+                .underline_color(underline_color)
+                .bold()
+                .underline()
+                .reverse();
+            let out = s.adapt(level);
+            assert_eq!(out.fg, s.fg.adapt(level));
+            assert_eq!(out.bg, s.bg.adapt(level));
+            let underline = if underline_color == Color::Default {
+                Color::Default
+            } else {
+                match level {
+                    ColorLevel::None => Color::Default,
+                    ColorLevel::Ansi16 => Color::Indexed(closest([13, 13, 13], &p[..16])),
+                    ColorLevel::Ansi256 => Color::Indexed(closest([13, 13, 13], &p)),
+                    ColorLevel::TrueColor => Color::Rgb(13, 13, 13),
+                }
+            };
+            assert_eq!(out.underline_color, underline);
+            assert!(
+                out.has(TextAttribute::Bold)
+                    && out.attributes.underline() == UnderlineStyle::Single
+                    && out.has(TextAttribute::Reverse)
+            );
+        }
     }
     assert_eq!(
         Color::Rgb(0, 0, 0).adapt(ColorLevel::Ansi256),

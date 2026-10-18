@@ -218,7 +218,12 @@ impl Style {
             _ => {
                 self.fg = self.fg.adapt(level);
                 self.bg = self.bg.adapt(level);
-                self.underline_color = self.underline_color.adapt(level);
+                // Default remains Default in every palette. Most themes do
+                // not request an underline color, so skip a third conversion
+                // call while keeping explicit indexed/RGB requests unchanged.
+                if self.underline_color != Color::Default {
+                    self.underline_color = self.underline_color.adapt(level);
+                }
             }
         }
         self
