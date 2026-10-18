@@ -32,3 +32,13 @@ all Tifinagh consonant pairs with both joiners, and an explicitly executed nativ
 release test of every non-control Unicode scalar in three mixed/ZWJ contexts. These
 finite tests do not prove every possible Unicode sequence or future dependency.
 Rerun the same complete-output/reference distributions before claiming a gain.
+
+The first optimized cohort reduces Unicode construct/read to 2.10–2.11 us but
+still trails the 1.42–1.43 us reference. Inspect the remaining shared sanitizer:
+its fast scan marks every non-ASCII byte and then scans all adjacent bytes even
+when no C2 exists. Valid UTF-8 C1 controls can only start with C2, so mark that
+lead byte instead of every high bit. Preserve the same fallback predicate for
+C2 80..9F. This changes no UTF-8 validity or normalization policy and introduces
+no unchecked reads. Existing exhaustive scalar normalization plus a mixed
+C2-control/valid-Latin matrix test cover both paths. Retain the earlier adverse
+cohort and measure the same original ten workloads again before accepting a gain.

@@ -1,0 +1,47 @@
+import hashlib,json,math,statistics,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs
+P=ROOT/'docs/evidence/rich-text';MASK=(1<<64)-1;INITIAL=0xcbf29ce484222325
+def hash(v,b):
+ for x in b:v=((v^x)*0x100000001b3)&MASK
+ return v
+def little(n):return n.to_bytes(8,'little')
+def atom(v,t,c):
+ b=t.encode();return hash(hash(hash(v,little(len(b))),b),bytes([c]))
+expected={}
+for kind in ['ascii','unicode']:
+ parts=[(f'm{i:02} tea / ' if kind=='ascii' else f'抹茶{i:02} e\u0301👩‍💻|',i%3+1) for i in range(12)]
+ width=120 if kind=='ascii' else 132;whole=''.join(t for t,c in parts);pos=0;ranges=[];doc=hash(INITIAL,little(width));glyphs=[]
+ for i,(t,c) in enumerate(parts):
+  end=pos+len(t.encode());ranges.append(f'{pos}:{end}:{c};');pos=end;doc=atom(doc,t,c)
+  glyphs.extend([(g,c,1) for g in t] if kind=='ascii' else [(g,c,w) for g,w in [('抹',2),('茶',2),(str(i//10),1),(str(i%10),1),(' ',1),('e\u0301',1),('👩‍💻',2),('|',1)]])
+ require(sum(w for g,c,w in glyphs)==width)
+ output=f'width={width} bytes={len(whole.encode())} styles='+''.join(ranges)+' text='+whole
+ gh=INITIAL
+ for g,c,w in glyphs:gh=hash(atom(gh,g,c),little(w))
+ cells=[];x=0
+ for g,c,w in glyphs:cells.append((x,g,c));x+=w
+ cells.extend((i,' ',0) for i in range(x,192));fh=INITIAL;fo=''
+ for x,g,c in cells:fh=atom(hash(fh,little(x)),g,c);fo+=f'{x}:{c}:{len(g.encode())}:{g};'
+ for operation,value in [('construct-read',doc),('clone-read',doc),('width',width),('graphemes',gh),('render-read',fh)]:expected[f'rich-text/{kind}/{operation}']={'first_return_value':value,'output':fo if operation=='render-read' else output}
+def p95(samples):return sorted(samples)[math.ceil(len(samples)*.95)-1]
+report={'schema':1,'status':'complete','limits':['One native host; finite 12-chunk corpora, not full text module or maximum possible speed.','Every raw before/after/order observation and tail retained; calibration distributions are not hypothesis tests.','Unicode construct/read and render/read remain slower than reference in this bounded cohort.','Isolated frozen reference dependency graph differs from ordinary production builds.'],'cohorts':{},'cases':{}}
+for cohort in ['baseline','optimized']:
+ folder=P/cohort;context=json.loads((folder/'context.json').read_text());require(context['status']=='complete' and context['source_changed']==[])
+ report['cohorts'][cohort]={'git_head':context['git_head'],'context_sha256':hashlib.sha256((folder/'context.json').read_bytes()).hexdigest(),'source_inputs':len(context['source_sha256'])}
+ outputs={mode:read_probe_outputs((folder/(mode+'-outputs.jsonl')).read_text()) for mode in ['matea','reference']};require(outputs['matea']==outputs['reference'])
+ for mode,records in outputs.items():
+  require(set(records)==set(expected))
+  for key,v in records.items():require({k:v[k] for k in expected[key]}==expected[key],key+' independent output')
+ for run in context['runs']:
+  path=folder/(run['name']+'.jsonl');require(hashlib.sha256(path.read_bytes()).hexdigest()==run['raw_sha256'])
+  records=read_records(path.read_text());require(set(records)==set(expected))
+  for key,v in records.items():
+   require({k:v[k] for k in expected[key]}==expected[key],key+' measured output');require(v['calibration']['target_ns']==20000000)
+   row={k:v[k] for k in ['cold_ns','allocations','allocated_bytes','iterations_per_sample']};row.update(p50_ns=statistics.median(v['samples_ns']),p95_ns=p95(v['samples_ns']),min_ns=min(v['samples_ns']),max_ns=max(v['samples_ns']),samples=len(v['samples_ns']),run=run['name'])
+   report['cases'].setdefault(key,{}).setdefault(cohort,{}).setdefault(run['mode'],[]).append(row)
+for file in ['tools/reference-text/src/main.rs','tools/reference-text/Cargo.lock','tools/reference-text/Cargo.toml','tools/perf-probe/src/measurement.rs']:
+ hashes=[json.loads((P/c/'context.json').read_text())['source_sha256'][file] for c in ['baseline','optimized']];require(hashes[0]==hashes[1], 'comparison instrumentation changed: '+file)
+(P/'performance-comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('verified 80 timing records and 40 output-only records against independently constructed text/style/grapheme/frame outputs')

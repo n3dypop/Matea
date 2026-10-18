@@ -1,8 +1,8 @@
    Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.81s
      Running tests/rich_text.rs (target/miri/aarch64-apple-darwin/debug/build/matea-render/2ca918cbadbb6ce0/out/rich_text-2ca918cbadbb6ce0)
 
-running 9 tests
+running 10 tests
 test caller_iterator_failure_keeps_the_preexisting_document ... ok
 test chunks_normalize_once_and_ranges_follow_normalized_utf8 ... ok
 test clipped_rows_skip_offscreen_styles_without_losing_byte_positions ... ok
@@ -11,7 +11,8 @@ test ownership_sharing_threads_and_old_view_snapshots_are_explicit ... ok
 test pinned_public_span_cells_have_four_matches_and_four_literal_cluster_deviations ... ok
 test rich_layers_clear_complete_old_wide_glyphs_and_keep_layout_height ... ok
 test single_style_matches_existing_text_for_controls_multiline_and_clipping ... ok
+test untrusted_hints_and_irregular_chunks_preserve_canonical_content ... ok
 test whole_graphemes_cross_style_boundaries_and_use_the_leading_style ... ok
 
-test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.19s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 44.00s
 

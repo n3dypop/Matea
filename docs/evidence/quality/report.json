@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 127,
+  "programs": 130,
   "review_units": 42,
   "below_high": [
     {
@@ -436,7 +436,9 @@
     {
       "id": "matea-render/lib",
       "files": [
-        "crates/matea-render/src/lib.rs"
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-render/src/rich_text.rs",
+        "crates/matea-render/tests/rich_text.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -471,7 +473,10 @@
         "docs/evidence/quality/miri-render.log",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0053-owned-rich-text-with-whole-content-graphemes.md",
+        "docs/evidence/ratatui-span-boundaries/context.json",
+        "docs/decisions/0055-pinned-width-fast-path-with-script-fallback.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1728,7 +1733,8 @@
         "crates/matea/benches/foundation_paths.rs",
         "tools/perf-probe/src/attributes.rs",
         "tools/perf-probe/src/gradients.rs",
-        "tools/perf-probe/src/progress.rs"
+        "tools/perf-probe/src/progress.rs",
+        "tools/reference-text/src/main.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1762,10 +1768,12 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
-        "docs/viewport-cell-geometry.md"
+        "docs/viewport-cell-geometry.md",
+        "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md"
       ],
       "remaining": [
-        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified."
+        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
+        "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned."
       ]
     },
     {
@@ -2197,12 +2205,12 @@
       ]
     }
   ],
-  "plan_sha256": "2cfe8c5d22389ea91427f39c56a6a08644d72c35591620c3b4866100283f8fc9",
+  "plan_sha256": "6bfe662486e6af712510d40fbcfdaaabca8af4d5ed0317e0620c58f6052575b7",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "c78340dd1b78ac76a31e5ff5ec7c86f31cb4db98cc3823122a281d2037145065",
+      "sha256": "b32539b75d007ad745df365f7d319e31fe4024b5df73509c620d82e3d33a90cb",
       "units": [
         "ci/workflow"
       ],
@@ -2524,7 +2532,7 @@
     },
     {
       "file": "crates/matea-render/src/lib.rs",
-      "sha256": "9f72f151e6bce83f8c03b31c1aada67e7d1246d7d080b99dbe845b94e4eedda1",
+      "sha256": "bd50b80a07ed77212917903625085545a8c2347759b1c4cb354f51a2a58d054d",
       "units": [
         "matea-render/lib"
       ],
@@ -2536,25 +2544,76 @@
             "compiler_filename": "crates/matea-render/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 673,
-                "covered": 654,
-                "percent": 97.17682020802377
+                "count": 731,
+                "covered": 708,
+                "percent": 96.85362517099864
               },
               "functions": {
-                "count": 72,
-                "covered": 68,
-                "percent": 94.44444444444444
+                "count": 74,
+                "covered": 70,
+                "percent": 94.5945945945946
               },
               "instantiations": {
-                "count": 201,
-                "covered": 185,
-                "percent": 92.03980099502488
+                "count": 267,
+                "covered": 213,
+                "percent": 79.7752808988764
               },
               "regions": {
-                "count": 1251,
-                "covered": 1216,
-                "notcovered": 35,
-                "percent": 97.20223820943245
+                "count": 1361,
+                "covered": 1321,
+                "notcovered": 40,
+                "percent": 97.060984570169
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-render/src/rich_text.rs",
+      "sha256": "1d7719a19006863add7e4f3eb3912c85f341f8ae4634edc55cd64de74f98f2f9",
+      "units": [
+        "matea-render/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/src/rich_text.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-render/src/rich_text.rs",
+            "summary": {
+              "lines": {
+                "count": 212,
+                "covered": 189,
+                "percent": 89.15094339622641
+              },
+              "functions": {
+                "count": 25,
+                "covered": 23,
+                "percent": 92
+              },
+              "instantiations": {
+                "count": 80,
+                "covered": 56,
+                "percent": 70
+              },
+              "regions": {
+                "count": 310,
+                "covered": 273,
+                "notcovered": 37,
+                "percent": 88.06451612903226
               },
               "branches": {
                 "count": 0,
@@ -2575,7 +2634,7 @@
     },
     {
       "file": "crates/matea-render/src/text.rs",
-      "sha256": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+      "sha256": "1ca05fdb98ba892367f305185e17cf4e694bd7ca6de0e2e342b52a0593b930cc",
       "units": [
         "matea-render/text"
       ],
@@ -2587,25 +2646,25 @@
             "compiler_filename": "crates/matea-render/src/text.rs",
             "summary": {
               "lines": {
-                "count": 74,
-                "covered": 71,
-                "percent": 95.94594594594594
+                "count": 78,
+                "covered": 75,
+                "percent": 96.15384615384616
               },
               "functions": {
-                "count": 20,
-                "covered": 19,
-                "percent": 95
+                "count": 21,
+                "covered": 20,
+                "percent": 95.23809523809523
               },
               "instantiations": {
-                "count": 40,
-                "covered": 24,
-                "percent": 60
+                "count": 63,
+                "covered": 28,
+                "percent": 44.44444444444444
               },
               "regions": {
-                "count": 113,
-                "covered": 110,
+                "count": 119,
+                "covered": 116,
                 "notcovered": 3,
-                "percent": 97.34513274336283
+                "percent": 97.47899159663865
               },
               "branches": {
                 "count": 0,
@@ -2657,6 +2716,57 @@
                 "covered": 143,
                 "notcovered": 1,
                 "percent": 99.30555555555556
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-render/tests/rich_text.rs",
+      "sha256": "4ab1b28f14042fb8325d20b35439100a7594984a42b32becd878c80edce2b93e",
+      "units": [
+        "matea-render/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/tests/rich_text.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-render/tests/rich_text.rs",
+            "summary": {
+              "lines": {
+                "count": 343,
+                "covered": 341,
+                "percent": 99.41690962099126
+              },
+              "functions": {
+                "count": 25,
+                "covered": 25,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 27,
+                "covered": 27,
+                "percent": 100
+              },
+              "regions": {
+                "count": 668,
+                "covered": 665,
+                "notcovered": 3,
+                "percent": 99.55089820359282
               },
               "branches": {
                 "count": 0,
@@ -2750,9 +2860,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 60,
+                "count": 72,
                 "covered": 57,
-                "percent": 95
+                "percent": 79.16666666666666
               },
               "regions": {
                 "count": 179,
@@ -2801,9 +2911,9 @@
                 "percent": 92.85714285714286
               },
               "instantiations": {
-                "count": 86,
+                "count": 130,
                 "covered": 41,
-                "percent": 47.674418604651166
+                "percent": 31.538461538461537
               },
               "regions": {
                 "count": 396,
@@ -2852,9 +2962,9 @@
                 "percent": 96.7741935483871
               },
               "instantiations": {
-                "count": 67,
-                "covered": 53,
-                "percent": 79.1044776119403
+                "count": 91,
+                "covered": 54,
+                "percent": 59.34065934065934
               },
               "regions": {
                 "count": 384,
@@ -5153,8 +5263,8 @@
             "summary": {
               "lines": {
                 "count": 63,
-                "covered": 57,
-                "percent": 90.47619047619048
+                "covered": 55,
+                "percent": 87.3015873015873
               },
               "functions": {
                 "count": 10,
@@ -5548,7 +5658,7 @@
     },
     {
       "file": "crates/matea/src/lib.rs",
-      "sha256": "570136a2054c32d656b29e285bcdcb95d53d1491b48b8383d4ade7aaa2b54e6c",
+      "sha256": "af5ff1ea38741b537b8f76239eff5465080f2bf13b19564f6938ab2b2bca5bfb",
       "units": [
         "matea/lib"
       ],
@@ -5786,7 +5896,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "b8598a5766fdf952495c279c4dbdf041eb82a79b9d09f2cbddd8d344a37a2a89",
+      "sha256": "851d1c8d88698a442cb64bd267e3d0ae694f1fb21547a1d41f2771c35fd4f360",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6026,7 +6136,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "b843b611863343804ec016d3fd82f9926d53e3c044c4ec4528d330bfeabe248b",
+      "sha256": "1532f7726c1f006a86661e6c23804e03af9d8b879f389dafc89be4d58ac55601",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6385,6 +6495,45 @@
                 "percent": 0
               }
             }
+          },
+          {
+            "unit": 0,
+            "compiler_filename": "tools/reference-text/src/../../perf-probe/src/measurement.rs",
+            "summary": {
+              "lines": {
+                "count": 207,
+                "covered": 45,
+                "percent": 21.73913043478261
+              },
+              "functions": {
+                "count": 26,
+                "covered": 8,
+                "percent": 30.76923076923077
+              },
+              "instantiations": {
+                "count": 134,
+                "covered": 17,
+                "percent": 12.686567164179104
+              },
+              "regions": {
+                "count": 313,
+                "covered": 65,
+                "notcovered": 248,
+                "percent": 20.766773162939298
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
           }
         ]
       }
@@ -6506,6 +6655,57 @@
         "tools/go-performance-probe"
       ],
       "native_execution_coverage": null
+    },
+    {
+      "file": "tools/reference-text/src/main.rs",
+      "sha256": "5e92c3b378f0c96c43b49c881451eba2baca56c8b2becef897ab4047b90f61db",
+      "units": [
+        "tools/perf-probe"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/reference-text/src/main.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "tools/reference-text/src/main.rs",
+            "summary": {
+              "lines": {
+                "count": 380,
+                "covered": 376,
+                "percent": 98.94736842105263
+              },
+              "functions": {
+                "count": 42,
+                "covered": 42,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 42,
+                "covered": 42,
+                "percent": 100
+              },
+              "regions": {
+                "count": 577,
+                "covered": 573,
+                "notcovered": 4,
+                "percent": 99.30675909878683
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
     }
   ],
   "limits": [

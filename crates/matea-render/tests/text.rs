@@ -134,3 +134,28 @@ fn byte_scan_preserves_standard_control_policy_for_every_unicode_scalar() {
         assert_eq!(Text::from(c).as_str(), expected, "U+{codepoint:04X}");
     }
 }
+
+#[test]
+fn c2_candidates_in_mixed_utf8_keep_controls_and_valid_latin_distinct() {
+    for value in 0x80..=0xbf {
+        let candidate = char::from_u32(value).unwrap();
+        for before in ["", "ASCII\n", "抹茶👩‍💻", "\u{85}\t"] {
+            for after in ["", "ASCII", "抹茶👩‍💻", "\u{a0}\u{9f}"] {
+                let raw = format!("{before}{candidate}{after}");
+                let expected: String = raw
+                    .chars()
+                    .flat_map(|c| match c {
+                        '\n' => "\n".chars().collect::<Vec<_>>(),
+                        '\t' => "    ".chars().collect(),
+                        c if c.is_control() => vec!['�'],
+                        c => vec![c],
+                    })
+                    .collect();
+                assert_eq!(matea_render::sanitize(&raw), expected);
+                assert_eq!(matea_render::sanitized(&raw), expected);
+                assert_eq!(Text::from(raw.clone()).as_str(), expected);
+                assert_eq!(Text::from(CompactString::from(raw)).as_str(), expected);
+            }
+        }
+    }
+}
