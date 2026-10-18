@@ -1,7 +1,7 @@
 # 未測定12単位の測定と改善
 
 個別評価Stage Aを継続中。全項目高評価・Stage B・F5の条件は未達です。
-最新は116プログラム・41評価単位で49軸が75未満です。性能28、参照元一致19、動作1、移植性1です。
+現在の棚卸しは121プログラム・42評価単位で52軸が75未満です。性能29、参照元一致20、動作1、移植性2です。進捗バーを独立した評価対象へ追加し、未検証条件を除外していません。
 
 測定報告の不正入力受理5件を修正し、厳密な検証の処理増加と改善を
 [ADR 0044の全分布](measurement-integrity.md)に保存しました。3 OSの必須7ジョブが成功しています。
@@ -346,3 +346,11 @@ correctness records masquerading as timings, incomplete calibration and a
 negative cold counter). These are recorded pending fixes; ordinary green CI
 does not erase the behavioral gap. The 111-program/41-unit inventory still has
 49 low assessments. No threshold, scope or gate is relaxed.
+
+進捗バーでは35公開宣言を部分対応へ連結し、120条件の全セル・前景/背景色と、
+256色のグラデーション参照結果を照合しました。負速度の早期停止を修正し、
+世代付きタイマー、テーマ、縮小モーション、幅・字形検証を再利用しています。
+6構成の描画全体は順序反転した2組で全出力が一致し、中央値は参照元の約4.6–22.9%です。
+追加で見つけた既定ラベルの2要求・12 byteを除き、別条件のセル反復6例は確保0です。
+p95の悪化も保存し、全モジュール性能の得点は昇格しません。
+[ソース・試験・生分布・残件](progress-audit.md)。[0199793の3 OS・MSRV・参照プローブCI](https://github.com/n3dypop/Matea/actions/runs/39118299105)は必須7ジョブ成功です。121プログラム・145実行入力と各OSの17ログを独立照合しました。[対応証拠](evidence/progress/ci-source-bindings.json)。現在は42評価単位・52未達軸で、Stage A／B・F5は閉じたままです。

@@ -2,8 +2,8 @@
 
 Bubbles c3bde0d166c2ca607d9864493453fd77bdcae7e4 exposes 35 progress declaration
 candidates, with no file-level platform/build conditions. All candidates now
-link to bounded Rust equivalents. This is partial feature coverage; new source
-CI, distributions and remaining color/style/lifecycle conditions are pending.
+link to bounded Rust equivalents. This is partial feature coverage; remaining color/style/lifecycle conditions
+and native Windows behavior are pending. CI source/output confirmation passes on all three OSes; physical Windows terminal behavior remains unverified.
 See [the declaration ledger and source hashes](evidence/progress/source-review.json)
 and [ADR 0046](decisions/0046-generation-safe-themed-progress.md).
 
@@ -93,7 +93,38 @@ materialization and cannot receive an upstream speed ratio.
 Use 20 ms calibrated batches with three confirmations and all 31 positive
 batch-averaged per-operation values. Preserve reference/Matea/Matea/reference
 order, actual iteration counts, cold calls, allocation accounting differences,
-and adverse tails. Timing is pending; no performance score is promoted. Full
+and adverse tails. Both source-bound balanced pairs are complete; no performance score is promoted. Full
 terminal output, resize/scheduling/error/constructor paths, RSS and native
 Windows/physical-emulator behavior remain unresolved. Stage A, Stage B and F5
 remain closed while the complete ledger has unmet requirements.
+
+[Initial complete distributions](evidence/progress/performance/report.json) and
+[inline-label distributions](evidence/progress/performance-inline/report.json)
+retain all raw runs, calibration histories, cold calls and allocation passes.
+At final source 0199793, all six frame medians are about 4.6–22.9% of the pinned
+reference. Removing label allocations changes five full-frame cases from eight
+requests to six and saves 12 requested bytes; the no-percentage case already
+uses six. All six distinct borrowed-cell controls request zero allocations in
+both final runs. Some p95 values worsen against the first source; no blanket
+latency improvement or maximum-speed claim follows. [Accounting and limits](evidence/progress/performance-review.json).
+
+Final native verification passes 33 checks, 178 Rust tests plus two doctests,
+115 Python tests, 16 snapshots and 21 Unix PTY cases. LLVM records 71 source
+files/76 compiler instances. [Initial Miri](evidence/progress/miri-context.json)
+passes 14 tests; the inline attempt retains its failed exact-rounding assertion
+under inline-miri. [Final same-seed rerun](evidence/progress/final-miri/context.json)
+passes eight widget and two dependent facade tests, including all 120 progress
+fixtures. The four unchanged gradient tests retain the first source's passing
+result (19 selected RGB8 fixtures and 16 indexed cases under Miri; all 548+256
+run natively). Production/test source is available in the commits; no failed
+result is relabeled successful.
+
+The final [three-OS/MSRV/reference run](https://github.com/n3dypop/Matea/actions/runs/39118299105)
+passes all seven required jobs at 0199793. Independent artifact verification binds
+121 programs and 145 known execution inputs to that commit, checks 17 uploaded
+log hashes per OS, all 120 progress and 256 indexed-gradient fixtures, six complete
+progress frames plus six Rust controls, and 14 attribute outputs. Unix acceptance
+runs 33 checks with LLVM 71 sources/76 instances; Windows runs 32 checks with
+70/74 (Unix-only checks excluded). Shared-runner timings validate schema and
+execution, not performance advantages. The earlier superseded runs are cancelled.
+[Exact source, raw/normalized hashes and limits](evidence/progress/ci-source-bindings.json).

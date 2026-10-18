@@ -16,10 +16,12 @@ cargo run -p matea --example clocks
 cargo run -p matea --example spinners
 cargo run -p matea --example cursor
 cargo run -p matea --example attributes
+cargo run -p matea --example gradients
+cargo run -p matea --example progress
 cargo run -p matea-example-external-widget
 ```
 
-All fourteen showcase programs accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All sixteen showcase programs accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -101,3 +103,9 @@ The provisional Style boolean fields migrate to `style.has(TextAttribute::Bold)`
 and `style.attribute(TextAttribute::Bold, false)`. Existing bold(), underline()
 and reverse() builders remain available. Attributes are resolved owned values,
 with no ambient inheritance or backend types in component APIs.
+
+Gradients: change the stop/sampling configuration with the displayed controls;
+colors adapt to terminal capability. Progress: Tab selects one of three bars,
+arrows change the target, g changes glyphs, s toggles gradient scaling, m toggles
+reduced motion, r resets and q exits. Both have portable snapshots and Unix PTY
+checks; physical emulator behavior remains separate evidence.

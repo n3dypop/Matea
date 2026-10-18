@@ -1,0 +1,60 @@
+import hashlib,json,subprocess,sys
+from pathlib import Path
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs,programs
+from performance_records import read_probe_outputs
+RUN=sys.argv[1];RAW=Path(sys.argv[2]);OUT=ROOT/'docs/evidence/progress'
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(path):return json.loads(path.read_text(encoding='utf-8'))
+run=read(OUT/'ci-run.json');HEAD=run['headSha']
+required={'msrv'}|{f'{group} ({host}-latest)' for group in ['foundation','reference-probes'] for host in ['ubuntu','windows','macos']}
+assert run['status']=='completed' and run['conclusion']=='success'
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+snapshot=read(OUT/'performance-inline/context.json');assert snapshot['source_head']==HEAD
+known=snapshot['source_sha256']
+assert all(sha(subprocess.check_output(['git','show',HEAD+':'+p]))==v for p,v in known.items())
+program={p:v for p,v in known.items() if Path(p).suffix in {'.rs','.go','.py','.yml','.yaml','.sh','.ps1','.js','.mjs','.ts'}};assert len(program)==121 and len(known)==145
+report={'schema':1,'run':run['url'],'source_head':HEAD,'all_7_required_jobs_passed':True,'program_sha256':program,'execution_input_sha256':known,'hosts':{},'raw_artifact_sha256':{},'retained_artifact_sha256':{},'limits':['Known programs/build/check/fixture inputs only, not every indirect historical data dependency.','Shared-runner timing schema/calibration checks are excluded from speed conclusions. Native Windows console and physical emulators remain unverified.','Reference compiler export profiles are retained from prior source; unchanged collectors, no new collection claim.','Raw artifact hashes precede LF normalization for retention; both digests are distinct fields.']}
+for host in ['ubuntu','windows','macos']:
+ native=RAW/f'native-drivers-{host}-latest';ref=RAW/f'reference-paths-{host}-latest';dest=OUT/'ci'/host;dest.mkdir(parents=True,exist_ok=True)
+ validation=read(native/'local-validation.json');coverage=read(native/'quality/rust-execution-coverage.json')
+ assert validation['status']=='complete' and validation['all_local_checks_passed'] and not validation['source_changed_during_run']
+ assert validation['source_sha256']==known and all(c['exit_code']==0 for c in validation['checks'])
+ assert len(validation['checks'])==(32 if host=='windows' else 33)
+ assert coverage['status']=='complete' and coverage['input_sha256']==known
+ assert all(known[k]==v for k,v in coverage['source_sha256'].items())
+ checked=0
+ for c in validation['checks']:
+  path=native/c['log']
+  if path.is_file():assert sha(path.read_bytes())==c['log_sha256'];checked+=1
+ assert checked==17
+ facts=read(ref/'path-checks.json')
+ for field,n in [('source_inventories',11),('matched_cases',84),('virtual_cursor_matched_cases',7),('gradient_matched_cases',6),('gradient_fixture_cases',548),('progress_matched_cases',6),('progress_fixture_cases',120),('indexed_gradient_fixture_cases',256),('rust_gradient_timing_cases',12),('go_gradient_timing_cases',6),('rust_progress_timing_cases',12),('go_progress_timing_cases',6)]:assert facts[field]==n,(host,field)
+ for stem,fixture in [('gradient','crates/matea-style/tests/fixtures/gradients.tsv'),('progress','crates/matea-widgets/tests/fixtures/progress.tsv'),('indexed-gradient','crates/matea-style/tests/fixtures/indexed-gradients.tsv')]:
+  data=(ref/(stem+'-fixtures.txt')).read_bytes();assert sha(data)==known[fixture] and facts['source_fixture_sha256']['--'+stem+'-fixtures']==sha(data)
+ for stem,rust_count,go_count in [('cursor',7,7),('gradient',12,6),('progress',12,6)]:
+  a=read_probe_outputs((ref/f'matea-{stem}-outputs.jsonl').read_text(encoding='utf-8'));b=read_probe_outputs((ref/f'upstream-{stem}-outputs.jsonl').read_text(encoding='utf-8'))
+  assert len(a)==rust_count and len(b)==go_count
+  for name,item in b.items():assert all(a[name][key]==item[key] for key in ['semantics','output','first_return_value'])
+  if stem=='progress':
+   assert set(a)==set(b)|{name.replace('/frame_','/cells_') for name in b}
+   for name,item in b.items():assert all(a[name.replace('/frame_','/cells_')][key]==item[key] for key in ['output','first_return_value'])
+ timing={}
+ for filename,label,group,n in [('timing-mode-checks.json','upstream','foundation',91),('rust-timing-mode-checks.json','matea','foundation',91),('matea-gradient-timing-mode-checks.json','matea','gradients',12),('upstream-gradient-timing-mode-checks.json','upstream','gradients',6),('matea-progress-timing-mode-checks.json','matea','progress',12),('upstream-progress-timing-mode-checks.json','upstream','progress',6)]:
+  data=read(ref/filename);assert data['probe']==label and data['group']==group and data['target_ns']==20_000_000 and data['zero_or_invalid_samples']==0
+  assert len(data['checked_cases'])==len({c['case'] for c in data['checked_cases']})==n
+  assert all(c['positive_samples']==31 and c['allocation_schema_valid'] and c['calibration_batches']>0 and c['iterations_per_sample']>0 for c in data['checked_cases'])
+  invalid=data['invalid_configurations_rejected'];assert len(invalid)==(5 if label=='matea' and group=='foundation' else 0)
+  assert all(i['exit_code']!=0 and i['stdout_bytes']==0 for i in invalid)
+  timing[label+'/'+group]=n
+ representation=read(native/'representations.json');assert representation['style_bytes']==14 and representation['cell_bytes']==40 and representation['view_bytes']==48 and representation['theme_bytes']==104
+ attrs=read_probe_outputs((native/'attributes-outputs.jsonl').read_text(encoding='utf-8'));expected=read_probe_outputs((OUT/'attributes-outputs.jsonl').read_text(encoding='utf-8'));assert attrs==expected and len(attrs)==14
+ report['hosts'][host]={'acceptance_checks':len(validation['checks']),'uploaded_logs_hash_checked':checked,'llvm_source_files':len(coverage['files']),'llvm_compiler_instances':sum(len(f['instances']) for f in coverage['files']),'all_known_inputs_match':True,'timing_mode_cases':timing,'progress_fixture_cases':120,'indexed_gradient_fixture_cases':256,'matched_progress_frames':6,'exact_attribute_outputs':14,'representation':representation}
+ for folder in [native,ref]:
+  for path in sorted(folder.rglob('*')):
+   if path.is_file():
+    rel=path.relative_to(folder);target=dest/rel;target.parent.mkdir(parents=True,exist_ok=True);raw=path.read_bytes();key=host+'/'+str(rel)
+    assert not target.exists() or target.read_bytes()==raw.replace(b'\r\n',b'\n'),key
+    target.write_bytes(raw.replace(b'\r\n',b'\n'));report['raw_artifact_sha256'][key]=sha(raw);report['retained_artifact_sha256'][key]=sha(target.read_bytes())
+ print(host,report['hosts'][host],flush=True)
+(OUT/'ci-source-bindings.json').write_text(json.dumps(report,indent=2)+'\n')

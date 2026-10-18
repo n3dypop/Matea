@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "reference": "bubbles",
+  "sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+  "source_sha256": {
+    "viewport/viewport.go": "6d5d15d15d175464237df578efd2f9f3022e89874649454ee69c30b1a250dec7",
+    "viewport/highlight.go": "62ca7d97843e993c18aa25f67252f5401544a03b196c41b82abd2536bc820af6",
+    "viewport/keymap.go": "0e01274491b38e97c69bee33ad77750538577f354816cfbf80202bb645edbf93",
+    "LICENSE": "373b3931e66627aadcfebd7771df93f3439203147e587a924508c63e20184d7f"
+  },
+  "probe_sha256": "a3b3de0a801996627cbce35d7734227f85bf43659e2f5ebefc98abcd271a8ff0",
+  "observation_sha256": "c30470c50f06fe5242ab53755fc5921dd98b03b1456e4da641b9a15263a4d99c",
+  "procedure": "GOMODCACHE=/private/tmp/matea-gomodcache GOCACHE=/private/tmp/matea-quality-go-cache GOPROXY=off GOSUMDB=off go run /private/tmp/matea-viewport-ownership.go in the isolated pinned Go module prepared from tools/perf-upstream; no modified reference files.",
+  "go_version": "go version go1.27.2 darwin/arm64",
+  "go_sum_sha256": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+  "limits": [
+    "Public API sequential observation on one macOS host, not a race/performance or cross-platform test.",
+    "Go source does not promise to copy the supplied slice; record shared ownership and stale cache behavior without claiming an undocumented copy guarantee.",
+    "Matea already owns contiguous sanitized content but lacks most of the 70 public functions; this audit does not implement or award parity for them."
+  ]
+}
