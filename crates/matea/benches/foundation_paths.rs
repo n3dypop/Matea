@@ -261,7 +261,7 @@ fn identity() {
     use matea_render as direct_render;
     types!(direct_render: Cursor, Rect, Size, Surface, Text, View);
     use matea_style as direct_style;
-    types!(direct_style: Border, Color, ColorLevel, Style, Theme);
+    types!(direct_style: BlinkStyle, Border, Color, ColorLevel, Style, TextAttribute, TextAttributes, TextFrame, Theme, UnderlineStyle);
     use matea_widgets as direct_widgets;
     types!(direct_widgets: Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, EchoMode, EmptySpinnerFrames, Field, Form, Help, HelpItem<'static>, HelpMap<'static>, HelpStyles, InputStyleState, InputStyles, List, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Spinner, SpinnerAnimation, SpinnerPreset, Stopwatch, Table, TextEditKeys, TextInput, TickInterval, Viewport);
     assert_eq!(

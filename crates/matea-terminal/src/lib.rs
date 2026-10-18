@@ -21,7 +21,9 @@ use crossterm::{
 };
 use matea_core::{Event, Input, KeyCode, Model, Modifiers, Runtime};
 use matea_render::{Size, Surface};
-use matea_style::{Border, Color, ColorLevel, Style, Theme};
+use matea_style::{
+    BlinkStyle, Border, Color, ColorLevel, Style, TextAttribute, TextFrame, Theme, UnderlineStyle,
+};
 use std::{
     io::{self, IsTerminal, Write},
     sync::atomic::AtomicBool,
@@ -338,14 +340,54 @@ fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
     if s.bg != Color::Default {
         ansi::color(w, s.bg, true)?;
     }
-    if s.bold {
+    if s.underline_color != Color::Default {
+        ansi::underline_color(w, s.underline_color)?;
+    }
+    let attributes = s.attributes;
+    if attributes.is_empty() {
+        return Ok(());
+    }
+    if attributes.contains(TextAttribute::Bold) {
         w.write_all(b"\x1b[1m")?;
     }
-    if s.underline {
-        w.write_all(b"\x1b[4m")?;
+    if attributes.contains(TextAttribute::Dim) {
+        w.write_all(b"\x1b[2m")?;
     }
-    if s.reverse {
+    if attributes.contains(TextAttribute::Italic) {
+        w.write_all(b"\x1b[3m")?;
+    }
+    match attributes.underline() {
+        UnderlineStyle::None => {}
+        UnderlineStyle::Single => w.write_all(b"\x1b[4m")?,
+        UnderlineStyle::Double => w.write_all(b"\x1b[4:2m")?,
+        UnderlineStyle::Curly => w.write_all(b"\x1b[4:3m")?,
+        UnderlineStyle::Dotted => w.write_all(b"\x1b[4:4m")?,
+        UnderlineStyle::Dashed => w.write_all(b"\x1b[4:5m")?,
+    }
+    match attributes.blink() {
+        BlinkStyle::None => {}
+        BlinkStyle::Slow => w.write_all(b"\x1b[5m")?,
+        BlinkStyle::Rapid => w.write_all(b"\x1b[6m")?,
+    }
+    if attributes.contains(TextAttribute::Reverse) {
         w.write_all(b"\x1b[7m")?;
+    }
+    if attributes.contains(TextAttribute::Hidden) {
+        w.write_all(b"\x1b[8m")?;
+    }
+    if attributes.contains(TextAttribute::Strikethrough) {
+        w.write_all(b"\x1b[9m")?;
+    }
+    if attributes.contains(TextAttribute::Fraktur) {
+        w.write_all(b"\x1b[20m")?;
+    }
+    match attributes.frame() {
+        TextFrame::None => {}
+        TextFrame::Framed => w.write_all(b"\x1b[51m")?,
+        TextFrame::Encircled => w.write_all(b"\x1b[52m")?,
+    }
+    if attributes.contains(TextAttribute::Overline) {
+        w.write_all(b"\x1b[53m")?;
     }
     Ok(())
 }
@@ -400,26 +442,146 @@ mod tests {
     fn fixed_attribute_sequences_match_crossterm_for_every_supported_combination() {
         use crossterm::style::{Attribute, SetAttribute};
         for mask in 0..8 {
-            let style = Style {
-                bold: mask & 1 != 0,
-                underline: mask & 2 != 0,
-                reverse: mask & 4 != 0,
-                ..Style::default()
-            };
+            let style = Style::default()
+                .attribute(TextAttribute::Bold, mask & 1 != 0)
+                .underline_style(if mask & 2 != 0 {
+                    UnderlineStyle::Single
+                } else {
+                    UnderlineStyle::None
+                })
+                .attribute(TextAttribute::Reverse, mask & 4 != 0);
             let mut actual = Vec::new();
             set_style(&mut actual, style).unwrap();
             let mut reference = Vec::new();
             ansi::command(&mut reference, SetAttribute(Attribute::Reset)).unwrap();
             for (enabled, attribute) in [
-                (style.bold, Attribute::Bold),
-                (style.underline, Attribute::Underlined),
-                (style.reverse, Attribute::Reverse),
+                (style.has(TextAttribute::Bold), Attribute::Bold),
+                (
+                    style.attributes.underline() != UnderlineStyle::None,
+                    Attribute::Underlined,
+                ),
+                (style.has(TextAttribute::Reverse), Attribute::Reverse),
             ] {
                 if enabled {
                     ansi::command(&mut reference, SetAttribute(attribute)).unwrap();
                 }
             }
             assert_eq!(actual, reference);
+        }
+    }
+    #[test]
+    fn all_resolved_attribute_requests_match_reference_sgr_commands() {
+        use crossterm::style::{Attribute, Attributes, SetAttribute, SetAttributes};
+        use matea_style::TextAttributes;
+        let masks: Vec<u16> = if cfg!(miri) {
+            vec![0, 85, 255]
+        } else {
+            (0..=255).collect()
+        };
+        let underlines = if cfg!(miri) {
+            vec![UnderlineStyle::None, UnderlineStyle::Curly]
+        } else {
+            UnderlineStyle::ALL.to_vec()
+        };
+        let blinks = if cfg!(miri) {
+            vec![BlinkStyle::None, BlinkStyle::Rapid]
+        } else {
+            BlinkStyle::ALL.to_vec()
+        };
+        let frames = if cfg!(miri) {
+            vec![TextFrame::None, TextFrame::Encircled]
+        } else {
+            TextFrame::ALL.to_vec()
+        };
+        let reference_flags = [
+            Attribute::Bold,
+            Attribute::Dim,
+            Attribute::Italic,
+            Attribute::Reverse,
+            Attribute::Hidden,
+            Attribute::CrossedOut,
+            Attribute::Fraktur,
+            Attribute::OverLined,
+        ];
+        for mask in masks {
+            for &underline in &underlines {
+                for &blink in &blinks {
+                    for &frame in &frames {
+                        let mut attrs = TextAttributes::new()
+                            .with_underline(underline)
+                            .with_blink(blink)
+                            .with_frame(frame);
+                        let mut expected_attrs = Attributes::default();
+                        for (index, attribute) in TextAttribute::ALL.into_iter().enumerate() {
+                            if mask & (1 << index) != 0 {
+                                attrs = attrs.with(attribute);
+                                expected_attrs.set(reference_flags[index]);
+                            }
+                        }
+                        if let Some(attribute) = match underline {
+                            UnderlineStyle::None => None,
+                            UnderlineStyle::Single => Some(Attribute::Underlined),
+                            UnderlineStyle::Double => Some(Attribute::DoubleUnderlined),
+                            UnderlineStyle::Curly => Some(Attribute::Undercurled),
+                            UnderlineStyle::Dotted => Some(Attribute::Underdotted),
+                            UnderlineStyle::Dashed => Some(Attribute::Underdashed),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        if let Some(attribute) = match blink {
+                            BlinkStyle::None => None,
+                            BlinkStyle::Slow => Some(Attribute::SlowBlink),
+                            BlinkStyle::Rapid => Some(Attribute::RapidBlink),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        if let Some(attribute) = match frame {
+                            TextFrame::None => None,
+                            TextFrame::Framed => Some(Attribute::Framed),
+                            TextFrame::Encircled => Some(Attribute::Encircled),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        let mut actual = Vec::new();
+                        set_style(
+                            &mut actual,
+                            Style {
+                                attributes: attrs,
+                                ..Style::default()
+                            },
+                        )
+                        .unwrap();
+                        let mut expected = Vec::new();
+                        ansi::command(&mut expected, SetAttribute(Attribute::Reset)).unwrap();
+                        ansi::command(&mut expected, SetAttributes(expected_attrs)).unwrap();
+                        assert_eq!(actual, expected, "{mask} {underline:?} {blink:?} {frame:?}");
+                    }
+                }
+            }
+        }
+    }
+    #[test]
+    fn underline_color_headers_and_resolved_attribute_removal_are_explicit() {
+        for (color, expected) in [
+            (Color::Default, "\x1b[0m\x1b[4:3m"),
+            (Color::Indexed(0), "\x1b[0m\x1b[58;5;0m\x1b[4:3m"),
+            (Color::Indexed(255), "\x1b[0m\x1b[58;5;255m\x1b[4:3m"),
+            (
+                Color::Rgb(13, 41, 227),
+                "\x1b[0m\x1b[58;2;13;41;227m\x1b[4:3m",
+            ),
+        ] {
+            let style = Style::default()
+                .bold()
+                .attribute(TextAttribute::Bold, false)
+                .underline_style(UnderlineStyle::Curly)
+                .underline_color(color);
+            let mut bytes = Vec::new();
+            set_style(&mut bytes, style).unwrap();
+            assert_eq!(bytes, expected.as_bytes());
+            bytes.clear();
+            set_style(&mut bytes, Style::default()).unwrap();
+            assert_eq!(bytes, b"\x1b[0m");
         }
     }
     use matea_core::{Effect, ViewContext};

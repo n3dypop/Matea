@@ -104,7 +104,7 @@ def main():
     for name, expected in [("counter", "Count: 0"), ("list", "Matcha"), ("form", "Favorite tea"),
                            ("dashboard", "Tea studio"), ("effects", "Loading tea"), ("motion", "Matea motion"),
                            ("input", "Matea input"), ("pagination", "Page 1 of 4"), ("help", "Matea key help"),
-                           ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("cursor", "Matea virtual cursor"), ("external-widget", "Third-party badge")]:
+                           ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("cursor", "Matea virtual cursor"), ("attributes", "Matea attributes"), ("external-widget", "Third-party badge")]:
         binary = ROOT/"target/release"/("matea-example-external-widget"+suffix) if name=="external-widget" else ROOT/"target/release/examples"/(name+suffix)
         binary_hashes[name] = digest(binary.read_bytes())
         def example(binary=binary, name=name, expected=expected):

@@ -33,7 +33,10 @@ pub mod prelude {
         ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
     };
     pub use matea_render::{Cursor, Rect, Size, Surface, Text, View};
-    pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
+    pub use matea_style::{
+        BlinkStyle, Border, Color, ColorLevel, Style, TextAttribute, TextAttributes, TextFrame,
+        Theme, UnderlineStyle,
+    };
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{
         Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, CursorMode,

@@ -108,9 +108,12 @@ jobs:
       - run: |
           cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl
           python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==7)"
+          cargo run --locked --quiet --release -p matea-perf-probe -- --attributes > artifacts/attributes-outputs.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/attributes-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==14)"
         shell: bash
         env:
           MATEA_PROBE_OUTPUT_ONLY: "1"
+      - run: cargo bench --locked -p matea --bench foundation_paths -- --representations
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release

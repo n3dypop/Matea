@@ -4,7 +4,7 @@ use crossterm::{
     terminal::{Clear, ClearType},
 };
 use matea_render::Surface;
-use matea_style::{Color, ColorLevel, Style};
+use matea_style::{BlinkStyle, Color, ColorLevel, Style};
 use std::io::{self, Write};
 
 /// Logical, immutable palette results are independent of physical terminal state.
@@ -25,7 +25,7 @@ impl QuantizedStyles {
             Color::Indexed(n) => level == ColorLevel::Ansi16 && n >= 16,
             Color::Default => false,
         };
-        if !expensive(source.fg) && !expensive(source.bg) {
+        if !expensive(source.fg) && !expensive(source.bg) && !expensive(source.underline_color) {
             return source.adapt(level);
         }
         if self.level != Some(level) {
@@ -187,7 +187,12 @@ impl FrameEncoder {
                 if ascii && old.is_some_and(|old| old.row(y)[x] == *cell) {
                     continue;
                 }
-                let style = self.quantized.adapt(cell.style(), caps.color);
+                let source = if caps.reduced_motion {
+                    cell.style().blink(BlinkStyle::None)
+                } else {
+                    cell.style()
+                };
+                let style = self.quantized.adapt(source, caps.color);
                 if (!ascii || full) && cell.symbol() == " " && style == Style::default() {
                     continue;
                 }
@@ -242,6 +247,47 @@ fn relative_is_shorter(distance: u16, x: u16, y: u16) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn reduced_motion_suppresses_blink_but_preserves_other_decorations_and_repaints_on_change() {
+        let style = Style::default()
+            .dim()
+            .italic()
+            .blink(BlinkStyle::Rapid)
+            .underline_style(matea_style::UnderlineStyle::Curly)
+            .underline_color(Color::Indexed(10));
+        let frame = matea_render::View::styled("X", style)
+            .render(matea_render::Size::new(1, 1))
+            .unwrap();
+        let mut caps = Capabilities {
+            color: ColorLevel::TrueColor,
+            unicode: true,
+            reduced_motion: false,
+        };
+        let mut encoder = FrameEncoder::default();
+        let mut bytes = Vec::new();
+        encoder.write(&mut bytes, &frame, None, caps).unwrap();
+        assert!(bytes.windows(4).any(|w| w == b"\x1b[6m"));
+        caps.reduced_motion = true;
+        bytes.clear();
+        encoder
+            .write(&mut bytes, &frame, Some(&frame), caps)
+            .unwrap();
+        assert!(!bytes.windows(4).any(|w| w == b"\x1b[5m" || w == b"\x1b[6m"));
+        for code in [
+            b"\x1b[2m".as_slice(),
+            b"\x1b[3m",
+            b"\x1b[4:3m",
+            b"\x1b[58;5;10m",
+        ] {
+            assert!(bytes.windows(code.len()).any(|w| w == code));
+        }
+        caps.reduced_motion = false;
+        bytes.clear();
+        encoder
+            .write(&mut bytes, &frame, Some(&frame), caps)
+            .unwrap();
+        assert!(bytes.windows(4).any(|w| w == b"\x1b[6m"));
+    }
     use matea_render::{Cursor, Size, View};
     fn caps() -> Capabilities {
         Capabilities {
@@ -297,12 +343,17 @@ mod tests {
     fn quantization_remains_correct_after_eviction_level_changes_and_attributes() {
         let mut cache = QuantizedStyles::default();
         let styles: Vec<_> = (0..40)
-            .map(|n| Style {
-                fg: Color::Rgb(n * 5, 135, 175),
-                bg: Color::Indexed(n + 16),
-                bold: n % 2 == 0,
-                underline: n % 3 == 0,
-                reverse: n % 5 == 0,
+            .map(|n| {
+                Style::default()
+                    .fg(Color::Rgb(n * 5, 135, 175))
+                    .bg(Color::Indexed(n + 16))
+                    .attribute(matea_style::TextAttribute::Bold, n % 2 == 0)
+                    .underline_style(if n % 3 == 0 {
+                        matea_style::UnderlineStyle::Single
+                    } else {
+                        matea_style::UnderlineStyle::None
+                    })
+                    .attribute(matea_style::TextAttribute::Reverse, n % 5 == 0)
             })
             .collect();
         for level in [

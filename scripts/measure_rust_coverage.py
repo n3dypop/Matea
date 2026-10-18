@@ -63,7 +63,7 @@ def collect(root):
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
     env["MATEA_PERF_ITERATIONS"] = "1"
-    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"], ["--virtual-cursor"]]:
+    for mode in [[], ["--trace"], ["--cursor-trace"], ["--color-trace"], ["--fallback-trace"], ["--views"], ["--subscriptions"], ["--clocks"], ["--viewport"], ["--style"], ["--input"], ["--protocol"], ["--virtual-cursor"], ["--attributes"]]:
         name = mode[0].removeprefix("--") if mode else "main"
         run([str(probe), *mode], "coverage-probe-" + name + ".log")
     env["MATEA_PROBE_OUTPUT_ONLY"] = "1"
@@ -116,7 +116,7 @@ def collect(root):
     if not files:
         raise ValueError("no repository source instances in LLVM export")
     report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor, text attributes; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",

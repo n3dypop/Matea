@@ -1,5 +1,6 @@
 //! Matched Foundation micro-workloads. No image or GPU processing.
 //! Allocation instrumentation is enabled only during the separate allocation pass.
+mod attributes;
 mod measurement;
 mod protocol;
 use matea::{
@@ -56,6 +57,10 @@ fn main() {
         .ok()
         .and_then(|n| n.parse().ok())
         .unwrap_or(300);
+    if std::env::args().any(|arg| arg == "--attributes" || arg == "--attribute-trace") {
+        attributes::costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--subscriptions") {
         subscription_costs(iterations);
         return;
@@ -497,7 +502,11 @@ fn style_costs(iterations: usize) {
         // derived Debug field names when the resolved style representation grows.
         let expected = format!(
             "fg={:?},bg={:?},bold={},underline={},reverse={}",
-            adapted.fg, adapted.bg, adapted.bold, adapted.underline, adapted.reverse
+            adapted.fg,
+            adapted.bg,
+            adapted.has(TextAttribute::Bold),
+            adapted.attributes.underline() != UnderlineStyle::None,
+            adapted.has(TextAttribute::Reverse)
         );
         measure(
             &format!("style/adapt_pair_{profile}"),
@@ -1478,7 +1487,11 @@ fn text_input(iterations: usize) {
 
 fn virtual_cursor_cells(cursor: &VirtualCursor, theme: &Theme) -> String {
     let frame = cursor.view(theme).render(Size::new(16, 1)).unwrap();
-    format!("{}|{}", frame.plain(), frame.row(0)[0].style().reverse)
+    format!(
+        "{}|{}",
+        frame.plain(),
+        frame.row(0)[0].style().has(TextAttribute::Reverse)
+    )
 }
 fn virtual_cursor_cases(n: usize) {
     let theme = Theme::plain();

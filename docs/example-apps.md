@@ -15,10 +15,11 @@ cargo run -p matea --example help
 cargo run -p matea --example clocks
 cargo run -p matea --example spinners
 cargo run -p matea --example cursor
+cargo run -p matea --example attributes
 cargo run -p matea-example-external-widget
 ```
 
-All twelve accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
+All fourteen showcase programs accept `-- --snapshot` for plain non-TTY output. `NO_COLOR=1` disables colors; `MATEA_REDUCED_MOTION=1` disables dashboard motion. Full-screen interactive runs require TTY stdin and stdout. Windows PowerShell users can set environment variables through `$env:NO_COLOR='1'`.
 
 Counter: +/- or arrows, q/Esc exit. List: typing filters, Tab changes search/list focus, arrows select, Enter chooses, Esc exits. Form: Tab/Shift-Tab traverse, Enter advances/validates/submits, Esc exits. Dashboard: Tab changes table/notes focus, arrows/PageUp/PageDown navigate, q exits. Badge: Space toggles, q exits. Effects: a typed completion updates the view; r reloads, c cancels, q exits. Ctrl-C exits all live examples through cleanup.
 
@@ -85,3 +86,18 @@ motion and Esc exits. Subscription reconciliation removes inactive timers; nativ
 cursor mode remains a separate TextInput setting. Use `-- --snapshot` for plain
 non-TTY output. This example is covered by snapshots and Unix PTY restoration
 checks, without claiming physical emulator or IME validation.
+
+## Resolved text attributes
+
+`cargo run -p matea --example attributes` uses typed decoration builders on
+passed theme tokens. +/- or arrows change the counter while focused; Tab toggles
+focus, b toggles a hardware blink request and q/Esc exits. The explicit > marker
+keeps focus visible without color. The panel clips on resize and the portable
+plain snapshot acquires no terminal. Reduced-motion output suppresses blink.
+Underline shapes, Fraktur and font framing depend on the terminal; SGR byte
+correctness is separate from actual font appearance.
+
+The provisional Style boolean fields migrate to `style.has(TextAttribute::Bold)`
+and `style.attribute(TextAttribute::Bold, false)`. Existing bold(), underline()
+and reverse() builders remain available. Attributes are resolved owned values,
+with no ambient inheritance or backend types in component APIs.

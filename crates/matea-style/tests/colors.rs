@@ -1,4 +1,4 @@
-use matea_style::{Color, ColorLevel, Style};
+use matea_style::{Color, ColorLevel, Style, TextAttribute, UnderlineStyle};
 
 // Independent, literal canonical xterm palette. The production implementation's
 // private palette/distance/candidate helpers are intentionally not reused.
@@ -102,13 +102,25 @@ fn profiles_preserve_indices_attributes_and_first_index_ties() {
         let s = Style::default()
             .fg(Color::Rgb(27, 160, 230))
             .bg(Color::Indexed(200))
+            .underline_color(Color::Rgb(13, 13, 13))
             .bold()
             .underline()
             .reverse();
         let out = s.adapt(level);
         assert_eq!(out.fg, s.fg.adapt(level));
         assert_eq!(out.bg, s.bg.adapt(level));
-        assert!(out.bold && out.underline && out.reverse);
+        let underline = match level {
+            ColorLevel::None => Color::Default,
+            ColorLevel::Ansi16 => Color::Indexed(closest([13, 13, 13], &p[..16])),
+            ColorLevel::Ansi256 => Color::Indexed(closest([13, 13, 13], &p)),
+            ColorLevel::TrueColor => Color::Rgb(13, 13, 13),
+        };
+        assert_eq!(out.underline_color, underline);
+        assert!(
+            out.has(TextAttribute::Bold)
+                && out.attributes.underline() == UnderlineStyle::Single
+                && out.has(TextAttribute::Reverse)
+        );
     }
     assert_eq!(
         Color::Rgb(0, 0, 0).adapt(ColorLevel::Ansi256),

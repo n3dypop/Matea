@@ -18,6 +18,14 @@ pub(crate) fn color(w: &mut impl io::Write, color: Color, background: bool) -> i
     }
 }
 
+pub(crate) fn underline_color(w: &mut impl io::Write, color: Color) -> io::Result<()> {
+    match color {
+        Color::Default => w.write_all(b"\x1b[59m"),
+        Color::Indexed(n) => write!(w, "\x1b[58;5;{n}m"),
+        Color::Rgb(r, g, b) => write!(w, "\x1b[58;2;{r};{g};{b}m"),
+    }
+}
+
 pub(crate) fn command(w: &mut impl io::Write, command: impl Command) -> io::Result<()> {
     struct Adapter<'a, W> {
         writer: &'a mut W,
@@ -45,6 +53,34 @@ pub(crate) fn command(w: &mut impl io::Write, command: impl Command) -> io::Resu
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn underline_reset_and_partial_writer_failure_preserve_the_io_contract() {
+        let mut bytes = Vec::new();
+        underline_color(&mut bytes, Color::Default).unwrap();
+        assert_eq!(bytes, b"\x1b[59m");
+        struct StopsAfter(usize);
+        impl io::Write for StopsAfter {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if self.0 == 0 {
+                    return Err(io::Error::new(
+                        io::ErrorKind::BrokenPipe,
+                        "underline fixture",
+                    ));
+                }
+                let count = self.0.min(bytes.len());
+                self.0 -= count;
+                Ok(count)
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        for color in [Color::Default, Color::Indexed(255), Color::Rgb(13, 41, 227)] {
+            let error = underline_color(&mut StopsAfter(3), color).unwrap_err();
+            assert_eq!(error.kind(), io::ErrorKind::BrokenPipe);
+            assert_eq!(error.to_string(), "underline fixture");
+        }
+    }
     struct ConsoleOnly;
     impl Command for ConsoleOnly {
         fn write_ansi(&self, f: &mut impl fmt::Write) -> fmt::Result {

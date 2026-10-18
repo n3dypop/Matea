@@ -1,5 +1,7 @@
 #![forbid(unsafe_code)]
 //! Portable design tokens and deterministic integer layout. No terminal I/O.
+mod attributes;
+pub use attributes::{BlinkStyle, TextAttribute, TextAttributes, TextFrame, UnderlineStyle};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -135,9 +137,8 @@ impl Color {
 pub struct Style {
     pub fg: Color,
     pub bg: Color,
-    pub bold: bool,
-    pub underline: bool,
-    pub reverse: bool,
+    pub underline_color: Color,
+    pub attributes: TextAttributes,
 }
 
 impl Style {
@@ -150,15 +151,58 @@ impl Style {
         self
     }
     pub fn bold(mut self) -> Self {
-        self.bold = true;
+        self.attributes = self.attributes.with(TextAttribute::Bold);
         self
     }
     pub fn underline(mut self) -> Self {
-        self.underline = true;
+        self.attributes = self.attributes.with_underline(UnderlineStyle::Single);
         self
     }
     pub fn reverse(mut self) -> Self {
-        self.reverse = true;
+        self.attributes = self.attributes.with(TextAttribute::Reverse);
+        self
+    }
+    #[inline]
+    pub fn attribute(mut self, attribute: TextAttribute, enabled: bool) -> Self {
+        self.attributes = self.attributes.set(attribute, enabled);
+        self
+    }
+    #[inline]
+    pub fn has(self, attribute: TextAttribute) -> bool {
+        self.attributes.contains(attribute)
+    }
+    pub fn dim(self) -> Self {
+        self.attribute(TextAttribute::Dim, true)
+    }
+    pub fn italic(self) -> Self {
+        self.attribute(TextAttribute::Italic, true)
+    }
+    pub fn hidden(self) -> Self {
+        self.attribute(TextAttribute::Hidden, true)
+    }
+    pub fn strikethrough(self) -> Self {
+        self.attribute(TextAttribute::Strikethrough, true)
+    }
+    pub fn fraktur(self) -> Self {
+        self.attribute(TextAttribute::Fraktur, true)
+    }
+    pub fn overline(self) -> Self {
+        self.attribute(TextAttribute::Overline, true)
+    }
+    pub fn underline_style(mut self, style: UnderlineStyle) -> Self {
+        self.attributes = self.attributes.with_underline(style);
+        self
+    }
+    pub fn blink(mut self, style: BlinkStyle) -> Self {
+        self.attributes = self.attributes.with_blink(style);
+        self
+    }
+    pub fn text_frame(mut self, style: TextFrame) -> Self {
+        self.attributes = self.attributes.with_frame(style);
+        self
+    }
+    pub fn underline_color(mut self, color: Color) -> Self {
+        self.underline_color = color;
         self
     }
     #[inline]
@@ -167,11 +211,13 @@ impl Style {
             ColorLevel::None => {
                 self.fg = Color::Default;
                 self.bg = Color::Default;
+                self.underline_color = Color::Default;
             }
             ColorLevel::TrueColor => {}
             _ => {
                 self.fg = self.fg.adapt(level);
                 self.bg = self.bg.adapt(level);
+                self.underline_color = self.underline_color.adapt(level);
             }
         }
         self
@@ -307,7 +353,12 @@ mod tests {
             Color::Indexed(9)
         );
         assert_eq!(Color::Indexed(200).adapt(ColorLevel::None), Color::Default);
-        assert!(Theme::default().focus.adapt(ColorLevel::None).reverse);
+        assert!(
+            Theme::default()
+                .focus
+                .adapt(ColorLevel::None)
+                .has(TextAttribute::Reverse)
+        );
         for n in 0..=255 {
             assert!(matches!(
                 Color::Indexed(n).adapt(ColorLevel::Ansi16),

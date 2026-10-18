@@ -1,6 +1,6 @@
 use matea_core::{Effect, Event, Model, Runtime, Subscription, ViewContext};
 use matea_render::{Size, View};
-use matea_style::{Color, Style, Theme};
+use matea_style::{Color, Style, TextAttribute, Theme};
 use matea_widgets::{ClockTick, CursorMode, TextInput, TickInterval, VirtualCursor};
 use std::{
     cell::Cell,
@@ -306,7 +306,11 @@ fn runtime_reconciles_blur_mode_reduced_motion_and_delayed_notifications() {
     now.set(origin + Duration::from_millis(35));
     runtime.advance(Duration::from_millis(35)).unwrap();
     assert_eq!(runtime.model().updates, 1);
-    assert!(!runtime.frame().unwrap().row(0)[0].style().reverse);
+    assert!(
+        !runtime.frame().unwrap().row(0)[0]
+            .style()
+            .has(TextAttribute::Reverse)
+    );
     runtime
         .dispatch(Event::Message(Message::Focus(false)))
         .unwrap();
@@ -324,7 +328,11 @@ fn runtime_reconciles_blur_mode_reduced_motion_and_delayed_notifications() {
         .unwrap();
     now.set(origin + Duration::from_millis(155));
     assert!(!runtime.advance(Duration::from_millis(100)).unwrap());
-    assert!(runtime.frame().unwrap().row(0)[0].style().reverse);
+    assert!(
+        runtime.frame().unwrap().row(0)[0]
+            .style()
+            .has(TextAttribute::Reverse)
+    );
     runtime
         .dispatch(Event::Message(Message::Mode(CursorMode::Blink)))
         .unwrap();
@@ -336,12 +344,20 @@ fn runtime_reconciles_blur_mode_reduced_motion_and_delayed_notifications() {
         .unwrap();
     now.set(origin + Duration::from_millis(265));
     assert!(!runtime.advance(Duration::from_millis(100)).unwrap());
-    assert!(runtime.frame().unwrap().row(0)[0].style().reverse);
+    assert!(
+        runtime.frame().unwrap().row(0)[0]
+            .style()
+            .has(TextAttribute::Reverse)
+    );
     runtime
         .dispatch(Event::Message(Message::Reduced(false)))
         .unwrap();
     now.set(origin + Duration::from_millis(275));
     runtime.advance(Duration::from_millis(10)).unwrap();
     assert_eq!(runtime.model().updates, 4);
-    assert!(runtime.frame().unwrap().row(0)[0].style().reverse);
+    assert!(
+        runtime.frame().unwrap().row(0)[0]
+            .style()
+            .has(TextAttribute::Reverse)
+    );
 }

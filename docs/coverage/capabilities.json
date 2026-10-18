@@ -828,6 +828,66 @@
       ],
       "performance": "docs/evidence/cursor/performance/report.json",
       "notes": "All 21 declarations reviewed. Typed modes, positive interval, exclusive live identity and generation-safe monotonic phase. Explicit owner focus/restart and structured text-input composition replace shared context/broadcast commands. Arbitrary Lip Gloss style decorators and active timer comparison remain partial."
+    },
+    {
+      "id": "style/resolved-text-attributes",
+      "status": "partial",
+      "reference_ids": [
+        "b1b4d554a65fb23a92a5",
+        "53d6e16a3c2fac056ddd",
+        "6d59d78f93e0be77a40f",
+        "2e0a55204da0fee5acce",
+        "6b646488175778abea32",
+        "6a03e316999ed9616e96",
+        "024cce2d48d64c8fb859",
+        "41920d27b99202e53fcf",
+        "d587bef02f0ae81db61d",
+        "6a61c60e67c4f511140f",
+        "328fa4263fc08f0ab5e4",
+        "ef9037fafcdd8108d1ff",
+        "7acca4597a188d114d55",
+        "fafb72ece5b1a53dbeee",
+        "70511ff53d6a0662faba",
+        "06f2786a3dd87820303f",
+        "50fddeb2939129e987cd",
+        "3dd01c23e497b7763706",
+        "9e247d5edeaaed4409c2",
+        "ad27c676faab6e95fcea",
+        "2b4677e69cdbca0c70e1",
+        "2b3b0986ce8491cba8ed",
+        "a70d667591050d6445cd",
+        "b9bd9ceaa4ba9e84001e",
+        "2724fe9a9ca40a9548dc",
+        "817a13fef93fd4d8c49f",
+        "050db98790e3d69b1534",
+        "bd80fc7f9f5a1decdf31",
+        "4b992cafa626074f106e",
+        "9e2d210a2d1f01223376",
+        "4d52471f01623edb49a3",
+        "8dc395ca7f862ac44c08",
+        "cf8b13038f7e393f246b",
+        "c4fe1505c7fa25e34cde",
+        "92ee55faff46081fee3b",
+        "250bb2eb0b7134772302",
+        "821d3b76fe6ea838999c",
+        "942f4bf61bf010f718fb"
+      ],
+      "implementation": [
+        "crates/matea-style/src/attributes.rs",
+        "crates/matea-style/src/lib.rs",
+        "crates/matea-terminal/src/lib.rs",
+        "crates/matea-terminal/src/frame.rs"
+      ],
+      "tests": [
+        "crates/matea-style/src/attributes.rs",
+        "crates/matea-style/tests/colors.rs",
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-terminal/src/lib.rs",
+        "crates/matea-terminal/src/frame.rs",
+        "scripts/pty_smoke.py"
+      ],
+      "performance": "pending",
+      "notes": "Resolved positive attributes, six underline choices, underline color, typed flag getters/clearing and reduced-motion blink suppression. Partial mapping: negative/reset command composition, Lip Gloss inheritance/unset-vs-false, arbitrary rich text/space decorators and terminal font support remain pending. See docs/text-attributes-audit.md; no full declaration or module parity."
     }
   ]
 }

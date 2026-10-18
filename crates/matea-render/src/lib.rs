@@ -596,6 +596,41 @@ impl View {
 mod tests {
     use super::*;
     #[test]
+    fn extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes() {
+        use matea_style::{BlinkStyle, TextFrame, UnderlineStyle};
+        if cfg!(target_pointer_width = "64") {
+            assert_eq!(
+                std::mem::size_of::<Cell>(),
+                40,
+                "resolved styling must not grow every cell"
+            );
+        }
+        let style = Style::default()
+            .italic()
+            .dim()
+            .strikethrough()
+            .overline()
+            .blink(BlinkStyle::Slow)
+            .text_frame(TextFrame::Encircled)
+            .underline_style(UnderlineStyle::Dashed)
+            .underline_color(matea_style::Color::Indexed(15));
+        let view = View::styled("茶e\u{301}🙂", style);
+        let frame = view.render(Size::new(6, 1)).unwrap();
+        assert_eq!(frame.row(0)[0].symbol(), "茶");
+        assert!(frame.row(0)[1].is_continuation());
+        assert_eq!(frame.row(0)[2].symbol(), "e\u{301}");
+        assert_eq!(frame.row(0)[3].symbol(), "🙂");
+        assert!(frame.row(0)[4].is_continuation());
+        for cell in &frame.row(0)[..5] {
+            assert_eq!(cell.style(), style);
+        }
+        assert_eq!(frame.row(0)[5].style(), Style::default());
+        let clipped = view.render(Size::new(4, 1)).unwrap();
+        assert_eq!(clipped.plain(), "茶e\u{301}");
+        assert_eq!(clipped.row(0)[3].style(), Style::default());
+        assert_eq!(view.render(Size::new(0, 0)).unwrap().plain(), "");
+    }
+    #[test]
     fn cursor_composes_through_layout_panel_and_layers() {
         let theme = Theme::default();
         let child = View::column([
