@@ -42,3 +42,11 @@ C2 80..9F. This changes no UTF-8 validity or normalization policy and introduces
 no unchecked reads. Existing exhaustive scalar normalization plus a mixed
 C2-control/valid-Latin matrix test cover both paths. Retain the earlier adverse
 cohort and measure the same original ten workloads again before accepting a gain.
+
+The C2-only trial at 495d934 does not meet the acceptance goal: ASCII
+construct/read increases from 560–562 ns to 583–584 ns (about 4%), while Unicode
+changes from 2.10–2.11 us to 2.07–2.08 us (about 1%). Restore the earlier shared
+scanner; retain all four trial runs, independent outputs and the useful mixed
+normalization regression test. Do not present this trial as an accepted gain.
+The remaining constructor gap stays open. Continue capability completion rather
+than keeping a regression for a marginal improvement in one corpus.

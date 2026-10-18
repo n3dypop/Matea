@@ -380,17 +380,16 @@ pub fn sanitized(s: &str) -> Cow<'_, str> {
 fn is_safe_text(s: &str) -> bool {
     // str already guarantees valid UTF-8. C0/DEL bytes cannot occur inside a
     // multibyte scalar; C1 controls are exactly the pairs C2 80..9F.
-    // Only C2 can start a non-ASCII control in valid UTF-8. Other high bytes
-    // need no adjacent-byte scan. Fold these flags so ASCII can vectorize too.
+    // Fold ASCII-control/high-bit flags together so clean ASCII can vectorize.
     let mut flags = 0u8;
     for byte in s.bytes() {
         let invalid = ((byte < 0x20) & (byte != b'\n')) | (byte == 0x7f);
-        flags |= u8::from(invalid) | (u8::from(byte == 0xc2) << 1);
+        flags |= u8::from(invalid) | (byte & 0x80);
     }
     if flags & 1 != 0 {
         return false;
     }
-    flags & 2 == 0
+    flags & 0x80 == 0
         || !s
             .as_bytes()
             .windows(2)

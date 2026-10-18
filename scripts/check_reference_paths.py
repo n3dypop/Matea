@@ -72,9 +72,34 @@ def check_trajectories(output, fixture, spring):
             "criterion": "existing matea-motion/tests/reference.rs; no Rust test threshold changed"}
 
 
+def check_viewport_wrap_fixtures(output, fixture):
+    actual = [line.split("\t") for line in output.decode("utf-8").splitlines()]
+    expected = [line.split("\t") for line in fixture.decode("utf-8").splitlines()]
+    require(actual and len(actual) == len(expected), "wrap matrix row count changed")
+    portable, zero = 0, 0
+    for a, b in zip(actual, expected):
+        require(len(a) == len(b) == 13 and a[:6] == b[:6], "wrap matrix input identity changed")
+        for value in a[6:10]:
+            number = int(value)
+            require(value == str(number) and -(1 << 63) <= number < (1 << 63), "wrap matrix invalid integer")
+        for value in a[10:]:
+            require(len(value) % 2 == 0 and all(c in "0123456789abcdef" for c in value), "wrap matrix invalid hex")
+        if a[2] == "0":
+            # Go's out-of-range float-to-int conversion / subsequent signed
+            # overflow is target dependent. Keep all raw totals/positions;
+            # never coerce them into matching the Mac observation or Matea.
+            require(a[8:10] == ["0", "0"] and a[10:] == ["", "", ""], "zero-width source geometry changed")
+            zero += 1
+        else:
+            require(a == b, "portable wrap matrix observation changed")
+            portable += 1
+    return {"rows": len(actual), "portable_exact_rows": portable, "platform_zero_width_rows_retained": zero}
+
+
 def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream", group="foundation"):
     require(label in ["upstream","matea"],"unknown timing-mode probe label")
-    require(group in ["foundation","gradients","progress","viewport-geometry"],"unknown timing-mode fixture group")
+    counts = {"foundation":(91,91), "gradients":(6,12), "progress":(6,12), "viewport-geometry":(14,18), "viewport-wrap":(10,12)}
+    require(group in counts,"unknown timing-mode fixture group")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
@@ -101,13 +126,13 @@ def check_timing_mode(destination, probe_binary, environment, correctness, label
             checked.append({"case":name,"iterations_per_sample":item["iterations_per_sample"],
                             "calibration_batches":len(item["calibration"]["batches"]),"positive_samples":31,
                             "allocation_schema_valid":True})
-    count=91 if group=="foundation" else ((18 if label=="matea" else 14) if group=="viewport-geometry" else (12 if label=="matea" else 6))
+    count=counts[group][label=="matea"]
     require(len(checked)==count and len({r["case"] for r in checked})==count, "incomplete calibrated probe")
     result={"schema":1,"probe":label,"group":group,"checked_cases":checked,"target_ns":target,"zero_or_invalid_samples":0,
             "invalid_configurations_rejected":rejected,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
     filename="timing-mode-checks.json" if label=="upstream" else "rust-timing-mode-checks.json"
-    if group!="foundation":filename=label+"-"+{"gradients":"gradient","progress":"progress","viewport-geometry":"viewport-geometry"}[group]+"-timing-mode-checks.json"
+    if group!="foundation":filename=label+"-"+("gradient" if group=="gradients" else group)+"-timing-mode-checks.json"
     (destination/filename).write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 
 
@@ -185,6 +210,17 @@ def check_probes(destination, go_binary, rust_binary, environment):
     require(varied[0].keys()==geometry[0].keys() and varied[1].keys()==geometry[1].keys(),"varied viewport fixture set changed")
     for name,b in varied[1].items():
         require(all(varied[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"varied viewport geometry mismatch: "+name)
+    wrapped = []
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output = subprocess.check_output([str(binary),"--viewport-wrap"],env=environment,timeout=30)
+        wrapped.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-viewport-wrap-outputs.jsonl")).write_bytes(output)
+    require(len(wrapped[0])==12 and len(wrapped[1])==10,"incomplete wrapped viewport outputs")
+    require(set(wrapped[0])==set(wrapped[1])|{"viewport-wrap/borrowed_ascii","viewport-wrap/borrowed_unicode"},"wrapped iterator control set changed")
+    for name,b in wrapped[1].items():
+        require(all(wrapped[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"wrapped viewport output mismatch: "+name)
+    check_timing_mode(destination,go_binary,environment,[(["--viewport-wrap"],wrapped[1])],group="viewport-wrap")
+    check_timing_mode(destination,rust_binary,environment,[(["--viewport-wrap"],wrapped[0])],label="matea",group="viewport-wrap")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -193,7 +229,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures","--viewport-horizontal-fixtures","--viewport-cut-fixtures","--viewport-input-fixtures","--viewport-geometry-edges"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures","--viewport-horizontal-fixtures","--viewport-cut-fixtures","--viewport-input-fixtures","--viewport-geometry-edges","--viewport-wrap-fixtures"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -226,8 +262,16 @@ def check_probes(destination, go_binary, rust_binary, environment):
             require(len(output.splitlines())==34 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-input.tsv").read_bytes(),"viewport input fixtures changed")
         if flag=="--viewport-geometry-edges":
             require(len(output.splitlines())==10 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv").read_bytes(),"viewport geometry edges changed")
+        if flag=="--viewport-wrap-fixtures":
+            wrap = check_viewport_wrap_fixtures(output, (ROOT/"crates/matea-widgets/tests/fixtures/viewport-wrap-source.tsv").read_bytes())
+            require(wrap == {"rows":1008,"portable_exact_rows":840,"platform_zero_width_rows_retained":168}, "incomplete wrap matrix")
+            (destination/"viewport-wrap-checks.json").write_text(json.dumps(wrap,indent=2)+"\n",encoding="utf-8")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
+    output = subprocess.check_output([str(rust_binary),"--viewport-wrap-fixtures"],env=environment,timeout=60)
+    require(output == (ROOT/"crates/matea-widgets/tests/fixtures/viewport-wrap-matea.tsv").read_bytes(),"native Matea wrap states changed")
+    (destination/"matea-viewport-wrap-fixtures.txt").write_bytes(output)
+    fixtures["--matea-viewport-wrap-fixtures"] = hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
     return fixtures
 

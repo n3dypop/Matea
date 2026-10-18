@@ -37,7 +37,11 @@ controls, excluded from speed ratios. Render includes Matea View/Arc constructio
 At 15b9284, 37 native checks, 211 Rust tests plus four doctests, 129 Python
 checks, 16 example snapshots, 21 Unix PTY cases and ten Miri tests pass. LLVM
 retains 75 source paths / 81 compiler instances, without combining percentages.
-Three-OS CI qualification is in progress.
+All seven required source-bound jobs pass at 15b9284: Linux/Windows/macOS,
+MSRV and reference probes. Independent verification binds 130 programs / 163
+inputs, 21 uploaded Unix logs / 22 Windows logs, 75 Unix / 74 Windows LLVM paths,
+the native 80-cell / two-corpus oracle, existing fixtures and console restoration.
+See `evidence/rich-text/optimized/ci/source-bindings.json`.
 
 All 80 measured records and 40 output-only records match an independent Python
 reconstruction of full text/style ranges, literal graphemes and leading cells /
@@ -56,3 +60,9 @@ Mutable span fields, style patch/reset algebra, alignment/conversion families,
 CJK width, borrowed-storage APIs, full paragraph/wrapping, physical emulators,
 all feature profiles and complete module performance are still pending. No high
 performance verdict or whole-module parity is inferred from this slice.
+
+A follow-up C2-only normalization scan was measured at 495d934, then rejected:
+ASCII construct/read regressed to 583–584 ns for about 1% Unicode improvement.
+All 120 timing / 60 output records across three cohorts remain in the report.
+The shared production scanner is restored to 15b9284; retain the mixed C2/Latin
+regression test. No high verdict is awarded for this rejected trial.

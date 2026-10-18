@@ -204,6 +204,10 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-wrap-fixtures" {
+		viewportWrapFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--viewport-geometry-edges" {
 		viewportGeometryEdges()
 		return
@@ -307,6 +311,10 @@ func main() {
 		clockCases(n)
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-wrap" {
+		viewportWrapCosts(n)
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--progress" {
 		progressCosts(n)
 		return
@@ -404,6 +412,58 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+
+func viewportWrapFixtures() {
+	texts := []struct{ name, text string }{
+		{"ascii", "abcde\nx\n\nTAIL\n"},
+		{"aligned", "抹茶抹茶\nA\n"},
+		{"mixed", "A茶B👩‍💻C\n🇯🇵e\u0301\n"},
+		{"empty", ""},
+		{"oversized", "👩‍💻界1️⃣"},
+		{"blank", "\n"},
+		{"scripts", "لاא\u200dל|ⵏ⵿ⴾ\n"},
+	}
+	for _, item := range texts {
+		for _, width := range []int{0, 1, 2, 3, 4, 7} {
+			for _, height := range []int{0, 1, 3} {
+				for _, fill := range []bool{false, true} {
+					for _, action := range []string{"top", "bottom", "page", "ensure"} {
+						total, y, x, visible := 0, 0, 0, 0
+						raw, plain, panicked := "", "", ""
+						func() {
+							defer func() {
+								if value := recover(); value != nil {
+									panicked = fmt.Sprint(value)
+								}
+							}()
+							m := viewport.New(viewport.WithWidth(width), viewport.WithHeight(height))
+							m.SoftWrap, m.FillHeight = true, fill
+							m.SetContent(item.text)
+							switch action {
+							case "bottom":
+								m.GotoBottom()
+							case "page":
+								m.PageDown()
+								m.PageDown()
+							case "ensure":
+								m.EnsureVisible(1, 4, 5)
+							}
+							total, y, x = m.TotalLineCount(), m.YOffset(), m.XOffset()
+							visible = m.VisibleLineCount()
+							raw = m.View()
+							lines := strings.Split(ansi.Strip(raw), "\n")
+							for i := range lines {
+								lines[i] = strings.TrimRight(lines[i], " ")
+							}
+							plain = strings.Join(lines, "\n")
+						}()
+						fmt.Printf("%s\t%x\t%d\t%d\t%t\t%s\t%d\t%d\t%d\t%d\t%x\t%x\t%x\n", item.name, item.text, width, height, fill, action, total, y, x, visible, raw, plain, panicked)
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -1691,5 +1751,52 @@ func viewportGeometryEdges() {
 			m.SetHeight(height)
 			m.GotoBottom()
 		})
+	}
+}
+
+func viewportWrapCosts(n int) {
+	for _, item := range []struct{ name, line string }{{"ascii", "abcdefgh"}, {"unicode", "抹茶抹茶"}} {
+		text := strings.TrimSuffix(strings.Repeat(item.line+"\n", 100), "\n")
+		makeView := func() viewport.Model {
+			m := viewport.New(viewport.WithWidth(4), viewport.WithHeight(3))
+			m.SetContent(text)
+			m.SoftWrap = true
+			return m
+		}
+		measure("viewport-wrap/construct_"+item.name, n, func() uint64 {
+			m := makeView()
+			total := m.TotalLineCount()
+			owned := m.GetContent()
+			return viewportGeometryDigest(owned, total, m.YOffset())
+		}, "total=200;y=0;text="+text, "fresh viewport; install one existing 100-line input, set 4x3 and soft wrap, compute complete display geometry, create independent owned content snapshot, consume all UTF-8 bytes/total/y with FNV64; include drop; no terminal I/O")
+		m := makeView()
+		if m.TotalLineCount() != 200 {
+			panic("wrong source wrapped geometry")
+		}
+		measure("viewport-wrap/count_"+item.name, n, func() uint64 { return uint64(m.TotalLineCount()) }, "total=200", "read total display row count from existing unchanged soft-wrap document; geometry initialized; no render/terminal I/O")
+		m.SetYOffset(7)
+		measure("viewport-wrap/scroll_"+item.name, n, func() uint64 {
+			m.SetYOffset(7)
+			m.ScrollDown(1)
+			m.ScrollUp(1)
+			return viewportGeometryDigest("", m.XOffset(), m.YOffset())
+		}, "x=0;y=7", "existing 4x3 soft-wrap document; reset y=7, down one/up one, consume final x/y with FNV64; no render/terminal I/O")
+		plain := func() string {
+			lines := strings.Split(ansi.Strip(m.View()), "\n")
+			for i := range lines {
+				lines[i] = strings.TrimRight(lines[i], " ")
+			}
+			return strings.Join(lines, "\n")
+		}
+		expected := plain()
+		measure("viewport-wrap/view_"+item.name, n, func() uint64 { return viewportGeometryDigest(plain(), m.XOffset(), m.YOffset()) }, expected, "existing 4x3 soft-wrap document at x=0,y=7; construct complete owned plain frame, trim only ASCII right-padding per row; consume all bytes/x/y with FNV64; Rust scene/surface/plain or Go View/plain adapter included; no terminal I/O")
+		m.SetYOffset(0)
+		measure("viewport-wrap/resize_"+item.name, n, func() uint64 {
+			m.SetWidth(8)
+			wide := m.TotalLineCount()
+			m.SetWidth(4)
+			narrow := m.TotalLineCount()
+			return viewportGeometryDigest("", wide, narrow)
+		}, "wide=100;narrow=200", "existing soft-wrap document at y=0; set width 8/read full geometry then width 4/read geometry, consume both totals with FNV64; include invalidated cache drop/rebuild; no render/terminal I/O")
 	}
 }

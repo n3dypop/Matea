@@ -28,7 +28,7 @@ for kind in ['ascii','unicode']:
  for operation,value in [('construct-read',doc),('clone-read',doc),('width',width),('graphemes',gh),('render-read',fh)]:expected[f'rich-text/{kind}/{operation}']={'first_return_value':value,'output':fo if operation=='render-read' else output}
 def p95(samples):return sorted(samples)[math.ceil(len(samples)*.95)-1]
 report={'schema':1,'status':'complete','limits':['One native host; finite 12-chunk corpora, not full text module or maximum possible speed.','Every raw before/after/order observation and tail retained; calibration distributions are not hypothesis tests.','Unicode construct/read and render/read remain slower than reference in this bounded cohort.','Isolated frozen reference dependency graph differs from ordinary production builds.'],'cohorts':{},'cases':{}}
-for cohort in ['baseline','optimized']:
+for cohort in ['baseline','optimized','sanitizer']:
  folder=P/cohort;context=json.loads((folder/'context.json').read_text());require(context['status']=='complete' and context['source_changed']==[])
  report['cohorts'][cohort]={'git_head':context['git_head'],'context_sha256':hashlib.sha256((folder/'context.json').read_bytes()).hexdigest(),'source_inputs':len(context['source_sha256'])}
  outputs={mode:read_probe_outputs((folder/(mode+'-outputs.jsonl')).read_text()) for mode in ['matea','reference']};require(outputs['matea']==outputs['reference'])
@@ -43,5 +43,5 @@ for cohort in ['baseline','optimized']:
    row={k:v[k] for k in ['cold_ns','allocations','allocated_bytes','iterations_per_sample']};row.update(p50_ns=statistics.median(v['samples_ns']),p95_ns=p95(v['samples_ns']),min_ns=min(v['samples_ns']),max_ns=max(v['samples_ns']),samples=len(v['samples_ns']),run=run['name'])
    report['cases'].setdefault(key,{}).setdefault(cohort,{}).setdefault(run['mode'],[]).append(row)
 for file in ['tools/reference-text/src/main.rs','tools/reference-text/Cargo.lock','tools/reference-text/Cargo.toml','tools/perf-probe/src/measurement.rs']:
- hashes=[json.loads((P/c/'context.json').read_text())['source_sha256'][file] for c in ['baseline','optimized']];require(hashes[0]==hashes[1], 'comparison instrumentation changed: '+file)
-(P/'performance-comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('verified 80 timing records and 40 output-only records against independently constructed text/style/grapheme/frame outputs')
+ hashes=[json.loads((P/c/'context.json').read_text())['source_sha256'][file] for c in ['baseline','optimized','sanitizer']];require(len(set(hashes))==1, 'comparison instrumentation changed: '+file)
+(P/'performance-comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('verified 120 timing records and 60 output-only records against independently constructed text/style/grapheme/frame outputs')

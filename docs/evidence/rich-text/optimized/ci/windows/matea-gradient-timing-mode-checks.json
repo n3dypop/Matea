@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "probe": "matea",
+  "group": "gradients",
+  "checked_cases": [
+    {
+      "case": "gradients/fresh_linear_8",
+      "iterations_per_sample": 65536,
+      "calibration_batches": 17,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_linear_8",
+      "iterations_per_sample": 131072,
+      "calibration_batches": 18,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/fresh_multi_80",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_multi_80",
+      "iterations_per_sample": 8192,
+      "calibration_batches": 14,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/fresh_multi_1024",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_multi_1024",
+      "iterations_per_sample": 512,
+      "calibration_batches": 10,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/fresh_grid_16x8_45",
+      "iterations_per_sample": 16384,
+      "calibration_batches": 15,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_grid_16x8_45",
+      "iterations_per_sample": 32768,
+      "calibration_batches": 16,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/fresh_grid_80x24_0",
+      "iterations_per_sample": 1024,
+      "calibration_batches": 11,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_grid_80x24_0",
+      "iterations_per_sample": 2048,
+      "calibration_batches": 12,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/fresh_grid_80x24_90",
+      "iterations_per_sample": 1024,
+      "calibration_batches": 11,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    },
+    {
+      "case": "gradients/reused_grid_80x24_90",
+      "iterations_per_sample": 2048,
+      "calibration_batches": 12,
+      "positive_samples": 31,
+      "allocation_schema_valid": true
+    }
+  ],
+  "target_ns": 20000000,
+  "zero_or_invalid_samples": 0,
+  "invalid_configurations_rejected": [],
+  "limits": "Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."
+}

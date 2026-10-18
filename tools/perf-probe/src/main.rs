@@ -5,6 +5,7 @@ mod gradients;
 mod measurement;
 mod progress;
 mod protocol;
+mod viewport_wrap;
 use matea::{
     prelude::*,
     style::Length,
@@ -39,6 +40,10 @@ fn trace() {
     );
 }
 fn main() {
+    if std::env::args().any(|arg| arg == "--viewport-wrap-fixtures") {
+        viewport_wrap::fixtures();
+        return;
+    }
     if std::env::args().any(|arg| arg == "--fallback-trace") {
         fallback_trace();
         return;
@@ -60,6 +65,10 @@ fn main() {
         return;
     }
     let iterations = measurement::iterations(300);
+    if std::env::args().any(|arg| arg == "--viewport-wrap") {
+        viewport_wrap::costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--progress") {
         progress::costs(iterations);
         return;

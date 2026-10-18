@@ -1010,7 +1010,9 @@
         "2ec959ea24ddcb75270d",
         "a29bd447ba213c3afe13",
         "5976d4597f778c76312c",
-        "12dce52aa632805fa68c"
+        "12dce52aa632805fa68c",
+        "1876565300a257d6e2d6",
+        "997b5db4cf56817bb8c2"
       ],
       "implementation": [
         "crates/matea-widgets/src/viewport.rs"
@@ -1022,10 +1024,14 @@
         "crates/matea-widgets/tests/fixtures/viewport-cuts.tsv",
         "crates/matea-widgets/tests/fixtures/viewport-cut-deviations.tsv",
         "crates/matea-widgets/tests/fixtures/viewport-input.tsv",
-        "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv"
+        "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv",
+        "crates/matea-widgets/tests/viewport_wrap.rs",
+        "crates/matea-widgets/tests/fixtures/viewport-wrap-source.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-wrap-matea.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-wrap-deviations.tsv"
       ],
       "performance": "docs/viewport-cell-geometry.md",
-      "notes": "50 candidates link partially to owned content, vertical/horizontal controls, typed default/override keys and focused wheel input. 1404 horizontal control observations match exactly, 200 View rows retain 161 plain matches and 39 literal cell-policy deviations; 34 input states retain 33 matches and one command-wheel policy difference, in addition to historical content fixtures. Default constant chords allocate no per-viewport key Vec. Lazy OnceLock width matches compositor grapheme policy and preserves Send/Sync. Full wrapping/fill/gutter/styles/highlights and source/platform/distribution coverage remain pending. No full module parity or high performance verdict."
+      "notes": "50 candidates link partially to owned content, vertical/horizontal controls, typed default/override keys and focused wheel input. 1404 horizontal control observations match exactly, 200 View rows retain 161 plain matches and 39 literal cell-policy deviations; 34 input states retain 33 matches and one command-wheel policy difference, in addition to historical content fixtures. Default constant chords allocate no per-viewport key Vec. Lazy OnceLock width matches compositor grapheme policy and preserves Send/Sync. Full wrapping/fill/gutter/styles/highlights and source/platform/distribution coverage remain pending. No full module parity or high performance verdict. Whole-EGC soft wrap/fill-height and logical-to-display ensure are implemented with a shared lazy row index; 1008 raw source cases preserve 586 exact states and 422 literal reviewed deviations. Wrapping measurements, Miri and cross-platform qualification remain pending; no whole-module verdict."
     },
     {
       "id": "render/owned-rich-text",

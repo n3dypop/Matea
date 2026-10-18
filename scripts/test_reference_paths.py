@@ -5,19 +5,29 @@ from pathlib import Path
 from types import SimpleNamespace
 import tempfile
 from unittest.mock import patch
-from check_reference_paths import check_trajectories, check_timing_mode
+from check_reference_paths import check_trajectories, check_timing_mode, check_viewport_wrap_fixtures
 
 
 class TrajectoryChecks(unittest.TestCase):
+    def test_wrap_matrix_keeps_target_dependent_counts_without_weakening_portable_rows(self):
+        zero = "empty\t\t0\t3\tfalse\ttop\t0\t0\t0\t0\t\t\t\n"
+        ordinary = "tea\t746561\t3\t1\tfalse\ttop\t1\t0\t0\t1\t746561\t746561\t\n"
+        expected = (zero + ordinary).encode()
+        target = (zero.replace("top\t0\t0", "top\t-1\t9223372036854775807") + ordinary).encode()
+        self.assertEqual(check_viewport_wrap_fixtures(target, expected), {"rows":2,"portable_exact_rows":1,"platform_zero_width_rows_retained":1})
+        for bad in [b"", expected + ordinary.encode(), target.replace(b"\t1\t0\t0\t1",b"\t2\t0\t0\t1"),
+                    target.replace(b"\t0\t0\t\t\t",b"\t1\t0\t\t\t"), target.replace(b"746561\t746561",b"xx\t746561"),
+                    target.replace(b"\t-1\t",b"\t--1\t"),target.replace(b"\t-1\t",b"\t18446744073709551616\t")]:
+            with self.subTest(bad=bad),self.assertRaises((AssertionError,ValueError)):check_viewport_wrap_fixtures(bad,expected)
     def test_gradient_timing_groups_require_all_separate_probe_cases(self):
-        for label,count,group in [(label,count,group) for label,count in [("upstream",6),("matea",12)] for group in ["gradients","progress"]]+[("upstream",14,"viewport-geometry"),("matea",18,"viewport-geometry")]:
+        for label,count,group in [(label,count,group) for label,count in [("upstream",6),("matea",12)] for group in ["gradients","progress"]]+[("upstream",14,"viewport-geometry"),("matea",18,"viewport-geometry"),("upstream",10,"viewport-wrap"),("matea",12,"viewport-wrap")]:
             values={f"{group}/{i}":{"case":f"{group}/{i}","semantics":"finite","output":"colors","first_return_value":1} for i in range(count)}
             raw="\n".join(json.dumps({**v,"samples_ns":[1]*31,"iterations_per_sample":1,"allocations":0,"allocated_bytes":0,
                 "calibration":{"target_ns":20_000_000,"start_n":1,"max_n":2,"batches":[{"iterations":1,"elapsed_ns":20_000_000,"confirmations_ns":[20_000_000]*2}]}}) for v in values.values()).encode()
             with tempfile.TemporaryDirectory() as directory,patch("check_reference_paths.subprocess.check_output",return_value=raw):
                 destination=Path(directory)
                 check_timing_mode(destination,Path("fixture"),{},[(["--"+group],values)],label=label,group=group)
-                report=json.loads((destination/(label+"-"+{"gradients":"gradient","progress":"progress","viewport-geometry":"viewport-geometry"}[group]+"-timing-mode-checks.json")).read_text())
+                report=json.loads((destination/(label+"-"+{"gradients":"gradient","progress":"progress","viewport-geometry":"viewport-geometry","viewport-wrap":"viewport-wrap"}[group]+"-timing-mode-checks.json")).read_text())
                 self.assertEqual(len(report['checked_cases']),count)
                 self.assertEqual(report['group'],group)
                 self.assertEqual(report['invalid_configurations_rejected'],[])

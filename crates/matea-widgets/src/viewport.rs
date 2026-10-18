@@ -195,10 +195,24 @@ pub struct Viewport {
     horizontal_offset: usize,
     horizontal_step: usize,
     longest_line_width: std::sync::OnceLock<usize>,
+    soft_wrap: bool,
+    wrapped_rows: std::sync::OnceLock<std::sync::Arc<WrappedRows>>,
     pub rows: u16,
+    /// Include empty padding rows in the visible iterator, including an empty
+    /// document. Explicit zero width/height still yields no padding rows.
+    pub fill_height: bool,
     pub keys: ViewportKeys,
     pub mouse_wheel_enabled: bool,
     pub mouse_wheel_delta: usize,
+}
+
+#[derive(Debug)]
+struct WrappedRows {
+    // Only UTF-8 byte starts are cached, not an allocation per displayed row.
+    starts: Vec<usize>,
+    // Rare oversized EGCs use a replacement row. Normal documents allocate no
+    // replacement storage; sorted row numbers permit a binary lookup.
+    replacements: Vec<usize>,
 }
 
 /// An ensure-visible range must have its end at or after its start.
@@ -228,7 +242,10 @@ impl Viewport {
             horizontal_offset: 0,
             horizontal_step: 6,
             longest_line_width: std::sync::OnceLock::new(),
+            soft_wrap: false,
+            wrapped_rows: std::sync::OnceLock::new(),
             rows: 6,
+            fill_height: false,
             keys: ViewportKeys::default(),
             mouse_wheel_enabled: true,
             mouse_wheel_delta: 3,
@@ -298,7 +315,10 @@ impl Viewport {
         }
         self.content = content;
         self.longest_line_width.take();
-        self.offset = self.offset.min(self.max_offset());
+        self.wrapped_rows.take();
+        if self.offset != 0 {
+            self.offset = self.offset.min(self.max_offset());
+        }
         if self.horizontal_offset != 0 {
             self.horizontal_offset = self.horizontal_offset.min(self.max_horizontal_offset());
         }
@@ -333,7 +353,13 @@ impl Viewport {
     /// Enable horizontal navigation and commit a position that fits the new
     /// width. Zero means an empty viewport, not an inferred parent width.
     pub fn set_width(&mut self, width: u16) {
+        if self.width != Some(width) {
+            self.wrapped_rows.take();
+        }
         self.width = Some(width);
+        if self.soft_wrap && self.offset != 0 {
+            self.offset = self.offset.min(self.max_offset());
+        }
         if self.horizontal_offset != 0 {
             self.horizontal_offset = self.horizontal_offset.min(self.max_horizontal_offset());
         }
@@ -342,10 +368,105 @@ impl Viewport {
     pub fn clear_width(&mut self) {
         self.width = None;
         self.horizontal_offset = 0;
+        self.wrapped_rows.take();
+        if self.soft_wrap && self.offset != 0 {
+            self.offset = self.offset.min(self.max_offset());
+        }
     }
     pub fn set_size(&mut self, width: u16, height: u16) {
         self.set_width(width);
         self.set_height(height);
+    }
+    /// Wrap complete graphemes once an explicit width is known. Vertical
+    /// positions then count display rows; logical line access stays unchanged.
+    /// Enabling wrap resets horizontal position. Clear width suspends wrapping
+    /// until the caller supplies a width again. Width zero displays no rows.
+    pub fn set_soft_wrap(&mut self, enabled: bool) {
+        if self.soft_wrap != enabled {
+            self.soft_wrap = enabled;
+            self.wrapped_rows.take();
+            if enabled {
+                self.horizontal_offset = 0;
+            }
+            if self.offset != 0 {
+                self.offset = self.offset.min(self.max_offset());
+            }
+        }
+    }
+    pub fn soft_wrap(&self) -> bool {
+        self.soft_wrap
+    }
+    /// Logical lines may occupy several display rows when wrapping is active.
+    pub fn display_line_count(&self) -> usize {
+        self.wrap_index()
+            .map_or_else(|| self.line_count(), |rows| rows.starts.len())
+    }
+    fn wrap_index(&self) -> Option<&WrappedRows> {
+        if !self.soft_wrap {
+            return None;
+        }
+        let width = usize::from(self.width?);
+        Some(self.wrapped_rows.get_or_init(|| {
+            use unicode_segmentation::UnicodeSegmentation;
+            use unicode_width::UnicodeWidthStr;
+            let mut rows = WrappedRows {
+                starts: Vec::new(),
+                replacements: Vec::new(),
+            };
+            if width == 0 {
+                return std::sync::Arc::new(rows);
+            }
+            rows.starts.reserve(self.line_count());
+            for (number, line) in self.lines().enumerate() {
+                let start = self.line_starts[number];
+                rows.starts.push(start);
+                if line.is_ascii() {
+                    rows.starts.extend(
+                        (width..line.len())
+                            .step_by(width)
+                            .map(|offset| start + offset),
+                    );
+                    continue;
+                }
+                let mut column = 0;
+                for (index, grapheme) in line.grapheme_indices(true) {
+                    let cells = grapheme.width();
+                    if cells == 0 {
+                        continue;
+                    }
+                    if column != 0 && cells > width - column {
+                        rows.starts.push(start + index);
+                        column = 0;
+                    }
+                    if cells > width {
+                        rows.replacements.push(rows.starts.len() - 1);
+                        column = width;
+                    } else {
+                        column += cells;
+                    }
+                }
+            }
+            std::sync::Arc::new(rows)
+        }))
+    }
+    fn display_line(&self, index: usize) -> Option<std::borrow::Cow<'_, str>> {
+        use std::borrow::Cow;
+        let Some(rows) = self.wrap_index() else {
+            return self.line(index).map(Cow::Borrowed);
+        };
+        let start = *rows.starts.get(index)?;
+        if rows.replacements.binary_search(&index).is_ok() {
+            return Some(Cow::Borrowed("�"));
+        }
+        let mut end = rows
+            .starts
+            .get(index + 1)
+            .copied()
+            .unwrap_or(self.content.len());
+        if end > start && self.content.as_bytes()[end - 1] == b'\n' {
+            end -= 1;
+        }
+        Some(Cow::Borrowed(&self.content[start..end]))
     }
     /// The compositor measures each grapheme independently. Cache that same
     /// policy lazily; vertical-only callers do not scan Unicode widths.
@@ -386,6 +507,9 @@ impl Viewport {
         })
     }
     pub fn max_horizontal_offset(&self) -> usize {
+        if self.soft_wrap {
+            return 0;
+        }
         self.width.map_or(0, |width| {
             self.longest_line_width().saturating_sub(usize::from(width))
         })
@@ -396,6 +520,9 @@ impl Viewport {
     /// Set a clamped cell position. Parent-sized viewports cannot scroll
     /// horizontally. Return whether the position changed.
     pub fn set_horizontal_offset(&mut self, offset: usize) -> bool {
+        if self.soft_wrap {
+            return false;
+        }
         let next = if offset == 0 {
             0
         } else {
@@ -450,6 +577,32 @@ impl Viewport {
             });
         }
         let before = (self.offset(), self.horizontal_offset);
+        if let Some(rows) = self.wrap_index() {
+            use unicode_segmentation::UnicodeSegmentation;
+            use unicode_width::UnicodeWidthStr;
+            let logical = line.min(self.line_count().saturating_sub(1));
+            let mut byte = self.line_starts.get(logical).copied().unwrap_or(0);
+            let mut column = 0usize;
+            if let Some(text) = self.line(logical) {
+                for grapheme in text.graphemes(true) {
+                    if column.saturating_add(grapheme.width()) > columns.start {
+                        break;
+                    }
+                    column += grapheme.width();
+                    byte += grapheme.len();
+                }
+            }
+            let target = rows
+                .starts
+                .partition_point(|start| *start <= byte)
+                .saturating_sub(1);
+            if target < self.offset()
+                || target.saturating_sub(self.offset()) >= usize::from(self.rows)
+            {
+                self.set_offset(target);
+            }
+            return Ok(before != (self.offset(), self.horizontal_offset));
+        }
         let column = if columns.end <= usize::from(self.width.unwrap_or(0)) {
             0
         } else {
@@ -473,7 +626,8 @@ impl Viewport {
         self.offset.min(self.max_offset())
     }
     pub fn max_offset(&self) -> usize {
-        self.line_count().saturating_sub(usize::from(self.rows))
+        self.display_line_count()
+            .saturating_sub(usize::from(self.rows))
     }
     /// Set a clamped position; return whether the observed position changed.
     pub fn set_offset(&mut self, offset: usize) -> bool {
@@ -503,7 +657,14 @@ impl Viewport {
         }
     }
     pub fn visible_line_count(&self) -> usize {
-        self.line_count()
+        if self.fill_height {
+            return if self.width == Some(0) {
+                0
+            } else {
+                usize::from(self.rows)
+            };
+        }
+        self.display_line_count()
             .saturating_sub(self.offset())
             .min(usize::from(self.rows))
     }
@@ -537,9 +698,25 @@ impl Viewport {
     pub fn go_to_bottom(&mut self) -> bool {
         self.set_offset(self.max_offset())
     }
-    /// Borrow the current vertical slice. Constructing an owned View is a
-    /// separate operation; this getter performs no allocation.
+    /// Borrow the original text covered by visible rows. Soft breaks and
+    /// fill-height padding are not inserted; use visible_lines for display rows.
+    /// The first wrapped geometry lookup can allocate its shared row index.
     pub fn visible_text(&self) -> &str {
+        if let Some(rows) = self.wrap_index() {
+            let first = self.offset();
+            let last = first
+                .saturating_add(usize::from(self.rows))
+                .min(rows.starts.len());
+            if first == last {
+                return "";
+            }
+            let start = rows.starts[first];
+            let mut end = rows.starts.get(last).copied().unwrap_or(self.content.len());
+            if end > start && self.content.as_bytes()[end - 1] == b'\n' {
+                end -= 1;
+            }
+            return &self.content[start..end];
+        }
         let start = self.offset();
         let end = start
             .saturating_add(usize::from(self.rows))
@@ -564,7 +741,14 @@ impl Viewport {
         let start = self.offset();
         let end = start + self.visible_line_count();
         (start..end).map(|index| {
-            let line = self.line(index).expect("visible owned line index is valid");
+            if self.soft_wrap && self.width.is_some() {
+                return self
+                    .display_line(index)
+                    .unwrap_or(std::borrow::Cow::Borrowed(""));
+            }
+            let Some(line) = self.line(index) else {
+                return std::borrow::Cow::Borrowed("");
+            };
             self.width
                 .map_or(std::borrow::Cow::Borrowed(line), |width| {
                     viewport_cell_window(line, self.horizontal_offset, usize::from(width))
@@ -681,7 +865,7 @@ impl Component for Viewport {
         };
         match action {
             Some(ViewportKey::Left | ViewportKey::Right) => {
-                if self.width.is_none() || self.horizontal_step == 0 {
+                if self.soft_wrap || self.width.is_none() || self.horizontal_step == 0 {
                     return Response::ignored();
                 }
                 if action == Some(ViewportKey::Left) {
@@ -719,7 +903,10 @@ impl Component for Viewport {
         Response::consumed(Some(Action::Changed))
     }
     fn view(&self, theme: &Theme, _: bool) -> View {
-        let view = if self.horizontal_offset == 0 {
+        let view = if self.horizontal_offset == 0
+            && !(self.soft_wrap && self.width.is_some())
+            && !self.fill_height
+        {
             View::styled(self.visible_text(), theme.text)
         } else {
             let mut text = compact_str::CompactString::default();
