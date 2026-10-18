@@ -14,6 +14,12 @@ caller scaling stays bounded. Malformed, non-Unicode, zero or out-of-range count
 are errors rather than silent defaults. This is private tooling, not a framework
 public API change.
 
+The first LLVM run with a fixed count of one fails on a zero coarse-clock interval
+at style/adapt_default_ansi256; the partial output and failed journal are retained.
+The driver now uses a uniform fixed count of 1,000 across probe modes. It does not
+retry selected intervals or publish instrumented distributions as performance
+evidence.
+
 An existing 29ffeea release binary accepted zero counts and emitted NaN while
 returning success. [The original raw output, exact binary and source context](evidence/rust-calibration/before-context.json)
 remain retained as an invalid-configuration regression, never a performance

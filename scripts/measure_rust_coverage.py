@@ -62,7 +62,11 @@ def collect(root):
     if sys.platform != "win32":
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
-    env["MATEA_PERF_ITERATIONS"] = "1"
+    # A single operation can be below the host clock resolution, even with
+    # instrumentation. Use one uniform fixed count; retain failures, never
+    # selectively retry or replace individual intervals. These are not timings
+    # for performance comparisons.
+    env["MATEA_PERF_ITERATIONS"] = "1000"
     # Instrumented execution coverage is explicitly fixed-batch, never timing
     # evidence. Native CI exercises the real confirmed-calibration path.
     env["MATEA_PERF_MIN_SAMPLE_NS"] = "0"
