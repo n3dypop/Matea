@@ -1026,6 +1026,37 @@
       ],
       "performance": "docs/viewport-cell-geometry.md",
       "notes": "50 candidates link partially to owned content, vertical/horizontal controls, typed default/override keys and focused wheel input. 1404 horizontal control observations match exactly, 200 View rows retain 161 plain matches and 39 literal cell-policy deviations; 34 input states retain 33 matches and one command-wheel policy difference, in addition to historical content fixtures. Default constant chords allocate no per-viewport key Vec. Lazy OnceLock width matches compositor grapheme policy and preserves Send/Sync. Full wrapping/fill/gutter/styles/highlights and source/platform/distribution coverage remain pending. No full module parity or high performance verdict."
+    },
+    {
+      "id": "render/owned-rich-text",
+      "status": "partial",
+      "reference_ids": [
+        "5fbdfdb60b558345b657",
+        "afd14d09ac4c61ac44ac",
+        "d73b4e1c299717147c94",
+        "5779087f423e5212821a",
+        "a6c8d400ed4171ce884c",
+        "4424d941d9785c59b0cb",
+        "f563ea141b96b223217a",
+        "9228ff68e836a528cbd3",
+        "535753b9c156dd0bb748",
+        "ae75c62ac2a5cef54fa0",
+        "91c4b3106c24a87c8186",
+        "ba2efe076488448a563c",
+        "78c32391bec83980da58",
+        "3abffa9809f135415dfa"
+      ],
+      "implementation": [
+        "crates/matea-render/src/rich_text.rs",
+        "crates/matea-render/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-render/tests/rich_text.rs",
+        "crates/matea-render/tests/fixtures/ratatui-span-boundaries.tsv",
+        "tools/reference-text/src/main.rs"
+      ],
+      "performance": "docs/rich-text-audit.md",
+      "notes": "Narrow owned normalized text, uniform/chunk styles, immutable shared clones, cached width/rows, borrowed style ranges/graphemes and left-aligned View/Canvas painting. Four aligned reference cases and four literal cross-span EGC deviations; styles of complete clusters follow the leading byte. Partial Line/Span links only: mutable fields/iterators, style patch/reset algebra, alignment/conversions, CJK width, complete feature/profile/module coverage and performance remain open."
     }
   ]
 }

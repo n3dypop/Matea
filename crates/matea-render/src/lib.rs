@@ -5,6 +5,8 @@ use matea_style::{Border, Length, Style, Theme, distribute};
 use std::{borrow::Cow, fmt};
 mod text;
 pub use text::Text;
+mod rich_text;
+pub use rich_text::{RichText, StyledGrapheme};
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -237,6 +239,67 @@ impl Canvas<'_> {
     fn text_owned(&mut self, x: u16, y: u16, text: &Text, style: Style) {
         self.draw_text(x, y, text.as_str(), style);
     }
+    /// Draw normalized rich text without splitting a grapheme at a style
+    /// transition. A grapheme uses the style at its leading byte.
+    pub fn rich_text(&mut self, x: u16, y: u16, text: &RichText) {
+        if let Some(style) = text.uniform_style() {
+            self.draw_text(x, y, text.as_str(), style);
+            return;
+        }
+        let mut byte_offset = 0;
+        for (dy, line) in text.as_str().split('\n').enumerate() {
+            let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
+                break;
+            };
+            if row >= self.clip.bottom() {
+                break;
+            }
+            if row < self.clip.y {
+                byte_offset += line.len() + 1;
+                continue;
+            }
+            let mut styles = text.style_cursor(byte_offset);
+            let mut col = u32::from(x);
+            if line.is_ascii() {
+                for index in 0..line.len() {
+                    if col >= u32::from(self.clip.right()) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) {
+                        self.put(
+                            col as u16,
+                            row,
+                            &line[index..index + 1],
+                            styles.at(byte_offset + index),
+                            1,
+                        );
+                    }
+                    col += 1;
+                }
+            } else {
+                for (index, grapheme) in line.grapheme_indices(true) {
+                    let width = grapheme.width();
+                    if width == 0 {
+                        continue;
+                    }
+                    if width > usize::from(self.clip.right()).saturating_sub(col as usize) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) {
+                        self.put(
+                            col as u16,
+                            row,
+                            grapheme,
+                            styles.at(byte_offset + index),
+                            width as u16,
+                        );
+                    }
+                    col += width as u32;
+                }
+            }
+            byte_offset += line.len() + 1;
+        }
+    }
     fn draw_text(&mut self, x: u16, y: u16, text: &str, style: Style) {
         for (dy, line) in text.split('\n').enumerate() {
             let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
@@ -259,17 +322,17 @@ impl Canvas<'_> {
                 continue;
             }
             for g in line.graphemes(true) {
-                let w = g.width() as u32;
+                let w = g.width();
                 if w == 0 {
                     continue;
                 }
-                if col + w > u32::from(self.clip.right()) {
+                if w > usize::from(self.clip.right()).saturating_sub(col as usize) {
                     break;
                 }
                 if col >= u32::from(self.clip.x) && row >= self.clip.y {
                     self.put(col as u16, row, g, style, w as u16);
                 }
-                col += w;
+                col += w as u32;
             }
         }
     }
@@ -389,6 +452,7 @@ enum Node {
         child: Box<View>,
         cursor: Cursor,
     },
+    RichText(RichText),
 }
 /// An owned immutable scene. Views never contain terminal escape sequences.
 #[derive(Clone, Debug)]
@@ -410,6 +474,9 @@ impl View {
     }
     pub fn styled(text: impl Into<Text>, style: Style) -> Self {
         Self::new(Node::Text(text.into(), style))
+    }
+    pub fn rich_text(text: RichText) -> Self {
+        Self::new(Node::RichText(text))
     }
     pub fn column(children: impl IntoIterator<Item = View>) -> Self {
         Self::new(Node::Stack {
@@ -497,6 +564,7 @@ impl View {
                 .saturating_add(content.theme.padding.saturating_mul(2)),
             Node::Layers(c) => c.iter().map(|(r, _)| r.bottom()).max().unwrap_or(0),
             Node::Cursor { child, .. } => child.natural_height(),
+            Node::RichText(text) => text.line_count().min(usize::from(u16::MAX)) as u16,
         }
     }
     pub fn render(&self, size: Size) -> Result<Surface, GeometryError> {
@@ -518,6 +586,7 @@ impl View {
         }
         match &self.node {
             Node::Text(text, style) => s.canvas(clip).text_owned(area.x, area.y, text, *style),
+            Node::RichText(text) => s.canvas(clip).rich_text(area.x, area.y, text),
             Node::Stack {
                 horizontal,
                 children,

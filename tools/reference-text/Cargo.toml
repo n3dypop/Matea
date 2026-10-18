@@ -1,0 +1,16 @@
+[package]
+name = "matea-reference-text-probe"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.88"
+publish = false
+
+# Independent reference lock: the main API auditor pins newer syn/quote and
+# would otherwise change the approved reference's transitive dependencies.
+[workspace]
+
+[dependencies]
+matea-render = { path = "../../crates/matea-render" }
+matea-style = { path = "../../crates/matea-style" }
+unicode-width = "=0.2.2"
+ratatui-core = { git = "https://github.com/ratatui/ratatui", rev = "d1ef782b48ddf0cb825c111d4d8b9adef572c0e1", default-features = false, features = ["std"] }

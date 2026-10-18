@@ -39,6 +39,7 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt, clippy, llvm-tools-preview
+      - run: cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml
       - run: cargo fmt --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
@@ -148,6 +149,7 @@ jobs:
             docs/evidence/local-validation.json
             docs/evidence/quality/rust-execution-coverage.json
             docs/evidence/*-tests.log
+            docs/evidence/reference-text*.log
             docs/evidence/representations.json
             docs/evidence/attributes-outputs.jsonl
             docs/evidence/windows-console.log
@@ -162,6 +164,7 @@ jobs:
         with:
           toolchain: "1.88"
       - run: cargo test --locked --workspace
+      - run: cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check
   reference-api:
     if: github.event_name == 'workflow_dispatch' && inputs.reference_api && !inputs.reference_probes_only
     timeout-minutes: 25

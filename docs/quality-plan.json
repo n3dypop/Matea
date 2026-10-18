@@ -138,7 +138,9 @@
     {
       "id": "matea-render/lib",
       "files": [
-        "crates/matea-render/src/lib.rs"
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-render/src/rich_text.rs",
+        "crates/matea-render/tests/rich_text.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -173,7 +175,9 @@
         "docs/evidence/quality/miri-render.log",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0053-owned-rich-text-with-whole-content-graphemes.md",
+        "docs/evidence/ratatui-span-boundaries/context.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1430,7 +1434,8 @@
         "crates/matea/benches/foundation_paths.rs",
         "tools/perf-probe/src/attributes.rs",
         "tools/perf-probe/src/gradients.rs",
-        "tools/perf-probe/src/progress.rs"
+        "tools/perf-probe/src/progress.rs",
+        "tools/reference-text/src/main.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1464,10 +1469,12 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
-        "docs/viewport-cell-geometry.md"
+        "docs/viewport-cell-geometry.md",
+        "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md"
       ],
       "remaining": [
-        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified."
+        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
+        "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned."
       ]
     },
     {

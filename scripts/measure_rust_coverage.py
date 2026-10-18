@@ -57,6 +57,23 @@ def collect(root):
         path.unlink()
     run(["cargo", "test", "--locked", "--offline", "--workspace", "--all-targets", "--message-format=json"], "coverage-test.jsonl")
     run(["cargo", "build", "--locked", "--offline", "--workspace", "--examples", "--bins", "--message-format=json"], "coverage-build.jsonl")
+    run(["cargo", "build", "--locked", "--offline", "--manifest-path", "tools/reference-text/Cargo.toml", "--message-format=json"], "coverage-reference-text-build.jsonl")
+    reference_text = ROOT / "target/quality-coverage/debug" / ("matea-reference-text-probe.exe" if sys.platform == "win32" else "matea-reference-text-probe")
+    run([str(reference_text), "--check"], "coverage-reference-text-check.log")
+    env["MATEA_PROBE_OUTPUT_ONLY"] = "1"
+    try:
+        text_outputs = []
+        for mode in ["--matea", "--reference"]:
+            log = "coverage-reference-text-" + mode[2:] + ".jsonl"
+            run([str(reference_text), mode], log)
+            values = read_probe_outputs((OUT / log).read_text(encoding="utf-8"))
+            if len(values) != 10:
+                raise ValueError("incomplete instrumented rich-text correctness records")
+            text_outputs.append(values)
+        if text_outputs[0] != text_outputs[1]:
+            raise ValueError("rich-text output-only reference mismatch")
+    finally:
+        env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
     run([sys.executable, "scripts/example_smoke.py"], "coverage-examples.log")
     run([sys.executable, "scripts/test_source_auditors.py"], "coverage-auditors.log")
     if sys.platform != "win32":
@@ -86,7 +103,7 @@ def collect(root):
 
     objects = set()
     deadline_probes = set()
-    for log in ["coverage-test.jsonl", "coverage-build.jsonl"]:
+    for log in ["coverage-test.jsonl", "coverage-build.jsonl", "coverage-reference-text-build.jsonl"]:
         for line in (OUT / log).read_text(encoding="utf-8").splitlines():
             try:
                 record = json.loads(line)
@@ -126,7 +143,7 @@ def collect(root):
     if not files:
         raise ValueError("no repository source instances in LLVM export")
     report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor, text attributes; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "isolated pinned reference-text package: native conformance and ten matched output-only records per implementation (instrumented; no timing evidence)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor, text attributes; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",
