@@ -37,7 +37,14 @@ The Cargo workspace is the repository root; engineering documentation lives in `
 
 See the runnable counter at `crates/matea/examples/counter.rs` and the facade rustdoc. Implement `Model` with an associated Message; Update mutates `&mut self` and returns Effect, View receives size/theme and returns an owned View. Unit tests can create Runtime directly, dispatch input/completion/resize events, advance logical time, and inspect Surface without a terminal. Applications need no executor annotations, macros, terminal setup, or message downcasts.
 
-The live loop reads one input per poll, dispatches it, advances timers, drains up to 32 completions and draws if state may have changed. The renderer suppresses unchanged rows. Update/View remain on the calling thread; only effect closures/messages must be Send. Update must not perform blocking I/O.
+The live loop reads one input per poll, honors an interrupt/configured Ctrl-C
+first, aligns logical time and advances already due timers, dispatches ordinary
+input/resize, then drains up to 32 completions. It draws if state may have changed.
+This prevents newly started subscriptions from inheriting time spent waiting for
+their triggering input. [ADR 0040](decisions/0040-align-logical-time-before-input-dispatch.md)
+records the deterministic ordering. The renderer suppresses unchanged rows.
+Update/View remain on the calling thread; only effect closures/messages must be
+Send. Update must not perform blocking I/O.
 
 Input waiting is capped by `Runtime::next_subscription_delay()` and the existing
 16ms idle bound. Subtract time spent since the last logical advance, including

@@ -150,24 +150,28 @@ pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
             }
             let timeout =
                 subscription_poll_timeout(runtime.next_subscription_delay(), || last.elapsed());
-            if let Some(event) = session.backend.poll(timeout)? {
+            let pending = match session.backend.poll(timeout)? {
+                Some(TerminalEvent::Interrupt) => break,
+                Some(TerminalEvent::Input(Input::Key(k)))
+                    if behavior == CtrlCBehavior::Quit && ctrl_c(k) =>
+                {
+                    break;
+                }
+                pending => pending,
+            };
+            // Synchronize time before input can create a new subscription.
+            // Already-due subscriptions run first; interrupts still take priority.
+            let now = Instant::now();
+            dirty = runtime.advance(now.duration_since(last))?;
+            last = now;
+            if let Some(event) = pending {
                 match event {
                     TerminalEvent::Interrupt => break,
-                    TerminalEvent::Input(Input::Key(k))
-                        if behavior == CtrlCBehavior::Quit && ctrl_c(k) =>
-                    {
-                        break;
-                    }
                     TerminalEvent::Input(input) => runtime.dispatch(Event::Input(input))?,
                     TerminalEvent::Resize(size) => runtime.dispatch(Event::Resize(size))?,
                 }
                 dirty = true;
-            } else {
-                dirty = false;
             }
-            let now = Instant::now();
-            dirty |= runtime.advance(now.duration_since(last))?;
-            last = now;
             dirty |= runtime.poll_effects()?;
         }
         runtime.shutdown();
@@ -580,6 +584,69 @@ mod tests {
         )
         .unwrap();
         assert_eq!(log.lock().unwrap().last(), Some(&"restore"));
+    }
+    #[test]
+    fn subscription_started_by_input_does_not_inherit_the_previous_input_wait() {
+        struct StartClock(bool);
+        impl Model for StartClock {
+            type Message = ();
+            fn update(&mut self, event: Event<()>) -> Effect<()> {
+                match event {
+                    Event::Input(_) => self.0 = true,
+                    Event::Message(()) => return Effect::quit(),
+                    _ => {}
+                }
+                Effect::none()
+            }
+            fn subscriptions(&self) -> Vec<matea_core::Subscription<()>> {
+                if self.0 {
+                    vec![matea_core::Subscription::every(
+                        "new-clock",
+                        Duration::from_millis(2),
+                        || (),
+                    )]
+                } else {
+                    Vec::new()
+                }
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("clock")
+            }
+        }
+        struct StartInput(Arc<Mutex<usize>>);
+        impl Backend for StartInput {
+            fn enter(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn restore(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn size(&self) -> io::Result<Size> {
+                Ok(Size::new(8, 1))
+            }
+            fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+                Ok(())
+            }
+            fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>> {
+                let mut calls = self.0.lock().unwrap();
+                *calls += 1;
+                if *calls == 1 {
+                    std::thread::sleep(Duration::from_millis(10));
+                    Ok(Some(TerminalEvent::Input(Input::Key(
+                        matea_core::Key::new(matea_core::KeyCode::Char('s')),
+                    ))))
+                } else {
+                    std::thread::sleep(timeout);
+                    Ok(None)
+                }
+            }
+        }
+        let calls = Arc::new(Mutex::new(0));
+        run_with_backend(StartClock(false), Theme::plain(), StartInput(calls.clone())).unwrap();
+        assert!(
+            *calls.lock().unwrap() >= 2,
+            "new 2ms subscription fired using the 10ms wait before it existed"
+        );
     }
     #[test]
     fn restoration_on_success_failure_and_unwind() {
