@@ -1705,7 +1705,9 @@
         "scripts/performance_records.py",
         "scripts/measure_remaining_performance.py",
         "scripts/report_attribute_performance.py",
-        "scripts/measure_reader_performance.py"
+        "scripts/measure_reader_performance.py",
+        "scripts/measurement_run.py",
+        "scripts/qualify_measurement_drivers.py"
       ],
       "criteria": {
         "rust_design": {
@@ -1718,7 +1720,7 @@
         },
         "behavior": {
           "score": 50,
-          "reason": "Execution/fixture evidence exists but malformed inputs, failure paths or richer behavior need further independent tests."
+          "reason": "Malformed/schema/calibration checks plus new running/failed/partial/atomic-publication, source/captured-input integrity and preparation rollback fixtures pass natively. Whole host-driver qualification remains pending."
         },
         "reference": {
           "score": null,
@@ -1730,7 +1732,7 @@
         },
         "portability": {
           "score": 50,
-          "reason": "All five historical reporters in read-only mode and pinned Go preparation execute on all three OSes, including the Windows Git EOL regression. Full auditor/remaining measurement-driver executions and their new captured-extraction paths are native-macOS evidence only, so this entire unit remains partial."
+          "reason": "Existing five reporters/preparation execute on three OSes. New complete auditor/remaining/reader and native-captured-extraction qualification is pending on three OSes; no score promotion before execution."
         }
       },
       "evidence": [

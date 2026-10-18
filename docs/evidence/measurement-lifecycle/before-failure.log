@@ -1,0 +1,27 @@
+..F.F....
+======================================================================
+FAIL: test_failed_auditor_invocation_replaces_old_success_manifest (test_measurement_drivers.MeasurementDriverTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_measurement_drivers.py", line 27, in test_failed_auditor_invocation_replaces_old_success_manifest
+    self.assertEqual(context["status"],"failed")
+AssertionError: 'complete' != 'failed'
+- complete
++ failed
+
+
+======================================================================
+FAIL: test_failed_remaining_source_check_cannot_reuse_previous_success (test_measurement_drivers.MeasurementDriverTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_measurement_drivers.py", line 40, in test_failed_remaining_source_check_cannot_reuse_previous_success
+    self.assertEqual(context["status"],"failed")
+AssertionError: 'complete' != 'failed'
+- complete
++ failed
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.239s
+
+FAILED (failures=2)

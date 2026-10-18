@@ -12,6 +12,10 @@ on:
         description: Reuse completed compiler profiles; rerun source/probe checks only
         type: boolean
         default: false
+      measurement_drivers:
+        description: Qualify complete measurement drivers and two native extraction paths
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -233,5 +237,37 @@ jobs:
             ${{ runner.temp }}/matea-reference-paths/upstream-progress-outputs.jsonl
             ${{ runner.temp }}/matea-reference-paths/progress-fixtures.txt
             ${{ runner.temp }}/matea-reference-paths/indexed-gradient-fixtures.txt
+          if-no-files-found: warn
+          retention-days: 14
+
+  measurement-drivers:
+    if: github.event_name == 'workflow_dispatch' && inputs.measurement_drivers
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: stable
+      - run: rustup toolchain install nightly-2026-10-11 --profile minimal
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.27.2"
+          cache: false
+      - run: python scripts/qualify_measurement_drivers.py --destination "${{ runner.temp }}/matea-measurement-drivers"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: measurement-drivers-${{ matrix.os }}
+          path: ${{ runner.temp }}/matea-measurement-drivers/results
           if-no-files-found: warn
           retention-days: 14

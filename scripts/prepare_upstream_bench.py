@@ -1,38 +1,28 @@
 """Prepare a disposable pinned Go module without modifying/vendoring references."""
-from evidence_checks import require
 import argparse
+import hashlib
 import json
 from pathlib import Path
-import shutil
 import subprocess
+from measurement_run import atomic_bytes, json_bytes
 
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser()
-parser.add_argument("--references",type=Path,required=True)
-parser.add_argument("--destination",type=Path,required=True)
-args=parser.parse_args()
-lock={r["name"]:r for r in json.loads((ROOT/"docs/upstream-lock.json").read_text())}
-source=args.references.resolve()/"ultraviolet"
-motion=args.references.resolve()/"harmonica"
-bindings=args.references.resolve()/"bubbles"
-tea=args.references.resolve()/"bubbletea"
-lip=args.references.resolve()/"lipgloss"
-require(subprocess.check_output(["git","-C",str(lip),"rev-parse","HEAD"],text=True).strip()==lock["lipgloss"]["sha"])
-require(not subprocess.check_output(["git","-C",str(lip),"status","--porcelain"],text=True))
-require(subprocess.check_output(["git","-C",str(tea),"rev-parse","HEAD"],text=True).strip()==lock["bubbletea"]["sha"])
-require(not subprocess.check_output(["git","-C",str(tea),"status","--porcelain"],text=True))
-require(subprocess.check_output(["git","-C",str(bindings),"rev-parse","HEAD"],text=True).strip()==lock["bubbles"]["sha"])
-require(not subprocess.check_output(["git","-C",str(bindings),"status","--porcelain"],text=True))
-require(subprocess.check_output(["git","-C",str(motion),"rev-parse","HEAD"],text=True).strip()==lock["harmonica"]["sha"])
-require(not subprocess.check_output(["git","-C",str(motion),"status","--porcelain"],text=True))
-actual=subprocess.check_output(["git","-C",str(source),"rev-parse","HEAD"],text=True).strip()
-require(actual==lock["ultraviolet"]["sha"])
-require(not subprocess.check_output(["git","-C",str(source),"status","--porcelain"],text=True))
-destination=args.destination.resolve();destination.mkdir(parents=True,exist_ok=True)
-shutil.copy2(ROOT/"tools/perf-upstream/main.go",destination/"main.go")
-shutil.copy2(ROOT/"tools/perf-upstream/main_test.go",destination/"main_test.go")
-shutil.copy2(ROOT/"tools/perf-upstream/go.sum",destination/"go.sum")
-(destination/"go.mod").write_text(f'''module matea-foundation-comparison
+
+
+def prepare(references, destination, root=ROOT):
+    lock={r["name"]:r for r in json.loads((root/"docs/upstream-lock.json").read_bytes())}
+    references, destination=references.resolve(),destination.resolve()
+    if destination.is_relative_to(root.resolve()) or destination.is_relative_to(references):
+        raise ValueError("comparison workspace must stay outside Matea and reference checkouts")
+    names=["ultraviolet","harmonica","bubbles","bubbletea","lipgloss"]
+    for name in names:
+        checkout=references/name
+        actual=subprocess.check_output(["git","rev-parse","HEAD"],cwd=checkout,text=True,timeout=30).strip()
+        dirty=subprocess.check_output(["git","status","--porcelain"],cwd=checkout,text=True,timeout=30)
+        if actual!=lock[name]["sha"] or dirty:
+            raise ValueError("reference is not the clean pinned input: "+name)
+    source,motion,bindings,tea,lip=(references/name for name in names)
+    module=f"""module matea-foundation-comparison
 
 go 1.26.0
 
@@ -45,6 +35,32 @@ replace github.com/charmbracelet/harmonica => {json.dumps(str(motion))}
 replace charm.land/bubbles/v2 => {json.dumps(str(bindings))}
 replace charm.land/bubbletea/v2 => {json.dumps(str(tea))}
 replace charm.land/lipgloss/v2 => {json.dumps(str(lip))}
-''')
-(destination/"source-pin.json").write_text(json.dumps({"ultraviolet_sha":actual,"harmonica_sha":lock["harmonica"]["sha"],"bubbles_sha":lock["bubbles"]["sha"],"bubbletea_sha":lock["bubbletea"]["sha"],"lipgloss_sha":lock["lipgloss"]["sha"],"harness":"tools/perf-upstream/main.go"},indent=2)+"\n")
-print(destination)
+"""
+    files={name:(root/"tools/perf-upstream"/name).read_bytes() for name in ["main.go","main_test.go","go.sum"]}
+    files["go.mod"]=module.encode("utf-8")
+    pin={name+"_sha":lock[name]["sha"] for name in names}
+    pin.update(harness="tools/perf-upstream/main.go",status="preparing")
+    destination.mkdir(parents=True,exist_ok=True)
+    atomic_bytes(destination/"source-pin.json",json_bytes(pin))
+    try:
+        for name,data in files.items():
+            atomic_bytes(destination/name,data)
+        pin.update(status="complete",file_sha256={name:hashlib.sha256(data).hexdigest() for name,data in files.items()})
+        atomic_bytes(destination/"source-pin.json",json_bytes(pin))
+    except Exception as error:
+        pin.update(status="failed",error_type=type(error).__name__)
+        atomic_bytes(destination/"source-pin.json",json_bytes(pin))
+        raise
+    return destination
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--references",type=Path,required=True)
+    parser.add_argument("--destination",type=Path,required=True)
+    args=parser.parse_args()
+    print(prepare(args.references,args.destination))
+
+
+if __name__=="__main__":
+    main()

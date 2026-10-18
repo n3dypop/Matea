@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 from optimization_evidence import compare, records, summary
-from performance_records import parse_json
+from performance_records import parse_json, write_report
 
 ROOT = Path(__file__).resolve().parents[1]
 COLOR = r"(?:Default|Indexed\(\d+\)|Rgb\(\d+, \d+, \d+\))"
@@ -110,10 +110,11 @@ def generate(directory):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory",type=Path)
+    parser.add_argument("--check",action="store_true",help="validate without replacing retained evidence")
     args=parser.parse_args()
     report=generate(args.directory)
     report["reporter_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    (args.directory/"report.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
+    write_report(args.directory/"report.json",json.dumps(report,indent=2)+"\n")
     print("157 legacy controls and 171 cache-change controls validated; 4 matched reference flag fixtures")
 
 
