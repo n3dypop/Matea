@@ -28,3 +28,12 @@ repeats. The literal full-cell/row tests, existing goldens, third-party widget a
 interactive resize/cleanup tests protect observable behavior. Run targeted Miri
 and native/three-OS checks before calling this optimization validated. No new
 public API, reference capability completion or Stage B claim follows.
+
+The first measured token-only version (db865c6) reduces short panel requested
+bytes from 160 to 102 with two allocations, without a consistent speed gain.
+Retain it as an intermediate. Evaluate storing the child View and three-token
+snapshot in one boxed PanelContent, while retaining the inline title in Node.
+This avoids a second allocation and keeps the enum/stack stride bounded; actual
+padding can request a few more bytes than the two separate payloads. Prefer the
+single owner only if measured allocations, distributions and all behavior remain
+acceptable. Preserve the two-allocation intermediate and mixed results.

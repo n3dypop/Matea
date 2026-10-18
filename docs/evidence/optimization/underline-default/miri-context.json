@@ -1,0 +1,13 @@
+{
+  "source_head": "ffce754aabaf719804090e3fd0c903d7b71413da",
+  "source_sha256": {
+    "crates/matea-style/src/lib.rs": "fcfa4c5b17e13616a4d22d57279b93525bfd12b8106c8d4ee75996c09d4c5cc0",
+    "crates/matea-style/tests/colors.rs": "85d67a5bb8dbdd6e82822693b2b1a2c7291b8765adea4c3045c6e4160a0edb17"
+  },
+  "command": "MIRIFLAGS=-Zmiri-seed=173 cargo +nightly miri test --locked --offline -p matea-style --test colors profiles_preserve",
+  "log_sha256": "440ee9dc40798df87a07a56409ceca8e401dd3b0790b78aa6a862a8588ca1733",
+  "tests_passed": 1,
+  "limits": [
+    "One finite palette/profile/attribute fixture; not exhaustive memory safety or full source capability parity."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "status": "not_adopted",
+  "candidate_head": "ffce754",
+  "reason": "Initial 144-case pass regressed paired styles, while balanced warm repeats improved ANSI16/256 only slightly and no-color/truecolor results mixed. Evidence does not justify keeping another branch as a stable optimization. Production guard reverted; expanded Default/RGB correctness fixture retained.",
+  "initial_ansi16_pair_ns": {
+    "before_p50": 17.104,
+    "candidate_p50": 41.979
+  },
+  "balanced_ansi16_pair_p50_ns": {
+    "before": [
+      54.2295,
+      17.292
+    ],
+    "candidate": [
+      16.792,
+      16.792
+    ]
+  },
+  "limits": [
+    "No samples removed or renamed as a success. Short batches, OS scheduling and uncontrolled clock/frequency limit inference.",
+    "Consider separately audited Rust batch calibration before revisiting sub-nanosecond/small-nanosecond control conclusions."
+  ]
+}
