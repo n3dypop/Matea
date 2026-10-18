@@ -95,3 +95,9 @@ semantics remain pending. RGB8 output uses RGBA16 rounding followed by an 8-bit
 projection, not RGB255 rounding. The two declarations are linked to this bounded
 capability, with no whole-module or all-feature parity claim. The design and
 comparison contract are in [ADR 0045](decisions/0045-owned-terminal-color-gradients.md).
+
+An additive constructor now resolves canonical indexed/RGB stops without hex
+parsing; all 256 indexed starting colors have separate eight-sample reference
+fixtures. Default terminal colors remain unresolved errors. This new path is
+under verification in [the progress slice](progress-audit.md); the timing and CI
+results above remain tied to source 1202535, not silently reassigned to it.

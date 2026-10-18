@@ -89,6 +89,41 @@ fn configuration_owns_stops_and_rejects_invalid_angle_or_empty_input() {
     );
 }
 
+#[test]
+fn all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback() {
+    let mut checked = 0;
+    for line in include_str!("fixtures/indexed-gradients.tsv").lines() {
+        let (index, colors) = line.split_once('\t').unwrap();
+        let index: u8 = index.parse().unwrap();
+        if cfg!(miri) && !index.is_multiple_of(17) {
+            continue;
+        }
+        let source = [Color::Indexed(index), Color::Indexed(13)];
+        let gradient = Gradient::from_xterm_colors(&source).unwrap();
+        assert_eq!(gradient.colors(8).collect::<Vec<_>>(), expected(colors));
+        checked += 1;
+    }
+    assert_eq!(checked, if cfg!(miri) { 16 } else { 256 });
+    assert_eq!(
+        Gradient::from_xterm_colors(&[]).unwrap_err(),
+        GradientError::EmptyStops
+    );
+    for source in [
+        [Color::Default, Color::Indexed(5)],
+        [Color::Rgb(1, 2, 3), Color::Default],
+    ] {
+        assert_eq!(
+            Gradient::from_xterm_colors(&source).unwrap_err(),
+            GradientError::UnresolvedDefaultColor
+        );
+    }
+    let mixed = Gradient::from_xterm_colors(&[Color::Indexed(5), Color::Rgb(0, 255, 0)]).unwrap();
+    assert_eq!(
+        mixed.colors(2).collect::<Vec<_>>(),
+        [Color::Rgb(128, 0, 128), Color::Rgb(0, 255, 0)]
+    );
+}
+
 fn mixed_ends(
     mut actual: impl ExactSizeIterator<Item = Color> + DoubleEndedIterator + FusedIterator,
     values: Vec<Color>,

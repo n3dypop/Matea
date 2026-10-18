@@ -9,6 +9,7 @@ blending.go at 19f011f1. The common MIT notice for these adapted sections:
 ```
 Copyright (c) 2013 Lucas Beyer
 Copyright (c) 2021-2026 Charmbracelet, Inc.
+Copyright (c) 2020-2026 Charmbracelet, Inc. (Bubbles progress)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +29,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+
+Progress in matea-widgets is an altered Rust implementation informed by Bubbles
+progress/progress.go at c3bde0d166c2ca607d9864493453fd77bdcae7e4. The MIT terms
+above also apply to those adapted sections; its original notice is Copyright
+(c) 2020-2026 Charmbracelet, Inc. Matea uses independently owned state, typed
+clock generations, semantic theme defaults, validated geometry and corrected
+absolute-velocity rest detection. See ADR 0046 for deliberate differences.
 
 ## Motion implementation attribution
 

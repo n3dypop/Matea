@@ -906,6 +906,56 @@
       ],
       "performance": "docs/evidence/gradients/performance/report.json",
       "notes": "RGB8 stop/output subset: owned cached Lab coordinates, reference segment distribution and prefix shortcut, cached diagonal palette and borrowed zero-output-allocation iteration. 548 native reference fixtures, 19 selected Miri cases, six matched fresh workloads and six separate streaming controls. Seven required CI jobs pass at 1202535 with 116 program/138 input binding. High-depth/fractional/alpha/custom color inputs, other constructor/prefix/error performance and full styled rendering remain pending. No full declaration/module parity; see docs/gradient-audit.md."
+    },
+    {
+      "id": "widgets/progress",
+      "status": "partial",
+      "reference_ids": [
+        "709049bce9048591d3e0",
+        "0c63eca5e90ae9746e11",
+        "1b5eb056f289c13b616f",
+        "751bd64c1a33bc77bb88",
+        "83f44bfd618ad0aa3acc",
+        "c209ed77fcb88c281681",
+        "f94c0bae83a709c55886",
+        "a6247d6a1a1bd0bb1bf9",
+        "ad764c47a06996b911e8",
+        "9c8142d673d87310b1ba",
+        "660d3664c83cd658c07e",
+        "b0db4af44e0795bee357",
+        "1a8f8489360a626fe21d",
+        "35a2692e27096b439722",
+        "6d12ea95087f79c9dae8",
+        "dfae268f65fe86308fb7",
+        "eec682dde765647ef779",
+        "08836c1ea682414b1afe",
+        "8d158ad9fb63dfb2186f",
+        "f85dc0beab16369c784c",
+        "68d577786612425b3b3c",
+        "dfb27ab4bf975a844845",
+        "61442aa90575b21cbdd1",
+        "e0d1169ae7b01df499a1",
+        "d7ea1843db54c4064759",
+        "32b78b4401bbe31ee640",
+        "1ac97ae5303d07b767f8",
+        "c0eb5b7510fbd21836fe",
+        "cbcd7b349e852c4a5972",
+        "c79a6c59e688c494653a",
+        "2d292bb4ad3277eb154a",
+        "e2156101136014a1bb62",
+        "7bdc62d14ce49959e373",
+        "1ab1e20216e15d33a3ee",
+        "2806a7f42fd931df768d"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/progress.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/progress.rs",
+        "crates/matea/tests/progress.rs"
+      ],
+      "performance": "docs/progress-audit.md",
+      "notes": "35 candidates have bounded Rust equivalents; 120 RGB8 styled-cell fixtures and signed-velocity regression. Initial native tests only; new CI, distributions and additional color/style/lifecycle conditions pending. ADR 0046 documents intentional validated geometry, finite input, enum fill and rest differences."
     }
   ]
 }

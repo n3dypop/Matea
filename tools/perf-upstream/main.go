@@ -7,6 +7,7 @@ import (
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/paginator"
+	"charm.land/bubbles/v2/progress"
 	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/stopwatch"
 	"charm.land/bubbles/v2/textinput"
@@ -202,6 +203,16 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--indexed-gradient-fixtures" {
+		for index := range 256 {
+			fmt.Printf("%d\t%s\n", index, gradientHex(lipgloss.Blend1D(8, ansi.IndexedColor(index), ansi.IndexedColor(13))))
+		}
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--progress-fixtures" {
+		progressFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--gradient-fixtures" {
 		gradientFixtures()
 		return
@@ -275,6 +286,11 @@ func main() {
 		clockCases(n)
 		return
 	}
+	if len(os.Args) > 1 && os.Args[1] == "--progress" {
+		progressCosts(n)
+		return
+	}
+
 	if len(os.Args) > 1 && os.Args[1] == "--gradients" {
 		gradientCosts(n)
 		return
@@ -359,6 +375,56 @@ func main() {
 			p, v := s.Update(motionInputs[0], motionInputs[1], motionInputs[2])
 			return math.Float64bits(p) ^ math.Float64bits(v)
 		}, expected, "construct spring coefficients and update once dt=16ms omega=12 state=(2,0) target=1; finite inputs")
+	}
+}
+
+func configuredProgress(mode, width int) progress.Model {
+	options := []progress.Option{progress.WithWidth(width)}
+	switch mode {
+	case 0:
+		options = append(options, progress.WithColors(color.RGBA{117, 113, 249, 255}))
+	case 1:
+		options = append(options, progress.WithoutPercentage(), progress.WithFillCharacters('█', '░'), progress.WithDefaultBlend())
+	case 2:
+		options = append(options, progress.WithDefaultBlend())
+	case 3:
+		options = append(options, progress.WithDefaultBlend(), progress.WithScaled(true))
+	case 4, 5:
+		options = append(options, progress.WithColorFunc(func(total, current float64) color.Color {
+			return color.RGBA{uint8(total * 255), uint8(current * 255), 77, 255}
+		}))
+		if mode == 5 {
+			options = append(options, progress.WithFillCharacters('#', '-'))
+		}
+	}
+	return progress.New(options...)
+}
+
+// Capture real public ViewAs output through the pinned ANSI/Ultraviolet parser.
+// The reference bar is not reconstructed in this oracle.
+func progressFixtures() {
+	for mode := 0; mode < 6; mode++ {
+		for _, width := range []int{5, 8, 17, 40} {
+			for _, fraction := range []float64{0, 0.125, 0.5, 0.995, 1} {
+				m := configuredProgress(mode, width)
+				output := m.ViewAs(fraction)
+				frame := uv.NewScreenBuffer(width, 1)
+				uv.NewStyledString(output).Draw(frame, frame.Bounds())
+				var cells []string
+				for x := 0; x < width; x++ {
+					cell := frame.CellAt(x, 0)
+					colorHex := func(c color.Color) string {
+						if c == nil {
+							return "default"
+						}
+						r, g, b, _ := c.RGBA()
+						return fmt.Sprintf("%02x%02x%02x", r>>8, g>>8, b>>8)
+					}
+					cells = append(cells, fmt.Sprintf("%s:%s:%s", cell.Content, colorHex(cell.Style.Fg), colorHex(cell.Style.Bg)))
+				}
+				fmt.Printf("%d\t%d\t%g\t%s\n", mode, width, fraction, strings.Join(cells, ","))
+			}
+		}
 	}
 }
 
@@ -1264,4 +1330,61 @@ func virtualCursorCases(n int) {
 		}
 		return 1
 	}, "true", "ignore foreign tick on focused blinking cursor; final visibility true; no new scheduling request or terminal I/O")
+}
+
+var progressFraction = 0.625
+
+func progressFrame(m progress.Model, fraction float64) uv.ScreenBuffer {
+	frame := uv.NewScreenBuffer(m.Width(), 1)
+	uv.NewStyledString(m.ViewAs(fraction)).Draw(frame, frame.Bounds())
+	return frame
+}
+func progressColorHex(c color.Color) string {
+	if c == nil {
+		return "default"
+	}
+	r, g, b, _ := c.RGBA()
+	return fmt.Sprintf("%02x%02x%02x", r>>8, g>>8, b>>8)
+}
+func progressOutput(frame uv.ScreenBuffer) string {
+	var cells []string
+	for x := 0; x < frame.Width(); x++ {
+		c := frame.CellAt(x, 0)
+		cells = append(cells, fmt.Sprintf("%s:%s:%s", c.Content, progressColorHex(c.Style.Fg), progressColorHex(c.Style.Bg)))
+	}
+	return strings.Join(cells, ",")
+}
+func progressChecksum(frame uv.ScreenBuffer) uint64 {
+	value := uint64(14695981039346656037)
+	feed := func(b byte) { value = (value ^ uint64(b)) * 1099511628211 }
+	for x := 0; x < frame.Width(); x++ {
+		c := frame.CellAt(x, 0)
+		for i := 0; i < len(c.Content); i++ {
+			feed(c.Content[i])
+		}
+		for _, col := range []color.Color{c.Style.Fg, c.Style.Bg} {
+			if col == nil {
+				feed(0)
+			} else {
+				r, g, b, _ := col.RGBA()
+				feed(1)
+				feed(byte(r >> 8))
+				feed(byte(g >> 8))
+				feed(byte(b >> 8))
+			}
+		}
+	}
+	return value
+}
+func progressCosts(n int) {
+	for mode, width := range []int{40, 40, 40, 80, 80, 200} {
+		m := configuredProgress(mode, width)
+		frame := progressFrame(m, progressFraction)
+		measure(fmt.Sprintf("progress/frame_%d_%d", mode, width), max(1, n/100), func() uint64 {
+			frame := progressFrame(m, progressFraction)
+			result := progressChecksum(frame)
+			runtime.KeepAlive(frame)
+			return result
+		}, progressOutput(frame), "existing configured RGB8 progress bar at fraction 0.625; construct complete styled one-row frame and consume all UTF-8 symbols and foreground/background colors with FNV64; include frame allocation, formatting and rendering; no terminal I/O or animation")
+	}
 }

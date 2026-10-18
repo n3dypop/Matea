@@ -6,6 +6,7 @@ mod help;
 pub mod key;
 mod pagination;
 mod paginator;
+mod progress;
 mod spinner;
 mod textinput;
 pub use clocks::{
@@ -19,6 +20,10 @@ use matea_render::{View, sanitize};
 use matea_style::Theme;
 pub use pagination::Pagination;
 pub use paginator::{PageDisplay, PageKeys, PageNumbers, Paginator};
+pub use progress::{
+    PROGRESS_EMPTY_BLOCK, PROGRESS_FULL_BLOCK, PROGRESS_HALF_BLOCK, Progress, ProgressCell,
+    ProgressCells, ProgressError, ProgressFill, ProgressFrame, ProgressStyles,
+};
 pub use spinner::{EmptySpinnerFrames, Spinner, SpinnerAnimation, SpinnerPreset};
 pub use textinput::{EchoMode, InputStyleState, InputStyles, TextEditKeys, TextInput};
 

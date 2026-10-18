@@ -929,6 +929,46 @@
       ]
     },
     {
+      "id": "matea-widgets/progress",
+      "files": [
+        "crates/matea-widgets/src/progress.rs"
+      ],
+      "criteria": {
+        "rust_design": {
+          "score": 75,
+          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+        },
+        "memory_safety": {
+          "score": 75,
+          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+        },
+        "behavior": {
+          "score": 75,
+          "reason": "Native tests/smokes and linked regressions validate the implemented subset."
+        },
+        "reference": {
+          "score": 50,
+          "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
+        },
+        "performance": {
+          "score": 50,
+          "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
+        },
+        "portability": {
+          "score": 50,
+          "reason": "Synthetic cell geometry and fallback tests cover the implemented subset. The historical native Windows width report and physical-emulator behavior remain unverified; this unit retains a partial portability verdict."
+        }
+      },
+      "evidence": [
+        "docs/progress-audit.md",
+        "crates/matea-widgets/tests/progress.rs",
+        "crates/matea/tests/progress.rs"
+      ],
+      "remaining": [
+        "Finish matched native measurements, current-source cross-platform verification and remaining color/format/style/lifecycle conditions."
+      ]
+    },
+    {
       "id": "matea-widgets/textinput",
       "files": [
         "crates/matea-widgets/src/textinput.rs"
@@ -973,7 +1013,8 @@
     {
       "id": "matea/lib",
       "files": [
-        "crates/matea/src/lib.rs"
+        "crates/matea/src/lib.rs",
+        "crates/matea/tests/progress.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1187,7 +1228,8 @@
         "crates/matea-widgets/tests/clocks.rs",
         "crates/matea-widgets/tests/spinner.rs",
         "crates/matea-widgets/tests/viewport.rs",
-        "crates/matea-widgets/tests/cursor.rs"
+        "crates/matea-widgets/tests/cursor.rs",
+        "crates/matea-widgets/tests/progress.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1287,7 +1329,8 @@
         "examples/external-widget/src/main.rs",
         "crates/matea/examples/cursor.rs",
         "crates/matea/examples/attributes.rs",
-        "crates/matea/examples/gradients.rs"
+        "crates/matea/examples/gradients.rs",
+        "crates/matea/examples/progress.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1382,7 +1425,8 @@
         "crates/matea-terminal/benches/terminal_primitives.rs",
         "crates/matea/benches/foundation_paths.rs",
         "tools/perf-probe/src/attributes.rs",
-        "tools/perf-probe/src/gradients.rs"
+        "tools/perf-probe/src/gradients.rs",
+        "tools/perf-probe/src/progress.rs"
       ],
       "criteria": {
         "rust_design": {

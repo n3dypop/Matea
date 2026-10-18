@@ -74,7 +74,7 @@ def check_trajectories(output, fixture, spring):
 
 def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream", group="foundation"):
     require(label in ["upstream","matea"],"unknown timing-mode probe label")
-    require(group in ["foundation","gradients"],"unknown timing-mode fixture group")
+    require(group in ["foundation","gradients","progress"],"unknown timing-mode fixture group")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
     environment.pop("MATEA_PROBE_OUTPUT_ONLY", None)
@@ -107,7 +107,7 @@ def check_timing_mode(destination, probe_binary, environment, correctness, label
             "invalid_configurations_rejected":rejected,
             "limits":"Measurement-mode/schema and exact-output portability check only. Shared-runner distributions/allocations are not performance comparisons and are deliberately not published."}
     filename="timing-mode-checks.json" if label=="upstream" else "rust-timing-mode-checks.json"
-    if group=="gradients":filename=label+"-gradient-timing-mode-checks.json"
+    if group!="foundation":filename=label+"-"+{"gradients":"gradient","progress":"progress"}[group]+"-timing-mode-checks.json"
     (destination/filename).write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 
 
@@ -153,6 +153,19 @@ def check_probes(destination, go_binary, rust_binary, environment):
     check_timing_mode(destination,rust_binary,environment,[([],records[0]),(["--virtual-cursor"],cursors[0])],label="matea")
     check_timing_mode(destination,go_binary,environment,[(["--gradients"],gradients[1])],group="gradients")
     check_timing_mode(destination,rust_binary,environment,[(["--gradients"],gradients[0])],label="matea",group="gradients")
+    progress=[]
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output=subprocess.check_output([str(binary),"--progress"],env=environment,timeout=30)
+        progress.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-progress-outputs.jsonl")).write_bytes(output)
+    require(len(progress[0])==12 and len(progress[1])==6,"progress fixture set changed")
+    require(set(progress[0])==set(progress[1])|{name.replace("/frame_","/cells_") for name in progress[1]},"progress control set changed")
+    for name,b in progress[1].items():
+        require(name.startswith("progress/frame_"),"unknown matched progress")
+        a=progress[0][name]
+        require(all(a[key]==b[key] for key in ["semantics","output","first_return_value"]),"progress output mismatch: "+name)
+    check_timing_mode(destination,go_binary,environment,[(["--progress"],progress[1])],group="progress")
+    check_timing_mode(destination,rust_binary,environment,[(["--progress"],progress[0])],label="matea",group="progress")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -161,7 +174,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -178,6 +191,12 @@ def check_probes(destination, go_binary, rust_binary, environment):
         if flag=="--gradient-fixtures":
             retained=(ROOT/"crates/matea-style/tests/fixtures/gradients.tsv").read_text(encoding="utf-8")
             require(len(output.decode("utf-8").splitlines())==548 and output.decode("utf-8").splitlines()==retained.splitlines(),"gradient fixtures changed")
+        if flag=="--indexed-gradient-fixtures":
+            retained=(ROOT/"crates/matea-style/tests/fixtures/indexed-gradients.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==256 and output.decode("utf-8").splitlines()==retained.splitlines(),"indexed gradient fixtures changed")
+        if flag=="--progress-fixtures":
+            retained=(ROOT/"crates/matea-widgets/tests/fixtures/progress.tsv").read_text(encoding="utf-8")
+            require(len(output.decode("utf-8").splitlines())==120 and output.decode("utf-8").splitlines()==retained.splitlines(),"progress fixtures changed")
         (destination/(flag.removeprefix("--")+".txt")).write_bytes(output)
         fixtures[flag]=hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
@@ -246,6 +265,7 @@ def main():
                  "--cache",destination/"private-issue-cache"],env=environment)
     (destination/"path-checks.json").write_text(json.dumps({"schema":1,"source_inventories":len(pins),"matched_cases":84,"virtual_cursor_matched_cases":7,"go_calibrated_timing_cases":91,
         "gradient_matched_cases":6,"gradient_fixture_cases":548,"rust_gradient_timing_cases":12,"go_gradient_timing_cases":6,
+        "indexed_gradient_fixture_cases":256,"progress_matched_cases":6,"progress_fixture_cases":120,"rust_progress_timing_cases":12,"go_progress_timing_cases":6,
         "source_fixture_sha256":fixtures,"historical_reporters_checked":5,"network_issues_executed":not args.offline,
         "limits":["CLI correctness and bounded path portability only; all shared-runner timing samples are excluded from performance conclusions.",
                   "Source declarations are not resolved API graphs. Reference compiler profiles, full public capability mapping and feature closure remain separate."]},indent=2)+"\n",encoding="utf-8")

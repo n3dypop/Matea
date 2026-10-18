@@ -388,6 +388,13 @@ impl Stopwatch {
         self.0.running = running;
         ClockUpdate::Changed
     }
+    /// Validate an animation observation before doing its numerical work.
+    pub(crate) fn accepts(&self, tick: ClockTick) -> bool {
+        self.0.running
+            && tick.id == self.0.id
+            && tick.generation == self.0.generation
+            && tick.at > self.0.anchor
+    }
 }
 impl Countdown {
     pub fn new(timeout: Duration) -> Self {

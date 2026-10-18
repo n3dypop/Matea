@@ -101,6 +101,8 @@ jobs:
           python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41 --target-ns 20000000
           cargo run --locked --quiet --release -p matea-perf-probe -- --gradients > artifacts/gradients.jsonl
           python scripts/optimization_evidence.py artifacts/gradients.jsonl --validate-current --expected 12 --target-ns 20000000
+          cargo run --locked --quiet --release -p matea-perf-probe -- --progress > artifacts/progress.jsonl
+          python scripts/optimization_evidence.py artifacts/progress.jsonl --validate-current --expected 12 --target-ns 20000000
         shell: bash
         env:
           MATEA_PERF_ITERATIONS: "20000"

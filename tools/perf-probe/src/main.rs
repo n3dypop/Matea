@@ -3,6 +3,7 @@
 mod attributes;
 mod gradients;
 mod measurement;
+mod progress;
 mod protocol;
 use matea::{
     prelude::*,
@@ -55,6 +56,10 @@ fn main() {
         return;
     }
     let iterations = measurement::iterations(300);
+    if std::env::args().any(|arg| arg == "--progress") {
+        progress::costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--gradients") {
         gradients::costs(iterations);
         return;

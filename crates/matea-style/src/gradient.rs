@@ -10,6 +10,7 @@ pub enum GradientError {
     AllocationFailed,
     NonFiniteAngle,
     AreaOverflow,
+    UnresolvedDefaultColor,
 }
 impl std::fmt::Display for GradientError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -18,6 +19,7 @@ impl std::fmt::Display for GradientError {
             Self::AllocationFailed => "cannot reserve gradient stops",
             Self::NonFiniteAngle => "gradient angle must be finite",
             Self::AreaOverflow => "gradient grid area is not representable",
+            Self::UnresolvedDefaultColor => "resolve default terminal colors before blending",
         })
     }
 }
@@ -38,14 +40,36 @@ pub struct Gradient {
 }
 impl Gradient {
     pub fn new(stops: &[[u8; 3]]) -> Result<Self, GradientError> {
-        if stops.is_empty() {
+        Self::from_rgb(stops.iter().copied())
+    }
+
+    /// Resolve RGB and indexed stops using the canonical xterm 256-color
+    /// palette. Actual terminal ANSI16 palettes are configurable; use new with
+    /// explicitly resolved RGB stops when their exact appearance matters.
+    /// Default foreground/background have no known RGB value and are rejected.
+    pub fn from_xterm_colors(stops: &[Color]) -> Result<Self, GradientError> {
+        if stops.contains(&Color::Default) {
+            return Err(GradientError::UnresolvedDefaultColor);
+        }
+        Self::from_rgb(stops.iter().map(|color| match *color {
+            Color::Rgb(r, g, b) => [r, g, b],
+            Color::Indexed(index) => {
+                let (r, g, b) = crate::palette(index);
+                [r, g, b]
+            }
+            Color::Default => unreachable!("validated immutable stops"),
+        }))
+    }
+
+    fn from_rgb(stops: impl ExactSizeIterator<Item = [u8; 3]>) -> Result<Self, GradientError> {
+        if stops.len() == 0 {
             return Err(GradientError::EmptyStops);
         }
         let mut owned = Vec::new();
         owned
             .try_reserve_exact(stops.len())
             .map_err(|_| GradientError::AllocationFailed)?;
-        owned.extend(stops.iter().map(|&rgb| Stop {
+        owned.extend(stops.map(|rgb| Stop {
             rgb,
             lab: to_lab(rgb),
         }));
