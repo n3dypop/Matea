@@ -344,6 +344,28 @@ fn write_sanitized(s: &str, out: &mut impl fmt::Write) -> fmt::Result {
     Ok(())
 }
 
+/// The owned panel needs three tokens, not the complete application Theme.
+/// Keep this boxed so every View/stack element retains its current stride.
+#[derive(Clone, Debug)]
+struct PanelTheme {
+    surface: Style,
+    border: Style,
+    accent: Style,
+    padding: u16,
+    border_kind: Border,
+}
+impl From<&Theme> for PanelTheme {
+    fn from(theme: &Theme) -> Self {
+        Self {
+            surface: theme.surface,
+            border: theme.border,
+            accent: theme.accent,
+            padding: theme.padding,
+            border_kind: theme.border_kind,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 enum Node {
     Text(Text, Style),
@@ -355,7 +377,7 @@ enum Node {
     Panel {
         title: Text,
         child: Box<View>,
-        theme: Box<Theme>,
+        theme: Box<PanelTheme>,
     },
     Layers(Vec<(Rect, View)>),
     Cursor {
@@ -418,7 +440,7 @@ impl View {
         Self::new(Node::Panel {
             title: title.into(),
             child: Box::new(self),
-            theme: Box::new(theme.clone()),
+            theme: Box::new(PanelTheme::from(theme)),
         })
     }
     pub fn gap(mut self, gap: u16) -> Self {
@@ -595,6 +617,80 @@ impl View {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout() {
+        use matea_style::{Color, TextFrame, UnderlineStyle};
+        let border_style = Style::default()
+            .italic()
+            .fg(Color::Indexed(9))
+            .underline_style(UnderlineStyle::Curly)
+            .underline_color(Color::Rgb(13, 41, 227));
+        let title_style = Style::default().overline().text_frame(TextFrame::Framed);
+        let surface_style = Style::default().bg(Color::Indexed(4)).dim();
+        for (kind, top, bottom) in [
+            (Border::Ascii, "+-Tea茶-+", "+-------+"),
+            (Border::Plain, "┌─Tea茶─┐", "└───────┘"),
+            (Border::Rounded, "╭─Tea茶─╮", "╰───────╯"),
+        ] {
+            for padding in [0, 1] {
+                let panel = {
+                    let mut theme = Theme {
+                        border: border_style,
+                        accent: title_style,
+                        surface: surface_style,
+                        padding,
+                        border_kind: kind,
+                        ..Theme::default()
+                    };
+                    let panel = View::text("X").panel("Tea茶", &theme);
+                    // Both consumed and unrelated tokens can change or disappear
+                    // without changing an already-owned scene's contents.
+                    theme.border = Style::default();
+                    theme.accent = Style::default();
+                    theme.surface = Style::default();
+                    theme.padding = u16::MAX;
+                    theme.border_kind = Border::Ascii;
+                    theme.text = Style::default().hidden();
+                    theme.focus = Style::default().reverse();
+                    theme.gap = u16::MAX;
+                    assert_eq!(theme.padding, u16::MAX);
+                    panel
+                };
+                let frame = panel.render(Size::new(9, 5)).unwrap();
+                let rows = if padding == 0 {
+                    [top, "|X      |", "|       |", "|       |", bottom]
+                } else {
+                    [top, "|       |", "| X     |", "|       |", bottom]
+                };
+                // Unicode borders use their own vertical glyph.
+                let expected = rows.join("\n").replace(
+                    '|',
+                    if matches!(kind, Border::Ascii) {
+                        "|"
+                    } else {
+                        "│"
+                    },
+                );
+                assert_eq!(frame.plain(), expected);
+                assert_eq!(frame.row(0)[0].style(), border_style);
+                for cell in &frame.row(0)[2..7] {
+                    assert_eq!(cell.style(), title_style);
+                }
+                assert_eq!(frame.row(1)[7].style(), surface_style);
+                assert_eq!(
+                    frame.row(padding + 1)[usize::from(padding) + 1].style(),
+                    Style::default()
+                );
+                assert_eq!(panel.clone().render(Size::new(9, 5)).unwrap(), frame);
+                let column = View::column([panel.clone(), View::text("next")])
+                    .render(Size::new(9, 8))
+                    .unwrap();
+                let next_row = if padding == 0 { 3 } else { 5 };
+                assert_eq!(column.row(next_row)[0].symbol(), "n");
+                assert_eq!(column.row(next_row)[3].symbol(), "t");
+            }
+        }
+    }
     #[test]
     fn extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes() {
         use matea_style::{BlinkStyle, TextFrame, UnderlineStyle};
