@@ -41,6 +41,40 @@ fn chunks_normalize_once_and_ranges_follow_normalized_utf8() {
 }
 
 #[test]
+fn untrusted_hints_and_irregular_chunks_preserve_canonical_content() {
+    struct Hint<I>(I, usize);
+    impl<I: Iterator> Iterator for Hint<I> {
+        type Item = I::Item;
+        fn next(&mut self) -> Option<Self::Item> {
+            self.0.next()
+        }
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            (self.1, None)
+        }
+    }
+    let chunks = [
+        ("", color(1)),
+        ("x", color(1)),
+        ("茶", color(2)),
+        ("", color(3)),
+        ("e\u{301}", color(2)),
+    ];
+    let expected = RichText::from_spans(chunks);
+    for hint in [0, 1, 5, 64, usize::MAX] {
+        let actual = RichText::from_spans(Hint(chunks.into_iter(), hint));
+        assert_eq!(actual.as_str(), expected.as_str());
+        assert_eq!(
+            actual.styles().collect::<Vec<_>>(),
+            expected.styles().collect::<Vec<_>>()
+        );
+        assert_eq!(actual.width(), expected.width());
+    }
+    let huge = "x".repeat(64 * 1024 + 1);
+    let text = RichText::from_spans(Hint([(huge.as_str(), color(1))].into_iter(), usize::MAX));
+    assert_eq!(text.as_str(), huge);
+}
+
+#[test]
 fn whole_graphemes_cross_style_boundaries_and_use_the_leading_style() {
     let red = color(1);
     let blue = color(4);

@@ -3,7 +3,7 @@ use crate::{Text, is_safe_text, write_sanitized};
 use compact_str::CompactString;
 use matea_style::Style;
 use std::{ops::Range, sync::Arc};
-use unicode_segmentation::UnicodeSegmentation;
+use unicode_segmentation::{GraphemeCursor, UnicodeSegmentation};
 use unicode_width::UnicodeWidthStr;
 
 #[derive(Clone, Copy, Debug)]
@@ -65,6 +65,11 @@ impl RichText {
         I: IntoIterator<Item = (S, Style)>,
         S: AsRef<str>,
     {
+        let spans = spans.into_iter();
+        // A hint is advisory, including for user iterators. Bound speculation;
+        // never reserve an untrusted usize::MAX or allocate styles for a
+        // uniform document. Unknown/irregular chunk sizes retain normal growth.
+        let hint = spans.size_hint().0.min(64);
         let mut text = CompactString::default();
         let mut base = Style::default();
         let mut active = base;
@@ -72,6 +77,12 @@ impl RichText {
         for (span, style) in spans {
             let raw = span.as_ref();
             let start = text.len();
+            if start == 0 && !raw.is_empty() && hint > 1 {
+                let capacity = raw.len().saturating_mul(hint).min(64 * 1024);
+                if capacity > text.capacity() {
+                    text = CompactString::with_capacity(capacity);
+                }
+            }
             if is_safe_text(raw) {
                 text.push_str(raw);
             } else {
@@ -83,22 +94,20 @@ impl RichText {
             if start == 0 {
                 base = style;
             } else if style != active {
+                if transitions.is_empty() {
+                    transitions.reserve_exact(hint.saturating_sub(1).max(1));
+                }
                 transitions.push(Transition { start, style });
             }
             active = style;
         }
-        Self::finish(Text::from(text), base, transitions)
+        Self::finish(Text::from_normalized(text), base, transitions)
     }
     fn finish(text: Text, base: Style, transitions: Vec<Transition>) -> Self {
         let mut width = 0;
         let mut lines = 0;
         for line in text.split('\n') {
-            let cells = if line.is_ascii() {
-                line.len()
-            } else {
-                line.graphemes(true).map(UnicodeWidthStr::width).sum()
-            };
-            width = width.max(cells);
+            width = width.max(cell_width(line));
             lines += 1;
         }
         Self(Arc::new(Data {
@@ -190,6 +199,40 @@ impl RichText {
     }
 }
 
+// unicode-width is pinned to 0.2.2. Its whole-string fast path agrees with
+// per-EGC width except script ligatures that may cross grapheme boundaries.
+// Conservatively fall back for entire relevant script blocks, including Khmer
+// and Kirat Rai even when the current segmentation keeps a sequence together.
+// LF is split by the caller and CR was normalized, so CRLF is not a case here.
+// Audit this list against unicode-width's documented rules when upgrading it.
+fn cell_width(line: &str) -> usize {
+    if line.is_ascii() {
+        return line.len();
+    }
+    let script = line.chars().any(|c| {
+        matches!(c,
+            '\u{500}'..='\u{8ff}' | // Hebrew / Arabic and joining extensions
+            '\u{1780}'..='\u{17ff}' | // Khmer
+            '\u{1a00}'..='\u{1a1f}' | // Buginese
+            '\u{2d30}'..='\u{2d7f}' | // Tifinagh
+            '\u{a4d0}'..='\u{a4ff}' | // Lisu
+            '\u{10c00}'..='\u{10c4f}' | // Old Turkic
+            '\u{16d40}'..='\u{16d7f}' // Kirat Rai
+        )
+    });
+    // unicode-width also recognizes keycap/flag/modifier ZWJ combinations
+    // that Unicode grapheme segmentation may split. Check those boundaries
+    // with the same segmentation engine, without walking every other EGC.
+    let split_zwj = line.match_indices('\u{200d}').any(|(index, zwj)| {
+        GraphemeCursor::new(index + zwj.len(), line.len(), true).is_boundary(line, 0) != Ok(false)
+    });
+    if script || split_zwj {
+        line.graphemes(true).map(UnicodeWidthStr::width).sum()
+    } else {
+        line.width()
+    }
+}
+
 pub(crate) struct StyleCursor<'a> {
     remaining: &'a [Transition],
     active: Style,
@@ -204,5 +247,76 @@ impl StyleCursor<'_> {
             self.remaining = rest;
         }
         self.active
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fmt::Write;
+    fn model(text: &str) -> usize {
+        text.graphemes(true).map(UnicodeWidthStr::width).sum()
+    }
+    #[test]
+    fn fast_width_preserves_cross_grapheme_script_and_emoji_policies() {
+        for text in [
+            "لا",
+            "ل\u{65f}\u{65e}أ",
+            "ڸا",
+            "א‍ל",
+            "ᨕᨗ‍ᨐ",
+            "\u{17d2}ក",
+            "\u{16d63}\u{16d67}",
+            "ꓹꓼ",
+            "𐰲‍𐰃",
+            "ⵏ⵿ⴾ",
+            "ⵏ‍ⴾ",
+            "e\u{301}👩‍💻🇯🇵1️⃣",
+            "1️⃣‍💻",
+            "🇯🇵‍💻",
+            "\u{1f3fb}‍💻",
+            "#\u{fe0f}‍💻",
+            "👩‍🇯🇵",
+            "“\u{fe01}tea”,",
+            "\u{301}A\u{200b}",
+        ] {
+            assert_eq!(cell_width(text), model(text), "{text:?}");
+        }
+        assert_ne!("لا".width(), model("لا"));
+        for first in '\u{2d31}'..='\u{2d65}' {
+            for last in '\u{2d31}'..='\u{2d65}' {
+                for joiner in ['\u{2d7f}', '\u{200d}'] {
+                    let text = format!("{first}{joiner}{last}");
+                    assert_eq!(cell_width(&text), model(&text));
+                }
+            }
+        }
+    }
+    #[test]
+    #[ignore = "exhaustive scalar contexts, explicitly executed by native acceptance"]
+    fn every_scalar_context_matches_per_grapheme_width() {
+        let mut text = String::new();
+        for code in 0..=0x10ffff {
+            let Some(c) = char::from_u32(code) else {
+                continue;
+            };
+            if c.is_control() {
+                continue;
+            }
+            for position in 0..3 {
+                text.clear();
+                match position {
+                    0 => write!(&mut text, "A{c}e\u{301}👩‍💻茶X"),
+                    1 => write!(&mut text, "A{c}‍💻X"),
+                    _ => write!(&mut text, "A👩‍{c}X"),
+                }
+                .unwrap();
+                assert_eq!(
+                    cell_width(&text),
+                    model(&text),
+                    "U+{code:04X} context {position}"
+                );
+            }
+        }
     }
 }

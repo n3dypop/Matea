@@ -24,6 +24,12 @@ impl Text {
     pub fn into_string(self) -> String {
         self.0.into()
     }
+    // Only builders that already ran the shared sanitizer can use this path.
+    // This is a display invariant, not a memory-safety precondition.
+    pub(crate) fn from_normalized(text: CompactString) -> Self {
+        debug_assert!(is_safe_text(&text));
+        Self(text)
+    }
     fn normalized(raw: &str) -> Self {
         let mut text = CompactString::default();
         write_sanitized(raw, &mut text).expect("writing normalized text cannot fail");

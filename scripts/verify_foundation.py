@@ -25,6 +25,7 @@ def acceptance_commands(root):
         ("all-targets", ["cargo", "test", "--locked", "--workspace", "--all-targets"]),
         ("release-tests", ["cargo", "test", "--locked", "--release", "--workspace"]),
         ("style-exhaustive", ["cargo", "test", "--locked", "--release", "-p", "matea-style", "--test", "colors", "every_rgb_triple_matches_full_palette_search", "--", "--ignored"]),
+        ("text-width-exhaustive", ["cargo", "test", "--locked", "--release", "-p", "matea-render", "--lib", "every_scalar_context_matches_per_grapheme_width", "--", "--ignored"]),
         ("docs", ["cargo", "doc", "--locked", "--workspace", "--no-deps"]),
         ("build-examples", ["cargo", "build", "--locked", "--workspace", "--examples"]),
         ("reference-text-fmt", ["cargo", "fmt", "--manifest-path", "tools/reference-text/Cargo.toml", "--check"]),

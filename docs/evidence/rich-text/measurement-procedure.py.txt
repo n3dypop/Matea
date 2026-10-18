@@ -1,0 +1,40 @@
+import datetime,hashlib,json,os,platform,statistics,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_records, read_probe_outputs
+from evidence_checks import require
+cohort=sys.argv[1];out=ROOT/'docs/evidence/rich-text'/cohort;out.mkdir(parents=True,exist_ok=False)
+binary=ROOT/'tools/reference-text/target/release/matea-reference-text-probe'
+files=sorted(execution_inputs(ROOT));source={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in files}
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+for name,h in source.items():
+ actual=subprocess.check_output(['git','show',head+':'+name],cwd=ROOT)
+ require(hashlib.sha256(actual).hexdigest()==h, 'uncommitted input: '+name)
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+context={'schema':1,'status':'running','started_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'git_head':head,'platform':platform.platform(),'architecture':platform.machine(),'rustc':subprocess.check_output(['rustc','-vV'],text=True),'source_sha256':source,'binary_sha256':sha(binary),'binary':'tools/reference-text/target/release/matea-reference-text-probe','manifest':'tools/reference-text/Cargo.toml','lock_sha256':sha(ROOT/'tools/reference-text/Cargo.lock'),'orders':['reference','matea','matea','reference'],'env':{'MATEA_PERF_ITERATIONS':'1000','MATEA_PERF_MIN_SAMPLE_NS':'20000000'},'limits':['Native host and this one pinned std-only reference graph.','The isolated graph preserves 43 reference package versions; shared transitive dependency versions differ from ordinary root workspace builds.','Construct/clone include full text/style/width reads and deallocation; immutable Arc versus independent Line clone storage differs.','All raw 31-sample batch means/cold/allocation observations retained; no RSS, branch coverage, physical-terminal throughput or statistical causality claim.','Full matched outputs required; cross-span deviation cases are correctness controls excluded from ratios.'],'runs':[]}
+def save(): (out/'context.json').write_text(json.dumps(context,ensure_ascii=False,indent=2)+'\n')
+save();env=dict(os.environ,**context['env']);env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+try:
+ outputs={}
+ for mode in ['matea','reference']:
+  path=out/(mode+'-outputs.jsonl');r=subprocess.run([str(binary),'--'+mode],env=dict(env,MATEA_PROBE_OUTPUT_ONLY='1'),stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=ROOT)
+  path.write_bytes(r.stdout);(out/(mode+'-outputs.stderr.log')).write_bytes(r.stderr);require(r.returncode==0,'output failure')
+  outputs[mode]=read_probe_outputs(path.read_text());require(len(outputs[mode])==10,'incomplete output')
+ require(outputs['matea']==outputs['reference'],'independent outputs mismatch')
+ for index,mode in enumerate(context['orders']):
+  name=f'{index+1}-{mode}';path=out/(name+'.jsonl');command=[str(binary),'--'+mode];started=datetime.datetime.now(datetime.timezone.utc).isoformat()
+  r=subprocess.run(command,env=env,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  path.write_bytes(r.stdout);(out/(name+'.stderr.log')).write_bytes(r.stderr)
+  row={'name':name,'mode':mode,'command':[context['binary'],'--'+mode],'exit_code':r.returncode,'started_at_utc':started,'finished_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'raw_sha256':sha(path)};context['runs'].append(row);save();require(r.returncode==0,'measurement failure')
+  records=read_records(path.read_text());require(set(records)==set(outputs[mode]),'case mismatch')
+  for key,v in records.items():
+   require({k:v[k] for k in ['case','semantics','first_return_value','output']}=={k:outputs[mode][key][k] for k in ['case','semantics','first_return_value','output']},'timed output mismatch')
+   require(v['calibration']['target_ns']==20000000,'calibration mismatch')
+  print(name+' complete',flush=True)
+ context['source_changed']=[name for name,h in source.items() if sha(ROOT/name)!=h];require(not context['source_changed'],'source changed');require(sha(binary)==context['binary_sha256'],'binary changed')
+ context['status']='complete'
+except Exception as e:
+ context['status']='failed';context['error']=str(e);raise
+finally:
+ context['finished_at_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat();save()
