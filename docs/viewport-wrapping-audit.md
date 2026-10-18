@@ -61,5 +61,8 @@ remain pending. Stage A, Stage B and F5 are not complete.
 
 A follow-up qualification change explicitly executes the excluded reference-text
 workspace's own eight unit tests in native/CI/MSRV and LLVM, beyond its existing
-80-cell conformance caller. That validation-only change is being qualified
-separately; the 37-check source binding above remains immutable.
+80-cell conformance caller. That validation-only change passes 38 native checks, including the eight
+isolated tests, and all three native OS jobs plus MSRV at 73d818c. The independent
+binding is `evidence/viewport-wrap/qualification/ci/source-bindings.json`.
+Reference probes remain bound to 32a67c0; no rerun is claimed. The original
+37-check source binding above remains immutable.

@@ -73,6 +73,19 @@ def collect(root):
             text_outputs.append(values)
         if text_outputs[0] != text_outputs[1]:
             raise ValueError("rich-text output-only reference mismatch")
+        patch_outputs = []
+        for mode, count in [("--patch-matea",8), ("--patch-reference",6)]:
+            log = "coverage-reference-text-" + mode[2:] + ".jsonl"
+            run([str(reference_text), mode], log)
+            values = read_probe_outputs((OUT / log).read_text(encoding="utf-8"))
+            if len(values) != count:
+                raise ValueError("incomplete instrumented style-patch outputs")
+            patch_outputs.append(values)
+        controls = {"style-patch/decoration-control", "style-patch/inherit-decoration-control"}
+        if set(patch_outputs[0]) != set(patch_outputs[1]) | controls:
+            raise ValueError("style-patch control set changed")
+        if any(patch_outputs[0][key] != value for key,value in patch_outputs[1].items()):
+            raise ValueError("style-patch output-only reference mismatch")
     finally:
         env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
     run([sys.executable, "scripts/example_smoke.py"], "coverage-examples.log")

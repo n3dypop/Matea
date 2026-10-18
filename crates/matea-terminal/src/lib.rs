@@ -584,6 +584,36 @@ mod tests {
             assert_eq!(bytes, b"\x1b[0m");
         }
     }
+    #[test]
+    fn style_patch_resets_and_false_intents_reach_literal_terminal_commands() {
+        use matea_style::StylePatch;
+        let base = Style::default()
+            .fg(Color::Indexed(2))
+            .bg(Color::Rgb(1, 2, 3))
+            .underline_color(Color::Indexed(5))
+            .bold()
+            .italic()
+            .underline_style(UnderlineStyle::Double)
+            .blink(BlinkStyle::Rapid)
+            .text_frame(TextFrame::Framed);
+        let patch = StylePatch::reset().then(
+            StylePatch::new()
+                .fg(Color::Indexed(4))
+                .underline_style(UnderlineStyle::Single),
+        );
+        let mut bytes = Vec::new();
+        set_style(&mut bytes, base.patched(patch)).unwrap();
+        assert_eq!(bytes, b"\x1b[0m\x1b[34m\x1b[4m");
+        bytes.clear();
+        set_style(
+            &mut bytes,
+            Style::default()
+                .bold()
+                .patched(StylePatch::new().attribute(TextAttribute::Bold, false)),
+        )
+        .unwrap();
+        assert_eq!(bytes, b"\x1b[0m");
+    }
     use matea_core::{Effect, ViewContext};
     use matea_render::View;
     use std::sync::{Arc, Mutex};

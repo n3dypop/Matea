@@ -1063,6 +1063,37 @@
       ],
       "performance": "docs/rich-text-audit.md",
       "notes": "Narrow owned normalized text, uniform/chunk styles, immutable shared clones, cached width/rows, borrowed style ranges/graphemes and left-aligned View/Canvas painting. Four aligned reference cases and four literal cross-span EGC deviations; styles of complete clusters follow the leading byte. Partial Line/Span links only: mutable fields/iterators, style patch/reset algebra, alignment/conversions, CJK width, complete feature/profile/module coverage and performance remain open."
+    },
+    {
+      "id": "style/explicit-cell-style-patches",
+      "status": "partial",
+      "reference_ids": [
+        "f2b5622e9ea13fc12ca3",
+        "e9f62011b2bccf771105",
+        "92dbfbf806998d93f9f3",
+        "6b37c2e6d8c9fc939ab3",
+        "4986ca71101cb79d2427",
+        "fa6398fb8de7ed09fde6",
+        "c25b075e9ad1fb378227",
+        "d4e3288f011537034f87",
+        "8cc2460a95a3c7be69ed",
+        "a629cec3ce390340a8cc",
+        "872ae23846907ede86f2",
+        "df01e31ed047f32d5e02",
+        "dc4fdb5ed7999368c3cf",
+        "4aed2a2a07ca05d5e227"
+      ],
+      "implementation": [
+        "crates/matea-style/src/attributes/patch.rs",
+        "crates/matea-style/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-style/tests/patches.rs",
+        "crates/matea-terminal/src/lib.rs",
+        "tools/reference-text/src/patches.rs"
+      ],
+      "performance": "docs/style-patches-audit.md",
+      "notes": "Separate resolved cell Style and Copy StylePatch represent inherit, explicit terminal default and false. Typed complete enum groups prevent invalid packed choices. 1679616 finite Boolean base/ternary-patch combinations and 579933 std-only pinned reference observations pass. Six overlapping raw source add/sub controls verify removal priority, not an upstream defect; Matea uses deterministic last-setter intent. Underline-color reference feature, serde/anstyle/palette, all Stylize conversions/raw flag combinations and full module performance remain pending. No whole-module parity or high verdict."
     }
   ]
 }

@@ -11,6 +11,7 @@ use std::{fmt::Write as _, hint::black_box};
 use unicode_width::UnicodeWidthStr;
 #[path = "../../perf-probe/src/measurement.rs"]
 mod measurement;
+mod patches;
 
 const CELLS: u16 = 192;
 const INITIAL_HASH: u64 = 0xcbf29ce484222325;
@@ -419,14 +420,23 @@ fn main() {
         include_str!("../../../crates/matea-render/tests/fixtures/ratatui-span-boundaries.tsv")
     );
     conformance();
+    let patch_cases = patches::conformance();
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     if args == ["--oracle"] {
         print!("{raw}");
+    } else if args == ["--patch-conflicts"] {
+        print!("{}", patches::conflicting_controls());
     } else if args.is_empty() || args == ["--check"] {
-        println!("8 cases / 80 pinned public reference cells and 2 complete styled corpora match");
+        println!(
+            "8 cases / 80 pinned public reference cells and 2 complete styled corpora match; {patch_cases} style-patch observations match"
+        );
     } else if args == ["--matea"] || args == ["--reference"] {
         benchmarks(args == ["--reference"]);
+    } else if args == ["--patch-matea"] || args == ["--patch-reference"] {
+        patches::costs(args == ["--patch-reference"]);
     } else {
-        panic!("expected --check, --oracle, --matea or --reference");
+        panic!(
+            "expected --check, --oracle, --matea, --reference, --patch-matea or --patch-reference"
+        );
     }
 }

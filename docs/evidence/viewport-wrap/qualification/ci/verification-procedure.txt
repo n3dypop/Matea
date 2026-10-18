@@ -1,0 +1,40 @@
+import hashlib,json,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from evidence_checks import require
+from performance_records import parse_json,read_probe_outputs
+from test_windows_console import validate_trace,validate_result
+OUT=ROOT/'docs/evidence/viewport-wrap/qualification/ci';RAW=Path('/private/tmp/matea-wrap-ci-artifacts-73d818c')
+read=lambda p:parse_json(p.read_bytes());sha=lambda b:hashlib.sha256(b).hexdigest()
+run=read(OUT/'ci-run.json');head=run['headSha'];require(run['status']=='completed' and run['conclusion']=='success')
+require({j['name'] for j in run['jobs'] if j['conclusion']=='success'}=={'msrv','foundation (ubuntu-latest)','foundation (windows-latest)','foundation (macos-latest)'})
+known=read(OUT.parent/'native/local-validation.json')['source_sha256'];require(len(known)==168)
+for p,h in known.items():require(sha(subprocess.check_output(['git','show',head+':'+p],cwd=ROOT))==h,'Git source '+p)
+report={'status':'complete_bounded_native_three_host_qualification','source_head':head,'run':run['url'],'all_four_required_native_jobs_passed':True,'execution_input_sha256':known,'program_files':132,'hosts':{},'raw_artifact_sha256':{},'retained_LF_artifact_sha256':{},'limits':['Only native/MSRV jobs at this validation-only commit. Reference probe jobs remain bound to prior 32a67c0 and are not claimed rerun.','No CI timing is a performance comparison.','Native Windows console is bounded ASCII/BMP readback and restoration, not all emulators/fonts/IME.']}
+expected=read(OUT.parent/'native/quality/rust-execution-coverage.json')['source_sha256']
+for host in ['ubuntu','windows','macos']:
+ folder=RAW/('native-drivers-'+host+'-latest');v=read(folder/'local-validation.json');c=read(folder/'quality/rust-execution-coverage.json')
+ require(v['status']=='complete' and v['all_local_checks_passed'] and v['source_changed_during_run']==[] and v['source_sha256']==known)
+ require(len(v['checks'])==38 and all(x['exit_code']==0 for x in v['checks']))
+ require(c['status']=='complete' and c['input_sha256']==known)
+ paths=set(expected)-({'crates/matea-terminal/src/signals_unix.rs'} if host=='windows' else set());require(set(c['source_sha256'])==paths)
+ for p,h in c['source_sha256'].items():require(known[p]==h,'LLVM source '+p)
+ logs=0
+ for check in v['checks']:
+  p=folder/check['log']
+  if p.is_file():require(sha(p.read_bytes())==check['log_sha256'],'log hash '+str(p));logs+=1
+ require(logs==(23 if host=='windows' else 22),'uploaded native logs')
+ require('8 passed; 0 failed' in (folder/'reference-text-tests.log').read_text(),'isolated workspace unit tests')
+ require('80 pinned public reference cells and 2 complete styled corpora match' in (folder/'reference-text.log').read_text())
+ representation=read(folder/'representations.json');require(all(representation[k]==n for k,n in [('style_bytes',14),('cell_bytes',40),('view_bytes',48),('theme_bytes',104)]))
+ attrs=read_probe_outputs((folder/'attributes-outputs.jsonl').read_text());require(len(attrs)==14)
+ row={'native_checks':38,'verified_native_logs':logs,'isolated_workspace_unit_tests':8,'LLVM_paths':len(c['files']),'LLVM_file_instances':sum(len(x['instances']) for x in c['files']),'representation':representation}
+ if host=='windows':
+  context=read(folder/'windows-console/context.json');attempt=folder/'windows-console'/context['attempt'];require(context==read(attempt/'context.json') and context['status']=='complete' and context['child_exit_code']==0)
+  stream=(attempt/'input.json').read_bytes();observed=(attempt/'observed.json').read_bytes();require(sha(stream)==context['input_sha256'] and sha(observed)==context['observed_sha256']);require(context['source_sha256']['oracle']==known['scripts/windows_console_oracle.ps1']);validate_result(parse_json(observed),validate_trace(parse_json(stream)));row.update(console_frames=36,console_cells=2160,state_restored=True)
+ report['hosts'][host]=row
+ for p in folder.rglob('*'):
+  if p.is_file():
+   rel=p.relative_to(folder);raw=p.read_bytes();target=OUT/host/rel;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw.replace(b'\r\n',b'\n'));key=host+'/'+rel.as_posix();report['raw_artifact_sha256'][key]=sha(raw);report['retained_LF_artifact_sha256'][key]=sha(target.read_bytes())
+ print(host,logs,'logs; 38 checks and isolated eight tests verified')
+(OUT/'source-bindings.json').write_text(json.dumps(report,indent=2)+'\n')

@@ -1,5 +1,7 @@
 //! Resolved SGR requests; terminal font/decoration support is not universal.
 use std::fmt;
+mod patch;
+pub use patch::StylePatch;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum TextAttribute {

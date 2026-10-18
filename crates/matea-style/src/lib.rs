@@ -1,12 +1,14 @@
 #![forbid(unsafe_code)]
 //! Portable design tokens and deterministic integer layout. No terminal I/O.
 mod attributes;
-pub use attributes::{BlinkStyle, TextAttribute, TextAttributes, TextFrame, UnderlineStyle};
+pub use attributes::{
+    BlinkStyle, StylePatch, TextAttribute, TextAttributes, TextFrame, UnderlineStyle,
+};
 mod gradient;
 pub use gradient::{Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum Color {
     #[default]
     Default,
@@ -135,7 +137,7 @@ impl Color {
     }
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 #[must_use = "styles are values; use the returned style"]
 pub struct Style {
     pub fg: Color,
@@ -145,6 +147,10 @@ pub struct Style {
 }
 
 impl Style {
+    /// Apply explicit settings while preserving properties the patch inherits.
+    pub const fn patched(self, patch: StylePatch) -> Self {
+        patch.resolve(self)
+    }
     pub fn fg(mut self, color: Color) -> Self {
         self.fg = color;
         self

@@ -181,7 +181,7 @@
       "unit": "matea-widgets/lib",
       "dimension": "performance",
       "score": 50,
-      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+      "reason": "Ten matched repeated/aligned wrapping workloads plus two separate borrowed controls retain complete source/Matea outputs and before/after distributions. Exclusive deferred reflow changes five warm allocations to zero; full widget/wrap/style/gutter/highlight, varied/large documents and residency remain pending, so the containing module stays partial."
     },
     {
       "unit": "matea-widgets/cursor",
@@ -1039,7 +1039,7 @@
         },
         "performance": {
           "score": 50,
-          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+          "reason": "Ten matched repeated/aligned wrapping workloads plus two separate borrowed controls retain complete source/Matea outputs and before/after distributions. Exclusive deferred reflow changes five warm allocations to zero; full widget/wrap/style/gutter/highlight, varied/large documents and residency remain pending, so the containing module stays partial."
         },
         "portability": {
           "score": 75,
@@ -1059,7 +1059,8 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/viewport-cell-geometry.md",
         "docs/decisions/0056-viewport-whole-grapheme-wrapping.md",
-        "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md"
+        "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md",
+        "docs/viewport-wrapping-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
@@ -2209,12 +2210,12 @@
       ]
     }
   ],
-  "plan_sha256": "0f7e63d341584d388ea6a457f4d3b86166fd8591f9730504997b884584eb991a",
+  "plan_sha256": "0f8eea2fca23e32def2026bf09596ddb39e07f806c2cceed7b94db71fecadcc7",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "5e76206c76ec57cf648cae0a2582cb35443216dad36306454a05a18c21fc073e",
+      "sha256": "65129ae31712e1b03c71e2d1afcf86f63c6cd6413b0432d37d6701e9dd06d8a5",
       "units": [
         "ci/workflow"
       ],
@@ -2294,24 +2295,24 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 705,
-                "percent": 94.12550066755674
+                "covered": 709,
+                "percent": 94.65954606141523
               },
               "functions": {
                 "count": 101,
-                "covered": 89,
-                "percent": 88.11881188118812
+                "covered": 90,
+                "percent": 89.10891089108911
               },
               "instantiations": {
                 "count": 1255,
-                "covered": 774,
-                "percent": 61.67330677290836
+                "covered": 776,
+                "percent": 61.832669322709165
               },
               "regions": {
                 "count": 1183,
-                "covered": 1119,
-                "notcovered": 64,
-                "percent": 94.59002535925613
+                "covered": 1125,
+                "notcovered": 58,
+                "percent": 95.09721048182587
               },
               "branches": {
                 "count": 0,
@@ -5951,7 +5952,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "7af5d7a5e28360cae4b0533b26481e2e962d0d4324d2e65f3107ebb7407e1e73",
+      "sha256": "907a6eb11b90ed99f51b4a471b9a4544d52dfee0f046385779d05d2b8f7fab07",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6191,7 +6192,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "1532f7726c1f006a86661e6c23804e03af9d8b879f389dafc89be4d58ac55601",
+      "sha256": "43252f8c5635d539d397aeb8bcbb176b4182a5a68def453f5253a976efb388d9",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6556,25 +6557,25 @@
             "compiler_filename": "tools/reference-text/src/../../perf-probe/src/measurement.rs",
             "summary": {
               "lines": {
-                "count": 207,
-                "covered": 45,
-                "percent": 21.73913043478261
+                "count": 339,
+                "covered": 256,
+                "percent": 75.51622418879056
               },
               "functions": {
-                "count": 26,
-                "covered": 8,
-                "percent": 30.76923076923077
+                "count": 43,
+                "covered": 33,
+                "percent": 76.74418604651163
               },
               "instantiations": {
-                "count": 134,
-                "covered": 17,
-                "percent": 12.686567164179104
+                "count": 187,
+                "covered": 53,
+                "percent": 28.342245989304814
               },
               "regions": {
-                "count": 313,
-                "covered": 65,
-                "notcovered": 248,
-                "percent": 20.766773162939298
+                "count": 509,
+                "covered": 368,
+                "notcovered": 141,
+                "percent": 72.29862475442044
               },
               "branches": {
                 "count": 0,
@@ -6786,9 +6787,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 42,
+                "count": 84,
                 "covered": 42,
-                "percent": 100
+                "percent": 50
               },
               "regions": {
                 "count": 577,
