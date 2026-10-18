@@ -1,7 +1,8 @@
 # 未測定12単位の測定と改善
 
 個別評価Stage Aを継続中。全項目高評価・Stage B・F5の条件は未達です。
-現在は103プログラム・41評価単位で53軸が75未満です。性能28、参照元一致19、動作3、移植性3です。
+最新は111プログラム・41評価単位で49軸が75未満です。性能28、参照元一致19、動作1、移植性1です。
+以下は各段階の記録です。カーソル追加直後は103プログラム・41評価単位で53軸が75未満でした。
 新規カーソルを独立単位へ加えたため、従来の51軸に部分評価2軸が加わりました。
 カーソル追加前は100プログラム、40評価単位、51軸が75未満でした。
 完全未測定の性能単位は12から0になりました。11単位は部分証拠の50、
@@ -285,3 +286,25 @@ LLVMとCIには4通知条件の出力専用実行を追加しています。計�
 [最終141c354のCI](https://github.com/n3dypop/Matea/actions/runs/39088967599)は7必須ジョブ成功です。
 ローカル33検証、Rust 148＋2 doctest、Python 103、13 snapshot、18 Unix PTY、
 LLVM 59 source／64 instanceが成功しました。未達49軸と両gateの閉鎖は維持します。
+
+## Compact resolved text attributes
+
+Source 4d1a397 adds typed attributes, six underline styles/colors and reduced-motion
+blink suppression, with 13,824 native state/SGR combinations and six targeted Miri
+tests. Native validation passes 33 checks, 155 Rust tests plus two doctests, 105
+Python tests, 14 snapshots and 19 Unix PTY cases. LLVM records 62 source files/67
+separate instances. The inventory now covers 111 programs/41 units/49 low axes.
+
+The bounded color cache no longer keys on unrelated attributes. Matched repeats
+retain output bytes and zero repaint allocations; 16-variant ANSI16 median drops
+from 4.207–4.211 µs to 2.670–2.688 µs. Theme/style/frame regressions and a 20-byte
+short-panel allocation increase remain open. Exactly two legacy Debug outputs
+require an explicit default-field transform; raw records are untouched.
+[Audit, domains and all limits](text-attributes-audit.md),
+[all controls](evidence/attributes/report.json),
+[balanced repeats](evidence/attributes/repeat-summary.json).
+
+The Style API is provisional; bool-field migration is documented. A cell still
+occupies 40 bytes on the measured host. This does not establish complete style
+parity, native-terminal appearance, resident memory or universal maximum speed.
+The performance/reference scores and both strict gates remain unchanged.

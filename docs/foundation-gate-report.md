@@ -3,7 +3,7 @@
 状態: **F0–F4を継続中。F5へ未到達、承認依頼は保留。**
 オーナーが全参照元・基盤ライブラリの公開機能、モジュールごとの性能比較と課題分析を追加したため、以前の小規模候補は受け入れ対象から外しました。
 
-最新の評価範囲は107プログラム・41単位、未達49軸です。検証・タイマー修正の
+最新の評価範囲は111プログラム・41単位、未達49軸です。検証・タイマー修正の
 [3 OS・MSRV・参照照合CI](https://github.com/n3dypop/Matea/actions/runs/39088967599)は7ジョブ成功ですが、
 参照公開機能の全件実装と性能条件は未達です。[現在の証拠・残件](remaining-optimization.md)。
 
@@ -26,6 +26,18 @@ Windowsの短い標本と改行変換を修正しています。動作・移植�
 [ADR 0040](decisions/0040-align-logical-time-before-input-dispatch.md)。
 [各OSの最終program/build/check入力・ログ・LLVM・参照照合の独立検査](evidence/deadlines/ci-source-bindings.json)
 でも、全107 programを同じCI commitへ対応付けています。
+
+文字装飾の拡張では、型付き属性・6種の下線・下線色・blink抑制を追加し、
+13,824状態を構築・解除・参照SGRと照合しました。セルは40 byteを維持し、
+色だけをキーとするキャッシュで装飾の相互追い出しを除去しています。
+ローカル33検証、Rust 155＋2 doctest、Python 105、14 snapshot、19 Unix PTY、
+6 targeted Miri、LLVM 62 source／67 instanceが成功しました。
+[監査と悪化を含む性能記録](text-attributes-audit.md)、
+[ADR 0041](decisions/0041-compact-resolved-text-attributes.md)。
+4d1a397の[3 OS CI](https://github.com/n3dypop/Matea/actions/runs/39091736105)は7必須ジョブ成功です。
+[全111 program／127入力・各OSの17ログ・LLVM・参照照合の独立検査](evidence/attributes/ci-source-bindings.json)も完了しました。
+属性の38宣言候補を部分対応へ連結しましたが、6,896候補、13部分能力、91 module group、
+参照一致・性能などの49軸は未達で、Stage B・F5・画像エンジン／CUDAへ進みません。
 
 ## 現在の範囲と進捗
 

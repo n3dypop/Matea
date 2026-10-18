@@ -47,3 +47,55 @@ style composition remain pending. Crossterm negative/reset command sets and raw
 numeric flag interoperability are not the same contract as resolved Style. New
 builders do not imply complete public module coverage or guaranteed terminal
 support. Style layout remains compiler-chosen and is not a stable ABI.
+
+## Executed evidence at 4d1a397
+
+All 33 native acceptance checks passed: 155 Rust tests plus two doctests,
+105 Python tests, 14 snapshots and 19 Unix PTY cases. LLVM recorded 62 source
+files/67 separate compilation instances. Six targeted Miri tests passed with
+distinct seeds; [source and logs](evidence/attributes/miri-context.json) preserve
+the reduced Miri domains. Native finite tests retain the full domains above.
+
+[The validated report](evidence/attributes/report.json) includes all 157 legacy
+controls and 171 cache-change controls. Exactly two theme Debug fixtures add
+explicit new defaults during comparison; their original strings are untouched.
+The four matched positive-flag construction/query fixtures use the identical
+eight logical flags and are compiler-limited at about 1 ns with no allocations.
+They do not establish full style/rendering throughput parity.
+
+Balanced initial/after/after/initial repaint repeats give these medians (µs):
+
+| Fixture | Initial pair | Color-only cache pair |
+| --- | --- | --- |
+| 8 variants, ANSI16 | 3.739 / 3.703 | 2.676 / 2.671 |
+| 16 variants, ANSI16 | 4.211 / 4.207 | 2.670 / 2.688 |
+| 8 variants, ANSI256 | 3.698 / 3.689 | 2.651 / 2.654 |
+| 16 variants, ANSI256 | 4.202 / 4.193 | 2.702 / 2.671 |
+
+Full bytes match and all six repaint fixtures request zero allocations. The
+initial 8-variant ANSI16 repeat has a 7.234 µs p95; it remains in the raw data.
+Truecolor results are mixed, including an initial-to-final p95 increase in the
+first pass. [Every repeat](evidence/attributes/repeat-summary.json) is retained.
+
+Legacy regressions include plain Theme construction (2.50 → 4.85 ns), style pair
+adaptation at ANSI16 (17.04 → 23.19 ns), and colored full-frame output (about
+5–9% higher medians across profiles). Short panel construction requests
+140 → 160 bytes with the same two allocations; full panel rendering adds the
+same 20 bytes. These are open optimization items, not erased by the cache gain.
+Actual cell stride stays 40 bytes, while Style changes 11 → 14 bytes. A complete
+new example process snapshot measures 3.559/5.004 ms p50/p95; this includes spawn
+and exit and has no prior equivalent or interactive-terminal speed claim.
+
+The new capability links 38 source candidates as partial. 6,896 source candidates,
+6,902 overlapping compiler keys, 91 module groups and broader performance work
+remain pending. Both strict gates remain closed; the 49 low assessments are
+unchanged. Pure protocol encoders remain the sole pre-approval image exception.
+
+[Three-OS/MSRV/reference CI](https://github.com/n3dypop/Matea/actions/runs/39091736105)
+passes all seven required jobs at 4d1a397. Independent validation binds all 111
+programs/127 execution inputs and 17 uploaded log hashes per host to that source.
+Unix native drivers pass 33 checks, Windows 32. LLVM records 62/67 source/instance
+counts on Unix and 61/65 on Windows. Each host also validates 84 reference output
+cases, seven cursor cases, 91 positive Go timing-mode records, and the new
+attribute/representation release steps. [Retained artifacts and source binding](evidence/attributes/ci-source-bindings.json)
+keep uploaded raw and retained LF hashes distinct. CI timings are not speed data.

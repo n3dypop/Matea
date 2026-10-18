@@ -25,8 +25,8 @@ Tests/benchmarks and private internals must be classified, not silently counted 
 public user features. The API tools record locations and conditions without copying
 implementation bodies. All sources remain in external reference checkouts.
 
-`capabilities.json` maps 401 declaration candidates to initial capability slices;
-7,054 remain unlinked. A link does not mean the whole declaration is implemented:
+`capabilities.json` maps 559 declaration candidates to initial capability slices;
+6,896 remain unlinked. A link does not mean the whole declaration is implemented:
 partial Kitty/Sixel and paginator/key coverage explicitly stays partial. The raw
 inventory's initial `unmapped` labels are preserved; capability links live in the
 separate file so regenerating an inventory cannot erase manual evidence.

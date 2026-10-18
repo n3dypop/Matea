@@ -35,7 +35,7 @@ entirely unmeasured units receive 0 and partially measured units remain at 50.
 | --- | --- | --- |
 | Rust design | Are state and resources owned once? Can invalid states be represented? Are borrows/lifetimes simple, cancellation and errors explicit, and extension contracts independent? | All-target Clippy with warnings denied, documentation, compile-fail immutability, standalone widget; targeted runtime identity/deadline tests. Public API/registry review remains open. |
 | Memory safety | Is unsafe isolated and justified? Are arithmetic, indexing, UTF-8 slices, aliasing, mutation, cleanup and thread ownership valid? | Safe-code crate policies, bounded paint/layout models, exhaustive Unicode scalar policy, targeted Miri. The Unix sigaction boundary and performance-only System allocator wrapper are explicitly unsafe; transitive dependencies are not asserted unsafe-free. |
-| Behavior | Are boundaries, empty input, control characters, wide glyph overlap, resize, stale messages, failures/panics and recovery correct? | Debug/all-target/release tests, snapshots, independent terminal trace interpreters, 18 Unix PTY cases, graphics protocol round trips, before/fix regression logs. These do not validate every physical emulator. |
+| Behavior | Are boundaries, empty input, control characters, wide glyph overlap, resize, stale messages, failures/panics and recovery correct? | Debug/all-target/release tests, snapshots, independent terminal trace interpreters, 19 Unix PTY cases, graphics protocol round trips, before/fix regression logs. These do not validate every physical emulator. |
 | Reference equivalence | Are semantics/outputs equal at the pinned SHAs? Are deliberate improvements documented and unavailable features visible? | Finite Harmonica/paginator/key groups, clock/spinner fixtures and matched performance output checks. Revised whole-reference coverage remains incomplete; see the separate declaration/compiler ledger. |
 | Performance | Are constructor and complete pipeline costs both measured? Are p50/p95, allocations, output bytes and regressions retained? | Original 84 reference-matched finite cases plus seven virtual-cursor cases, 5 subscription and 20 scene Rust-only cases, 12 Viewport before/after cases; long clock repeats overlap the 84. No instrumented timing is performance evidence. Missing resident memory, scheduling/application latency and module workloads remain pending. |
 | Portability | Does this exact implementation run on Linux, Windows, macOS and MSRV? Are terminal/FFI limits explicit? | Foundation CI plus MSRV. Native host coverage/Miri is additional evidence, not another OS. Windows PTY and physical emulator behavior remain unverified. |
@@ -161,3 +161,25 @@ Goの短バッチ失敗2件を保持し、20ms校正でも31の計時標本を�
 5固有テストのMiri 9実行が成功しています。
 [全分布・CPU対照の悪化・source/binaryの対応](evidence/deadlines/report.json)を保持し、
 性能の部分評価50と全49軸の未達を維持します。これはStage Bへの移行ではありません。
+
+## Compact resolved text attributes
+
+Source 4d1a397 adds typed attributes, six underline styles/colors and reduced-motion
+blink suppression, with 13,824 native state/SGR combinations and six targeted Miri
+tests. Native validation passes 33 checks, 155 Rust tests plus two doctests, 105
+Python tests, 14 snapshots and 19 Unix PTY cases. LLVM records 62 source files/67
+separate instances. The inventory now covers 111 programs/41 units/49 low axes.
+
+The bounded color cache no longer keys on unrelated attributes. Matched repeats
+retain output bytes and zero repaint allocations; 16-variant ANSI16 median drops
+from 4.207–4.211 µs to 2.670–2.688 µs. Theme/style/frame regressions and a 20-byte
+short-panel allocation increase remain open. Exactly two legacy Debug outputs
+require an explicit default-field transform; raw records are untouched.
+[Audit, domains and all limits](text-attributes-audit.md),
+[all controls](evidence/attributes/report.json),
+[balanced repeats](evidence/attributes/repeat-summary.json).
+
+The Style API is provisional; bool-field migration is documented. A cell still
+occupies 40 bytes on the measured host. This does not establish complete style
+parity, native-terminal appearance, resident memory or universal maximum speed.
+The performance/reference scores and both strict gates remain unchanged.

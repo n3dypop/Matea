@@ -1,6 +1,6 @@
 # ADR 0041: Compact resolved text attributes without backend types
 
-Status: proposed for implementation; API and representation require validation.
+Status: implemented; public API remains provisional pending Foundation review.
 
 The resolved Style currently carries foreground/background and three booleans.
 Pinned Lip Gloss `19f011f1cc573e5d2bf9d7a9c4f14d429647759e`, `style.go`, exposes
@@ -59,3 +59,19 @@ clipping, Unicode, motion preferences and all three OSes. Retain adverse results
 This slice does not complete Lip Gloss's transforms, layout, borders, inheritance,
 space-specific decoration or every referenced public capability. Those remain
 pending in the same Foundation scope and are not promoted by adding attributes.
+
+Implementation at 4d1a397 retains 40-byte render cells (Style grows from 11 to 14
+bytes on the measured 64-bit host). Attribute-only changes no longer evict a
+palette result: the bounded cache keys foreground/background/underline colors
+and reattaches the caller's attributes. This preserves ownership without a global
+map or allocation. Style/TextAttributes are must-use values, so accidentally
+discarded setters warn. Native 13,824-state construction and SGR tests, targeted
+Miri, grapheme/clipping, reduced-motion repaint and interactive example checks
+are recorded in [the audit](../text-attributes-audit.md).
+
+[Measurements](../evidence/attributes/report.json) retain 157 legacy controls and
+171 before/after cache controls. Two legacy theme Debug strings use an explicit
+default-field transformation; the other 155 outputs match raw bytes. A balanced
+14-case repeat retains every sample, including mixed truecolor tails. Short
+panels request 20 more bytes due to their retained complete Theme; some legacy
+costs regress. Neither module parity nor maximum performance is established.
