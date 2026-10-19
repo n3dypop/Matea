@@ -8,6 +8,11 @@
       "git_head": "e609fbe4a1325f81bbee17c4ca80ffe835885583",
       "inputs": 171,
       "context_sha256": "579aca7ce9d581b01045e1e4dec162fe5ea3205c65c36edda81851b28745416d"
+    },
+    "inline-trial": {
+      "git_head": "a0804588fcbe00443f6b4336ca01f3ccc108609b",
+      "inputs": 171,
+      "context_sha256": "b7fa1b12c66d9741c765af813e451fadb6a841f2466a78ddd0b4344c21c76dbf"
     }
   },
   "cases": {
@@ -62,6 +67,60 @@
             "p95_ns": 9.99312353515625,
             "min_ns": 9.8016357421875,
             "max_ns": 10.01027392578125,
+            "samples": 31
+          }
+        ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 9.90922021484375,
+            "p95_ns": 10.1191611328125,
+            "min_ns": 9.8009033203125,
+            "max_ns": 10.20458984375,
+            "samples": 31
+          },
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 9.960896484375,
+            "p95_ns": 10.06099462890625,
+            "min_ns": 9.802978515625,
+            "max_ns": 10.0649619140625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "2-matea",
+            "p50_ns": 9.88425732421875,
+            "p95_ns": 10.103271484375,
+            "min_ns": 9.8011474609375,
+            "max_ns": 10.47951220703125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 83,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "3-matea",
+            "p50_ns": 9.91192626953125,
+            "p95_ns": 10.0349931640625,
+            "min_ns": 9.79744482421875,
+            "max_ns": 10.08758544921875,
             "samples": 31
           }
         ]
@@ -121,6 +180,60 @@
             "samples": 31
           }
         ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 12.371439453125,
+            "p95_ns": 12.51141357421875,
+            "min_ns": 12.27978515625,
+            "max_ns": 12.5760703125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 208,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 12.45086669921875,
+            "p95_ns": 12.74530029296875,
+            "min_ns": 12.28446435546875,
+            "max_ns": 12.93414306640625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 6.9138388671875,
+            "p95_ns": 6.963287353515625,
+            "min_ns": 6.834716796875,
+            "max_ns": 6.9751484375,
+            "samples": 31
+          },
+          {
+            "cold_ns": 208,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 6.961771728515625,
+            "p95_ns": 7.3046875,
+            "min_ns": 6.9120888671875,
+            "max_ns": 7.791371826171875,
+            "samples": 31
+          }
+        ]
       }
     },
     "style-patch/compose": {
@@ -174,6 +287,60 @@
             "p95_ns": 7.87457275390625,
             "min_ns": 7.530598876953125,
             "max_ns": 7.887064697265625,
+            "samples": 31
+          }
+        ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 21.34499072265625,
+            "p95_ns": 23.8721513671875,
+            "min_ns": 18.34043359375,
+            "max_ns": 24.39727783203125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 166,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 20.14316796875,
+            "p95_ns": 21.95859814453125,
+            "min_ns": 18.30708837890625,
+            "max_ns": 22.75850390625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 7.97772216796875,
+            "p95_ns": 10.495025634765625,
+            "min_ns": 7.6456298828125,
+            "max_ns": 22.36573291015625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 7.7307841796875,
+            "p95_ns": 7.917510986328125,
+            "min_ns": 7.626953125,
+            "max_ns": 7.96617626953125,
             "samples": 31
           }
         ]
@@ -233,6 +400,60 @@
             "samples": 31
           }
         ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 166,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "1-reference",
+            "p50_ns": 5.806935791015625,
+            "p95_ns": 5.8465576171875,
+            "min_ns": 5.763916015625,
+            "max_ns": 5.849812744140625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "4-reference",
+            "p50_ns": 5.864094970703125,
+            "p95_ns": 6.00885009765625,
+            "min_ns": 5.81158447265625,
+            "max_ns": 6.02330517578125,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 5.89155078125,
+            "p95_ns": 6.421661376953125,
+            "min_ns": 5.6374716796875,
+            "max_ns": 6.43657421875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 41,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 5.68255615234375,
+            "p95_ns": 5.70758056640625,
+            "min_ns": 5.64080810546875,
+            "max_ns": 5.711334228515625,
+            "samples": 31
+          }
+        ]
       }
     },
     "style-patch/override": {
@@ -286,6 +507,60 @@
             "p95_ns": 6.964569091796875,
             "min_ns": 6.513997314453125,
             "max_ns": 6.977142333984375,
+            "samples": 31
+          }
+        ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "1-reference",
+            "p50_ns": 6.812774658203125,
+            "p95_ns": 6.89928173828125,
+            "min_ns": 6.744954345703125,
+            "max_ns": 6.918426513671875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 83,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "4-reference",
+            "p50_ns": 6.8544921875,
+            "p95_ns": 6.887176513671875,
+            "min_ns": 6.814677001953125,
+            "max_ns": 7.167694091796875,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 6.8323974609375,
+            "p95_ns": 6.969024658203125,
+            "min_ns": 6.60847998046875,
+            "max_ns": 7.551249267578125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 6.818013427734375,
+            "p95_ns": 7.050445556640625,
+            "min_ns": 6.696696044921875,
+            "max_ns": 9.006378173828125,
             "samples": 31
           }
         ]
@@ -345,6 +620,60 @@
             "samples": 31
           }
         ]
+      },
+      "inline-trial": {
+        "reference": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 10.53218603515625,
+            "p95_ns": 10.6711220703125,
+            "min_ns": 10.41802978515625,
+            "max_ns": 10.675150390625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 209,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 10.603169921875,
+            "p95_ns": 10.66619873046875,
+            "min_ns": 10.47186279296875,
+            "max_ns": 10.67244482421875,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "2-matea",
+            "p50_ns": 25.630330078125,
+            "p95_ns": 96.4422197265625,
+            "min_ns": 23.817708984375,
+            "max_ns": 134.3863525390625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 208,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "3-matea",
+            "p50_ns": 25.4550380859375,
+            "p95_ns": 25.7034091796875,
+            "min_ns": 24.5954189453125,
+            "max_ns": 25.7312421875,
+            "samples": 31
+          }
+        ]
       }
     },
     "style-patch/decoration-control": {
@@ -375,6 +704,34 @@
             "samples": 31
           }
         ]
+      },
+      "inline-trial": {
+        "matea": [
+          {
+            "cold_ns": 209,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 512000,
+            "run": "2-matea",
+            "p50_ns": 40.564779296875,
+            "p95_ns": 41.18619921875,
+            "min_ns": 39.8064765625,
+            "max_ns": 41.21915625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 292,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 512000,
+            "run": "3-matea",
+            "p50_ns": 40.605712890625,
+            "p95_ns": 42.259115234375,
+            "min_ns": 39.733154296875,
+            "max_ns": 42.38525390625,
+            "samples": 31
+          }
+        ]
       }
     },
     "style-patch/inherit-decoration-control": {
@@ -402,6 +759,34 @@
             "p95_ns": 35.1769609375,
             "min_ns": 34.573404296875,
             "max_ns": 35.1922607421875,
+            "samples": 31
+          }
+        ]
+      },
+      "inline-trial": {
+        "matea": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "2-matea",
+            "p50_ns": 35.113240234375,
+            "p95_ns": 35.3226728515625,
+            "min_ns": 33.9427080078125,
+            "max_ns": 35.5209150390625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 83,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "3-matea",
+            "p50_ns": 35.1715087890625,
+            "p95_ns": 35.5397548828125,
+            "min_ns": 32.061482421875,
+            "max_ns": 35.627482421875,
             "samples": 31
           }
         ]

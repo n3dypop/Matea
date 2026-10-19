@@ -64,6 +64,16 @@ with existing packed attribute operations. This is a compiler-hint experiment,
 not evidence that a particular out-of-line call caused the gap; symbols alone
 did not establish that cause. Keep the instrumentation fixed across the trial.
 
+The inline-trial cohort at a080458 did not improve reset (25.5–25.6 ns);
+the constructor/composition/resolution hints are therefore removed. The retained
+arm64 disassembly shows the Matea reset loop calling `matea_resolved`, while the
+source reset closure has no corresponding resolved-record helper call. No
+StylePatch method call remains in that loop. This explains a concrete
+instrumentation asymmetry, not a demonstrated library defect. The next measurement
+forces both resolved-read adapters inline. Its timings are a new instrumentation
+cohort and must not be labeled a before/after production optimization. The actual
+production library returns to the c77fd31 implementation.
+
 Style decorators, arbitrary padding/borders/layout, all Stylize conversions,
 conditional underline-color/serde/anstyle/palette profiles, complete raw modifier
 composition and full module performance remain open. Stage A and F5 stay closed

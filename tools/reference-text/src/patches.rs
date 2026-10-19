@@ -273,6 +273,7 @@ fn reference_record(style: ReferenceStyle) -> [u8; 16] {
     }
     out
 }
+#[inline(always)]
 fn matea_resolved(style: Style) -> [u8; 16] {
     let mut out = [0; 16];
     out[..5].copy_from_slice(&color_record(Some(style.fg)));
@@ -282,6 +283,7 @@ fn matea_resolved(style: Style) -> [u8; 16] {
     }
     out
 }
+#[inline(always)]
 fn reference_resolved(cell: &Cell) -> [u8; 16] {
     let mut out = [0; 16];
     out[..5].copy_from_slice(&color_record(Some(from_reference(cell.fg))));
