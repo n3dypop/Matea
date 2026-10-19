@@ -55,6 +55,15 @@ Matea reset versus 10.7–10.8 ns source reset is still an investigation result,
 not an attributed cause. No production library changes accompany this adapter
 correction.
 
+The direct-read-before cohort at e609fbe preserves this gap (Matea reset
+25.6–25.9 ns, source 10.4–10.6 ns, medians from two orders). Build and complete
+override are close; compose/resolve favor Matea in this bounded corpus. All eight
+Matea and six source cases report zero tracked allocations. The next experiment
+marks the small constructors/composition/resolution methods inline, consistently
+with existing packed attribute operations. This is a compiler-hint experiment,
+not evidence that a particular out-of-line call caused the gap; symbols alone
+did not establish that cause. Keep the instrumentation fixed across the trial.
+
 Style decorators, arbitrary padding/borders/layout, all Stylize conversions,
 conditional underline-color/serde/anstyle/palette profiles, complete raw modifier
 composition and full module performance remain open. Stage A and F5 stay closed

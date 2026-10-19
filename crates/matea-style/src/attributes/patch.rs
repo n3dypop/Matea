@@ -36,6 +36,7 @@ pub struct StylePatch {
     values: u16,
 }
 impl StylePatch {
+    #[inline]
     pub const fn new() -> Self {
         Self {
             fg: None,
@@ -46,6 +47,7 @@ impl StylePatch {
         }
     }
     /// Explicit terminal defaults for all colors and every attribute group.
+    #[inline]
     pub const fn reset() -> Self {
         Self {
             fg: Some(Color::Default),
@@ -56,6 +58,7 @@ impl StylePatch {
         }
     }
     /// Treat every property of a resolved style as an explicit override.
+    #[inline]
     pub const fn from_style(style: Style) -> Self {
         Self {
             fg: Some(style.fg),
@@ -158,6 +161,7 @@ impl StylePatch {
     }
     /// Sequential application, with every explicit overlay setting winning.
     /// This composes intent; unspecified settings never erase previous intent.
+    #[inline]
     pub const fn then(self, overlay: Self) -> Self {
         Self {
             fg: match overlay.fg {
@@ -178,6 +182,7 @@ impl StylePatch {
     }
     /// Produce a resolved cell style. No allocation, terminal I/O or mutation of
     /// either input occurs; typed setters preserve valid packed enum groups.
+    #[inline]
     pub const fn resolve(self, base: Style) -> Style {
         Style {
             fg: match self.fg {
