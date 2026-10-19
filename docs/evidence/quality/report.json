@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 132,
+  "programs": 135,
   "review_units": 42,
   "below_high": [
     {
@@ -531,7 +531,8 @@
       "files": [
         "crates/matea-style/src/lib.rs",
         "crates/matea-style/src/attributes.rs",
-        "crates/matea-style/src/gradient.rs"
+        "crates/matea-style/src/gradient.rs",
+        "crates/matea-style/src/attributes/patch.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -570,7 +571,9 @@
         "docs/evidence/optimization/style/exhaustive.log",
         "docs/evidence/optimization/style/miri.log",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0058-resolved-cell-style-and-explicit-style-patches.md",
+        "docs/style-patches-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1494,7 +1497,8 @@
       "files": [
         "crates/matea-style/tests/layout.rs",
         "crates/matea-style/tests/colors.rs",
-        "crates/matea-style/tests/gradients.rs"
+        "crates/matea-style/tests/gradients.rs",
+        "crates/matea-style/tests/patches.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1739,7 +1743,8 @@
         "tools/perf-probe/src/gradients.rs",
         "tools/perf-probe/src/progress.rs",
         "tools/reference-text/src/main.rs",
-        "tools/perf-probe/src/viewport_wrap.rs"
+        "tools/perf-probe/src/viewport_wrap.rs",
+        "tools/reference-text/src/patches.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -2210,7 +2215,7 @@
       ]
     }
   ],
-  "plan_sha256": "0f8eea2fca23e32def2026bf09596ddb39e07f806c2cceed7b94db71fecadcc7",
+  "plan_sha256": "6131ca785ee5a0ce3d73a7743db0ff28dd12299cdf189372eae15f5b7ac5fe3a",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2295,8 +2300,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 709,
-                "percent": 94.65954606141523
+                "covered": 708,
+                "percent": 94.5260347129506
               },
               "functions": {
                 "count": 101,
@@ -2310,9 +2315,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1125,
-                "notcovered": 58,
-                "percent": 95.09721048182587
+                "covered": 1124,
+                "notcovered": 59,
+                "percent": 95.01267962806425
               },
               "branches": {
                 "count": 0,
@@ -2843,7 +2848,7 @@
     },
     {
       "file": "crates/matea-style/src/attributes.rs",
-      "sha256": "fd17850e753de9b242cb14eb902a42bee329c74427ec650a0dabd176d39b8d4a",
+      "sha256": "6ae62f130eb944d40912d5e3b811f81c0dc1ffceac1d641fe4b9038bd772fcad",
       "units": [
         "matea-style/lib"
       ],
@@ -2865,15 +2870,66 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 72,
-                "covered": 57,
-                "percent": 79.16666666666666
+                "count": 77,
+                "covered": 69,
+                "percent": 89.6103896103896
               },
               "regions": {
                 "count": 179,
                 "covered": 175,
                 "notcovered": 4,
                 "percent": 97.76536312849163
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-style/src/attributes/patch.rs",
+      "sha256": "3f30891401146d359f497c7d42c69ff57e183879fac6ba84365e12004e32d6a4",
+      "units": [
+        "matea-style/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/src/attributes/patch.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-style/src/attributes/patch.rs",
+            "summary": {
+              "lines": {
+                "count": 178,
+                "covered": 167,
+                "percent": 93.82022471910112
+              },
+              "functions": {
+                "count": 29,
+                "covered": 29,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 87,
+                "covered": 53,
+                "percent": 60.91954022988506
+              },
+              "regions": {
+                "count": 220,
+                "covered": 195,
+                "notcovered": 25,
+                "percent": 88.63636363636364
               },
               "branches": {
                 "count": 0,
@@ -2945,7 +3001,7 @@
     },
     {
       "file": "crates/matea-style/src/lib.rs",
-      "sha256": "51fa03c59f444445843a192807797b889447d46b743999e1a14292582bedf519",
+      "sha256": "4adacdba33d91c51bd7f78f7571d12862de9a74e633862dea1e9ea81fbb93fe1",
       "units": [
         "matea-style/lib"
       ],
@@ -2957,25 +3013,25 @@
             "compiler_filename": "crates/matea-style/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 245,
-                "covered": 239,
-                "percent": 97.55102040816327
+                "count": 248,
+                "covered": 245,
+                "percent": 98.79032258064517
               },
               "functions": {
-                "count": 31,
-                "covered": 30,
-                "percent": 96.7741935483871
+                "count": 32,
+                "covered": 32,
+                "percent": 100
               },
               "instantiations": {
-                "count": 91,
-                "covered": 54,
-                "percent": 59.34065934065934
+                "count": 97,
+                "covered": 65,
+                "percent": 67.0103092783505
               },
               "regions": {
-                "count": 384,
-                "covered": 376,
-                "notcovered": 8,
-                "percent": 97.91666666666666
+                "count": 389,
+                "covered": 386,
+                "notcovered": 3,
+                "percent": 99.22879177377892
               },
               "branches": {
                 "count": 0,
@@ -3129,6 +3185,57 @@
                 "covered": 58,
                 "notcovered": 0,
                 "percent": 100
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-style/tests/patches.rs",
+      "sha256": "3c13363ce984498cca56ea24ed7b32e04378611cad2285527e26acf1e7629d67",
+      "units": [
+        "matea-style/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/tests/patches.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-style/tests/patches.rs",
+            "summary": {
+              "lines": {
+                "count": 202,
+                "covered": 179,
+                "percent": 88.61386138613861
+              },
+              "functions": {
+                "count": 15,
+                "covered": 14,
+                "percent": 93.33333333333333
+              },
+              "instantiations": {
+                "count": 15,
+                "covered": 14,
+                "percent": 93.33333333333333
+              },
+              "regions": {
+                "count": 482,
+                "covered": 446,
+                "notcovered": 36,
+                "percent": 92.5311203319502
               },
               "branches": {
                 "count": 0,
@@ -3392,7 +3499,7 @@
     },
     {
       "file": "crates/matea-terminal/src/lib.rs",
-      "sha256": "4991f9ef67ba0ad9bb7b65c105248f44539335cd4f952f931088dd8393c2d847",
+      "sha256": "6cfcfef3ec50cb07b56b0307347a84e08bf260d89793012aad2306f35448ac32",
       "units": [
         "matea-terminal/lib"
       ],
@@ -3404,25 +3511,25 @@
             "compiler_filename": "crates/matea-terminal/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 672,
-                "covered": 641,
-                "percent": 95.38690476190477
+                "count": 698,
+                "covered": 667,
+                "percent": 95.55873925501433
               },
               "functions": {
-                "count": 69,
-                "covered": 67,
-                "percent": 97.10144927536231
+                "count": 70,
+                "covered": 68,
+                "percent": 97.14285714285714
               },
               "instantiations": {
-                "count": 267,
-                "covered": 181,
-                "percent": 67.79026217228464
+                "count": 268,
+                "covered": 182,
+                "percent": 67.91044776119402
               },
               "regions": {
-                "count": 1062,
-                "covered": 985,
+                "count": 1109,
+                "covered": 1032,
                 "notcovered": 77,
-                "percent": 92.74952919020716
+                "percent": 93.05680793507665
               },
               "branches": {
                 "count": 0,
@@ -5714,7 +5821,7 @@
     },
     {
       "file": "crates/matea/src/lib.rs",
-      "sha256": "af5ff1ea38741b537b8f76239eff5465080f2bf13b19564f6938ab2b2bca5bfb",
+      "sha256": "cb51d69bd62f3a92c9f15c2a85be697e5a41f02ec7cdd07f8da13d6b471ac5c1",
       "units": [
         "matea/lib"
       ],
@@ -5952,7 +6059,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "907a6eb11b90ed99f51b4a471b9a4544d52dfee0f046385779d05d2b8f7fab07",
+      "sha256": "124dfeacddd43250e0cfed228a945a924a15c1aeeec1c8570df3999eaa883f26",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6192,7 +6299,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "43252f8c5635d539d397aeb8bcbb176b4182a5a68def453f5253a976efb388d9",
+      "sha256": "9447e72045d7f9c6f8cedb2c99e0ed42fdc9d10f8cb417752f9e0124e9e05736",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6567,9 +6674,9 @@
                 "percent": 76.74418604651163
               },
               "instantiations": {
-                "count": 187,
-                "covered": 53,
-                "percent": 28.342245989304814
+                "count": 355,
+                "covered": 67,
+                "percent": 18.87323943661972
               },
               "regions": {
                 "count": 509,
@@ -6765,7 +6872,7 @@
     },
     {
       "file": "tools/reference-text/src/main.rs",
-      "sha256": "5e92c3b378f0c96c43b49c881451eba2baca56c8b2becef897ab4047b90f61db",
+      "sha256": "91ad3951dd24f6b43db93a9076007f990723f9273c7b3adb3bcd2caf37c86d64",
       "units": [
         "tools/perf-probe"
       ],
@@ -6777,9 +6884,9 @@
             "compiler_filename": "tools/reference-text/src/main.rs",
             "summary": {
               "lines": {
-                "count": 380,
-                "covered": 376,
-                "percent": 98.94736842105263
+                "count": 387,
+                "covered": 382,
+                "percent": 98.70801033591732
               },
               "functions": {
                 "count": 42,
@@ -6792,10 +6899,61 @@
                 "percent": 50
               },
               "regions": {
-                "count": 577,
-                "covered": 573,
-                "notcovered": 4,
-                "percent": 99.30675909878683
+                "count": 585,
+                "covered": 580,
+                "notcovered": 5,
+                "percent": 99.14529914529915
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "tools/reference-text/src/patches.rs",
+      "sha256": "ce86b61267645602dc770e7d2d1d1188c8925fe93833f6ccaf2bfc95a698cfa7",
+      "units": [
+        "tools/perf-probe"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/reference-text/src/patches.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "tools/reference-text/src/patches.rs",
+            "summary": {
+              "lines": {
+                "count": 470,
+                "covered": 467,
+                "percent": 99.36170212765958
+              },
+              "functions": {
+                "count": 38,
+                "covered": 38,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 76,
+                "covered": 38,
+                "percent": 50
+              },
+              "regions": {
+                "count": 835,
+                "covered": 832,
+                "notcovered": 3,
+                "percent": 99.64071856287426
               },
               "branches": {
                 "count": 0,

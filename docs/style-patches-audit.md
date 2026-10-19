@@ -34,8 +34,26 @@ The measurement caller has six matched operations (build, resolve, compose,
 inherit, complete override and runtime-selected reset), with complete canonical
 16-byte foreground/background/six-Boolean records consumed via FNV. Two separate
 25-byte expanded-decoration controls have no reference ratio. Source resolution
-includes a Cell clone; representations and extra properties differ. Measurement,
-Miri, full native/LLVM and three-OS qualification are pending.
+includes a Cell clone; representations and extra properties differ.
+
+At c77fd31, all 39 native acceptance commands passed with unchanged inputs. The
+isolated reference workspace's eight measurement unit tests ran as well. LLVM
+observed 80 source paths / 86 compiler file instances; this is execution evidence,
+not every branch or conditional profile. Miri seed 263 passed the six ordinary
+patch tests and the terminal encoder regression. The finite test runs natively.
+The source-bound native snapshot is under `evidence/style-patches/baseline/native`.
+Three-OS CI for this checkpoint is still running.
+
+The first performance cohort is retained under `baseline`. Its resolved-state
+read adapters converted a complete resolved state back to explicit style intent
+before extracting the canonical fields. That extra conversion is unnecessary for
+both implementations. A second cohort will use direct foreground/background and
+modifier reads on both sides, with identical complete output bytes. The first
+cohort's timings must not be used as a before/after library optimization claim
+against this changed instrumentation. In particular, the initial 24.6–27.2 ns
+Matea reset versus 10.7–10.8 ns source reset is still an investigation result,
+not an attributed cause. No production library changes accompany this adapter
+correction.
 
 Style decorators, arbitrary padding/borders/layout, all Stylize conversions,
 conditional underline-color/serde/anstyle/palette profiles, complete raw modifier

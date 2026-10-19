@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "seed": 263,
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097",
+    "crates/matea-style/src/lib.rs": "4adacdba33d91c51bd7f78f7571d12862de9a74e633862dea1e9ea81fbb93fe1",
+    "crates/matea-style/src/attributes.rs": "6ae62f130eb944d40912d5e3b811f81c0dc1ffceac1d641fe4b9038bd772fcad",
+    "crates/matea-style/src/attributes/patch.rs": "3f30891401146d359f497c7d42c69ff57e183879fac6ba84365e12004e32d6a4",
+    "crates/matea-style/tests/patches.rs": "3c13363ce984498cca56ea24ed7b32e04378611cad2285527e26acf1e7629d67",
+    "crates/matea-terminal/src/lib.rs": "6cfcfef3ec50cb07b56b0307347a84e08bf260d89793012aad2306f35448ac32"
+  },
+  "started_at_utc": "2026-10-18T23:59:54.506375+00:00",
+  "runs": [
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "miri",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-style",
+        "--test",
+        "patches"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "miri",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-terminal",
+        "--lib",
+        "style_patch_resets"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_changed": [],
+  "log_sha256": "e06557e83204ad53d96f7e1e6da9a7bbe04cbb54a35dfb025d616aca7c5016fd",
+  "finished_at_utc": "2026-10-19T00:00:09.918274+00:00"
+}

@@ -1,0 +1,43 @@
+import hashlib,json,math,statistics,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs
+P=ROOT/'docs/evidence/style-patches'
+def clr(v):
+ if v is None:return bytes(5)
+ if v=='default':return bytes([1,0,0,0,0])
+ if isinstance(v,int):return bytes([2,v,0,0,0])
+ return bytes([3,*v,0])
+def record(fg,bg,flags):return clr(fg)+clr(bg)+bytes(flags)
+def flags(code):
+ result=[]
+ for _ in range(6):result.append(code%3);code//=3
+ return result
+# Canonical flag bytes: absent 0, explicit false 1, explicit true 2.
+a=flags(137);b=flags(593);base=[2,1,2,1,1,1]
+expected={'build':record(137,(19,47,233),a),'resolve':record(137,(19,47,233),[v or old for v,old in zip(a,base)]),'compose':record(81,(19,47,233),[v or old for v,old in zip(b,a)]),'inherit':record(None,(19,47,233),[0,*a[1:]]),'override':record(2,(11,41,227),base),'reset':record('default','default',[1]*6)}
+expected['decoration-control']=expected['override']+clr(23)+bytes([9,6,3,3])
+expected['inherit-decoration-control']=expected['override']+bytes(5)+bytes([9,0,0,0])
+expected={'style-patch/'+k:v for k,v in expected.items()}
+def digest(data):
+ v=14695981039346656037
+ for b in data:v=((v^b)*1099511628211)&((1<<64)-1)
+ return v
+report={'schema':1,'status':'complete_bounded_native_measurement','matched_cases':6,'separate_controls':2,'cohorts':{},'cases':{},'limits':['Only FG/BG/six-flag std-only overlap receives ratios; two 25-byte expanded-group controls are separate.','Complete canonical projection/digest is part of each operation; source resolution clones a Cell.','One native host, no RSS/whole-style/full-feature/terminal performance proof.','Keep every order, cold/tail observation and regressions; no universal max-speed/statistical causality claim.']}
+for cohort in sys.argv[1:] or ['baseline']:
+ folder=P/cohort;c=json.loads((folder/'context.json').read_text());require(c['status']=='complete' and c['source_changed']==[])
+ report['cohorts'][cohort]={'git_head':c['git_head'],'inputs':len(c['source_sha256']),'context_sha256':hashlib.sha256((folder/'context.json').read_bytes()).hexdigest()}
+ for mode in ['matea','reference']:
+  outputs=read_probe_outputs((folder/(mode+'-outputs.jsonl')).read_text());require(len(outputs)==(8 if mode=='matea' else 6))
+  for key,v in outputs.items():require(v['output']==expected[key].hex() and v['first_return_value']==digest(expected[key]),'independent output '+key)
+ for run in c['runs']:
+  path=folder/(run['name']+'.jsonl');require(hashlib.sha256(path.read_bytes()).hexdigest()==run['raw_sha256']);rows=read_records(path.read_text());require(len(rows)==(8 if run['mode']=='matea' else 6))
+  for key,v in rows.items():
+   require(v['output']==expected[key].hex() and v['first_return_value']==digest(expected[key]),'measured projection/digest '+key);require(v['calibration']['target_ns']==20000000)
+   s=v['samples_ns'];row={k:v[k] for k in ['cold_ns','allocations','allocated_bytes','iterations_per_sample']};row.update(run=run['name'],p50_ns=statistics.median(s),p95_ns=sorted(s)[math.ceil(.95*len(s))-1],min_ns=min(s),max_ns=max(s),samples=len(s));report['cases'].setdefault(key,{}).setdefault(cohort,{}).setdefault(run['mode'],[]).append(row)
+if len(report['cohorts'])>1:
+ cs=[json.loads((P/k/'context.json').read_text()) for k in report['cohorts']]
+ for path in ['tools/reference-text/src/main.rs','tools/reference-text/src/patches.rs','tools/reference-text/Cargo.lock','tools/reference-text/Cargo.toml','tools/perf-probe/src/measurement.rs']:
+  require(len({c['source_sha256'][path] for c in cs})==1,'instrumentation changed '+path)
+(P/'performance-comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('verified independent 16/25-byte intent/state records and complete FNV for every retained timing/output record')

@@ -1,0 +1,417 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_native_measurement",
+  "matched_cases": 6,
+  "separate_controls": 2,
+  "cohorts": {
+    "baseline": {
+      "git_head": "c77fd31a01f4f52c76ecb55cd19ce65ecca1313f",
+      "inputs": 171,
+      "context_sha256": "e0dac2faeeebee7e9dae0422664f9284c18b88f3221013962ca48ea8199dd866"
+    }
+  },
+  "cases": {
+    "style-patch/build": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 209,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 9.8432822265625,
+            "p95_ns": 9.93865966796875,
+            "min_ns": 9.80482958984375,
+            "max_ns": 9.94240283203125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 83,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 9.82452392578125,
+            "p95_ns": 9.892822265625,
+            "min_ns": 9.7944130859375,
+            "max_ns": 10.1371865234375,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 84,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "2-matea",
+            "p50_ns": 9.82212353515625,
+            "p95_ns": 9.8820595703125,
+            "min_ns": 9.80019140625,
+            "max_ns": 9.97464990234375,
+            "samples": 31
+          },
+          {
+            "cold_ns": 83,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "3-matea",
+            "p50_ns": 9.84010791015625,
+            "p95_ns": 9.91585302734375,
+            "min_ns": 9.79325390625,
+            "max_ns": 9.93912744140625,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/resolve": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "1-reference",
+            "p50_ns": 19.92041015625,
+            "p95_ns": 20.026041015625,
+            "min_ns": 19.82881640625,
+            "max_ns": 20.045166015625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "4-reference",
+            "p50_ns": 20.0233974609375,
+            "p95_ns": 20.1609697265625,
+            "min_ns": 19.8619794921875,
+            "max_ns": 20.1610107421875,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 209,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 8.048990966796875,
+            "p95_ns": 8.57574462890625,
+            "min_ns": 7.807535888671875,
+            "max_ns": 9.031107666015625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 8.179402587890625,
+            "p95_ns": 8.424703125,
+            "min_ns": 7.891510009765625,
+            "max_ns": 8.43370556640625,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/compose": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 291,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 21.05275439453125,
+            "p95_ns": 23.593505859375,
+            "min_ns": 18.9829306640625,
+            "max_ns": 24.4790244140625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 19.9307861328125,
+            "p95_ns": 23.9306435546875,
+            "min_ns": 18.62648486328125,
+            "max_ns": 24.44331884765625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 7.55113720703125,
+            "p95_ns": 7.630025146484375,
+            "min_ns": 7.506367919921875,
+            "max_ns": 7.6427001953125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 7.54903173828125,
+            "p95_ns": 7.6083984375,
+            "min_ns": 7.51324462890625,
+            "max_ns": 7.6791279296875,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/inherit": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "1-reference",
+            "p50_ns": 5.758280517578125,
+            "p95_ns": 6.199025390625,
+            "min_ns": 5.72393798828125,
+            "max_ns": 6.26210546875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "4-reference",
+            "p50_ns": 5.78181982421875,
+            "p95_ns": 5.8631591796875,
+            "min_ns": 5.725301025390625,
+            "max_ns": 5.88092041015625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 41,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 5.615275146484375,
+            "p95_ns": 5.66502880859375,
+            "min_ns": 5.59129833984375,
+            "max_ns": 5.66869091796875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 5.611348388671875,
+            "p95_ns": 6.63624072265625,
+            "min_ns": 5.57269287109375,
+            "max_ns": 17.06880712890625,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/override": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "1-reference",
+            "p50_ns": 6.75499462890625,
+            "p95_ns": 6.801666259765625,
+            "min_ns": 6.713846923828125,
+            "max_ns": 6.8136494140625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "4-reference",
+            "p50_ns": 6.743489501953125,
+            "p95_ns": 6.8736064453125,
+            "min_ns": 6.710591552734375,
+            "max_ns": 7.1705322265625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "2-matea",
+            "p50_ns": 6.688578369140625,
+            "p95_ns": 6.930399658203125,
+            "min_ns": 6.5435283203125,
+            "max_ns": 6.93370556640625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 42,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 4096000,
+            "run": "3-matea",
+            "p50_ns": 6.743571044921875,
+            "p95_ns": 6.98333740234375,
+            "min_ns": 6.5465087890625,
+            "max_ns": 8.322672607421875,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/reset": {
+      "baseline": {
+        "reference": [
+          {
+            "cold_ns": 0,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "1-reference",
+            "p50_ns": 10.7186279296875,
+            "p95_ns": 10.79752587890625,
+            "min_ns": 10.55830908203125,
+            "max_ns": 10.86556005859375,
+            "samples": 31
+          },
+          {
+            "cold_ns": 250,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 2048000,
+            "run": "4-reference",
+            "p50_ns": 10.77994775390625,
+            "p95_ns": 11.21360302734375,
+            "min_ns": 10.597697265625,
+            "max_ns": 11.2992353515625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 125,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "2-matea",
+            "p50_ns": 27.147705078125,
+            "p95_ns": 28.20878125,
+            "min_ns": 17.1013583984375,
+            "max_ns": 28.2508544921875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 209,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "3-matea",
+            "p50_ns": 24.643107421875,
+            "p95_ns": 28.027140625,
+            "min_ns": 15.262939453125,
+            "max_ns": 28.155802734375,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/decoration-control": {
+      "baseline": {
+        "matea": [
+          {
+            "cold_ns": 208,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 512000,
+            "run": "2-matea",
+            "p50_ns": 40.44132421875,
+            "p95_ns": 45.752685546875,
+            "min_ns": 39.791015625,
+            "max_ns": 50.228841796875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 292,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 512000,
+            "run": "3-matea",
+            "p50_ns": 40.510986328125,
+            "p95_ns": 41.075845703125,
+            "min_ns": 39.564533203125,
+            "max_ns": 41.244302734375,
+            "samples": 31
+          }
+        ]
+      }
+    },
+    "style-patch/inherit-decoration-control": {
+      "baseline": {
+        "matea": [
+          {
+            "cold_ns": 167,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "2-matea",
+            "p50_ns": 35.164876953125,
+            "p95_ns": 35.477091796875,
+            "min_ns": 34.69287109375,
+            "max_ns": 35.9024658203125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 292,
+            "allocations": 0,
+            "allocated_bytes": 0,
+            "iterations_per_sample": 1024000,
+            "run": "3-matea",
+            "p50_ns": 35.1069736328125,
+            "p95_ns": 35.2416181640625,
+            "min_ns": 30.1613359375,
+            "max_ns": 35.250732421875,
+            "samples": 31
+          }
+        ]
+      }
+    }
+  },
+  "limits": [
+    "Only FG/BG/six-flag std-only overlap receives ratios; two 25-byte expanded-group controls are separate.",
+    "Complete canonical projection/digest is part of each operation; source resolution clones a Cell.",
+    "One native host, no RSS/whole-style/full-feature/terminal performance proof.",
+    "Keep every order, cold/tail observation and regressions; no universal max-speed/statistical causality claim."
+  ]
+}

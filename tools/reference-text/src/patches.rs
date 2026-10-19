@@ -274,10 +274,22 @@ fn reference_record(style: ReferenceStyle) -> [u8; 16] {
     out
 }
 fn matea_resolved(style: Style) -> [u8; 16] {
-    matea_record(StylePatch::from_style(style))
+    let mut out = [0; 16];
+    out[..5].copy_from_slice(&color_record(Some(style.fg)));
+    out[5..10].copy_from_slice(&color_record(Some(style.bg)));
+    for (i, (flag, _)) in FLAGS.into_iter().enumerate() {
+        out[10 + i] = intent(Some(style.has(flag)));
+    }
+    out
 }
 fn reference_resolved(cell: &Cell) -> [u8; 16] {
-    reference_record(ReferenceStyle::reset().patch(cell.style()))
+    let mut out = [0; 16];
+    out[..5].copy_from_slice(&color_record(Some(from_reference(cell.fg))));
+    out[5..10].copy_from_slice(&color_record(Some(from_reference(cell.bg))));
+    for (i, (_, flag)) in FLAGS.into_iter().enumerate() {
+        out[10 + i] = intent(Some(cell.modifier.contains(flag)));
+    }
+    out
 }
 fn build_matea(mut choices: usize) -> StylePatch {
     let mut patch = StylePatch::new()
