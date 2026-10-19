@@ -2246,7 +2246,7 @@
             "notes": "Older signed/zero-height slicing panic is absent in ten pinned public sequences. Five nonnegative height states/views match; two negative source cases do not panic. Negative dimensions cannot enter Matea u16 APIs; parent-derived available dimensions use saturating subtraction.",
             "evidence_sha256": {
               "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
-              "crates/matea-widgets/src/viewport.rs": "0749def80fb3edd59bfd1f6029e0c888e87e0efc4a5881a0373c26ab90b8ce79",
+              "crates/matea-widgets/src/viewport.rs": "d1aeb5ac294de846084e5f602dd0cbbc2269aec6ce6c9b32c420eb0b9be6abbf",
               "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
               "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
               "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
@@ -2254,9 +2254,13 @@
               "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
               "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c",
               "docs/evidence/viewport-wrap/optimized/native/test.log": "0633f69108fae42331e0b0e9c4088dfcbd7988973ed1d9fed16b8b244a57d3c8",
-              "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4"
+              "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4",
+              "docs/evidence/ratatui-bridge/viewport-issue-refresh.json": "2120d87c84792e7eab31bf4781dbb3bacef4fd9c5041bd0f5f69e5fe074169ef",
+              "docs/evidence/viewport-highlights/optimized/ci/source-bindings.json": "857b41fea5130251c020f1cda245498b2966dd64add0f13e073b9fad55c657bf",
+              "docs/evidence/ratatui-bridge/native/source-bindings.json": "b7c50cd07055321cd43377fec9a32b8646e4d4dfbcea4028e23bb3943ae136aa",
+              "docs/evidence/ratatui-bridge/native/test.log": "7d3717ce5de1d1dd5df7505909e02cdc94b319d928acc001c5e3453212bd5946"
             },
-            "scope": "Bounded flat-mode historical contract, repeated at 32a67c0 in full native/three-host regression checks after wrapping was added. No reproduction of the original historical checkout or promise about all wrap/style/gutter/highlight combinations; zero-width wrapped count finding is separately documented."
+            "scope": "Bounded flat/default historical contract rechecked after highlight additions: current viewport source/test byte-identical to ed05ad9 three-host CI; fresh optimized adapter native suite repeats the regressions. Historical checkout not reproduced; no all wrap/style/gutter/highlight combinations or new whole-framework CI qualification."
           }
         },
         {
@@ -3091,7 +3095,7 @@
             "notes": "Older near-fit/zero-offset NaN formula is absent at the pinned source; current denominator and retained zero/near-fit/empty cases are finite with exact fraction bits.",
             "evidence_sha256": {
               "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
-              "crates/matea-widgets/src/viewport.rs": "0749def80fb3edd59bfd1f6029e0c888e87e0efc4a5881a0373c26ab90b8ce79",
+              "crates/matea-widgets/src/viewport.rs": "d1aeb5ac294de846084e5f602dd0cbbc2269aec6ce6c9b32c420eb0b9be6abbf",
               "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
               "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
               "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
@@ -3099,9 +3103,13 @@
               "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
               "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c",
               "docs/evidence/viewport-wrap/optimized/native/test.log": "0633f69108fae42331e0b0e9c4088dfcbd7988973ed1d9fed16b8b244a57d3c8",
-              "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4"
+              "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4",
+              "docs/evidence/ratatui-bridge/viewport-issue-refresh.json": "2120d87c84792e7eab31bf4781dbb3bacef4fd9c5041bd0f5f69e5fe074169ef",
+              "docs/evidence/viewport-highlights/optimized/ci/source-bindings.json": "857b41fea5130251c020f1cda245498b2966dd64add0f13e073b9fad55c657bf",
+              "docs/evidence/ratatui-bridge/native/source-bindings.json": "b7c50cd07055321cd43377fec9a32b8646e4d4dfbcea4028e23bb3943ae136aa",
+              "docs/evidence/ratatui-bridge/native/test.log": "7d3717ce5de1d1dd5df7505909e02cdc94b319d928acc001c5e3453212bd5946"
             },
-            "scope": "Bounded flat-mode historical contract, repeated at 32a67c0 in full native/three-host regression checks after wrapping was added. No reproduction of the original historical checkout or promise about all wrap/style/gutter/highlight combinations; zero-width wrapped count finding is separately documented."
+            "scope": "Bounded flat/default historical contract rechecked after highlight additions: current viewport source/test byte-identical to ed05ad9 three-host CI; fresh optimized adapter native suite repeats the regressions. Historical checkout not reproduced; no all wrap/style/gutter/highlight combinations or new whole-framework CI qualification."
           }
         },
         {

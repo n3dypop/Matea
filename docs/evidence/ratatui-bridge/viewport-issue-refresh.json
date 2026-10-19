@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_reassessment",
+  "as_of_utc": "2026-10-19T05:01:01.325089+00:00",
+  "repository": "charmbracelet/bubbles",
+  "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+  "issues": [
+    {
+      "number": 879,
+      "url": "https://github.com/charmbracelet/bubbles/issues/879",
+      "updated_at": "2026-01-25T22:08:17Z",
+      "bounded_conclusion": "Older signed/zero-height slicing panic is absent in ten pinned public sequences. Five nonnegative height states/views match; two negative source cases do not panic. Negative dimensions cannot enter Matea u16 APIs; parent-derived available dimensions use saturating subtraction."
+    },
+    {
+      "number": 288,
+      "url": "https://github.com/charmbracelet/bubbles/issues/288",
+      "updated_at": "2023-02-22T08:17:01Z",
+      "bounded_conclusion": "Older near-fit/zero-offset NaN formula is absent at the pinned source; current denominator and retained zero/near-fit/empty cases are finite with exact fraction bits."
+    }
+  ],
+  "prior_reviews": {
+    "879": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2026-01-25T22:08:17Z",
+      "notes": "Older signed/zero-height slicing panic is absent in ten pinned public sequences. Five nonnegative height states/views match; two negative source cases do not panic. Negative dimensions cannot enter Matea u16 APIs; parent-derived available dimensions use saturating subtraction.",
+      "evidence_sha256": {
+        "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
+        "crates/matea-widgets/src/viewport.rs": "0749def80fb3edd59bfd1f6029e0c888e87e0efc4a5881a0373c26ab90b8ce79",
+        "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
+        "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+        "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
+        "docs/evidence/viewport-horizontal/issue-context.json": "1f2fa83d100264e5396192f5b019ec118f62cada101247fcb661321a04f20c16",
+        "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
+        "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c",
+        "docs/evidence/viewport-wrap/optimized/native/test.log": "0633f69108fae42331e0b0e9c4088dfcbd7988973ed1d9fed16b8b244a57d3c8",
+        "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4"
+      },
+      "scope": "Bounded flat-mode historical contract, repeated at 32a67c0 in full native/three-host regression checks after wrapping was added. No reproduction of the original historical checkout or promise about all wrap/style/gutter/highlight combinations; zero-width wrapped count finding is separately documented."
+    },
+    "288": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2023-02-22T08:17:01Z",
+      "notes": "Older near-fit/zero-offset NaN formula is absent at the pinned source; current denominator and retained zero/near-fit/empty cases are finite with exact fraction bits.",
+      "evidence_sha256": {
+        "docs/viewport-cell-geometry.md": "e0f0fe3fde132f934cbbc9fb8c92daab9d61ecb48c83e615e45a777abfe47752",
+        "crates/matea-widgets/src/viewport.rs": "0749def80fb3edd59bfd1f6029e0c888e87e0efc4a5881a0373c26ab90b8ce79",
+        "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
+        "crates/matea-widgets/tests/fixtures/viewport-controls.tsv": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+        "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv": "0b0a37d2fa9d68c8bb260d1e79d18a5348d531ecc97263680800d027c3ff91fd",
+        "docs/evidence/viewport-horizontal/issue-context.json": "1f2fa83d100264e5396192f5b019ec118f62cada101247fcb661321a04f20c16",
+        "docs/evidence/viewport-horizontal/optimized/native/test.log": "111f1671baa358c198a2e0bf8081e9af35e1602b751abf40236f9169930a974e",
+        "docs/evidence/viewport-horizontal/optimized/ci/source-bindings.json": "065579fa6a1c55074be788e5e9dd840ae085dd0e72380ae391a98d9bcca0953c",
+        "docs/evidence/viewport-wrap/optimized/native/test.log": "0633f69108fae42331e0b0e9c4088dfcbd7988973ed1d9fed16b8b244a57d3c8",
+        "docs/evidence/viewport-wrap/optimized/ci/source-bindings.json": "d1ee4717e6a987a3f8044fc3d1d517fb715c2ba5e70cba5f511a646c8e9463a4"
+      },
+      "scope": "Bounded flat-mode historical contract, repeated at 32a67c0 in full native/three-host regression checks after wrapping was added. No reproduction of the original historical checkout or promise about all wrap/style/gutter/highlight combinations; zero-width wrapped count finding is separately documented."
+    }
+  },
+  "observations": [
+    "Only the viewport implementation hash had drifted in each prior evidence map. All prior source fixture/test/document hashes still match.",
+    "Inspected current u16 height, saturating max_offset, clamped offset, guarded scroll_fraction denominator, flat view and visible-line ranges. Existing finite height/control/geometry tests pass in the fresh 44-command native suite.",
+    "Current viewport implementation and its regression test are byte-identical to ed05ad9, independently bound to all seven CI jobs and retained three-host source/fixture reproduction.",
+    "The new owned-scene/Ratatui adapter remains unqualified on other OSes; its new code is not covered by the prior CI. No new whole-framework portability claim is made."
+  ],
+  "limits": [
+    "Historical issue checkout is not reproduced. These reports were not reproduced at the fixed current source pin.",
+    "Bounded flat/default viewport contract only. No all-wrap/style/gutter/highlight or physical terminal assertion.",
+    "No source issue is relabeled as an extant upstream bug merely from its historical title."
+  ]
+}

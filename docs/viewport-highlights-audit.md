@@ -1,7 +1,8 @@
 # Viewport search matches and typed highlight intent
 
-Implementation in progress; full native/Miri/three-OS qualification and performance
-remain pending. No whole-widget parity or high score is assigned.
+The bounded implementation, native/Miri/three-OS qualification and six matched
+performance workloads are complete at ed05ad9. Whole-widget parity and a high
+module score remain pending; the limits and earlier trials below are retained.
 
 The API accepts sorted, disjoint byte ranges in normalized content and validates
 them transactionally. Scalar-boundary matches inside EGCs style complete clusters;
@@ -69,6 +70,14 @@ Rust 237 tests plus six doctests, isolated reference eight tests, Python 131,
 16 snapshots and 21 Unix PTY scenarios pass. LLVM observes 83 source paths / 89
 compiler instances, not every branch/profile. Miri seed 269 passes eight targeted
 tests; the finite scalar range corpus and literal 420-row matrix execute natively
-and were deliberately skipped in Miri. Three-host CI 39196946306 is in progress;
+and were deliberately skipped in Miri. Three-host CI 39196946306 passes all seven required jobs;
 af4d043's earlier unfinished candidate jobs are superseded, not all-pass evidence.
 See the immutable `evidence/viewport-highlights/optimized/native` snapshot.
+
+The independent [CI source binding](evidence/viewport-highlights/optimized/ci/source-bindings.json)
+checks 138 programs / 177 execution inputs, all 39 acceptance commands, 23 Unix
+and 24 Windows uploaded logs, 420 source and 420 Matea literal highlight states,
+252 independent ASCII SGR replays and six complete matched frames on each host.
+LLVM retains 83 paths / 89 compiler instances on Unix and 82 / 87 on Windows.
+The native Windows console verifies 36 frames / 2,160 cells plus restoration.
+These facts qualify ed05ad9, not subsequent owned-scene/adapter changes.

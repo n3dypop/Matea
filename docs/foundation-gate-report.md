@@ -1,5 +1,17 @@
 # Matea Foundation gate report
 
+最新のローカル検証は、所有権付き描画面とRatatui連携の147 program／43評価単位／187入力です。
+44受け入れ検証、Rust254＋7 doctest、独立参照8、Python135、snapshot17、Unix PTY21が成功。
+LLVMは90 source／96 compiler instance、Miriは描画面7＋連携9＋runtime/frame1が成功しています。
+[実装・全測定・制約](ratatui-bridge-audit.md)、[ハッシュ付き証拠](evidence/ratatui-bridge/native/source-bindings.json)。
+公開宣言77件を追加対応し、未対応付けは6,696件、部分／未測定20能力です。
+Viewportの履歴2件を現行ソース・回帰試験・既存3 OS証拠へ再対応付けし、未分析／再確認待ちissueは825件です。
+未達60軸は参照元一致21・性能30・移植性9。新評価単位と変更箇所のCI再検証を含みます。
+現行ソースの3 OS／MSRV CIは未実行で、過去の成功を流用しません。Stage Aを継続し、Stage B／F5は閉じています。
+署名コミットは自動承認サービスの容量不足で未実行。差分と完全なローカル証拠は保存済みです。
+以下のed05ad9等は各ソース時点での検証履歴です。
+
+
 現在のローカル検証済みチェックポイントはed05ad9です。138プログラム・42評価単位、
 未達49軸（性能29・参照元一致20）、未対応付け6,773宣言、部分／未測定19能力です。
 91モジュール判定・827 issue報告が残ります。Stage Aを継続し、Stage BとF5は閉じています。
@@ -15,7 +27,7 @@ Viewportハイライトでは、検証付きbyte範囲・完全EGCの強調・�
 描画8→6を確認しました。Unicode登録の時間改善は確認せず、全遅延・生分布を保持します。
 [全結果](viewport-highlights-audit.md)。
 ed05ad9はローカル39検証、Rust237＋6 doctest、Python131、Miri8、LLVM83 source／89 instanceが成功。
-[最適化後の3 OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)は進行中です。
+[最適化後の3 OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)は7必須ジョブ成功。138 program／177入力と成果物を独立照合しました。
 旧af4d043の未完了CIは新候補へ置き換え、全件成功とは扱いません。
 未達数が変わらない主因である機能範囲を閉じるため、次は[ウィジェット統合](ratatui-widget-bridge-design.md)を具体化します。
 以下は各時点の検証履歴です。

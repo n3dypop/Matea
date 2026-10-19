@@ -5,6 +5,7 @@ mod gradients;
 mod measurement;
 mod progress;
 mod protocol;
+mod ratatui_bridge;
 mod viewport_highlights;
 mod viewport_wrap;
 use matea::{
@@ -70,6 +71,14 @@ fn main() {
         return;
     }
     let iterations = measurement::iterations(300);
+    if std::env::args().any(|arg| arg == "--ratatui-bridge-source") {
+        ratatui_bridge::costs(iterations, false);
+        return;
+    }
+    if std::env::args().any(|arg| arg == "--ratatui-bridge-matea") {
+        ratatui_bridge::costs(iterations, true);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--viewport-highlights") {
         viewport_highlights::costs(iterations);
         return;

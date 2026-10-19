@@ -150,6 +150,9 @@ jobs:
             docs/evidence/quality/rust-execution-coverage.json
             docs/evidence/*-tests.log
             docs/evidence/reference-text*.log
+            docs/evidence/ratatui-*.log
+            docs/evidence/ratatui-bridge/outputs
+            docs/evidence/facade-feature-tests.log
             docs/evidence/text-width-exhaustive.log
             docs/evidence/style-patch-exhaustive.log
             docs/evidence/representations.json
@@ -166,6 +169,9 @@ jobs:
         with:
           toolchain: "1.88"
       - run: cargo test --locked --workspace
+      - run: cargo test --locked -p matea-ratatui --no-default-features
+      - run: cargo test --locked -p matea-ratatui --all-features
+      - run: cargo test --locked -p matea --all-targets --features ratatui
       - run: cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check
       - run: cargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets
   reference-api:

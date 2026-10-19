@@ -56,6 +56,8 @@ def collect(root):
     for path in profiles.glob("*.profraw"):
         path.unlink()
     run(["cargo", "test", "--locked", "--offline", "--workspace", "--all-targets", "--message-format=json"], "coverage-test.jsonl")
+    run(["cargo", "test", "--locked", "--offline", "-p", "matea-ratatui", "--all-features", "--message-format=json"], "coverage-ratatui-features.jsonl")
+    run(["cargo", "test", "--locked", "--offline", "-p", "matea-ratatui", "--no-default-features", "--message-format=json"], "coverage-ratatui-minimal.jsonl")
     run(["cargo", "build", "--locked", "--offline", "--workspace", "--examples", "--bins", "--message-format=json"], "coverage-build.jsonl")
     run(["cargo", "build", "--locked", "--offline", "--manifest-path", "tools/reference-text/Cargo.toml", "--message-format=json"], "coverage-reference-text-build.jsonl")
     run(["cargo", "test", "--locked", "--offline", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets", "--message-format=json"], "coverage-reference-text-test.jsonl")
@@ -93,6 +95,8 @@ def collect(root):
     if sys.platform != "win32":
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")
+    run([sys.executable, "scripts/check_ratatui_bridge.py", "--probe", str(probe),
+         "--destination", str(profiles / "ratatui-bridge")], "coverage-ratatui-outputs.log")
     if sys.platform == "win32":
         run([sys.executable, "scripts/test_windows_console.py", "--probe", str(probe),
              "--destination", str(profiles / "windows-console")], "coverage-windows-console.log")
@@ -117,7 +121,8 @@ def collect(root):
 
     objects = set()
     deadline_probes = set()
-    for log in ["coverage-test.jsonl", "coverage-build.jsonl", "coverage-reference-text-build.jsonl", "coverage-reference-text-test.jsonl"]:
+    for log in ["coverage-test.jsonl", "coverage-ratatui-features.jsonl", "coverage-ratatui-minimal.jsonl",
+                "coverage-build.jsonl", "coverage-reference-text-build.jsonl", "coverage-reference-text-test.jsonl"]:
         for line in (OUT / log).read_text(encoding="utf-8").splitlines():
             try:
                 record = json.loads(line)
@@ -157,7 +162,7 @@ def collect(root):
     if not files:
         raise ValueError("no repository source instances in LLVM export")
     report = {"schema": 2, "rustc": subprocess.check_output(["rustc", "-vV"], text=True),
-              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "isolated pinned reference-text package: native conformance and ten matched output-only records per implementation (instrumented; no timing evidence)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor, text attributes; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
+              "commands": ["cargo test --workspace --all-targets (instrumented)", "cargo test -p matea-ratatui --all-features and --no-default-features; all profile executable objects retained (instrumented)", "cargo build --workspace --examples --bins (instrumented)", "isolated pinned reference-text package: native conformance and ten matched output-only records per implementation (instrumented; no timing evidence)", "python scripts/example_smoke.py (instrumented)", "python scripts/test_source_auditors.py (instrumented Rust CLI)", "python scripts/pty_smoke.py (Unix)", "independent managed-widget checker: twelve complete source/Matea output-only projections (instrumented; no timing values)", "instrumented performance CLI: main, trace, cursor/color/fallback traces, views, subscriptions, clocks, viewport, style, input, protocol, virtual cursor, text attributes; execution coverage only", "instrumented output-only main CLI: 84 records validated separately; no timing values", "instrumented output-only deadline benchmark: four real first-notification paths; no timing values"],
               "limits": ["Native host only. Line/function execution is not branch, mutation, reference-capability or memory-safety proof.",
                          "Profiling changes timing. None of the instrumented probe numbers is performance evidence; zero coverage remains zero.",
                          "Embedded cfg(test) lines are included in source-file totals; separate test/example files are also listed. These are not production-only percentages.",

@@ -1,5 +1,5 @@
 {
-  "started_at_utc": "2026-10-19T03:50:42.476961+00:00",
+  "started_at_utc": "2026-10-19T04:50:39.676905+00:00",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "architecture": "arm64",
   "scope": "local host only; no other OS/CI execution inferred",
@@ -14,7 +14,7 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.372,
+      "elapsed_seconds": 0.298,
       "log": "fmt.log",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -32,9 +32,9 @@
         "warnings"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.38,
+      "elapsed_seconds": 0.315,
       "log": "clippy.log",
-      "log_sha256": "9a30d54c8b16d7e49510b182028079bca120aeebb7d662e88f8566e6196a49f6"
+      "log_sha256": "f4403412cb20dc7d8a0a94c08c9c8853e4bac9b3e8489158834f30512311ed97"
     },
     {
       "name": "test",
@@ -46,9 +46,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 26.372,
+      "elapsed_seconds": 25.421,
       "log": "test.log",
-      "log_sha256": "b437769612b757dc7b83beb02552df1dec32edff2f1383585aade1c1ae853096"
+      "log_sha256": "7d3717ce5de1d1dd5df7505909e02cdc94b319d928acc001c5e3453212bd5946"
     },
     {
       "name": "all-targets",
@@ -61,9 +61,79 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 33.237,
+      "elapsed_seconds": 28.818,
       "log": "all-targets.log",
-      "log_sha256": "07c4fc23d9a4c561a8f29ed9005dcc60b152ea9fefcb96158681dc218f573ec7"
+      "log_sha256": "8dbfbf8ff4ecc1a5f864b0c479ea82847508d6a87c1cf692fd39d5412a7df089"
+    },
+    {
+      "name": "ratatui-minimal-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "matea-ratatui",
+        "--no-default-features",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.056,
+      "log": "ratatui-minimal-tests.log",
+      "log_sha256": "60b36b916204f385396f3698c505724f9daae87431fa987af082403a32c47be0"
+    },
+    {
+      "name": "ratatui-feature-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "matea-ratatui",
+        "--all-features",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.25,
+      "log": "ratatui-feature-tests.log",
+      "log_sha256": "4a073d3b067c4da91cad04b2f183ed2d34ae6dbbceb01b6ce620dd4899acc9dd"
+    },
+    {
+      "name": "ratatui-feature-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "matea-ratatui",
+        "--all-targets",
+        "--all-features",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.04,
+      "log": "ratatui-feature-clippy.log",
+      "log_sha256": "74d706b323b59e91cb34ab61520b67bd373c5a3595772fc4a8c85865fd984c6e"
+    },
+    {
+      "name": "facade-feature-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "matea",
+        "--all-targets",
+        "--features",
+        "ratatui",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 36.027,
+      "log": "facade-feature-tests.log",
+      "log_sha256": "6622802d59bea777934006354cb018b72e902fd2440856f1591f12954e43de60"
     },
     {
       "name": "release-tests",
@@ -76,9 +146,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 30.619,
+      "elapsed_seconds": 24.703,
       "log": "release-tests.log",
-      "log_sha256": "49750428361b8bf2d74a6aee1f22d7987ac1c84621ca4e26bc3fe9e150417990"
+      "log_sha256": "3c3609f73c8f9e0d51d9624b65351641960e0db9967a74b5ad066f67ac691403"
     },
     {
       "name": "style-exhaustive",
@@ -97,9 +167,9 @@
         "--ignored"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 4.126,
+      "elapsed_seconds": 4.339,
       "log": "style-exhaustive.log",
-      "log_sha256": "b4fe50070481b6711559abcf5dcef0ecd0ee1be9816793ffbaa3081fc8343d25"
+      "log_sha256": "c55ca9f6f01a7e39b7553c980ae7cf9240a3b4efaa819d6e3fdd8aa04a9db154"
     },
     {
       "name": "text-width-exhaustive",
@@ -117,9 +187,9 @@
         "--ignored"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.153,
+      "elapsed_seconds": 1.258,
       "log": "text-width-exhaustive.log",
-      "log_sha256": "e0ebf118381db115c6fb9a731bba20d27cbe587319f9167b68a6e02c6580c260"
+      "log_sha256": "420bfe93da59b33d7ecb7ead44bb33534689d2556016d3c752151e5964103415"
     },
     {
       "name": "style-patch-exhaustive",
@@ -138,9 +208,9 @@
         "--ignored"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.09,
+      "elapsed_seconds": 0.117,
       "log": "style-patch-exhaustive.log",
-      "log_sha256": "89d9d59abb4a8e0a00870217af018d65d7ffc4453f3b8ae7d219856f8b6d052e"
+      "log_sha256": "4ec4742c687b6e23e1f026aa0758b198dbdd7b62d1b9a019dd6123664e37e88b"
     },
     {
       "name": "docs",
@@ -149,13 +219,14 @@
         "doc",
         "--locked",
         "--workspace",
+        "--all-features",
         "--no-deps",
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 5.46,
+      "elapsed_seconds": 5.432,
       "log": "docs.log",
-      "log_sha256": "55d2cf1e4f66c475ab008bbd64db08f8035b9f92a7bdf48f9f629be7ae36cb46"
+      "log_sha256": "3ae22935a9233c0d892944ccb7a5c5504492c9a4d70b556a4aa8fa42a0a0c159"
     },
     {
       "name": "build-examples",
@@ -164,13 +235,14 @@
         "build",
         "--locked",
         "--workspace",
+        "--all-features",
         "--examples",
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 5.519,
+      "elapsed_seconds": 9.706,
       "log": "build-examples.log",
-      "log_sha256": "30cebb4e8a1c4788f2e891f269bb255179f6fe3ed485c2bbd4699145738a071b"
+      "log_sha256": "c44489e72feb0a06238a21c42265f2b0d88c1f70e4136b73ec82c79a6da3c468"
     },
     {
       "name": "reference-text-fmt",
@@ -182,7 +254,7 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.1,
+      "elapsed_seconds": 0.095,
       "log": "reference-text-fmt.log",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -201,9 +273,9 @@
         "warnings"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.598,
+      "elapsed_seconds": 0.509,
       "log": "reference-text-clippy.log",
-      "log_sha256": "806bb7cb98f562fe3314c4ab4856ae0d68f15baae918ac4376288f2e2ac12962"
+      "log_sha256": "0ec172a8eac86ce604d33711716b14aad1b3327f4e1718d14a85e3f488ce5375"
     },
     {
       "name": "reference-text-tests",
@@ -217,9 +289,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.939,
+      "elapsed_seconds": 0.99,
       "log": "reference-text-tests.log",
-      "log_sha256": "a7b6292f431c67afe6d08220556b6d6d9b9e4e9787c6192058dff5e51814e719"
+      "log_sha256": "fe99344f6b5aac20d2d401d3ce788b89998a025657e0143c8dc79c32413dc7c1"
     },
     {
       "name": "reference-text",
@@ -234,9 +306,9 @@
         "--check"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.839,
+      "elapsed_seconds": 0.974,
       "log": "reference-text.log",
-      "log_sha256": "c0dc0c04f7085a544260369621f7bb9a351347fdeff4d793522dcc4b2c935f82"
+      "log_sha256": "d23c339bf5ad8c4a81c6be0a8eff377c2f9ba8842497d691cbd3619e5ecb1604"
     },
     {
       "name": "example-smoke",
@@ -245,9 +317,9 @@
         "${REPOSITORY}/scripts/example_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 19.634,
+      "elapsed_seconds": 43.99,
       "log": "example-smoke.log",
-      "log_sha256": "7031fff1e9f62ec1bed695c7fa7d633f37ef57e59e90aed499546493505fad0c"
+      "log_sha256": "af5fd4f35c735f580090b2cf5b8c26bf45a31a84652ee2e42745011c6a1dfd11"
     },
     {
       "name": "coverage-integrity",
@@ -256,9 +328,9 @@
         "${REPOSITORY}/scripts/check_coverage.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.599,
+      "elapsed_seconds": 0.58,
       "log": "coverage-integrity.log",
-      "log_sha256": "b803eee3e928e1a5c27033864f2cdf186ae4bacf6466dc7b58ac61ca38667c7d"
+      "log_sha256": "8995b6d7ed702028cb4fe39b6e516e4dcb2fe4a2289e47e331787229141804e4"
     },
     {
       "name": "coverage-guard-tests",
@@ -267,9 +339,9 @@
         "${REPOSITORY}/scripts/test_coverage.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.109,
+      "elapsed_seconds": 1.087,
       "log": "coverage-guard-tests.log",
-      "log_sha256": "ae26cc0da58b922c67450cd03884fe83c3163958121bc3cb207a42dffb9186bc"
+      "log_sha256": "6bbe24298c74b9dead567443f1297d60d96b978e7266034012f749b43466717e"
     },
     {
       "name": "reference-audit-tests",
@@ -278,9 +350,9 @@
         "${REPOSITORY}/scripts/test_reference_audit.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 2.729,
+      "elapsed_seconds": 2.629,
       "log": "reference-audit-tests.log",
-      "log_sha256": "3eb01d493453a3259de892cda835317381a79166b8f7993a08c4c91e5aa307bc"
+      "log_sha256": "0d609e7037bb2e8948a441a43f467648365bc36a6546d992791f60be2339afc4"
     },
     {
       "name": "rustdoc-audit-tests",
@@ -289,7 +361,7 @@
         "${REPOSITORY}/scripts/test_rustdoc_exports.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.047,
+      "elapsed_seconds": 0.046,
       "log": "rustdoc-audit-tests.log",
       "log_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad"
     },
@@ -300,9 +372,9 @@
         "${REPOSITORY}/scripts/test_source_snapshot.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.522,
+      "elapsed_seconds": 1.471,
       "log": "source-snapshot-tests.log",
-      "log_sha256": "eaff8fa6d1bdf1d4fd4e691874777d053cf9c8f6067198e4d04e14f9d555f5f1"
+      "log_sha256": "0d302c12d6de252e7c9853bb638ec15b1b121eb7b36d70966eff8d00433eff19"
     },
     {
       "name": "rustdoc-import-tests",
@@ -311,7 +383,7 @@
         "${REPOSITORY}/scripts/test_rustdoc_import.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.058,
+      "elapsed_seconds": 0.057,
       "log": "rustdoc-import-tests.log",
       "log_sha256": "f96363f8d8dff4c4abed7197c63606ead0bd955ea4259bdcb5fb6f47dbe53992"
     },
@@ -322,9 +394,9 @@
         "${REPOSITORY}/scripts/test_issue_refresh.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.079,
+      "elapsed_seconds": 0.077,
       "log": "issue-refresh-tests.log",
-      "log_sha256": "35649ccb7621214ac024bd31428022d326fb76b6926043ad7d6527b41cd3c0f8"
+      "log_sha256": "fc23540c8545d4075fe2f0420accd022e74e5566176c3bd4c597964ff02c2e14"
     },
     {
       "name": "color-oracle-tests",
@@ -333,7 +405,7 @@
         "${REPOSITORY}/scripts/test_color_trace.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.066,
+      "elapsed_seconds": 0.064,
       "log": "color-oracle-tests.log",
       "log_sha256": "a2e97b7515932007aa3d038fcfa41fdd107cb2467ff84d182512ff3c7e24f045"
     },
@@ -348,9 +420,9 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.045,
+      "elapsed_seconds": 0.066,
       "log": "build-source-auditor.log",
-      "log_sha256": "a13905646e2aed93ec6ea9ed6ac91490a4e01f91af0215c3965279a910612149"
+      "log_sha256": "02db5a66fa0c60ca8618bd08aac556eac4f3ec863e8630a0d353dba6a0f6e126"
     },
     {
       "name": "source-auditor-tests",
@@ -359,9 +431,9 @@
         "${REPOSITORY}/scripts/test_source_auditors.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.771,
+      "elapsed_seconds": 1.066,
       "log": "source-auditor-tests.log",
-      "log_sha256": "6549c2412ad99545da7d6272b41e690e5fc543149eefe2c645e1fefe4b1a3111"
+      "log_sha256": "b7d0cad0207f8bb1cf4eeceed10187781ce3c2e9eb6661782bcb0ad71832cebd"
     },
     {
       "name": "quality-gate-tests",
@@ -370,9 +442,9 @@
         "${REPOSITORY}/scripts/test_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.298,
+      "elapsed_seconds": 0.293,
       "log": "quality-gate-tests.log",
-      "log_sha256": "ab9184ee4e0d0a73b7f882782f1650225434d523a2b920ffdfa6cb28c7cbfef0"
+      "log_sha256": "e8902b93f2514aeda08c3c419a7f2f1b7d70a9cdbc537b9bbfcad73c852bbd62"
     },
     {
       "name": "evidence-guard-tests",
@@ -383,7 +455,7 @@
       "exit_code": 0,
       "elapsed_seconds": 0.212,
       "log": "evidence-guard-tests.log",
-      "log_sha256": "02fe7a8b6b3a4e3e0802115de3d62544c3f3538a842b84987b0337884410e23c"
+      "log_sha256": "bda9f7c8a1beff71fcf391be296b34f35e100d2082b4507bd29186d0eb7c5541"
     },
     {
       "name": "reference-path-tests",
@@ -392,7 +464,7 @@
         "${REPOSITORY}/scripts/test_reference_paths.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.095,
+      "elapsed_seconds": 0.09,
       "log": "reference-path-tests.log",
       "log_sha256": "c1de396add63b60b7739446ae754c9af4d1c4c8af85083ffc8071726ef9e4e98"
     },
@@ -414,9 +486,9 @@
         "${REPOSITORY}/scripts/test_optimization_evidence.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.563,
+      "elapsed_seconds": 0.557,
       "log": "optimization-evidence-tests.log",
-      "log_sha256": "92edcc7399486d49d9cbc98deb0c048b5bc63330f8a7ecbe4dcae1a8f76f1bcb"
+      "log_sha256": "968d98cee7023f1c6460364003285da793059fac3ad4153156259b368b56b08d"
     },
     {
       "name": "measurement-driver-tests",
@@ -425,9 +497,9 @@
         "${REPOSITORY}/scripts/test_measurement_drivers.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.372,
+      "elapsed_seconds": 0.356,
       "log": "measurement-driver-tests.log",
-      "log_sha256": "0278d39d6973fa4e5a25f037394875e7b5066f0f44e05b8f0cf87291ea584ded"
+      "log_sha256": "b1240a7637f9f6e3be2e383804d4fb2877e747402f3a33193fa30a80736b88b2"
     },
     {
       "name": "acceptance-driver-tests",
@@ -436,9 +508,9 @@
         "${REPOSITORY}/scripts/test_acceptance_driver.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 1.012,
+      "elapsed_seconds": 0.975,
       "log": "acceptance-driver-tests.log",
-      "log_sha256": "32f516381a9451fd6020ae5f8eed8c2f8d5dbe0ef92cd269075f627dc50f49d3"
+      "log_sha256": "cc43dbd740c6d542b5c9bb655b8ef90045229cff0482b87cc4b06ca71ca17001"
     },
     {
       "name": "optimized-python-tests",
@@ -454,9 +526,9 @@
         "test_*.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 7.898,
+      "elapsed_seconds": 7.645,
       "log": "optimized-python-tests.log",
-      "log_sha256": "db3bf87714e2858734a6a02e0466abb1faa32fb72c564cc19739c98db77a0618"
+      "log_sha256": "03a66b8e1dbc1af921f36406190641b799f600402f5a9c6302a640cc9a4bd8c8"
     },
     {
       "name": "quality-inventory",
@@ -465,9 +537,9 @@
         "${REPOSITORY}/scripts/check_quality.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.117,
+      "elapsed_seconds": 0.125,
       "log": "quality-inventory.log",
-      "log_sha256": "3b422a4a5bdf52abb6c7d28060c3981338fb07ddc2093437e9982b61b1d73aef"
+      "log_sha256": "fd50795ab87af7f060bb0ad0d0f7e6f45ceb71617e6b648cb1489757c8a60896"
     },
     {
       "name": "python-syntax",
@@ -479,7 +551,7 @@
         "${REPOSITORY}/scripts"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.046,
+      "elapsed_seconds": 0.047,
       "log": "python-syntax.log",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -495,9 +567,20 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.07,
+      "elapsed_seconds": 0.138,
       "log": "build-color-probe.log",
-      "log_sha256": "90c8a1a69c0155761cff4bfe0e61bbee007961d2b96729d2127c2e0c291489dd"
+      "log_sha256": "0b5fe2277fd2b29cc111b76604c482f8ec516047dbc0954657203c5614f4e4db"
+    },
+    {
+      "name": "ratatui-bridge-outputs",
+      "command": [
+        "python",
+        "${REPOSITORY}/scripts/check_ratatui_bridge.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.457,
+      "log": "ratatui-bridge-outputs.log",
+      "log_sha256": "7b3224616693cdba03871bdaa956372a02f136af2022ecb4062fb42d00b77927"
     },
     {
       "name": "color-trace",
@@ -510,7 +593,7 @@
         "${REPOSITORY}/docs/evidence/color-policy-after.json"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.144,
+      "elapsed_seconds": 0.084,
       "log": "color-trace.log",
       "log_sha256": "2fda1254023407291920eb06a37919c8e46148f1db8ab9239f04c738c020ebc3"
     },
@@ -521,7 +604,7 @@
         "${REPOSITORY}/scripts/pty_smoke.py"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 8.161,
+      "elapsed_seconds": 8.35,
       "log": "pty-smoke.log",
       "log_sha256": "c40b2311aef5f2c27f7b739bba3546c615abdcb5a711c4b5c0ff6e5762df2959"
     },
@@ -540,21 +623,21 @@
         "--offline"
       ],
       "exit_code": 0,
-      "elapsed_seconds": 0.275,
+      "elapsed_seconds": 0.803,
       "log": "render-probe.log",
-      "log_sha256": "c70ed29a0cb9b25fe55e40f7da92f1cc7b58f8d2d6d01ba810e5f9859ac363ed"
+      "log_sha256": "76feed92f2972ebc987a3f9f86264533cf79ec58192498cc2d6fe9cc0c4b03df"
     }
   ],
   "path_redaction": "Repository and home prefixes are replaced with placeholders.",
   "source_sha256": {
     ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
-    ".github/workflows/foundation.yml": "ae308b4d3fd7caadeb8e15c7f4d4ff1f3b4966c7082fc6065be16b64cfe1d7d1",
+    ".github/workflows/foundation.yml": "5848c86d5e3cf51aa9631f33c6719008ba19212b0c887d51c96e2976ed717d80",
     ".github/workflows/windows-console.yml": "72f05e3b35adc0afa1a868c1883642a6dd844f11f1a6c67a169d815530880977",
-    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4",
     "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
     "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
     "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
-    "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+    "crates/matea-core/src/lib.rs": "3532fd9fbb3392ba53f61cbd3de79816443b39d667dfc69b59056470a2d63a52",
     "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
     "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
     "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
@@ -562,13 +645,18 @@
     "crates/matea-motion/tests/harmonica-motion.csv": "c9d7eec51c3c2eea0defc3a39e6d8e3bbf52ef64cc49a4be82404fe87af1684c",
     "crates/matea-motion/tests/harmonica-projectiles.csv": "7e586e838c34b31497d064bd9b6768ef27203aa7e55f98d1cb56d36d9f8208f1",
     "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+    "crates/matea-ratatui/Cargo.toml": "27c3db227b76352159ac29b23c98235daa04fd74a328293cb0fe55be1a54401c",
+    "crates/matea-ratatui/src/lib.rs": "b40db04bf75cafd65e038c4d3b23862f83670f208b17d9da61ae1c19cb29ee10",
+    "crates/matea-ratatui/tests/bridge.rs": "38e92b7a753471ae61f0d29f88309d6a50d3468890457a8782f6a80a88937f65",
     "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
-    "crates/matea-render/src/lib.rs": "bd50b80a07ed77212917903625085545a8c2347759b1c4cb354f51a2a58d054d",
+    "crates/matea-render/src/lib.rs": "124e6ae3c0c95d4802a62c3e8c9e3b77a1884184cce4f83b38c34789ccd6637d",
     "crates/matea-render/src/rich_text.rs": "1d7719a19006863add7e4f3eb3912c85f341f8ae4634edc55cd64de74f98f2f9",
+    "crates/matea-render/src/snapshot.rs": "7578bc33049c9e2b670e31303c9a43fd6f4c1334c36d463f0375ac2c25213fe7",
     "crates/matea-render/src/text.rs": "1ca05fdb98ba892367f305185e17cf4e694bd7ca6de0e2e342b52a0593b930cc",
     "crates/matea-render/tests/fixtures/ratatui-span-boundaries.tsv": "8feddfd51452bbfb140a1d536f9a6af9a55a3a847051289776676b98d1e56856",
     "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
     "crates/matea-render/tests/rich_text.rs": "4ab1b28f14042fb8325d20b35439100a7594984a42b32becd878c80edce2b93e",
+    "crates/matea-render/tests/surface_snapshot.rs": "ab6777221ba8c977318bfd341b3f4a69cfb394c069b3373a57786fdd401b1412",
     "crates/matea-render/tests/text.rs": "7c8af030f0b89d45dc23f758bc6be0741d5ddcec6b2901dc69baa0993d3df16a",
     "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
     "crates/matea-style/src/attributes.rs": "6ae62f130eb944d40912d5e3b811f81c0dc1ffceac1d641fe4b9038bd772fcad",
@@ -629,7 +717,7 @@
     "crates/matea-widgets/tests/viewport.rs": "163087eb8bc8f84901e7f0ba47dd2c1f5cc4727393019207c8e99cbaa80c1acb",
     "crates/matea-widgets/tests/viewport_highlights.rs": "88c0efcbb35a109ffec1948623312364d7666c529403af939a25a8ef4a2cd45f",
     "crates/matea-widgets/tests/viewport_wrap.rs": "cad688cfd9bb59dbf2499871ba025349b1d432a3de15eb6ac861201e6d6009c1",
-    "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+    "crates/matea/Cargo.toml": "010b343a13c5ea0b6ed0b020db02ca8674501bab2742a4d095575b9e39c90f96",
     "crates/matea/benches/foundation_paths.rs": "455c5a0c5eb43d90bd15b2c157977b06e2ed3895bfcb96f5e7ad531ef95d7077",
     "crates/matea/examples/attributes.rs": "08e4aca6c72bb27822491fe666dd7f848ed499d43e33f40e30c3e6f18fc9d884",
     "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
@@ -646,12 +734,14 @@
     "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
     "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
     "crates/matea/examples/progress.rs": "9c1b45406c21beb38715dc2ba29605a8ccf8922a8736a620451b74a3039752c7",
+    "crates/matea/examples/ratatui_widgets.rs": "3a1f8517dd71a64eebcc71aad5945bdc4e1cd12a3865438fdbe0dfd9b2f20e39",
     "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
     "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
     "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
-    "crates/matea/src/lib.rs": "9c45c10a205748788352acd6ba32140d2158998c675f8dcdcbd6864cb17c176d",
+    "crates/matea/src/lib.rs": "0a130a7bc132db1d6f8309428cc7f2e055f1d4bfecf7bf94b75dcb31ded1a860",
     "crates/matea/tests/progress.rs": "242c227c90a4a07209a3ae717edd5fbc5cb3eb293f32d63941c54b84203fcdf0",
-    "docs/quality-plan.json": "3adef430fc36dea56e3cd8d226441dd69af64333b2f64f4cc0b1066151bd7370",
+    "crates/matea/tests/surface_snapshot.rs": "ddcdf878f94c20c0a1191d814ebd6bee3dbbaf07d5dc37d22033b7e31980e0eb",
+    "docs/quality-plan.json": "d53288921975335ec0fd5c43d05db61e26b2e0b2c72f38857857565605822385",
     "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
     "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
     "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
@@ -659,19 +749,20 @@
     "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
     "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
     "scripts/check_quality.py": "5110677d8f3e5919654aa982aaf14c9a16a6d7e5ff7ada442d3c433ade532a7a",
+    "scripts/check_ratatui_bridge.py": "160581b26fac7bef190516351b53107c88808692bdce848782b25c17e0fbfb2e",
     "scripts/check_reference_paths.py": "2a5c243448a531b8f31b2110a7f720a6ef3b414ced850f20930655dd142c8c9a",
     "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
     "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
     "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
     "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
-    "scripts/example_smoke.py": "1c575a9e6ba7ff47deefddd15654f1a827736ea091010ae33f20b28c09863eef",
+    "scripts/example_smoke.py": "04b4801a20d256b01b550aa6b105244e006feb45555ceee02dce100c0fbc9594",
     "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
     "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
     "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
     "scripts/measure_auditor_performance.py": "efdfcafd4eee6ee388127be541b2c478b7cc1efd2e50516dc0bf57dfdfa8e0a7",
     "scripts/measure_reader_performance.py": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
     "scripts/measure_remaining_performance.py": "b6f2513397fb78221d977ef3cf18be951f05b5bdd37eb774a95fcd1ce7b4bb4c",
-    "scripts/measure_rust_coverage.py": "7218d4ac84f7223d3328ee8085595e0428c7fe9f6113ce22840f625ef85c3bca",
+    "scripts/measure_rust_coverage.py": "ca1c5f9fba7dd1cb0d74e3b7e061ab020948c8377b7f155cdc0966c7fc3f72a2",
     "scripts/measurement_run.py": "4983fc477a512b068d253a15f4e37664f2d0b1fefc6f846993ed7180d77f064d",
     "scripts/optimization_evidence.py": "820f7093815c234dc405c99fc68f14a75294e4daf66d03bbe0ec0a4441738711",
     "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
@@ -694,6 +785,7 @@
     "scripts/test_optimization_evidence.py": "e0f064424bc042dddeb61bc743933074c7064deb6dd294c4b9587d83afbdb138",
     "scripts/test_performance_records.py": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
     "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+    "scripts/test_ratatui_bridge.py": "7f0815baa023ddbbc3900d5e5ab7255730a99f0a5fb5ca1d0dc31c9090b73cff",
     "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
     "scripts/test_reference_paths.py": "14136bcc227f500813cb63e8d94498ece0890b1430c54fcb2ad7f3f5e0c2ca7e",
     "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
@@ -701,20 +793,21 @@
     "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
     "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
     "scripts/test_windows_console.py": "f9f053c342e882ff26f7a4307879d17faca972e9d7b60f553b924248597de34e",
-    "scripts/verify_foundation.py": "9447e72045d7f9c6f8cedb2c99e0ed42fdc9d10f8cb417752f9e0124e9e05736",
+    "scripts/verify_foundation.py": "8c1388713d488b803867bea69c4755884541cf25a890f6c7b889615c6ede55d2",
     "scripts/windows_console_oracle.ps1": "d7cbd91edd7d91c9c1f89af92aa085105e5149929c07367cb3440e98741655f9",
     "tests/golden/dashboard.txt": "7f47d6f70fe2d00f77c796556d3ebf75062b9334ca1b27db60b6dffcb13cb9d5",
     "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
     "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
     "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
     "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
-    "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+    "tools/perf-probe/Cargo.toml": "69f25edac472953f14dc3f63cea3f2bf32a5cd6e173d746214fa68a3d59cfb9d",
     "tools/perf-probe/src/attributes.rs": "cce2cd3a6056220b9f6383c0c01d5149fad05a770b36edd8cf344961be7358fa",
     "tools/perf-probe/src/gradients.rs": "76c737a37c74c442ec96e86331ae64b18a27ffdc918f96c5eab0c2bbea49e321",
-    "tools/perf-probe/src/main.rs": "8a7695a35dff0a82d0f0112995efd909e7e4091d1655d3e1a7cedd391081d24a",
+    "tools/perf-probe/src/main.rs": "e00aaa528dde72f1582f4fcc974bc4ae47971967e185485e596615a90c7b0101",
     "tools/perf-probe/src/measurement.rs": "7989695d112c46ae07ab87482c9077dc7909947b949f6d03ebd2cdad4bb7ece3",
     "tools/perf-probe/src/progress.rs": "fc4de10255a7181bf8df7e69a3b21e8108a65fa7b6ea54789940a0e770f06b48",
     "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+    "tools/perf-probe/src/ratatui_bridge.rs": "a003a510554473793fe88ee0ea6622f3bfff3a48b49bbee612c4c5176408243a",
     "tools/perf-probe/src/viewport_highlights.rs": "81323cb5e6c35f03e1226cceeb6fb3fd4bc406fe3975e1c997c0bae3b573f22c",
     "tools/perf-probe/src/viewport_wrap.rs": "7fb2ebab67fc118f167ebdaa5bb72b909f748e1e80caed9f78836328521ef643",
     "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
@@ -734,5 +827,5 @@
     "output": "cargo 1.99.0 (5f94df478 2026-08-27)"
   },
   "source_changed_during_run": [],
-  "finished_at_utc": "2026-10-19T03:53:18.956470+00:00"
+  "finished_at_utc": "2026-10-19T04:54:17.856909+00:00"
 }

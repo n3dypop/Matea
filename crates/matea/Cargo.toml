@@ -5,7 +5,11 @@ edition.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
+[features]
+ratatui = ["dep:matea-ratatui"]
+
 [dependencies]
+matea-ratatui = { path = "../matea-ratatui", optional = true }
 matea-core.workspace = true
 matea-render.workspace = true
 matea-style.workspace = true
@@ -16,3 +20,7 @@ matea-motion.workspace = true
 [[bench]]
 name = "foundation_paths"
 harness = false
+
+[[example]]
+name = "ratatui_widgets"
+required-features = ["ratatui"]

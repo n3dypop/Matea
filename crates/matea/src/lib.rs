@@ -21,6 +21,9 @@
 //! ```
 pub use matea_core as core;
 pub use matea_motion as motion;
+/// Pinned Rust widget adapter; working API/name, no nested terminal session.
+#[cfg(feature = "ratatui")]
+pub use matea_ratatui as ratatui;
 pub use matea_render as render;
 pub use matea_style as style;
 pub use matea_terminal as terminal;

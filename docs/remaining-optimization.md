@@ -1,10 +1,22 @@
 # 未測定12単位の測定と改善
 
+最新のローカル検証は、所有権付き描画面とRatatui連携の147 program／43評価単位／187入力です。
+44受け入れ検証、Rust254＋7 doctest、独立参照8、Python135、snapshot17、Unix PTY21が成功。
+LLVMは90 source／96 compiler instance、Miriは描画面7＋連携9＋runtime/frame1が成功しています。
+[実装・全測定・制約](ratatui-bridge-audit.md)、[ハッシュ付き証拠](evidence/ratatui-bridge/native/source-bindings.json)。
+公開宣言77件を追加対応し、未対応付けは6,696件、部分／未測定20能力です。
+Viewportの履歴2件を現行ソース・回帰試験・既存3 OS証拠へ再対応付けし、未分析／再確認待ちissueは825件です。
+未達60軸は参照元一致21・性能30・移植性9。新評価単位と変更箇所のCI再検証を含みます。
+現行ソースの3 OS／MSRV CIは未実行で、過去の成功を流用しません。Stage Aを継続し、Stage B／F5は閉じています。
+署名コミットは自動承認サービスの容量不足で未実行。差分と完全なローカル証拠は保存済みです。
+以下のed05ad9等は各ソース時点での検証履歴です。
+
+
 最新のローカル検証済み範囲は138プログラム・42単位、未達49軸です。
 未対応付け6,773宣言、部分／未測定19能力、91モジュール、827 issue報告が残ります。
 [StylePatch](style-patches-audit.md)の135プログラム時点は3 OSの7ジョブとartifact照合まで完了。
 [ハイライト](viewport-highlights-audit.md)は39ローカル検証・Miri8・LLVM83経路が完了し、
-[最適化後CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)を実行中です。
+[最適化後CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)は7必須ジョブ成功。138 program／177入力と成果物を独立照合しました。
 ASCII登録＋描画47→8.4µs、登録時の確保15→8、描画時8→6を、同じ6ケースの全出力と
 48分布／24出力で検証しました。Unicode時間の改善は未確認で、不利な結果も保持しています。
 

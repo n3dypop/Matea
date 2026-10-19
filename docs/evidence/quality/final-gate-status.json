@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "F5_closed",
+  "status": "incomplete",
   "checks": {
     "quality": {
       "command": [
@@ -9,7 +9,7 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "138 program files; 42 review units; 49 assessments below 75; all_high=False\n",
+      "stdout": "147 program files; 43 review units; 60 assessments below 75; all_high=False\n",
       "stderr": ""
     },
     "coverage": {
@@ -19,19 +19,26 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "11 reference inventories; 7455 declaration candidates; 6773 unlinked; 19 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 827 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
+      "stdout": "11 reference inventories; 7455 declaration candidates; 6696 unlinked; 20 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 825 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
       "stderr": ""
     }
   },
-  "checked_at_utc": "2026-10-19T03:56:55.285244+00:00",
-  "source_head": "ed05ad9b4b503b2d4ff830a15a5e5bc85fe82641",
-  "program_files": 138,
-  "review_units": 42,
-  "below_high_axes": 49,
-  "unlinked_source_declarations": 6773,
-  "partial_or_unmeasured_capabilities": 19,
-  "pending_issue_reports": 827,
-  "stage_a": "in_progress_below_high",
+  "checked_at_utc": "2026-10-19T04:56:26.121931+00:00",
+  "source_head": "2da2cfb3586e31f14991baf3e800539eeb6b81c6",
+  "program_files": 147,
+  "review_units": 43,
+  "below_high_axes": 60,
+  "unlinked_source_declarations": 6696,
+  "partial_or_unmeasured_capabilities": 20,
+  "pending_issue_reports": 825,
+  "stage_a": "ongoing",
   "stage_b": "not_started",
-  "f5": "closed"
+  "f5": "closed",
+  "source_context": "Uncommitted optimized owned-scene/widget adapter; 147 program / 187 input hashes independently bound in docs/evidence/ratatui-bridge/native/source-bindings.json. Exact-source three-OS/MSRV CI pending.",
+  "below_high_dimensions": {
+    "reference": 21,
+    "performance": 30,
+    "portability": 9
+  },
+  "post_native_issue_reassessment": "Two previously reviewed flat/default viewport reports re-assessed with unchanged ed05ad9 source/tests, retained three-host binding and fresh native regressions. Prior review maps remain archived; no new whole-framework portability claim."
 }

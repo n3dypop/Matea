@@ -10,10 +10,11 @@ env = dict(os.environ, NO_COLOR="1", MATEA_REDUCED_MOTION="1")
 for name, expected in [("counter", "Count: 0"), ("list", "Matcha"),
                        ("form", "Favorite tea"), ("dashboard", "Tea studio"),
                        ("effects", "Loading tea"), ("motion", "Matea motion"), ("input", "Matea input"),
-                       ("pagination", "Page 1 of 4"), ("help", "Matea key help"), ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("cursor", "Matea virtual cursor"), ("attributes", "Matea attributes"), ("gradients", "Matea gradients"), ("progress", "Matea progress")]:
+                       ("pagination", "Page 1 of 4"), ("help", "Matea key help"), ("clocks", "Matea clocks"), ("spinners", "Matea spinners"), ("cursor", "Matea virtual cursor"), ("attributes", "Matea attributes"), ("gradients", "Matea gradients"), ("progress", "Matea progress"), ("ratatui_widgets", "Matea Rust widget bridge")]:
+    features = ["--features", "ratatui"] if name == "ratatui_widgets" else []
     result = subprocess.run(
         ["cargo", "run", "--locked", "--quiet", "-p", "matea", "--example", name,
-         "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
+         *features, "--", "--snapshot"], cwd=WORKSPACE, env=env, check=True,
         capture_output=True, text=True, encoding="utf-8", timeout=60)
     require(expected in result.stdout, lambda: (name, result.stdout))
     require("\x1b" not in result.stdout, lambda: name)

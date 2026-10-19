@@ -1,0 +1,30 @@
+[package]
+name = "matea-ratatui"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+# Working name; registry availability/public API are not yet reviewed.
+[features]
+default = ["calendar", "macros", "layout-cache"]
+calendar = ["ratatui-upstream/widget-calendar", "dep:time"]
+macros = ["ratatui-upstream/macros"]
+layout-cache = ["ratatui-upstream/layout-cache"]
+serde = ["ratatui-upstream/serde"]
+palette = ["ratatui-upstream/palette"]
+portable-atomic = ["ratatui-upstream/portable-atomic"]
+scrolling-regions = ["ratatui-upstream/scrolling-regions"]
+unstable-rendered-line-info = ["ratatui-upstream/unstable-rendered-line-info"]
+unstable-widget-ref = ["ratatui-upstream/unstable-widget-ref"]
+
+[dependencies]
+matea-render.workspace = true
+matea-style.workspace = true
+unicode-segmentation.workspace = true
+unicode-width.workspace = true
+# Underline color is mandatory in this adapter: feature unification elsewhere
+# cannot silently add a source field that a conditional importer then discards.
+ratatui-upstream = { package = "ratatui", git = "https://github.com/ratatui/ratatui", rev = "d1ef782b48ddf0cb825c111d4d8b9adef572c0e1", default-features = false, features = ["std", "underline-color"] }
+# The calendar's public Date type stays at the approved source lock version.
+time = { version = "=0.3.55", default-features = false, optional = true }

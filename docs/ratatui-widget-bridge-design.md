@@ -1,7 +1,8 @@
 # Ratatui widget bridge: next Foundation capability increment
 
-Design investigation, not an implemented feature or an accepted renderer switch.
-The current narrow compositor, ownership contracts and F5 gate remain in force.
+Initial adapter and owned scenes are implemented under ADRs 0060/0061. The
+[bounded audit and measurements](ratatui-bridge-audit.md) supersede the candidate
+status below. Complete raw/module/profile parity and the F5 gate remain pending.
 ADR 0004 requires reevaluation before a broad widget catalog; ADR 0016 explicitly
 rejects bare reexports or nested terminal sessions as integration evidence.
 

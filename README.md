@@ -25,12 +25,21 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current scope is 138 programs in 42 units, with 49 assessments still below
-the high threshold. The [last fully bound seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39178730764)
-validates the 135-program StylePatch checkpoint. The 138-program viewport highlight
-checkpoint passes 39 native acceptance commands, eight targeted Miri tests and
-83-path LLVM execution; its [three-OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)
-is in progress. [Recent work and remaining limitations](docs/remaining-optimization.md)
+The owned-scene/Ratatui adapter increment now covers 147 programs in 43 units.
+All 44 local acceptance commands pass, LLVM observes 90 source paths / 96
+compiler instances, and 17 targeted Miri tests pass. Twelve source/widget frames
+match completely; three performance trials retain 144 timing and 72 output
+records. Import caching/batching reduces measured latency but retains conversion
+overhead. See the [audit and limits](docs/ratatui-bridge-audit.md).
+There are 60 below-high axes (21 reference, 30 performance, 9 awaiting new CI).
+The stricter scope and changed files are explicitly requalified; no score is
+raised from historical CI. Stage A continues; Stage B and F5 remain closed.
+
+The last fully qualified highlight checkpoint has 138 programs in 42 units,
+with 49 assessments below the high threshold. That checkpoint passes 39 native acceptance commands, eight
+targeted Miri tests and 83-path LLVM execution. Its
+[three-OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306) passes all
+seven required jobs, with 138 programs / 177 inputs independently bound. [Recent work and remaining limitations](docs/remaining-optimization.md)
 include immutable styled text, explicit inherited/set/clear style intent,
 whole-grapheme viewport wrapping and validated search highlights. Measurements
 retain complete outputs, all raw distributions and rejected trials. The native

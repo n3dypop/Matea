@@ -7,6 +7,7 @@ mod text;
 pub use text::Text;
 mod rich_text;
 pub use rich_text::{RichText, StyledGrapheme};
+mod snapshot;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -453,6 +454,7 @@ enum Node {
         cursor: Cursor,
     },
     RichText(RichText),
+    Snapshot(std::sync::Arc<Surface>),
 }
 /// An owned immutable scene. Views never contain terminal escape sequences.
 #[derive(Clone, Debug)]
@@ -565,9 +567,17 @@ impl View {
             Node::Layers(c) => c.iter().map(|(r, _)| r.bottom()).max().unwrap_or(0),
             Node::Cursor { child, .. } => child.natural_height(),
             Node::RichText(text) => text.line_count().min(usize::from(u16::MAX)) as u16,
+            Node::Snapshot(surface) => surface.size.height,
         }
     }
     pub fn render(&self, size: Size) -> Result<Surface, GeometryError> {
+        if self.width.is_none()
+            && self.height.is_none()
+            && let Node::Snapshot(surface) = &self.node
+            && surface.size() == size
+        {
+            return Ok(surface.as_ref().clone());
+        }
         let mut s = Surface::new(size)?;
         let area = s.area();
         self.paint(&mut s, area, area);
@@ -587,6 +597,12 @@ impl View {
         match &self.node {
             Node::Text(text, style) => s.canvas(clip).text_owned(area.x, area.y, text, *style),
             Node::RichText(text) => s.canvas(clip).rich_text(area.x, area.y, text),
+            Node::Snapshot(surface) => {
+                s.canvas(clip).surface(area.x, area.y, surface);
+                if let Some(cursor) = surface.cursor() {
+                    snapshot::paint_cursor(s, area, clip, cursor);
+                }
+            }
             Node::Stack {
                 horizontal,
                 children,
@@ -668,21 +684,7 @@ impl View {
             }
             Node::Cursor { child, cursor } => {
                 child.paint(s, area, clip);
-                let absolute = Cursor::new(
-                    area.x.saturating_add(cursor.x),
-                    area.y.saturating_add(cursor.y),
-                );
-                if absolute.x >= clip.x
-                    && absolute.x < clip.right()
-                    && absolute.y >= clip.y
-                    && absolute.y < clip.bottom()
-                {
-                    s.set_cursor(Some(absolute));
-                    // Normalization must not move outside the inherited clip.
-                    if s.cursor().is_some_and(|c| c.x < clip.x) {
-                        s.set_cursor(None);
-                    }
-                }
+                snapshot::paint_cursor(s, area, clip, *cursor);
             }
         }
     }

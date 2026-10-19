@@ -299,7 +299,7 @@ impl<A: Model> Runtime<A> {
                 size: self.size,
                 theme: &self.theme,
             })
-            .render(self.size)
+            .into_surface(self.size)
     }
     pub fn dispatch(&mut self, event: Event<A::Message>) -> Result<(), RuntimeError> {
         if self.quitting {

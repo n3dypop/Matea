@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "flags": "-Zmiri-seed=317",
+  "command": "cargo +nightly miri test --offline --locked -p matea --test surface_snapshot",
+  "passed": 1,
+  "seconds": 9.22,
+  "source_sha256": {
+    "crates/matea/tests/surface_snapshot.rs": "ddcdf878f94c20c0a1191d814ebd6bee3dbbaf07d5dc37d22033b7e31980e0eb",
+    "crates/matea-core/src/lib.rs": "3532fd9fbb3392ba53f61cbd3de79816443b39d667dfc69b59056470a2d63a52",
+    "crates/matea-render/src/lib.rs": "124e6ae3c0c95d4802a62c3e8c9e3b77a1884184cce4f83b38c34789ccd6637d",
+    "crates/matea-render/src/snapshot.rs": "7578bc33049c9e2b670e31303c9a43fd6f4c1334c36d463f0375ac2c25213fe7",
+    "crates/matea-terminal/src/frame.rs": "ddc1318acaaf710cd61cc9521da39b9441ccd9821fd65fb7a1fcb46444066269"
+  },
+  "log_sha256": "e1a27ccaf1ea36c6f79b8fcf5a2ce695785938aa3f342c180e324b39b8cbefb8",
+  "limits": [
+    "Targeted runtime/snapshot/frame-byte path only; no actual terminal I/O or soundness proof."
+  ]
+}
