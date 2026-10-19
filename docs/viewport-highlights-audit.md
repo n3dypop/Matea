@@ -53,3 +53,22 @@ Adversarial hint tests and all 420 literal states must remain unchanged. No spee
 is assigned before collecting the unchanged measurement caller again. Full ASCII
 detection still scans the content on replacement; giant prefix-only match sets,
 resident memory and varied style densities are not evaluated by this corpus.
+
+The optimized ed05ad9 cohort uses exactly the same caller/measurement hashes as
+af4d043. All 48 timing and 24 output-only records pass independent 72-cell/x/y
+reconstruction. ASCII install/frame medians change 47.0–47.5 / 9.01–9.04 to
+8.42–8.47 / 7.55–7.61 microseconds. Install/frame tracked allocations change
+15/8 to 8/6, requested bytes 16,613/6,493 to 10,021/5,981. Unicode frame/cycle
+latencies overlap their baselines; Unicode install includes a slightly slower
+35.49 microsecond observation and no latency improvement is assigned. Source
+measurements and every adverse tail remain in the report, without a universal
+maximum-speed claim.
+
+At ed05ad9 all 39 native acceptance commands passed with unchanged 177 inputs;
+Rust 237 tests plus six doctests, isolated reference eight tests, Python 131,
+16 snapshots and 21 Unix PTY scenarios pass. LLVM observes 83 source paths / 89
+compiler instances, not every branch/profile. Miri seed 269 passes eight targeted
+tests; the finite scalar range corpus and literal 420-row matrix execute natively
+and were deliberately skipped in Miri. Three-host CI 39196946306 is in progress;
+af4d043's earlier unfinished candidate jobs are superseded, not all-pass evidence.
+See the immutable `evidence/viewport-highlights/optimized/native` snapshot.

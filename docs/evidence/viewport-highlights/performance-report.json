@@ -7,6 +7,11 @@
       "git_head": "af4d043dedd7f0f17388df225b7bd720233df4d4",
       "inputs": 177,
       "context_sha256": "29852f7e71fe78184bb54309310598bfaa93addfb3661bec1bd41f817157f64e"
+    },
+    "optimized": {
+      "git_head": "ed05ad9b4b503b2d4ff830a15a5e5bc85fe82641",
+      "inputs": 177,
+      "context_sha256": "4b77bfa3f4a41146ade5b1f393e4bb63ab785c43a7d4c1140f2154845dbd11c6"
     }
   },
   "cases": {
@@ -61,6 +66,60 @@
             "p95_ns": 47503.583,
             "min_ns": 46760.25,
             "max_ns": 47796.583,
+            "samples": 31
+          }
+        ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 265292,
+            "allocations": 413,
+            "allocated_bytes": 57552,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 266219,
+            "p95_ns": 273416.625,
+            "min_ns": 257865.916,
+            "max_ns": 276329.541,
+            "samples": 31
+          },
+          {
+            "cold_ns": 444541,
+            "allocations": 413,
+            "allocated_bytes": 57552,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 262838.959,
+            "p95_ns": 265796.791,
+            "min_ns": 254524.542,
+            "max_ns": 267642.083,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 14042,
+            "allocations": 8,
+            "allocated_bytes": 10021,
+            "iterations_per_sample": 4000,
+            "run": "2-matea",
+            "p50_ns": 8467.27075,
+            "p95_ns": 8574.9375,
+            "min_ns": 8380.448,
+            "max_ns": 8652.79175,
+            "samples": 31
+          },
+          {
+            "cold_ns": 12834,
+            "allocations": 8,
+            "allocated_bytes": 10021,
+            "iterations_per_sample": 4000,
+            "run": "3-matea",
+            "p50_ns": 8416.45825,
+            "p95_ns": 8649.97925,
+            "min_ns": 8366.46875,
+            "max_ns": 8750.53125,
             "samples": 31
           }
         ]
@@ -120,6 +179,60 @@
             "samples": 31
           }
         ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 45333,
+            "allocations": 204,
+            "allocated_bytes": 21136,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 45106.292,
+            "p95_ns": 46641.042,
+            "min_ns": 44257.75,
+            "max_ns": 47403.625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 44042,
+            "allocations": 204,
+            "allocated_bytes": 21136,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 45292.625,
+            "p95_ns": 46291.208,
+            "min_ns": 44113.875,
+            "max_ns": 46453.333,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 8500,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "2-matea",
+            "p50_ns": 7614.29175,
+            "p95_ns": 7721.10425,
+            "min_ns": 7510.08325,
+            "max_ns": 7727.53125,
+            "samples": 31
+          },
+          {
+            "cold_ns": 8041,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "3-matea",
+            "p50_ns": 7551.20825,
+            "p95_ns": 7989.70825,
+            "min_ns": 7519.42725,
+            "max_ns": 8406.8645,
+            "samples": 31
+          }
+        ]
       }
     },
     "viewport-highlights/cycle_ascii": {
@@ -173,6 +286,60 @@
             "p95_ns": 9510.34375,
             "min_ns": 8926.3645,
             "max_ns": 9653.63525,
+            "samples": 31
+          }
+        ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 42500,
+            "allocations": 204,
+            "allocated_bytes": 21136,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 46645.958,
+            "p95_ns": 48089.291,
+            "min_ns": 45583.208,
+            "max_ns": 49202.208,
+            "samples": 31
+          },
+          {
+            "cold_ns": 43166,
+            "allocations": 204,
+            "allocated_bytes": 21136,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 46203.917,
+            "p95_ns": 47206.291,
+            "min_ns": 45011.208,
+            "max_ns": 47287.166,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 8417,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "2-matea",
+            "p50_ns": 7759.41675,
+            "p95_ns": 8104.58325,
+            "min_ns": 7514.21875,
+            "max_ns": 9482.396,
+            "samples": 31
+          },
+          {
+            "cold_ns": 8416,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "3-matea",
+            "p50_ns": 7569.39575,
+            "p95_ns": 7620.75,
+            "min_ns": 7544.70825,
+            "max_ns": 7620.8335,
             "samples": 31
           }
         ]
@@ -232,6 +399,60 @@
             "samples": 31
           }
         ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 196000,
+            "allocations": 404,
+            "allocated_bytes": 57344,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 222674.25,
+            "p95_ns": 236222.166,
+            "min_ns": 217193.959,
+            "max_ns": 237528.875,
+            "samples": 31
+          },
+          {
+            "cold_ns": 284375,
+            "allocations": 404,
+            "allocated_bytes": 57344,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 218450.625,
+            "p95_ns": 221516.916,
+            "min_ns": 216322.917,
+            "max_ns": 221661.875,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 39708,
+            "allocations": 8,
+            "allocated_bytes": 10021,
+            "iterations_per_sample": 1000,
+            "run": "2-matea",
+            "p50_ns": 35486.542,
+            "p95_ns": 40951.666,
+            "min_ns": 34664.833,
+            "max_ns": 45794.291,
+            "samples": 31
+          },
+          {
+            "cold_ns": 36250,
+            "allocations": 8,
+            "allocated_bytes": 10021,
+            "iterations_per_sample": 1000,
+            "run": "3-matea",
+            "p50_ns": 34845.334,
+            "p95_ns": 34962.375,
+            "min_ns": 34689.791,
+            "max_ns": 34967.5,
+            "samples": 31
+          }
+        ]
       }
     },
     "viewport-highlights/view_unicode": {
@@ -288,6 +509,60 @@
             "samples": 31
           }
         ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 48375,
+            "allocations": 195,
+            "allocated_bytes": 20928,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 45194.25,
+            "p95_ns": 46963,
+            "min_ns": 43828.875,
+            "max_ns": 47054.542,
+            "samples": 31
+          },
+          {
+            "cold_ns": 50292,
+            "allocations": 195,
+            "allocated_bytes": 20928,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 45000.334,
+            "p95_ns": 45596.584,
+            "min_ns": 44016.5,
+            "max_ns": 48390.625,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 10083,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "2-matea",
+            "p50_ns": 9529.25,
+            "p95_ns": 9613.40625,
+            "min_ns": 9478.4895,
+            "max_ns": 9714.448,
+            "samples": 31
+          },
+          {
+            "cold_ns": 10125,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "3-matea",
+            "p50_ns": 9574.71875,
+            "p95_ns": 9780.34375,
+            "min_ns": 9543.72925,
+            "max_ns": 9860.65625,
+            "samples": 31
+          }
+        ]
       }
     },
     "viewport-highlights/cycle_unicode": {
@@ -341,6 +616,60 @@
             "p95_ns": 9879.3855,
             "min_ns": 9521.29175,
             "max_ns": 10994.2085,
+            "samples": 31
+          }
+        ]
+      },
+      "optimized": {
+        "upstream": [
+          {
+            "cold_ns": 41208,
+            "allocations": 195,
+            "allocated_bytes": 20928,
+            "iterations_per_sample": 1000,
+            "run": "1-upstream",
+            "p50_ns": 46232.167,
+            "p95_ns": 47028.333,
+            "min_ns": 45493.792,
+            "max_ns": 48098.834,
+            "samples": 31
+          },
+          {
+            "cold_ns": 43750,
+            "allocations": 195,
+            "allocated_bytes": 20928,
+            "iterations_per_sample": 1000,
+            "run": "4-upstream",
+            "p50_ns": 46528.417,
+            "p95_ns": 47210.25,
+            "min_ns": 45665.792,
+            "max_ns": 47567.959,
+            "samples": 31
+          }
+        ],
+        "matea": [
+          {
+            "cold_ns": 10792,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "2-matea",
+            "p50_ns": 9584.677,
+            "p95_ns": 9704.302,
+            "min_ns": 9495.427,
+            "max_ns": 9741.625,
+            "samples": 31
+          },
+          {
+            "cold_ns": 10834,
+            "allocations": 6,
+            "allocated_bytes": 5981,
+            "iterations_per_sample": 4000,
+            "run": "3-matea",
+            "p50_ns": 9593.25,
+            "p95_ns": 9649.8645,
+            "min_ns": 9542.1355,
+            "max_ns": 9651.6875,
             "samples": 31
           }
         ]

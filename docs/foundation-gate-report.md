@@ -1,5 +1,25 @@
 # Matea Foundation gate report
 
+現在のローカル検証済みチェックポイントはed05ad9です。138プログラム・42評価単位、
+未達49軸（性能29・参照元一致20）、未対応付け6,773宣言、部分／未測定19能力です。
+91モジュール判定・827 issue報告が残ります。Stage Aを継続し、Stage BとF5は閉じています。
+
+StylePatchのc77fd31は[3 OS・MSRV・参照照合7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39178730764)
+に成功し、135 program／171入力を独立照合しました。約58万Source観測・167万Boolean試験・Miriが成功。
+測定器の非対称性を修正し、効果のなかったinline指定を撤回しています。
+[全試行と制約](style-patches-audit.md)。
+
+Viewportハイライトでは、検証付きbyte範囲・完全EGCの強調・選択スタイルの継承を実装しました。
+420組を190一致／230明示差分として保持し、SourceのASCII252組は独立SGR再生でも確認しています。
+同一測定器の48計測／24出力を独立に再構成し、ASCII登録＋描画47→8.4µs、確保15→8、
+描画8→6を確認しました。Unicode登録の時間改善は確認せず、全遅延・生分布を保持します。
+[全結果](viewport-highlights-audit.md)。
+ed05ad9はローカル39検証、Rust237＋6 doctest、Python131、Miri8、LLVM83 source／89 instanceが成功。
+[最適化後の3 OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)は進行中です。
+旧af4d043の未完了CIは新候補へ置き換え、全件成功とは扱いません。
+未達数が変わらない主因である機能範囲を閉じるため、次は[ウィジェット統合](ratatui-widget-bridge-design.md)を具体化します。
+以下は各時点の検証履歴です。
+
 現在の検証済み実装チェックポイント（32a67c0）: 132プログラム・42評価単位、
 未達49軸（性能29・参照元一致20）。未対応付け6,793宣言、部分／未測定17能力、
 91モジュール判定・825 issue報告が残ります。Stage Aを継続し、Stage BとF5は閉じています。

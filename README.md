@@ -25,15 +25,18 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current scope is 132 programs in 42 units, with 49 assessments still below
-the high threshold. The [latest seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39173451153)
-validates the prior RichText checkpoint (130 programs), native acceptance/LLVM and reference/probe paths
-on all three OSes. [Recent work and remaining limitations](docs/remaining-optimization.md)
-include deadline-aware input waits, typed text attributes, a color-only palette cache
-smaller owned panel payloads, indexed gradients, generation-safe progress and
-source-checked measurement attempts. The independent native Windows console
-oracle verifies 36 ASCII/BMP frames and restoration; modern terminal/font/IME
-appearance remains outside that verdict. Detailed component reference outputs retain
-their separate earlier source bindings.
+The current scope is 138 programs in 42 units, with 49 assessments still below
+the high threshold. The [last fully bound seven-job CI](https://github.com/n3dypop/Matea/actions/runs/39178730764)
+validates the 135-program StylePatch checkpoint. The 138-program viewport highlight
+checkpoint passes 39 native acceptance commands, eight targeted Miri tests and
+83-path LLVM execution; its [three-OS CI](https://github.com/n3dypop/Matea/actions/runs/39196946306)
+is in progress. [Recent work and remaining limitations](docs/remaining-optimization.md)
+include immutable styled text, explicit inherited/set/clear style intent,
+whole-grapheme viewport wrapping and validated search highlights. Measurements
+retain complete outputs, all raw distributions and rejected trials. The native
+Windows console oracle verifies 36 ASCII/BMP frames and restoration; modern
+terminal/font/IME appearance remains outside that verdict. Component reference
+outputs retain their distinct source bindings. Stage A, Stage B and F5 are not
+complete; the image engine and CUDA stay gated.
 
 This repository contains source, tests, examples, CI and engineering documentation. External source checkouts and agent instructions are not part of it. Upstream revisions and declared dependency licenses are recorded in docs; Matea's distribution license and public naming availability remain owner review items.
