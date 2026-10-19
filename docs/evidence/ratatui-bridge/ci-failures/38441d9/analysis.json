@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "run": "https://github.com/n3dypop/Matea/actions/runs/39224682979",
+  "source_head": "38441d96088d133ab19f877a1fdb0eacac95d103",
+  "host": "ubuntu-latest",
+  "status": "failed_incomplete_offline_dependency_prefetch",
+  "root_cause": "Only tools/reference-text Cargo.lock was prefetched; root default compilation does not download optional crossterm 0.28.1 needed by adapter --all-features. Offline feature tests/clippy/docs/examples correctly fail.",
+  "fix": "Prefetch the complete root Cargo.lock before offline acceptance. Retain isolated reference fetch separately.",
+  "no_high_score_assigned": true,
+  "sha256": {
+    "local-validation.json": "12dbaa842f8be08f040941897a6d6b0c5c6d75ec918e390f3805cd80a8fd0858",
+    "ratatui-feature-tests.log": "6a42e9fe8715448c62ddf950acc902a08dc38300366c34a6964056a48dd2d52f",
+    "ratatui-feature-clippy.log": "6a42e9fe8715448c62ddf950acc902a08dc38300366c34a6964056a48dd2d52f"
+  }
+}

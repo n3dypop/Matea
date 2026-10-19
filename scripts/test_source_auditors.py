@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -17,6 +18,49 @@ def go_environment():
 
 
 class SourceAuditorTests(unittest.TestCase):
+    def auditor(self):
+        target = Path(os.environ.get("CARGO_TARGET_DIR", ROOT / "target"))
+        return target / "debug" / ("matea-api-audit.exe" if os.name == "nt" else "matea-api-audit")
+
+    def test_rust_tree_skips_external_links_and_cycles_and_rejects_linked_root(self):
+        def link(source, destination):
+            if os.name == "nt":
+                subprocess.run(["cmd", "/c", "mklink", "/J", str(destination), str(source)],
+                               check=True, capture_output=True, timeout=15)
+            else:
+                destination.symlink_to(source, target_is_directory=True)
+        with tempfile.TemporaryDirectory(prefix="matea-audit-links-") as folder:
+            base=Path(folder);source=base/"source";source.mkdir();outside=base/"outside";outside.mkdir()
+            (source/"lib.rs").write_text("pub const LOCAL: usize = 1;\n",encoding="utf-8")
+            (outside/"outside.rs").write_text("pub const OUTSIDE: usize = 2;\n",encoding="utf-8")
+            link(outside,source/"escape");link(source,source/"cycle");link(source,base/"alias")
+            result=subprocess.run([str(self.auditor()),str(source)],capture_output=True,text=True,encoding="utf-8",timeout=15,check=True)
+            self.assertEqual([json.loads(l)['symbol'] for l in result.stdout.splitlines()],["LOCAL"])
+            for path in [base/"alias",source/"lib.rs",base/"missing"]:
+                bad=subprocess.run([str(self.auditor()),str(path)],capture_output=True,timeout=15)
+                self.assertNotEqual(bad.returncode,0)
+                self.assertEqual(bad.stdout,b"")
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "arbitrary filename bytes require a supporting Linux filesystem; APFS rejects this fixture")
+    def test_rust_non_utf8_paths_fail_instead_of_colliding_after_lossy_conversion(self):
+        with tempfile.TemporaryDirectory(prefix="matea-audit-path-") as folder:
+            for byte in [b"\xff",b"\xfe"]:
+                with open(os.fsencode(folder)+b"/"+byte+b".rs","wb") as file:
+                    file.write(b"pub const VALUE: usize = 0;\n")
+            result=subprocess.run([str(self.auditor()),folder],capture_output=True,timeout=15)
+            self.assertNotEqual(result.returncode,0)
+            self.assertIn(b"not UTF-8",result.stderr)
+            self.assertEqual(result.stdout,b"")
+
+    @unittest.skipUnless(os.name == "posix", "FIFO source entries are a Unix filesystem contract")
+    def test_rust_fifo_with_source_suffix_is_not_opened(self):
+        with tempfile.TemporaryDirectory(prefix="matea-audit-fifo-") as folder:
+            source=Path(folder)
+            (source/"lib.rs").write_text("pub const LOCAL: usize = 1;\n",encoding="utf-8")
+            os.mkfifo(source/"blocked.rs")
+            result=subprocess.run([str(self.auditor()),folder],capture_output=True,text=True,encoding="utf-8",timeout=15,check=True)
+            self.assertEqual([json.loads(l)['symbol'] for l in result.stdout.splitlines()],["LOCAL"])
+
     def test_go_parser_and_writer_failures(self):
         result = subprocess.run(["go", "test", "tools/audit-go/main.go", "tools/audit-go/main_test.go"],
                                 cwd=ROOT, env=go_environment(), capture_output=True, text=True,

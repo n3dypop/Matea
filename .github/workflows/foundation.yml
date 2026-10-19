@@ -40,6 +40,9 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy, llvm-tools-preview
       - run: cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml
+      # Offline acceptance also exercises every optional adapter feature. The
+      # isolated reference lock and default root build do not fetch that graph.
+      - run: cargo fetch --locked
       - run: cargo fmt --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
