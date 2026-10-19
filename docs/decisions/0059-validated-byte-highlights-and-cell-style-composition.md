@@ -60,3 +60,14 @@ qualification and retain adverse distributions before evaluating performance.
 Line-style callbacks, fixed gutters, arbitrary viewport borders/margins/padding,
 rich input/ANSI text preservation and complete widget/reference coverage remain
 separate open capabilities. Stage A and the F5 owner gate remain closed.
+
+The first measured implementation segments each visible ASCII byte and grows both
+input and visible-span vectors repeatedly. A bounded optimization trial uses the
+existing logical-line index for ASCII anchors and sorted interval slices for
+ASCII paint. Unicode keeps the monotone EGC cursor and whole-cluster style policy.
+Reserve at most 256 input entries after the first validated match, and at most 64
+initial visible spans; caller hints/heights cannot request unbounded speculative
+allocation. Default/empty input allocates no match vector. One ASCII detection
+pass remains O(document bytes), so very large prefix-only match workloads need
+separate evaluation. Preserve canonical source/literal fixtures and matched
+measurement instrumentation across the trial; do not assign a whole-module score.

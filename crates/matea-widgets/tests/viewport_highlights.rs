@@ -413,3 +413,44 @@ fn pinned_420_source_states_retain_190_matches_and_230_literal_deviations() {
     }
     assert_eq!(matched, 190);
 }
+
+#[test]
+fn adversarial_size_hints_do_not_control_reservations_or_match_semantics() {
+    struct Hints<I> {
+        inner: I,
+        hint: usize,
+    }
+    impl<I: Iterator> Iterator for Hints<I> {
+        type Item = I::Item;
+        fn next(&mut self) -> Option<Self::Item> {
+            self.inner.next()
+        }
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            (self.hint, Some(self.hint))
+        }
+    }
+    for text in ["abc\ndef\n", "茶e\u{301}\nlast"] {
+        for hint in [0, 1, 256, usize::MAX] {
+            let mut view = Viewport::new(text);
+            view.set_size(3, 2);
+            let ranges = [
+                0..text.chars().next().unwrap().len_utf8(),
+                text.len()..text.len(),
+            ];
+            view.set_highlights(Hints {
+                inner: ranges.clone().into_iter(),
+                hint,
+            })
+            .unwrap();
+            assert_eq!(view.highlights().collect::<Vec<_>>(), ranges);
+            assert_eq!(view.selected_highlight(), Some(0));
+            view.set_highlights(Hints {
+                inner: std::iter::empty(),
+                hint,
+            })
+            .unwrap();
+            assert_eq!(view.highlights().len(), 0);
+            assert_eq!(view.selected_highlight(), None);
+        }
+    }
+}

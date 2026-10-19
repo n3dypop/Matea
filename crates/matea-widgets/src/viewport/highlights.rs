@@ -106,11 +106,16 @@ impl Viewport {
     where
         I: IntoIterator<Item = Range<usize>>,
     {
+        let ranges = ranges.into_iter();
+        // Hints are untrusted. Reserve only after the first valid match, and
+        // cap speculative storage independently of the caller's reported size.
+        let hint = ranges.size_hint().0.min(256);
         let mut entries = Vec::new();
+        let ascii = self.content.is_ascii();
         let mut positions = Positions::new(&self.content);
         let mut previous_end = 0;
         let mut paint = false;
-        for (index, bytes) in ranges.into_iter().enumerate() {
+        for (index, bytes) in ranges.enumerate() {
             if bytes.start > bytes.end {
                 return Err(HighlightError::Reversed { index });
             }
@@ -125,14 +130,32 @@ impl Viewport {
             if bytes.start < previous_end {
                 return Err(HighlightError::UnsortedOrOverlapping { index });
             }
-            let (line, start) = positions.at(bytes.start, false);
+            let (line, start) = if ascii {
+                let line = self
+                    .line_starts
+                    .partition_point(|start| *start <= bytes.start)
+                    .saturating_sub(1);
+                (
+                    line,
+                    bytes.start - self.line_starts.get(line).copied().unwrap_or(0),
+                )
+            } else {
+                positions.at(bytes.start, false)
+            };
             let line_end = self
                 .line_starts
                 .get(line + 1)
                 .map_or(self.content.len(), |next| next - 1);
-            let (_, end) = positions.at(bytes.end.min(line_end), true);
+            let end = if ascii {
+                bytes.end.min(line_end) - self.line_starts.get(line).copied().unwrap_or(0)
+            } else {
+                positions.at(bytes.end.min(line_end), true).1
+            };
             previous_end = bytes.end;
             paint |= !bytes.is_empty();
+            if entries.is_empty() && hint != 0 {
+                entries.reserve_exact(hint);
+            }
             entries.push(Highlight {
                 bytes,
                 line,
@@ -258,6 +281,40 @@ impl Viewport {
         byte: usize,
         base: Style,
     ) {
+        if text.is_ascii() {
+            // In normalized ASCII every non-LF byte is a complete one-cell
+            // grapheme. Walk only intersecting intervals rather than searching
+            // and segmenting again for each byte of every visible row.
+            let entries = self.highlights.entries();
+            let first = entries.partition_point(|entry| entry.bytes.end <= byte);
+            let end = byte + text.len();
+            let mut cursor = byte;
+            for (offset, entry) in entries[first..].iter().enumerate() {
+                if entry.bytes.start >= end {
+                    break;
+                }
+                if entry.bytes.is_empty() {
+                    continue;
+                }
+                let start = entry.bytes.start.max(byte);
+                if cursor < start {
+                    spans.push((&text[cursor - byte..start - byte], base));
+                }
+                let stop = entry.bytes.end.min(end);
+                let style = self.highlight_style.resolve(base);
+                let style = if self.highlights.selected == Some(first + offset) {
+                    self.selected_highlight_style.resolve(style)
+                } else {
+                    style
+                };
+                spans.push((&text[start - byte..stop - byte], style));
+                cursor = stop;
+            }
+            if cursor < end {
+                spans.push((&text[cursor - byte..], base));
+            }
+            return;
+        }
         let mut start = 0;
         let mut active = base;
         for (index, cluster) in text.grapheme_indices(true) {
@@ -280,7 +337,9 @@ impl Viewport {
         {
             return None;
         }
-        let mut spans = Vec::new();
+        // Bound speculation for large caller-provided heights. The common
+        // three-row search window needs eleven spans, without repeated growth.
+        let mut spans = Vec::with_capacity(self.visible_line_count().min(16) * 4);
         let wrapped = self.wrap_index();
         let offset = self.offset();
         for row in 0..self.visible_line_count() {
