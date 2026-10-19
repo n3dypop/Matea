@@ -42,11 +42,11 @@ pub mod prelude {
     pub use matea_widgets::{
         Action, ClockId, ClockSchedule, ClockText, ClockTick, ClockUpdate, Countdown, CursorMode,
         EchoMode, EmptySpinnerFrames, Field, Form, Help, HelpItem, HelpMap, HelpStyles,
-        InputStyleState, InputStyles, List, PROGRESS_EMPTY_BLOCK, PROGRESS_FULL_BLOCK,
-        PROGRESS_HALF_BLOCK, PageDisplay, PageKeys, PageNumbers, Pagination, Paginator, Progress,
-        ProgressCell, ProgressCells, ProgressError, ProgressFill, ProgressFrame, ProgressStyles,
-        ReversedViewportColumns, Spinner, SpinnerAnimation, SpinnerPreset, Stopwatch, Table,
-        TextEditKeys, TextInput, TickInterval, Viewport, ViewportKey, ViewportKeys, VirtualCursor,
-        required,
+        HighlightError, InputStyleState, InputStyles, List, PROGRESS_EMPTY_BLOCK,
+        PROGRESS_FULL_BLOCK, PROGRESS_HALF_BLOCK, PageDisplay, PageKeys, PageNumbers, Pagination,
+        Paginator, Progress, ProgressCell, ProgressCells, ProgressError, ProgressFill,
+        ProgressFrame, ProgressStyles, ReversedViewportColumns, Spinner, SpinnerAnimation,
+        SpinnerPreset, Stopwatch, Table, TextEditKeys, TextInput, TickInterval, Viewport,
+        ViewportKey, ViewportKeys, VirtualCursor, required,
     };
 }

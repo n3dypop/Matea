@@ -204,6 +204,10 @@ func plain(s uv.ScreenBuffer) string {
 }
 func main() {
 	runtime.GOMAXPROCS(1)
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-highlight-fixtures" {
+		viewportHighlightFixtures()
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--viewport-wrap-fixtures" {
 		viewportWrapFixtures()
 		return
@@ -309,6 +313,10 @@ func main() {
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--clocks" {
 		clockCases(n)
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "--viewport-highlights" {
+		viewportHighlightCosts(n)
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "--viewport-wrap" {
@@ -1798,5 +1806,120 @@ func viewportWrapCosts(n int) {
 			narrow := m.TotalLineCount()
 			return viewportGeometryDigest("", wide, narrow)
 		}, "wide=100;narrow=200", "existing soft-wrap document at y=0; set width 8/read full geometry then width 4/read geometry, consume both totals with FNV64; include invalidated cache drop/rebuild; no render/terminal I/O")
+	}
+}
+
+// Canonical lead-cell styles; wide placeholders carry no independent SGR.
+func highlightCells(m viewport.Model) (string, string) {
+	raw := m.View()
+	screen := uv.NewScreenBuffer(m.Width(), m.Height())
+	screen.Method = ansi.GraphemeWidth
+	uv.NewStyledString(raw).Draw(screen, uv.Rect(0, 0, m.Width(), m.Height()))
+	var out strings.Builder
+	out.Grow(m.Width() * m.Height() * 32)
+	for y := 0; y < m.Height(); y++ {
+		for x := 0; x < m.Width(); x++ {
+			c := screen.CellAt(x, y)
+			if c.Width == 0 {
+				out.WriteString("0,,0,0,0;")
+				continue
+			}
+			fmt.Fprintf(&out, "%d,%x,%t,%d,%t;", c.Width, c.Content, c.Style.Attrs&uv.AttrBold != 0, c.Style.Underline, c.Style.Attrs&uv.AttrReverse != 0)
+		}
+	}
+	return raw, out.String()
+}
+func viewportHighlightFixtures() {
+	cases := []struct {
+		name, text string
+		matches    [][]int
+	}{
+		{"ascii", "one tea two tea\nsecond tea line\nlast", [][]int{{4, 7}, {12, 15}, {23, 26}}},
+		{"mixed", "A茶B👩‍💻C\n🇯🇵e\u0301\nlast茶", [][]int{{1, 4}, {5, 16}, {34, 37}}},
+		{"split", "e\u0301👩‍💻🇯🇵", [][]int{{0, 1}, {1, 3}, {7, 10}, {18, 22}}},
+		{"multiline", "ab\ncd\nef", [][]int{{1, 4}, {6, 8}}},
+		{"empty", "ab\ncd", [][]int{{0, 0}, {2, 2}}},
+	}
+	for _, item := range cases {
+		for _, w := range []int{1, 3, 8} {
+			for _, h := range []int{1, 3} {
+				for _, wrap := range []bool{false, true} {
+					for _, action := range []string{"set", "next", "previous", "clear", "empty", "bottom", "top"} {
+						x, y := 0, 0
+						raw, cells, panicked := "", "", ""
+						func() {
+							defer func() {
+								if value := recover(); value != nil {
+									panicked = fmt.Sprint(value)
+								}
+							}()
+							m := viewport.New(viewport.WithWidth(w), viewport.WithHeight(h))
+							m.SoftWrap = wrap
+							m.SetContent(item.text)
+							m.HighlightStyle = lipgloss.NewStyle().Bold(true).Underline(true)
+							m.SelectedHighlightStyle = lipgloss.NewStyle().Reverse(true)
+							m.SetHighlights(item.matches)
+							switch action {
+							case "next":
+								m.HighlightNext()
+							case "previous":
+								m.HighlightPrevious()
+							case "clear":
+								m.ClearHighlights()
+							case "empty":
+								m.SetHighlights(nil)
+							case "bottom":
+								m.GotoBottom()
+							case "top":
+								m.GotoTop()
+							}
+							x, y = m.XOffset(), m.YOffset()
+							raw, cells = highlightCells(m)
+						}()
+						fmt.Printf("%s\t%x\t%d\t%d\t%t\t%s\t%d\t%d\t%x\t%x\t%x\n", item.name, item.text, w, h, wrap, action, x, y, raw, cells, panicked)
+					}
+				}
+			}
+		}
+	}
+}
+
+func viewportHighlightCosts(n int) {
+	const install = "existing 100-line 24x3 flat viewport; reset y=0, replace all 100 ordered whole-EGC byte matches, reveal first match, produce complete owned lead-cell symbol/width/bold/underline/reverse projection plus x/y FNV64; includes Rust scene/surface or Go View/Ultraviolet ANSI interpretation and canonical serialization; no terminal I/O"
+	const view = "existing initialized 100-line 24x3 flat viewport and 100 matches, first selected; produce complete owned lead-cell symbol/width/bold/underline/reverse projection plus x/y FNV64; includes Rust scene/surface or Go View/Ultraviolet ANSI interpretation and canonical serialization; no terminal I/O"
+	const cycle = "existing initialized 100-line 24x3 flat viewport and 100 matches, first selected; next then previous match, reveal each, produce complete owned lead-cell symbol/width/bold/underline/reverse projection plus x/y FNV64; includes Rust scene/surface or Go View/Ultraviolet ANSI interpretation and canonical serialization; no terminal I/O"
+	for _, item := range []struct{ name, line string }{{"ascii", "prefix tea tail"}, {"unicode", "抹茶 tea 茶"}} {
+		lines := make([]string, 100)
+		for i := range lines {
+			lines[i] = fmt.Sprintf("%s #%d", item.line, i)
+		}
+		text := strings.Join(lines, "\n")
+		matches := make([][]int, 0, 100)
+		offset := 0
+		for _, line := range lines {
+			start := strings.Index(line, "tea")
+			matches = append(matches, []int{offset + start, offset + start + 3})
+			offset += len(line) + 1
+		}
+		m := viewport.New(viewport.WithWidth(24), viewport.WithHeight(3))
+		m.SetContent(text)
+		m.HighlightStyle = lipgloss.NewStyle().Bold(true).Underline(true)
+		m.SelectedHighlightStyle = m.HighlightStyle.Reverse(true)
+		m.SetHighlights(matches)
+		_, projected := highlightCells(m)
+		output := "x=0;y=0;cells=" + projected
+		for _, op := range []struct{ name, semantics string }{{"install", install}, {"view", view}, {"cycle", cycle}} {
+			measure("viewport-highlights/"+op.name+"_"+item.name, n, func() uint64 {
+				if op.name == "install" {
+					m.SetYOffset(0)
+					m.SetHighlights(matches)
+				} else if op.name == "cycle" {
+					m.HighlightNext()
+					m.HighlightPrevious()
+				}
+				_, cells := highlightCells(m)
+				return viewportGeometryDigest(cells, m.XOffset(), m.YOffset())
+			}, output, op.semantics)
+		}
 	}
 }

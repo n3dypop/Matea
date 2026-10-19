@@ -3,6 +3,8 @@ use crate::{Action, key};
 use matea_core::{Component, Input, KeyCode, Response};
 use matea_render::View;
 use matea_style::Theme;
+mod highlights;
+pub use highlights::HighlightError;
 
 /// Pager commands used by [`ViewportKeys`].
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -198,6 +200,11 @@ pub struct Viewport {
     soft_wrap: bool,
     wrapped_rows: std::sync::OnceLock<std::sync::Arc<WrappedRows>>,
     recycled_rows: RecycledRows,
+    highlights: highlights::HighlightState,
+    /// Intent applied to each matching whole grapheme, after the theme text.
+    pub highlight_style: matea_style::StylePatch,
+    /// Intent applied over the ordinary highlight for the selected match.
+    pub selected_highlight_style: matea_style::StylePatch,
     pub rows: u16,
     /// Include empty padding rows in the visible iterator, including an empty
     /// document. Explicit zero width/height still yields no padding rows.
@@ -275,6 +282,11 @@ impl Viewport {
             soft_wrap: false,
             wrapped_rows: std::sync::OnceLock::new(),
             recycled_rows: RecycledRows::default(),
+            highlights: highlights::HighlightState::default(),
+            highlight_style: matea_style::StylePatch::new()
+                .underline_style(matea_style::UnderlineStyle::Single),
+            selected_highlight_style: matea_style::StylePatch::new()
+                .attribute(matea_style::TextAttribute::Reverse, true),
             rows: 6,
             fill_height: false,
             keys: ViewportKeys::default(),
@@ -345,6 +357,7 @@ impl Viewport {
                 .extend(content.match_indices('\n').map(|(index, _)| index + 1));
         }
         self.content = content;
+        self.clear_highlights();
         self.longest_line_width.take();
         self.wrapped_rows.take();
         self.recycled_rows = RecycledRows::default();
@@ -739,10 +752,14 @@ impl Viewport {
         self.scroll_up(usize::from(self.rows / 2))
     }
     pub fn go_to_top(&mut self) -> bool {
-        self.set_offset(0)
+        let changed = self.set_offset(0);
+        self.select_nearest_highlight();
+        changed
     }
     pub fn go_to_bottom(&mut self) -> bool {
-        self.set_offset(self.max_offset())
+        let changed = self.set_offset(self.max_offset());
+        self.select_nearest_highlight();
+        changed
     }
     /// Borrow the original text covered by visible rows. Soft breaks and
     /// fill-height padding are not inserted; use visible_lines for display rows.
@@ -805,14 +822,29 @@ impl Viewport {
 
 fn viewport_cell_window(line: &str, left: usize, width: usize) -> std::borrow::Cow<'_, str> {
     use std::borrow::Cow;
+    let (start, end, padding) = viewport_cell_bounds(line, left, width);
+    let slice = &line[start..end];
+    if padding == 0 {
+        Cow::Borrowed(slice)
+    } else {
+        let mut text = String::with_capacity(padding + slice.len());
+        text.extend(std::iter::repeat_n(' ', padding));
+        text.push_str(slice);
+        Cow::Owned(text)
+    }
+}
+
+// The source-byte interval and generated left padding share one clipping
+// authority for plain text and styled matches. Neither splits an EGC.
+fn viewport_cell_bounds(line: &str, left: usize, width: usize) -> (usize, usize, usize) {
     use unicode_segmentation::UnicodeSegmentation;
     use unicode_width::UnicodeWidthStr;
     if width == 0 {
-        return Cow::Borrowed("");
+        return (0, 0, 0);
     }
     let right = left.saturating_add(width);
     if line.is_ascii() {
-        return Cow::Borrowed(&line[left.min(line.len())..right.min(line.len())]);
+        return (left.min(line.len()), right.min(line.len()), 0);
     }
     let mut column = 0usize;
     let mut start = None;
@@ -835,15 +867,7 @@ fn viewport_cell_window(line: &str, left: usize, width: usize) -> std::borrow::C
             break;
         }
     }
-    let slice = start.map_or("", |start| &line[start..end]);
-    if padding == 0 {
-        Cow::Borrowed(slice)
-    } else {
-        let mut text = String::with_capacity(padding + slice.len());
-        text.extend(std::iter::repeat_n(' ', padding));
-        text.push_str(slice);
-        Cow::Owned(text)
-    }
+    start.map_or((0, 0, padding), |start| (start, end, padding))
 }
 
 fn normalize_viewport_text(text: &str) -> std::borrow::Cow<'_, str> {
@@ -949,7 +973,9 @@ impl Component for Viewport {
         Response::consumed(Some(Action::Changed))
     }
     fn view(&self, theme: &Theme, _: bool) -> View {
-        let view = if self.horizontal_offset == 0
+        let view = if let Some(view) = self.highlighted_view(theme.text) {
+            view
+        } else if self.horizontal_offset == 0
             && !(self.soft_wrap && self.width.is_some())
             && !self.fill_height
         {

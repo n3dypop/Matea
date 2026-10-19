@@ -1,0 +1,99 @@
+import hashlib,json,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import parse_json,read_probe_outputs
+from test_windows_console import validate_trace,validate_result
+OUT=ROOT/'docs/evidence/style-patches/baseline/ci';RAW=Path('/private/tmp/matea-style-patches-ci-artifacts-c77fd31')
+def require(value,message):
+    if not value:raise ValueError(message)
+def sha(data):return hashlib.sha256(data).hexdigest()
+def read(path):return parse_json(path.read_bytes())
+run=read(OUT/'ci-run.json');head=run['headSha']
+require(run['status']=='completed' and run['conclusion']=='success','run not complete')
+required={'msrv'}|{f'{group} ({host}-latest)' for group in ['foundation','reference-probes'] for host in ['ubuntu','windows','macos']}
+require({j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required,'required job set')
+native_snapshot=read(OUT.parent/'native/local-validation.json');known=native_snapshot['source_sha256']
+require(len(known)==171,'known input count')
+for path,digest in known.items():require(sha(subprocess.check_output(['git','show',head+':'+path],cwd=ROOT))==digest,'Git source mismatch '+path)
+names=subprocess.check_output(['git','ls-tree','-r','--name-only',head],cwd=ROOT,text=True).splitlines()
+suffixes={'.rs','.go','.py','.yml','.yaml','.sh','.ps1','.js','.mjs','.ts'}
+expected_inputs={n for n in names if Path(n).suffix in suffixes or Path(n).suffix in {'.toml','.lock','.sum','.mod'} or n in {'.gitattributes','docs/quality-plan.json','docs/upstream-lock.json'} or (n.startswith(('crates/','examples/','tests/')) and Path(n).suffix in {'.csv','.tsv','.txt','.json'})}
+require(set(known)==expected_inputs,'independent Git input membership')
+program={p:v for p,v in known.items() if Path(p).suffix in {'.rs','.go','.py','.yml','.yaml','.sh','.ps1','.js','.mjs','.ts'}}
+require(len(program)==135,'program count')
+local_llvm=read(OUT.parent/'native/quality/rust-execution-coverage.json');llvm_paths=set(local_llvm['source_sha256'])
+facts={'source_inventories':11,'matched_cases':84,'virtual_cursor_matched_cases':7,'gradient_matched_cases':6,'gradient_fixture_cases':548,'progress_matched_cases':6,'progress_fixture_cases':120,'indexed_gradient_fixture_cases':256,'rust_gradient_timing_cases':12,'go_gradient_timing_cases':6,'rust_progress_timing_cases':12,'go_progress_timing_cases':6,'viewport_content_fixture_cases':220,'viewport_horizontal_fixture_cases':1404,'viewport_cut_fixture_cases':200,'viewport_input_fixture_cases':34,'viewport_geometry_edge_cases':10,'viewport_geometry_matched_cases':14,'viewport_geometry_varied_matched_cases':14,'rust_viewport_geometry_timing_cases':18,'go_viewport_geometry_timing_cases':14}
+fixtures=[('gradient','crates/matea-style/tests/fixtures/gradients.tsv'),('progress','crates/matea-widgets/tests/fixtures/progress.tsv'),('indexed-gradient','crates/matea-style/tests/fixtures/indexed-gradients.tsv'),('viewport-content','crates/matea-widgets/tests/fixtures/viewport-controls.tsv'),('viewport-horizontal','crates/matea-widgets/tests/fixtures/viewport-horizontal.tsv'),('viewport-cut','crates/matea-widgets/tests/fixtures/viewport-cuts.tsv'),('viewport-input','crates/matea-widgets/tests/fixtures/viewport-input.tsv'),('viewport-geometry-edges','crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv')]
+report={'schema':1,'status':'complete_bounded_three_host_qualification','source_head':head,'run':run['url'],'all_seven_required_jobs_passed':True,'program_sha256':program,'execution_input_sha256':known,'hosts':{},'raw_artifact_sha256':{},'retained_LF_artifact_sha256':{},'limits':['171 recorded program/build/check/fixture inputs; not every indirect historical data dependency.','Shared-runner timing schema/calibration checks and allocation fields are not used for speed comparisons. Varied corpus is output-only qualified here.','Native Windows console is isolated VT/readback for BMP/ASCII. No modern Windows Terminal/ConPTY/SSH/IME/font or supplementary-glyph appearance equivalence.','Executable hashes are recorded by native helpers; executables themselves are not uploaded in these artifacts.','Prior reference compiler profiles and complete measurement-driver qualification remain their original source-bound evidence; no new collection claim.','Width-zero Go numeric totals/positions are target dependent; raw observations retained. The fixed Mac snapshot has 586 paired matches / 422 deviations, not a claim that all 840 portable source reproductions match Matea.','The finite style-patch log was not uploaded at c77fd31; its successful command and hash are retained by the 39-check journal. Later workflow adds the raw log.','Raw Windows artifact hashes are verified before explicit LF retention normalization. No historical hash is rewritten.']}
+for host in ['ubuntu','windows','macos']:
+    native=RAW/f'native-drivers-{host}-latest';ref=RAW/f'reference-paths-{host}-latest'
+    validation=read(native/'local-validation.json');coverage=read(native/'quality/rust-execution-coverage.json')
+    require(validation['status']=='complete' and validation['all_local_checks_passed'] and validation['source_changed_during_run']==[],'native state '+host)
+    require(validation['source_sha256']==known and len(validation['checks'])==39 and all(c['exit_code']==0 for c in validation['checks']),'native inputs/checks '+host)
+    require(coverage['status']=='complete' and coverage['input_sha256']==known,'LLVM state/inputs '+host)
+    expected=llvm_paths-({'crates/matea-terminal/src/signals_unix.rs'} if host=='windows' else set())
+    require(set(coverage['source_sha256'])==expected and all(known[k]==v for k,v in coverage['source_sha256'].items()),'LLVM source set/hashes '+host)
+    logs=0
+    for c in validation['checks']:
+        path=native/c['log']
+        if path.is_file():require(sha(path.read_bytes())==c['log_sha256'],'native log '+str(path));logs+=1
+    require(logs==(23 if host=='windows' else 22),'uploaded log count '+host)
+    reference_log=(native/'reference-text.log').read_text()
+    require('8 cases / 80 pinned public reference cells and 2 complete styled corpora match' in reference_log,'pinned native rich-text oracle '+host)
+    require('579933 style-patch observations match' in reference_log,'pinned style patch observations '+host)
+    require('8 passed; 0 failed' in (native/'reference-text-tests.log').read_text(),'isolated workspace tests '+host)
+    paths=read(ref/'path-checks.json')
+    for key,value in facts.items():require(paths[key]==value,'reference facts '+host+'/'+key)
+    for stem,fixture in fixtures:
+        raw=(ref/(stem+'-fixtures.txt' if stem!='viewport-geometry-edges' else stem+'.txt')).read_bytes()
+        require(sha(raw)==known[fixture] and paths['source_fixture_sha256']['--'+stem+('-fixtures' if stem!='viewport-geometry-edges' else '')]==sha(raw),'source fixture '+host+'/'+stem)
+    for stem,rust_count,go_count in [('viewport-wrap',12,10),('cursor',7,7),('gradient',12,6),('progress',12,6),('viewport-geometry',18,14),('viewport-geometry-varied',18,14)]:
+        a=read_probe_outputs((ref/f'matea-{stem}-outputs.jsonl').read_text());b=read_probe_outputs((ref/f'upstream-{stem}-outputs.jsonl').read_text())
+        require(len(a)==rust_count and len(b)==go_count,'probe counts '+host+'/'+stem)
+        for name,item in b.items():require(all(a[name][k]==item[k] for k in ['semantics','output','first_return_value']),'complete probe output '+host+'/'+name)
+        if stem.startswith('viewport-geometry'):require(set(a)==set(b)|{'viewport-geometry/borrowed_'+edge+'_'+text for edge in ['aligned','partial'] for text in ['ascii','unicode']},'iterator controls '+host)
+    timing={}
+    for label,group,count in [('matea','viewport-wrap',12),('upstream','viewport-wrap',10),('upstream','foundation',91),('matea','foundation',91),('matea','gradient',12),('upstream','gradient',6),('matea','progress',12),('upstream','progress',6),('matea','viewport-geometry',18),('upstream','viewport-geometry',14)]:
+        filename=('timing-mode-checks.json' if label=='upstream' else 'rust-timing-mode-checks.json') if group=='foundation' else label+'-'+group+'-timing-mode-checks.json'
+        data=read(ref/filename);expected_group='gradients' if group=='gradient' else group
+        require(data['probe']==label and data['group']==expected_group and data['target_ns']==20_000_000 and data['zero_or_invalid_samples']==0,'timing schema '+host+'/'+filename)
+        require(len(data['checked_cases'])==len({c['case'] for c in data['checked_cases']})==count,'timing cases '+host+'/'+filename)
+        require(all(c['positive_samples']==31 and c['allocation_schema_valid'] and c['calibration_batches']>0 and c['iterations_per_sample']>0 for c in data['checked_cases']),'timing positive intervals '+host)
+        invalid=data['invalid_configurations_rejected'];require(len(invalid)==(5 if label=='matea' and group=='foundation' else 0) and all(i['exit_code']!=0 and i['stdout_bytes']==0 for i in invalid),'invalid timing inputs '+host)
+        timing[label+'/'+group]=count
+    wrap=read(ref/'viewport-wrap-checks.json')
+    require(wrap=={'rows':1008,'portable_exact_rows':840,'platform_zero_width_rows_retained':168},'wrap matrix membership '+host)
+    observed=(ref/'viewport-wrap-fixtures.txt').read_bytes()
+    fixed=subprocess.check_output(['git','show',head+':crates/matea-widgets/tests/fixtures/viewport-wrap-source.tsv'],cwd=ROOT)
+    actual=[r.split('\t') for r in observed.decode().splitlines()];original=[r.split('\t') for r in fixed.decode().splitlines()]
+    require(len(actual)==len(original)==1008,'source matrix count '+host)
+    for a,b in zip(actual,original):
+        require(len(a)==len(b)==13 and a[:6]==b[:6],'source matrix input '+host)
+        if a[2]!='0':require(a==b,'portable source matrix row '+host)
+        else:
+            require(all(v==str(int(v)) and -(1<<63)<=int(v)<(1<<63) for v in a[6:10]),'canonical signed zero-width observation '+host)
+            require(a[8:10]==['0','0'] and a[10:]==['','',''],'zero-width empty source geometry '+host)
+    require(sha(observed)==paths['source_fixture_sha256']['--viewport-wrap-fixtures'],'raw platform source matrix hash '+host)
+    matea=(ref/'matea-viewport-wrap-fixtures.txt').read_bytes()
+    require(sha(matea)==known['crates/matea-widgets/tests/fixtures/viewport-wrap-matea.tsv']==paths['source_fixture_sha256']['--matea-viewport-wrap-fixtures'],'Matea matrix hash '+host)
+    attrs=read_probe_outputs((native/'attributes-outputs.jsonl').read_text());expected_attrs=read_probe_outputs((ROOT/'docs/evidence/progress/attributes-outputs.jsonl').read_text());require(attrs==expected_attrs and len(attrs)==14,'attribute outputs '+host)
+    representation=read(native/'representations.json');require(all(representation[k]==v for k,v in [('style_bytes',14),('cell_bytes',40),('view_bytes',48),('theme_bytes',104)]),'representation '+host)
+    host_report={'pinned_rich_text_oracle_cases':8,'pinned_rich_text_oracle_raw_cells':80,'pinned_rich_text_literal_corpora':2,'acceptance_checks':39,'native_logs_hash_checked':logs,'wrap_reference_portable_reproductions':840,'wrap_reference_target_dependent_rows_retained':168,'wrap_matea_literal_states':1008,'fixed_Mac_paired_snapshot_matches':586,'fixed_Mac_paired_snapshot_explicit_deviations':422,'LLVM_source_files':len(coverage['files']),'LLVM_compiler_instances':sum(len(f['instances']) for f in coverage['files']),'style_patch_source_observations':579933,'isolated_workspace_tests':8,'exact_attribute_outputs':14,'representation':representation,'reference_facts':facts,'timing_schema_cases':timing}
+    if host=='windows':
+        context=read(native/'windows-console/context.json');attempt=native/'windows-console'/context['attempt']
+        require(context==read(attempt/'context.json') and context['status']=='complete' and context['child_exit_code']==0,'console journal')
+        stream=(attempt/'input.json').read_bytes();observed=(attempt/'observed.json').read_bytes()
+        require(sha(stream)==context['input_sha256'] and sha(observed)==context['observed_sha256'],'console hashes')
+        require(context['source_sha256']['oracle']==known['scripts/windows_console_oracle.ps1'],'console oracle source')
+        require(stream==subprocess.check_output(['git','show',head+':docs/evidence/windows-console-design/native-input.json'],cwd=ROOT),'independent console input')
+        validate_result(parse_json(observed),validate_trace(parse_json(stream)))
+        host_report.update(native_console_exact_frames=36,native_console_exact_cells=2160,native_console_state_restored=True)
+    report['hosts'][host]=host_report
+    for folder in [native,ref]:
+        for path in sorted(folder.rglob('*')):
+            if not path.is_file():continue
+            rel=path.relative_to(folder);raw=path.read_bytes();target=OUT/host/rel;target.parent.mkdir(parents=True,exist_ok=True)
+            require(not target.exists() or target.read_bytes()==raw.replace(b'\r\n',b'\n'),'artifact filename collision '+host+'/'+str(rel))
+            target.write_bytes(raw.replace(b'\r\n',b'\n'));key=host+'/'+rel.as_posix();report['raw_artifact_sha256'][key]=sha(raw);report['retained_LF_artifact_sha256'][key]=sha(target.read_bytes())
+    print(host,'39 checks,',len(coverage['files']),'LLVM files,',logs,'logs; all fixed and varied source fixtures/outputs/calibration verified',flush=True)
+OUT.mkdir(parents=True,exist_ok=True);(OUT/'source-bindings.json').write_text(json.dumps(report,indent=2)+'\n');pass

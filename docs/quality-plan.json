@@ -723,7 +723,9 @@
         "crates/matea-widgets/src/lib.rs",
         "crates/matea-widgets/tests/collections.rs",
         "crates/matea-widgets/src/viewport.rs",
-        "crates/matea-widgets/tests/viewport_wrap.rs"
+        "crates/matea-widgets/tests/viewport_wrap.rs",
+        "crates/matea-widgets/src/viewport/highlights.rs",
+        "crates/matea-widgets/tests/viewport_highlights.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -765,7 +767,9 @@
         "docs/viewport-cell-geometry.md",
         "docs/decisions/0056-viewport-whole-grapheme-wrapping.md",
         "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md",
-        "docs/viewport-wrapping-audit.md"
+        "docs/viewport-wrapping-audit.md",
+        "docs/decisions/0059-validated-byte-highlights-and-cell-style-composition.md",
+        "docs/viewport-highlights-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
@@ -1446,7 +1450,8 @@
         "tools/perf-probe/src/progress.rs",
         "tools/reference-text/src/main.rs",
         "tools/perf-probe/src/viewport_wrap.rs",
-        "tools/reference-text/src/patches.rs"
+        "tools/reference-text/src/patches.rs",
+        "tools/perf-probe/src/viewport_highlights.rs"
       ],
       "criteria": {
         "rust_design": {

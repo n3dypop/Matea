@@ -27,7 +27,7 @@ pub use progress::{
 };
 pub use spinner::{EmptySpinnerFrames, Spinner, SpinnerAnimation, SpinnerPreset};
 pub use textinput::{EchoMode, InputStyleState, InputStyles, TextEditKeys, TextInput};
-pub use viewport::{ReversedViewportColumns, Viewport, ViewportKey, ViewportKeys};
+pub use viewport::{HighlightError, ReversedViewportColumns, Viewport, ViewportKey, ViewportKeys};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Action {

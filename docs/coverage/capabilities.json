@@ -1094,6 +1094,31 @@
       ],
       "performance": "docs/style-patches-audit.md",
       "notes": "Separate resolved cell Style and Copy StylePatch represent inherit, explicit terminal default and false. Typed complete enum groups prevent invalid packed choices. 1679616 finite Boolean base/ternary-patch combinations and 579933 std-only pinned reference observations pass. Six overlapping raw source add/sub controls verify removal priority, not an upstream defect; Matea uses deterministic last-setter intent. Underline-color reference feature, serde/anstyle/palette, all Stylize conversions/raw flag combinations and full module performance remain pending. No whole-module parity or high verdict."
+    },
+    {
+      "id": "widgets/viewport-highlights",
+      "status": "partial",
+      "reference_ids": [
+        "7b72106e6beaeaed390a",
+        "fa3e8275a69d8b5df284",
+        "44cfdaafd4ebd0a22ab4",
+        "d2a1ada8846f19e0a24d",
+        "5c8ffc321552b6a8ad19",
+        "0779b2e78c05808af376"
+      ],
+      "implementation": [
+        "crates/matea-widgets/src/viewport.rs",
+        "crates/matea-widgets/src/viewport/highlights.rs"
+      ],
+      "tests": [
+        "crates/matea-widgets/tests/viewport_highlights.rs",
+        "crates/matea-widgets/tests/fixtures/viewport-highlight-source.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-highlight-matea.tsv",
+        "crates/matea-widgets/tests/fixtures/viewport-highlight-deviations.tsv",
+        "scripts/test_reference_paths.py"
+      ],
+      "performance": "docs/viewport-highlights-audit.md",
+      "notes": "Validated normalized UTF-8 byte matches, whole-intersecting-EGC painting, local selection over shared immutable geometry and transactional errors. 420 source observations retain 190 exact projected states and 230 literal deliberate differences; 252 source ASCII states have independent SGR replay. Six matched styled frame outputs agree before timing. Full native/Miri/three-host qualification and measurement pending; no complete module parity."
     }
   ]
 }

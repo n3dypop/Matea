@@ -42,7 +42,13 @@ observed 80 source paths / 86 compiler file instances; this is execution evidenc
 not every branch or conditional profile. Miri seed 263 passed the six ordinary
 patch tests and the terminal encoder regression. The finite test runs natively.
 The source-bound native snapshot is under `evidence/style-patches/baseline/native`.
-Three-OS CI for this checkpoint is still running.
+All seven native/MSRV/reference-probe jobs passed at this checkpoint:
+https://github.com/n3dypop/Matea/actions/runs/39178730764. Independent artifact
+bindings verify all 171 execution inputs / 135 program files against Git, logs,
+fixtures and outputs. LLVM observes 80 paths / 86 file instances on Unix and
+79 / 84 on Windows. The new finite test log was not uploaded at this checkpoint;
+its successful command and hash are in the journal, with the raw local log
+retained. The workflow now explicitly uploads that log for future checkpoints.
 
 The first performance cohort is retained under `baseline`. Its resolved-state
 read adapters converted a complete resolved state back to explicit style intent
@@ -78,3 +84,13 @@ Style decorators, arbitrary padding/borders/layout, all Stylize conversions,
 conditional underline-color/serde/anstyle/palette profiles, complete raw modifier
 composition and full module performance remain open. Stage A and F5 stay closed
 to advancement; the image engine and CUDA remain gated.
+
+The final direct-inline and confirmation cohorts use identical instrumentation
+and production code. Reset medians are 4.45–4.47 ns in Matea and 5.51–5.58 ns in
+the source; resolve is 5.86–5.88 versus 8.56–8.64 ns. These are bounded current
+comparisons after repairing the reader, not a production speedup. Compose favors
+Matea here, while build and complete override generally overlap. One retained
+Matea override run is 13.19 ns versus the other 6.79–6.82 ns observations; all
+samples and calibration history remain published. The confirmation does not erase
+that adverse result. All cases report zero tracked allocations. Complete style
+profiles, retained memory and module coverage still prevent a high verdict.

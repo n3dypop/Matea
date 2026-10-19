@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -96,9 +97,58 @@ def check_viewport_wrap_fixtures(output, fixture):
     return {"rows": len(actual), "portable_exact_rows": portable, "platform_zero_width_rows_retained": zero}
 
 
+def highlight_ascii_cells(raw, width, height):
+    """Independent bounded SGR replay: ASCII, bold, underline and reverse only."""
+    cells = [[(" ", False, 0, False) for _ in range(width)] for _ in range(height)]
+    x = y = offset = 0
+    bold = reverse = False
+    underline = 0
+    while offset < len(raw):
+        char = raw[offset]
+        if char == "\x1b":
+            match = re.match(r"\x1b\[([0-9;]*)m", raw[offset:])
+            require(match, "unknown highlight control")
+            for value in map(lambda n: int(n or 0), match[1].split(";")):
+                require(value in (0, 1, 4, 7, 22, 24, 27), "unknown highlight SGR")
+                if value == 0: bold, underline, reverse = False, 0, False
+                elif value == 1: bold = True
+                elif value == 4: underline = 1
+                elif value == 7: reverse = True
+                elif value == 22: bold = False
+                elif value == 24: underline = 0
+                elif value == 27: reverse = False
+            offset += match.end()
+            continue
+        if char == "\n": x, y = 0, y + 1
+        elif char == "\r": x = 0
+        else:
+            require(" " <= char <= "~" and x < width and y < height, "highlight ASCII geometry changed")
+            cells[y][x] = (char, bold, underline, reverse)
+            x += 1
+        offset += 1
+    return "".join(f"1,{ord(char):02x},{str(bold).lower()},{underline},{str(reverse).lower()};"
+                   for row in cells for char, bold, underline, reverse in row)
+
+
+def check_viewport_highlight_fixtures(output, fixture):
+    require(output == fixture, "source highlight observations changed")
+    rows = [line.split("\t") for line in output.decode("utf-8").splitlines()]
+    require(rows, "empty highlight observations")
+    ascii_checked = 0
+    for row in rows:
+        require(len(row) == 11 and row[4] in ("true", "false") and not row[10], "invalid highlight fixture")
+        width, height = int(row[2]), int(row[3])
+        require(width > 0 and height > 0, "invalid highlight geometry")
+        text, raw, cells = (bytes.fromhex(row[n]).decode("utf-8") for n in (1, 8, 9))
+        if text.isascii():
+            require(highlight_ascii_cells(raw, width, height) == cells, "independent ASCII highlight cells changed")
+            ascii_checked += 1
+    return {"rows": len(rows), "independent_ascii_SGR_replays": ascii_checked}
+
+
 def check_timing_mode(destination, probe_binary, environment, correctness, label="upstream", group="foundation"):
     require(label in ["upstream","matea"],"unknown timing-mode probe label")
-    counts = {"foundation":(91,91), "gradients":(6,12), "progress":(6,12), "viewport-geometry":(14,18), "viewport-wrap":(10,12)}
+    counts = {"foundation":(91,91), "gradients":(6,12), "progress":(6,12), "viewport-geometry":(14,18), "viewport-wrap":(10,12), "viewport-highlights":(6,6)}
     require(group in counts,"unknown timing-mode fixture group")
     target=20_000_000
     environment = dict(environment, MATEA_PERF_ITERATIONS="1", MATEA_PERF_MIN_SAMPLE_NS=str(target))
@@ -221,6 +271,14 @@ def check_probes(destination, go_binary, rust_binary, environment):
         require(all(wrapped[0][name][key]==b[key] for key in ["semantics","output","first_return_value"]),"wrapped viewport output mismatch: "+name)
     check_timing_mode(destination,go_binary,environment,[(["--viewport-wrap"],wrapped[1])],group="viewport-wrap")
     check_timing_mode(destination,rust_binary,environment,[(["--viewport-wrap"],wrapped[0])],label="matea",group="viewport-wrap")
+    highlights = []
+    for label,binary in [("matea",rust_binary),("upstream",go_binary)]:
+        output = subprocess.check_output([str(binary),"--viewport-highlights"],env=environment,timeout=30)
+        highlights.append(read_probe_outputs(output.decode("utf-8")))
+        (destination/(label+"-viewport-highlights-outputs.jsonl")).write_bytes(output)
+    require(len(highlights[0]) == len(highlights[1]) == 6 and highlights[0] == highlights[1], "highlight complete outputs differ")
+    check_timing_mode(destination,go_binary,environment,[(["--viewport-highlights"],highlights[1])],group="viewport-highlights")
+    check_timing_mode(destination,rust_binary,environment,[(["--viewport-highlights"],highlights[0])],label="matea",group="viewport-highlights")
     fixtures={}
     numeric={}
     retained={"--key-source-edges":("key-source-edges.json","upstream_observed"),
@@ -229,7 +287,7 @@ def check_probes(destination, go_binary, rust_binary, environment):
               "--clock-source-edges":("clocks-source-edges.json","observations"),
               "--spinner-source-edges":("spinner-source-edges.json","observations"),
               "--cursor-source-edges":("cursor-source-edges.json","observations")}
-    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures","--viewport-horizontal-fixtures","--viewport-cut-fixtures","--viewport-input-fixtures","--viewport-geometry-edges","--viewport-wrap-fixtures"]:
+    for flag in ["--key-source-edges","--source-regressions","--textinput-source-edges","--help-source-edges","--clock-source-edges","--spinner-source-edges","--cursor-source-edges","--duration-fixtures","--spinner-fixtures","--motion-fixtures","--projectile-fixtures","--clocks","--gradient-fixtures","--progress-fixtures","--indexed-gradient-fixtures","--viewport-content-fixtures","--viewport-horizontal-fixtures","--viewport-cut-fixtures","--viewport-input-fixtures","--viewport-geometry-edges","--viewport-wrap-fixtures","--viewport-highlight-fixtures"]:
         output=subprocess.check_output([str(go_binary),flag],env=environment,timeout=60)
         require(output, "empty source fixture: "+flag)
         if flag in retained:
@@ -262,6 +320,10 @@ def check_probes(destination, go_binary, rust_binary, environment):
             require(len(output.splitlines())==34 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-input.tsv").read_bytes(),"viewport input fixtures changed")
         if flag=="--viewport-geometry-edges":
             require(len(output.splitlines())==10 and output==(ROOT/"crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv").read_bytes(),"viewport geometry edges changed")
+        if flag=="--viewport-highlight-fixtures":
+            highlights = check_viewport_highlight_fixtures(output, (ROOT/"crates/matea-widgets/tests/fixtures/viewport-highlight-source.tsv").read_bytes())
+            require(highlights == {"rows":420,"independent_ascii_SGR_replays":252}, "incomplete highlight matrix")
+            (destination/"viewport-highlight-checks.json").write_text(json.dumps(highlights,indent=2)+"\n",encoding="utf-8")
         if flag=="--viewport-wrap-fixtures":
             wrap = check_viewport_wrap_fixtures(output, (ROOT/"crates/matea-widgets/tests/fixtures/viewport-wrap-source.tsv").read_bytes())
             require(wrap == {"rows":1008,"portable_exact_rows":840,"platform_zero_width_rows_retained":168}, "incomplete wrap matrix")
@@ -272,6 +334,10 @@ def check_probes(destination, go_binary, rust_binary, environment):
     require(output == (ROOT/"crates/matea-widgets/tests/fixtures/viewport-wrap-matea.tsv").read_bytes(),"native Matea wrap states changed")
     (destination/"matea-viewport-wrap-fixtures.txt").write_bytes(output)
     fixtures["--matea-viewport-wrap-fixtures"] = hashlib.sha256(output).hexdigest()
+    output = subprocess.check_output([str(rust_binary),"--viewport-highlight-fixtures"],env=environment,timeout=60)
+    require(output == (ROOT/"crates/matea-widgets/tests/fixtures/viewport-highlight-matea.tsv").read_bytes(),"native Matea highlight states changed")
+    (destination/"matea-viewport-highlight-fixtures.txt").write_bytes(output)
+    fixtures["--matea-viewport-highlight-fixtures"] = hashlib.sha256(output).hexdigest()
     (destination/"trajectory-errors.json").write_text(json.dumps(numeric,indent=2)+"\n",encoding="utf-8")
     return fixtures
 
