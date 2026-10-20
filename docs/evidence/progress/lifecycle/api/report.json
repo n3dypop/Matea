@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source_head": "4b6c85e4ffd9d6297ff694d65ebd26a2793b75fa",
+  "context_sha256": "e7d5b4b755599b759519a58960083e1d92d22d0de2ea349f9953ae5dc63b3519",
+  "reporter_sha256": "8c554445503d3fe502015d06134219278b8a6bff38fd1b217edb5f4014a8875d",
+  "timing_records": 10,
+  "rss_observations": 31,
+  "runs": [
+    {
+      "run": 1,
+      "summaries": {
+        "progress/api_configure_formatters_glyph_errors": {
+          "p50_ns": 673.3677978515625,
+          "p95_ns": 678.8825988769531,
+          "allocations": 3,
+          "allocated_bytes": 33
+        },
+        "progress/api_clocked_fraction_controls": {
+          "p50_ns": 145.4488410949707,
+          "p95_ns": 147.06039428710938,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "progress/api_subscription_construction_reduction": {
+          "p50_ns": 44.893503189086914,
+          "p95_ns": 44.98767852783203,
+          "allocations": 1,
+          "allocated_bytes": 32
+        },
+        "progress/api_component_live_frame": {
+          "p50_ns": 2316.2562255859375,
+          "p95_ns": 2334.3175048828125,
+          "allocations": 6,
+          "allocated_bytes": 1915
+        },
+        "progress/api_borrowed_iterator_boundaries": {
+          "p50_ns": 310.5926513671875,
+          "p95_ns": 311.7084503173828,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "run": 2,
+      "summaries": {
+        "progress/api_configure_formatters_glyph_errors": {
+          "p50_ns": 671.1298522949219,
+          "p95_ns": 675.5040588378906,
+          "allocations": 3,
+          "allocated_bytes": 33
+        },
+        "progress/api_clocked_fraction_controls": {
+          "p50_ns": 145.8892822265625,
+          "p95_ns": 147.3271026611328,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "progress/api_subscription_construction_reduction": {
+          "p50_ns": 44.85583305358887,
+          "p95_ns": 44.92131805419922,
+          "allocations": 1,
+          "allocated_bytes": 32
+        },
+        "progress/api_component_live_frame": {
+          "p50_ns": 2314.2496948242188,
+          "p95_ns": 2321.528076171875,
+          "allocations": 6,
+          "allocated_bytes": 1915
+        },
+        "progress/api_borrowed_iterator_boundaries": {
+          "p50_ns": 310.5214385986328,
+          "p95_ns": 312.97047424316406,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    }
+  ],
+  "rss_group_bytes": {
+    "p50": 2441216,
+    "p95": 2441216,
+    "min": 2424832,
+    "max": 2441216
+  },
+  "limits": [
+    "Five additional current-binary Rust API controls; construction/drop, clock reads, formatter ownership, subscriptions, input response/live frame and iterator boundary work are included explicitly.",
+    "No upstream timing ratio, whole-runtime/TTY performance or universal optimum follows.",
+    "All production library/manifests/lock inputs are byte-identical to prior 27-case String candidate; existing distributions retain that exact historical caller/binary and are not relabeled current whole-binary timing.",
+    "20ms confirmed calibration, all 31 positive samples, separate allocator pass, two unfiltered cohorts, no local build/test/LLVM/Miri/download overlap.",
+    "RSS is 31 distinct whole-output-group child processes after timing; not per-operation residency."
+  ]
+}

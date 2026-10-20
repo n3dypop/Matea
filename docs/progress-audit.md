@@ -1,5 +1,10 @@
 # Progress component source audit
 
+The implemented module now has a [completed native performance review](progress-performance-audit.md)
+covering static frames, construction, animation, configuration, subscriptions,
+errors, iterator boundaries and scale. Full reference equivalence remains partial.
+The original measurement/CI sections below retain their historical source context.
+
 Bubbles c3bde0d166c2ca607d9864493453fd77bdcae7e4 exposes 35 progress declaration
 candidates, with no file-level platform/build conditions. All candidates now
 link to bounded Rust equivalents. This is partial feature coverage; remaining color/style/lifecycle conditions

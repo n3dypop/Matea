@@ -1,6 +1,6 @@
 # ADR 0067: Progress lifecycle, scale and owned-cell candidate
 
-Status: additional controls implemented; optimization experiment pending.
+Status: implemented; native distributions complete; current Miri/CI qualification in progress.
 
 Retain the existing six matched complete-frame workloads and six distinct
 borrowed-cell controls. Fill the measurement gaps with nine Rust lifecycle
@@ -24,3 +24,19 @@ frame probes before selecting the implementation. Additional eager cell storage
 and borrowed/consuming rendering costs must be retained, including regressions.
 No new unsafe code, mutable shared scene, renderer callback or terminal lease is
 needed. Do not promote the module merely because six static frames are fast.
+
+The first full-width snapshot reduces requests but retains unnecessary cells
+when the bar is mostly empty. Keep only the colored segment as a Surface and
+compose it with the existing empty/label text in fixed layers. This preserves
+whole-text grapheme boundaries and avoids a density heuristic. The old public
+composition independently checks nested/partial layouts and callback order.
+
+The first single-pass normalizer uses CompactString pushes and regresses in
+latency despite fewer requests. Retain that failed performance attempt. Use a
+standard owned String for normalization, then move it into the label container;
+complete normalization precedes grapheme clipping. Compare all C0/C1 controls
+and representative clusters with the prior complete-text contract. Final
+measurements resolve the observed regression and preserve adverse unchanged
+controls. Five supplementary controls close configuration, clocked mutation,
+subscription, Component adapter and iterator measurement gaps. See the
+[scoped performance review](../progress-performance-audit.md).

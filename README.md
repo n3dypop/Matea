@@ -25,8 +25,8 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current inventory covers 150 programs in 43 units, with 53 below-high axes
-(21 reference, 28 performance, 4 portability). The Rust inventory tool's bounded
+The current inventory covers 150 programs in 43 units, with 52 below-high axes
+(21 reference, 27 performance, 4 portability). The Rust inventory tool's bounded
 performance assessment reaches 75 after parser, CLI, allocation and actual-child
 RSS measurements. At 100,000 declarations, peak RSS falls from 481/574 to
 182/234 MB. An ineffective 8 KiB dispatch experiment was rejected and retained.
