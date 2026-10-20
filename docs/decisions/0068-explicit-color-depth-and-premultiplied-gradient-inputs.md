@@ -1,6 +1,6 @@
 # ADR 0068: Explicit depth at color input boundaries
 
-Status: selected for implementation; public API remains provisional.
+Status: implemented; verification in progress; public API remains provisional.
 
 Source observations expose ambiguous 8/16-bit ANSI conversion and different
 premultiplied-alpha behavior between gradient prefix and interpolation paths.
@@ -37,3 +37,11 @@ frames. Preserve all RGB8 fixtures and distributions; measure constructor and
 frame costs/allocations before keeping performance high. Run targeted Miri,
 native acceptance/LLVM and all-platform CI. Percentage geometry, hyperlink and
 whitespace-style coverage stays open; this decision does not close F5.
+
+The first retained measurement (ca7214a) found a single-stop construction control
+at 91 ns despite that path always returning its original channel projection.
+Skip unused Lab/normalization for this case after validating it. For multiple
+stops, skip integer normalization of already opaque inputs and use u32 products:
+65535² fits u32 and validated channel <= alpha bounds the quotient to u16.
+This keeps the same owned representation and adds no unsafe code. Preserve the
+first cohort and remeasure both legacy and precise controls before qualification.

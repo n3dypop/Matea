@@ -189,6 +189,28 @@ fn all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback() {
     );
 }
 
+#[test]
+fn precise_single_stop_stays_constant_for_large_ranges_and_rotated_grids() {
+    for stop in [
+        [32768, 8192, 16384, 32768],
+        [32768, 8192, 16384, 0],
+        [65535; 4],
+        [0, 0, 1, 1],
+    ] {
+        let gradient = Gradient::from_premultiplied_rgba16(&[stop]).unwrap();
+        let value = Color::rgb16(stop[0], stop[1], stop[2]);
+        for count in [1, 2, 17, usize::MAX] {
+            assert_eq!(gradient.color_at(0, count), Some(value));
+            assert_eq!(gradient.color_at(count - 1, count), Some(value));
+            assert_eq!(gradient.colors(count).nth_back(count - 1), Some(value));
+        }
+        for angle in [0.0, 45.0, 90.0, -135.0] {
+            let grid = gradient.grid(7, 3, angle).unwrap();
+            assert_eq!(grid.colors().collect::<Vec<_>>(), vec![value; 21]);
+        }
+    }
+}
+
 fn mixed_ends(
     mut actual: impl ExactSizeIterator<Item = Color> + DoubleEndedIterator + FusedIterator,
     values: Vec<Color>,

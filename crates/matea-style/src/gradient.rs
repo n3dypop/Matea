@@ -41,7 +41,7 @@ struct Stop {
     lab: [f64; 3],
 }
 
-/// Immutable stops with CIELAB coordinates computed once at construction.
+/// Immutable stops with CIELAB coordinates cached for interpolated segments.
 /// Sampling uses the reference's segmented distribution and prefix shortcut.
 /// RGB8 and precise premultiplied-RGBA16 inputs produce terminal RGB8 output.
 /// This is style color math, without image processing or background compositing.
@@ -88,6 +88,17 @@ impl Gradient {
         owned
             .try_reserve_exact(stops.len())
             .map_err(|_| GradientError::AllocationFailed)?;
+        if let [[r, g, b, _]] = stops {
+            let raw = [*r, *g, *b].map(|c| (c >> 8) as u8);
+            // A single stop always samples its raw projection, including grids;
+            // there is no segment that could read normalized endpoints or Lab.
+            owned.push(Stop {
+                raw,
+                rgb: raw,
+                lab: [0.0; 3],
+            });
+            return Ok(Self { stops: owned });
+        }
         owned.extend(stops.iter().map(|&[r, g, b, alpha]| {
             let raw = [r, g, b].map(|c| (c >> 8) as u8);
             if alpha == 0 {
@@ -97,10 +108,13 @@ impl Gradient {
                     lab: to_lab(raw),
                 }
             } else {
-                // All operands are u16 and c <= alpha. Use a wide unsigned
-                // product and preserve the source's integer division order.
-                let normalized =
-                    [r, g, b].map(|c| (u64::from(c) * 65535 / u64::from(alpha)) as u16);
+                // 65535² fits u32. Validation proves the quotient fits u16.
+                // Opaque stops already have the normalized channel values.
+                let normalized = if alpha == u16::MAX {
+                    [r, g, b]
+                } else {
+                    [r, g, b].map(|c| (u32::from(c) * 65535 / u32::from(alpha)) as u16)
+                };
                 Stop {
                     raw,
                     rgb: normalized.map(|c| (c >> 8) as u8),
