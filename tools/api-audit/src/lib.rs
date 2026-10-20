@@ -1,5 +1,6 @@
 //! Source declaration inventory; macro/cfg resolution is deliberately not claimed.
 use quote::ToTokens;
+use std::fmt::Write as _;
 use std::{
     fmt, fs,
     io::{self, Write},
@@ -55,12 +56,39 @@ fn public(v: &Visibility) -> bool {
     matches!(v, Visibility::Public(_))
 }
 fn attrs(attrs: &[syn::Attribute]) -> String {
-    attrs
+    let mut output = String::new();
+    for attr in attrs
         .iter()
         .filter(|a| a.path().is_ident("cfg") || a.path().is_ident("cfg_attr"))
-        .map(|a| a.to_token_stream().to_string())
-        .collect::<Vec<_>>()
-        .join(" ")
+    {
+        if !output.is_empty() {
+            output.push(' ');
+        }
+        if let syn::Meta::List(list) = &attr.meta
+            && matches!(list.delimiter, syn::MacroDelimiter::Paren(_))
+        {
+            // Preserve the pinned TokenStream spelling while borrowing the
+            // existing list tokens. Reconstructing #/[...]/(...) duplicates the
+            // complete group and then allocates another Vec and joined String.
+            write!(
+                output,
+                "# {}[{} ({})]",
+                if matches!(attr.style, syn::AttrStyle::Inner(_)) {
+                    "! "
+                } else {
+                    ""
+                },
+                list.path.to_token_stream(),
+                list.tokens
+            )
+            .expect("String formatting cannot fail");
+        } else {
+            // Lexical inventory also accepts syntactically valid path/value
+            // attributes even when cfg evaluation would reject their meaning.
+            write!(output, "{}", attr.to_token_stream()).expect("String formatting cannot fail");
+        }
+    }
+    output
 }
 fn conditions(parent: &str, own: &[syn::Attribute]) -> String {
     let own = attrs(own);
@@ -264,8 +292,103 @@ pub fn audit_source(
     file: &str,
     source: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let parsed = syn::parse_file(source)?;
-    items(out, file, &parsed.items, "", &attrs(&parsed.attrs))?;
+    use syn::parse::Parser;
+    let clean = source.strip_prefix('\u{feff}').unwrap_or(source);
+    // Keep syn's complete shebang/comment disambiguation for uncommon prefixes.
+    // Ordinary files and compact inner attributes use the bounded AST path.
+    if clean.starts_with("#!") && !clean.starts_with("#![") {
+        let parsed = syn::parse_file(source)?;
+        items(out, file, &parsed.items, "", &attrs(&parsed.attrs))?;
+        return Ok(());
+    }
+    let mut bytes = Vec::new();
+    (|input: syn::parse::ParseStream<'_>| {
+        let inner = input.call(syn::Attribute::parse_inner)?;
+        stream_items(input, &mut bytes, file, "", &attrs(&inner), false)
+    })
+    .parse_str(clean)?;
+    // A later parse error must not publish an earlier declaration from this
+    // file. Buffer bytes rather than retaining its complete AST.
+    out.write_all(&bytes)?;
+    Ok(())
+}
+
+fn module_ahead(input: syn::parse::ParseStream<'_>) -> bool {
+    use proc_macro2::Delimiter;
+    let mut cursor = input.cursor();
+    while let Some((punct, after)) = cursor.punct() {
+        if punct.as_char() != '#' {
+            break;
+        }
+        let Some((_, _, rest)) = after.group(Delimiter::Bracket) else {
+            return false;
+        };
+        cursor = rest;
+    }
+    let Some((mut word, mut rest)) = cursor.ident() else {
+        return false;
+    };
+    if word == "pub" {
+        if let Some((_, _, after)) = rest.group(Delimiter::Parenthesis) {
+            rest = after;
+        }
+        let Some((next, after)) = rest.ident() else {
+            return false;
+        };
+        word = next;
+        rest = after;
+    }
+    if word == "unsafe" {
+        let Some((next, _)) = rest.ident() else {
+            return false;
+        };
+        word = next;
+    }
+    word == "mod"
+}
+
+fn stream_items(
+    input: syn::parse::ParseStream<'_>,
+    out: &mut Vec<u8>,
+    file: &str,
+    prefix: &str,
+    parent: &str,
+    ignored: bool,
+) -> syn::Result<()> {
+    while !input.is_empty() {
+        if !module_ahead(input) {
+            let item: Item = input.parse()?;
+            if !ignored {
+                items(out, file, std::slice::from_ref(&item), prefix, parent)
+                    .expect("Vec output cannot fail");
+            }
+            continue;
+        }
+        let line = input.span().start().line;
+        let mut attributes = input.call(syn::Attribute::parse_outer)?;
+        let visibility: Visibility = input.parse()?;
+        let _: Option<syn::Token![unsafe]> = input.parse()?;
+        let _: syn::Token![mod] = input.parse()?;
+        let ident: syn::Ident = input.parse()?;
+        let name = format!("{prefix}{ident}");
+        if input.peek(syn::Token![;]) {
+            let _: syn::Token![;] = input.parse()?;
+            let cfg = format!("{parent} {}", attrs(&attributes));
+            if !ignored && ident != "tests" && !cfg.contains("cfg (test)") && public(&visibility) {
+                emit(out, file, line, "module", &name, &cfg).expect("Vec output cannot fail");
+            }
+        } else {
+            let content;
+            syn::braced!(content in input);
+            attributes.extend(content.call(syn::Attribute::parse_inner)?);
+            let cfg = format!("{parent} {}", attrs(&attributes));
+            let ignored = ignored || ident == "tests" || cfg.contains("cfg (test)");
+            if !ignored && public(&visibility) {
+                emit(out, file, line, "module", &name, &cfg).expect("Vec output cannot fail");
+            }
+            stream_items(&content, out, file, &format!("{name}::"), &cfg, ignored)?;
+        }
+    }
     Ok(())
 }
 fn walk(out: &mut impl Write, root: &Path, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
@@ -323,6 +446,120 @@ pub fn audit(out: &mut impl Write, root: &Path) -> Result<(), Box<dyn std::error
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn incremental_items_match_whole_file_parser_including_module_boundaries() {
+        let fixtures = [
+            "",
+            "\u{feff}pub const BOM: u8 = 0;",
+            "#!/usr/bin/env rust-script\npub const SCRIPT: u8 = 0;",
+            "#! /* inner attribute, not a shebang */ [allow(unused)]\npub struct Tea;",
+            r#"#![cfg(any(unix, windows))]
+                /// A module doc comment.
+                #[cfg(feature = "tea")]
+                pub mod outer {
+                    #![cfg_attr(unix, allow(unused))]
+                    pub(in crate::outer) mod private { pub const V: u8 = 0; }
+                    pub(crate) mod restricted;
+                    pub unsafe mod external;
+                    mod hidden { pub struct S { pub field: u8 } }
+                    pub mod empty {}
+                    pub mod r#type { pub enum E { V { value: u8 } } }
+                    pub mod tests { pub const NOT_EMITTED: u8 = 0; }
+                    #[cfg(test)] pub mod also_ignored { pub fn hidden() {} }
+                    #[cfg(any(test, unix))] pub mod retained { pub trait T { fn run(); } }
+                    pub mod inner { #![cfg(test)] pub const HIDDEN: u8 = 0; }
+                }
+                pub fn f() { mod local { pub const LOCAL: u8 = 0; } }
+                macro_rules! r#mod { () => {} }
+                r#mod!();
+                pub use outer::*;
+                impl outer::hidden::S { pub fn call(&self) {} }
+            "#,
+            "#[cfg[unix]] pub mod m { #[cfg{unix}] pub const C: u8 = 0; }",
+        ];
+        for source in fixtures {
+            let parsed = syn::parse_file(source).unwrap();
+            let mut expected = Vec::new();
+            items(
+                &mut expected,
+                "抹茶.rs",
+                &parsed.items,
+                "",
+                &attrs(&parsed.attrs),
+            )
+            .unwrap();
+            let mut actual = Vec::new();
+            audit_source(&mut actual, "抹茶.rs", source).unwrap();
+            assert_eq!(actual, expected, "{source}");
+        }
+    }
+
+    #[test]
+    fn later_syntax_errors_never_publish_partial_file_declarations() {
+        for source in [
+            "pub const GOOD: u8 = 0; pub struct",
+            "pub mod m { pub const GOOD: u8 = 0; pub struct }",
+            "pub mod tests { pub struct }",
+            "#[cfg(test)] pub mod ignored { pub struct }",
+            "pub mod m { pub const GOOD: u8 = 0; } trailing tokens",
+            "#!/bin/rust\npub const GOOD: u8 = 0; pub struct",
+        ] {
+            assert!(syn::parse_file(source).is_err());
+            let mut output = b"earlier file\n".to_vec();
+            assert!(audit_source(&mut output, "bad.rs", source).is_err());
+            assert_eq!(output, b"earlier file\n", "{source}");
+        }
+    }
+
+    #[test]
+    fn public_source_path_propagates_short_writes_and_failures() {
+        struct ShortWriter {
+            remaining: usize,
+            bytes: Vec<u8>,
+        }
+        impl Write for ShortWriter {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if self.remaining == 0 {
+                    return Err(io::Error::new(io::ErrorKind::BrokenPipe, "source fixture"));
+                }
+                let length = bytes.len().min(self.remaining).min(7);
+                self.bytes.extend_from_slice(&bytes[..length]);
+                self.remaining -= length;
+                Ok(length)
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        for source in [
+            "pub mod m { pub const C: u8 = 0; }",
+            "#!/bin/rust\npub const C:u8=0;",
+        ] {
+            let mut expected = Vec::new();
+            audit_source(&mut expected, "fixture.rs", source).unwrap();
+            for limit in 0..=expected.len() {
+                let mut writer = ShortWriter {
+                    remaining: limit,
+                    bytes: Vec::new(),
+                };
+                let result = audit_source(&mut writer, "fixture.rs", source);
+                assert_eq!(writer.bytes, expected[..limit]);
+                if limit < expected.len() {
+                    assert_eq!(
+                        result
+                            .unwrap_err()
+                            .downcast_ref::<io::Error>()
+                            .unwrap()
+                            .kind(),
+                        io::ErrorKind::BrokenPipe
+                    );
+                } else {
+                    result.unwrap();
+                }
+            }
+        }
+    }
 
     #[test]
     fn borrowed_json_preserves_unicode_and_escapes_without_changing_bytes() {

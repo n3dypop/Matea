@@ -18,6 +18,27 @@ def go_environment():
 
 
 class SourceAuditorTests(unittest.TestCase):
+    def test_rust_cfg_spelling_preserves_inner_nested_multiple_path_and_value_forms(self):
+        text='''#![cfg(any(unix, windows))]
+#[cfg(all(feature="tea",not(windows)))]
+#[cfg_attr(feature="other", repr(C))]
+pub struct Tea { #[cfg(target_pointer_width="64")] pub cups: u64 }
+#[cfg]
+pub const PATH: u8=0;
+#[cfg="literal"]
+pub const VALUE:u8=0;
+pub mod nested { #![cfg_attr(unix, allow(unused))] pub const C:u8=0; }
+#[cfg[unix]] pub const BRACKET:u8=0;
+#[cfg{unix}] pub const BRACE:u8=0;
+'''
+        with tempfile.TemporaryDirectory() as folder:
+            Path(folder,'fixture.rs').write_text(text,encoding='utf-8')
+            r=subprocess.run([str(self.auditor()),folder],capture_output=True,check=True,timeout=15)
+        actual={row['symbol']:row['cfg'] for row in map(json.loads,r.stdout.splitlines())}
+        base='# ! [cfg (any (unix , windows))]'
+        tea=base+' # [cfg (all (feature = "tea" , not (windows)))] # [cfg_attr (feature = "other" , repr (C))]'
+        self.assertEqual(actual,{'Tea':tea,'Tea.cups':tea+' # [cfg (target_pointer_width = "64")]','PATH':base+' # [cfg]','VALUE':base+' # [cfg = "literal"]','nested':base+' # ! [cfg_attr (unix , allow (unused))]','nested::C':base+' # ! [cfg_attr (unix , allow (unused))]','BRACKET':base+' # [cfg [unix]]','BRACE':base+' # [cfg { unix }]'})
+
     def auditor(self):
         target = Path(os.environ.get("CARGO_TARGET_DIR", ROOT / "target"))
         return target / "debug" / ("matea-api-audit.exe" if os.name == "nt" else "matea-api-audit")

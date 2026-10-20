@@ -25,15 +25,15 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The owned-scene/Ratatui adapter increment now covers 147 programs in 43 units.
-All 44 local acceptance commands pass, LLVM observes 90 source paths / 96
-compiler instances, and 17 targeted Miri tests pass. Twelve source/widget frames
-match completely; three performance trials retain 144 timing and 72 output
-records. Import caching/batching reduces measured latency but retains conversion
-overhead. See the [audit and limits](docs/ratatui-bridge-audit.md).
-There are 60 below-high axes (21 reference, 30 performance, 9 awaiting new CI).
-The stricter scope and changed files are explicitly requalified; no score is
-raised from historical CI. Stage A continues; Stage B and F5 remain closed.
+The current inventory covers 149 programs in 43 units, with 53 below-high axes
+(21 reference, 30 performance, 2 portability). The
+[2948000 CI run](https://github.com/n3dypop/Matea/actions/runs/39227162508) passes all
+seven required jobs: three native OS jobs, three pinned source/probe jobs and MSRV.
+Exact hashes and 44 acceptance checks per OS qualify eight unchanged portability
+units; the evolving source auditor and its regression suite remain pending.
+[Evidence and limits](docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json).
+The auditor now validates incremental syntax and file-atomic output; memory and
+latency trials are in progress. Stage A continues; Stage B and F5 remain closed.
 
 The last fully qualified highlight checkpoint has 138 programs in 42 units,
 with 49 assessments below the high threshold. That checkpoint passes 39 native acceptance commands, eight
