@@ -77,3 +77,8 @@ identity explicitly; it does not relabel an older whole-binary timing as current
 Native/Miri/CI evidence remains source-scoped and failures stay retained.
 
 [Decision and ownership boundaries](decisions/0067-progress-lifecycle-scale-and-owned-cell-candidate.md).
+
+Additional [source color/style analysis](progress-color-scope-audit.md) reproduces
+a low-intensity ANSI conversion jump that the existing Rust gradient avoids,
+and confirms unresolved percentage geometry. These findings keep the reference
+assessment partial; performance qualification does not imply full feature parity.
