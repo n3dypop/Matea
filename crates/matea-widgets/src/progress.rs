@@ -270,7 +270,7 @@ impl Progress {
             // Normalize once without an intermediate newline replacement and
             // growing String. Keep complete UTF-8 before EGC clipping, since a
             // discarded tail could otherwise split a combining cluster.
-            let mut normalized = CompactString::with_capacity(label.len());
+            let mut normalized = String::with_capacity(label.len());
             for c in label.chars() {
                 match c {
                     '\n' | '\r' => normalized.push(' '),
@@ -279,7 +279,7 @@ impl Progress {
                     c => normalized.push(c),
                 }
             }
-            label = normalized;
+            label = normalized.into();
         }
         let mut label_width = 0;
         let mut end = 0;
