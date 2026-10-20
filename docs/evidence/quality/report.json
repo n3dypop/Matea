@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 149,
+  "programs": 150,
   "review_units": 43,
   "below_high": [
     {
@@ -214,12 +214,6 @@
       "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
     },
     {
-      "unit": "matea-widgets/progress",
-      "dimension": "performance",
-      "score": 50,
-      "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
-    },
-    {
       "unit": "matea-widgets/textinput",
       "dimension": "reference",
       "score": 50,
@@ -244,28 +238,10 @@
       "reason": "31 release-process samples for all 12 snapshot examples, complete deterministic outputs, expected content and dashboard golden. Includes spawn/pipe/exit; interactive lifecycle, resident memory and physical terminals remain unmeasured."
     },
     {
-      "unit": "tools/api-audit",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New fixed-tree/library/phase-benchmark paths need native Linux, macOS and Windows junction/invalid-byte coverage; prior CLI CI does not qualify changed source."
-    },
-    {
       "unit": "tools/perf-probe",
       "dimension": "performance",
       "score": 50,
       "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
-    },
-    {
-      "unit": "tools/go-auditor",
-      "dimension": "performance",
-      "score": 50,
-      "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
-    },
-    {
-      "unit": "tools/go-auditor",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New real-root, regular-entry and UTF-8-identity paths and junction/FIFO/invalid-byte tests are being qualified. Prior three-OS CI does not qualify these changed Go sources."
     },
     {
       "unit": "tools/go-performance-probe",
@@ -302,12 +278,6 @@
       "dimension": "performance",
       "score": 50,
       "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
-    },
-    {
-      "unit": "scripts/regression-tests",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
     },
     {
       "unit": "matea-ratatui/bridge",
@@ -1297,22 +1267,30 @@
           "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
         },
         "performance": {
-          "score": 50,
-          "reason": "Complete styled frame and separate borrowed-cell probes prepared; native distributions and lifecycle/constructor/error paths remain pending."
+          "score": 75,
+          "reason": "Bounded implemented-module scope: six matched complete frames and six separate borrowed-cell controls plus twenty native lifecycle/scale/public-API controls. Three balanced 108-record attempts and 403 distinct-child RSS observations retain all outputs, allocations, cold calls, calibration and adverse tails. Owned colored segments reduce frame requests 6 to 5; rejected CompactString normalization is replaced by measured String storage (long-label 32-33 to 15.5-15.9 us; requests 19 to 8). Full library/manifests/lock identity supports scoped reuse when supplementary callers are added. No fresh Go ratio, arbitrary-callback optimum, transport/runtime timing or universal/cross-OS speed guarantee."
         },
         "portability": {
           "score": 75,
-          "reason": "Production sources and manifests match independently bound Linux/Windows/macOS/MSRV c198c86 CI. Added actual Windows Server 2025 console readback at 3258166 verifies 36 ASCII/BMP-block frames and 2160 native cells through FrameEncoder, including model-width shrink/growth; modes, cursor, attributes and CP437/UTF-8/CP437 restoration pass. Native input bytes exactly match the independently generated macOS fixture. The bounded implemented output paths qualify; modern emulator/font/IME/SSH and the historical 2022 Go environment remain unverified."
+          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
         }
       },
       "evidence": [
         "docs/progress-audit.md",
         "crates/matea-widgets/tests/progress.rs",
         "crates/matea/tests/progress.rs",
-        "docs/evidence/windows-console-design/ci-source-bindings.json"
+        "docs/evidence/windows-console-design/ci-source-bindings.json",
+        "docs/progress-performance-audit.md",
+        "docs/evidence/progress/lifecycle/string/report.json",
+        "docs/evidence/progress/lifecycle/api/report.json",
+        "docs/evidence/progress/lifecycle/workspace-context.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/progress/lifecycle/final-miri/verification.json",
+        "docs/progress-color-scope-audit.md"
       ],
       "remaining": [
-        "Full color/format/style/input/lifecycle conditions and matched scheduling/constructor/RSS/scale performance remain pending. Native console evidence covers one Windows Server build, BMP/ASCII and no color; it does not reproduce the historical Windows Go report or establish modern terminal/font/IME coverage."
+        "General premultiplied/high-depth color input APIs and source PercentageStyle geometry, hyperlink and separate whitespace conditions remain pending. Source brightness-jump behavior is intentionally corrected, with explicit raw output evidence.",
+        "Performance is native-host evidence for the implemented contract; full runtime/transport optimization remains separate. Native Windows console evidence is one Server build/BMP-ASCII/no-color scope, not modern emulator/font/IME/SSH coverage."
       ]
     },
     {
@@ -1604,7 +1582,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
         }
       },
       "evidence": [
@@ -1612,7 +1590,8 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
-        "docs/viewport-cell-geometry.md"
+        "docs/viewport-cell-geometry.md",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1751,8 +1730,8 @@
           "reason": "Bounded native utility scope: eight output-checked parser phases with 31 samples/allocator requests, 1000/10000/100000 flat/nested scale, pinned Crossterm/Ratatui, and four fresh 16-case complete-CLI/child-RSS cohorts. Byte-identical parser prefix permits scoped reuse; 30 interleaved crossover records independently verify startup drift and wide/deep gains. Large-file residency falls 481/574 to 182/234 MB. All adverse small-process tails and rejected 8 KiB trial remain retained; one macOS host, no universal or cross-OS speed guarantee."
         },
         "portability": {
-          "score": 50,
-          "reason": "New fixed-tree/library/phase-benchmark paths need native Linux, macOS and Windows junction/invalid-byte coverage; prior CLI CI does not qualify changed source."
+          "score": 75,
+          "reason": "Exact unit sources match successful 4bbf317 Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 44 acceptance checks per OS pass. Directory junction/link/root failures, Linux arbitrary-byte paths, and applicable Unix FIFO fixtures execute through the regression suite. Windows file-symlink/FIFO and physical terminal/filesystem combinations beyond the fixtures remain unverified; newer progress probe sources are excluded."
         }
       },
       "evidence": [
@@ -1770,7 +1749,8 @@
         "docs/evidence/auditor-completion/direntry-comparison.json",
         "docs/evidence/auditor-completion/crossover-context.json",
         "docs/evidence/auditor-completion/parser-source-identity.json",
-        "docs/decisions/0064-reuse-directory-entry-types-with-owned-walk-state.md"
+        "docs/decisions/0064-reuse-directory-entry-types-with-owned-walk-state.md",
+        "docs/evidence/go-auditor-phases/ci-4bbf317/source-bindings.json"
       ],
       "remaining": [
         "Compiler-resolved exports remain a separate unresolved audit; lexical inventory is not framework parity.",
@@ -1817,7 +1797,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
+          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
         }
       },
       "evidence": [
@@ -1828,18 +1808,21 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/viewport-cell-geometry.md",
         "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md",
-        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
       ],
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
-        "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned."
+        "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned.",
+        "Qualify the added progress lifecycle and scale controls on all required CI jobs; their timing remains native-host evidence, not a cross-OS speed claim."
       ]
     },
     {
       "id": "tools/go-auditor",
       "files": [
         "tools/audit-go/main.go",
-        "tools/audit-go/main_test.go"
+        "tools/audit-go/main_test.go",
+        "tools/audit-go/measurement_test.go"
       ],
       "criteria": {
         "rust_design": {
@@ -1859,12 +1842,12 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 50,
-          "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
+          "score": 75,
+          "reason": "Bounded utility scope now includes fifteen calibrated parser/AST/full-NDJSON cases with 31 samples and requested allocations/bytes, all nine pinned Go corpora and independent 1000/10000/100000 constants/struct fields. Four 21-case complete-CLI cohorts retain 2604 actual-child RSS observations, plus current root-wrapper 21-case/651-RSS verification and 40 interleaved startup/metadata diagnostics. Complete outputs match; safety fixes and all adverse tails remain retained. One native macOS host; no Go/Rust framework speed ratio or universal optimum."
         },
         "portability": {
-          "score": 50,
-          "reason": "New real-root, regular-entry and UTF-8-identity paths and junction/FIFO/invalid-byte tests are being qualified. Prior three-OS CI does not qualify these changed Go sources."
+          "score": 75,
+          "reason": "Exact unit sources match successful 4bbf317 Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 44 acceptance checks per OS pass. Directory junction/link/root failures, Linux arbitrary-byte paths, and applicable Unix FIFO fixtures execute through the regression suite. Windows file-symlink/FIFO and physical terminal/filesystem combinations beyond the fixtures remain unverified; newer progress probe sources are excluded."
         }
       },
       "evidence": [
@@ -1874,10 +1857,21 @@
         "docs/evidence/optimization/remaining-report.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/decisions/0065-aligned-fixed-tree-contracts-for-go-source-inventory.md",
-        "docs/evidence/go-auditor-containment/before.json"
+        "docs/evidence/go-auditor-containment/before.json",
+        "docs/decisions/0066-go-source-phase-measurements-with-common-caller.md",
+        "docs/evidence/go-auditor-phases/report.json",
+        "docs/evidence/go-auditor-phases/root-final-report.json",
+        "docs/evidence/go-auditor-phases/root-crossover-context.json",
+        "docs/evidence/go-auditor-phases/parser-source-identity.json",
+        "docs/evidence/go-auditor-containment/nine-pins-output-check.json",
+        "docs/evidence/go-auditor-containment/native-context.json",
+        "docs/go-source-auditor-audit.md",
+        "docs/evidence/go-auditor-phases/ci-4bbf317/source-bindings.json",
+        "docs/evidence/go-auditor-phases/final-native-context.json"
       ],
       "remaining": [
-        "Standalone Go parser fixture validates exports/build tags; malformed input and scale distributions remain pending."
+        "Finite parser and CLI benchmarks are native-host evidence, not an exhaustive performance bound or compiler-resolved export proof.",
+        "Windows file-symlink creation/FIFO and non-Linux arbitrary-byte filesystem fixtures remain explicitly unverified; applicable directory-junction/Linux fixtures require exact-source CI."
       ]
     },
     {
@@ -2155,7 +2149,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
+          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
         }
       },
       "evidence": [
@@ -2163,7 +2157,8 @@
         "docs/evidence/optimization/remaining-report.json",
         "docs/evidence/measurement-drivers/ci-source-bindings.json",
         "docs/evidence/measurement-drivers/ci-run.json",
-        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
       ],
       "remaining": [
         "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
@@ -2212,15 +2207,16 @@
           "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
         },
         "portability": {
-          "score": 50,
-          "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 4bbf317 Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 44 acceptance checks per OS pass. Directory junction/link/root failures, Linux arbitrary-byte paths, and applicable Unix FIFO fixtures execute through the regression suite. Windows file-symlink/FIFO and physical terminal/filesystem combinations beyond the fixtures remain unverified; newer progress probe sources are excluded."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/go-auditor-phases/ci-4bbf317/source-bindings.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -2318,7 +2314,7 @@
       ]
     }
   ],
-  "plan_sha256": "cf6d2a2f5e053a407e33d067c8cf227ee0bb5a747749dde327895cfa7bb0be4c",
+  "plan_sha256": "b32bbd16b431dbe9a052996c4cacfbff1bb3236c3faadb7f7810121bef5303e7",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2412,9 +2408,9 @@
                 "percent": 89.10891089108911
               },
               "instantiations": {
-                "count": 1311,
-                "covered": 797,
-                "percent": 60.79328756674295
+                "count": 1318,
+                "covered": 800,
+                "percent": 60.69802731411229
               },
               "regions": {
                 "count": 1183,
@@ -2769,9 +2765,9 @@
                 "percent": 94.52054794520548
               },
               "instantiations": {
-                "count": 269,
-                "covered": 216,
-                "percent": 80.29739776951673
+                "count": 271,
+                "covered": 218,
+                "percent": 80.44280442804428
               },
               "regions": {
                 "count": 1364,
@@ -2871,9 +2867,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 25,
-                "covered": 14,
-                "percent": 56.00000000000001
+                "count": 26,
+                "covered": 15,
+                "percent": 57.692307692307686
               },
               "regions": {
                 "count": 145,
@@ -4263,9 +4259,9 @@
                 "percent": 95.71428571428572
               },
               "instantiations": {
-                "count": 240,
-                "covered": 141,
-                "percent": 58.75
+                "count": 258,
+                "covered": 145,
+                "percent": 56.201550387596896
               },
               "regions": {
                 "count": 541,
@@ -4598,7 +4594,7 @@
     },
     {
       "file": "crates/matea-widgets/src/progress.rs",
-      "sha256": "cd273a4d906fe212521edb429c1be674ebcb3b1cd01b5850c8b74708fcb05f6d",
+      "sha256": "b05a5bd4347a08b2cd5fc10aa7931a03d2dcdf571c3bcf47a7ec4b2d54e3ff2a",
       "units": [
         "matea-widgets/progress"
       ],
@@ -4610,25 +4606,25 @@
             "compiler_filename": "crates/matea-widgets/src/progress.rs",
             "summary": {
               "lines": {
-                "count": 349,
-                "covered": 300,
-                "percent": 85.95988538681948
+                "count": 395,
+                "covered": 355,
+                "percent": 89.87341772151899
               },
               "functions": {
                 "count": 55,
-                "covered": 46,
-                "percent": 83.63636363636363
+                "covered": 50,
+                "percent": 90.9090909090909
               },
               "instantiations": {
-                "count": 114,
-                "covered": 47,
-                "percent": 41.228070175438596
+                "count": 134,
+                "covered": 67,
+                "percent": 50
               },
               "regions": {
-                "count": 542,
-                "covered": 457,
-                "notcovered": 85,
-                "percent": 84.31734317343174
+                "count": 619,
+                "covered": 537,
+                "notcovered": 82,
+                "percent": 86.75282714054927
               },
               "branches": {
                 "count": 0,
@@ -5006,7 +5002,7 @@
     },
     {
       "file": "crates/matea-widgets/tests/progress.rs",
-      "sha256": "a8dea1626d93071cf789aab6ee1d2386d6da0c49f128d4d31fe7e1147a2c1a89",
+      "sha256": "5b55659097f855bbb7ff4b90884518f348619baf9c5943789f0b3708d98b8968",
       "units": [
         "matea-widgets/integration-tests"
       ],
@@ -5018,25 +5014,25 @@
             "compiler_filename": "crates/matea-widgets/tests/progress.rs",
             "summary": {
               "lines": {
-                "count": 263,
-                "covered": 261,
-                "percent": 99.23954372623575
+                "count": 355,
+                "covered": 353,
+                "percent": 99.43661971830986
               },
               "functions": {
-                "count": 16,
-                "covered": 16,
+                "count": 24,
+                "covered": 24,
                 "percent": 100
               },
               "instantiations": {
-                "count": 16,
-                "covered": 16,
+                "count": 24,
+                "covered": 24,
                 "percent": 100
               },
               "regions": {
-                "count": 630,
-                "covered": 628,
+                "count": 826,
+                "covered": 824,
                 "notcovered": 2,
-                "percent": 99.68253968253968
+                "percent": 99.75786924939467
               },
               "branches": {
                 "count": 0,
@@ -6578,7 +6574,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "ca1c5f9fba7dd1cb0d74e3b7e061ab020948c8377b7f155cdc0966c7fc3f72a2",
+      "sha256": "caf3fa91485e8949216c12a18a5a8f38e1164605e1a05a1bc094f4cfa95f5d56",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6802,7 +6798,7 @@
     },
     {
       "file": "scripts/test_source_auditors.py",
-      "sha256": "e6f1f23fae2c0012648f839591d7e9683936354289d1a13bd830b3fa7e444002",
+      "sha256": "9675a6cb2eeff0ef20811aacd118a0e7e69b2d201268b37e1ca2d8c121ad5fe3",
       "units": [
         "scripts/regression-tests"
       ],
@@ -6826,7 +6822,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "8c1388713d488b803867bea69c4755884541cf25a890f6c7b889615c6ede55d2",
+      "sha256": "e770e70e57b60253c364e18e97ab4fbd2a9d65193ecbb482243ae74c312ad9ee",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6995,7 +6991,7 @@
     },
     {
       "file": "tools/audit-go/main.go",
-      "sha256": "447a0ad8eee60e65c75fe69e72bf31486365c404fd5e4670e12cbc0c33f44b7a",
+      "sha256": "7f5f4a700e2e74f8b1fe17f13e237167845abdea449b08df221bbc634789b837",
       "units": [
         "tools/go-auditor"
       ],
@@ -7003,7 +6999,15 @@
     },
     {
       "file": "tools/audit-go/main_test.go",
-      "sha256": "9b8160217b2a1ed2a15f7992aa03e45346e4e79c6ed6e3b455a100e106d9f4fc",
+      "sha256": "498bb324f926312a667aaff4a4f5591a995222217dee1c36e4268a7013b19c93",
+      "units": [
+        "tools/go-auditor"
+      ],
+      "native_execution_coverage": null
+    },
+    {
+      "file": "tools/audit-go/measurement_test.go",
+      "sha256": "97201da2c09d74cce8d83c06b0f1671802a1079c68aefc2f72bb970ae68906b9",
       "units": [
         "tools/go-auditor"
       ],
@@ -7113,7 +7117,7 @@
     },
     {
       "file": "tools/perf-probe/src/main.rs",
-      "sha256": "e00aaa528dde72f1582f4fcc974bc4ae47971967e185485e596615a90c7b0101",
+      "sha256": "d3a6d7d50aafb74ad26f0e1b049ba8b8f6238d8b95dab0efa5513c6d5abd18f3",
       "units": [
         "tools/perf-probe"
       ],
@@ -7125,25 +7129,25 @@
             "compiler_filename": "tools/perf-probe/src/main.rs",
             "summary": {
               "lines": {
-                "count": 1615,
-                "covered": 1610,
-                "percent": 99.69040247678018
+                "count": 1625,
+                "covered": 1620,
+                "percent": 99.6923076923077
               },
               "functions": {
-                "count": 131,
-                "covered": 130,
-                "percent": 99.23664122137404
+                "count": 133,
+                "covered": 132,
+                "percent": 99.24812030075188
               },
               "instantiations": {
-                "count": 262,
-                "covered": 130,
-                "percent": 49.61832061068702
+                "count": 266,
+                "covered": 132,
+                "percent": 49.62406015037594
               },
               "regions": {
-                "count": 2584,
-                "covered": 2579,
+                "count": 2600,
+                "covered": 2595,
                 "notcovered": 5,
-                "percent": 99.80650154798761
+                "percent": 99.8076923076923
               },
               "branches": {
                 "count": 0,
@@ -7303,9 +7307,9 @@
                 "percent": 83.72093023255815
               },
               "instantiations": {
-                "count": 1087,
-                "covered": 469,
-                "percent": 43.146274149034035
+                "count": 1123,
+                "covered": 472,
+                "percent": 42.03027604630454
               },
               "regions": {
                 "count": 509,
@@ -7371,7 +7375,7 @@
     },
     {
       "file": "tools/perf-probe/src/progress.rs",
-      "sha256": "fc4de10255a7181bf8df7e69a3b21e8108a65fa7b6ea54789940a0e770f06b48",
+      "sha256": "1aeec217d9644420c82d6712597b76bb4d563f8a49ed350aafc3b14dbc37ac3c",
       "units": [
         "tools/perf-probe"
       ],
@@ -7383,25 +7387,25 @@
             "compiler_filename": "tools/perf-probe/src/progress.rs",
             "summary": {
               "lines": {
-                "count": 159,
-                "covered": 113,
-                "percent": 71.0691823899371
+                "count": 436,
+                "covered": 388,
+                "percent": 88.9908256880734
               },
               "functions": {
-                "count": 12,
-                "covered": 10,
-                "percent": 83.33333333333334
+                "count": 26,
+                "covered": 24,
+                "percent": 92.3076923076923
               },
               "instantiations": {
-                "count": 24,
-                "covered": 10,
-                "percent": 41.66666666666667
+                "count": 49,
+                "covered": 34,
+                "percent": 69.38775510204081
               },
               "regions": {
-                "count": 273,
-                "covered": 190,
-                "notcovered": 83,
-                "percent": 69.59706959706959
+                "count": 874,
+                "covered": 789,
+                "notcovered": 85,
+                "percent": 90.2745995423341
               },
               "branches": {
                 "count": 0,

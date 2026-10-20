@@ -15,6 +15,8 @@ Go監査は15解析・105 CLI・3,255 RSS標本を検証し、性能評価も75�
 低速化した中間案を撤回し、全試行・403 RSSログを保持しています。[性能評価](progress-performance-audit.md)。
 [2fdf2feの必須7ジョブ](https://github.com/n3dypop/Matea/actions/runs/39436824456)が成功し、45検証／OSと5新規操作の出力を照合。
 Miriも進捗バー10＋facade 2が成功し、変更4単位の移植性を75へ更新しました。
+評価表更新後のローカル45検証、Rust262＋7 doctest、Python142（条件付きskip 2）、LLVM92 source／99 instanceも成功しています。
+LLVMの依存hashbrown由来3警告は診断を保存し、厳密な全分岐・安全性の証明とは扱いません。
 [色変換の参照元課題と未実装の色／style条件](progress-color-scope-audit.md)を調査し、残りの実装を継続します。
 未対応付け6,696宣言、部分／未測定20能力、未分析／再確認待ち825 issueは残ります。
 Stage Aを継続し、Stage B／F5は閉じています。以下は過去の各ソース時点の検証履歴です。
