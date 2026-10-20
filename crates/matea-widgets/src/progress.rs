@@ -4,7 +4,7 @@ use crate::{ClockId, ClockSchedule, ClockTick, Stopwatch, TickInterval};
 use compact_str::{CompactString, format_compact};
 use matea_core::{Component, Input, Response, Subscription};
 use matea_motion::{Motion, MotionError, Spring};
-use matea_render::{Rect, Size, Surface, View, sanitize};
+use matea_render::{Rect, Size, Surface, View};
 use matea_style::{Color, Gradient, Style, Theme};
 use std::{
     fmt,
@@ -266,11 +266,20 @@ impl Progress {
         } else {
             format_compact!(" {:3.0}%", percent * 100.0)
         };
-        if label.contains(['\n', '\r']) {
-            label = label.replace(['\n', '\r'], " ").into();
-        }
         if label.chars().any(char::is_control) {
-            label = sanitize(&label).into();
+            // Normalize once without an intermediate newline replacement and
+            // growing String. Keep complete UTF-8 before EGC clipping, since a
+            // discarded tail could otherwise split a combining cluster.
+            let mut normalized = CompactString::with_capacity(label.len());
+            for c in label.chars() {
+                match c {
+                    '\n' | '\r' => normalized.push(' '),
+                    '\t' => normalized.push_str("    "),
+                    c if c.is_control() => normalized.push('\u{fffd}'),
+                    c => normalized.push(c),
+                }
+            }
+            label = normalized;
         }
         let mut label_width = 0;
         let mut end = 0;
@@ -417,7 +426,7 @@ impl ProgressFrame<'_> {
             // Each colored glyph was already a separate text child. Retain
             // that boundary; the uniform empty run and label keep their own
             // whole-text grapheme segmentation (including regional indicators).
-            let mut surface = Surface::new(Size::new(self.progress.width, 1))
+            let mut surface = Surface::new(Size::new(self.filled as u16, 1))
                 .expect("one u16-width row fits the surface limit");
             for (x, cell) in self.cells().take(self.filled).enumerate() {
                 let mut utf8 = [0; 4];
@@ -428,28 +437,35 @@ impl ProgressFrame<'_> {
                     cell.style,
                 );
             }
+            // Retain only the colored segment. A mostly empty, wide bar must
+            // not hold a second full-width cell grid before rendering.
+            let mut layers = Vec::with_capacity(3);
+            layers.push((
+                Rect::new(0, 0, self.filled as u16, 1),
+                View::surface(surface),
+            ));
             let empty_width = (self.width - self.filled) as u16;
             if empty_width != 0 {
-                surface
-                    .canvas(Rect::new(self.filled as u16, 0, empty_width, 1))
-                    .text(
-                        self.filled as u16,
-                        0,
-                        &repeat(self.progress.empty, usize::from(empty_width)),
+                layers.push((
+                    Rect::new(self.filled as u16, 0, empty_width, 1),
+                    View::styled(
+                        repeat(self.progress.empty, usize::from(empty_width)),
                         self.empty_style,
-                    );
+                    ),
+                ));
             }
             if !self.label.is_empty() {
-                surface
-                    .canvas(Rect::new(
+                layers.push((
+                    Rect::new(
                         self.width as u16,
                         0,
                         self.progress.width - self.width as u16,
                         1,
-                    ))
-                    .text(self.width as u16, 0, &self.label, self.label_style);
+                    ),
+                    View::styled(self.label.as_str(), self.label_style),
+                ));
             }
-            return View::surface(surface).width(self.progress.width).height(1);
+            return View::layers(layers).width(self.progress.width).height(1);
         }
         let mut children = Vec::new();
         if self.filled != 0 {

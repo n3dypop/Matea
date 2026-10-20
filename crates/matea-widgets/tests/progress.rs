@@ -298,6 +298,46 @@ fn narrow_formatting_is_single_line_sanitized_and_grapheme_clipped() {
     assert_eq!(frame.label(), "茶");
     assert_eq!(frame.view().render(Size::new(3, 1)).unwrap().plain(), "▌茶");
 }
+
+#[test]
+fn single_pass_label_normalization_matches_previous_complete_text_contract() {
+    use unicode_segmentation::UnicodeSegmentation;
+    use unicode_width::UnicodeWidthStr;
+    let mut labels = vec![
+        "\r\n\t\x1b".to_owned(),
+        "e\u{301}茶\n\u{1b}".repeat(1024),
+        "🇯🇵\t👩‍💻\r\n\u{301}A".to_owned(),
+    ];
+    for code in (0..=31).chain(127..=159) {
+        let c = char::from_u32(code).unwrap();
+        labels.push(format!("e\u{301}{c}\u{301}茶🇯🇵{c}👩‍💻"));
+    }
+    for raw in labels {
+        let normalized = matea_render::sanitize(&raw.replace(['\n', '\r'], " "));
+        for width in [0, 1, 2, 3, 5, 17, 80, u16::MAX] {
+            let mut p = Progress::new();
+            p.set_width(width);
+            let text = raw.clone();
+            p.set_percentage_formatter(move |_| text.clone());
+            let mut cells = 0;
+            let expected: String = normalized
+                .graphemes(true)
+                .take_while(|g| {
+                    let next = cells + g.width();
+                    if next > usize::from(width) {
+                        false
+                    } else {
+                        cells = next;
+                        true
+                    }
+                })
+                .collect();
+            let frame = p.frame_as(0.625, &theme()).unwrap();
+            assert_eq!(frame.label(), expected, "width={width}, input={raw:?}");
+            assert_eq!(frame.bar_width(), usize::from(width) - cells);
+        }
+    }
+}
 #[test]
 fn reduced_motion_uses_target_suppresses_schedules_and_can_snap_state() {
     let origin = Instant::now();
