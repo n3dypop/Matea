@@ -116,6 +116,11 @@ def collect(root):
         run([str(probe)], "coverage-probe-outputs.log")
         if len(read_probe_outputs((OUT / "coverage-probe-outputs.log").read_text(encoding="utf-8"))) != 84:
             raise ValueError("incomplete instrumented correctness records")
+        for mode, count in [("progress-lifecycle", 15), ("progress-api-controls", 5)]:
+            log = "coverage-probe-" + mode + "-outputs.log"
+            run([str(probe), "--" + mode], log)
+            if len(read_probe_outputs((OUT / log).read_text(encoding="utf-8"))) != count:
+                raise ValueError("incomplete instrumented " + mode + " records")
     finally:
         env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
 
