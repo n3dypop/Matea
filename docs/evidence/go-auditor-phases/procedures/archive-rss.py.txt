@@ -1,0 +1,26 @@
+"""Archive flat RSS logs losslessly; originals remain local and Git-ignored."""
+import gzip,hashlib,io,json,tarfile
+from pathlib import Path
+if not __debug__:raise RuntimeError('archival verification refuses -O')
+base=Path.cwd()/'docs/evidence/go-auditor-phases';sha=lambda b:hashlib.sha256(b).hexdigest();index={}
+for folder in sorted(p for p in base.iterdir() if p.is_dir()):
+ files=sorted(folder.glob('rss-*.txt'))
+ if not files:continue
+ archive=folder/'rss-raw.tar.gz'
+ with archive.open('wb') as raw:
+  with gzip.GzipFile(filename='',fileobj=raw,mode='wb',mtime=0) as compressed:
+   with tarfile.open(fileobj=compressed,mode='w',format=tarfile.USTAR_FORMAT) as tar:
+    for path in files:
+     data=path.read_bytes();info=tarfile.TarInfo(path.name);info.size=len(data);info.mode=0o644;info.mtime=0
+     tar.addfile(info,io.BytesIO(data))
+ members={p.name:sha(p.read_bytes()) for p in files}
+ with tarfile.open(archive,'r:gz') as tar:
+  restored={m.name:sha(tar.extractfile(m).read()) for m in tar.getmembers() if m.isfile() and Path(m.name).name==m.name}
+ assert restored==members,folder
+ context=folder/'context.json';assert context.is_file()
+ ctx=json.loads(context.read_text())
+ for name,digest in members.items():
+  if name in ctx.get('raw_sha256',{}):assert ctx['raw_sha256'][name]==digest
+ index[folder.name]={'archive_sha256':sha(archive.read_bytes()),'context_sha256':sha(context.read_bytes()),'members':members,'count':len(members)}
+(base/'rss-archive-index.json').write_text(json.dumps({'schema':1,'archives':index,'limits':['Lossless storage only; original contexts and measurement outcomes are not changed.','Earlier attribute-only contexts hash fewer raw artifacts; this archive index is a later integrity record, not retrospective proof of their initial capture.']},indent=2)+'\n')
+print('Losslessly archived',sum(v['count'] for v in index.values()),'raw RSS observations')

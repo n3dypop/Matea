@@ -1,0 +1,77 @@
+"""Collect one parser cohort or one complete CLI/RSS cohort, no concurrent load.
+Run in Matea; arguments: parser-current | before-1 | after-1 | after-2 | before-2.
+Peak RSS is native macOS distinct-child /usr/bin/time -l, separate from timing.
+"""
+import datetime,gzip,hashlib,json,os,platform,re,subprocess,sys,time
+from pathlib import Path
+if not __debug__:raise RuntimeError('measurement refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/go-auditor-phases';FIX=Path('/private/tmp/matea-go-phase-fixtures');sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import validate
+sha=lambda b:hashlib.sha256(b).hexdigest()
+BINS={'before':Path('/private/tmp/matea-go-auditor-before'),'after':Path('/private/tmp/matea-go-auditor-root-reuse'),'phase':Path('/private/tmp/matea-go-phase-measure.test')}
+CASES=json.load(open(FIX/'cases.json'));PUBLIC=json.load(open(BASE/'fixtures.json'))['cases']
+assert [{k:v for k,v in c.items() if k!='folder'} for c in CASES]==[{k:v for k,v in c.items() if k!='folder'} for c in PUBLIC]
+expected={c['name']:gzip.decompress((BASE/(c['name']+'-expected.jsonl.gz')).read_bytes()) for c in CASES}
+for c in CASES:assert sha(expected[c['name']])==c['expected_sha256']
+snapshot=lambda:{p:sha((ROOT/p).read_bytes()) for p in sorted(execution_inputs(ROOT))}
+def current_files(c):
+ folder=Path(c['folder']);result={}
+ def walk(path):
+  if path.is_symlink():return
+  if path.is_dir():
+   for p in sorted(path.iterdir()):
+    if p.is_dir() and p.name in {'.git','vendor','node_modules','examples','tutorials','testdata'}:continue
+    walk(p)
+  elif path.is_file() and path.suffix=='.go':result[path.relative_to(folder).as_posix()]=sha(path.read_bytes())
+ walk(folder);return result
+for c in CASES:assert current_files(c)==c['files_sha256'],c['name']
+def save(path,data):path.write_text(json.dumps(data,indent=2)+'\n')
+stage=sys.argv[1];folder=BASE/stage;folder.mkdir();sources=snapshot()
+ctx={'schema':1,'status':'running','started_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'stage':stage,'platform':platform.platform(),'source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_sha256':sources,'binary_sha256':{n:sha(p.read_bytes()) for n,p in BINS.items()},'fixtures_sha256':sha((BASE/'fixtures.json').read_bytes()),'manifest_sha256':sha((FIX/'manifest.json').read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),'go':subprocess.check_output(['go','version'],text=True).strip()};save(folder/'context.json',ctx)
+def check(result,c):
+ assert result.returncode==c['exit_code'] and result.stdout==expected[c['name']],(stage,c['name'],result.stderr)
+ if c['exit_code']==0:assert result.stderr==b''
+try:
+ if stage=='parser-current':
+  environment=dict(os.environ,MATEA_GO_AUDIT_PHASE='outputs',MATEA_AUDIT_GO_MANIFEST=str(FIX/'manifest.json'),MATEA_PERF_MIN_SAMPLE_NS='20000000')
+  command=[str(BINS['phase']),'-test.run','^TestAuditSourceMeasurement$','-test.v']
+  pre=subprocess.run(command,env=environment,capture_output=True,check=True,timeout=120);assert not pre.stderr;(folder/'outputs.log').write_bytes(pre.stdout)
+  outputs=[json.loads(s) for s in pre.stdout.splitlines() if s.startswith(b'{')];assert len(outputs)==15
+  environment['MATEA_GO_AUDIT_PHASE']='timing';print('parser-current: 15 calibrated cases',flush=True)
+  with (folder/'timing.log').open('wb') as out:subprocess.run(command,env=environment,stdout=out,check=True,timeout=900)
+  values=[validate(json.loads(s)) for s in (folder/'timing.log').read_bytes().splitlines() if s.startswith(b'{')];assert len(values)==15
+  assert {r['case']:r['output'] for r in values}=={r['case']:r['output'] for r in outputs}
+  for r in values:
+   assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20000000
+  (folder/'timing.jsonl').write_bytes(b''.join((json.dumps(r)+'\n').encode() for r in values))
+ else:
+  kind='before' if stage.startswith('before') else 'after';binary=BINS[kind]
+  print(stage,'CLI timing: 21 cases',flush=True)
+  with (folder/'cli.jsonl').open('w') as output:
+   for c in CASES:
+    samples=[];diagnostics=set()
+    for index in range(32):
+     start=time.perf_counter_ns();r=subprocess.run([str(binary),c['folder']],capture_output=True,timeout=30);elapsed=time.perf_counter_ns()-start
+     check(r,c);assert elapsed>0;diagnostics.add(sha(r.stderr))
+     if index:samples.append(elapsed)
+     else:cold=elapsed
+    output.write(json.dumps({'case':c['name'],'cold_ns':cold,'samples_ns':samples,'exit_code':r.returncode,'output_sha256':sha(r.stdout),'stderr_sha256':sorted(diagnostics),'bytes':len(r.stdout),'rows':c['rows']})+'\n');output.flush()
+  print(stage,'separate child RSS: 21 cases',flush=True)
+  with (folder/'rss.jsonl').open('w') as output:
+   for c in CASES:
+    values=[]
+    for i in range(31):
+     r=subprocess.run(['/usr/bin/time','-l',str(binary),c['folder']],capture_output=True,timeout=30)
+     assert r.returncode==c['exit_code'] and r.stdout==expected[c['name']],(stage,c['name'])
+     m=re.search(rb'(\d+)\s+maximum resident set size',r.stderr);assert m and int(m.group(1))>0
+     (folder/f'rss-{c["name"]}-{i}.txt').write_bytes(r.stderr);values.append(int(m.group(1)))
+    output.write(json.dumps({'case':c['name'],'peak_rss_bytes':values})+'\n');output.flush()
+ assert sources==snapshot(),'source changed during measurement'
+ assert ctx['binary_sha256']=={n:sha(p.read_bytes()) for n,p in BINS.items()}
+ for c in CASES:assert current_files(c)==c['files_sha256'],c['name']
+ ctx.update(status='complete',raw_sha256={p.name:sha(p.read_bytes()) for p in folder.iterdir() if p.name!='context.json'})
+except BaseException as error:ctx.update(status='failed',error=repr(error));raise
+finally:
+ ctx['finished_at_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat();save(folder/'context.json',ctx)
+print(stage,'complete',flush=True)

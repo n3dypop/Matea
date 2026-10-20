@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "source_head": "4bbf3177a1ec22bb8d8903c4138e5e911c20a4e3",
+  "scope": "exact three Go inventory utility programs only; unrelated current-tree progress edits excluded",
+  "source_sha256": {
+    "tools/audit-go/main.go": "7f5f4a700e2e74f8b1fe17f13e237167845abdea449b08df221bbc634789b837",
+    "tools/audit-go/main_test.go": "498bb324f926312a667aaff4a4f5591a995222217dee1c36e4268a7013b19c93",
+    "tools/audit-go/measurement_test.go": "97201da2c09d74cce8d83c06b0f1671802a1079c68aefc2f72bb970ae68906b9"
+  },
+  "commands": [
+    {
+      "command": "GOCACHE=/private/tmp/matea-quality-go-cache GOPROXY=off GOSUMDB=off go test -race -v tools/audit-go/main.go tools/audit-go/main_test.go tools/audit-go/measurement_test.go",
+      "exit_code": 0,
+      "log": "final-race.log",
+      "log_sha256": "7fb2861fe50fe780ef9501e1df705b33c92e46124125fb180a9d42532b9bd834"
+    },
+    {
+      "command": "same environment; go vet tools/audit-go/main.go tools/audit-go/main_test.go tools/audit-go/measurement_test.go",
+      "exit_code": 0,
+      "log": "final-vet.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limits": [
+    "Measurement test deliberately skips normal Go-test mode; native Python source-auditor tests invoke and independently verify its output-only mode.",
+    "Native macOS scope; all-platform source-bound CI archived separately."
+  ]
+}

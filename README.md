@@ -25,17 +25,21 @@ The workspace contains seven framework crates plus an independent example compon
 
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
-The current inventory covers 150 programs in 43 units, with 53 below-high axes
-(21 reference, 29 performance, 3 portability). The Rust inventory tool's bounded
+The current inventory covers 150 programs in 43 units, with 50 below-high axes
+(21 reference, 28 performance, 1 portability). The Rust inventory tool's bounded
 performance assessment reaches 75 after parser, CLI, allocation and actual-child
 RSS measurements. At 100,000 declarations, peak RSS falls from 481/574 to
 182/234 MB. An ineffective 8 KiB dispatch experiment was rejected and retained.
 [Methods, all trials and limits](docs/source-auditor-audit.md).
-The [88781a7 CI](https://github.com/n3dypop/Matea/actions/runs/39415338843) passes
-all seven required jobs. Later Go-auditor link/FIFO/root fixes pass local race,
-vet and all nine pinned output comparisons (4,882 declarations); fresh whole-tree
-native/LLVM and CI qualification are in progress. Stage A continues; Stage B and
-F5 remain closed.
+Go-auditor link/FIFO/root fixes preserve all nine pinned outputs (4,882
+declarations), with 15 parser, 105 CLI and 3,255 child-RSS observations retained.
+[Methods and limits](docs/go-source-auditor-audit.md).
+The [4bbf317 CI](https://github.com/n3dypop/Matea/actions/runs/39424522289) passes
+all seven required jobs; 190 execution inputs and 44 acceptance checks per OS
+are source-bound. Three auditor/test portability axes now qualify. New progress
+lifecycle/scale controls pass ten native tests and independent complete-cell
+checks; their all-OS qualification remains pending. Stage A continues; Stage B
+and F5 remain closed.
 
 The last fully qualified highlight checkpoint has 138 programs in 42 units,
 with 49 assessments below the high threshold. That checkpoint passes 39 native acceptance commands, eight

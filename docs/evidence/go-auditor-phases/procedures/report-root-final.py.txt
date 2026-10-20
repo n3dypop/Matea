@@ -1,0 +1,22 @@
+"""Verify the current root-wrapper's complete output/RSS supplement."""
+import hashlib,json,re,statistics,subprocess,tarfile
+from functools import lru_cache
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/go-auditor-phases';FOLDER=BASE/'after-root-final';sha=lambda b:hashlib.sha256(b).hexdigest()
+@lru_cache(maxsize=None)
+def archived():
+ with tarfile.open(FOLDER/'rss-raw.tar.gz','r:gz') as tar:return {m.name:tar.extractfile(m).read() for m in tar.getmembers() if m.isfile() and Path(m.name).name==m.name}
+def read(name):return (FOLDER/name).read_bytes() if (FOLDER/name).is_file() else archived()[name]
+ctx=json.loads(read('context.json'));assert ctx['status']=='complete'
+for n,d in ctx['raw_sha256'].items():assert sha(read(n))==d,n
+for n,d in ctx['source_sha256'].items():assert sha(subprocess.check_output(['git','show',ctx['source_head']+':'+n]))==d,n
+cases={c['name']:c for c in json.load(open(BASE/'fixtures.json'))['cases']};cli={r['case']:r for r in map(json.loads,read('cli.jsonl').splitlines())};rss={r['case']:r for r in map(json.loads,read('rss.jsonl').splitlines())};assert cli.keys()==rss.keys()==cases.keys()
+summary={}
+for n,r in cli.items():
+ c=cases[n];assert r['output_sha256']==c['expected_sha256'] and r['exit_code']==c['exit_code'] and r['bytes']==c['bytes']
+ samples=r['samples_ns'];values=[int(re.search(rb'(\d+)\s+maximum resident set size',read(f'rss-{n}-{i}.txt')).group(1)) for i in range(31)];assert len(samples)==31 and values==rss[n]['peak_rss_bytes']
+ summary[n]={'p50_ns':statistics.median(samples),'p95_ns':sorted(samples)[29],'peak_rss_bytes_p50':statistics.median(values),'output_sha256':r['output_sha256']}
+source=subprocess.check_output(['git','show',ctx['source_head']+':tools/audit-go/main.go']).split(b'// auditSource parses')[1];old=subprocess.check_output(['git','show','3df2002:tools/audit-go/main.go']).split(b'// auditSource parses')[1];assert source==old
+result={'schema':1,'status':'complete','source_head':ctx['source_head'],'context_sha256':sha(read('context.json')),'reporter_sha256':sha(Path(__file__).read_bytes()),'cases':summary,'cli_records':21,'rss_observations':651,'parser_body_sha256':sha(source),'parser_measurements':'report.json at 3df2002; source body byte-identical','limits':['Current root-wrapper supplement; earlier balanced before/after and four-way crossover remain retained.','One native host; no discarded outliers, adjusted thresholds or universal speed assertion.']}
+(BASE/'root-final-report.json').write_text(json.dumps(result,indent=2)+'\n');print('Current 21 CLI/651 RSS records and identical parser source verified')

@@ -1,7 +1,9 @@
-//! Complete static progress frame comparisons; no terminal I/O or animation.
+//! Matched static progress frames and separate native lifecycle/scale controls.
 use crate::measurement::measure;
+use matea::motion::Motion;
 use matea::prelude::*;
 use std::hint::black_box;
+use std::time::{Duration, Instant};
 
 /// Transport input for an independent native console readback test, without
 /// clock calibration or timing records. All selected symbols occupy one BMP
@@ -176,5 +178,216 @@ pub(crate) fn costs(iterations: usize) {
             &output,
             "existing configured RGB8 progress bar at fraction 0.625; format percentage and stream complete bar cells and label with FNV64; omit View and Surface materialization; no terminal I/O or animation; separate Rust control without upstream ratio",
         );
+    }
+}
+
+// These are Rust API controls. Constructor, reset and assertion work is inside
+// each operation where used; none receives a cross-language timing ratio.
+fn lifecycle_operation(case: usize, origin: Instant, theme: &Theme) -> u64 {
+    let mut progress = match case {
+        1 => Progress::new(),
+        _ => Progress::new_at(black_box(origin)),
+    };
+    match case {
+        0 | 1 => {
+            let progress = black_box(progress);
+            assert_eq!(progress.width(), 40);
+            assert_eq!(progress.target(), 0.0);
+            assert_eq!(progress.motion(), Motion::default());
+            assert!(progress.schedule(theme).is_none());
+            40
+        }
+        2 => {
+            for (frequency, damping) in [(18.0, 1.0), (18.0, 0.1), (18.0, 2.0)] {
+                progress
+                    .set_spring(black_box(frequency), black_box(damping))
+                    .unwrap();
+            }
+            assert_eq!(black_box(&progress).target(), 0.0);
+            3
+        }
+        3 => {
+            let mut errors = 0;
+            for invalid in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+                errors += u64::from(progress.set_percent_at(black_box(invalid), origin).is_err());
+                errors += u64::from(progress.set_spring(black_box(invalid), 1.0).is_err());
+                errors += u64::from(progress.frame_as(black_box(invalid), theme).is_err());
+            }
+            assert_eq!(progress.target(), 0.0);
+            assert_eq!(progress.motion(), Motion::default());
+            assert!(progress.schedule(theme).is_none());
+            errors
+        }
+        4 => {
+            for i in 0..64 {
+                assert!(
+                    progress
+                        .set_percent_at(black_box(f64::from(i % 2)), origin)
+                        .unwrap()
+                );
+            }
+            assert_eq!(progress.target(), 1.0);
+            assert_eq!(progress.motion(), Motion::default());
+            assert!(progress.schedule(theme).is_some());
+            64
+        }
+        5 => {
+            progress.set_percent_at(1.0, origin).unwrap();
+            let mut steps = 0;
+            for frame in 1..=120 {
+                let Some(schedule) = progress.schedule(theme) else {
+                    break;
+                };
+                let tick = schedule.tick_at(origin + Duration::from_nanos(16_666_666 * frame));
+                assert!(progress.update(black_box(tick)).unwrap());
+                steps += 1;
+            }
+            assert_eq!(progress.motion(), Motion::at_rest(1.0).unwrap());
+            assert!(!progress.is_animating());
+            assert!(steps > 0 && steps < 120);
+            1
+        }
+        6 => {
+            progress.set_percent_at(0.75, origin).unwrap();
+            let old = progress.schedule(theme).unwrap();
+            let tick = old.tick_at(origin + Duration::from_millis(50));
+            assert!(progress.update(tick).unwrap());
+            let state = progress.motion();
+            assert!(!progress.update(black_box(tick)).unwrap());
+            assert!(!progress.update(old.tick_at(origin)).unwrap());
+            progress.set_percent_at(0.25, tick.at()).unwrap();
+            assert!(
+                !progress
+                    .update(old.tick_at(origin + Duration::from_millis(100)))
+                    .unwrap()
+            );
+            assert_eq!(progress.motion(), state);
+            assert_eq!(progress.target(), 0.25);
+            3
+        }
+        7 => {
+            progress.set_percent_at(0.75, origin).unwrap();
+            let mut present = 0;
+            for _ in 0..64 {
+                present += u64::from(black_box(&progress).schedule(black_box(theme)).is_some());
+            }
+            assert!(progress.set_reduced_motion_at(true, origin));
+            assert_eq!(progress.motion(), Motion::at_rest(0.75).unwrap());
+            assert!(progress.schedule(theme).is_none());
+            assert!(!progress.set_reduced_motion_at(true, origin));
+            present
+        }
+        8 => {
+            let progress = black_box(configured(3, 80));
+            assert_eq!(progress.width(), 80);
+            assert!(!progress.is_animating());
+            80
+        }
+        _ => unreachable!(),
+    }
+}
+
+const SCALES: [(&str, u16, u8); 6] = [
+    ("zero", 0, 0),
+    ("narrow", 1, 0),
+    ("wide", 1024, 0),
+    ("maximum", u16::MAX, 0),
+    ("long_ascii_label", 80, 1),
+    ("long_unicode_control_label", 80, 2),
+];
+fn scale_progress(width: u16, custom: u8) -> Progress {
+    let mut progress = configured(0, width);
+    if custom == 1 {
+        progress.set_percentage_formatter(|_| "x".repeat(8192));
+    } else if custom == 2 {
+        progress.set_percentage_formatter(|_| "e\u{301}茶\n\u{1b}".repeat(1024));
+    }
+    progress
+}
+pub(crate) fn lifecycle_costs(iterations: usize) {
+    let theme = Theme {
+        reduced_motion: false,
+        ..Theme::plain()
+    };
+    let origin = Instant::now();
+    for (case, name, output) in [
+        (0, "new_at", "40"),
+        (1, "new_clock", "40"),
+        (2, "new_three_springs", "3"),
+        (3, "new_nine_errors", "9"),
+        (4, "new_retarget_64", "64"),
+        (5, "new_animate_to_rest", "1"),
+        (6, "new_reject_three_ticks", "3"),
+        (7, "new_schedule_64_reduce", "64"),
+        (8, "new_gradient", "80"),
+    ] {
+        let operation = || lifecycle_operation(black_box(case), origin, &theme);
+        assert_eq!(operation(), output.parse::<u64>().unwrap());
+        measure(
+            &format!("progress/lifecycle_{name}"),
+            iterations,
+            operation,
+            output,
+            "Rust native control; include fresh owned Progress construction/drop and every named validated operation/assertion; no terminal I/O, subscriptions or upstream timing ratio",
+        );
+    }
+    for (name, width, custom) in SCALES {
+        let progress = scale_progress(width, custom);
+        let surface = progress
+            .view_as(0.625, &theme)
+            .unwrap()
+            .render(Size::new(width, 1))
+            .unwrap();
+        let expected = checksum(&surface);
+        let output = format!("{width}:{}:{expected:016x}", surface.plain());
+        measure(
+            &format!("progress/scale_{name}"),
+            (iterations / 100).max(1),
+            || {
+                let surface = black_box(&progress)
+                    .view_as(black_box(0.625), &theme)
+                    .unwrap()
+                    .render(Size::new(black_box(width), 1))
+                    .unwrap();
+                checksum(black_box(&surface))
+            },
+            &output,
+            "Rust native control; existing solid RGB8 bar, full owned View/Surface render and all-cell FNV; width/long formatter scale, include sanitation/clipping/formatting and requested allocations; no upstream timing ratio",
+        );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn lifecycle_controls_check_results_and_transactional_state() {
+        let theme = Theme {
+            reduced_motion: false,
+            ..Theme::plain()
+        };
+        let origin = Instant::now();
+        for (case, expected) in [40, 40, 3, 9, 64, 1, 3, 64, 80].into_iter().enumerate() {
+            assert_eq!(lifecycle_operation(case, origin, &theme), expected);
+        }
+    }
+    #[test]
+    fn scale_controls_match_independent_complete_cell_digests() {
+        let expected = [
+            0xcbf29ce484222325,
+            0xc41db217cf0f5a57,
+            0x1a8feae50a706538,
+            0xdcdd3e763e9d4ff8,
+            0xab0f676942233465,
+            0xb13c9b1700827765,
+        ];
+        for ((_, width, custom), expected) in SCALES.into_iter().zip(expected) {
+            let surface = scale_progress(width, custom)
+                .view_as(0.625, &Theme::plain())
+                .unwrap()
+                .render(Size::new(width, 1))
+                .unwrap();
+            assert_eq!(checksum(&surface), expected);
+        }
     }
 }

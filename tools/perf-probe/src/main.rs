@@ -91,6 +91,10 @@ fn main() {
         progress::costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--progress-lifecycle") {
+        progress::lifecycle_costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--gradients") {
         gradients::costs(iterations);
         return;
