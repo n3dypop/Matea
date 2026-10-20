@@ -258,6 +258,7 @@ def unix_run(probe, context, save):
         original = termios.tcgetattr(slave)
         settings = termios.tcgetattr(slave)
         settings[6][termios.VERASE] = b"\x7f"
+        settings[6][termios.VEOF] = b"\x04"
         termios.tcsetattr(slave, termios.TCSANOW, settings)
         fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", 42, 132, 0, 0))
         before = termios.tcgetattr(slave)

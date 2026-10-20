@@ -249,3 +249,21 @@ truthy nonboolean metadata cannot satisfy it. Two independent corrupted-ledger
 tests confirm this condition can block F5 even when the synthetic other
 conditions are complete. Seven affected assessments are reopened (current 57);
 the prior fully tested 50-axis checkpoint is preserved instead of relabeled.
+
+The follow-up bounded export-data experiment also exposes Darwin State.Termios
+and seven data fields, and Linux amd64 State.Termios and eight (including Line).
+The source embeds unix.Termios, so its descendants are promoted through the
+private state as well. [All three compiler profiles](evidence/terminal-device/go-export-experiment/verification.json)
+retain source locations and selection indexes. This experiment remains incomplete
+for pointers, returned/private interfaces, generics and other reference packages.
+
+[ADR 0072](decisions/0072-explicit-unix-native-attributes.md) adds conditional
+Unix Attributes/read/snapshot operations with owned target-libc records, keeping
+the portable type opaque. Native layout/field names/control counts can differ
+from Go's kernel record; speed normalization and unsupported source OSes stay
+explicit. The private guard's original is not exposed mutably. Pure tests cover
+all 256 values per native control slot and copy independence; live PTY fixtures
+change echo and EOF bytes, query them, restore, then run the previous twelve
+cases. The driver now explicitly selects EOF=Ctrl-D instead of relying on a
+host default. Current macOS targeted 49 tests/Clippy/native fixtures pass; the
+expanded exact-source three-OS/Miri qualification is still pending.

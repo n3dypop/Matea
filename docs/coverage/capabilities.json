@@ -1248,16 +1248,273 @@
         "scripts/test_acceptance_driver.py"
       ],
       "performance": "docs/evidence/terminal-device/performance/attempts/3e0cd5c347b446ef8488926bdbd4a44d/report.json",
-      "notes": "All 13 raw candidates classified; Windows State.Mode is an additional compiler-confirmed promoted selector, implemented provisionally through explicit conditional mode APIs. Raw candidate mapping is not an export graph. Native slice at c526cf4 is qualified, but new Windows mode/value/input-output role tests and Go export closure remain pending. Source Plan 9/other OS conditions and full-module performance remain partial.",
+      "notes": "All 13 raw candidates classified, plus compiler-confirmed State selectors in three bounded target profiles. Unix Attributes and Windows ConsoleMode read/snapshot interfaces provisionally implement customization through the same owned restoration guard. Raw candidate mapping is not an export graph. The c526cf4 slice stays qualified; new projections/role tests, Go closure, source-only OSes and complete performance remain pending.",
       "promoted_export_obligations": [
         {
+          "selector": "State.Cc",
+          "target": "darwin",
+          "type": "[20]uint8",
+          "index": [
+            0,
+            0,
+            4
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:678:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Cflag",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            2
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:676:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Iflag",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            0
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:674:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Ispeed",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            5
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:679:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Lflag",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            3
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:677:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Oflag",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            1
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:675:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Ospeed",
+          "target": "darwin",
+          "type": "uint64",
+          "index": [
+            0,
+            0,
+            6
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_darwin_amd64.go:680:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Termios",
+          "target": "darwin",
+          "type": "golang.org/x/sys/unix.Termios",
+          "index": [
+            0,
+            0
+          ],
+          "source_position": "term/term_unix.go:11:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Cc",
+          "target": "linux",
+          "type": "[19]uint8",
+          "index": [
+            0,
+            0,
+            5
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:291:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Cflag",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            2
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:288:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Iflag",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            0
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:286:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Ispeed",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            6
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:292:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Lflag",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            3
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:289:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Line",
+          "target": "linux",
+          "type": "uint8",
+          "index": [
+            0,
+            0,
+            4
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:290:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Oflag",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            1
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:287:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Ospeed",
+          "target": "linux",
+          "type": "uint32",
+          "index": [
+            0,
+            0,
+            7
+          ],
+          "source_position": "/Users/misosoup/go/pkg/mod/golang.org/x/sys@v0.47.0/unix/ztypes_linux_amd64.go:293:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
+          "selector": "State.Termios",
+          "target": "linux",
+          "type": "golang.org/x/sys/unix.Termios",
+          "index": [
+            0,
+            0
+          ],
+          "source_position": "term/term_unix.go:11:1",
+          "implementation": "device::unix::{attributes,snapshot}; native libc ABI, not a Go layout promise",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
+          "performance": "pending"
+        },
+        {
           "selector": "State.Mode",
-          "defined_in": "term/term_windows.go:13",
-          "build": "windows",
-          "reference_sha": "4542a189d0fbeb156bb1df8730d253f2ef443c00",
-          "reachability": "Compiler-confirmed through private embedded state; not a new raw-inventory declaration.",
-          "implementation": "device::windows::{ConsoleMode,mode,snapshot}; pending Windows native qualification",
-          "evidence": "docs/evidence/terminal-device/promoted-mode/context.json",
+          "target": "windows",
+          "type": "uint32",
+          "index": [
+            0,
+            0
+          ],
+          "source_position": "term/term_windows.go:13:1",
+          "implementation": "device::windows::{mode,snapshot}",
+          "status": "native_requalification_pending",
+          "evidence": "docs/evidence/terminal-device/go-export-experiment/verification.json",
           "performance": "pending"
         }
       ]

@@ -2056,7 +2056,7 @@
         },
         "behavior": {
           "score": 50,
-          "reason": "The existing native slice is qualified at c526cf4; new Windows promoted Mode functionality and named/unknown-bit projection need actual Windows tests before promotion."
+          "reason": "New Unix attributes and Windows modes expose compiler-confirmed promoted state fields; both target-native mutation/restore paths and all low-word/control-byte values require current three-OS qualification. Prior c526cf4 observations remain historical."
         },
         "reference": {
           "score": 50,
@@ -2082,7 +2082,8 @@
         "docs/evidence/terminal-device/password-performance-verification.json",
         "docs/evidence/terminal-device/password-single-source-binding-correction.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/decisions/0071-promoted-go-state-mode-and-explicit-windows-api.md"
+        "docs/decisions/0071-promoted-go-state-mode-and-explicit-windows-api.md",
+        "docs/decisions/0072-explicit-unix-native-attributes.md"
       ],
       "remaining": [
         "Qualify canonical batching with updated Miri, native/LLVM and three-OS/MSRV CI; advance only evidenced dimensions.",

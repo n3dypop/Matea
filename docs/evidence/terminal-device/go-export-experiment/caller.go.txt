@@ -1,0 +1,25 @@
+// Original bounded export-data experiment. No upstream implementation copied.
+package main
+import("encoding/json";"fmt";"go/importer";"go/token";"go/types";"io";"os";"os/exec";"sort")
+type Package struct { ImportPath,Export,Dir string; Error *struct{Err string} }
+type Selector struct { Root,Name,Kind,Type,Position string; Index []int; Indirect bool }
+func main(){
+ path:="github.com/charmbracelet/x/term"
+ command:=exec.Command("go","list","-export","-deps","-json",path);command.Dir="/private/tmp/matea-device-comparison"
+ output,err:=command.Output();if err!=nil{panic(err)}
+ // Read the compiler's own selected export artifacts, including target stdlib.
+ packages:=map[string]Package{};decoder:=json.NewDecoder(bytesReader(output))
+ for {var p Package;if err:=decoder.Decode(&p);err==io.EOF{break}else if err!=nil{panic(err)};if p.Error!=nil{panic(p.Error.Err)};packages[p.ImportPath]=p}
+ fset:=token.NewFileSet();load:=importer.ForCompiler(fset,"gc",func(path string)(io.ReadCloser,error){p,ok:=packages[path];if !ok||p.Export==""{return nil,fmt.Errorf("missing export %s",path)};return os.Open(p.Export)})
+ pkg,err:=load.Import(path);if err!=nil{panic(err)};roots:=[]string{};selectors:=[]Selector{}
+ for _,name:=range pkg.Scope().Names(){object:=pkg.Scope().Lookup(name);if !object.Exported(){continue};roots=append(roots,name)
+  if _,ok:=object.(*types.TypeName);!ok{continue};t:=object.Type();names:=map[string]bool{};seen:=map[types.Type]bool{}
+  var fields func(types.Type);fields=func(t types.Type){t=types.Unalias(t);if p,ok:=t.(*types.Pointer);ok{t=p.Elem()};if seen[t]{return};seen[t]=true
+   if st,ok:=t.Underlying().(*types.Struct);ok{for i:=0;i<st.NumFields();i++{field:=st.Field(i);if field.Exported(){names[field.Name()]=true};if field.Embedded(){fields(field.Type())}}}}
+  fields(t);ordered:=[]string{};for name:=range names{ordered=append(ordered,name)};sort.Strings(ordered)
+  for _,field:=range ordered{object,index,indirect:=types.LookupFieldOrMethod(t,true,nil,field);if object==nil||!object.Exported(){continue};selectors=append(selectors,Selector{name,field,"field",types.TypeString(object.Type(),nil),fset.Position(object.Pos()).String(),index,indirect})}
+  methods:=types.NewMethodSet(t);for i:=0;i<methods.Len();i++{s:=methods.At(i);object:=s.Obj();if object.Exported(){selectors=append(selectors,Selector{name,object.Name(),"method",types.TypeString(s.Type(),nil),fset.Position(object.Pos()).String(),s.Index(),s.Indirect()})}}
+ }
+ json.NewEncoder(os.Stdout).Encode(map[string]any{"kind":"bounded-compiler-export-experiment","goos":os.Getenv("GOOS"),"goarch":os.Getenv("GOARCH"),"roots":roots,"selectors":selectors,"limits":[]string{"Root exported types, promoted fields and value method sets only; pointer/returned/private-interface/generic/profile closure is incomplete.","Export-data/type reachability, not native console execution or whole module parity."}})
+}
+type reader struct {b []byte;i int};func bytesReader(b []byte)*reader{return &reader{b:b}};func(r *reader)Read(p []byte)(int,error){if r.i==len(r.b){return 0,io.EOF};n:=copy(p,r.b[r.i:]);r.i+=n;return n,nil}

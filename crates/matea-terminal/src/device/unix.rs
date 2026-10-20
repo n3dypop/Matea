@@ -8,6 +8,14 @@ use std::{
 
 #[derive(Clone)]
 pub(super) struct State(libc::termios);
+impl State {
+    pub(super) fn attributes(&self) -> libc::termios {
+        self.0
+    }
+    pub(super) const fn from_attributes(attributes: libc::termios) -> Self {
+        Self(attributes)
+    }
+}
 pub(super) struct Native<'fd> {
     fd: BorrowedFd<'fd>,
 }

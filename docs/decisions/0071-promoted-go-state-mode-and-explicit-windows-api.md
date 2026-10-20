@@ -31,3 +31,7 @@ Test every low word and individual bit/complement, unknown-bit retention, named
 flag editing, real input-console application and original restoration. Keep all
 three OS/MSRV checks and benchmark/source conditions visible. No portable raw flag
 fields, image processing, image decoding or CUDA work is added.
+
+Follow-up compiler inspection also finds promoted Unix Termios/data fields;
+ADR 0072 adds their explicit conditional interface. The Windows-only compile
+probe was not a complete proof of the Unix export surface.

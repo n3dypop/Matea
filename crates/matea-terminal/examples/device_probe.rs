@@ -80,6 +80,28 @@ fn probe(
             "exclusive/read-only device contract failed",
         ));
     }
+    #[cfg(unix)]
+    {
+        use matea_terminal::device::unix::{attributes, snapshot};
+        let initial = device.state()?;
+        let mut changed = attributes(&initial);
+        changed.c_lflag ^= libc::ECHO;
+        changed.c_cc[libc::VEOF] = b'\x1e';
+        device.set_state(&snapshot(changed))?;
+        let current = attributes(&device.state()?);
+        if current.c_lflag & libc::ECHO != changed.c_lflag & libc::ECHO
+            || current.c_cc[libc::VEOF] != b'\x1e'
+            || attributes(&initial).c_cc[libc::VEOF] == b'\x1e'
+        {
+            return Err(io::Error::other(
+                "native attributes were aliased or not applied",
+            ));
+        }
+        device.set_state(&initial)?;
+        if attributes(&device.state()?).c_cc[libc::VEOF] != attributes(&initial).c_cc[libc::VEOF] {
+            return Err(io::Error::other("native control byte was not restored"));
+        }
+    }
     #[cfg(windows)]
     check_console_flag(
         &mut device,

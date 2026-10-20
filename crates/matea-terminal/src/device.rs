@@ -130,6 +130,60 @@ pub mod windows {
     }
 }
 
+/// Explicit native Unix attributes. Their field names/layout and control-byte
+/// count follow the target libc, not a copied kernel/Go structure. Capture an
+/// owned value, edit it, and apply a snapshot through the restoration guard.
+#[cfg(unix)]
+pub mod unix {
+    use super::{TerminalState, native};
+    pub use libc::termios as Attributes;
+
+    /// Copy native fields without borrowing or exposing the guard's original.
+    pub fn attributes(state: &TerminalState) -> Attributes {
+        state.0.attributes()
+    }
+    /// Construct a value only. Native validity and normalization are checked by
+    /// the OS when applied; transient flags and padding are not equality bytes.
+    pub const fn snapshot(attributes: Attributes) -> TerminalState {
+        TerminalState(native::State::from_attributes(attributes))
+    }
+
+    #[cfg(all(test, any(target_os = "macos", target_os = "linux")))]
+    mod tests {
+        use super::*;
+        #[test]
+        fn native_attributes_are_owned_and_preserve_every_control_byte() {
+            let input = Attributes {
+                c_iflag: 1,
+                c_oflag: 2,
+                c_cflag: 4,
+                c_lflag: 8,
+                c_cc: [0; libc::NCCS],
+                c_ispeed: 0,
+                c_ospeed: 0,
+                #[cfg(target_os = "linux")]
+                c_line: 0,
+            };
+            let original = snapshot(input);
+            for index in 0..libc::NCCS {
+                for value in 0..=u8::MAX {
+                    let mut changed = attributes(&original);
+                    changed.c_cc[index] = value;
+                    changed.c_lflag = libc::tcflag_t::MAX;
+                    let actual = attributes(&snapshot(changed));
+                    assert_eq!(actual.c_cc[index], value);
+                    assert_eq!(actual.c_lflag, libc::tcflag_t::MAX);
+                    assert_eq!((actual.c_iflag, actual.c_oflag, actual.c_cflag), (1, 2, 4));
+                    assert_eq!(actual.c_ispeed, 0);
+                    assert_eq!(actual.c_ospeed, 0);
+                    assert_eq!(attributes(&original).c_cc[index], 0);
+                    assert_eq!(attributes(&original).c_lflag, 8);
+                }
+            }
+        }
+    }
+}
+
 /// UI-local, exclusively owned mode restoration over a borrowed native handle.
 /// The device and all native cleanup are dropped before the shared lease.
 ///
