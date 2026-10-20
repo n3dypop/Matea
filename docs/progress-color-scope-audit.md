@@ -44,13 +44,12 @@ MaxWidth/transform composition, hyperlink metadata and separate whitespace
 attributes need explicit equivalence tests or documented corrected contracts.
 They remain pending. A generic Style reexport alone is not implementation proof.
 
-## Next implementation boundary
+## Implemented color boundary; qualification in progress
 
-Keep terminal cells/styles RGB8 and avoid enlarging every Color/Cell merely to
-accept high-depth stops. Add explicit channel-depth conversion at the input
-boundary, and preserve precision only while computing gradient stops. Review
-premultiplied RGBA16, zero-alpha handling and prefix/single-stop behavior with
-actual source fixtures before choosing public constructors. Inputs, color math
-and terminal quantization need separate types/contracts; no image processing,
-codec or CUDA work is involved. Record the selected API in an ADR before its
-implementation and retain existing RGB8 distributions as the control.
+The selected explicit input API is implemented under ADR 0068 while terminal
+cells/styles stay RGB8. Full-depth conversion and owned premultiplied stops now
+have 144 canonical gradient conditions and 576 actual Progress frame conditions.
+[Implementation, initial performance and remaining qualification](precise-color-inputs-audit.md)
+keep the 28 intentional source-ANSI corrections explicit. No image processing,
+codec or CUDA work is involved. Existing RGB8 workloads remain regression controls;
+the percentage/style conditions above still prevent a full reference verdict.

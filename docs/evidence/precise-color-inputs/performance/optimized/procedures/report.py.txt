@@ -1,0 +1,66 @@
+"""Replay retained RGBA16 timing/output/source/RSS evidence, including archive-only."""
+import hashlib,json,re,statistics,subprocess,sys,tarfile
+from pathlib import Path
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/precise-color-inputs/performance/optimized';sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+if not __debug__:raise RuntimeError('verification refuses -O')
+sha=lambda b:hashlib.sha256(b).hexdigest();ctx=json.load(open(BASE/'context.json'));assert ctx['status']=='complete'
+assert sha((BASE/'procedures/measure.py.txt').read_bytes())==ctx['procedure_sha256']
+for side,files in ctx['source_sha256'].items():
+ for n,d in files.items():assert sha(subprocess.check_output(['git','show',ctx['heads'][side]+':'+n]))==d,(side,n)
+assert ctx['source_sha256']['before']['tools/perf-probe/src/measurement.rs']==ctx['source_sha256']['after']['tools/perf-probe/src/measurement.rs']
+for n,d in ctx['go_source_sha256'].items():
+ path=BASE/'procedures'/('upstream-'+n+'.txt')
+ if n=='main.go':raw=subprocess.check_output(['git','show',ctx['heads']['after']+':tools/perf-upstream/main.go'])
+ elif n=='main_test.go':raw=subprocess.check_output(['git','show',ctx['heads']['after']+':tools/perf-upstream/main_test.go'])
+ elif n=='precise.go':raw=(BASE/'procedures/upstream-extra.go.txt').read_bytes()
+ else:raw=path.read_bytes()
+ assert sha(raw)==d,n
+oracles={};output_hashes={}
+for side,groups in [('before',['progress','lifecycle','api','gradients']),('after',['progress','lifecycle','api','gradients','precise']),('prior',['precise']),('upstream',['precise'])]:
+ for group in groups:
+  path=BASE/f'{side}-{group}-outputs.jsonl';raw=path.read_bytes();oracles[side,group]=read_probe_outputs(raw.decode());output_hashes[path.name]=sha(raw)
+for group in ['progress','lifecycle','api','gradients']:assert oracles['before',group]==oracles['after',group]
+assert sum(len(oracles['before',g]) for g in ['progress','lifecycle','api','gradients'])==44
+assert oracles['prior','precise']==oracles['after','precise']
+assert len(oracles['after','precise'])==10 and len(oracles['upstream','precise'])==4
+for n,r in oracles['upstream','precise'].items():assert all(r[k]==oracles['after','precise'][n][k] for k in ['semantics','output','first_return_value'])
+runs=[];cases={}
+for run in ctx['runs']:
+ raw=(BASE/run['raw']).read_bytes();assert sha(raw)==run['raw_sha256'];records=read_records(raw.decode());oracle=oracles[run['label'],run['group']];assert records.keys()==oracle.keys()
+ assert not (BASE/run['raw'].replace('.jsonl','.stderr')).read_bytes()
+ for n,r in records.items():
+  assert all(r[k]==oracle[n][k] for k in ['semantics','output','first_return_value'])
+  assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20000000 and all(len(b['confirmations_ns'])==2 for b in r['calibration']['batches'])
+  cases.setdefault((run['phase'],n),{}).setdefault(run['label'],[]).append(r)
+ runs.append({**run,'summaries':{n:summary(r) for n,r in records.items()}})
+assert len(runs)==22 and sum(r['cases'] for r in runs)==224
+comparisons=[]
+for (phase,n),sides in cases.items():
+ medians={side:[statistics.median(r['samples_ns']) for r in rs] for side,rs in sides.items()}
+ allocations={side:[r['allocations'] for r in rs] for side,rs in sides.items()};allocated={side:[r['allocated_bytes'] for r in rs] for side,rs in sides.items()}
+ if phase=='legacy':
+  assert allocations['before']==allocations['after'] and allocated['before']==allocated['after'],n
+  ratio=statistics.median(medians['after'])/statistics.median(medians['before'])
+ else:ratio=(statistics.median(medians['after'])/statistics.median(medians['upstream'])) if 'upstream' in sides else None
+ if phase=='precise':assert allocations['prior']==allocations['after'] and allocated['prior']==allocated['after'],n
+ comparisons.append({'after_over_prior_median':statistics.median(medians['after'])/statistics.median(medians['prior']) if phase=='precise' else None,'phase':phase,'case':n,'cohort_medians_ns':medians,'after_over_comparator_median':ratio,'allocations':allocations,'allocated_bytes':allocated})
+archive=BASE/'rss-raw.tar.gz';archived={}
+if archive.exists():
+ index=json.load(open(BASE/'rss-index.json'));assert sha(archive.read_bytes())==index['archive_sha256']
+ with tarfile.open(archive,'r:gz') as t:
+  for m in t.getmembers():
+   assert m.isfile() and Path(m.name).name==m.name and m.name not in archived
+   archived[m.name]=t.extractfile(m).read()
+ assert {n:sha(v) for n,v in archived.items()}==index['members_sha256']
+rss=[]
+for group in ctx['rss']:
+ values=[]
+ for n,d in group['raw_sha256'].items():
+  raw=(BASE/n).read_bytes() if '--archive-only' not in sys.argv and (BASE/n).is_file() else archived[n];assert sha(raw)==d
+  values.append(int(re.search(rb'(\d+)\s+maximum resident set size',raw).group(1)))
+ assert values==group['peak_rss_bytes'] and len(values)==31
+ rss.append({'label':group['label'],'group':group['group'],'samples':31,'p50':statistics.median(values),'p95':sorted(values)[29],'min':min(values),'max':max(values)})
+assert sum(r['samples'] for r in rss)==217
+result={'schema':1,'status':'complete','heads':ctx['heads'],'context_sha256':sha((BASE/'context.json').read_bytes()),'reporter_sha256':sha(Path(__file__).read_bytes()),'timing_records':224,'rss_observations':217,'output_sha256':output_hashes,'comparisons':comparisons,'runs':runs,'rss_group_bytes':rss,'limits':ctx['limits']}
+(BASE/'report.json').write_text(json.dumps(result,indent=2)+'\n');print('224 timing records, 217 RSS observations, 44 unchanged legacy outputs and four matched source outputs verified')
