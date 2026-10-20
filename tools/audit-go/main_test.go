@@ -215,3 +215,24 @@ func TestSelectedRootIsNotExcludedByItsOwnName(t *testing.T) {
 		t.Fatalf("explicitly selected root excluded: %v %q", err, output.String())
 	}
 }
+
+func TestPreloadedSourceDoesNotReadFilenameAndKeepsParseErrorsAtomic(t *testing.T) {
+	missing := filepath.Join(t.TempDir(), "not-on-disk.go")
+	var output bytes.Buffer
+	if err := auditSource("fixture.go", missing, []byte("package fixture\nconst Answer=42\n"), json.NewEncoder(&output)); err != nil {
+		t.Fatal(err)
+	}
+	expected := "{\"file\":\"fixture.go\",\"line\":2,\"package\":\"fixture\",\"kind\":\"const\",\"symbol\":\"Answer\"}\n"
+	if output.String() != expected {
+		t.Fatalf("preloaded complete output: %q", output.String())
+	}
+	output.Reset()
+	output.WriteString("earlier file\n")
+	if err := auditSource("bad.go", missing, []byte("package fixture\nconst Good=1\nfunc Bad("), json.NewEncoder(&output)); err == nil || output.String() != "earlier file\n" {
+		t.Fatalf("partial invalid-file declarations: %v %q", err, output.String())
+	}
+	writer := &brokenWriter{}
+	if err := auditSource("fixture.go", missing, []byte("package fixture\nconst Answer=42\n"), json.NewEncoder(writer)); !errors.Is(err, broken) {
+		t.Fatalf("source writer error lost: %v", err)
+	}
+}
