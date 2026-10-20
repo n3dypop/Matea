@@ -4,7 +4,7 @@ use crate::{ClockId, ClockSchedule, ClockTick, Stopwatch, TickInterval};
 use compact_str::{CompactString, format_compact};
 use matea_core::{Component, Input, Response, Subscription};
 use matea_motion::{Motion, MotionError, Spring};
-use matea_render::{View, sanitize};
+use matea_render::{Rect, Size, Surface, View, sanitize};
 use matea_style::{Color, Gradient, Style, Theme};
 use std::{
     fmt,
@@ -408,6 +408,49 @@ impl ProgressFrame<'_> {
         })
     }
     pub fn view(&self) -> View {
+        if self.filled != 0
+            && matches!(
+                self.progress.fill,
+                ProgressFill::Gradient { .. } | ProgressFill::ColorFn(_)
+            )
+        {
+            // Each colored glyph was already a separate text child. Retain
+            // that boundary; the uniform empty run and label keep their own
+            // whole-text grapheme segmentation (including regional indicators).
+            let mut surface = Surface::new(Size::new(self.progress.width, 1))
+                .expect("one u16-width row fits the surface limit");
+            for (x, cell) in self.cells().take(self.filled).enumerate() {
+                let mut utf8 = [0; 4];
+                surface.canvas(Rect::new(x as u16, 0, 1, 1)).text(
+                    x as u16,
+                    0,
+                    cell.symbol.encode_utf8(&mut utf8),
+                    cell.style,
+                );
+            }
+            let empty_width = (self.width - self.filled) as u16;
+            if empty_width != 0 {
+                surface
+                    .canvas(Rect::new(self.filled as u16, 0, empty_width, 1))
+                    .text(
+                        self.filled as u16,
+                        0,
+                        &repeat(self.progress.empty, usize::from(empty_width)),
+                        self.empty_style,
+                    );
+            }
+            if !self.label.is_empty() {
+                surface
+                    .canvas(Rect::new(
+                        self.width as u16,
+                        0,
+                        self.progress.width - self.width as u16,
+                        1,
+                    ))
+                    .text(self.width as u16, 0, &self.label, self.label_style);
+            }
+            return View::surface(surface).width(self.progress.width).height(1);
+        }
         let mut children = Vec::new();
         if self.filled != 0 {
             if matches!(

@@ -64,6 +64,77 @@ fn all_public_reference_view_fixtures_match_cells_and_rgb8_styles() {
     }
     assert_eq!(count, 120);
 }
+
+#[test]
+fn colored_owned_scene_preserves_child_boundaries_layout_and_callback_order() {
+    use matea_render::View;
+    use std::{cell::RefCell, rc::Rc};
+    for width in [0, 1, 5, 9, 17, 40] {
+        for empty in ['░', '🇦'] {
+            for label in [" 62%", "e\u{301}茶", "\u{301}A", "🇯🇵"] {
+                let calls = Rc::new(RefCell::new(Vec::new()));
+                let record = calls.clone();
+                let mut p = Progress::new();
+                p.set_width(width);
+                p.set_glyphs('▌', empty).unwrap();
+                p.set_percentage_formatter(move |_| label.into());
+                p.fill = ProgressFill::ColorFn(Box::new(move |total, current| {
+                    record.borrow_mut().push((total, current));
+                    Color::Rgb((total * 255.0) as u8, (current * 255.0) as u8, 77)
+                }));
+                let frame = p.frame_as(0.625, &theme()).unwrap();
+                // Reconstruct the previous public View composition as a
+                // separate conformance path; compare full surfaces, not plain
+                // text alone, including nested placement and narrow clipping.
+                let mut children: Vec<_> = frame
+                    .cells()
+                    .take(frame.filled_width())
+                    .map(|c| View::styled(c.symbol.to_string(), c.style).width(1))
+                    .collect();
+                let empty_width = frame.bar_width() - frame.filled_width();
+                if empty_width != 0 {
+                    let style = frame.cell_at(frame.filled_width()).unwrap().style;
+                    children.push(
+                        View::styled(empty.to_string().repeat(empty_width), style)
+                            .width(empty_width as u16),
+                    );
+                }
+                if !frame.label().is_empty() {
+                    children.push(
+                        View::styled(frame.label(), frame.label_style())
+                            .width(width - frame.bar_width() as u16),
+                    );
+                }
+                let old_calls = calls.take();
+                let reference = View::row(children).width(width).height(1);
+                let scene = frame.view();
+                assert_eq!(*calls.borrow(), old_calls);
+                for viewport in [0, 1, 3, 7, 17, 40, 60] {
+                    let compose = |v: View| {
+                        View::column([
+                            View::row([View::text("X").width(1), v, View::text("Z").width(1)]),
+                            View::text("tail"),
+                        ])
+                    };
+                    assert_eq!(
+                        compose(scene.clone())
+                            .render(Size::new(viewport, 3))
+                            .unwrap(),
+                        compose(reference.clone())
+                            .render(Size::new(viewport, 3))
+                            .unwrap(),
+                        "width={width}, empty={empty}, label={label:?}, viewport={viewport}"
+                    );
+                }
+                assert_eq!(
+                    *calls.borrow(),
+                    old_calls,
+                    "render must not call user code again"
+                );
+            }
+        }
+    }
+}
 #[test]
 fn negative_velocity_is_not_rest_and_final_state_snaps_exactly() {
     let origin = Instant::now();
