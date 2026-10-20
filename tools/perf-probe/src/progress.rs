@@ -295,6 +295,129 @@ const SCALES: [(&str, u16, u8); 6] = [
     ("long_ascii_label", 80, 1),
     ("long_unicode_control_label", 80, 2),
 ];
+
+fn api_operation(case: usize, origin: Instant, theme: &Theme) -> u64 {
+    use matea::core::Component;
+    let mut progress = if case == 3 {
+        configured(0, 40)
+    } else {
+        Progress::new_at(black_box(origin))
+    };
+    match case {
+        0 => {
+            progress.set_width(u16::MAX);
+            assert_eq!(black_box(&progress).width(), u16::MAX);
+            progress.set_width(80);
+            for glyph in ['\0', '\t', '\u{301}', '茶', '👩'] {
+                assert!(progress.set_glyphs(black_box(glyph), '.').is_err());
+            }
+            progress.set_glyphs('#', '-').unwrap();
+            assert_eq!(progress.glyphs(), ('#', '-'));
+            let prefix = String::from("v");
+            progress.set_percentage_formatter(move |fraction| format!("{prefix}:{fraction:.3}"));
+            assert_eq!(progress.frame_as(0.625, theme).unwrap().label(), "v:0.625");
+            progress.reset_percentage_formatter();
+            assert_eq!(progress.frame_as(0.625, theme).unwrap().label(), "  62%");
+            5
+        }
+        1 => {
+            let id = progress.id();
+            assert!(progress.set_percent(black_box(0.5)).unwrap());
+            assert!(progress.increment(black_box(0.25)).unwrap());
+            assert!(progress.decrement(black_box(0.5)).unwrap());
+            assert_eq!(progress.target(), 0.25);
+            assert!(progress.set_reduced_motion(true));
+            assert!(progress.set_percent(black_box(0.625)).unwrap());
+            assert!(progress.set_reduced_motion(false));
+            assert_eq!(progress.motion(), Motion::at_rest(0.625).unwrap());
+            assert_eq!(progress.id(), id);
+            // Explicitly order the backward observation even on hosts whose
+            // real clock returns equal readings for consecutive controls.
+            assert!(
+                progress
+                    .set_percent_at(0.625, Instant::now() + Duration::from_secs(1))
+                    .unwrap()
+            );
+            assert!(!progress.set_percent_at(1.0, origin).unwrap());
+            6
+        }
+        2 => {
+            progress.set_percent_at(1.0, origin).unwrap();
+            let subscription = black_box(progress.subscription(theme, |tick: ClockTick| tick));
+            assert!(subscription.is_some());
+            drop(subscription);
+            let reduced = Theme {
+                reduced_motion: true,
+                ..theme.clone()
+            };
+            assert!(
+                progress
+                    .subscription(&reduced, |tick: ClockTick| tick)
+                    .is_none()
+            );
+            assert!(progress.set_reduced_motion_at(true, origin));
+            assert!(
+                progress
+                    .subscription(theme, |tick: ClockTick| tick)
+                    .is_none()
+            );
+            1
+        }
+        3 => {
+            progress.set_reduced_motion(true);
+            progress.set_percent(0.625).unwrap();
+            let response = black_box(Component::event(&mut progress, &Input::Focus(true), true));
+            assert!(!response.consumed && response.message.is_none());
+            let surface = Component::view(&progress, theme, true)
+                .render(Size::new(40, 1))
+                .unwrap();
+            checksum(black_box(&surface))
+        }
+        4 => {
+            progress.set_width(17);
+            let frame = progress.frame_as(0.5, theme).unwrap();
+            assert_eq!(frame.bar_width(), 12);
+            assert_eq!(frame.filled_width(), 6);
+            assert_eq!(frame.label_style(), theme.text);
+            let mut cells = frame.cells();
+            assert_eq!(cells.len(), 12);
+            assert_eq!(cells.next(), frame.cell_at(0));
+            assert_eq!(cells.next_back(), frame.cell_at(11));
+            assert_eq!(cells.nth(3), frame.cell_at(4));
+            assert_eq!(cells.nth_back(3), frame.cell_at(7));
+            assert_eq!(cells.len(), 2);
+            assert!(cells.nth(usize::MAX).is_none());
+            assert!(cells.next_back().is_none());
+            assert!(frame.cell_at(usize::MAX).is_none());
+            12
+        }
+        _ => unreachable!(),
+    }
+}
+pub(crate) fn api_costs(iterations: usize) {
+    let origin = Instant::now();
+    let theme = Theme {
+        reduced_motion: false,
+        ..Theme::plain()
+    };
+    for (case, name, output) in [
+        (0, "configure_formatters_glyph_errors", "5"),
+        (1, "clocked_fraction_controls", "6"),
+        (2, "subscription_construction_reduction", "1"),
+        (3, "component_live_frame", "13470074180807873566"),
+        (4, "borrowed_iterator_boundaries", "12"),
+    ] {
+        let operation = || api_operation(black_box(case), origin, &theme);
+        assert_eq!(operation(), output.parse::<u64>().unwrap());
+        measure(
+            &format!("progress/api_{name}"),
+            iterations,
+            operation,
+            output,
+            "Rust native public-API control; include fresh construction/drop, all named mutations, clock reads, error validation/assertions, formatter/subscription ownership and live frame when named; no terminal transport or upstream timing ratio",
+        );
+    }
+}
 fn scale_progress(width: u16, custom: u8) -> Progress {
     let mut progress = configured(0, width);
     if custom == 1 {
@@ -369,6 +492,17 @@ mod tests {
         let origin = Instant::now();
         for (case, expected) in [40, 40, 3, 9, 64, 1, 3, 64, 80].into_iter().enumerate() {
             assert_eq!(lifecycle_operation(case, origin, &theme), expected);
+        }
+    }
+    #[test]
+    fn supplementary_controls_check_public_ownership_and_adapters() {
+        let theme = Theme {
+            reduced_motion: false,
+            ..Theme::plain()
+        };
+        let origin = Instant::now();
+        for (case, expected) in [5, 6, 1, 13470074180807873566, 12].into_iter().enumerate() {
+            assert_eq!(api_operation(case, origin, &theme), expected);
         }
     }
     #[test]
