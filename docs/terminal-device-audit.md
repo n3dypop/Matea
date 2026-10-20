@@ -241,14 +241,14 @@ and flags only when applying through the owned device guard. The direct bitflags
 edge uses the already pinned version. Windows fixtures now exercise input and
 output mode editing/restoration and reject input-only operations on output
 handles; pure Windows tests cover low words, bit/complement boundaries and
-unknown-bit edits. These new paths require actual Windows qualification.
+unknown-bit edits. The exact-source Windows qualification is recorded below.
 
 The raw inventory count is unchanged and no complete Go export resolution is
 claimed. The project-wide Go target/export review remains false; missing or
 truthy nonboolean metadata cannot satisfy it. Two independent corrupted-ledger
 tests confirm this condition can block F5 even when the synthetic other
-conditions are complete. Seven affected assessments are reopened (current 57);
-the prior fully tested 50-axis checkpoint is preserved instead of relabeled.
+conditions are complete. Seven affected assessments were reopened (57 axes);
+the prior fully tested 50-axis checkpoint remains a separate historical record.
 
 The follow-up bounded export-data experiment also exposes Darwin State.Termios
 and seven data fields, and Linux amd64 State.Termios and eight (including Line).
@@ -265,5 +265,31 @@ explicit. The private guard's original is not exposed mutably. Pure tests cover
 all 256 values per native control slot and copy independence; live PTY fixtures
 change echo and EOF bytes, query them, restore, then run the previous twelve
 cases. The driver now explicitly selects EOF=Ctrl-D instead of relying on a
-host default. Current macOS targeted 49 tests/Clippy/native fixtures pass; the
-expanded exact-source three-OS/Miri qualification is still pending.
+host default.
+
+## Qualified native attribute and console mode increment
+
+[04e81bc CI](https://github.com/n3dypop/Matea/actions/runs/39495143723) passes all
+seven required jobs. The [independent source binding](evidence/terminal-device/ci-04e81bc/source-bindings.json)
+verifies all 198 inputs against Git and matching inputs on three OSes, 47 native
+commands per host, twelve Unix/nine Windows fixtures in both ordinary and
+instrumented runs, exact bytes and original-mode restoration. The conditional
+attribute/mode edits run inside every exact-source fixture. Unix only excludes
+Darwin's named transient PENDIN bit; all other fields are compared. Uploaded log
+hashes are verified, while sixteen Unix/fifteen Windows logs absent from uploaded
+artifacts remain explicitly listed. MSRV 1.88 and pinned-reference probes pass.
+
+[Miri seed 223](evidence/terminal-device/miri-attributes/verification.json) passes
+ten pure device/lease tests, including every byte value in each native Unix
+control slot and snapshot independence. It does not interpret native FFI or the
+Windows-only mode projection. [Post-assessment local execution](evidence/terminal-device/attributes-final-metrics.json)
+passes 47 commands, Rust 277 plus 11 doctests, Python 146 with two conditional
+skips, and LLVM 95 canonical source paths/102 instances. The three transitive
+hashbrown zero-hash profile warnings are retained and diagnosed; no branch or
+whole-dependency soundness proof is inferred.
+
+The six affected portability assessments and device behavior return to 75.
+Device design/memory remain 75 with refreshed bounded evidence; reference and
+performance stay 50. The 156-program/44-unit inventory and threshold 75 are
+unchanged. Fifty axes remain below high, and the Go target/export closure flag
+stays false. Stage A continues; Stage B and F5 remain closed.

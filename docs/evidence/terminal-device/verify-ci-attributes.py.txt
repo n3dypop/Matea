@@ -1,0 +1,85 @@
+"""Bind exact 04e81bc CI programs/native device observations before qualification."""
+import hashlib,json,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_probe_outputs
+source=Path('/private/tmp/matea-attributes-ci04');out=root/'docs/evidence/terminal-device/ci-04e81bc';out.mkdir(exist_ok=True)
+sha=lambda b:hashlib.sha256(b).hexdigest();run=json.loads(Path('/private/tmp/matea-attributes-ci04-run.json').read_bytes())
+required={f'{kind} ({os}-latest)' for kind in ['foundation','reference-probes'] for os in ['ubuntu','macos','windows']}|{'msrv'}
+assert run['headSha']=='04e81bcc563e2bf8b647c0247dba2a19ddd7b499'
+assert run['status']=='completed' and run['conclusion']=='success'
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+(out/'run.json').write_text(json.dumps(run,indent=2)+'\n')
+shutil.copy2('/private/tmp/matea-attributes-msrv04.log',out/'msrv.log')
+assert '1.88.0' in (out/'msrv.log').read_text() and 'cargo test --locked --workspace' in (out/'msrv.log').read_text()
+binding=None;native={}
+for os in ['ubuntu','macos','windows']:
+ folder=source/f'native-drivers-{os}-latest';evidence=folder/'docs/evidence';dest=out/os;dest.mkdir(exist_ok=True)
+ report=json.loads((evidence/'local-validation.json').read_bytes())
+ assert report['status']=='complete' and report['all_local_checks_passed'] is True and report['source_changed_during_run']==[]
+ assert len(report['checks'])==47 and len({c['name'] for c in report['checks']})==47 and all(c['exit_code']==0 for c in report['checks'])
+ hashes=report['source_sha256'];assert len(hashes)==198 and (binding is None or hashes==binding);binding=hashes
+ verified=[];missing=[]
+ for check in report['checks']:
+  assert Path(check['log']).name==check['log']
+  path=evidence/check['log']
+  if path.is_file():
+   assert sha(path.read_bytes())==check['log_sha256'],(os,check['name']);verified.append(check['name']);shutil.copy2(path,dest/path.name)
+  else:missing.append(check['name'])
+ shutil.copy2(evidence/'local-validation.json',dest/'local-validation.json')
+ coverage=evidence/'quality/rust-execution-coverage.json';data=json.loads(coverage.read_bytes());assert data['status']=='complete' and data['input_sha256']==hashes;shutil.copy2(coverage,dest/'rust-execution-coverage.json')
+ for name,h in data['source_sha256'].items():assert h==hashes[name],(os,name)
+ expected_cases=['state','drop','unwind','ascii','byte_backspace','supplementary','empty','limit','zero_limit']
+ if os!='windows':expected_cases+=['empty_eof','partial_eof','no_overread']
+ for kind,path in [('native',evidence/'terminal-device'),('instrumented',folder/'artifacts/quality-coverage/terminal-device')]:
+  value=json.loads((path/'context.json').read_bytes());assert value['status']=='complete'
+  assert [c['case'] for c in value['cases']]==expected_cases and all(c['status']=='passed' and c['exit_code']==0 and not c['stderr'] for c in value['cases'])
+  if os=='windows':
+   console=value['native_console'];assert console['status']=='complete' and console['binary_sha256']==value['binary_sha256']
+   assert console['console_input_before']==console['console_input_after'] and console['console_output_before']==console['console_output_after']
+   for c in value['cases']:assert c['before']==c['after']
+  else:
+   for c in value['cases']:
+    before,after=c['before'].copy(),c['after'].copy()
+    if os=='macos':before[3]&=~536870912;after[3]&=~536870912
+    assert before==after,(os,kind,c['case'])
+  for c in value['cases']:
+   if c['case'] in ['state','drop','unwind']:
+    if os=='windows':assert c['raw']==c['expected_raw']
+    else:
+     raw,expected=c['raw'].copy(),c['expected_raw'].copy()
+     if os=='macos':raw[3]&=~536870912;expected[3]&=~536870912
+     assert raw==expected,(os,kind,c['case'])
+   else:
+    expected={'ascii':('ok','746561'),'byte_backspace':('ok','e88c'),'supplementary':('ok','f09f8db5'),'empty':('ok',''),'limit':('limit','7465'),'zero_limit':('limit',''),'empty_eof':('UnexpectedEof',''),'partial_eof':('ok','746561'),'no_overread':('ok','746561')}[c['case']]
+    assert c['result'][1:3]==list(expected) and c['result'][4]=='false'
+   if c['case']=='no_overread':assert c['remainder_hex']=='6e6578740a'
+  target=dest/(kind+'-device');target.mkdir(exist_ok=True)
+  shutil.copy2(path/'context.json',target/'context.json')
+  attempt=Path(value['attempt']);assert not attempt.is_absolute() and '..' not in attempt.parts
+  shutil.copytree(path/attempt,target/attempt,dirs_exist_ok=True)
+ log=folder/'artifacts/quality-coverage/coverage-terminal-device.log';assert b'Native device checks complete' in log.read_bytes();shutil.copy2(log,dest/'coverage-terminal-device.log')
+ probes=source/f'reference-paths-{os}-latest';probe=json.loads((probes/'path-checks.json').read_bytes());assert probe['source_inventories']==11 and probe['matched_cases']==84 and probe['progress_fixture_cases']==120;shutil.copy2(probes/'path-checks.json',dest/'path-checks.json')
+ precise=read_probe_outputs((dest/'precise-color-tests.log').read_text());oracle=read_probe_outputs((root/'docs/evidence/precise-color-inputs/performance/optimized/after-precise-outputs.jsonl').read_text());assert precise==oracle and len(precise)==10
+ native[os]={'native_checks':47,'device_native_cases':len(expected_cases),'device_instrumented_cases':len(expected_cases),'precise_outputs':10,'uploaded_log_sha256_verified':verified,'logs_not_uploaded':missing,'rust_paths':len(data['files']),'rust_instances':sum(len(f['instances']) for f in data['files'])}
+for name,h in binding.items():assert sha(subprocess.check_output(['git','show',run['headSha']+':'+name]))==h,name
+changed=[n for n,h in binding.items() if sha((root/n).read_bytes())!=h];assert changed in [[],['docs/quality-plan.json']],changed
+miri=root/'docs/evidence/terminal-device/miri-attributes';m=json.loads((miri/'context.json').read_bytes());verification=json.loads((miri/'verification.json').read_bytes())
+assert m['status']=='complete' and verification['tests']==10 and verification['context_sha256']==sha((miri/'context.json').read_bytes())
+for name,h in m['source_sha256'].items():assert sha((root/name).read_bytes())==h,name
+plan_path=root/'docs/quality-plan.json';plan=json.loads(plan_path.read_bytes());qualified=[]
+units=['matea-terminal/lib','matea/lib','matea-terminal/integration-tests','scripts/coverage-and-issues','scripts/test-and-acceptance-drivers','matea-terminal/device']
+for u in plan['units']:
+ if u['id'] not in units:continue
+ assert all(sha((root/f).read_bytes())==binding[f] for f in u['files']),u['id']
+ u['criteria']['portability']={'score':75,'reason':'Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification.'}
+ if u['id']=='matea-terminal/device':
+  u['criteria']['rust_design']={'score':75,'reason':'Borrowed AsFd/AsHandle owners, opaque snapshots, UI-local non-Send restoration, shared lease and typed partial/error contracts reviewed; constructor query and failed transition cleanup tested. Two compile-fail ownership contracts pass; names remain provisional.'}
+  u['criteria']['memory_safety']={'score':75,'reason':'Narrow documented termios/console FFI uses borrowed handles and checked initialization. Pure line/mode/UTF-16/lease logic remains safe Rust. Miri seed 223 passes ten tests including native Unix attribute copy/control values and 90 canonical length/limit positions; real input/state fixtures pass all three OSes. No exhaustive soundness or transitive-dependency claim.'}
+  u['criteria']['behavior']={'score':75,'reason':'Finite normal/error/limit/EOF/byte-editing/current/original restore and retry/unwind contracts have pure/native regressions. Native fixtures pass Linux/macOS/Windows, including full supplementary console input and exact queued following-line preservation on Unix. Abrupt process signals, unsupported source OSes and full reference contracts remain explicit limits.'}
+ u['evidence'].append('docs/evidence/terminal-device/ci-04e81bc/source-bindings.json');qualified.append(u['id'])
+assert len(qualified)==6
+frontier=json.loads((root/'docs/coverage/dependency-frontier.json').read_bytes());assert frontier['go_target_export_closure_reviewed'] is False
+result={'schema':1,'source_head':run['headSha'],'run_url':'https://github.com/n3dypop/Matea/actions/runs/39495143723','required_successful_jobs':sorted(required),'input_sha256':binding,'native':native,'qualified_units':qualified,'qualified_device_dimensions':['rust_design','memory_safety','behavior','portability'],'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['All 156 program and 198 execution-input CI hashes bind the exact source commit. Only quality assessment metadata differs in the current checkout; no old CI is relabeled as new execution.','Uploaded raw log hashes checked; missing logs explicitly listed. Native/instrumented console fixtures do not prove physical emulator, IME or font behavior.','Device reference and performance remain 50; source platform closure, native errors/cancellation and other-host performance are pending. Stage B/F5 stay closed.']}
+(out/'source-bindings.json').write_text(json.dumps(result,indent=2)+'\n');plan_path.write_text(json.dumps(plan,indent=2)+'\n');print('Qualified six units; current expected unmet axes: 50')

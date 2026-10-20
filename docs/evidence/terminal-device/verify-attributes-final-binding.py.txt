@@ -1,0 +1,46 @@
+"""Bind the Unix-attribute/Windows-mode qualification after committing metadata."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('binding refuses -O')
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,programs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes())
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes())
+validate_native(native,root);validate_coverage(coverage,root)
+actual={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+assert actual==native['source_sha256']==coverage['input_sha256'] and len(actual)==198
+assert len(programs(root))==156
+for name,h in actual.items():assert sha(subprocess.check_output(['git','show',head+':'+name]))==h,name
+ci=json.loads((root/'docs/evidence/terminal-device/ci-04e81bc/source-bindings.json').read_bytes())
+changed=sorted(n for n in actual if actual[n]!=ci['input_sha256'][n])
+assert changed==['docs/quality-plan.json']
+old=json.loads(subprocess.check_output(['git','show',ci['source_head']+':docs/quality-plan.json']))
+new=json.loads((root/'docs/quality-plan.json').read_bytes())
+assert old['high_threshold']==new['high_threshold']==75 and old['scope']==new['scope']
+assert len(old['units'])==len(new['units'])==44
+allowed=set(ci['qualified_units']);promoted=[]
+for a,b in zip(old['units'],new['units']):
+ assert a['id']==b['id'] and a['files']==b['files']
+ for dimension,value in b['criteria'].items():
+  previous=a['criteria'][dimension]
+  if value['score']!=previous['score']:
+   assert a['id'] in allowed and previous['score']==50 and value['score']==75
+   assert dimension=='portability' or (a['id']=='matea-terminal/device' and dimension=='behavior')
+   promoted.append([a['id'],dimension])
+assert len(promoted)==7
+assert json.loads((root/'docs/coverage/dependency-frontier.json').read_bytes())['go_target_export_closure_reviewed'] is False
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes())
+assert gate['below_high_axes']==50 and gate['pending_issue_reports']==823 and gate['f5']=='closed'
+result={'status':'complete','tested_committed_inputs':head,'ci_source_head':ci['source_head'],
+ 'execution_inputs':len(actual),'current_inputs_match_native_and_llvm':True,'ci_different_inputs':changed,
+ 'promoted_assessments':promoted,
+ 'reviewed_metadata_changes':'Six portability assessments and device behavior restored to 75 after exact-source three-OS native/instrumented CI and ten targeted Miri tests. Existing device design/memory reasons refreshed without score changes. Same 156 programs, 44 units, threshold 75 and partial reference/performance assessments.',
+ 'gate':{'below_high_axes':50,'pending_issue_reports':823,'go_target_export_closure_reviewed':False,'stage_a':'ongoing','stage_b':'not_started','f5':'closed'},
+ 'report_sha256':{n:sha((root/n).read_bytes()) for n in ['docs/evidence/local-validation.json','docs/evidence/quality/rust-execution-coverage.json','docs/evidence/quality/report.json','docs/evidence/quality/final-gate-status.json']},
+ 'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['CI stays bound to its actual source commit. The current committed inputs differ only in separately reviewed assessment metadata; no execution is relabeled.',
+ 'Native observations do not establish source-platform/export closure, physical terminal support, universal performance or exhaustive memory safety.']}
+(root/'docs/evidence/terminal-device/attributes-post-qualification-binding.json').write_text(json.dumps(result,indent=2)+'\n')
+print('Bound',head,'198 inputs; seven qualified axes; 50 remain')

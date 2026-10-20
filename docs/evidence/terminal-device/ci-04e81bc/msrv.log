@@ -1,0 +1,1483 @@
+﻿2026-10-20T20:48:42.6389719Z Current runner version: '2.337.0'
+2026-10-20T20:48:42.6415271Z ##[group]Runner Image Provisioner
+2026-10-20T20:48:42.6416155Z Hosted Compute Agent
+2026-10-20T20:48:42.6416818Z Version: 20261015.610
+2026-10-20T20:48:42.6417533Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-20T20:48:42.6418307Z Build Date: 2026-10-14T17:06:54Z
+2026-10-20T20:48:42.6419340Z Worker ID: {e3ba487d-a1fc-40c7-9510-b828d503e06e}
+2026-10-20T20:48:42.6420082Z Region: westus
+2026-10-20T20:48:42.6420684Z Cloud: Azure
+2026-10-20T20:48:42.6421284Z ##[endgroup]
+2026-10-20T20:48:42.6423272Z ##[group]Operating System
+2026-10-20T20:48:42.6424017Z Ubuntu
+2026-10-20T20:48:42.6424554Z 24.04.5
+2026-10-20T20:48:42.6425048Z LTS
+2026-10-20T20:48:42.6425679Z ##[endgroup]
+2026-10-20T20:48:42.6426292Z ##[group]Runner Image
+2026-10-20T20:48:42.6426963Z Image: ubuntu-24.04
+2026-10-20T20:48:42.6427544Z Version: 20261018.339.1
+2026-10-20T20:48:42.6429146Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-20T20:48:42.6430800Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-20T20:48:42.6431842Z ##[endgroup]
+2026-10-20T20:48:42.6432933Z ##[group]GITHUB_TOKEN Permissions
+2026-10-20T20:48:42.6435219Z Contents: read
+2026-10-20T20:48:42.6435879Z Metadata: read
+2026-10-20T20:48:42.6436437Z ##[endgroup]
+2026-10-20T20:48:42.6438623Z Secret source: Actions
+2026-10-20T20:48:42.6439814Z Cache mode: write
+2026-10-20T20:48:42.6440678Z Prepare workflow directory
+2026-10-20T20:48:42.6792963Z Prepare all required actions
+2026-10-20T20:48:42.6844330Z Getting action download info
+2026-10-20T20:48:43.0541636Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-20T20:48:43.1692149Z Download action repository 'dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de' (SHA:02cb101ec7c40f2c49e1d9714d64511d8e1b74de)
+2026-10-20T20:48:43.5631775Z Complete job name: msrv
+2026-10-20T20:48:43.6460575Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-20T20:48:43.6461682Z with:
+2026-10-20T20:48:43.6462126Z   repository: n3dypop/Matea
+2026-10-20T20:48:43.6466253Z   token: ***
+2026-10-20T20:48:43.6466730Z   ssh-strict: true
+2026-10-20T20:48:43.6467170Z   ssh-user: git
+2026-10-20T20:48:43.6467619Z   persist-credentials: true
+2026-10-20T20:48:43.6468106Z   clean: true
+2026-10-20T20:48:43.6468547Z   sparse-checkout-cone-mode: true
+2026-10-20T20:48:43.6469285Z   fetch-depth: 1
+2026-10-20T20:48:43.6469724Z   fetch-tags: false
+2026-10-20T20:48:43.6470165Z   show-progress: true
+2026-10-20T20:48:43.6470605Z   lfs: false
+2026-10-20T20:48:43.6471038Z   submodules: false
+2026-10-20T20:48:43.6471557Z   set-safe-directory: true
+2026-10-20T20:48:43.6472133Z   allow-unsafe-pr-checkout: false
+2026-10-20T20:48:43.6472963Z ##[endgroup]
+2026-10-20T20:48:43.7577200Z Syncing repository: n3dypop/Matea
+2026-10-20T20:48:43.7580201Z ##[group]Getting Git version info
+2026-10-20T20:48:43.7581426Z Working directory is '/home/runner/work/Matea/Matea'
+2026-10-20T20:48:43.7583013Z [command]/usr/bin/git version
+2026-10-20T20:48:43.7727003Z git version 2.55.0
+2026-10-20T20:48:43.7757356Z ##[endgroup]
+2026-10-20T20:48:43.7769237Z Temporarily overriding HOME='/home/runner/work/_temp/d24555e0-4009-4933-aaeb-e644188f8066' before making global git config changes
+2026-10-20T20:48:43.7770840Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T20:48:43.7777025Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Matea/Matea
+2026-10-20T20:48:43.7834487Z Deleting the contents of '/home/runner/work/Matea/Matea'
+2026-10-20T20:48:43.7838615Z ##[group]Determining repository object format
+2026-10-20T20:48:43.7841270Z ##[endgroup]
+2026-10-20T20:48:43.7842433Z ##[group]Initializing the repository
+2026-10-20T20:48:43.7846716Z [command]/usr/bin/git init /home/runner/work/Matea/Matea
+2026-10-20T20:48:43.7969332Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-20T20:48:43.7971902Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-20T20:48:43.7973347Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-20T20:48:43.7974806Z hint: call:
+2026-10-20T20:48:43.7975485Z hint:
+2026-10-20T20:48:43.7976172Z hint: 	git config --global init.defaultBranch <name>
+2026-10-20T20:48:43.7976945Z hint:
+2026-10-20T20:48:43.7977759Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-20T20:48:43.7979275Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-20T20:48:43.7980292Z hint:
+2026-10-20T20:48:43.7980891Z hint: 	git branch -m <name>
+2026-10-20T20:48:43.7981508Z hint:
+2026-10-20T20:48:43.7982293Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-20T20:48:43.7983561Z Initialized empty Git repository in /home/runner/work/Matea/Matea/.git/
+2026-10-20T20:48:43.7985712Z [command]/usr/bin/git remote add origin https://github.com/n3dypop/Matea
+2026-10-20T20:48:43.8063048Z ##[endgroup]
+2026-10-20T20:48:43.8063873Z ##[group]Disabling automatic garbage collection
+2026-10-20T20:48:43.8068114Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-20T20:48:43.8109901Z ##[endgroup]
+2026-10-20T20:48:43.8111221Z ##[group]Setting up auth
+2026-10-20T20:48:43.8112259Z Removing SSH command configuration
+2026-10-20T20:48:43.8119620Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T20:48:43.8166793Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T20:48:43.8612317Z Removing HTTP extra header
+2026-10-20T20:48:43.8619830Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T20:48:43.8672695Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T20:48:43.8920738Z Removing includeIf entries pointing to credentials config files
+2026-10-20T20:48:43.8926406Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T20:48:43.8975625Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T20:48:43.9245888Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-20T20:48:43.9298367Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Matea/Matea/.git.path /home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:48:43.9346095Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:48:43.9396561Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:48:43.9447537Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:48:43.9494982Z ##[endgroup]
+2026-10-20T20:48:43.9496264Z ##[group]Fetching the repository
+2026-10-20T20:48:43.9504071Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +04e81bcc563e2bf8b647c0247dba2a19ddd7b499:refs/remotes/origin/foundation-coverage
+2026-10-20T20:48:46.0375821Z From https://github.com/n3dypop/Matea
+2026-10-20T20:48:46.0377903Z  * [new ref]         04e81bcc563e2bf8b647c0247dba2a19ddd7b499 -> origin/foundation-coverage
+2026-10-20T20:48:46.0388144Z [command]/usr/bin/git branch --list --remote origin/foundation-coverage
+2026-10-20T20:48:46.0426817Z   origin/foundation-coverage
+2026-10-20T20:48:46.0437303Z [command]/usr/bin/git rev-parse refs/remotes/origin/foundation-coverage
+2026-10-20T20:48:46.0472692Z 04e81bcc563e2bf8b647c0247dba2a19ddd7b499
+2026-10-20T20:48:46.0478219Z ##[endgroup]
+2026-10-20T20:48:46.0480057Z ##[group]Determining the checkout info
+2026-10-20T20:48:46.0481965Z ##[endgroup]
+2026-10-20T20:48:46.0483301Z [command]/usr/bin/git sparse-checkout disable
+2026-10-20T20:48:46.0546532Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-20T20:48:46.0590486Z ##[group]Checking out the ref
+2026-10-20T20:48:46.0594661Z [command]/usr/bin/git checkout --progress --force -B foundation-coverage refs/remotes/origin/foundation-coverage
+2026-10-20T20:48:46.6288035Z Switched to a new branch 'foundation-coverage'
+2026-10-20T20:48:46.6292712Z branch 'foundation-coverage' set up to track 'origin/foundation-coverage'.
+2026-10-20T20:48:46.6339804Z ##[endgroup]
+2026-10-20T20:48:46.6399367Z [command]/usr/bin/git log -1 --format=%H
+2026-10-20T20:48:46.6440008Z 04e81bcc563e2bf8b647c0247dba2a19ddd7b499
+2026-10-20T20:48:46.6814983Z ##[group]Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+2026-10-20T20:48:46.6815495Z with:
+2026-10-20T20:48:46.6815743Z   toolchain: 1.88
+2026-10-20T20:48:46.6815997Z ##[endgroup]
+2026-10-20T20:48:46.6970321Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-10-20T20:48:46.7034488Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-10-20T20:48:46.7034976Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-10-20T20:48:46.7035576Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-10-20T20:48:46.7036224Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-10-20T20:48:46.7036600Z [36;1m  exit 1[0m
+2026-10-20T20:48:46.7037033Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-10-20T20:48:46.7037548Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2026-10-20T20:48:46.7038215Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7038995Z [36;1m  else[0m
+2026-10-20T20:48:46.7039481Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7039994Z [36;1m  fi[0m
+2026-10-20T20:48:46.7040348Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-10-20T20:48:46.7040938Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7041456Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-10-20T20:48:46.7042023Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7042582Z [36;1melse[0m
+2026-10-20T20:48:46.7042872Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7043223Z [36;1mfi[0m
+2026-10-20T20:48:46.7222753Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:46.7223214Z env:
+2026-10-20T20:48:46.7223481Z   toolchain: 1.88
+2026-10-20T20:48:46.7223761Z ##[endgroup]
+2026-10-20T20:48:46.7362672Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=39]
+2026-10-20T20:48:46.7376604Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-10-20T20:48:46.7408688Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-10-20T20:48:46.7409811Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7410503Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7411248Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:46.7459649Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:46.7460044Z env:
+2026-10-20T20:48:46.7460268Z   targets: 
+2026-10-20T20:48:46.7460501Z   components: 
+2026-10-20T20:48:46.7460740Z ##[endgroup]
+2026-10-20T20:48:46.7545537Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=16]
+2026-10-20T20:48:46.7547980Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-10-20T20:48:46.7569504Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-10-20T20:48:46.7570041Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2026-10-20T20:48:46.7616215Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:46.7616623Z ##[endgroup]
+2026-10-20T20:48:46.7694170Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=14]
+2026-10-20T20:48:46.7696758Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-10-20T20:48:46.7726394Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-10-20T20:48:46.7726851Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-10-20T20:48:46.7727684Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2026-10-20T20:48:46.7728468Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2026-10-20T20:48:46.7729059Z [36;1mfi[0m
+2026-10-20T20:48:46.7777369Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:46.7777772Z env:
+2026-10-20T20:48:46.7778032Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:46.7778336Z ##[endgroup]
+2026-10-20T20:48:46.7855207Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=15]
+2026-10-20T20:48:46.7857812Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-10-20T20:48:46.7865821Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-20T20:48:46.7877886Z ##[start-action display=rustup toolchain install 1.88;id=__dtolnay_rust-toolchain.__run_4]
+2026-10-20T20:48:46.7900412Z ##[group]Run rustup toolchain install 1.88 --profile minimal --no-self-update --force-non-host
+2026-10-20T20:48:46.7901118Z [36;1mrustup toolchain install 1.88 --profile minimal --no-self-update --force-non-host[0m
+2026-10-20T20:48:46.7948177Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:46.7948572Z env:
+2026-10-20T20:48:46.7949007Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:46.7949338Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-10-20T20:48:46.7949630Z ##[endgroup]
+2026-10-20T20:48:46.9046587Z info: syncing channel updates for 1.88-x86_64-unknown-linux-gnu
+2026-10-20T20:48:47.1615469Z info: latest update on 2025-06-26 for version 1.88.0 (6b00bc388 2025-06-23)
+2026-10-20T20:48:47.1616172Z info: downloading 3 components
+2026-10-20T20:48:54.8959366Z 
+2026-10-20T20:48:54.9039729Z   1.88-x86_64-unknown-linux-gnu installed - rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-10-20T20:48:54.9040461Z 
+2026-10-20T20:48:54.9238168Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=8135]
+2026-10-20T20:48:54.9246963Z ##[start-action display=rustup default 1.88;id=__dtolnay_rust-toolchain.__run_5]
+2026-10-20T20:48:54.9271604Z ##[group]Run rustup default 1.88 --force-non-host
+2026-10-20T20:48:54.9271994Z [36;1mrustup default 1.88 --force-non-host[0m
+2026-10-20T20:48:54.9325654Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:54.9326022Z env:
+2026-10-20T20:48:54.9326244Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:54.9326518Z ##[endgroup]
+2026-10-20T20:48:54.9446145Z info: using existing install for 1.88-x86_64-unknown-linux-gnu
+2026-10-20T20:48:54.9453432Z info: default toolchain set to 1.88-x86_64-unknown-linux-gnu
+2026-10-20T20:48:54.9453807Z 
+2026-10-20T20:48:54.9531272Z   1.88-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-10-20T20:48:54.9531896Z 
+2026-10-20T20:48:54.9550587Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=30]
+2026-10-20T20:48:54.9553412Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-10-20T20:48:54.9576984Z ##[group]Run DATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-10-20T20:48:54.9577824Z [36;1mDATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-10-20T20:48:54.9578462Z [36;1mHASH=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-10-20T20:48:54.9579437Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-10-20T20:48:54.9633554Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:54.9633902Z env:
+2026-10-20T20:48:54.9634287Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:54.9634563Z ##[endgroup]
+2026-10-20T20:48:55.0003864Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=44]
+2026-10-20T20:48:55.0006888Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-10-20T20:48:55.0032034Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-10-20T20:48:55.0032444Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-10-20T20:48:55.0032787Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-10-20T20:48:55.0033078Z [36;1mfi[0m
+2026-10-20T20:48:55.0088529Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:55.0089235Z env:
+2026-10-20T20:48:55.0089510Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.0089792Z ##[endgroup]
+2026-10-20T20:48:55.0177069Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=16]
+2026-10-20T20:48:55.0180126Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-10-20T20:48:55.0201956Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-10-20T20:48:55.0202347Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-10-20T20:48:55.0202691Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-10-20T20:48:55.0203000Z [36;1mfi[0m
+2026-10-20T20:48:55.0258151Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:55.0258526Z env:
+2026-10-20T20:48:55.0258989Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.0259278Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:48:55.0259509Z ##[endgroup]
+2026-10-20T20:48:55.0366077Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=18]
+2026-10-20T20:48:55.0368529Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-10-20T20:48:55.0392169Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-10-20T20:48:55.0392718Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-10-20T20:48:55.0393444Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-10-20T20:48:55.0394188Z [36;1m  if rustc +1.88 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-10-20T20:48:55.0394771Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-20T20:48:55.0395326Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-10-20T20:48:55.0395817Z [36;1m  elif rustc +1.88 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-10-20T20:48:55.0396375Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-20T20:48:55.0397100Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-10-20T20:48:55.0397456Z [36;1m  fi[0m
+2026-10-20T20:48:55.0397656Z [36;1mfi[0m
+2026-10-20T20:48:55.0450399Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:55.0450754Z env:
+2026-10-20T20:48:55.0450957Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.0451221Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:48:55.0451445Z   CARGO_TERM_COLOR: always
+2026-10-20T20:48:55.0451670Z ##[endgroup]
+2026-10-20T20:48:55.0784633Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=41]
+2026-10-20T20:48:55.0787688Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-10-20T20:48:55.0811798Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-10-20T20:48:55.0812644Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-10-20T20:48:55.0813276Z [36;1mif rustc +1.88 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-10-20T20:48:55.0813923Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-10-20T20:48:55.0814280Z [36;1mfi[0m
+2026-10-20T20:48:55.0869963Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:55.0870330Z env:
+2026-10-20T20:48:55.0870560Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.0870837Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:48:55.0871067Z   CARGO_TERM_COLOR: always
+2026-10-20T20:48:55.0871301Z ##[endgroup]
+2026-10-20T20:48:55.1079928Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=29]
+2026-10-20T20:48:55.1084025Z ##[start-action display=rustc +1.88 --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-10-20T20:48:55.1105748Z ##[group]Run rustc +1.88 --version --verbose
+2026-10-20T20:48:55.1106110Z [36;1mrustc +1.88 --version --verbose[0m
+2026-10-20T20:48:55.1160395Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T20:48:55.1160757Z env:
+2026-10-20T20:48:55.1160971Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.1161253Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:48:55.1161476Z   CARGO_TERM_COLOR: always
+2026-10-20T20:48:55.1161697Z ##[endgroup]
+2026-10-20T20:48:55.1349804Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-10-20T20:48:55.1350308Z binary: rustc
+2026-10-20T20:48:55.1350670Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2026-10-20T20:48:55.1351167Z commit-date: 2025-06-23
+2026-10-20T20:48:55.1351493Z host: x86_64-unknown-linux-gnu
+2026-10-20T20:48:55.1351949Z release: 1.88.0
+2026-10-20T20:48:55.1352681Z LLVM version: 20.1.5
+2026-10-20T20:48:55.1370611Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=28]
+2026-10-20T20:48:55.1432833Z ##[group]Run cargo test --locked --workspace
+2026-10-20T20:48:55.1433254Z [36;1mcargo test --locked --workspace[0m
+2026-10-20T20:48:55.1488665Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:48:55.1489223Z env:
+2026-10-20T20:48:55.1489437Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:48:55.1489706Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:48:55.1489933Z   CARGO_TERM_COLOR: always
+2026-10-20T20:48:55.1490157Z ##[endgroup]
+2026-10-20T20:48:55.1954706Z [1m[32m    Updating[0m crates.io index
+2026-10-20T20:48:55.2118685Z [1m[32m    Updating[0m git repository `https://github.com/ratatui/ratatui`
+2026-10-20T20:48:56.8793187Z [1m[32m Downloading[0m crates ...
+2026-10-20T20:48:56.9355752Z [1m[32m  Downloaded[0m termios v0.3.3
+2026-10-20T20:48:56.9398292Z [1m[32m  Downloaded[0m filedescriptor v0.8.3
+2026-10-20T20:48:56.9420168Z [1m[32m  Downloaded[0m errno v0.3.14
+2026-10-20T20:48:56.9444870Z [1m[32m  Downloaded[0m strsim v0.11.1
+2026-10-20T20:48:56.9499850Z [1m[32m  Downloaded[0m strum_macros v0.28.0
+2026-10-20T20:48:56.9552861Z [1m[32m  Downloaded[0m scopeguard v1.2.0
+2026-10-20T20:48:56.9569761Z [1m[32m  Downloaded[0m lab v0.11.0
+2026-10-20T20:48:56.9592301Z [1m[32m  Downloaded[0m heck v0.5.0
+2026-10-20T20:48:56.9632435Z [1m[32m  Downloaded[0m phf_generator v0.11.3
+2026-10-20T20:48:56.9661280Z [1m[32m  Downloaded[0m rustversion v1.0.23
+2026-10-20T20:48:56.9749837Z [1m[32m  Downloaded[0m wezterm-dynamic v0.2.1
+2026-10-20T20:48:56.9788931Z [1m[32m  Downloaded[0m wezterm-dynamic-derive v0.1.1
+2026-10-20T20:48:56.9820599Z [1m[32m  Downloaded[0m wezterm-input-types v0.1.0
+2026-10-20T20:48:56.9847344Z [1m[32m  Downloaded[0m ucd-trie v0.1.7
+2026-10-20T20:48:56.9882010Z [1m[32m  Downloaded[0m zmij v1.0.23
+2026-10-20T20:48:56.9921572Z [1m[32m  Downloaded[0m wezterm-bidi v0.2.3
+2026-10-20T20:48:56.9966359Z [1m[32m  Downloaded[0m uuid v1.18.0
+2026-10-20T20:48:57.0010820Z [1m[32m  Downloaded[0m unicode-segmentation v1.13.3
+2026-10-20T20:48:57.0068971Z [1m[32m  Downloaded[0m itertools v0.15.0
+2026-10-20T20:48:57.0168872Z [1m[32m  Downloaded[0m portable-atomic v1.15.0
+2026-10-20T20:48:57.0247909Z [1m[32m  Downloaded[0m hashbrown v0.17.1
+2026-10-20T20:48:57.0304795Z [1m[32m  Downloaded[0m syn v3.0.9
+2026-10-20T20:48:57.0419882Z [1m[32m  Downloaded[0m regex v1.11.1
+2026-10-20T20:48:57.0561350Z [1m[32m  Downloaded[0m syn v1.0.109
+2026-10-20T20:48:57.0658944Z [1m[32m  Downloaded[0m rustix v1.1.5
+2026-10-20T20:48:57.0921139Z [1m[32m  Downloaded[0m palette v0.7.7
+2026-10-20T20:48:57.1042644Z [1m[32m  Downloaded[0m time v0.3.55
+2026-10-20T20:48:57.1186380Z [1m[32m  Downloaded[0m unicode-width v0.2.2
+2026-10-20T20:48:57.1243965Z [1m[32m  Downloaded[0m syn v2.0.119
+2026-10-20T20:48:57.1357053Z [1m[32m  Downloaded[0m regex-syntax v0.8.5
+2026-10-20T20:48:57.1424941Z [1m[32m  Downloaded[0m nix v0.29.0
+2026-10-20T20:48:57.1533911Z [1m[32m  Downloaded[0m termwiz v0.23.3
+2026-10-20T20:48:57.1657979Z [1m[32m  Downloaded[0m aho-corasick v1.1.3
+2026-10-20T20:48:57.1710007Z [1m[32m  Downloaded[0m hashbrown v0.16.1
+2026-10-20T20:48:57.1760806Z [1m[32m  Downloaded[0m termina v0.4.0
+2026-10-20T20:48:57.1801165Z [1m[32m  Downloaded[0m pest v2.8.1
+2026-10-20T20:48:57.1847653Z [1m[32m  Downloaded[0m libm v0.2.16
+2026-10-20T20:48:57.1955774Z [1m[32m  Downloaded[0m serde v1.0.229
+2026-10-20T20:48:57.1992415Z [1m[32m  Downloaded[0m nom v7.1.3
+2026-10-20T20:48:57.2043999Z [1m[32m  Downloaded[0m derive_more v2.1.1
+2026-10-20T20:48:57.2172251Z [1m[32m  Downloaded[0m crossterm v0.29.0
+2026-10-20T20:48:57.2239244Z [1m[32m  Downloaded[0m typenum v1.18.0
+2026-10-20T20:48:57.2271840Z [1m[32m  Downloaded[0m signal-hook v0.3.18
+2026-10-20T20:48:57.2302039Z [1m[32m  Downloaded[0m serde_derive v1.0.229
+2026-10-20T20:48:57.2331846Z [1m[32m  Downloaded[0m regex-automata v0.4.9
+2026-10-20T20:48:57.2478990Z [1m[32m  Downloaded[0m serde_core v1.0.229
+2026-10-20T20:48:57.2506699Z [1m[32m  Downloaded[0m semver v1.0.28
+2026-10-20T20:48:57.2549845Z [1m[32m  Downloaded[0m ryu v1.0.23
+2026-10-20T20:48:57.2589647Z [1m[32m  Downloaded[0m mio v1.2.4
+2026-10-20T20:48:57.2671703Z [1m[32m  Downloaded[0m memchr v2.8.3
+2026-10-20T20:48:57.2725457Z [1m[32m  Downloaded[0m derive_more-impl v2.1.1
+2026-10-20T20:48:57.2777763Z [1m[32m  Downloaded[0m compact_str v0.10.0
+2026-10-20T20:48:57.2817716Z [1m[32m  Downloaded[0m base64 v0.22.1
+2026-10-20T20:48:57.2854952Z [1m[32m  Downloaded[0m unicode-ident v1.0.27
+2026-10-20T20:48:57.2882313Z [1m[32m  Downloaded[0m smallvec v1.16.3
+2026-10-20T20:48:57.2896053Z [1m[32m  Downloaded[0m libc v0.2.190
+2026-10-20T20:48:57.3354434Z [1m[32m  Downloaded[0m rand v0.8.5
+2026-10-20T20:48:57.3399670Z [1m[32m  Downloaded[0m minimal-lexical v0.2.1
+2026-10-20T20:48:57.3444673Z [1m[32m  Downloaded[0m finl_unicode v1.3.0
+2026-10-20T20:48:57.3484137Z [1m[32m  Downloaded[0m fancy-regex v0.11.0
+2026-10-20T20:48:57.3516373Z [1m[32m  Downloaded[0m euclid v0.22.11
+2026-10-20T20:48:57.3546577Z [1m[32m  Downloaded[0m darling_core v0.24.0
+2026-10-20T20:48:57.3604249Z [1m[32m  Downloaded[0m compact_str v0.9.0
+2026-10-20T20:48:57.3635889Z [1m[32m  Downloaded[0m static_assertions v1.1.0
+2026-10-20T20:48:57.3650414Z [1m[32m  Downloaded[0m signal-hook-registry v1.4.8
+2026-10-20T20:48:57.3662582Z [1m[32m  Downloaded[0m sha2 v0.10.9
+2026-10-20T20:48:57.3687769Z [1m[32m  Downloaded[0m proc-macro2 v1.0.107
+2026-10-20T20:48:57.3716833Z [1m[32m  Downloaded[0m log v0.4.34
+2026-10-20T20:48:57.3741577Z [1m[32m  Downloaded[0m litrs v1.0.1
+2026-10-20T20:48:57.3776730Z [1m[32m  Downloaded[0m anyhow v1.0.99
+2026-10-20T20:48:57.3816157Z [1m[32m  Downloaded[0m allocator-api2 v0.2.21
+2026-10-20T20:48:57.3842586Z [1m[32m  Downloaded[0m wezterm-color-types v0.3.0
+2026-10-20T20:48:57.3851840Z [1m[32m  Downloaded[0m unicode-truncate v3.0.0
+2026-10-20T20:48:57.3868019Z [1m[32m  Downloaded[0m thiserror-impl v2.0.21
+2026-10-20T20:48:57.3882962Z [1m[32m  Downloaded[0m num-traits v0.2.19
+2026-10-20T20:48:57.3909281Z [1m[32m  Downloaded[0m kasuari v0.4.12
+2026-10-20T20:48:57.3934162Z [1m[32m  Downloaded[0m getrandom v0.3.3
+2026-10-20T20:48:57.3967694Z [1m[32m  Downloaded[0m darling v0.24.0
+2026-10-20T20:48:57.4032844Z [1m[32m  Downloaded[0m convert_case v0.10.0
+2026-10-20T20:48:57.4050693Z [1m[32m  Downloaded[0m bytemuck v1.23.2
+2026-10-20T20:48:57.4081745Z [1m[32m  Downloaded[0m bitflags v2.13.2
+2026-10-20T20:48:57.4125502Z [1m[32m  Downloaded[0m wezterm-blob-leases v0.1.1
+2026-10-20T20:48:57.4137081Z [1m[32m  Downloaded[0m vtparse v0.6.2
+2026-10-20T20:48:57.4146394Z [1m[32m  Downloaded[0m utf8parse v0.2.2
+2026-10-20T20:48:57.4156806Z [1m[32m  Downloaded[0m time-core v0.1.9
+2026-10-20T20:48:57.4168370Z [1m[32m  Downloaded[0m thiserror-impl v1.0.69
+2026-10-20T20:48:57.4182050Z [1m[32m  Downloaded[0m thiserror v2.0.21
+2026-10-20T20:48:57.4244196Z [1m[32m  Downloaded[0m thiserror v1.0.69
+2026-10-20T20:48:57.4298523Z [1m[32m  Downloaded[0m terminfo v0.9.0
+2026-10-20T20:48:57.4324960Z [1m[32m  Downloaded[0m siphasher v1.0.1
+2026-10-20T20:48:57.4337328Z [1m[32m  Downloaded[0m signal-hook-mio v0.2.5
+2026-10-20T20:48:57.4350812Z [1m[32m  Downloaded[0m rand_core v0.6.4
+2026-10-20T20:48:57.4364648Z [1m[32m  Downloaded[0m pest_meta v2.8.1
+2026-10-20T20:48:57.4385260Z [1m[32m  Downloaded[0m pest_generator v2.8.1
+2026-10-20T20:48:57.4398204Z [1m[32m  Downloaded[0m pest_derive v2.8.1
+2026-10-20T20:48:57.4422851Z [1m[32m  Downloaded[0m parking_lot_core v0.9.12
+2026-10-20T20:48:57.4443860Z [1m[32m  Downloaded[0m parking_lot v0.12.5
+2026-10-20T20:48:57.4468534Z [1m[32m  Downloaded[0m palette_derive v0.7.7
+2026-10-20T20:48:57.4486653Z [1m[32m  Downloaded[0m ordered-float v4.6.0
+2026-10-20T20:48:57.4501975Z [1m[32m  Downloaded[0m mac_address v1.1.8
+2026-10-20T20:48:57.4516982Z [1m[32m  Downloaded[0m lru v0.18.5
+2026-10-20T20:48:57.4529381Z [1m[32m  Downloaded[0m lock_api v0.4.14
+2026-10-20T20:48:57.4543148Z [1m[32m  Downloaded[0m line-clipping v0.3.8
+2026-10-20T20:48:57.4559414Z [1m[32m  Downloaded[0m itoa v1.0.18
+2026-10-20T20:48:57.4574144Z [1m[32m  Downloaded[0m indoc v2.0.7
+2026-10-20T20:48:57.4603392Z [1m[32m  Downloaded[0m foldhash v0.2.0
+2026-10-20T20:48:57.4616157Z [1m[32m  Downloaded[0m either v1.19.0
+2026-10-20T20:48:57.4631553Z [1m[32m  Downloaded[0m digest v0.10.7
+2026-10-20T20:48:57.4649816Z [1m[32m  Downloaded[0m deranged v0.5.8
+2026-10-20T20:48:57.4665671Z [1m[32m  Downloaded[0m csscolorparser v0.6.2
+2026-10-20T20:48:57.4679029Z [1m[32m  Downloaded[0m critical-section v1.2.0
+2026-10-20T20:48:57.4696933Z [1m[32m  Downloaded[0m cfg-if v1.0.5
+2026-10-20T20:48:57.4711298Z [1m[32m  Downloaded[0m castaway v0.2.4
+2026-10-20T20:48:57.4724803Z [1m[32m  Downloaded[0m by_address v1.2.1
+2026-10-20T20:48:57.4733573Z [1m[32m  Downloaded[0m block-buffer v0.10.4
+2026-10-20T20:48:57.4744319Z [1m[32m  Downloaded[0m bitflags v1.3.2
+2026-10-20T20:48:57.4776274Z [1m[32m  Downloaded[0m bit-vec v0.6.3
+2026-10-20T20:48:57.4790222Z [1m[32m  Downloaded[0m autocfg v1.5.1
+2026-10-20T20:48:57.4808436Z [1m[32m  Downloaded[0m atomic v0.6.1
+2026-10-20T20:48:57.4822817Z [1m[32m  Downloaded[0m version_check v0.9.5
+2026-10-20T20:48:57.4835656Z [1m[32m  Downloaded[0m quote v1.0.47
+2026-10-20T20:48:57.4862511Z [1m[32m  Downloaded[0m powerfmt v0.2.0
+2026-10-20T20:48:57.4874131Z [1m[32m  Downloaded[0m phf_shared v0.11.3
+2026-10-20T20:48:57.4884075Z [1m[32m  Downloaded[0m phf_macros v0.11.3
+2026-10-20T20:48:57.4894371Z [1m[32m  Downloaded[0m phf_codegen v0.11.3
+2026-10-20T20:48:57.4903918Z [1m[32m  Downloaded[0m phf v0.11.3
+2026-10-20T20:48:57.4916656Z [1m[32m  Downloaded[0m palette_math v0.7.7
+2026-10-20T20:48:57.4930889Z [1m[32m  Downloaded[0m num_threads v0.1.7
+2026-10-20T20:48:57.4941605Z [1m[32m  Downloaded[0m num-derive v0.4.2
+2026-10-20T20:48:57.4959433Z [1m[32m  Downloaded[0m num-conv v0.2.2
+2026-10-20T20:48:57.4968884Z [1m[32m  Downloaded[0m memoffset v0.9.1
+2026-10-20T20:48:57.4981783Z [1m[32m  Downloaded[0m lazy_static v1.5.0
+2026-10-20T20:48:57.4999521Z [1m[32m  Downloaded[0m instability v0.3.14
+2026-10-20T20:48:57.5014999Z [1m[32m  Downloaded[0m hex v0.4.3
+2026-10-20T20:48:57.5031149Z [1m[32m  Downloaded[0m memmem v0.1.1
+2026-10-20T20:48:57.5045914Z [1m[32m  Downloaded[0m ident_case v1.0.1
+2026-10-20T20:48:57.5059827Z [1m[32m  Downloaded[0m fixedbitset v0.4.2
+2026-10-20T20:48:57.5063681Z [1m[32m  Downloaded[0m equivalent v1.0.3
+2026-10-20T20:48:57.5074160Z [1m[32m  Downloaded[0m crypto-common v0.1.6
+2026-10-20T20:48:57.5083500Z [1m[32m  Downloaded[0m cpufeatures v0.2.17
+2026-10-20T20:48:57.5097469Z [1m[32m  Downloaded[0m generic-array v0.14.7
+2026-10-20T20:48:57.5111637Z [1m[32m  Downloaded[0m bit-set v0.5.3
+2026-10-20T20:48:57.5122509Z [1m[32m  Downloaded[0m rustc_version v0.4.1
+2026-10-20T20:48:57.5137509Z [1m[32m  Downloaded[0m fnv v1.0.7
+2026-10-20T20:48:57.5149281Z [1m[32m  Downloaded[0m darling_macro v0.24.0
+2026-10-20T20:48:57.5156895Z [1m[32m  Downloaded[0m cfg_aliases v0.2.1
+2026-10-20T20:48:57.5166635Z [1m[32m  Downloaded[0m deltae v0.3.2
+2026-10-20T20:48:57.5327761Z [1m[32m  Downloaded[0m linux-raw-sys v0.12.1
+2026-10-20T20:48:57.5975636Z [1m[32m  Downloaded[0m approx v0.5.1
+2026-10-20T20:48:57.5993013Z [1m[32m  Downloaded[0m strum v0.28.0
+2026-10-20T20:48:57.6001450Z [1m[32m  Downloaded[0m document-features v0.2.12
+2026-10-20T20:48:57.6523919Z [1m[32m   Compiling[0m unicode-segmentation v1.13.3
+2026-10-20T20:48:57.6525346Z [1m[32m   Compiling[0m cfg-if v1.0.5
+2026-10-20T20:48:57.6547384Z [1m[32m   Compiling[0m rustversion v1.0.23
+2026-10-20T20:48:57.6548280Z [1m[32m   Compiling[0m itoa v1.0.18
+2026-10-20T20:48:57.6955622Z [1m[32m   Compiling[0m static_assertions v1.1.0
+2026-10-20T20:48:57.7562466Z [1m[32m   Compiling[0m matea-style v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-style)
+2026-10-20T20:48:57.8570407Z [1m[32m   Compiling[0m unicode-width v0.2.2
+2026-10-20T20:48:58.1112999Z [1m[32m   Compiling[0m unicode-ident v1.0.27
+2026-10-20T20:48:58.1580779Z [1m[32m   Compiling[0m quote v1.0.47
+2026-10-20T20:48:58.1955735Z [1m[32m   Compiling[0m ryu v1.0.23
+2026-10-20T20:48:58.1999638Z [1m[32m   Compiling[0m bitflags v2.13.2
+2026-10-20T20:48:58.3470185Z [1m[32m   Compiling[0m proc-macro2 v1.0.107
+2026-10-20T20:48:58.4770433Z [1m[32m   Compiling[0m libc v0.2.190
+2026-10-20T20:48:58.4859207Z [1m[32m   Compiling[0m matea-motion v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-motion)
+2026-10-20T20:48:58.5800206Z [1m[32m   Compiling[0m equivalent v1.0.3
+2026-10-20T20:48:58.6124235Z [1m[32m   Compiling[0m allocator-api2 v0.2.21
+2026-10-20T20:48:58.7610029Z [1m[32m   Compiling[0m castaway v0.2.4
+2026-10-20T20:48:58.8185221Z [1m[32m   Compiling[0m compact_str v0.9.0
+2026-10-20T20:48:58.9180269Z [1m[32m   Compiling[0m foldhash v0.2.0
+2026-10-20T20:48:59.0460277Z [1m[32m   Compiling[0m ident_case v1.0.1
+2026-10-20T20:48:59.1036645Z [1m[32m   Compiling[0m zmij v1.0.23
+2026-10-20T20:48:59.3414323Z [1m[32m   Compiling[0m matea-render v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-render)
+2026-10-20T20:48:59.5320010Z [1m[32m   Compiling[0m strsim v0.11.1
+2026-10-20T20:48:59.6727984Z [1m[32m   Compiling[0m matea-core v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-core)
+2026-10-20T20:48:59.8180074Z [1m[32m   Compiling[0m syn v2.0.119
+2026-10-20T20:48:59.8530189Z [1m[32m   Compiling[0m syn v3.0.9
+2026-10-20T20:49:00.0768035Z [1m[32m   Compiling[0m thiserror v2.0.21
+2026-10-20T20:49:00.2890072Z [1m[32m   Compiling[0m errno v0.3.14
+2026-10-20T20:49:00.3930266Z [1m[32m   Compiling[0m parking_lot_core v0.9.12
+2026-10-20T20:49:00.4280245Z [1m[32m   Compiling[0m signal-hook v0.3.18
+2026-10-20T20:49:00.5990254Z [1m[32m   Compiling[0m heck v0.5.0
+2026-10-20T20:49:00.6155489Z [1m[32m   Compiling[0m either v1.19.0
+2026-10-20T20:49:00.7813493Z [1m[32m   Compiling[0m itertools v0.15.0
+2026-10-20T20:49:01.1215226Z [1m[32m   Compiling[0m signal-hook-registry v1.4.8
+2026-10-20T20:49:01.3695684Z [1m[32m   Compiling[0m matea-widgets v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-widgets)
+2026-10-20T20:49:02.4810294Z [1m[32m   Compiling[0m hashbrown v0.16.1
+2026-10-20T20:49:02.5960578Z [1m[32m   Compiling[0m strum_macros v0.28.0
+2026-10-20T20:49:03.1470314Z [1m[32m   Compiling[0m hashbrown v0.17.1
+2026-10-20T20:49:03.2420050Z [1m[32m   Compiling[0m convert_case v0.10.0
+2026-10-20T20:49:03.4970180Z [1m[32m   Compiling[0m darling_core v0.24.0
+2026-10-20T20:49:03.7834014Z [1m[32m   Compiling[0m rustix v1.1.5
+2026-10-20T20:49:04.1260296Z [1m[32m   Compiling[0m log v0.4.34
+2026-10-20T20:49:04.2590261Z [1m[32m   Compiling[0m smallvec v1.16.3
+2026-10-20T20:49:04.4440456Z [1m[32m   Compiling[0m scopeguard v1.2.0
+2026-10-20T20:49:04.4910443Z [1m[32m   Compiling[0m lock_api v0.4.14
+2026-10-20T20:49:04.9760216Z [1m[32m   Compiling[0m mio v1.2.4
+2026-10-20T20:49:05.0477741Z [1m[32m   Compiling[0m strum v0.28.0
+2026-10-20T20:49:05.1790121Z [1m[32m   Compiling[0m lru v0.18.5
+2026-10-20T20:49:05.2990493Z [1m[32m   Compiling[0m thiserror-impl v2.0.21
+2026-10-20T20:49:05.3240331Z [1m[32m   Compiling[0m derive_more-impl v2.1.1
+2026-10-20T20:49:05.5524092Z [1m[32m   Compiling[0m unicode-truncate v3.0.0
+2026-10-20T20:49:05.9315857Z [1m[32m   Compiling[0m compact_str v0.10.0
+2026-10-20T20:49:06.2130284Z [1m[32m   Compiling[0m num_threads v0.1.7
+2026-10-20T20:49:06.3182699Z [1m[32m   Compiling[0m critical-section v1.2.0
+2026-10-20T20:49:06.3680216Z [1m[32m   Compiling[0m num-conv v0.2.2
+2026-10-20T20:49:06.4920207Z [1m[32m   Compiling[0m litrs v1.0.1
+2026-10-20T20:49:06.6746686Z [1m[32m   Compiling[0m time-core v0.1.9
+2026-10-20T20:49:06.8547815Z [1m[32m   Compiling[0m powerfmt v0.2.0
+2026-10-20T20:49:06.9069031Z [1m[32m   Compiling[0m kasuari v0.4.12
+2026-10-20T20:49:06.9890505Z [1m[32m   Compiling[0m darling_macro v0.24.0
+2026-10-20T20:49:06.9920076Z [1m[32m   Compiling[0m indoc v2.0.7
+2026-10-20T20:49:07.0210282Z [1m[32m   Compiling[0m deranged v0.5.8
+2026-10-20T20:49:07.4220223Z [1m[32m   Compiling[0m linux-raw-sys v0.12.1
+2026-10-20T20:49:07.5771243Z [1m[32m   Compiling[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:07.7100142Z [1m[32m   Compiling[0m darling v0.24.0
+2026-10-20T20:49:07.7470152Z [1m[32m   Compiling[0m instability v0.3.14
+2026-10-20T20:49:08.3914670Z [1m[32m   Compiling[0m time v0.3.55
+2026-10-20T20:49:08.6290533Z [1m[32m   Compiling[0m document-features v0.2.12
+2026-10-20T20:49:08.9091657Z [1m[32m   Compiling[0m derive_more v2.1.1
+2026-10-20T20:49:08.9500310Z [1m[32m   Compiling[0m signal-hook-mio v0.2.5
+2026-10-20T20:49:09.0080370Z [1m[32m   Compiling[0m parking_lot v0.12.5
+2026-10-20T20:49:09.1990352Z [1m[32m   Compiling[0m line-clipping v0.3.8
+2026-10-20T20:49:09.2454250Z [1m[32m   Compiling[0m crossterm v0.29.0
+2026-10-20T20:49:09.4124659Z [1m[32m   Compiling[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:10.5250768Z [1m[32m   Compiling[0m matea-terminal v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-terminal)
+2026-10-20T20:49:10.9087467Z [1m[32m   Compiling[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:10.9559699Z [1m[32m   Compiling[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:11.0805857Z [1m[32m   Compiling[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+2026-10-20T20:49:11.3016332Z [1m[32m   Compiling[0m matea v0.1.0 (/home/runner/work/Matea/Matea/crates/matea)
+2026-10-20T20:49:14.8570589Z [1m[32m   Compiling[0m matea-api-audit v0.1.0 (/home/runner/work/Matea/Matea/tools/api-audit)
+2026-10-20T20:49:16.7361535Z [1m[32m   Compiling[0m matea-example-external-widget v0.1.0 (/home/runner/work/Matea/Matea/examples/external-widget)
+2026-10-20T20:49:17.3619675Z [1m[32m   Compiling[0m matea-perf-probe v0.1.0 (/home/runner/work/Matea/Matea/tools/perf-probe)
+2026-10-20T20:49:28.7630909Z [1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 33.59s
+2026-10-20T20:49:28.7996292Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea-0959ec9a0a9d161a)
+2026-10-20T20:49:28.8014793Z 
+2026-10-20T20:49:28.8015016Z running 0 tests
+2026-10-20T20:49:28.8015264Z 
+2026-10-20T20:49:28.8015687Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.8016263Z 
+2026-10-20T20:49:28.8017814Z [1m[32m     Running[0m tests/progress.rs (target/debug/deps/progress-05c25746c3fab4c4)
+2026-10-20T20:49:28.8029243Z 
+2026-10-20T20:49:28.8029513Z running 2 tests
+2026-10-20T20:49:28.8034928Z test runtime_retargets_and_cancels_reduced_motion_subscriptions ... ok
+2026-10-20T20:49:28.8041062Z test structured_progress_preserves_geometry_and_terminal_color_unicode_fallback ... ok
+2026-10-20T20:49:28.8041701Z 
+2026-10-20T20:49:28.8042046Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.8042442Z 
+2026-10-20T20:49:28.8043749Z [1m[32m     Running[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-1e1469e6b15ec169)
+2026-10-20T20:49:28.8054740Z 
+2026-10-20T20:49:28.8054927Z running 1 test
+2026-10-20T20:49:28.8064877Z test snapshot_scenes_reach_runtime_and_terminal_with_the_same_cells_cursor_and_bytes ... ok
+2026-10-20T20:49:28.8065377Z 
+2026-10-20T20:49:28.8065809Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.8066427Z 
+2026-10-20T20:49:28.8069423Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_api_audit-4add0c90a57d4e83)
+2026-10-20T20:49:28.8078516Z 
+2026-10-20T20:49:28.8078690Z running 6 tests
+2026-10-20T20:49:28.8119590Z test tests::borrowed_json_preserves_unicode_and_escapes_without_changing_bytes ... ok
+2026-10-20T20:49:28.8120710Z test tests::later_syntax_errors_never_publish_partial_file_declarations ... ok
+2026-10-20T20:49:28.8124604Z test tests::incremental_items_match_whole_file_parser_including_module_boundaries ... ok
+2026-10-20T20:49:28.8305589Z test tests::final_flush_failure_cannot_report_a_successful_inventory ... ok
+2026-10-20T20:49:28.8317923Z test tests::public_source_path_propagates_short_writes_and_failures ... ok
+2026-10-20T20:49:28.8873051Z test tests::output_failure_at_every_byte_is_reported_without_panicking ... ok
+2026-10-20T20:49:28.8873687Z 
+2026-10-20T20:49:28.8874030Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+2026-10-20T20:49:28.8874395Z 
+2026-10-20T20:49:28.8879200Z [1m[32m     Running[0m unittests src/main.rs (target/debug/deps/matea_api_audit-4270a9d3167ba525)
+2026-10-20T20:49:28.8890893Z 
+2026-10-20T20:49:28.8891251Z running 0 tests
+2026-10-20T20:49:28.8891420Z 
+2026-10-20T20:49:28.8891713Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.8892549Z 
+2026-10-20T20:49:28.8894242Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_core-79ec9793079a7541)
+2026-10-20T20:49:28.8905180Z 
+2026-10-20T20:49:28.8905337Z running 14 tests
+2026-10-20T20:49:28.8910907Z test input::tests::chords_ignore_repeat_and_lock_state_but_preserve_modifiers_and_release ... ok
+2026-10-20T20:49:28.8912038Z test input::tests::focus_ring_ignores_release_and_modified_tab ... ok
+2026-10-20T20:49:28.8912931Z test tests::deterministic_subscriptions_resize_and_focus ... ok
+2026-10-20T20:49:28.8914666Z test tests::cancelled_queued_results_are_discarded ... ok
+2026-10-20T20:49:28.8921554Z test tests::full_completion_queue_does_not_prevent_shutdown ... ok
+2026-10-20T20:49:28.8922561Z test tests::model_state_can_remain_non_send ... ok
+2026-10-20T20:49:28.8923558Z test tests::cancellation_interrupts_wait_and_worker_limit_is_enforced ... ok
+2026-10-20T20:49:28.8924604Z test tests::saturated_clock_never_refires_or_rounds_down_unrepresentable_deadlines ... ok
+2026-10-20T20:49:28.8926218Z test tests::replacing_an_id_discards_the_old_generation ... ok
+2026-10-20T20:49:28.8927622Z test tests::subscription_deadline_distinguishes_maximum_from_unrepresentable_future ... ok
+2026-10-20T20:49:28.8929383Z test tests::subscription_deadline_tracks_nearest_logical_time_removal_and_coalescing ... ok
+2026-10-20T20:49:28.8930756Z test tests::small_or_duplicate_heavy_focus_rings_never_construct_a_hash_table ... ok
+2026-10-20T20:49:28.8934002Z test tests::sequence_and_failures ... ok
+2026-10-20T20:49:28.9016664Z test tests::large_focus_rings_preserve_first_order_even_with_total_hash_collision ... ok
+2026-10-20T20:49:28.9017378Z 
+2026-10-20T20:49:28.9017841Z test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:28.9018530Z 
+2026-10-20T20:49:28.9021722Z [1m[32m     Running[0m tests/subscription_atomicity.rs (target/debug/deps/subscription_atomicity-7741c7d101a320e9)
+2026-10-20T20:49:28.9032015Z 
+2026-10-20T20:49:28.9032333Z running 1 test
+2026-10-20T20:49:28.9043475Z test rejected_duplicate_configuration_does_not_lose_existing_deadlines ... ok
+2026-10-20T20:49:28.9044003Z 
+2026-10-20T20:49:28.9044421Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9044996Z 
+2026-10-20T20:49:28.9045642Z [1m[32m     Running[0m tests/subscription_identity.rs (target/debug/deps/subscription_identity-ce718eafcd2e1200)
+2026-10-20T20:49:28.9049262Z 
+2026-10-20T20:49:28.9049511Z running 2 tests
+2026-10-20T20:49:28.9053264Z test namespaces_and_named_text_are_distinct_and_revision_controls_callback_replacement ... ok
+2026-10-20T20:49:28.9053890Z test zero_period_and_limit_errors_preserve_all_preexisting_deadlines ... ok
+2026-10-20T20:49:28.9054205Z 
+2026-10-20T20:49:28.9054704Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9055061Z 
+2026-10-20T20:49:28.9056635Z [1m[32m     Running[0m unittests src/main.rs (target/debug/deps/matea_example_external_widget-983b65e97051f401)
+2026-10-20T20:49:28.9067240Z 
+2026-10-20T20:49:28.9067418Z running 1 test
+2026-10-20T20:49:28.9070618Z test tests::extension_routes_input_and_renders_without_internals ... ok
+2026-10-20T20:49:28.9070984Z 
+2026-10-20T20:49:28.9071234Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9071601Z 
+2026-10-20T20:49:28.9073438Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_motion-31b73f87d49437ab)
+2026-10-20T20:49:28.9083390Z 
+2026-10-20T20:49:28.9083578Z running 6 tests
+2026-10-20T20:49:28.9086901Z test tests::analytical_oscillator_and_all_damping_regimes ... ok
+2026-10-20T20:49:28.9087916Z test tests::extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it ... ok
+2026-10-20T20:49:28.9089192Z test tests::frame_duration_boundaries_and_zero_steps ... ok
+2026-10-20T20:49:28.9090341Z test tests::projectile_matches_forward_euler_and_exact_partition ... ok
+2026-10-20T20:49:28.9091138Z test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
+2026-10-20T20:49:28.9091649Z test tests::velocity_overflow_cannot_partially_commit_position ... ok
+2026-10-20T20:49:28.9092116Z 
+2026-10-20T20:49:28.9092521Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9093004Z 
+2026-10-20T20:49:28.9093421Z [1m[32m     Running[0m tests/reference.rs (target/debug/deps/reference-c430f9b003903024)
+2026-10-20T20:49:28.9101658Z 
+2026-10-20T20:49:28.9101798Z running 2 tests
+2026-10-20T20:49:28.9106735Z test reference_projectiles_cover_xyz_gravity_zero_steps_and_nanosecond_periods ... ok
+2026-10-20T20:49:28.9107625Z test reference_trajectories_across_frequencies_and_damping ... ok
+2026-10-20T20:49:28.9108046Z 
+2026-10-20T20:49:28.9108463Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9109408Z 
+2026-10-20T20:49:28.9110055Z [1m[32m     Running[0m unittests src/main.rs (target/debug/deps/matea_perf_probe-7820b2c2769cdd8e)
+2026-10-20T20:49:28.9120148Z 
+2026-10-20T20:49:28.9120289Z running 12 tests
+2026-10-20T20:49:28.9126700Z test gradients::precise_tests::precise_controls_match_independent_source_projections_and_literal_validation ... ok
+2026-10-20T20:49:28.9130386Z test measurement::tests::calibration_growth_never_overflows_usize ... ok
+2026-10-20T20:49:28.9131672Z test measurement::tests::calibration_failure_preserves_coarse_clock_history_at_the_cap ... ok
+2026-10-20T20:49:28.9133261Z test measurement::tests::allocation_tracking_is_released_on_unwind_and_rejects_nesting ... ok
+2026-10-20T20:49:28.9134181Z test measurement::tests::configuration_is_bounded_and_fixed_mode_is_explicit ... ok
+2026-10-20T20:49:28.9134744Z test measurement::tests::invalid_calibration_performs_no_operations ... ok
+2026-10-20T20:49:28.9135308Z test measurement::tests::retained_samples_keep_every_interval_and_never_retry_a_zero ... ok
+2026-10-20T20:49:28.9135946Z test measurement::tests::shared_batch_runs_exactly_the_requested_stateful_operations ... ok
+2026-10-20T20:49:28.9136542Z test progress::tests::lifecycle_controls_check_results_and_transactional_state ... ok
+2026-10-20T20:49:28.9137158Z test measurement::tests::calibration_keeps_all_observations_and_requires_three_confirmations ... ok
+2026-10-20T20:49:28.9137780Z test progress::tests::supplementary_controls_check_public_ownership_and_adapters ... ok
+2026-10-20T20:49:28.9802806Z test progress::tests::scale_controls_match_independent_complete_cell_digests ... ok
+2026-10-20T20:49:28.9803858Z 
+2026-10-20T20:49:28.9804437Z test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+2026-10-20T20:49:28.9805448Z 
+2026-10-20T20:49:28.9808393Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-b4e1ceb081a308b8)
+2026-10-20T20:49:28.9820165Z 
+2026-10-20T20:49:28.9820379Z running 0 tests
+2026-10-20T20:49:28.9820630Z 
+2026-10-20T20:49:28.9820959Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:28.9821406Z 
+2026-10-20T20:49:28.9823358Z [1m[32m     Running[0m tests/bridge.rs (target/debug/deps/bridge-e31ae2031a8df1ea)
+2026-10-20T20:49:28.9835368Z 
+2026-10-20T20:49:28.9835526Z running 9 tests
+2026-10-20T20:49:28.9889706Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+2026-10-20T20:49:28.9899715Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+2026-10-20T20:49:28.9900909Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+2026-10-20T20:49:28.9901923Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+2026-10-20T20:49:28.9902542Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+2026-10-20T20:49:28.9903132Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+2026-10-20T20:49:28.9904511Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+2026-10-20T20:49:28.9918661Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+2026-10-20T20:49:28.9959899Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+2026-10-20T20:49:28.9960262Z 
+2026-10-20T20:49:28.9960526Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:28.9960895Z 
+2026-10-20T20:49:28.9964960Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_render-e2dbe32731831d16)
+2026-10-20T20:49:28.9977155Z 
+2026-10-20T20:49:28.9977313Z running 12 tests
+2026-10-20T20:49:28.9980277Z test rich_text::tests::every_scalar_context_matches_per_grapheme_width ... ignored, exhaustive scalar contexts, explicitly executed by native acceptance
+2026-10-20T20:49:28.9982521Z test tests::cursor_metadata_does_not_damage_cells_and_invalid_positions_hide ... ok
+2026-10-20T20:49:28.9983801Z test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
+2026-10-20T20:49:28.9984812Z test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
+2026-10-20T20:49:28.9985836Z test tests::extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes ... ok
+2026-10-20T20:49:28.9997076Z test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+2026-10-20T20:49:28.9998069Z test tests::cursor_composes_through_layout_panel_and_layers ... ok
+2026-10-20T20:49:28.9999428Z test tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout ... ok
+2026-10-20T20:49:29.0017823Z test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
+2026-10-20T20:49:29.0018578Z test tests::unicode_clipping_and_controls ... ok
+2026-10-20T20:49:29.0019441Z test tests::zero_and_oversized_geometry ... ok
+2026-10-20T20:49:29.0171768Z test rich_text::tests::fast_width_preserves_cross_grapheme_script_and_emoji_policies ... ok
+2026-10-20T20:49:29.0172451Z 
+2026-10-20T20:49:29.0172868Z test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-10-20T20:49:29.0173446Z 
+2026-10-20T20:49:29.0175145Z [1m[32m     Running[0m tests/invariants.rs (target/debug/deps/invariants-27de5619d97eef57)
+2026-10-20T20:49:29.0187770Z 
+2026-10-20T20:49:29.0187972Z running 2 tests
+2026-10-20T20:49:29.0191495Z test extreme_empty_clips_never_write_or_wrap_coordinates ... ok
+2026-10-20T20:49:29.2664889Z test bounded_paint_sequences_preserve_glyph_ownership_and_determinism ... ok
+2026-10-20T20:49:29.2665328Z 
+2026-10-20T20:49:29.2665641Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+2026-10-20T20:49:29.2666094Z 
+2026-10-20T20:49:29.2669122Z [1m[32m     Running[0m tests/rich_text.rs (target/debug/deps/rich_text-fa9ffd961a9fc66a)
+2026-10-20T20:49:29.2682862Z 
+2026-10-20T20:49:29.2683071Z running 10 tests
+2026-10-20T20:49:29.2689679Z test chunks_normalize_once_and_ranges_follow_normalized_utf8 ... ok
+2026-10-20T20:49:29.2690826Z test caller_iterator_failure_keeps_the_preexisting_document ... ok
+2026-10-20T20:49:29.2692286Z test clipped_rows_skip_offscreen_styles_without_losing_byte_positions ... ok
+2026-10-20T20:49:29.2693844Z test every_scalar_split_of_complex_sequences_preserves_complete_cell_output ... ok
+2026-10-20T20:49:29.2695485Z test pinned_public_span_cells_have_four_matches_and_four_literal_cluster_deviations ... ok
+2026-10-20T20:49:29.2697068Z test rich_layers_clear_complete_old_wide_glyphs_and_keep_layout_height ... ok
+2026-10-20T20:49:29.2706759Z test single_style_matches_existing_text_for_controls_multiline_and_clipping ... ok
+2026-10-20T20:49:29.2707513Z test ownership_sharing_threads_and_old_view_snapshots_are_explicit ... ok
+2026-10-20T20:49:29.2710662Z test whole_graphemes_cross_style_boundaries_and_use_the_leading_style ... ok
+2026-10-20T20:49:29.2714430Z test untrusted_hints_and_irregular_chunks_preserve_canonical_content ... ok
+2026-10-20T20:49:29.2714966Z 
+2026-10-20T20:49:29.2715241Z test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:29.2715589Z 
+2026-10-20T20:49:29.2718192Z [1m[32m     Running[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-33161251c69e3e44)
+2026-10-20T20:49:29.2728367Z 
+2026-10-20T20:49:29.2728503Z running 7 tests
+2026-10-20T20:49:29.2733404Z test extreme_and_empty_geometry_never_wraps_or_publishes_orphan_continuations ... ok
+2026-10-20T20:49:29.2734529Z test consuming_unique_roots_transfers_cells_while_shared_and_constrained_scenes_remain_independent ... ok
+2026-10-20T20:49:29.2735586Z test copying_cells_invalidates_old_cursors_and_snapshot_metadata_maps_like_view_cursors ... ok
+2026-10-20T20:49:29.2736379Z test long_heap_graphemes_and_nondefault_blank_cells_are_owned_exactly ... ok
+2026-10-20T20:49:29.2741023Z test natural_height_layout_panels_and_clipped_glyphs_have_literal_results ... ok
+2026-10-20T20:49:29.2742441Z test snapshots_share_owned_immutable_cells_and_keep_the_scene_budget ... ok
+2026-10-20T20:49:29.3825523Z test row_clone_matches_independent_per_glyph_paint_for_clips_offsets_and_damage ... ok
+2026-10-20T20:49:29.3826724Z 
+2026-10-20T20:49:29.3827345Z test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+2026-10-20T20:49:29.3828101Z 
+2026-10-20T20:49:29.3829896Z [1m[32m     Running[0m tests/text.rs (target/debug/deps/text-03d75079e46358dc)
+2026-10-20T20:49:29.3845685Z 
+2026-10-20T20:49:29.3848144Z running 6 tests
+2026-10-20T20:49:29.3863188Z test arguments_format_once_and_the_scene_retains_no_ui_borrow ... ok
+2026-10-20T20:49:29.3864340Z test failed_display_panics_instead_of_returning_partial_text ... ok
+2026-10-20T20:49:29.3865283Z test standard_inputs_normalize_identically_and_own_their_snapshot ... ok
+2026-10-20T20:49:29.3866145Z test typed_views_and_raw_canvas_preserve_cells_styles_and_clipping_at_every_size ... ok
+2026-10-20T20:49:29.3946255Z test c2_candidates_in_mixed_utf8_keep_controls_and_valid_latin_distinct ... ok
+2026-10-20T20:49:29.7699630Z test byte_scan_preserves_standard_control_policy_for_every_unicode_scalar ... ok
+2026-10-20T20:49:29.7700233Z 
+2026-10-20T20:49:29.7700556Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+2026-10-20T20:49:29.7700904Z 
+2026-10-20T20:49:29.7704181Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_style-44ab9b4975d2770d)
+2026-10-20T20:49:29.7717440Z 
+2026-10-20T20:49:29.7717697Z running 5 tests
+2026-10-20T20:49:29.7729927Z test gradient::layout_tests::precise_inputs_keep_stop_and_terminal_color_storage_bounded ... ok
+2026-10-20T20:49:29.7730751Z test tests::default_rgb_tokens_have_readable_contrast ... ok
+2026-10-20T20:49:29.7731348Z test tests::layout_does_not_overflow_at_small_sizes ... ok
+2026-10-20T20:49:29.7732341Z test tests::fallback_is_bounded_and_no_color_keeps_focus ... ok
+2026-10-20T20:49:29.7951496Z test attributes::tests::all_typed_states_preserve_independent_choices_and_clear_back_to_default ... ok
+2026-10-20T20:49:29.7952588Z 
+2026-10-20T20:49:29.7953204Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-10-20T20:49:29.7953951Z 
+2026-10-20T20:49:29.7955774Z [1m[32m     Running[0m tests/colors.rs (target/debug/deps/colors-0877cde980dff11c)
+2026-10-20T20:49:29.7967947Z 
+2026-10-20T20:49:29.7968138Z running 4 tests
+2026-10-20T20:49:29.7971756Z test every_rgb_triple_matches_full_palette_search ... ignored, Run explicitly in release: exhaustive 16,777,216 RGB triples against full search
+2026-10-20T20:49:29.7979623Z test profiles_preserve_indices_attributes_and_first_index_ties ... ok
+2026-10-20T20:49:29.8004017Z test rgb16_quantization_is_monotonic_and_every_rgb8_bucket_has_256_inputs ... ok
+2026-10-20T20:49:29.9786056Z test palette_and_midpoint_boundaries_match_independent_search ... ok
+2026-10-20T20:49:29.9786594Z 
+2026-10-20T20:49:29.9787043Z test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.18s
+2026-10-20T20:49:29.9788154Z 
+2026-10-20T20:49:29.9790504Z [1m[32m     Running[0m tests/gradients.rs (target/debug/deps/gradients-ef6b1640323d152f)
+2026-10-20T20:49:29.9803890Z 
+2026-10-20T20:49:29.9804061Z running 7 tests
+2026-10-20T20:49:29.9819837Z test configuration_owns_stops_and_rejects_invalid_angle_or_empty_input ... ok
+2026-10-20T20:49:29.9827876Z test precise_single_stop_stays_constant_for_large_ranges_and_rotated_grids ... ok
+2026-10-20T20:49:29.9829543Z test precise_stop_ownership_validation_prefix_and_opaque_interpolation_are_explicit ... ok
+2026-10-20T20:49:29.9830886Z test premultiplied_rgba16_matches_canonical_pinned_source_color_projections ... ok
+2026-10-20T20:49:29.9841766Z test all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback ... ok
+2026-10-20T20:49:29.9918931Z test pinned_lip_gloss_rgb8_samples_match_complete_fixture_outputs ... ok
+2026-10-20T20:49:30.0181461Z test indexed_and_mixed_ended_iterators_preserve_exact_remaining_ranges ... ok
+2026-10-20T20:49:30.0182345Z 
+2026-10-20T20:49:30.0182942Z test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+2026-10-20T20:49:30.0183821Z 
+2026-10-20T20:49:30.0186242Z [1m[32m     Running[0m tests/layout.rs (target/debug/deps/layout-839291267c1bee30)
+2026-10-20T20:49:30.0197960Z 
+2026-10-20T20:49:30.0198115Z running 1 test
+2026-10-20T20:49:30.0207659Z test weighted_layout_preserves_budget_zero_weights_and_fixed_priority ... ok
+2026-10-20T20:49:30.0208063Z 
+2026-10-20T20:49:30.0208367Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.0209065Z 
+2026-10-20T20:49:30.0210792Z [1m[32m     Running[0m tests/patches.rs (target/debug/deps/patches-9827be50e60f4679)
+2026-10-20T20:49:30.0220723Z 
+2026-10-20T20:49:30.0220867Z running 7 tests
+2026-10-20T20:49:30.0229281Z test each_boolean_composes_all_inherit_set_clear_sequences ... ok
+2026-10-20T20:49:30.0230339Z test compact_copy_values_work_in_const_contexts_and_across_threads ... ok
+2026-10-20T20:49:30.0231428Z test enum_groups_never_leak_into_other_attributes_or_each_other ... ok
+2026-10-20T20:49:30.0232831Z test every_boolean_base_and_ternary_patch_matches_a_branching_value_model ... ignored, finite full flag domain, explicitly executed by native acceptance
+2026-10-20T20:49:30.0233939Z test inheritance_false_and_terminal_default_are_distinct_intents ... ok
+2026-10-20T20:49:30.0234439Z test composition_is_associative_and_equivalent_to_sequential_resolution ... ok
+2026-10-20T20:49:30.0234974Z test reset_and_complete_override_preserve_no_implicit_inheritance ... ok
+2026-10-20T20:49:30.0235269Z 
+2026-10-20T20:49:30.0235509Z test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.0235847Z 
+2026-10-20T20:49:30.0236525Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_terminal-9c214150191fec28)
+2026-10-20T20:49:30.0243735Z 
+2026-10-20T20:49:30.0243877Z running 49 tests
+2026-10-20T20:49:30.0249124Z test ansi::tests::encoding_does_not_consult_console_support_or_execute_winapi ... ok
+2026-10-20T20:49:30.0250348Z test ansi::tests::underline_reset_and_partial_writer_failure_preserve_the_io_contract ... ok
+2026-10-20T20:49:30.0251391Z test ansi::tests::preserves_original_io_error ... ok
+2026-10-20T20:49:30.0261220Z test device::tests::fresh_raw_captures_once_and_owns_failed_transition_cleanup ... ok
+2026-10-20T20:49:30.0262615Z test device::tests::input_errors_keep_partial_bytes_without_debugging_them ... ok
+2026-10-20T20:49:30.0263527Z test device::tests::line_bytes_endings_eof_limits_and_no_overread ... ok
+2026-10-20T20:49:30.0264368Z test device::tests::password_errors_and_unwind_keep_restoration_owned ... ok
+2026-10-20T20:49:30.0265311Z test device::tests::restore_is_retryable_and_password_restores_the_current_mode ... ok
+2026-10-20T20:49:30.0266479Z test device::tests::canonical_chunks_preserve_limits_backspaces_and_the_following_line ... ok
+2026-10-20T20:49:30.0267480Z test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
+2026-10-20T20:49:30.0268973Z test frame::tests::cursor_moves_use_short_relative_sequences_only_from_known_positions ... ok
+2026-10-20T20:49:30.0270050Z test frame::tests::cursor_only_updates_show_move_hide_without_repainting_cells ... ok
+2026-10-20T20:49:30.0271098Z test device::unix::tests::native_attributes_are_owned_and_preserve_every_control_byte ... ok
+2026-10-20T20:49:30.0272087Z test frame::tests::fallback_padding_failure_invalidates_state_before_retry ... ok
+2026-10-20T20:49:30.0273020Z test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
+2026-10-20T20:49:30.0273956Z test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
+2026-10-20T20:49:30.0274971Z test frame::tests::logical_color_cache_survives_recovery_without_reusing_physical_pen_state ... ok
+2026-10-20T20:49:30.0275987Z test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
+2026-10-20T20:49:30.0319704Z test frame::tests::quantization_remains_correct_after_eviction_level_changes_and_attributes ... ok
+2026-10-20T20:49:30.0321068Z test frame::tests::reduced_motion_suppresses_blink_but_preserves_other_decorations_and_repaints_on_change ... ok
+2026-10-20T20:49:30.0339887Z test frame::tests::row_changes_address_absolutely_without_scrolling_or_margin_clamping ... ok
+2026-10-20T20:49:30.0341350Z test frame::tests::visible_cursor_is_hidden_during_damage_then_restored_after_paint ... ok
+2026-10-20T20:49:30.0342699Z test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
+2026-10-20T20:49:30.0343982Z test modes::tests::retries_failed_modes_without_repeating_successful_releases ... ok
+2026-10-20T20:49:30.0345208Z test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
+2026-10-20T20:49:30.0346521Z test protocol::tests::header_formatting_is_bounded_and_failed_headers_are_not_appended ... ok
+2026-10-20T20:49:30.0347735Z test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
+2026-10-20T20:49:30.0349052Z test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
+2026-10-20T20:49:30.0350636Z test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
+2026-10-20T20:49:30.0351726Z test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
+2026-10-20T20:49:30.0352875Z test session::tests::exclusive_lease_outlives_backend_body_and_nested_destructors ... ok
+2026-10-20T20:49:30.0354134Z test session::tests::failed_and_panicking_constructors_release_their_owned_lease ... ok
+2026-10-20T20:49:30.0355536Z test signals_unix::tests::restoration_retries_only_failed_records_in_reverse_install_order ... ok
+2026-10-20T20:49:30.0357033Z test signals_unix::tests::partial_installation_journal_never_restores_unacquired_signals ... ok
+2026-10-20T20:49:30.0369847Z test tests::conservative_environment_and_key_release ... ok
+2026-10-20T20:49:30.0371258Z test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
+2026-10-20T20:49:30.0372448Z test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
+2026-10-20T20:49:30.0373672Z test tests::fixed_attribute_sequences_match_crossterm_for_every_supported_combination ... ok
+2026-10-20T20:49:30.0374856Z test tests::input_wait_respects_a_short_subscription_deadline ... ok
+2026-10-20T20:49:30.0375815Z test tests::resize_to_empty_still_clears_old_content ... ok
+2026-10-20T20:49:30.0376738Z test tests::restoration_on_success_failure_and_unwind ... ok
+2026-10-20T20:49:30.0380896Z test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
+2026-10-20T20:49:30.0396437Z test tests::style_patch_resets_and_false_intents_reach_literal_terminal_commands ... ok
+2026-10-20T20:49:30.0397573Z test frame::tests::palette_reuse_preserves_each_callers_attributes_across_eviction_and_color_levels ... ok
+2026-10-20T20:49:30.0398643Z test tests::subscription_wait_subtracts_render_time_and_preserves_idle_cap ... ok
+2026-10-20T20:49:30.0400719Z test tests::underline_color_headers_and_resolved_attribute_removal_are_explicit ... ok
+2026-10-20T20:49:30.0518428Z test tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait ... ok
+2026-10-20T20:49:30.0792936Z test device::tests::utf16_stream_matches_standard_replacement_without_losing_lookahead ... ok
+2026-10-20T20:49:30.0818622Z test tests::all_resolved_attribute_requests_match_reference_sgr_commands ... ok
+2026-10-20T20:49:30.0819294Z 
+2026-10-20T20:49:30.0819567Z test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+2026-10-20T20:49:30.0819931Z 
+2026-10-20T20:49:30.0824050Z [1m[32m     Running[0m tests/graphics_encoding.rs (target/debug/deps/graphics_encoding-18d07e2acb5e05cf)
+2026-10-20T20:49:30.0836641Z 
+2026-10-20T20:49:30.0836822Z running 2 tests
+2026-10-20T20:49:30.0858291Z test sixel_band_rewinds_runs_and_transparency_preserve_every_pixel ... ok
+2026-10-20T20:49:30.0901259Z test kitty_transfers_round_trip_formats_chunk_edges_and_exact_limits ... ok
+2026-10-20T20:49:30.0901934Z 
+2026-10-20T20:49:30.0902370Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:30.0902935Z 
+2026-10-20T20:49:30.0904642Z [1m[32m     Running[0m tests/input.rs (target/debug/deps/input-b0aa3c240c6c8d37)
+2026-10-20T20:49:30.0916284Z 
+2026-10-20T20:49:30.0916628Z running 4 tests
+2026-10-20T20:49:30.0920154Z test every_nonpayload_function_media_and_modifier_code_survives ... ok
+2026-10-20T20:49:30.0921276Z test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
+2026-10-20T20:49:30.0921783Z test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
+2026-10-20T20:49:30.0924893Z test key_kinds_modifiers_and_lock_state_survive_all_combinations ... ok
+2026-10-20T20:49:30.0925418Z 
+2026-10-20T20:49:30.0925827Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.0926473Z 
+2026-10-20T20:49:30.0928104Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_widgets-264f4b5bd51e38ad)
+2026-10-20T20:49:30.0939669Z 
+2026-10-20T20:49:30.0939849Z running 31 tests
+2026-10-20T20:49:30.0947365Z test key::tests::custom_tokens_share_enable_unbind_help_and_borrowed_matching ... ok
+2026-10-20T20:49:30.0951906Z test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
+2026-10-20T20:49:30.0953112Z test pagination::tests::explicit_pages_are_independent_and_stale_collections_never_panic ... ok
+2026-10-20T20:49:30.0954283Z test help::tests::reference_columns_are_top_aligned_and_disabled_groups_are_omitted ... ok
+2026-10-20T20:49:30.0955314Z test help::tests::shared_binding_state_unicode_safety_and_gap_styles_reach_cells ... ok
+2026-10-20T20:49:30.0956340Z test pagination::tests::index_limits_preserve_slice_invariants_across_all_setters ... ok
+2026-10-20T20:49:30.0957788Z test paginator::tests::custom_bindings_repeat_release_focus_and_boundaries_share_one_state ... ok
+2026-10-20T20:49:30.0959015Z test tests::custom_filter_and_keys_share_enabled_help ... ok
+2026-10-20T20:49:30.0959897Z test paginator::tests::custom_formatting_and_dots_use_bounded_coherent_views ... ok
+2026-10-20T20:49:30.0960902Z test help::tests::all_widths_fit_complete_items_and_columns_including_exact_tail_fit ... ok
+2026-10-20T20:49:30.0961748Z test tests::list_filter_selection_empty_and_table ... ok
+2026-10-20T20:49:30.0962355Z test tests::form_focus_validation_and_submit ... ok
+2026-10-20T20:49:30.0963137Z test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
+2026-10-20T20:49:30.0964066Z test pagination::tests::range_remains_valid_on_empty_data_and_resize ... ok
+2026-10-20T20:49:30.0964801Z test tests::viewport_bounds_and_reduced_motion ... ok
+2026-10-20T20:49:30.0965418Z test tests::input_graphemes_focus_paste_and_scroll ... ok
+2026-10-20T20:49:30.0966317Z test textinput::tests::context_merging_at_limit_and_paste_truncation_preserve_existing_suffix ... ok
+2026-10-20T20:49:30.0967447Z test textinput::tests::custom_styles_switch_with_focus_without_embedded_terminal_sequences ... ok
+2026-10-20T20:49:30.0968980Z test textinput::tests::deleting_at_word_end_never_panics_or_erases_the_next_word ... ok
+2026-10-20T20:49:30.0979987Z test textinput::tests::completions_respect_limits_and_live_validation_and_form_tab_ownership ... ok
+2026-10-20T20:49:30.0981293Z test textinput::tests::completion_handles_empty_selection_unicode_case_expansion_and_combining_marks ... ok
+2026-10-20T20:49:30.0984424Z test textinput::tests::form_submission_rechecks_validators_that_capture_other_ui_state ... ok
+2026-10-20T20:49:30.0985796Z test textinput::tests::form_validation_cannot_bypass_the_input_validator ... ok
+2026-10-20T20:49:30.0987070Z test textinput::tests::ignored_events_keep_error_and_state_and_repeat_is_an_edit ... ok
+2026-10-20T20:49:30.0988400Z test textinput::tests::native_cursor_uses_visible_cells_prompt_and_focus_without_reverse_style ... ok
+2026-10-20T20:49:30.0990161Z test textinput::tests::wide_completion_reserves_the_cursor_and_preview_respects_limits ... ok
+2026-10-20T20:49:30.0992049Z test textinput::tests::words_custom_bindings_and_masks_share_the_editing_contract ... ok
+2026-10-20T20:49:30.0996908Z test textinput::tests::edits_preserve_global_grapheme_boundaries_without_splitting_xyz_or_flags ... ok
+2026-10-20T20:49:30.0998432Z test viewport::tests::viewport_vertical_work_does_not_initialize_width_cache ... ok
+2026-10-20T20:49:30.1000088Z test textinput::tests::placeholders_clip_by_cell_width_without_nuls_and_views_keep_cursor_visible ... ok
+2026-10-20T20:49:30.1063168Z test textinput::tests::byte_budget_and_sanitizer_are_independent_of_grapheme_limits ... ok
+2026-10-20T20:49:30.1063620Z 
+2026-10-20T20:49:30.1063869Z test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:30.1064229Z 
+2026-10-20T20:49:30.1067668Z [1m[32m     Running[0m tests/clocks.rs (target/debug/deps/clocks-48b83563a65b88b3)
+2026-10-20T20:49:30.1079458Z 
+2026-10-20T20:49:30.1079646Z running 8 tests
+2026-10-20T20:49:30.1084432Z test countdown_shortens_last_period_and_notifies_timeout_once_without_overshoot ... ok
+2026-10-20T20:49:30.1085570Z test clock_views_keep_compact_unicode_units_and_theme_style ... ok
+2026-10-20T20:49:30.1086718Z test defaults_reject_zero_intervals_and_zero_deadlines_do_not_schedule ... ok
+2026-10-20T20:49:30.1088098Z test repeated_start_foreign_ticks_and_backward_controls_cannot_accelerate_clocks ... ok
+2026-10-20T20:49:30.1089676Z test runtime_reconciles_short_final_deadlines_and_coalesces_without_losing_elapsed_time ... ok
+2026-10-20T20:49:30.1094552Z test stopwatch_accounts_partial_intervals_pause_reset_and_invalidates_old_ticks ... ok
+2026-10-20T20:49:30.1095477Z test compact_duration_display_matches_fixed_reference_fixtures ... ok
+2026-10-20T20:49:30.1101453Z test identities_are_unique_across_clock_types_and_concurrent_construction ... ok
+2026-10-20T20:49:30.1102070Z 
+2026-10-20T20:49:30.1102757Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.1103385Z 
+2026-10-20T20:49:30.1105437Z [1m[32m     Running[0m tests/collections.rs (target/debug/deps/collections-2279f72262c28b73)
+2026-10-20T20:49:30.1115863Z 
+2026-10-20T20:49:30.1116021Z running 4 tests
+2026-10-20T20:49:30.1125587Z test caught_filter_panics_leave_a_valid_visible_prefix_and_selection ... ok
+2026-10-20T20:49:30.1126553Z test forms_validate_all_fields_focus_first_failure_and_clear_stale_submission ... ok
+2026-10-20T20:49:30.1129373Z test list_navigation_clamps_and_preserves_original_filtered_indices ... ok
+2026-10-20T20:49:30.1145904Z test table_ragged_rows_empty_headers_and_navigation_are_bounded ... ok
+2026-10-20T20:49:30.1146375Z 
+2026-10-20T20:49:30.1146663Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.1147018Z 
+2026-10-20T20:49:30.1149952Z [1m[32m     Running[0m tests/cursor.rs (target/debug/deps/cursor-ce27e6ed072162e6)
+2026-10-20T20:49:30.1160692Z 
+2026-10-20T20:49:30.1160866Z running 6 tests
+2026-10-20T20:49:30.1165294Z test every_control_invalidates_queued_ticks_even_for_same_timestamp_or_value ... ok
+2026-10-20T20:49:30.1166350Z test modes_focus_and_styles_follow_the_reference_contract ... ok
+2026-10-20T20:49:30.1167235Z test cursor_text_is_inline_before_grapheme_clipping ... ok
+2026-10-20T20:49:30.1168246Z test phase_coalesces_elapsed_periods_and_rejects_duplicate_foreign_and_backward_ticks ... ok
+2026-10-20T20:49:30.1170765Z test text_input_composition_preserves_graphemes_passwords_suggestions_and_native_cursor ... ok
+2026-10-20T20:49:30.1171912Z test runtime_reconciles_blur_mode_reduced_motion_and_delayed_notifications ... ok
+2026-10-20T20:49:30.1172402Z 
+2026-10-20T20:49:30.1172912Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.1173572Z 
+2026-10-20T20:49:30.1175608Z [1m[32m     Running[0m tests/progress.rs (target/debug/deps/progress-86583904fd02d908)
+2026-10-20T20:49:30.1186568Z 
+2026-10-20T20:49:30.1186764Z running 11 tests
+2026-10-20T20:49:30.1192001Z test callback_policy_replacement_styles_and_owned_view_are_independent ... ok
+2026-10-20T20:49:30.1192905Z test cells_are_exact_double_ended_and_exhausted_without_hidden_work ... ok
+2026-10-20T20:49:30.1229548Z test invalid_input_is_transactional_and_finite_values_clamp ... ok
+2026-10-20T20:49:30.1249816Z test narrow_formatting_is_single_line_sanitized_and_grapheme_clipped ... ok
+2026-10-20T20:49:30.1271571Z test negative_velocity_is_not_rest_and_final_state_snaps_exactly ... ok
+2026-10-20T20:49:30.1275301Z test reduced_motion_uses_target_suppresses_schedules_and_can_snap_state ... ok
+2026-10-20T20:49:30.1276558Z test retargeting_rejects_stale_foreign_duplicate_and_backward_ticks ... ok
+2026-10-20T20:49:30.1279637Z test all_public_reference_view_fixtures_match_cells_and_rgb8_styles ... ok
+2026-10-20T20:49:30.1341882Z test colored_owned_scene_preserves_child_boundaries_layout_and_callback_order ... ok
+2026-10-20T20:49:30.1358348Z test precise_rgba16_progress_frames_match_canonical_source_projections ... ok
+2026-10-20T20:49:30.1385567Z test single_pass_label_normalization_matches_previous_complete_text_contract ... ok
+2026-10-20T20:49:30.1386161Z 
+2026-10-20T20:49:30.1386517Z test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-10-20T20:49:30.1386885Z 
+2026-10-20T20:49:30.1390192Z [1m[32m     Running[0m tests/spinner.rs (target/debug/deps/spinner-895ae1061ffbdb4d)
+2026-10-20T20:49:30.1402851Z 
+2026-10-20T20:49:30.1403011Z running 5 tests
+2026-10-20T20:49:30.1407609Z test custom_frames_are_validated_and_shared_without_cloning_live_state ... ok
+2026-10-20T20:49:30.1408146Z test all_preset_frames_and_intervals_match_pinned_data ... ok
+2026-10-20T20:49:30.1409828Z test manual_cadence_reduced_motion_labels_and_style_are_independent ... ok
+2026-10-20T20:49:30.1411027Z test runtime_coalesces_animation_and_removes_paused_or_reduced_motion_schedules ... ok
+2026-10-20T20:49:30.1411618Z test phase_uses_elapsed_time_and_controls_invalidate_old_schedules ... ok
+2026-10-20T20:49:30.1411933Z 
+2026-10-20T20:49:30.1412175Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.1412581Z 
+2026-10-20T20:49:30.1414538Z [1m[32m     Running[0m tests/viewport.rs (target/debug/deps/viewport-8c7800a0f0abf792)
+2026-10-20T20:49:30.1426874Z 
+2026-10-20T20:49:30.1427042Z running 25 tests
+2026-10-20T20:49:30.1431230Z test ensure_visible_validates_before_mutation_and_handles_extreme_regions ... ok
+2026-10-20T20:49:30.1432169Z test explicit_resize_commits_clamping_and_zero_movement_does_not ... ok
+2026-10-20T20:49:30.1433580Z test failed_line_iteration_preserves_content_position_and_derived_index ... ok
+2026-10-20T20:49:30.1434471Z test horizontal_controls_match_an_independent_bounded_position_model ... ok
+2026-10-20T20:49:30.1435363Z test focused_wheel_navigation_obeys_direction_modifiers_enable_delta_and_step ... ok
+2026-10-20T20:49:30.1436240Z test horizontal_navigation_obeys_focus_step_and_key_lifecycle ... ok
+2026-10-20T20:49:30.1439948Z test ignored_navigation_does_not_commit_a_resize_position_change ... ok
+2026-10-20T20:49:30.1441239Z test horizontal_positions_resize_replace_and_clone_keep_owned_geometry ... ok
+2026-10-20T20:49:30.1442230Z test line_inputs_normalize_individually_without_borrowing_or_changing_the_caller ... ok
+2026-10-20T20:49:30.1460393Z test owned_replacement_reuses_clean_utf8_and_normalizes_other_input ... ok
+2026-10-20T20:49:30.1465658Z test pager_overrides_share_help_enable_exact_modifiers_precedence_and_reset ... ok
+2026-10-20T20:49:30.1474916Z test horizontal_public_controls_match_all_pinned_observations ... ok
+2026-10-20T20:49:30.1475806Z test pinned_public_controls_match_and_crlf_content_deviation_is_explicit ... ok
+2026-10-20T20:49:30.1477394Z test public_controls_match_an_independent_bounded_position_model ... ok
+2026-10-20T20:49:30.1489857Z test longest_width_handles_repeated_varied_ascii_indexes_and_replacement ... ok
+2026-10-20T20:49:30.1491211Z test pager_defaults_match_each_documented_chord_and_keep_existing_shift_navigation ... ok
+2026-10-20T20:49:30.1492380Z test replacements_own_input_and_old_views_keep_their_snapshot ... ok
+2026-10-20T20:49:30.1493432Z test resize_clamps_observed_position_before_applying_navigation ... ok
+2026-10-20T20:49:30.1494435Z test trailing_empty_lines_are_scrollable_and_crlf_is_structural ... ok
+2026-10-20T20:49:30.1495555Z test source_resize_replace_overflow_edges_have_explicit_bounded_rust_outcomes ... ok
+2026-10-20T20:49:30.1496741Z test visible_lines_borrow_aligned_slices_and_owned_views_keep_their_snapshot ... ok
+2026-10-20T20:49:30.1498035Z test pinned_cut_outputs_match_or_have_literal_reviewed_cell_policy_deviations ... ok
+2026-10-20T20:49:30.1502708Z test public_input_state_matches_source_with_literal_command_wheel_policy_difference ... ok
+2026-10-20T20:49:30.1552907Z test visible_windows_preserve_independently_specified_grapheme_cell_coordinates ... ok
+2026-10-20T20:49:30.1580290Z test viewport_slices_match_an_independent_line_model ... ok
+2026-10-20T20:49:30.1580758Z 
+2026-10-20T20:49:30.1581178Z test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-10-20T20:49:30.1581546Z 
+2026-10-20T20:49:30.1585101Z [1m[32m     Running[0m tests/viewport_highlights.rs (target/debug/deps/viewport_highlights-facfbc163812daa3)
+2026-10-20T20:49:30.1597921Z 
+2026-10-20T20:49:30.1598113Z running 10 tests
+2026-10-20T20:49:30.1603599Z test adversarial_size_hints_do_not_control_reservations_or_match_semantics ... ok
+2026-10-20T20:49:30.1604670Z test combining_and_emoji_matches_cover_complete_intersecting_graphemes ... ok
+2026-10-20T20:49:30.1605889Z test clipped_wide_left_padding_and_oversized_replacements_keep_source_styles ... ok
+2026-10-20T20:49:30.1619967Z test navigation_tracks_first_logical_range_and_wrapped_display_rows ... ok
+2026-10-20T20:49:30.1621449Z test multiline_empty_matches_clear_and_content_replacement_have_defined_semantics ... ok
+2026-10-20T20:49:30.1622385Z test invalid_ranges_and_iterator_panics_are_transactional ... ok
+2026-10-20T20:49:30.1623145Z test ordinary_selected_and_explicit_false_intents_reach_cells ... ok
+2026-10-20T20:49:30.1635116Z test shared_geometry_old_views_and_independent_selections_are_safe_across_threads ... ok
+2026-10-20T20:49:30.1771830Z test pinned_420_source_states_retain_190_matches_and_230_literal_deviations ... ok
+2026-10-20T20:49:30.2318131Z test every_scalar_boundary_range_preserves_plain_geometry_across_clipping_and_wrap ... ok
+2026-10-20T20:49:30.2319129Z 
+2026-10-20T20:49:30.2319642Z test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+2026-10-20T20:49:30.2320263Z 
+2026-10-20T20:49:30.2322678Z [1m[32m     Running[0m tests/viewport_wrap.rs (target/debug/deps/viewport_wrap-bc35f7e175874fe8)
+2026-10-20T20:49:30.2336003Z 
+2026-10-20T20:49:30.2336177Z running 8 tests
+2026-10-20T20:49:30.2359828Z test ensure_visible_maps_logical_cell_columns_to_wrapped_rows_transactionally ... ok
+2026-10-20T20:49:30.2361548Z test fill_height_includes_borrowed_empty_rows_and_respects_empty_geometry ... ok
+2026-10-20T20:49:30.2363466Z test whole_graphemes_fit_rows_and_oversized_clusters_get_one_replacement ... ok
+2026-10-20T20:49:30.2364665Z test wrapping_uses_display_rows_without_changing_logical_content ... ok
+2026-10-20T20:49:30.2365824Z test caches_clones_and_old_views_keep_independent_content_and_geometry ... ok
+2026-10-20T20:49:30.2366791Z test zero_sizes_resize_and_parent_width_have_defined_position_semantics ... ok
+2026-10-20T20:49:30.2403563Z test every_wrapped_row_obeys_its_budget_and_preserves_the_complete_glyph_stream ... ok
+2026-10-20T20:49:30.2486915Z test pinned_source_matrix_has_586_exact_states_and_422_literal_reviewed_deviations ... ok
+2026-10-20T20:49:30.2487535Z 
+2026-10-20T20:49:30.2487950Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-10-20T20:49:30.2488518Z 
+2026-10-20T20:49:30.2491398Z [1m[32m   Doc-tests[0m matea
+2026-10-20T20:49:30.9322145Z 
+2026-10-20T20:49:30.9322611Z running 1 test
+2026-10-20T20:49:30.9324383Z test crates/matea/src/lib.rs - (line 4) - compile ... ok
+2026-10-20T20:49:30.9324679Z 
+2026-10-20T20:49:30.9324965Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.9325461Z 
+2026-10-20T20:49:30.9366828Z [1m[32m   Doc-tests[0m matea_api_audit
+2026-10-20T20:49:30.9575214Z 
+2026-10-20T20:49:30.9575579Z running 0 tests
+2026-10-20T20:49:30.9575777Z 
+2026-10-20T20:49:30.9576061Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.9576435Z 
+2026-10-20T20:49:30.9591943Z [1m[32m   Doc-tests[0m matea_core
+2026-10-20T20:49:30.9992254Z 
+2026-10-20T20:49:30.9992751Z running 0 tests
+2026-10-20T20:49:30.9992935Z 
+2026-10-20T20:49:30.9993218Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:30.9993613Z 
+2026-10-20T20:49:31.0007238Z [1m[32m   Doc-tests[0m matea_motion
+2026-10-20T20:49:31.0189295Z 
+2026-10-20T20:49:31.0189759Z running 0 tests
+2026-10-20T20:49:31.0189962Z 
+2026-10-20T20:49:31.0190242Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:31.0190626Z 
+2026-10-20T20:49:31.0203519Z [1m[32m   Doc-tests[0m matea_ratatui
+2026-10-20T20:49:31.0465574Z 
+2026-10-20T20:49:31.0466110Z running 0 tests
+2026-10-20T20:49:31.0466376Z 
+2026-10-20T20:49:31.0466837Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:31.0467321Z 
+2026-10-20T20:49:31.0484317Z [1m[32m   Doc-tests[0m matea_render
+2026-10-20T20:49:31.4144254Z 
+2026-10-20T20:49:31.4144733Z running 2 tests
+2026-10-20T20:49:31.4159995Z test crates/matea-render/src/rich_text.rs - rich_text::RichText (line 27) ... ok
+2026-10-20T20:49:31.4160971Z test crates/matea-render/src/snapshot.rs - snapshot::View::surface (line 12) ... ok
+2026-10-20T20:49:31.4161651Z 
+2026-10-20T20:49:31.4161925Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:31.4162298Z 
+2026-10-20T20:49:31.4175930Z 
+2026-10-20T20:49:31.4176084Z running 1 test
+2026-10-20T20:49:31.4498451Z test crates/matea-render/src/text.rs - text::Text (line 14) - compile fail ... ok
+2026-10-20T20:49:31.4499274Z 
+2026-10-20T20:49:31.4499686Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+2026-10-20T20:49:31.4500258Z 
+2026-10-20T20:49:31.4514884Z [1m[32m   Doc-tests[0m matea_style
+2026-10-20T20:49:31.7562543Z 
+2026-10-20T20:49:31.7563508Z running 3 tests
+2026-10-20T20:49:31.7578038Z test crates/matea-style/src/attributes/patch.rs - attributes::patch::StylePatch (line 17) ... ok
+2026-10-20T20:49:31.7579358Z test crates/matea-style/src/lib.rs - Color::rgb16 (line 23) ... ok
+2026-10-20T20:49:31.7580441Z test crates/matea-style/src/gradient.rs - gradient::Gradient::from_premultiplied_rgba16 (line 69) ... ok
+2026-10-20T20:49:31.7580923Z 
+2026-10-20T20:49:31.7581239Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:31.7582018Z 
+2026-10-20T20:49:31.7606858Z [1m[32m   Doc-tests[0m matea_terminal
+2026-10-20T20:49:31.8074844Z 
+2026-10-20T20:49:31.8075325Z running 2 tests
+2026-10-20T20:49:31.8369677Z test crates/matea-terminal/src/device.rs - device::TerminalDevice (line 190) - compile fail ... ok
+2026-10-20T20:49:31.8396541Z test crates/matea-terminal/src/device.rs - device::TerminalDevice (line 195) - compile fail ... ok
+2026-10-20T20:49:31.8397201Z 
+2026-10-20T20:49:31.8397616Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+2026-10-20T20:49:31.8398208Z 
+2026-10-20T20:49:31.8411332Z [1m[32m   Doc-tests[0m matea_widgets
+2026-10-20T20:49:32.2495520Z 
+2026-10-20T20:49:32.2496046Z running 2 tests
+2026-10-20T20:49:32.2510989Z test crates/matea-widgets/src/viewport/highlights.rs - viewport::highlights::Viewport::set_highlights (line 97) ... ok
+2026-10-20T20:49:32.2511972Z test crates/matea-widgets/src/viewport.rs - viewport::Viewport (line 182) ... ok
+2026-10-20T20:49:32.2512492Z 
+2026-10-20T20:49:32.2512955Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:32.2513699Z 
+2026-10-20T20:49:32.2660642Z ##[group]Run cargo test --locked -p matea-ratatui --no-default-features
+2026-10-20T20:49:32.2661210Z [36;1mcargo test --locked -p matea-ratatui --no-default-features[0m
+2026-10-20T20:49:32.2712789Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:49:32.2713040Z env:
+2026-10-20T20:49:32.2713236Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:49:32.2713499Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:49:32.2713717Z   CARGO_TERM_COLOR: always
+2026-10-20T20:49:32.2713939Z ##[endgroup]
+2026-10-20T20:49:32.3796328Z [1m[32m   Compiling[0m unicode-ident v1.0.27
+2026-10-20T20:49:32.3800134Z [1m[32m   Compiling[0m quote v1.0.47
+2026-10-20T20:49:32.4167148Z [1m[32m   Compiling[0m proc-macro2 v1.0.107
+2026-10-20T20:49:32.7930395Z [1m[32m   Compiling[0m syn v3.0.9
+2026-10-20T20:49:32.7934073Z [1m[32m   Compiling[0m syn v2.0.119
+2026-10-20T20:49:34.2792810Z [1m[32m   Compiling[0m strum_macros v0.28.0
+2026-10-20T20:49:35.2820419Z [1m[32m   Compiling[0m darling_core v0.24.0
+2026-10-20T20:49:35.7172217Z [1m[32m   Compiling[0m strum v0.28.0
+2026-10-20T20:49:36.0957285Z [1m[32m   Compiling[0m thiserror-impl v2.0.21
+2026-10-20T20:49:37.0759796Z [1m[32m   Compiling[0m thiserror v2.0.21
+2026-10-20T20:49:37.1176988Z [1m[32m   Compiling[0m kasuari v0.4.12
+2026-10-20T20:49:37.3550838Z [1m[32m   Compiling[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:37.3970047Z [1m[32m   Compiling[0m darling_macro v0.24.0
+2026-10-20T20:49:37.9142878Z [1m[32m   Compiling[0m darling v0.24.0
+2026-10-20T20:49:37.9378138Z [1m[32m   Compiling[0m instability v0.3.14
+2026-10-20T20:49:38.5622959Z [1m[32m   Compiling[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:39.3194182Z [1m[32m   Compiling[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:39.3830606Z [1m[32m   Compiling[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+2026-10-20T20:49:40.4050894Z [1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 8.11s
+2026-10-20T20:49:40.4149923Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-ccb7227968c5a0d8)
+2026-10-20T20:49:40.4161679Z 
+2026-10-20T20:49:40.4161886Z running 0 tests
+2026-10-20T20:49:40.4163586Z 
+2026-10-20T20:49:40.4164036Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:40.4164588Z 
+2026-10-20T20:49:40.4165146Z [1m[32m     Running[0m tests/bridge.rs (target/debug/deps/bridge-67359b2e374d4c70)
+2026-10-20T20:49:40.4176153Z 
+2026-10-20T20:49:40.4176641Z running 9 tests
+2026-10-20T20:49:40.4209553Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+2026-10-20T20:49:40.4231627Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+2026-10-20T20:49:40.4235872Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+2026-10-20T20:49:40.4237133Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+2026-10-20T20:49:40.4238253Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+2026-10-20T20:49:40.4239694Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+2026-10-20T20:49:40.4241035Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+2026-10-20T20:49:40.4255700Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+2026-10-20T20:49:40.4325182Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+2026-10-20T20:49:40.4325750Z 
+2026-10-20T20:49:40.4326138Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:40.4326712Z 
+2026-10-20T20:49:40.4329753Z [1m[32m   Doc-tests[0m matea_ratatui
+2026-10-20T20:49:40.4583917Z 
+2026-10-20T20:49:40.4584519Z running 0 tests
+2026-10-20T20:49:40.4584843Z 
+2026-10-20T20:49:40.4585399Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:40.4586063Z 
+2026-10-20T20:49:40.4671569Z ##[group]Run cargo test --locked -p matea-ratatui --all-features
+2026-10-20T20:49:40.4672077Z [36;1mcargo test --locked -p matea-ratatui --all-features[0m
+2026-10-20T20:49:40.4723434Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:49:40.4723689Z env:
+2026-10-20T20:49:40.4723885Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:49:40.4724138Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:49:40.4724352Z   CARGO_TERM_COLOR: always
+2026-10-20T20:49:40.4724588Z ##[endgroup]
+2026-10-20T20:49:40.5457144Z [1m[32m Downloading[0m crates ...
+2026-10-20T20:49:40.6023861Z [1m[32m  Downloaded[0m numtoa v0.2.4
+2026-10-20T20:49:40.6037413Z [1m[32m  Downloaded[0m termion v4.0.6
+2026-10-20T20:49:40.6068800Z [1m[32m  Downloaded[0m portable-atomic-util v0.2.6
+2026-10-20T20:49:40.6105267Z [1m[32m  Downloaded[0m crossterm v0.28.1
+2026-10-20T20:49:40.6183178Z [1m[32m  Downloaded[0m rustix v0.38.44
+2026-10-20T20:49:40.6558480Z [1m[32m  Downloaded[0m linux-raw-sys v0.4.15
+2026-10-20T20:49:40.7170202Z [1m[32m   Compiling[0m serde_core v1.0.229
+2026-10-20T20:49:40.7171381Z [1m[32m   Compiling[0m libm v0.2.16
+2026-10-20T20:49:40.7172536Z [1m[32m   Compiling[0m syn v2.0.119
+2026-10-20T20:49:40.7173348Z [1m[32m   Compiling[0m portable-atomic v1.15.0
+2026-10-20T20:49:40.9983116Z [1m[32m   Compiling[0m serde v1.0.229
+2026-10-20T20:49:41.1960261Z [1m[32m   Compiling[0m portable-atomic-util v0.2.6
+2026-10-20T20:49:41.6727818Z [1m[32m   Compiling[0m serde_derive v1.0.229
+2026-10-20T20:49:43.1497269Z [1m[32m   Compiling[0m by_address v1.2.1
+2026-10-20T20:49:43.2068995Z [1m[32m   Compiling[0m palette_math v0.7.7
+2026-10-20T20:49:43.4840502Z [1m[32m   Compiling[0m kasuari v0.4.12
+2026-10-20T20:49:43.6809946Z [1m[32m   Compiling[0m bitflags v2.13.2
+2026-10-20T20:49:43.9031224Z [1m[32m   Compiling[0m line-clipping v0.3.8
+2026-10-20T20:49:44.1021288Z [1m[32m   Compiling[0m strum_macros v0.28.0
+2026-10-20T20:49:44.1247153Z [1m[32m   Compiling[0m palette_derive v0.7.7
+2026-10-20T20:49:44.9541111Z [1m[32m   Compiling[0m palette v0.7.7
+2026-10-20T20:49:45.6730215Z [1m[32m   Compiling[0m compact_str v0.10.0
+2026-10-20T20:49:46.0870710Z [1m[32m   Compiling[0m strum v0.28.0
+2026-10-20T20:49:49.1937475Z [1m[32m   Compiling[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:50.2895715Z [1m[32m   Compiling[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:51.3977539Z [1m[32m   Compiling[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:51.4220016Z [1m[32m   Compiling[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:51.4870685Z [1m[32m   Compiling[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+2026-10-20T20:49:52.6124077Z [1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 12.12s
+2026-10-20T20:49:52.6245015Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-461bda8f02d98d0e)
+2026-10-20T20:49:52.6257040Z 
+2026-10-20T20:49:52.6257225Z running 0 tests
+2026-10-20T20:49:52.6257469Z 
+2026-10-20T20:49:52.6258270Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:52.6259186Z 
+2026-10-20T20:49:52.6260601Z [1m[32m     Running[0m tests/bridge.rs (target/debug/deps/bridge-68458c4900c7ac57)
+2026-10-20T20:49:52.6271813Z 
+2026-10-20T20:49:52.6271993Z running 9 tests
+2026-10-20T20:49:52.6299684Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+2026-10-20T20:49:52.6324851Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+2026-10-20T20:49:52.6339803Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+2026-10-20T20:49:52.6341658Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+2026-10-20T20:49:52.6342950Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+2026-10-20T20:49:52.6344118Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+2026-10-20T20:49:52.6354192Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+2026-10-20T20:49:52.6355393Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+2026-10-20T20:49:52.6394273Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+2026-10-20T20:49:52.6394875Z 
+2026-10-20T20:49:52.6395295Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-20T20:49:52.6395877Z 
+2026-10-20T20:49:52.6397820Z [1m[32m   Doc-tests[0m matea_ratatui
+2026-10-20T20:49:52.6682198Z 
+2026-10-20T20:49:52.6682783Z running 0 tests
+2026-10-20T20:49:52.6683103Z 
+2026-10-20T20:49:52.6683475Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:52.6683866Z 
+2026-10-20T20:49:52.6776578Z ##[group]Run cargo test --locked -p matea --all-targets --features ratatui
+2026-10-20T20:49:52.6777162Z [36;1mcargo test --locked -p matea --all-targets --features ratatui[0m
+2026-10-20T20:49:52.6827359Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:49:52.6827625Z env:
+2026-10-20T20:49:52.6827820Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:49:52.6828082Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:49:52.6828301Z   CARGO_TERM_COLOR: always
+2026-10-20T20:49:52.6828522Z ##[endgroup]
+2026-10-20T20:49:52.7966981Z [1m[32m   Compiling[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:52.7968388Z [1m[32m   Compiling[0m derive_more-impl v2.1.1
+2026-10-20T20:49:53.3736422Z [1m[32m   Compiling[0m derive_more v2.1.1
+2026-10-20T20:49:53.3909414Z [1m[32m   Compiling[0m crossterm v0.29.0
+2026-10-20T20:49:53.5755423Z [1m[32m   Compiling[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:54.0889596Z [1m[32m   Compiling[0m matea-terminal v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-terminal)
+2026-10-20T20:49:54.8085732Z [1m[32m   Compiling[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:54.8316937Z [1m[32m   Compiling[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:49:54.9380614Z [1m[32m   Compiling[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+2026-10-20T20:49:55.0912730Z [1m[32m   Compiling[0m matea v0.1.0 (/home/runner/work/Matea/Matea/crates/matea)
+2026-10-20T20:49:57.9244912Z [1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 5.22s
+2026-10-20T20:49:57.9366786Z [1m[32m     Running[0m unittests src/lib.rs (target/debug/deps/matea-701355c068d5c91d)
+2026-10-20T20:49:57.9377689Z 
+2026-10-20T20:49:57.9377919Z running 0 tests
+2026-10-20T20:49:57.9378188Z 
+2026-10-20T20:49:57.9379030Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9379505Z 
+2026-10-20T20:49:57.9381357Z [1m[32m     Running[0m tests/progress.rs (target/debug/deps/progress-cda0bba2ada85954)
+2026-10-20T20:49:57.9391328Z 
+2026-10-20T20:49:57.9391471Z running 2 tests
+2026-10-20T20:49:57.9396266Z test runtime_retargets_and_cancels_reduced_motion_subscriptions ... ok
+2026-10-20T20:49:57.9402218Z test structured_progress_preserves_geometry_and_terminal_color_unicode_fallback ... ok
+2026-10-20T20:49:57.9402718Z 
+2026-10-20T20:49:57.9403043Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9403485Z 
+2026-10-20T20:49:57.9405894Z [1m[32m     Running[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-7cce4a8157f8a87a)
+2026-10-20T20:49:57.9415546Z 
+2026-10-20T20:49:57.9415715Z running 1 test
+2026-10-20T20:49:57.9426744Z test snapshot_scenes_reach_runtime_and_terminal_with_the_same_cells_cursor_and_bytes ... ok
+2026-10-20T20:49:57.9427525Z 
+2026-10-20T20:49:57.9428004Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9428626Z 
+2026-10-20T20:49:57.9429918Z [1m[32m     Running[0m benches/foundation_paths.rs (target/debug/deps/foundation_paths-a6cfe08a03ac8199)
+2026-10-20T20:49:57.9445645Z [1m[32m     Running[0m unittests examples/attributes.rs (target/debug/examples/attributes-a61a81e6480b51af)
+2026-10-20T20:49:57.9454284Z 
+2026-10-20T20:49:57.9454463Z running 0 tests
+2026-10-20T20:49:57.9456177Z 
+2026-10-20T20:49:57.9456664Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9457239Z 
+2026-10-20T20:49:57.9457872Z [1m[32m     Running[0m unittests examples/clocks.rs (target/debug/examples/clocks-5b50de7533f64432)
+2026-10-20T20:49:57.9466439Z 
+2026-10-20T20:49:57.9466998Z running 0 tests
+2026-10-20T20:49:57.9468417Z 
+2026-10-20T20:49:57.9469071Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9469646Z 
+2026-10-20T20:49:57.9470309Z [1m[32m     Running[0m unittests examples/counter.rs (target/debug/examples/counter-063d735ca19229c1)
+2026-10-20T20:49:57.9478353Z 
+2026-10-20T20:49:57.9478536Z running 0 tests
+2026-10-20T20:49:57.9480525Z 
+2026-10-20T20:49:57.9481059Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9481634Z 
+2026-10-20T20:49:57.9482206Z [1m[32m     Running[0m unittests examples/cursor.rs (target/debug/examples/cursor-4fed4ab600b5135a)
+2026-10-20T20:49:57.9490670Z 
+2026-10-20T20:49:57.9490835Z running 0 tests
+2026-10-20T20:49:57.9491087Z 
+2026-10-20T20:49:57.9491504Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9492083Z 
+2026-10-20T20:49:57.9493857Z [1m[32m     Running[0m unittests examples/dashboard.rs (target/debug/examples/dashboard-a0f2b0162c60afbc)
+2026-10-20T20:49:57.9502548Z 
+2026-10-20T20:49:57.9502727Z running 0 tests
+2026-10-20T20:49:57.9504542Z 
+2026-10-20T20:49:57.9505036Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9505911Z 
+2026-10-20T20:49:57.9506596Z [1m[32m     Running[0m unittests examples/effects.rs (target/debug/examples/effects-13109175dcce660a)
+2026-10-20T20:49:57.9514579Z 
+2026-10-20T20:49:57.9514767Z running 0 tests
+2026-10-20T20:49:57.9516487Z 
+2026-10-20T20:49:57.9517068Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9518318Z [1m[32m     Running[0m unittests examples/form.rs (target/debug/examples/form-531afc3242e5e15c)
+2026-10-20T20:49:57.9519047Z 
+2026-10-20T20:49:57.9526825Z 
+2026-10-20T20:49:57.9527020Z running 0 tests
+2026-10-20T20:49:57.9528565Z 
+2026-10-20T20:49:57.9529371Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9529827Z 
+2026-10-20T20:49:57.9530403Z [1m[32m     Running[0m unittests examples/gradients.rs (target/debug/examples/gradients-37f03fff5af9d5e7)
+2026-10-20T20:49:57.9539191Z 
+2026-10-20T20:49:57.9539915Z running 0 tests
+2026-10-20T20:49:57.9540178Z 
+2026-10-20T20:49:57.9540600Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9541087Z 
+2026-10-20T20:49:57.9543139Z [1m[32m     Running[0m unittests examples/help.rs (target/debug/examples/help-bb839c851c5d166d)
+2026-10-20T20:49:57.9551797Z 
+2026-10-20T20:49:57.9551994Z running 0 tests
+2026-10-20T20:49:57.9552254Z 
+2026-10-20T20:49:57.9552794Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9553487Z 
+2026-10-20T20:49:57.9555360Z [1m[32m     Running[0m unittests examples/input.rs (target/debug/examples/input-1a6e64da82add9b3)
+2026-10-20T20:49:57.9564029Z 
+2026-10-20T20:49:57.9564252Z running 0 tests
+2026-10-20T20:49:57.9564516Z 
+2026-10-20T20:49:57.9567326Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9568290Z 
+2026-10-20T20:49:57.9571570Z [1m[32m     Running[0m unittests examples/lifecycle.rs (target/debug/examples/lifecycle-da4e6fcc8a2671ec)
+2026-10-20T20:49:57.9577301Z 
+2026-10-20T20:49:57.9577462Z running 0 tests
+2026-10-20T20:49:57.9577683Z 
+2026-10-20T20:49:57.9578223Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9579036Z 
+2026-10-20T20:49:57.9580871Z [1m[32m     Running[0m unittests examples/list.rs (target/debug/examples/list-16387321fc6621c9)
+2026-10-20T20:49:57.9590497Z 
+2026-10-20T20:49:57.9590669Z running 0 tests
+2026-10-20T20:49:57.9592573Z 
+2026-10-20T20:49:57.9593056Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9593902Z 
+2026-10-20T20:49:57.9594444Z [1m[32m     Running[0m unittests examples/motion.rs (target/debug/examples/motion-83fd16b92ce91eed)
+2026-10-20T20:49:57.9602902Z 
+2026-10-20T20:49:57.9603072Z running 0 tests
+2026-10-20T20:49:57.9603358Z 
+2026-10-20T20:49:57.9603788Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9604387Z 
+2026-10-20T20:49:57.9606231Z [1m[32m     Running[0m unittests examples/pagination.rs (target/debug/examples/pagination-9843980bb4c33302)
+2026-10-20T20:49:57.9614749Z 
+2026-10-20T20:49:57.9614924Z running 0 tests
+2026-10-20T20:49:57.9615174Z 
+2026-10-20T20:49:57.9615728Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9616290Z 
+2026-10-20T20:49:57.9618029Z [1m[32m     Running[0m unittests examples/progress.rs (target/debug/examples/progress-2465075f313008db)
+2026-10-20T20:49:57.9626590Z 
+2026-10-20T20:49:57.9626768Z running 0 tests
+2026-10-20T20:49:57.9628566Z 
+2026-10-20T20:49:57.9629248Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9629840Z 
+2026-10-20T20:49:57.9630515Z [1m[32m     Running[0m unittests examples/ratatui_widgets.rs (target/debug/examples/ratatui_widgets-0d970ba8c24aa407)
+2026-10-20T20:49:57.9638683Z 
+2026-10-20T20:49:57.9639220Z running 0 tests
+2026-10-20T20:49:57.9639492Z 
+2026-10-20T20:49:57.9640065Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9640699Z 
+2026-10-20T20:49:57.9642553Z [1m[32m     Running[0m unittests examples/render_probe.rs (target/debug/examples/render_probe-b6f04627d300db44)
+2026-10-20T20:49:57.9651025Z 
+2026-10-20T20:49:57.9651194Z running 0 tests
+2026-10-20T20:49:57.9653031Z 
+2026-10-20T20:49:57.9653570Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9654800Z [1m[32m     Running[0m unittests examples/spinners.rs (target/debug/examples/spinners-76650b455fb5b1ab)
+2026-10-20T20:49:57.9655271Z 
+2026-10-20T20:49:57.9663243Z 
+2026-10-20T20:49:57.9663438Z running 0 tests
+2026-10-20T20:49:57.9664842Z 
+2026-10-20T20:49:57.9665368Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:49:57.9666009Z 
+2026-10-20T20:49:57.9742663Z ##[group]Run cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check
+2026-10-20T20:49:57.9743347Z [36;1mcargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check[0m
+2026-10-20T20:49:57.9793341Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:49:57.9793585Z env:
+2026-10-20T20:49:57.9793783Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:49:57.9794043Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:49:57.9794269Z   CARGO_TERM_COLOR: always
+2026-10-20T20:49:57.9794488Z ##[endgroup]
+2026-10-20T20:49:58.0416934Z [1m[32m Downloading[0m crates ...
+2026-10-20T20:49:58.0739627Z [1m[32m  Downloaded[0m equivalent v1.0.2
+2026-10-20T20:49:58.0753905Z [1m[32m  Downloaded[0m quote v1.0.45
+2026-10-20T20:49:58.0784923Z [1m[32m  Downloaded[0m cfg-if v1.0.1
+2026-10-20T20:49:58.0800726Z [1m[32m  Downloaded[0m itoa v1.0.15
+2026-10-20T20:49:58.0818232Z [1m[32m  Downloaded[0m either v1.15.0
+2026-10-20T20:49:58.0837412Z [1m[32m  Downloaded[0m zmij v1.0.2
+2026-10-20T20:49:58.0857974Z [1m[32m  Downloaded[0m rustversion v1.0.22
+2026-10-20T20:49:58.0889275Z [1m[32m  Downloaded[0m proc-macro2 v1.0.106
+2026-10-20T20:49:58.0921694Z [1m[32m  Downloaded[0m autocfg v1.5.0
+2026-10-20T20:49:58.0942815Z [1m[32m  Downloaded[0m unicode-ident v1.0.18
+2026-10-20T20:49:58.0993815Z [1m[32m  Downloaded[0m libm v0.2.15
+2026-10-20T20:49:58.1129334Z [1m[32m  Downloaded[0m portable-atomic v1.13.1
+2026-10-20T20:49:58.1206509Z [1m[32m  Downloaded[0m syn v2.0.117
+2026-10-20T20:49:58.1312234Z [1m[32m  Downloaded[0m syn v3.0.2
+2026-10-20T20:49:58.1592496Z [1m[32m   Compiling[0m proc-macro2 v1.0.106
+2026-10-20T20:49:58.1593642Z [1m[32m   Compiling[0m unicode-ident v1.0.18
+2026-10-20T20:49:58.1594646Z [1m[32m   Compiling[0m quote v1.0.45
+2026-10-20T20:49:58.1595461Z [1m[32m   Compiling[0m rustversion v1.0.22
+2026-10-20T20:49:58.2293585Z [1m[32m   Compiling[0m equivalent v1.0.2
+2026-10-20T20:49:58.2595006Z [1m[32m   Compiling[0m foldhash v0.2.0
+2026-10-20T20:49:58.4030036Z [1m[32m   Compiling[0m allocator-api2 v0.2.21
+2026-10-20T20:49:58.4310003Z [1m[32m   Compiling[0m cfg-if v1.0.1
+2026-10-20T20:49:58.4589803Z [1m[32m   Compiling[0m thiserror v2.0.21
+2026-10-20T20:49:58.7471011Z [1m[32m   Compiling[0m zmij v1.0.2
+2026-10-20T20:49:58.7590320Z [1m[32m   Compiling[0m itoa v1.0.15
+2026-10-20T20:49:58.8353833Z [1m[32m   Compiling[0m static_assertions v1.1.0
+2026-10-20T20:49:58.9145112Z [1m[32m   Compiling[0m unicode-width v0.2.2
+2026-10-20T20:49:59.0790626Z [1m[32m   Compiling[0m castaway v0.2.4
+2026-10-20T20:49:59.1279464Z [1m[32m   Compiling[0m heck v0.5.0
+2026-10-20T20:49:59.1394702Z [1m[32m   Compiling[0m either v1.15.0
+2026-10-20T20:49:59.1802311Z [1m[32m   Compiling[0m syn v3.0.2
+2026-10-20T20:49:59.2122979Z [1m[32m   Compiling[0m syn v2.0.117
+2026-10-20T20:49:59.2910291Z [1m[32m   Compiling[0m unicode-segmentation v1.13.3
+2026-10-20T20:49:59.3170946Z [1m[32m   Compiling[0m itertools v0.15.0
+2026-10-20T20:49:59.8580384Z [1m[32m   Compiling[0m hashbrown v0.16.1
+2026-10-20T20:50:00.5170336Z [1m[32m   Compiling[0m hashbrown v0.17.1
+2026-10-20T20:50:00.9754012Z [1m[32m   Compiling[0m ryu v1.0.23
+2026-10-20T20:50:01.1150372Z [1m[32m   Compiling[0m compact_str v0.9.0
+2026-10-20T20:50:01.1902551Z [1m[32m   Compiling[0m lru v0.18.5
+2026-10-20T20:50:01.3161101Z [1m[32m   Compiling[0m unicode-truncate v3.0.0
+2026-10-20T20:50:01.4110121Z [1m[32m   Compiling[0m compact_str v0.10.0
+2026-10-20T20:50:01.8130115Z [1m[32m   Compiling[0m bitflags v2.13.2
+2026-10-20T20:50:02.0150718Z [1m[32m   Compiling[0m matea-style v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-style)
+2026-10-20T20:50:02.0480429Z [1m[32m   Compiling[0m strum_macros v0.28.0
+2026-10-20T20:50:02.0509793Z [1m[32m   Compiling[0m thiserror-impl v2.0.21
+2026-10-20T20:50:02.2220741Z [1m[32m   Compiling[0m matea-render v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-render)
+2026-10-20T20:50:03.1270753Z [1m[32m   Compiling[0m kasuari v0.4.12
+2026-10-20T20:50:03.6861072Z [1m[32m   Compiling[0m strum v0.28.0
+2026-10-20T20:50:03.7133033Z [1m[32m   Compiling[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+2026-10-20T20:50:04.7587678Z [1m[32m   Compiling[0m matea-reference-text-probe v0.0.0 (/home/runner/work/Matea/Matea/tools/reference-text)
+2026-10-20T20:50:05.5654651Z [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 7.57s
+2026-10-20T20:50:05.5709982Z [1m[32m     Running[0m `tools/reference-text/target/debug/matea-reference-text-probe --check`
+2026-10-20T20:50:05.9725741Z 8 cases / 80 pinned public reference cells and 2 complete styled corpora match; 579933 style-patch observations match
+2026-10-20T20:50:05.9770288Z ##[group]Run cargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets
+2026-10-20T20:50:05.9770984Z [36;1mcargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets[0m
+2026-10-20T20:50:05.9823725Z shell: /usr/bin/bash -e {0}
+2026-10-20T20:50:05.9823980Z env:
+2026-10-20T20:50:05.9824180Z   CARGO_HOME: /home/runner/.cargo
+2026-10-20T20:50:05.9824436Z   CARGO_INCREMENTAL: 0
+2026-10-20T20:50:05.9824649Z   CARGO_TERM_COLOR: always
+2026-10-20T20:50:05.9824865Z ##[endgroup]
+2026-10-20T20:50:06.0366959Z [1m[32m   Compiling[0m matea-reference-text-probe v0.0.0 (/home/runner/work/Matea/Matea/tools/reference-text)
+2026-10-20T20:50:06.4675344Z [1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 0.47s
+2026-10-20T20:50:06.4715030Z [1m[32m     Running[0m unittests src/main.rs (tools/reference-text/target/debug/deps/matea_reference_text_probe-f10149b57380e18c)
+2026-10-20T20:50:06.4725843Z 
+2026-10-20T20:50:06.4726067Z running 8 tests
+2026-10-20T20:50:06.4731319Z test measurement::tests::allocation_tracking_is_released_on_unwind_and_rejects_nesting ... ok
+2026-10-20T20:50:06.4732393Z test measurement::tests::calibration_growth_never_overflows_usize ... ok
+2026-10-20T20:50:06.4733292Z test measurement::tests::calibration_keeps_all_observations_and_requires_three_confirmations ... ok
+2026-10-20T20:50:06.4734172Z test measurement::tests::calibration_failure_preserves_coarse_clock_history_at_the_cap ... ok
+2026-10-20T20:50:06.4734780Z test measurement::tests::configuration_is_bounded_and_fixed_mode_is_explicit ... ok
+2026-10-20T20:50:06.4735430Z test measurement::tests::shared_batch_runs_exactly_the_requested_stateful_operations ... ok
+2026-10-20T20:50:06.4736269Z test measurement::tests::invalid_calibration_performs_no_operations ... ok
+2026-10-20T20:50:06.4737150Z test measurement::tests::retained_samples_keep_every_interval_and_never_retry_a_zero ... ok
+2026-10-20T20:50:06.4737718Z 
+2026-10-20T20:50:06.4738092Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-20T20:50:06.4738629Z 
+2026-10-20T20:50:06.4878094Z Post job cleanup.
+2026-10-20T20:50:06.5746746Z [command]/usr/bin/git version
+2026-10-20T20:50:06.5798411Z git version 2.55.0
+2026-10-20T20:50:06.5852129Z Temporarily overriding HOME='/home/runner/work/_temp/14ae52d3-97c1-4b91-9009-8f25e6f1cdea' before making global git config changes
+2026-10-20T20:50:06.5853263Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T20:50:06.5858981Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Matea/Matea
+2026-10-20T20:50:06.5898689Z Removing SSH command configuration
+2026-10-20T20:50:06.5906886Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T20:50:06.5949353Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T20:50:06.6234923Z Removing HTTP extra header
+2026-10-20T20:50:06.6241356Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T20:50:06.6285288Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T20:50:06.6585719Z Removing includeIf entries pointing to credentials config files
+2026-10-20T20:50:06.6594388Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T20:50:06.6634926Z includeif.gitdir:/home/runner/work/Matea/Matea/.git.path
+2026-10-20T20:50:06.6635877Z includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path
+2026-10-20T20:50:06.6636656Z includeif.gitdir:/github/workspace/.git.path
+2026-10-20T20:50:06.6637436Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T20:50:06.6646727Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Matea/Matea/.git.path
+2026-10-20T20:50:06.6679247Z /home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:50:06.6694893Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Matea/Matea/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-8a3eb204\-3186\-4eb1\-b45d\-280a7bf8fbf0\.config
+2026-10-20T20:50:06.6743176Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path
+2026-10-20T20:50:06.6804011Z /home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:50:06.6811611Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-8a3eb204\-3186\-4eb1\-b45d\-280a7bf8fbf0\.config
+2026-10-20T20:50:06.6863609Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-20T20:50:06.6923322Z /github/runner_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:50:06.6940316Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-8a3eb204\-3186\-4eb1\-b45d\-280a7bf8fbf0\.config
+2026-10-20T20:50:06.6989910Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T20:50:06.7034081Z /github/runner_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config
+2026-10-20T20:50:06.7042882Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-8a3eb204\-3186\-4eb1\-b45d\-280a7bf8fbf0\.config
+2026-10-20T20:50:06.7105652Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T20:50:06.7394505Z Removing credentials config '/home/runner/work/_temp/git-credentials-8a3eb204-3186-4eb1-b45d-280a7bf8fbf0.config'
+2026-10-20T20:50:06.7561261Z Cleaning up orphan processes

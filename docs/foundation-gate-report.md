@@ -1,13 +1,15 @@
 # Matea Foundation gate report
 
-直近の検証済みc526cf4は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
-現在は追加発見したWindows State.Mode公開機能とGo export gateを実装・再検証中で、作業評価は57軸です。
+現在は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
+追加発見したWindows State.ModeとUnix State.Termiosの公開機能を実装し、再検証待ち7軸を57→50へ更新しました。
 x/termの13宣言候補を分類・対応付けし、借用handle、排他的な状態復元、raw取得、上限付きbyte入力を実装しました。
-[5bcdeb6の必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39483552313)はすべて成功。
+[04e81bcの必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39495143723)はすべて成功。
 198実行入力を固定commitと照合し、各OSの47検証、Unix各12／Windows 9の実端末試験と同数の計装試験を確認しました。
-Miri 9試験と90長さ／上限組が成功し、変更6単位の移植性とdeviceの設計・安全性・動作を75へ更新しました。
-[証拠と限定評価](terminal-device-audit.md)。評価表更新後のローカル47検証、Rust276＋11 doctest、Python144（条件付きskip 2）、
+Unixでは属性のコピー独立性・echo／EOF変更と復元、Windowsでは入力／出力モード変更・handle役割を検証しています。
+Miri 10試験と90長さ／上限組、Unix各制御slotの256値が成功。変更6単位の移植性とdeviceの動作を75へ戻しました。
+[証拠と限定評価](terminal-device-audit.md)。評価表更新後のローカル47検証、Rust277＋11 doctest、Python146（条件付きskip 2）、
 LLVM95 source／102 instanceも成功しました。依存profilingの3警告は保持し、全分岐の証明とは扱いません。
+Goの埋め込み・戻り値・pointer等のexport解決は未完了で、独立gateをfalseのまま維持しています。
 
 ネイティブ入力の144計測を含む合計201計測・6,231標本と1,612 RSS子プロセスを検証しました。
 長い入力の確保は4→1回、要求120→65 bytes、固定128操作のp50は約41→15–16µsです。

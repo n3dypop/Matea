@@ -1,7 +1,7 @@
 # Explicit Windows console modes and promoted source fields
 
-Status: implementation and native Windows qualification in progress at 95dd7b7.
-The prior c526cf4 checkpoint remains separate.
+Status: qualified at 04e81bc for the stated three-OS fixture scope.
+The prior c526cf4 checkpoint and intermediate 95dd7b7 CI remain separate.
 
 Pinned x/term State embeds private state. The Windows implementation has exported
 Mode uint32, which is promoted to State.Mode. Its private embedding does not make
@@ -41,8 +41,16 @@ executed doctest. The executable device_probe fixture exercises the actual API
 on disposable consoles. Its new checks toggle input echo and output wrap,
 independently query the resulting state, restore both roles, and reject
 input-only operations on an output handle. A Windows pure test covers every low
-word, each bit/complement and unknown-bit edits without IO. The new paths require
-successful actual Windows CI before their reopened assessments can be promoted.
+word, each bit/complement and unknown-bit edits without IO.
+
+[04e81bc CI](https://github.com/n3dypop/Matea/actions/runs/39495143723) succeeds in
+all seven required jobs. [Independent artifact verification](evidence/terminal-device/ci-04e81bc/source-bindings.json)
+binds all 198 execution inputs, 47 acceptance commands per host, and the nine
+isolated Windows console fixtures in ordinary and instrumented binaries. Input
+echo/output wrap edits, role rejection and mode restoration execute inside every
+fixture. Six reopened portability assessments and device behavior return to 75;
+device reference/performance remain 50. This does not qualify physical emulator,
+IME, font or remote transport behavior, nor any shared-runner timing.
 
 The Foundation gate now independently requires a boolean Go target/export review.
 Missing metadata is pending, and strings/numbers/other truthy values fail closed.
