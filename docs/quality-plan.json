@@ -448,8 +448,8 @@
           "reason": "12 complete mock-backend event-loop/lifecycle cases include idle, resize, quit and five I/O failures, with 31 samples and allocation passes. Native terminal input/output, effects and scheduling/resident memory remain incomplete."
         },
         "portability": {
-          "score": 50,
-          "reason": "Native device API and shared terminal lease are newly integrated; the aff137a/941623d qualified checkpoint is retained. Current-source Linux/Windows/macOS/MSRV and native device qualification is pending."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         }
       },
       "evidence": [
@@ -459,7 +459,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/remaining-report.json",
         "docs/evidence/optimization/foundation-paths/current.jsonl",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1077,8 +1078,8 @@
           "reason": "The current facade contains only crate/item reexports. Executed identities cover prelude types and all function aliases; direct/module/prelude text construction uses the same underlying implementation in three 31-sample cases. There is no wrapper allocation/runtime dispatch introduced by these reexports. This does not award underlying modules or missing upstream features parity."
         },
         "portability": {
-          "score": 50,
-          "reason": "Native device API and shared terminal lease are newly integrated; the aff137a/941623d qualified checkpoint is retained. Current-source Linux/Windows/macOS/MSRV and native device qualification is pending."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         }
       },
       "evidence": [
@@ -1088,7 +1089,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/foundation-paths/current.jsonl",
         "docs/evidence/cursor/ci-source-bindings.json",
-        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1341,15 +1343,16 @@
           "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
         },
         "portability": {
-          "score": 50,
-          "reason": "New isolated native-device probe requires Unix PTY and Windows-console execution; old fixture/source CI does not qualify it."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1512,8 +1515,8 @@
           "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
         },
         "portability": {
-          "score": 50,
-          "reason": "New opt-in native device benchmark path requires warning-free all-target checks and three-OS compile/runtime CI. Actual timing is explicitly Unix-only; no Windows timing claim."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         }
       },
       "evidence": [
@@ -1526,7 +1529,8 @@
         "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md",
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
         "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
-        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
@@ -1866,8 +1870,8 @@
           "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
         },
         "portability": {
-          "score": 50,
-          "reason": "New native-device PTY/console driver is in development; current-source Windows/Unix qualification remains pending."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         }
       },
       "evidence": [
@@ -1877,7 +1881,8 @@
         "docs/evidence/measurement-drivers/ci-run.json",
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
         "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
-        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
         "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
@@ -2042,28 +2047,28 @@
       ],
       "criteria": {
         "rust_design": {
-          "score": 50,
-          "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+          "score": 75,
+          "reason": "Borrowed AsFd/AsHandle owners, opaque snapshots, UI-local non-Send restoration, shared lease and typed partial/error contracts reviewed; constructor query and failed transition cleanup tested. Two compile-fail ownership contracts pass; names remain provisional."
         },
         "memory_safety": {
-          "score": 50,
-          "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+          "score": 75,
+          "reason": "Narrow documented termios/console FFI uses borrowed handles and checked initialization. Pure line/mode/UTF-16/lease logic remains safe Rust. Miri seed 223 passes nine tests with 90 canonical length/limit positions; real input/state fixtures pass all three OSes. No exhaustive soundness or transitive-dependency claim."
         },
         "behavior": {
-          "score": 50,
-          "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+          "score": 75,
+          "reason": "Finite normal/error/limit/EOF/byte-editing/current/original restore and retry/unwind contracts have pure/native regressions. Native fixtures pass Linux/macOS/Windows, including full supplementary console input and exact queued following-line preservation on Unix. Abrupt process signals, unsupported source OSes and full reference contracts remain explicit limits."
         },
         "reference": {
           "score": 50,
           "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
         },
         "portability": {
-          "score": 50,
-          "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+          "score": 75,
+          "reason": "Exact current program files match 5bcdeb6 successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
         },
         "performance": {
           "score": 50,
-          "reason": "Three isolated macOS cohorts measure four matched successful native operations and one Rust guard control: 27 timing records with 31 positive samples plus 62 whole-process RSS children. Four source outputs/semantics match; query/raw state allocations 1x80 bytes to zero. New fused constructor retest, password/error paths and other OS performance remain pending."
+          "reason": "Ten matched macOS native operations plus owned controls now have 201 timing records, 6231 positive retained intervals and 1612 whole-process RSS children across separate fixed/calibrated protocols. Four source query/raw and six byte-input fixtures match; canonical long-input allocations improve 4/120 to 1/65 and queued latency about 41 to 15-16 microseconds. Adverse single-call cohorts remain retained; OS/error/cancellation and complete module performance are still partial, so no high/full-module verdict."
         }
       },
       "evidence": [
@@ -2071,10 +2076,17 @@
         "docs/decisions/0069-owned-terminal-device-state-and-password-eof.md",
         "docs/evidence/terminal-device-source/context.json",
         "docs/evidence/terminal-device/performance/context.json",
-        "docs/evidence/terminal-device/miri/verification.json"
+        "docs/evidence/terminal-device/miri/verification.json",
+        "docs/decisions/0070-canonical-terminal-input-batching.md",
+        "docs/evidence/terminal-device/performance-verification.json",
+        "docs/evidence/terminal-device/password-performance-verification.json",
+        "docs/evidence/terminal-device/password-single-source-binding-correction.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
       ],
       "remaining": [
-        "Complete native PTY/Windows console, Miri, source declaration/condition and performance evidence before qualifying this module."
+        "Qualify canonical batching with updated Miri, native/LLVM and three-OS/MSRV CI; advance only evidenced dimensions.",
+        "Keep Plan 9/other Unix platform conditions explicit; Rust Unsupported is not source platform parity.",
+        "Complete native error/cancellation, Windows/other-host performance and full source module contracts; abrupt process termination does not run this guard Drop."
       ]
     }
   ]

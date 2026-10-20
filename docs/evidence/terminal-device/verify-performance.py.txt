@@ -1,0 +1,53 @@
+"""Archive-only reconstruction; no binaries, timers or reference checkout used."""
+import hashlib,json,math,statistics,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs
+base=root/'docs/evidence/terminal-device';results=[]
+sha=lambda b:hashlib.sha256(b).hexdigest()
+for directory,fused in [('performance',False),('performance-fused',True)]:
+ p=base/directory;c=json.loads((p/'context.json').read_bytes());assert c['status']=='complete'
+ attempt=p/c['attempt'];r=json.loads((attempt/'report.json').read_bytes())
+ assert sha((attempt/'report.json').read_bytes())==c['report_sha256']
+ assert r['status']=='complete' and len(r['cohorts'])==3 and len(c['children'])==68
+ for name,digest in c['procedure_sha256'].items():assert sha((p/'procedures'/name).read_bytes())==digest
+ expected={'device/is_terminal':(1,'true'),'device/state':(1,'captured'),'device/size':((132<<16)|42,'132x42'),'device/raw_restore':(1,'restored'),'device/owned_raw_cycle':(1,'restored')}
+ if fused:expected['device/owned_raw_fused_cycle']=(1,'restored')
+ rows={};rss={k:[] for k in ['source','matea']};timings=outputs=0
+ for child in c['children']:
+  assert child['status']=='passed' and child['exit_code']==0
+  for field in ['stdout','stderr']:assert sha((attempt/child[field]).read_bytes())==child[field+'_sha256']
+  before,after=child['before'].copy(),child['after'].copy()
+  # Only the previously observed named Darwin PENDIN transient flag.
+  before[3]&=~536870912;after[3]&=~536870912;assert before==after
+  text=(attempt/child['stdout']).read_text()
+  records=(read_probe_outputs if child['output_only'] else read_records)(text)
+  keys=set(expected) if child['implementation']=='matea' else {k for k in expected if not k.startswith('device/owned_')}
+  assert set(records)==keys
+  for key,value in records.items():assert (value['first_return_value'],value['output'])==expected[key]
+  if child['rss']:
+   assert child['output_only'];rss[child['implementation']].append(child['maximum_resident_set_size_bytes']);outputs+=len(records)
+  else:
+   assert not child['output_only'];timings+=len(records);rows[(child['implementation'],int(child['label'].split('-')[-1]))]=records
+ for cohort in r['cohorts']:
+  index=cohort['cohort'];matea=rows[('matea',index)];source=rows[('source',index)]
+  assert len(cohort['cases'])==len(matea)
+  for row in cohort['cases']:
+   key=row['case']
+   for implementation,records in [('matea',matea),('source',source)]:
+    if key not in records:assert implementation=='source' and not row['output_equivalent_for_this_fixture'];continue
+    value=records[key];s=sorted(value['samples_ns']);actual={'p50_ns':statistics.median(s),'p95_ns':s[math.ceil(len(s)*.95)-1],'allocations':value['allocations'],'allocated_bytes':value['allocated_bytes']}
+    assert len(s)==31 and row[implementation]==actual
+    assert value['calibration']['target_ns']==20000000
+    assert all(len(b['confirmations_ns'])==2 for b in value['calibration']['batches'])
+   if key in source:
+    assert row['output_equivalent_for_this_fixture'] is True
+    assert all(matea[key][k]==source[key][k] for k in ['semantics','output','first_return_value'])
+    assert row['source_over_matea_p50']==statistics.median(source[key]['samples_ns'])/statistics.median(matea[key]['samples_ns'])
+ for key,values in rss.items():
+  assert len(values)==31 and all(type(v)is int and v>0 for v in values)
+  assert r['rss'][key]=={'children':31,'minimum_bytes':min(values),'p50_bytes':statistics.median(values),'maximum_bytes':max(values)}
+ results.append({'directory':directory,'timing_records':timings,'positive_retained_intervals':timings*31,'output_only_records':outputs,'rss_children':62,'context_sha256':sha((p/'context.json').read_bytes())})
+report={'status':'complete','experiments':results,'limits':['Archive reconstruction validates all raw bytes, cases, confirmations, statistics, paired outputs and RSS records; it does not repeat native execution or establish whole-module parity.']}
+(base/'performance-verification.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

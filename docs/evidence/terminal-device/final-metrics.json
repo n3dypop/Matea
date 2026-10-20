@@ -1,0 +1,15 @@
+{
+  "status": "complete",
+  "native_rust_passed": 276,
+  "rust_doctests_passed": 11,
+  "python_tests": 144,
+  "conditional_python_skips": 2,
+  "miri_device_and_lease_tests": 9,
+  "additional_standalone_rustdoc_checks": 3,
+  "derivation": "all-targets regular test-result sum; workspace test-result sum minus all-targets gives doctests. Cargo emits Doc-tests labels to stderr after captured stdout, so splitting on labels would misclassify counts.",
+  "log_sha256": {
+    "all-targets.log": "70ee6625e7aacf33a28b38d445769dc86f7f777ffa7f97c02e8040e4658db399",
+    "test.log": "14ee9ab6b9127988370befead5d068823534f43d837198382f03136bb02cf1aa",
+    "optimized-python-tests.log": "10d6139989c150546ee4268f5c071c79b9bd28d7aceafdbd61568c5a31eac44b"
+  }
+}

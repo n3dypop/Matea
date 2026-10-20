@@ -1,0 +1,17 @@
+#![deny(unsafe_code)]
+#[allow(unsafe_code)]
+#[path = "/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]
+mod measurement;
+use std::{io,hint::black_box};
+use matea_terminal::device::TerminalDevice;
+fn hash(bytes:&[u8])->u64 {bytes.iter().fold(14695981039346656037u64,|h,b|(h^u64::from(*b)).wrapping_mul(1099511628211))}
+fn main(){
+ let name=std::env::args().nth(1).expect("fixture");
+ let expected:&[u8]=match name.as_str(){"ascii"=>b"tea","utf8"=>"茶🍵".as_bytes(),"bytes"=>b"\xff\x00","empty"=>b"","backspace"=>b"\xe8\x8c","long"=>b"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",_=>panic!("unknown fixture")};
+ let file=io::stdin();let mut device=TerminalDevice::open(&file).unwrap();
+ let output:String=expected.iter().map(|v|format!("{v:02x}")).collect();
+ measurement::measure(&format!("device/password_{name}"),measurement::iterations(1),||{
+  let bytes=device.read_password(4096).unwrap();assert_eq!(bytes,expected);black_box(hash(&bytes))
+ },&output,"one native non-echo line from queued dummy input, byte editing and current-mode restoration; descriptor already open; input return allocation included");
+ device.restore().unwrap();
+}

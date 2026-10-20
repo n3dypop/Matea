@@ -1,0 +1,22 @@
+{
+  "status": "complete",
+  "native_host": "macOS",
+  "command": [
+    "rustdoc",
+    "--test",
+    "--edition=2024",
+    "docs/terminal-device-usage.md",
+    "-L",
+    "dependency=target/debug/deps",
+    "--extern",
+    "matea_terminal=target/debug/deps/libmatea_terminal-f801b84fe465d82b.rlib"
+  ],
+  "exit_code": 0,
+  "tests": 3,
+  "document_sha256": "874f361877b238da74081a5916c5f14293eba6da4b88178a4761ff71f67f8819",
+  "library_sha256": "14937c97fb3ce0343a473ce6fd3caab93b3af231411eb266459a857ed3c8877c",
+  "log_sha256": "22e04d7b3f1af66f3f2353ffc5dce023d512bb275ecaf3a2ae6fb1f9c88ca4bb",
+  "limits": [
+    "Two no-run documentation examples and one compile-fail reject numeric handles. Windows-only body is cfg-excluded on this host; Windows native behavior remains separate CI evidence."
+  ]
+}

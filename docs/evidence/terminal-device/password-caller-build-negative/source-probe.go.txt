@@ -1,0 +1,134 @@
+package main
+import ("encoding/json";"encoding/hex";"bytes";"fmt";"os";"runtime";"runtime/debug";"testing";"time";"github.com/charmbracelet/x/term")
+var sink uint64
+type calibrationBatch struct {
+	Iterations      int     `json:"iterations"`
+	ElapsedNS       int64   `json:"elapsed_ns"`
+	ConfirmationsNS []int64 `json:"confirmations_ns"`
+}
+
+// Keep coarse-clock observations as calibration evidence, never timing samples.
+// Bound both the arithmetic and work; inability to reach the target is an error.
+func calibratedIterations(n int, target int64, limit int, batch func(int) int64) (int, []calibrationBatch, error) {
+	if n < 1 || limit < n || target <= 0 {
+		return 0, nil, fmt.Errorf("invalid calibration bounds")
+	}
+	var history []calibrationBatch
+	for {
+		observation := calibrationBatch{Iterations: n, ConfirmationsNS: make([]int64, 2)}
+		ready := true
+		for repeat := 0; repeat < 3; repeat++ {
+			elapsed := batch(n)
+			if elapsed < 0 {
+				return 0, history, fmt.Errorf("negative calibration duration")
+			}
+			if repeat == 0 {
+				observation.ElapsedNS = elapsed
+			} else {
+				observation.ConfirmationsNS[repeat-1] = elapsed
+			}
+			ready = ready && elapsed >= target
+		}
+		history = append(history, observation)
+		if ready {
+			return n, history, nil
+		}
+		if n == limit {
+			return 0, history, fmt.Errorf("sample target not reached at iteration limit")
+		}
+		if n > limit/2 {
+			n = limit
+		} else {
+			n *= 2
+		}
+	}
+}
+
+func sampleTarget(value string, specified bool) (int64, error) {
+	if !specified {
+		return 20_000_000, nil
+	}
+	target, err := strconv.ParseInt(value, 10, 64)
+	if err != nil || target < 0 || target > 1_000_000_000 {
+		return 0, fmt.Errorf("MATEA_PERF_MIN_SAMPLE_NS must be 0..1000000000; 0 explicitly selects fixed batches")
+	}
+	return target, nil
+}
+
+// Calibration and retained samples must execute exactly the same hot loop.
+// Prevent context-dependent inlining/dispatch from changing that cost.
+//
+//go:noinline
+func timedBatch(count int, f func() uint64) int64 {
+	start := time.Now()
+	for i := 0; i < count; i++ {
+		sink = f()
+	}
+	return time.Since(start).Nanoseconds()
+}
+
+func measure(id string, n int, f func() uint64, output, semantics string) {
+	if os.Getenv("MATEA_PROBE_OUTPUT_ONLY") == "1" {
+		sink = f()
+		if err := json.NewEncoder(os.Stdout).Encode(map[string]any{"record_kind": "probe-output", "case": id, "semantics": semantics, "first_return_value": sink, "output": output}); err != nil {
+			panic(err)
+		}
+		return
+	}
+	if n <= 0 {
+		panic("iterations must be positive")
+	}
+	start := time.Now()
+	sink = f()
+	firstReturnValue := sink
+	cold := time.Since(start).Nanoseconds()
+	for i := 0; i < 100; i++ {
+		sink = f()
+	}
+	target, err := sampleTarget(os.LookupEnv("MATEA_PERF_MIN_SAMPLE_NS"))
+	if err != nil {
+		panic(err)
+	}
+	starting := n
+	const limit = 1 << 26
+	var history []calibrationBatch
+	if target > 0 {
+		n, history, err = calibratedIterations(n, target, limit, func(count int) int64 {
+			return timedBatch(count, f)
+		})
+		if err != nil {
+			panic(err)
+		}
+	}
+	samples := make([]float64, 31)
+	for sample := range samples {
+		elapsed := timedBatch(n, f)
+		if elapsed <= 0 {
+			panic(fmt.Sprintf("nonpositive timing sample: index=%d iterations=%d target_ns=%d calibration=%v; increase the target/fixed count", sample, n, target, history))
+		}
+		samples[sample] = float64(elapsed) / float64(n)
+	}
+	allocations := testing.AllocsPerRun(10, func() { sink = f() })
+	old := debug.SetGCPercent(-1)
+	var before, after runtime.MemStats
+	runtime.ReadMemStats(&before)
+	for i := 0; i < 10; i++ {
+		sink = f()
+	}
+	runtime.ReadMemStats(&after)
+	debug.SetGCPercent(old)
+	record := map[string]any{"case": id, "semantics": semantics, "cold_ns": cold, "first_return_value": firstReturnValue, "iterations_per_sample": n, "samples_ns": samples, "allocations": allocations, "allocated_bytes": float64(after.TotalAlloc-before.TotalAlloc) / 10, "output": output}
+	if target > 0 {
+		record["calibration"] = map[string]any{"target_ns": target, "start_n": starting, "max_n": limit, "batches": history}
+	}
+	if err := json.NewEncoder(os.Stdout).Encode(record); err != nil {
+		panic(err)
+	}
+}
+
+func hash(b []byte)uint64 {h:=uint64(14695981039346656037);for _,v:=range b{h=(h^uint64(v))*1099511628211};return h}
+func main(){
+ name:=os.Args[1];expected,ok:=map[string][]byte{"ascii":[]byte("tea"),"utf8":[]byte("茶🍵"),"bytes":{255,0},"empty":{},"backspace":{232,140}}[name];if !ok{panic("fixture")}
+ fd:=os.Stdin.Fd();original,err:=term.GetState(fd);if err!=nil{panic(err)};defer term.Restore(fd,original)
+ measure("device/password_"+name,1,func()uint64{b,err:=term.ReadPassword(fd);if err!=nil{panic(err)};if !bytes.Equal(b,expected){panic(fmt.Sprintf("input differs: %x",b))};return hash(b)},hex.EncodeToString(expected),"one native non-echo line from queued dummy input, byte editing and current-mode restoration; descriptor already open; input return allocation included")
+}

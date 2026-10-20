@@ -1,0 +1,18 @@
+"""Run terminal device and shared lease Miri targets with compile-input and failure journals."""
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/terminal-device/miri-canonical';sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest();names=sorted(n for n in execution_inputs(root) if n.startswith('crates/') or n in ['Cargo.toml','Cargo.lock']);sources={n:sha((root/n).read_bytes()) for n in names}
+targets=[('device',['-p','matea-terminal','--lib','device::tests']),('session',['-p','matea-terminal','--lib','session::tests'])]
+ctx={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'seed':223,'source_sha256':sources,'procedure_sha256':sha(Path(__file__).read_bytes()),'commands':[],'limits':['Only seven pure device tests and two shared-lease tests execute; native termios/WinAPI calls are not interpreted or qualified.', 'UTF-16 uses every 257th u16 single unit plus paired boundaries and Interrupted recovery under cfg(miri); native tests cover all 65536 single units.', 'Assessment metadata and unrelated tools are excluded from this Miri compile/test scope.']}
+def save():(base/'context.json').write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+try:
+ for name,args in targets:
+  command=['cargo','+nightly','miri','test','--locked','--offline',*args];log=name+'.log'
+  with open(base/log,'wb') as output:result=subprocess.run(command,env={**os.environ,'MIRIFLAGS':'-Zmiri-seed=223'},stdout=output,stderr=subprocess.STDOUT,timeout=1800)
+  ctx['commands'].append({'command':command,'exit_code':result.returncode,'log':log,'log_sha256':sha((base/log).read_bytes())});save();print(name,result.returncode,flush=True)
+  if result.returncode:raise RuntimeError(name+' failed')
+ assert sources=={n:sha((root/n).read_bytes()) for n in names},'compile-input drift'
+ ctx['status']='complete';save()
+except BaseException as e:ctx.update(status='failed',error=str(e));save();raise

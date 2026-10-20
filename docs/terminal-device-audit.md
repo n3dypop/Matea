@@ -1,9 +1,10 @@
 # Borrowed terminal-device implementation
 
-Status: implementation and qualification in progress under [ADR 0069](decisions/0069-owned-terminal-device-state-and-password-eof.md).
-The qualified preceding checkpoint is aff137a (48 unmet axes); the new device
-module and shared lease require new native, Miri, performance and three-OS evidence.
-None of the new raw-module/declaration conditions is labeled complete yet.
+Status: implemented contracts qualified on Foundation targets under [ADR 0069](decisions/0069-owned-terminal-device-state-and-password-eof.md)
+and [ADR 0070](decisions/0070-canonical-terminal-input-batching.md). Whole-module
+reference and performance assessments stay partial. The preceding qualified
+checkpoint aff137a had 48 unmet axes; the expanded current 156-program/44-unit
+scope has 50, including this new unit's reference/performance obligations.
 
 `terminal::device` borrows AsFd/AsHandle owners and keeps captured native state
 opaque. A UI-local TerminalDevice shares the interactive backend's atomic lease,
@@ -17,6 +18,9 @@ the outer original-state guard. EOF, Interrupted, byte-backspace, byte limits,
 partial data and simultaneous read/restore errors have explicit contracts.
 PasswordError's formatting omits partial bytes, which remain available through
 explicit accessors. Growth is fallible, and reading does not buffer following lines.
+On a limit error, the triggering byte has been consumed and only the accepted
+prefix is returned; subsequent bytes remain queued. There is no implicit drain,
+secret zeroization, nonblocking cancellation or recovery promise.
 Windows uses bounded UTF-16 decoding with owned lookahead/UTF-8 bytes and input
 handle validation. Native Unix/Windows FFI is narrowly allowed and documented;
 the orchestration/line parser stays under the crate's unsafe-code denial.
@@ -26,7 +30,8 @@ empty/partial EOF, invalid UTF-8, no overread, limits and interrupted surrogate
 pairs. Native UTF-16 replacement tests cover all 65,536 single-unit cases plus
 surrogate pair boundaries; Miri uses a documented finite subset. These tests and
 the initial Unix Clippy pass do not qualify Windows console I/O or a full source
-module. Real OS fixture and performance work continues.
+module. The final qualification below adds the separately executed native fixtures;
+full module performance/condition closure remains pending.
 
 Source observations retain a macOS PENDIN-only state difference after raw
 restoration, byte-level backspace behavior and Ctrl-D calls requiring an extra
@@ -61,7 +66,8 @@ target libc constants rather than copied request numbers. Foundation qualificati
 requires Linux and macOS runtime evidence; other Unix targets are not qualified by
 those two results. Source Windows uses console modes and an output viewport;
 the Rust adapter validates input before raw/password operations and reads console
-UTF-16 directly, without duplicated handles. Its native validation is still pending.
+UTF-16 directly, without duplicated handles. Its finite native console validation
+is recorded below; other source-platform conditions remain explicit.
 Source Plan 9 resolves /fd/<number>ctl paths, with rawon/rawoff control writes;
 Matea currently returns Unsupported on that target. Source other-OS stubs also return
 unsupported errors. These conditions remain pending rather than being hidden by
@@ -83,8 +89,8 @@ line. Only the named Darwin PENDIN transient flag is excluded from state equalit
 Two compile-fail examples reject Send and closing a still-borrowed owner. These
 are type-contract checks, not native cleanup evidence. The pure UTF-16/parser and
 mock failure tests likewise do not qualify WinAPI. A new-console Windows adapter,
-native acceptance hook and instrumented native hook are implemented for CI; their
-results must be observed before portability is promoted.
+native acceptance hook and instrumented native hook provide the separately
+observed CI evidence in the final qualification below.
 
 ## First native performance experiment
 
@@ -122,3 +128,98 @@ Whole-process RSS medians are 1,949,696 bytes for Rust and 5,144,576 for Go, wit
 different available case sets; they do not measure per-operation peak memory.
 Password latency, full native error-path cost and other OSes remain unmeasured.
 The module's performance verdict therefore remains partial.
+
+The [fused-constructor follow-up](evidence/terminal-device/performance-fused/attempts/64bd20d0debb4f2692af590fd73b0eda/report.json)
+binds 493e2d6, with both fresh lifecycle variants retained in the same executable.
+The ordinary four-call operation takes 9.52/9.58/9.61 µs across its three cohorts;
+the fused three-call operation takes 9.22/9.30/9.36 µs, with zero allocations for
+both. This is a 2.6–3.1% latency reduction in this experiment, alongside the
+independently tested single-capture contract. It does not justify removing the
+current-state query from later make_raw calls. All four source comparisons still
+match their fixture outputs, and the constructor controls have no source ratio.
+The additional 30 timing and 62 RSS records, together with the preceding experiment,
+are [reconstructed from archived data](evidence/terminal-device/performance-verification.json):
+57 timing records, 1,767 retained intervals and 124 distinct RSS children. This
+verification executes no timers or binaries. The intermediate mixed-source LLVM
+collection was rejected as source drift and retained, never promoted as a pass.
+
+## Native byte-input measurements and redevelopment
+
+[Four complete input experiments](evidence/terminal-device/password-performance-verification.json)
+retain 144 timing records (4,464 positive intervals) and 1,488 separate RSS children.
+Each compares six real PTY inputs: ASCII, UTF-8/supplementary text, invalid UTF-8
+with NUL, empty input, byte-backspace retaining a partial scalar, and 64-byte text.
+All returned bytes/FNV values, exact supplied call counts and configured terminal
+states are checked. The helper's active dependencies match the root graph; only
+its private executable is additional. Both use Cargo's default release profile.
+
+The first fixed-one-call experiment retains a 32.3 µs Rust ASCII cohort versus
+13.4 µs source, followed by 11.0/10.7 µs Rust and 11.2/11.8 µs source. Do not drop
+that outlier or claim every native measurement wins. A second full fixed-128-call
+protocol measures queued native throughput, including producer/kernel queue
+interaction. It is separate from single-call latency and has no 20ms calibration.
+Cold calls include producer startup and remain distinct from retained samples.
+
+[ADR 0070](decisions/0070-canonical-terminal-input-batching.md) uses the documented
+canonical read boundary to batch at most 256 bytes, limit reads to remaining
+accepted bytes plus one, and reserve from a bounded chunk only when capacity is
+needed. Windows and arbitrary readers keep single-byte reads. Ninety independent
+length/limit expectations test the exact consumed prefix/position and following
+line; all twelve real macOS PTY cases pass after the change.
+
+| Same-protocol long-input comparison | Before Rust p50 | After Rust p50 | Source p50 after |
+| --- | --- | --- | --- |
+| Fixed 1 call, three cohorts | 40.3–41.2 µs | 12.3–13.0 µs | 47.9–49.0 µs |
+| Fixed 128 calls, three cohorts | 41.3–41.9 µs | 15.4–15.7 µs | 43.5–44.7 µs |
+
+Return-buffer growth changes from four allocations/120 requested bytes to
+one/65; empty input stays zero-allocation. The fixed-128-call results improve
+the other nonempty cases modestly. One optimized single-call empty cohort is
+11.7 µs versus source 11.2 µs, and first ASCII cohorts remain slow in both
+implementations. These negatives, p95 distributions and every raw record remain.
+No universal optimality, all-case speedup or other-host performance is inferred.
+
+The single-after collector initially archived a later Go caller while reusing
+the exact earlier fixed-one source binary. A [separate corrective binding](evidence/terminal-device/password-single-source-binding-correction.json)
+links that unchanged binary to its actual before caller; the original collector
+and mistaken snapshot remain intact. Both execute one operation per sample in
+this environment, but their source snapshots are not asserted identical. Other
+experiments bind their actual caller snapshots. The initial comparison-caller
+compile failure and inactive-target dependency-filter mismatch are also separate
+from framework failures. The archive-only verifier checks these boundaries.
+
+Native error/cancellation paths, source-only OS conditions and other-host
+performance remain pending; the device performance assessment stays partial.
+The [typed handle guide](terminal-device-usage.md) and three local rustdoc checks
+address x/term documentation issue #76 without claiming historical bug or Windows
+runtime reproduction. Its current body/update date is retained in the ledger.
+
+## Final qualification of the implemented slice
+
+[5bcdeb6 CI](https://github.com/n3dypop/Matea/actions/runs/39483552313) passes all
+seven required jobs. The [source binding](evidence/terminal-device/ci-5bcdeb6/source-bindings.json)
+checks 198 execution inputs against that Git commit on all three hosts. Each
+host passes 47 acceptance commands. Real native and independently instrumented
+device fixtures each pass twelve cases on Linux/macOS and nine in isolated
+Windows consoles, including supplementary UTF-16 input. Native modes, exact byte
+outputs, size, raw/set/restore, Drop/unwind, regular-file/pipe rejection and Unix
+following-line/EOF behavior are verified within those finite fixtures.
+
+Uploaded raw log hashes are checked (31 per Unix host, 32 on Windows); the sixteen
+or fifteen logs not included by the artifact configuration are explicitly listed.
+Unix LLVM reports retain 95 canonical source paths/102 compilation instances;
+Windows retains 94/100. These are execution observations, not branch or physical
+terminal proofs. Shared-runner timing is not used as benchmark evidence.
+
+The post-assessment local suite also passes 47 commands, Rust 276 plus 11 doctests,
+Python 144 with two conditional skips and LLVM 95/102. [Derived counts](evidence/terminal-device/final-metrics.json)
+avoid treating stderr's delayed Doc-tests labels as stdout section boundaries.
+[Miri seed 223](evidence/terminal-device/miri-canonical/verification.json) passes
+seven pure device tests plus two lease tests, including all ninety canonical
+length/limit positions. Native tests cover all 65,536 single UTF-16 units; Miri's
+single-unit domain uses its declared 257-step subset and paired boundaries.
+
+The six changed units' portability and the device's design/memory/behavior are
+75 within this reviewed scope. Device reference/performance stay 50, with source
+OS conditions, full exported contracts, error/cancellation costs and other-host
+measurements still explicit. Stage A remains open; Stage B and F5 remain closed.

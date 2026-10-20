@@ -1,5 +1,23 @@
 # Matea Foundation gate report
 
+現在は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
+x/termの13宣言候補を分類・対応付けし、借用handle、排他的な状態復元、raw取得、上限付きbyte入力を実装しました。
+[5bcdeb6の必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39483552313)はすべて成功。
+198実行入力を固定commitと照合し、各OSの47検証、Unix各12／Windows 9の実端末試験と同数の計装試験を確認しました。
+Miri 9試験と90長さ／上限組が成功し、変更6単位の移植性とdeviceの設計・安全性・動作を75へ更新しました。
+[証拠と限定評価](terminal-device-audit.md)。評価表更新後のローカル47検証、Rust276＋11 doctest、Python144（条件付きskip 2）、
+LLVM95 source／102 instanceも成功しました。依存profilingの3警告は保持し、全分岐の証明とは扱いません。
+
+ネイティブ入力の144計測を含む合計201計測・6,231標本と1,612 RSS子プロセスを検証しました。
+長い入力の確保は4→1回、要求120→65 bytes、固定128操作のp50は約41→15–16µsです。
+単発測定の遅い試行、途中の失敗、Go呼出し元snapshotの補正をすべて保持し、最大性能や全条件優位とは主張しません。
+未対応付け6,683宣言、部分／未測定21能力、91 module verdict、823 issue報告、115 source marker、
+未解決Rust export graph 2等が残ります。x/term #76は型付きhandleの説明と3 rustdoc試験で対応しました。
+Stage Aを継続し、Stage B／F5は閉じています。画像エンジン／CUDAには着手していません。
+追加した独立device単位の参照元一致／性能は50で残しており、直前の48軸から範囲を狭めていません。
+
+以下は過去のチェックポイントごとの検証履歴です。
+
 現在は150 program／43評価単位、未達48軸（参照元一致21・性能27）です。
 RGBA16追加の性能・移植性再検証が完了しました。
 [941623dの必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39451395348)と
