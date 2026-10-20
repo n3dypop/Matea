@@ -36,3 +36,16 @@ baseline/changed/changed/baseline sequence, keep cold and all 31 warm observatio
 and retain raw outcomes and adverse tails. Shared-runner CI timings are execution
 checks only. No score or maximum-performance claim follows from a single RSS
 observation.
+
+The first balanced trial confirmed 481→182 MB flat and 574→234 MB nested CLI
+peak RSS at 100,000 declarations, with improved large-file latency. It also found
+small-file overhead: 1,000 tiny files rose from 22.39–22.61 to 22.89–23.05 ms.
+Syn's public cursor clones identifiers, and per-file output buffering adds work.
+Retain this trial; do not discard the adverse small-file path.
+
+Use the complete-AST path for inputs up to 8 KiB and incremental items above it.
+This explicit byte budget bounds the small-file AST lifetime without depending on
+an unmeasured item-count heuristic. It does not bound syntax nesting. Verify the
+exact boundary and non-ASCII spans, test syntax/short-write behavior on both
+paths, and measure small/wide/deep inputs as well as the unchanged large-file
+controls. The threshold is a provisional engineering budget, not a proven optimum.

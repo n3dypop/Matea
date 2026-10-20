@@ -294,9 +294,10 @@ pub fn audit_source(
 ) -> Result<(), Box<dyn std::error::Error>> {
     use syn::parse::Parser;
     let clean = source.strip_prefix('\u{feff}').unwrap_or(source);
+    // A small complete AST avoids module lookahead and a second output buffer.
+    // Limit that lifetime by input bytes; large files use incremental items.
     // Keep syn's complete shebang/comment disambiguation for uncommon prefixes.
-    // Ordinary files and compact inner attributes use the bounded AST path.
-    if clean.starts_with("#!") && !clean.starts_with("#![") {
+    if clean.len() <= SMALL_SOURCE_BYTES || (clean.starts_with("#!") && !clean.starts_with("#![")) {
         let parsed = syn::parse_file(source)?;
         items(out, file, &parsed.items, "", &attrs(&parsed.attrs))?;
         return Ok(());
@@ -312,6 +313,8 @@ pub fn audit_source(
     out.write_all(&bytes)?;
     Ok(())
 }
+
+const SMALL_SOURCE_BYTES: usize = 8 * 1024;
 
 fn module_ahead(input: syn::parse::ParseStream<'_>) -> bool {
     use proc_macro2::Delimiter;
@@ -489,9 +492,33 @@ mod tests {
                 &attrs(&parsed.attrs),
             )
             .unwrap();
+            for padding in [0, SMALL_SOURCE_BYTES + 1] {
+                // Appending whitespace preserves all expected line positions;
+                // both the small-AST and incremental public paths must agree.
+                let padded = format!("{source}{}", " ".repeat(padding));
+                let mut actual = Vec::new();
+                audit_source(&mut actual, "抹茶.rs", &padded).unwrap();
+                assert_eq!(actual, expected, "{source}; padding={padding}");
+            }
+        }
+    }
+
+    #[test]
+    fn source_dispatch_boundary_preserves_bytes_and_multibyte_positions() {
+        let prefix = "pub mod 抹茶 { pub const 茶: u8 = 0; }\n";
+        let parsed = syn::parse_file(prefix).unwrap();
+        let mut expected = Vec::new();
+        items(&mut expected, "抹茶.rs", &parsed.items, "", "").unwrap();
+        for length in [
+            SMALL_SOURCE_BYTES - 1,
+            SMALL_SOURCE_BYTES,
+            SMALL_SOURCE_BYTES + 1,
+        ] {
+            let source = format!("{prefix}{}", " ".repeat(length - prefix.len()));
+            assert_eq!(source.len(), length);
             let mut actual = Vec::new();
-            audit_source(&mut actual, "抹茶.rs", source).unwrap();
-            assert_eq!(actual, expected, "{source}");
+            audit_source(&mut actual, "抹茶.rs", &source).unwrap();
+            assert_eq!(actual, expected);
         }
     }
 
@@ -506,9 +533,12 @@ mod tests {
             "#!/bin/rust\npub const GOOD: u8 = 0; pub struct",
         ] {
             assert!(syn::parse_file(source).is_err());
-            let mut output = b"earlier file\n".to_vec();
-            assert!(audit_source(&mut output, "bad.rs", source).is_err());
-            assert_eq!(output, b"earlier file\n", "{source}");
+            for padding in [0, SMALL_SOURCE_BYTES + 1] {
+                let padded = format!("{source}{}", " ".repeat(padding));
+                let mut output = b"earlier file\n".to_vec();
+                assert!(audit_source(&mut output, "bad.rs", &padded).is_err());
+                assert_eq!(output, b"earlier file\n", "{source}");
+            }
         }
     }
 
@@ -532,18 +562,24 @@ mod tests {
                 Ok(())
             }
         }
-        for source in [
+        let fixtures = [
             "pub mod m { pub const C: u8 = 0; }",
             "#!/bin/rust\npub const C:u8=0;",
-        ] {
+        ];
+        for source in fixtures.iter().flat_map(|source| {
+            [
+                source.to_string(),
+                format!("{source}{}", " ".repeat(SMALL_SOURCE_BYTES + 1)),
+            ]
+        }) {
             let mut expected = Vec::new();
-            audit_source(&mut expected, "fixture.rs", source).unwrap();
+            audit_source(&mut expected, "fixture.rs", &source).unwrap();
             for limit in 0..=expected.len() {
                 let mut writer = ShortWriter {
                     remaining: limit,
                     bytes: Vec::new(),
                 };
-                let result = audit_source(&mut writer, "fixture.rs", source);
+                let result = audit_source(&mut writer, "fixture.rs", &source);
                 assert_eq!(writer.bytes, expected[..limit]);
                 if limit < expected.len() {
                     assert_eq!(
