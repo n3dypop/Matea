@@ -1,0 +1,60 @@
+{
+  "status": "complete",
+  "tested_committed_inputs": "e360924089a1102f0d87812ee131ea4ded1882a1",
+  "ci_source_head": "04e81bcc563e2bf8b647c0247dba2a19ddd7b499",
+  "execution_inputs": 198,
+  "current_inputs_match_native_and_llvm": true,
+  "ci_different_inputs": [
+    "docs/quality-plan.json"
+  ],
+  "promoted_assessments": [
+    [
+      "matea-terminal/lib",
+      "portability"
+    ],
+    [
+      "matea/lib",
+      "portability"
+    ],
+    [
+      "matea-terminal/integration-tests",
+      "portability"
+    ],
+    [
+      "scripts/coverage-and-issues",
+      "portability"
+    ],
+    [
+      "scripts/test-and-acceptance-drivers",
+      "portability"
+    ],
+    [
+      "matea-terminal/device",
+      "behavior"
+    ],
+    [
+      "matea-terminal/device",
+      "portability"
+    ]
+  ],
+  "reviewed_metadata_changes": "Six portability assessments and device behavior restored to 75 after exact-source three-OS native/instrumented CI and ten targeted Miri tests. Existing device design/memory reasons refreshed without score changes. Same 156 programs, 44 units, threshold 75 and partial reference/performance assessments.",
+  "gate": {
+    "below_high_axes": 50,
+    "pending_issue_reports": 823,
+    "go_target_export_closure_reviewed": false,
+    "stage_a": "ongoing",
+    "stage_b": "not_started",
+    "f5": "closed"
+  },
+  "report_sha256": {
+    "docs/evidence/local-validation.json": "85f0e376cc8281d8ff7e8bce3ebe1bec32ea3fde4995b2a0543e4bd7492e8b42",
+    "docs/evidence/quality/rust-execution-coverage.json": "c89e04ba2fad8cd3648ab6a1bd8bee3abfd99886ef89265cfb14e63fc508b56c",
+    "docs/evidence/quality/report.json": "78f67f1cb0af8a38aa87a4cdfe393cfb6846816851dbbf83cf9611564ed2d678",
+    "docs/evidence/quality/final-gate-status.json": "e78b080957aeab3f977f4bf6d182b59d0b748da5888785b57690691c1e23b237"
+  },
+  "procedure_sha256": "fd3c3c91275b5f9e172c669b6db43b01cf2fe88a14158a558b10f5a2520a00d6",
+  "limits": [
+    "CI stays bound to its actual source commit. The current committed inputs differ only in separately reviewed assessment metadata; no execution is relabeled.",
+    "Native observations do not establish source-platform/export closure, physical terminal support, universal performance or exhaustive memory safety."
+  ]
+}
