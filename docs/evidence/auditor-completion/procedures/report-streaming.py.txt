@@ -1,0 +1,60 @@
+"""Verify every retained byte/hash and report all balanced native trials.
+Run from Matea with Python3, without -O, after all four stages finish.
+"""
+import hashlib,json,re,statistics,subprocess,sys,tarfile
+from functools import lru_cache
+from pathlib import Path
+if not __debug__:raise RuntimeError('archived procedure refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/auditor-completion';sys.path.insert(0,str(ROOT/'scripts'))
+from optimization_evidence import records
+sha=lambda b:hashlib.sha256(b).hexdigest()
+@lru_cache(maxsize=None)
+def archived(folder):
+ with tarfile.open(folder/'rss-raw.tar.gz','r:gz') as tar:
+  return {m.name:tar.extractfile(m).read() for m in tar.getmembers() if m.isfile() and Path(m.name).name==m.name}
+def read_raw(folder,name):
+ path=folder/name
+ return path.read_bytes() if path.is_file() else archived(folder)[name]
+
+def summary(values):
+ assert len(values)==31 and all(isinstance(v,(int,float)) and v>0 for v in values)
+ return {'p50':statistics.median(values),'p95':sorted(values)[29],'min':min(values),'max':max(values)}
+stages=['baseline-1','streaming-1','streaming-2','baseline-2'];all_data={};contexts={}
+for stage in stages:
+ folder=BASE/stage;ctx=json.loads((folder/'context.json').read_text());assert ctx['status']=='complete'
+ assert sha((BASE/'procedures/measure-streaming.py.txt').read_bytes())==ctx['procedure_sha256']
+ for name,digest in ctx['raw_sha256'].items():assert sha(read_raw(folder,name))==digest,(stage,name)
+ parser=records((folder/'phase-timing.jsonl').read_text());assert len(parser)==8
+ outputs=[json.loads(s) for s in (folder/'phase-outputs.jsonl').read_text().splitlines()];assert len(outputs)==8
+ assert {r['case']:r['output'] for r in outputs}=={n:r['output'] for n,r in parser.items()}
+ cli={r['case']:r for r in map(json.loads,(folder/'cli-timing.jsonl').read_text().splitlines())};assert len(cli)==13
+ rss={r['case']:r for r in map(json.loads,(folder/'rss.jsonl').read_text().splitlines())};assert rss.keys()==cli.keys()
+ for name,row in cli.items():
+  assert row['stdout_sha256']==ctx['expected_sha256'][name]
+  assert row['exit_code']==(1 if name=='malformed' else 0)
+  measured=[int(re.search(rb'(\d+)\s+maximum resident set size',read_raw(folder,f'rss-{name}-{i}.txt')).group(1)) for i in range(31)]
+  assert measured==rss[name]['peak_rss_bytes'],(stage,name)
+ all_data[stage]={'parser':{n:{'latency_ns':summary(r['samples_ns']),'cold_ns':r['cold_ns'],'allocations':r['allocations'],'allocated_bytes':r['allocated_bytes'],'output':r['output']} for n,r in parser.items()},'cli':{n:{'latency_ns':summary(r['samples_ns']),'cold_ns':r['cold_ns'],'exit_code':r['exit_code'],'stdout_sha256':r['stdout_sha256'],'stdout_bytes':r['stdout_bytes'],'stderr_sha256':r['stderr_sha256'],'peak_rss_bytes':summary(rss[n]['peak_rss_bytes'])} for n,r in cli.items()}}
+ contexts[stage]=ctx
+first=contexts[stages[0]]
+for stage,c in contexts.items():
+ for key in ['source_sha256','procedure_sha256','case_files_sha256','expected_sha256','baseline_source_head','baseline_lib_sha256']:
+  assert c[key]==first[key],(stage,key)
+ for mode in ['parser','cli']:
+  assert all_data[stage][mode].keys()==all_data[stages[0]][mode].keys()
+  for name,r in all_data[stage][mode].items():
+   old=all_data[stages[0]][mode][name]
+   for key in (['output'] if mode=='parser' else ['exit_code','stdout_sha256','stdout_bytes']):assert r[key]==old[key],(stage,name,key)
+for pair in [('baseline-1','baseline-2'),('streaming-1','streaming-2')]:
+ for key in ['binary_sha256','bench_sha256']:assert contexts[pair[0]][key]==contexts[pair[1]][key]
+source_head=subprocess.check_output(['git','rev-parse','222a2f9'],text=True).strip()
+for name,digest in first['source_sha256'].items():
+ assert sha(subprocess.check_output(['git','show',source_head+':'+name]))==digest,name
+result={'schema':1,'reporter_sha256':sha(Path(__file__).read_bytes()),'status':'complete_bounded_balanced_comparison','source_head':source_head,'order':stages,'contexts_sha256':{s:sha((BASE/s/'context.json').read_bytes()) for s in stages},'cohorts':all_data,'timing_records':32,'output_records':32,'complete_cli_records':52,'rss_child_observations':1612,'limits':['One macOS arm64 host; no affinity/frequency control or universal optimum. Retain each cohort and every adverse p95.','Parser includes the shared measurement allocator forwarding wrapper and complete owned output/FNV. CLI uses the ordinary allocator and includes spawn, traversal, reads, pipe transport and exit.','cold_ns is the first retained call, after correctness setup; it is not a cold filesystem or uninitialized parser claim.','Requested allocation counts/bytes are separate instrumented passes, not live or peak bytes. Distinct-child time -l observations measure actual macOS peak RSS; their timings are excluded.','Finite lexical source inventory only. Macro/cfg/compiler exports, arbitrary hostile syntax depth and concurrently mutated trees are not established.','Earlier before/after attribute-only and failed attempts remain retained; they are not substituted for these balanced matched-input cohorts.']}
+(BASE/'streaming-comparison.json').write_text(json.dumps(result,indent=2)+'\n')
+for mode in ['parser','cli']:
+ print(mode)
+ for name in all_data['baseline-1'][mode]:
+  rows=[all_data[s][mode][name] for s in stages]
+  times=[round(r['latency_ns']['p50']/1e6,3) for r in rows]
+  print(name,'p50_ms',times,('allocations '+str([r['allocations'] for r in rows])) if mode=='parser' else ('rss_MB '+str([round(r['peak_rss_bytes']['p50']/1e6,2) for r in rows])))

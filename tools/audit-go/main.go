@@ -15,6 +15,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 )
 
 type Entry struct {
@@ -39,33 +40,48 @@ func main() {
 }
 
 func audit(root string, output io.Writer) error {
+	info, err := os.Lstat(root)
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+		return fmt.Errorf("source root must be a real directory")
+	}
 	buffer := bufio.NewWriterSize(output, 64*1024)
 	enc := json.NewEncoder(buffer)
 	var failure error
-	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if d.IsDir() {
+			if path == root {
+				return nil
+			}
 			switch d.Name() {
 			case ".git", "vendor", "node_modules", "examples", "tutorials", "testdata":
 				return filepath.SkipDir
 			}
 			return nil
 		}
-		if !strings.HasSuffix(path, ".go") {
+		// Never open links, pipes or other special entries. The contract is a
+		// fixed tree, not protection against concurrent filesystem replacement.
+		if !d.Type().IsRegular() || !strings.HasSuffix(path, ".go") {
 			return nil
-		}
-		fset := token.NewFileSet()
-		file, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
-		if err != nil {
-			return err
 		}
 		rel, err := filepath.Rel(root, path)
 		if err != nil {
 			return err
 		}
 		rel = filepath.ToSlash(rel)
+		if !utf8.ValidString(rel) {
+			return fmt.Errorf("source path is not UTF-8: %q", rel)
+		}
+		fset := token.NewFileSet()
+		file, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
+		if err != nil {
+			return err
+		}
 		var build []string
 		for _, g := range file.Comments {
 			for _, c := range g.List {

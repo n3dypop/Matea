@@ -26,14 +26,16 @@ The workspace contains seven framework crates plus an independent example compon
 The [quality evaluation](docs/quality-evaluation.md) inventories every implemented program and keeps Rust design, safety, behavior, reference parity, performance and portability separate. `python3 scripts/check_quality.py --gate` fails while applicable scores remain below the documented threshold; ordinary green CI does not imply every assessment is high.
 
 The current inventory covers 149 programs in 43 units, with 53 below-high axes
-(21 reference, 30 performance, 2 portability). The
-[2948000 CI run](https://github.com/n3dypop/Matea/actions/runs/39227162508) passes all
-seven required jobs: three native OS jobs, three pinned source/probe jobs and MSRV.
-Exact hashes and 44 acceptance checks per OS qualify eight unchanged portability
-units; the evolving source auditor and its regression suite remain pending.
-[Evidence and limits](docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json).
-The auditor now validates incremental syntax and file-atomic output; memory and
-latency trials are in progress. Stage A continues; Stage B and F5 remain closed.
+(21 reference, 29 performance, 3 portability). The Rust inventory tool's bounded
+performance assessment reaches 75 after parser, CLI, allocation and actual-child
+RSS measurements. At 100,000 declarations, peak RSS falls from 481/574 to
+182/234 MB. An ineffective 8 KiB dispatch experiment was rejected and retained.
+[Methods, all trials and limits](docs/source-auditor-audit.md).
+The [88781a7 CI](https://github.com/n3dypop/Matea/actions/runs/39415338843) passes
+all seven required jobs. Later Go-auditor link/FIFO/root fixes pass local race,
+vet and all nine pinned output comparisons (4,882 declarations); fresh whole-tree
+native/LLVM and CI qualification are in progress. Stage A continues; Stage B and
+F5 remain closed.
 
 The last fully qualified highlight checkpoint has 138 programs in 42 units,
 with 49 assessments below the high threshold. That checkpoint passes 39 native acceptance commands, eight

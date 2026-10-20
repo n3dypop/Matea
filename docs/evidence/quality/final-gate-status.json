@@ -1,6 +1,9 @@
 {
   "schema": 1,
   "status": "incomplete",
+  "checked_at_utc": "2026-10-20T12:15:35.157547+00:00",
+  "source_head": "88781a7f013e5616adcd7918114b2daae96d9b71",
+  "source_context": "Working tree adds tested Go containment changes to 88781a7. Fresh native 44-check/LLVM reports bind exact current source inputs; current three changed-unit portability verdicts await final CI.",
   "checks": {
     "quality": {
       "command": [
@@ -9,7 +12,7 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "147 program files; 43 review units; 60 assessments below 75; all_high=False\n",
+      "stdout": "149 program files; 43 review units; 53 assessments below 75; all_high=False\n",
       "stderr": ""
     },
     "coverage": {
@@ -23,22 +26,20 @@
       "stderr": ""
     }
   },
-  "checked_at_utc": "2026-10-19T04:56:26.121931+00:00",
-  "source_head": "2da2cfb3586e31f14991baf3e800539eeb6b81c6",
-  "program_files": 147,
+  "program_files": 149,
   "review_units": 43,
-  "below_high_axes": 60,
+  "below_high_axes": 53,
+  "below_high_dimensions": {
+    "reference": 21,
+    "performance": 29,
+    "portability": 3
+  },
   "unlinked_source_declarations": 6696,
   "partial_or_unmeasured_capabilities": 20,
   "pending_issue_reports": 825,
   "stage_a": "ongoing",
   "stage_b": "not_started",
   "f5": "closed",
-  "source_context": "Uncommitted optimized owned-scene/widget adapter; 147 program / 187 input hashes independently bound in docs/evidence/ratatui-bridge/native/source-bindings.json. Exact-source three-OS/MSRV CI pending.",
-  "below_high_dimensions": {
-    "reference": 21,
-    "performance": 30,
-    "portability": 9
-  },
-  "post_native_issue_reassessment": "Two previously reviewed flat/default viewport reports re-assessed with unchanged ed05ad9 source/tests, retained three-host binding and fresh native regressions. Prior review maps remain archived; no new whole-framework portability claim."
+  "native_report_sha256": "5631017978818b4ce8e683e95fea9bf07d5b18cc8220d32f8a94c560a9637aa1",
+  "coverage_report_sha256": "7767eaabee1af1563e3f6ed94f40921b8ed894e603f93067ac65bf39e2d1bb31"
 }

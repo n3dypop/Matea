@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "source_head": "222a2f962c6c6f578e7e1e21312ef220a1c3c895",
+  "coverage_sha256": "adf645035a48102629bbd03a78241b8007c7797525ba9acde63ebbe70c2d6bfa",
+  "diagnostic_sha256": "bfdb3c42c9b345daa39a103430b4d6dc8cfbe11bdf990dca712d6fe237884bc3",
+  "rust_paths": 92,
+  "compiler_instances": 99,
+  "mismatches": [
+    "hashbrown::hasher::DefaultHasher::Hasher::write_isize",
+    "hashbrown::hasher::DefaultHasher::Hasher::write_u16",
+    "hashbrown::hasher::DefaultHasher::Hasher::write_u32"
+  ],
+  "observation": "llvm-cov export --dump reports three hash=0 records absent from the merged profile, all in transitive Hashbrown hasher methods. They are outside repository source paths. Repository source/instance counters are retained without aggregation.",
+  "limits": [
+    "Successful native execution and exported counters do not prove every branch or function executed.",
+    "No warning was suppressed or counted as a passing profile record. The complete instrumented invocation and native source inputs remain separately bound."
+  ]
+}

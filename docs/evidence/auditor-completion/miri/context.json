@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "seed": 347,
+  "status": "complete_targeted_subset",
+  "command": "cargo +nightly miri test --offline --locked -p matea-api-audit --lib borrowed_json_preserves_unicode_and_escapes_without_changing_bytes",
+  "passed": 1,
+  "source_sha256": "7a83dad9c8ad795c96bf49841e00bbfe296fc4decd41a7e02bd843c3ced835f5",
+  "attempted_full_fault_matrix": {
+    "status": "interrupted",
+    "exit_code": 130,
+    "reason": "Per-byte exhaustive fault injection is quadratic in output length and costly in the interpreter. One earlier JSON test passed; the in-progress matrix is not counted as passed. The complete matrix passes natively."
+  },
+  "limits": [
+    "Borrowed JSON formatting only; no filesystem sandbox or complete soundness proof.",
+    "All-byte writer/flush failures remain native tests; no full Miri matrix claim."
+  ]
+}

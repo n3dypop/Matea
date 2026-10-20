@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 147,
+  "programs": 149,
   "review_units": 43,
   "below_high": [
     {
@@ -28,12 +28,6 @@
       "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
     },
     {
-      "unit": "matea-core/lib",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
-    },
-    {
       "unit": "matea-render/lib",
       "dimension": "reference",
       "score": 50,
@@ -44,12 +38,6 @@
       "dimension": "performance",
       "score": 50,
       "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
-    },
-    {
-      "unit": "matea-render/lib",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
     },
     {
       "unit": "matea-render/text",
@@ -250,12 +238,6 @@
       "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
     },
     {
-      "unit": "matea/lib",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
-    },
-    {
       "unit": "examples",
       "dimension": "performance",
       "score": 50,
@@ -263,9 +245,9 @@
     },
     {
       "unit": "tools/api-audit",
-      "dimension": "performance",
+      "dimension": "portability",
       "score": 50,
-      "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+      "reason": "New fixed-tree/library/phase-benchmark paths need native Linux, macOS and Windows junction/invalid-byte coverage; prior CLI CI does not qualify changed source."
     },
     {
       "unit": "tools/perf-probe",
@@ -274,16 +256,16 @@
       "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
     },
     {
-      "unit": "tools/perf-probe",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
-    },
-    {
       "unit": "tools/go-auditor",
       "dimension": "performance",
       "score": 50,
       "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
+    },
+    {
+      "unit": "tools/go-auditor",
+      "dimension": "portability",
+      "score": 50,
+      "reason": "New real-root, regular-entry and UTF-8-identity paths and junction/FIFO/invalid-byte tests are being qualified. Prior three-OS CI does not qualify these changed Go sources."
     },
     {
       "unit": "tools/go-performance-probe",
@@ -310,12 +292,6 @@
       "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
     },
     {
-      "unit": "scripts/independent-terminal-oracles",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
-    },
-    {
       "unit": "scripts/performance-reporters",
       "dimension": "performance",
       "score": 50,
@@ -328,19 +304,7 @@
       "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
     },
     {
-      "unit": "scripts/test-and-acceptance-drivers",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
-    },
-    {
       "unit": "scripts/regression-tests",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
-    },
-    {
-      "unit": "ci/workflow",
       "dimension": "portability",
       "score": 50,
       "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
@@ -356,12 +320,6 @@
       "dimension": "performance",
       "score": 50,
       "reason": "Twelve matched full widget-to-owned-frame projections, 144 retained timing / 72 output-only records across three trials. Import caching/batching reduces latency but retains two allocations and measurable overhead over direct source rendering. Render-only, residency and complete module workloads remain pending."
-    },
-    {
-      "unit": "matea-ratatui/bridge",
-      "dimension": "portability",
-      "score": 50,
-      "reason": "Local Apple Silicon default/minimal/all-feature tests pass. Exact-source Linux/Windows/macOS and MSRV 1.88 CI is pending."
     }
   ],
   "schema": 1,
@@ -439,8 +397,8 @@
           "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
         },
         "portability": {
-          "score": 50,
-          "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -451,7 +409,8 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/input/report.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -530,8 +489,8 @@
           "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
         },
         "portability": {
-          "score": 50,
-          "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -546,7 +505,8 @@
         "docs/evidence/ratatui-span-boundaries/context.json",
         "docs/decisions/0055-pinned-width-fast-path-with-script-fallback.md",
         "docs/decisions/0060-owned-cell-scenes-and-consuming-frame-transfer.md",
-        "crates/matea-render/tests/surface_snapshot.rs"
+        "crates/matea-render/tests/surface_snapshot.rs",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1426,8 +1386,8 @@
           "reason": "The current facade contains only crate/item reexports. Executed identities cover prelude types and all function aliases; direct/module/prelude text construction uses the same underlying implementation in three 31-sample cases. There is no wrapper allocation/runtime dispatch introduced by these reexports. This does not award underlying modules or missing upstream features parity."
         },
         "portability": {
-          "score": 50,
-          "reason": "Changed consuming frame/snapshot/optional adapter paths pass local targeted tests; exact-source three-OS and MSRV execution remains pending. Prior checkpoint CI cannot qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -1436,7 +1396,8 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/foundation-paths/current.jsonl",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1764,7 +1725,9 @@
     {
       "id": "tools/api-audit",
       "files": [
-        "tools/api-audit/src/main.rs"
+        "tools/api-audit/src/main.rs",
+        "tools/api-audit/src/lib.rs",
+        "tools/api-audit/benches/audit_paths.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1784,12 +1747,12 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 50,
-          "reason": "31 native whole-process samples each for pinned Crossterm (613 declarations), Ratatui (1960) and an independent 10000-constant fixture; complete output/byte checks match before/after. AST-only, allocations/RSS, deeper scale and all-platform performance remain unmeasured."
+          "score": 75,
+          "reason": "Bounded native utility scope: eight output-checked parser phases with 31 samples/allocator requests, 1000/10000/100000 flat/nested scale, pinned Crossterm/Ratatui, and four fresh 16-case complete-CLI/child-RSS cohorts. Byte-identical parser prefix permits scoped reuse; 30 interleaved crossover records independently verify startup drift and wide/deep gains. Large-file residency falls 481/574 to 182/234 MB. All adverse small-process tails and rejected 8 KiB trial remain retained; one macOS host, no universal or cross-OS speed guarantee."
         },
         "portability": {
-          "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "score": 50,
+          "reason": "New fixed-tree/library/phase-benchmark paths need native Linux, macOS and Windows junction/invalid-byte coverage; prior CLI CI does not qualify changed source."
         }
       },
       "evidence": [
@@ -1799,11 +1762,19 @@
         "docs/evidence/optimization/auditor/before.jsonl",
         "docs/evidence/optimization/auditor/after.jsonl",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0062-fixed-source-tree-walk-and-auditor-phase-measurement.md",
+        "docs/source-auditor-audit.md",
+        "docs/evidence/auditor-completion/streaming-comparison.json",
+        "docs/evidence/auditor-completion/adaptive-comparison.json",
+        "docs/evidence/auditor-completion/direntry-comparison.json",
+        "docs/evidence/auditor-completion/crossover-context.json",
+        "docs/evidence/auditor-completion/parser-source-identity.json",
+        "docs/decisions/0064-reuse-directory-entry-types-with-owned-walk-state.md"
       ],
       "remaining": [
-        "Nested cfg loss fixed; compiler-resolved exports remain a separate audit; more parser/error/scale fixtures needed.",
-        "Regenerated inventories correct 80 Crossterm and 42 Ratatui cfg records without changing declaration IDs/counts."
+        "Compiler-resolved exports remain a separate unresolved audit; lexical inventory is not framework parity.",
+        "Finite-host performance verdict; native physical filesystem/OS latency beyond tested cases is not a universal optimum."
       ]
     },
     {
@@ -1845,8 +1816,8 @@
           "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
         },
         "portability": {
-          "score": 50,
-          "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -1856,7 +1827,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/viewport-cell-geometry.md",
-        "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md"
+        "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
@@ -1891,8 +1863,8 @@
           "reason": "31 complete-process before/after samples for pinned Bubble Tea/Bubbles/Ultraviolet and 10000 independent constants; all output bytes match. Parser-only timing, other reference scale, allocations/RSS and cross-OS timing remain unmeasured."
         },
         "portability": {
-          "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "score": 50,
+          "reason": "New real-root, regular-entry and UTF-8-identity paths and junction/FIFO/invalid-byte tests are being qualified. Prior three-OS CI does not qualify these changed Go sources."
         }
       },
       "evidence": [
@@ -1900,7 +1872,9 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/remaining-report.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0065-aligned-fixed-tree-contracts-for-go-source-inventory.md",
+        "docs/evidence/go-auditor-containment/before.json"
       ],
       "remaining": [
         "Standalone Go parser fixture validates exports/build tags; malformed input and scale distributions remain pending."
@@ -2075,8 +2049,8 @@
           "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
         },
         "portability": {
-          "score": 50,
-          "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -2084,7 +2058,8 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/remaining-report.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
@@ -2179,15 +2154,16 @@
           "reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured."
         },
         "portability": {
-          "score": 50,
-          "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/optimization/remaining-report.json",
         "docs/evidence/measurement-drivers/ci-source-bindings.json",
-        "docs/evidence/measurement-drivers/ci-run.json"
+        "docs/evidence/measurement-drivers/ci-run.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
@@ -2278,8 +2254,8 @@
           "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
         },
         "portability": {
-          "score": 50,
-          "reason": "New managed-widget caller/checker/acceptance/feature paths need exact-source native Linux, Windows, macOS and MSRV execution. Historical checkpoint CI does not qualify changed programs."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -2287,7 +2263,8 @@
         "docs/evidence/text-ci-run.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Run current changed source on all 3 OSes/MSRV; nightly Miri and physical emulator matrix are separate."
@@ -2322,8 +2299,8 @@
           "reason": "Twelve matched full widget-to-owned-frame projections, 144 retained timing / 72 output-only records across three trials. Import caching/batching reduces latency but retains two allocations and measurable overhead over direct source rendering. Render-only, residency and complete module workloads remain pending."
         },
         "portability": {
-          "score": 50,
-          "reason": "Local Apple Silicon default/minimal/all-feature tests pass. Exact-source Linux/Windows/macOS and MSRV 1.88 CI is pending."
+          "score": 75,
+          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
         }
       },
       "evidence": [
@@ -2331,7 +2308,8 @@
         "crates/matea-ratatui/tests/bridge.rs",
         "crates/matea/examples/ratatui_widgets.rs",
         "docs/evidence/ratatui-bridge/miri/context.json",
-        "docs/ratatui-bridge-audit.md"
+        "docs/ratatui-bridge-audit.md",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
       ],
       "remaining": [
         "Reduce measured adapter overhead; add separate render-only, residency, varied/hostile and terminal-I/O workloads without relaxing output equivalence.",
@@ -2340,12 +2318,12 @@
       ]
     }
   ],
-  "plan_sha256": "d53288921975335ec0fd5c43d05db61e26b2e0b2c72f38857857565605822385",
+  "plan_sha256": "cf6d2a2f5e053a407e33d067c8cf227ee0bb5a747749dde327895cfa7bb0be4c",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
       "file": ".github/workflows/foundation.yml",
-      "sha256": "5848c86d5e3cf51aa9631f33c6719008ba19212b0c887d51c96e2976ed717d80",
+      "sha256": "0d931571af32f68b22f5927f4b8d3f593220199901cfbc29d4ac06ee5a32dc93",
       "units": [
         "ci/workflow"
       ],
@@ -4276,8 +4254,8 @@
             "summary": {
               "lines": {
                 "count": 380,
-                "covered": 363,
-                "percent": 95.52631578947368
+                "covered": 364,
+                "percent": 95.78947368421052
               },
               "functions": {
                 "count": 70,
@@ -4291,9 +4269,9 @@
               },
               "regions": {
                 "count": 541,
-                "covered": 518,
-                "notcovered": 23,
-                "percent": 95.74861367837339
+                "covered": 520,
+                "notcovered": 21,
+                "percent": 96.11829944547135
               },
               "branches": {
                 "count": 0,
@@ -5872,9 +5850,9 @@
               },
               "regions": {
                 "count": 90,
-                "covered": 86,
-                "notcovered": 4,
-                "percent": 95.55555555555556
+                "covered": 85,
+                "notcovered": 5,
+                "percent": 94.44444444444444
               },
               "branches": {
                 "count": 0,
@@ -6824,7 +6802,7 @@
     },
     {
       "file": "scripts/test_source_auditors.py",
-      "sha256": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+      "sha256": "e6f1f23fae2c0012648f839591d7e9683936354289d1a13bd830b3fa7e444002",
       "units": [
         "scripts/regression-tests"
       ],
@@ -6863,8 +6841,110 @@
       "native_execution_coverage": null
     },
     {
+      "file": "tools/api-audit/benches/audit_paths.rs",
+      "sha256": "7178d21751d4357cfd7c0869eed120db1422fa36a1b46926c4c943c84d4c7274",
+      "units": [
+        "tools/api-audit"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/api-audit/benches/audit_paths.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "tools/api-audit/benches/audit_paths.rs",
+            "summary": {
+              "lines": {
+                "count": 82,
+                "covered": 5,
+                "percent": 6.097560975609756
+              },
+              "functions": {
+                "count": 9,
+                "covered": 2,
+                "percent": 22.22222222222222
+              },
+              "instantiations": {
+                "count": 9,
+                "covered": 2,
+                "percent": 22.22222222222222
+              },
+              "regions": {
+                "count": 147,
+                "covered": 7,
+                "notcovered": 140,
+                "percent": 4.761904761904762
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "tools/api-audit/src/lib.rs",
+      "sha256": "8ef39f884a287e675a7aca804446535224b4fe69cd8b543df77b471da3cbef91",
+      "units": [
+        "tools/api-audit"
+      ],
+      "native_execution_coverage": {
+        "file": "tools/api-audit/src/lib.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "tools/api-audit/src/lib.rs",
+            "summary": {
+              "lines": {
+                "count": 538,
+                "covered": 492,
+                "percent": 91.44981412639405
+              },
+              "functions": {
+                "count": 34,
+                "covered": 30,
+                "percent": 88.23529411764706
+              },
+              "instantiations": {
+                "count": 86,
+                "covered": 57,
+                "percent": 66.27906976744185
+              },
+              "regions": {
+                "count": 920,
+                "covered": 834,
+                "notcovered": 86,
+                "percent": 90.65217391304347
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "file": "tools/api-audit/src/main.rs",
-      "sha256": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+      "sha256": "5e4b626768752857389febc6ef8a3e486265a4f9cababddc1937864f3029c2e7",
       "units": [
         "tools/api-audit"
       ],
@@ -6876,25 +6956,25 @@
             "compiler_filename": "tools/api-audit/src/main.rs",
             "summary": {
               "lines": {
-                "count": 327,
-                "covered": 276,
-                "percent": 84.40366972477065
+                "count": 8,
+                "covered": 8,
+                "percent": 100
               },
               "functions": {
-                "count": 27,
-                "covered": 24,
-                "percent": 88.88888888888889
+                "count": 1,
+                "covered": 1,
+                "percent": 100
               },
               "instantiations": {
-                "count": 59,
-                "covered": 45,
-                "percent": 76.27118644067797
+                "count": 2,
+                "covered": 1,
+                "percent": 50
               },
               "regions": {
-                "count": 585,
-                "covered": 499,
-                "notcovered": 86,
-                "percent": 85.2991452991453
+                "count": 16,
+                "covered": 15,
+                "notcovered": 1,
+                "percent": 93.75
               },
               "branches": {
                 "count": 0,
@@ -6915,7 +6995,7 @@
     },
     {
       "file": "tools/audit-go/main.go",
-      "sha256": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+      "sha256": "447a0ad8eee60e65c75fe69e72bf31486365c404fd5e4670e12cbc0c33f44b7a",
       "units": [
         "tools/go-auditor"
       ],
@@ -6923,7 +7003,7 @@
     },
     {
       "file": "tools/audit-go/main_test.go",
-      "sha256": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+      "sha256": "9b8160217b2a1ed2a15f7992aa03e45346e4e79c6ed6e3b455a100e106d9f4fc",
       "units": [
         "tools/go-auditor"
       ],
@@ -7154,6 +7234,45 @@
                 "covered": 61,
                 "notcovered": 252,
                 "percent": 19.488817891373802
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          },
+          {
+            "unit": 0,
+            "compiler_filename": "tools/api-audit/benches/../../perf-probe/src/measurement.rs",
+            "summary": {
+              "lines": {
+                "count": 207,
+                "covered": 8,
+                "percent": 3.864734299516908
+              },
+              "functions": {
+                "count": 26,
+                "covered": 2,
+                "percent": 7.6923076923076925
+              },
+              "instantiations": {
+                "count": 38,
+                "covered": 2,
+                "percent": 5.263157894736842
+              },
+              "regions": {
+                "count": 313,
+                "covered": 15,
+                "notcovered": 298,
+                "percent": 4.792332268370607
               },
               "branches": {
                 "count": 0,
