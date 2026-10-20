@@ -1248,7 +1248,19 @@
         "scripts/test_acceptance_driver.py"
       ],
       "performance": "docs/evidence/terminal-device/performance/attempts/3e0cd5c347b446ef8488926bdbd4a44d/report.json",
-      "notes": "All 13 raw declaration candidates classified in terminal-device-audit.md; private State.state and private passwordReader.Read are not independently reachable APIs. Borrowed AsFd/AsHandle+std IO/owner Drop compose source File. Unix real PTY tests pass locally, exact Windows console/three-OS qualification and matched native syscall/input distributions remain pending. Source Plan 9 and other-OS conditions are recorded and explicitly not Rust-supported parity."
+      "notes": "All 13 raw candidates classified; Windows State.Mode is an additional compiler-confirmed promoted selector, implemented provisionally through explicit conditional mode APIs. Raw candidate mapping is not an export graph. Native slice at c526cf4 is qualified, but new Windows mode/value/input-output role tests and Go export closure remain pending. Source Plan 9/other OS conditions and full-module performance remain partial.",
+      "promoted_export_obligations": [
+        {
+          "selector": "State.Mode",
+          "defined_in": "term/term_windows.go:13",
+          "build": "windows",
+          "reference_sha": "4542a189d0fbeb156bb1df8730d253f2ef443c00",
+          "reachability": "Compiler-confirmed through private embedded state; not a new raw-inventory declaration.",
+          "implementation": "device::windows::{ConsoleMode,mode,snapshot}; pending Windows native qualification",
+          "evidence": "docs/evidence/terminal-device/promoted-mode/context.json",
+          "performance": "pending"
+        }
+      ]
     }
   ]
 }

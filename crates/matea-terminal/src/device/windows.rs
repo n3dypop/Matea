@@ -10,6 +10,14 @@ use windows_sys::Win32::System::Console::*;
 
 #[derive(Clone)]
 pub(super) struct State(u32);
+impl State {
+    pub(super) const fn mode(&self) -> u32 {
+        self.0
+    }
+    pub(super) const fn from_mode(mode: u32) -> Self {
+        Self(mode)
+    }
+}
 pub(super) struct Native<'fd> {
     handle: BorrowedHandle<'fd>,
     input_validated: Cell<bool>,

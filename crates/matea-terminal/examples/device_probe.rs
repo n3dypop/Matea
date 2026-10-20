@@ -13,6 +13,24 @@ fn emit(text: impl std::fmt::Display) -> io::Result<()> {
 fn barrier() -> io::Result<()> {
     io::stdin().read_exact(&mut [0])
 }
+#[cfg(windows)]
+fn check_console_flag(
+    device: &mut TerminalDevice<'_>,
+    flag: matea_terminal::device::windows::ConsoleMode,
+) -> io::Result<()> {
+    use matea_terminal::device::windows::{mode, snapshot};
+    let initial = device.state()?;
+    let toggled = mode(&initial) ^ flag;
+    device.set_state(&snapshot(toggled))?;
+    if mode(&device.state()?) != toggled {
+        return Err(io::Error::other("custom console mode was not applied"));
+    }
+    device.set_state(&initial)?;
+    if mode(&device.state()?) != mode(&initial) {
+        return Err(io::Error::other("custom console mode was not restored"));
+    }
+    Ok(())
+}
 fn probe(
     input: &(impl TerminalFile + ?Sized),
     output: &(impl TerminalFile + ?Sized),
@@ -35,6 +53,22 @@ fn probe(
     }
     rejected(&std::fs::File::open(std::env::current_exe()?)?)?;
     rejected(&io::stdout())?; // The fixture driver captures stdout in a pipe.
+    #[cfg(windows)]
+    {
+        use matea_terminal::device::windows::{ConsoleMode, mode};
+        let mut console = TerminalDevice::open(output)?;
+        let initial = mode(&console.state()?);
+        if console.make_raw().is_ok()
+            || console.read_password(8).is_ok()
+            || mode(&console.state()?) != initial
+        {
+            return Err(io::Error::other(
+                "output handle accepted input-only operations",
+            ));
+        }
+        check_console_flag(&mut console, ConsoleMode::OUTPUT_WRAP_AT_EOL)?;
+        console.restore()?;
+    }
     let mut device = TerminalDevice::open(input)?;
     let size = terminal_size(output)?;
     let nested = TerminalDevice::open(input).unwrap_err();
@@ -46,6 +80,11 @@ fn probe(
             "exclusive/read-only device contract failed",
         ));
     }
+    #[cfg(windows)]
+    check_console_flag(
+        &mut device,
+        matea_terminal::device::windows::ConsoleMode::INPUT_ECHO,
+    )?;
     if operation == "password" {
         emit(format_args!("ready\t{}\t{}", size.width, size.height))?;
         let (kind, bytes, limit, restoration) = match device.read_password(maximum) {

@@ -124,6 +124,28 @@ class CoverageTests(unittest.TestCase):
         self.write("docs/coverage/dependency-frontier.json", {"scope_closure_reviewed":"false"})
         self.assert_rejected()
 
+    def test_go_export_review_is_separate_and_missing_cannot_open_gate(self):
+        # Close every other condition in this one-declaration synthetic ledger.
+        # The new Go requirement must independently keep the gate closed.
+        self.write("docs/coverage/rustdoc/index.json", {
+            "target_feature_closure_reviewed":True,
+            "signature_dependency_closure_reviewed":True, "snapshots":[]})
+        for value in ["missing",False,True]:
+            frontier={"scope_closure_reviewed":True}
+            if value!="missing":frontier["go_target_export_closure_reviewed"]=value
+            self.write("docs/coverage/dependency-frontier.json",frontier)
+            result=self.run_checker("--gate")
+            with self.subTest(value=value):
+                self.assertEqual(result.returncode,0 if value is True else 1,result.stdout+result.stderr)
+                self.assertIn("Go target/export closure reviewed: "+str(value is True),result.stdout)
+
+    def test_go_export_closure_does_not_accept_truthy_metadata(self):
+        for value in [1,"false",None,{}]:
+            with self.subTest(value=value):
+                self.write("docs/coverage/dependency-frontier.json",{
+                    "scope_closure_reviewed":True,"go_target_export_closure_reviewed":value})
+                self.assert_rejected()
+
     def test_compiler_identity_exit_codes_and_keys_cannot_be_forged(self):
         identity={"reference":"fixture", "sha":"a"*40, "package":"fixture", "profile":"default", "target":"fixture-target"}
         for defect in ["none", "wrong-package", "boolean-exit", "duplicate-key", "duplicate-profile"]:

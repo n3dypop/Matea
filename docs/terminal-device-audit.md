@@ -223,3 +223,29 @@ The six changed units' portability and the device's design/memory/behavior are
 75 within this reviewed scope. Device reference/performance stay 50, with source
 OS conditions, full exported contracts, error/cancellation costs and other-host
 measurements still explicit. Stage A remains open; Stage B and F5 remain closed.
+
+## Reopened promoted-export increment
+
+The qualification above remains the c526cf4 checkpoint. A subsequent compiler
+probe discovered that Windows State.Mode is accessible through the private state
+embedding, even though the thirteen raw candidate records omit that selector.
+The original caller compiles for Windows and fails for Linux/macOS at the pin;
+[logs and exact caller](evidence/terminal-device/promoted-mode/context.json) retain
+both positive and negative compiler results. This does not execute a console.
+
+[ADR 0071](decisions/0071-promoted-go-state-mode-and-explicit-windows-api.md)
+adds an explicit conditional ConsoleMode/read/snapshot API and a separate Go
+target/export gate. The portable snapshot stays opaque. Known input/output flags
+have names and unknown uint32 bits remain representable; the OS validates role
+and flags only when applying through the owned device guard. The direct bitflags
+edge uses the already pinned version. Windows fixtures now exercise input and
+output mode editing/restoration and reject input-only operations on output
+handles; pure Windows tests cover low words, bit/complement boundaries and
+unknown-bit edits. These new paths require actual Windows qualification.
+
+The raw inventory count is unchanged and no complete Go export resolution is
+claimed. The project-wide Go target/export review remains false; missing or
+truthy nonboolean metadata cannot satisfy it. Two independent corrupted-ledger
+tests confirm this condition can block F5 even when the synthetic other
+conditions are complete. Seven affected assessments are reopened (current 57);
+the prior fully tested 50-axis checkpoint is preserved instead of relabeled.

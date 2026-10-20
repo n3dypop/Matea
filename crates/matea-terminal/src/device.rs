@@ -62,6 +62,74 @@ impl fmt::Debug for TerminalState {
     }
 }
 
+/// Explicit Windows console-state customization. The ordinary portable state
+/// remains opaque; console flags have input/output-handle-specific meanings.
+/// Applying a snapshot still uses TerminalDevice's checked OS call and owned
+/// original-state restoration. Unknown bits are retained for future OS flags.
+#[cfg(windows)]
+pub mod windows {
+    use super::{TerminalState, native};
+    use windows_sys::Win32::System::Console::*;
+
+    bitflags::bitflags! {
+        #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+        pub struct ConsoleMode: u32 {
+            const INPUT_PROCESSED = ENABLE_PROCESSED_INPUT;
+            const INPUT_LINE = ENABLE_LINE_INPUT;
+            const INPUT_ECHO = ENABLE_ECHO_INPUT;
+            const INPUT_WINDOW = ENABLE_WINDOW_INPUT;
+            const INPUT_MOUSE = ENABLE_MOUSE_INPUT;
+            const INPUT_INSERT = ENABLE_INSERT_MODE;
+            const INPUT_QUICK_EDIT = ENABLE_QUICK_EDIT_MODE;
+            const INPUT_EXTENDED_FLAGS = ENABLE_EXTENDED_FLAGS;
+            const INPUT_AUTO_POSITION = ENABLE_AUTO_POSITION;
+            const INPUT_VIRTUAL_TERMINAL = ENABLE_VIRTUAL_TERMINAL_INPUT;
+            const OUTPUT_PROCESSED = ENABLE_PROCESSED_OUTPUT;
+            const OUTPUT_WRAP_AT_EOL = ENABLE_WRAP_AT_EOL_OUTPUT;
+            const OUTPUT_VIRTUAL_TERMINAL = ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            const OUTPUT_DISABLE_NEWLINE_AUTO_RETURN = DISABLE_NEWLINE_AUTO_RETURN;
+            const OUTPUT_LVB_GRID = ENABLE_LVB_GRID_WORLDWIDE;
+        }
+    }
+
+    /// Read a captured or explicitly constructed snapshot without native I/O.
+    pub const fn mode(state: &TerminalState) -> ConsoleMode {
+        ConsoleMode::from_bits_retain(state.0.mode())
+    }
+
+    /// Construct a mode value without touching a console. The OS validates its
+    /// flags/handle role when a device applies it; this is not a validity proof.
+    pub const fn snapshot(mode: ConsoleMode) -> TerminalState {
+        TerminalState(native::State::from_mode(mode.bits()))
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        #[test]
+        fn snapshots_retain_every_low_word_and_each_high_bit_without_io() {
+            let cases = (0..=u16::MAX)
+                .map(u32::from)
+                .chain((0..32).flat_map(|shift| [1u32 << shift, !(1u32 << shift)]))
+                .chain([u32::MAX]);
+            for bits in cases {
+                let value = ConsoleMode::from_bits_retain(bits);
+                assert_eq!(mode(&snapshot(value)).bits(), bits);
+                assert_eq!(
+                    mode(&snapshot(value)).symmetric_difference(value),
+                    ConsoleMode::empty()
+                );
+            }
+            let unknown = ConsoleMode::from_bits_retain(1 << 31);
+            let mut edited = unknown | ConsoleMode::INPUT_MOUSE;
+            assert_eq!(edited.bits(), (1 << 31) | 16);
+            edited.set(ConsoleMode::INPUT_ECHO, true);
+            edited.remove(ConsoleMode::INPUT_MOUSE);
+            assert_eq!(edited.bits(), (1 << 31) | 4);
+        }
+    }
+}
+
 /// UI-local, exclusively owned mode restoration over a borrowed native handle.
 /// The device and all native cleanup are dropped before the shared lease.
 ///

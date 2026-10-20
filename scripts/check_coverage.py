@@ -136,7 +136,9 @@ def check(root=ROOT):
     issues=load_json(ROOT/"docs/coverage/upstream-issues.json")
     untriaged=sum(issue_needs_review(ROOT, i, r["repository"], pins) for r in issues["repositories"] for i in r["issues"])
     pending_markers=sum(m.get("assessment","pending")=="pending" for r in inventories for m in r["issue_markers"])
-    scope_closed=boolean(load_json(ROOT/"docs/coverage/dependency-frontier.json")["scope_closure_reviewed"])
+    frontier=load_json(ROOT/"docs/coverage/dependency-frontier.json")
+    scope_closed=boolean(frontier["scope_closure_reviewed"])
+    go_exports_closed=boolean(frontier.get("go_target_export_closure_reviewed", False))
     compiled_index = ROOT / "docs/coverage/rustdoc/index.json"
     compiled_keys, compiled_linked = set(), set()
     compiled_groups = {}
@@ -192,8 +194,9 @@ def check(root=ROOT):
           f"{unmapped} unlinked; {pending} partial/unmeasured capabilities; {unresolved_exports} unresolved Rust export graphs")
     print(f"{pending_modules} module verdicts pending; {untriaged} issue reports and {pending_markers} source markers need ledger disposition")
     print(f"Dependency/public-capability closure reviewed: {scope_closed}")
+    print(f"Go target/export closure reviewed: {go_exports_closed}")
     print(f"{compiled_unmapped} compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: {compiled_scope_closed}")
-    blocked=unmapped or pending or unresolved_exports or pending_modules or untriaged or pending_markers or not scope_closed or compiled_unmapped or not compiled_scope_closed
+    blocked=unmapped or pending or unresolved_exports or pending_modules or untriaged or pending_markers or not scope_closed or not go_exports_closed or compiled_unmapped or not compiled_scope_closed
     print("F5 CLOSED" if blocked else "Coverage entry checks satisfied; full F5 validation still required")
     return bool(blocked)
 

@@ -1,6 +1,7 @@
 # Matea Foundation gate report
 
-現在は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
+直近の検証済みc526cf4は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
+現在は追加発見したWindows State.Mode公開機能とGo export gateを実装・再検証中で、作業評価は57軸です。
 x/termの13宣言候補を分類・対応付けし、借用handle、排他的な状態復元、raw取得、上限付きbyte入力を実装しました。
 [5bcdeb6の必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39483552313)はすべて成功。
 198実行入力を固定commitと照合し、各OSの47検証、Unix各12／Windows 9の実端末試験と同数の計装試験を確認しました。
