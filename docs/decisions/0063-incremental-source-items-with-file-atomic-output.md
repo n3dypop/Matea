@@ -49,3 +49,10 @@ an unmeasured item-count heuristic. It does not bound syntax nesting. Verify the
 exact boundary and non-ASCII spans, test syntax/short-write behavior on both
 paths, and measure small/wide/deep inputs as well as the unchanged large-file
 controls. The threshold is a provisional engineering budget, not a proven optimum.
+
+The completed adaptive trial did not establish a stable tiny-file improvement:
+22.65–22.89 ms controls versus 22.78–22.85 ms adaptive. It added 1,426 requested
+allocations on Crossterm and 7,853 on Ratatui and increased residency at the
+8 KiB boundary. Reject the size dispatch and restore the uniformly incremental
+parser. The exact boundary tests/Miri result describe the rejected 9c93ed1
+candidate only. ADR 0064 addresses directory traversal instead; all raw data stay.

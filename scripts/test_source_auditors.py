@@ -18,6 +18,20 @@ def go_environment():
 
 
 class SourceAuditorTests(unittest.TestCase):
+    def test_rust_cached_file_types_preserve_depth_first_filename_order(self):
+        files = {"z.rs": "Z", "a/second.rs": "SECOND", "抹茶.rs": "UNICODE",
+                 "a/inner/deep.rs": "DEEP", "A.rs": "UPPER", "a/first.rs": "FIRST"}
+        with tempfile.TemporaryDirectory(prefix="matea-audit-order-") as folder:
+            for name, symbol in files.items():
+                path = Path(folder, name)
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(f"pub const {symbol}: u8 = 0;\n", encoding="utf-8")
+            result = subprocess.run([str(self.auditor()), folder], capture_output=True,
+                                    text=True, encoding="utf-8", check=True, timeout=15)
+        self.assertEqual([(row["file"], row["symbol"]) for row in map(json.loads, result.stdout.splitlines())],
+                         [("A.rs", "UPPER"), ("a/first.rs", "FIRST"), ("a/inner/deep.rs", "DEEP"),
+                          ("a/second.rs", "SECOND"), ("z.rs", "Z"), ("抹茶.rs", "UNICODE")])
+
     def test_rust_cfg_spelling_preserves_inner_nested_multiple_path_and_value_forms(self):
         text='''#![cfg(any(unix, windows))]
 #[cfg(all(feature="tea",not(windows)))]
