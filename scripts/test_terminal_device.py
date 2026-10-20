@@ -245,7 +245,8 @@ def unix_run(probe, context, save):
 
     def configured(value):
         result = list(value)
-        result[3] &= ~getattr(termios, "PENDIN", 0)
+        if sys.platform == "darwin":
+            result[3] &= ~getattr(termios, "PENDIN", 0)
         return result
 
     def record(proc, timeout=5):

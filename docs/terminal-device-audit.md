@@ -85,3 +85,40 @@ are type-contract checks, not native cleanup evidence. The pure UTF-16/parser an
 mock failure tests likewise do not qualify WinAPI. A new-console Windows adapter,
 native acceptance hook and instrumented native hook are implemented for CI; their
 results must be observed before portability is promoted.
+
+## First native performance experiment
+
+The [retained report](evidence/terminal-device/performance/attempts/3e0cd5c347b446ef8488926bdbd4a44d/report.json)
+binds 46bac2a, both release binaries, 198 execution inputs and the fixed source
+files. Three cohorts contain 27 timing records, each with 31 positive samples
+and all 20ms calibration confirmations. Another 62 output-only children record
+Darwin maximum RSS separately. No builds, tests, Miri, LLVM or downloads overlap
+these ordinary measurements. All configured PTY flags restore after every child.
+
+| Isolated 132×42 PTY operation | Matea p50 across cohorts | Source p50 across cohorts | Allocations, Matea/source |
+| --- | --- | --- | --- |
+| Terminal query | 277–279 ns | 305–308 ns | 0/0 |
+| Owned state capture/drop | 276–279 ns | 318–324 ns | 0/1 (80 bytes) |
+| Visible dimensions | 271–275 ns | 300–305 ns | 0/0 |
+| Current-state capture, raw, previous-state restore | 9.23–9.28 µs | 9.43–9.51 µs | 0/1 (80 bytes) |
+
+State records check successful opaque capture, independently observed native
+before/after fields and explicit flag fixtures; they are not a serialization of
+every state byte. The raw case already owns the Rust lease outside samples;
+the source caller keeps its descriptor open. Each matched cycle performs three
+native calls. All paired return values, declared semantics and fixture outputs
+agree. Retained p95 values remain in the report; no universal speed advantage or
+maximum-performance claim follows from one host's modest differences.
+
+The separate Rust fresh-owned lifecycle uses four native calls and takes
+9.53–9.58 µs, without allocations. It includes original capture, current capture,
+raw transition, original restore and release. This is a control with additional
+ownership work, so it has no source ratio. The extra current-state query suggests
+a fused fresh raw constructor; the existing make_raw must still query the actual
+current state when called later on an existing guard.
+
+Whole-process RSS medians are 1,949,696 bytes for Rust and 5,144,576 for Go, with
+31 distinct children each. These include each language's startup/runtime and
+different available case sets; they do not measure per-operation peak memory.
+Password latency, full native error-path cost and other OSes remain unmeasured.
+The module's performance verdict therefore remains partial.

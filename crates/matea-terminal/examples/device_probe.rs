@@ -66,7 +66,8 @@ fn probe(
             limit.map_or_else(|| "none".to_owned(), |n| n.to_string())
         ))?;
     } else if operation == "drop" || operation == "unwind" {
-        device.make_raw()?;
+        drop(device);
+        let device = TerminalDevice::open_raw(input)?;
         emit(format_args!("raw\t{}\t{}", size.width, size.height))?;
         barrier()?;
         if operation == "unwind" {

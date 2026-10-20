@@ -2062,14 +2062,16 @@
           "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
         },
         "performance": {
-          "score": 0,
-          "reason": "No ordinary matched native-device syscall/password/constructor distributions, allocation or RSS evidence yet."
+          "score": 50,
+          "reason": "Three isolated macOS cohorts measure four matched successful native operations and one Rust guard control: 27 timing records with 31 positive samples plus 62 whole-process RSS children. Four source outputs/semantics match; query/raw state allocations 1x80 bytes to zero. New fused constructor retest, password/error paths and other OS performance remain pending."
         }
       },
       "evidence": [
         "docs/terminal-device-audit.md",
         "docs/decisions/0069-owned-terminal-device-state-and-password-eof.md",
-        "docs/evidence/terminal-device-source/context.json"
+        "docs/evidence/terminal-device-source/context.json",
+        "docs/evidence/terminal-device/performance/context.json",
+        "docs/evidence/terminal-device/miri/verification.json"
       ],
       "remaining": [
         "Complete native PTY/Windows console, Miri, source declaration/condition and performance evidence before qualifying this module."

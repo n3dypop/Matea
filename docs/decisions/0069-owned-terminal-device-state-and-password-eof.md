@@ -61,6 +61,15 @@ when needed. Do not claim zeroization or change UTF-8/backspace semantics withou
 separate documented policy. Avoid reading beyond the completed input line;
 buffering optimizations require measured native semantic evidence first.
 
+The first native measurement found that a fresh open+make_raw cycle queries the
+same initial state twice, whereas a later make_raw must requery current state.
+Add open_raw to fuse only fresh acquisition/transition: one captured original,
+one raw set and one eventual restore. Failure keeps cleanup owned before release.
+Keep both APIs, with mock query-count/error tests and real Drop/unwind fixtures.
+The Windows-only benchmark lint failure is corrected with cfg-local control flow,
+without suppressing unreachable-code warnings. Exact Linux state checks exclude
+no Darwin-only transient flag; the PENDIN exception is limited to Darwin.
+
 Acceptance requires pure mock failure/unwind/lease tests, real isolated Unix PTYs,
 native Windows console checks, exact configured flags/size restoration, regular
 file/pipe errors, UTF-8/invalid-byte/backspace/CR/LF/empty/partial EOF and boundary

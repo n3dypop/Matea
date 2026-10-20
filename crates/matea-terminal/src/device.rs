@@ -93,6 +93,18 @@ impl<'fd> TerminalDevice<'fd> {
             _ui_thread: PhantomData,
         })
     }
+    /// Capture the original state once and immediately enter raw mode. Unlike
+    /// open followed by make_raw, this fused constructor needs no second query.
+    /// A failed transition still owns cleanup until the lease is released.
+    pub fn open_raw(file: &'fd (impl TerminalFile + ?Sized)) -> io::Result<Self> {
+        let lease = Lease::acquire(&EXCLUSIVE)?;
+        let inner = Guard::new_raw(native::Native::new(file))?;
+        Ok(Self {
+            inner,
+            _lease: lease,
+            _ui_thread: PhantomData,
+        })
+    }
     pub fn state(&self) -> io::Result<TerminalState> {
         self.inner.io.state().map(TerminalState)
     }
@@ -227,6 +239,12 @@ impl<D: DeviceIo> Guard<D> {
             original,
             changed: false,
         })
+    }
+    fn new_raw(io: D) -> io::Result<Self> {
+        let mut owned = Self::new(io)?;
+        let raw = owned.io.raw_state(&owned.original)?;
+        owned.set_state(&raw)?;
+        Ok(owned)
     }
     fn set_state(&mut self, state: &D::State) -> io::Result<()> {
         self.changed = true;
@@ -389,7 +407,11 @@ impl Utf16Decoder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{cell::RefCell, collections::VecDeque, io::Cursor};
+    use std::{
+        cell::{Cell, RefCell},
+        collections::VecDeque,
+        io::Cursor,
+    };
 
     #[test]
     fn line_bytes_endings_eof_limits_and_no_overread() {
@@ -461,6 +483,8 @@ mod tests {
         writes: usize,
         fail: VecDeque<usize>,
         panic_read: bool,
+        queries: Rc<Cell<usize>>,
+        reject_raw: bool,
     }
     impl Read for Mock {
         fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
@@ -471,6 +495,7 @@ mod tests {
     impl DeviceIo for Mock {
         type State = u8;
         fn state(&self) -> io::Result<u8> {
+            self.queries.set(self.queries.get() + 1);
             Ok(self.state.borrow().0)
         }
         fn set_state(&mut self, value: &u8) -> io::Result<()> {
@@ -484,7 +509,11 @@ mod tests {
             Ok(())
         }
         fn raw_state(&self, _: &u8) -> io::Result<u8> {
-            Ok(2)
+            if self.reject_raw {
+                Err(io::ErrorKind::Unsupported.into())
+            } else {
+                Ok(2)
+            }
         }
         fn password_state(&self, _: &u8) -> io::Result<u8> {
             Ok(3)
@@ -503,7 +532,32 @@ mod tests {
             writes: 0,
             fail: fail.iter().copied().collect(),
             panic_read,
+            queries: Rc::new(Cell::new(0)),
+            reject_raw: false,
         }
+    }
+    #[test]
+    fn fresh_raw_captures_once_and_owns_failed_transition_cleanup() {
+        let io = mock(&[], false);
+        let (state, queries) = (io.state.clone(), io.queries.clone());
+        let owned = Guard::new_raw(io).unwrap();
+        assert_eq!(queries.get(), 1);
+        assert_eq!(state.borrow().0, 2);
+        drop(owned);
+        assert_eq!(*state.borrow(), (1, vec![2, 1]));
+
+        let io = mock(&[1], false);
+        let state = io.state.clone();
+        assert!(
+            matches!(Guard::new_raw(io), Err(e) if e.kind() == io::ErrorKind::PermissionDenied)
+        );
+        assert_eq!(*state.borrow(), (1, vec![2, 1]));
+
+        let mut io = mock(&[], false);
+        io.reject_raw = true;
+        let state = io.state.clone();
+        assert!(matches!(Guard::new_raw(io), Err(e) if e.kind() == io::ErrorKind::Unsupported));
+        assert_eq!(*state.borrow(), (1, vec![]));
     }
     #[test]
     fn restore_is_retryable_and_password_restores_the_current_mode() {

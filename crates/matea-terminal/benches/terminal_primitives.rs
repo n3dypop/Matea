@@ -77,13 +77,12 @@ fn device_measurements() {
         "device/owned_raw_cycle",
         n,
         || {
-            let mut device = TerminalDevice::open(black_box(&file)).unwrap();
-            black_box(device.make_raw().unwrap());
+            let mut device = TerminalDevice::open_raw(black_box(&file)).unwrap();
             device.restore().unwrap();
             1
         },
         "restored",
-        "Rust control: fresh exclusive lease and original capture, raw transition, explicit original restoration and guard/lease drop; four native calls",
+        "Rust control: fused fresh exclusive lease/original capture and raw transition, explicit original restoration and guard/lease drop; three native calls",
     );
 }
 
@@ -125,10 +124,12 @@ fn command<C: Command + Copy>(id: &str, command: C, expected: &str, n: usize) {
 fn main() {
     if std::env::args().any(|argument| argument == "--device-measure") {
         #[cfg(unix)]
-        device_measurements();
+        {
+            device_measurements();
+            return;
+        }
         #[cfg(not(unix))]
         panic!("native device timing currently requires a disposable Unix PTY");
-        return;
     }
     let n = if std::env::args().any(|a| a == "--measure") {
         measurement::iterations(20000)

@@ -329,10 +329,16 @@
         "scripts/test_terminal_device.py",
         "docs/evidence/terminal-device/context.json"
       ],
-      "performance_cases": [],
+      "performance_cases": [
+        "device/is_terminal",
+        "device/state",
+        "device/size",
+        "device/raw_restore"
+      ],
       "notes": "Borrowed device, owned retryable restoration and bounded byte password input implemented; all 13 raw candidates classified, including private and conditional declarations. macOS real PTY positives and negative cfmakeraw/barrier trials retained. Windows/native CI, performance and unsupported source-OS boundaries remain pending; no full module parity.",
       "source_audit": "docs/terminal-device-audit.md",
-      "declarations_reviewed": 13
+      "declarations_reviewed": 13,
+      "performance_report": "docs/evidence/terminal-device/performance/attempts/3e0cd5c347b446ef8488926bdbd4a44d/report.json"
     },
     {
       "reference": "crossterm",
