@@ -40,23 +40,24 @@ func main() {
 }
 
 func audit(root string, output io.Writer) error {
-	info, err := os.Lstat(root)
-	if err != nil {
-		return err
-	}
-	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
-		return fmt.Errorf("source root must be a real directory")
-	}
-	buffer := bufio.NewWriterSize(output, 64*1024)
-	enc := json.NewEncoder(buffer)
-	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	var buffer *bufio.Writer
+	var enc *json.Encoder
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if d.IsDir() {
-			if path == root {
-				return nil
+		if path == root {
+			// WalkDir already used Lstat for its root. Reuse that entry instead
+			// of making another metadata query; initialize output only after
+			// validating the root, before any descendant can emit a row.
+			if !d.IsDir() || d.Type()&os.ModeSymlink != 0 {
+				return fmt.Errorf("source root must be a real directory")
 			}
+			buffer = bufio.NewWriterSize(output, 64*1024)
+			enc = json.NewEncoder(buffer)
+			return nil
+		}
+		if d.IsDir() {
 			switch d.Name() {
 			case ".git", "vendor", "node_modules", "examples", "tutorials", "testdata":
 				return filepath.SkipDir

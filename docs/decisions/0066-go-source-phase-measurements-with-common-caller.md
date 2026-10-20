@@ -28,3 +28,13 @@ and actual distinct-child peak RSS. Preserve every distribution, input/source/
 binary hash, failure and incompatible corrected outcome. A source scan is not a
 compiler export graph; requested allocations are not residency. Native OS/race
 checks and finite-host performance evidence do not establish universal optimality.
+
+The first complete CLI cohorts retained small-process drift and modest overhead.
+A four-binary rotated/reversed crossover keeps original, containment, extraction
+and root-entry-reuse outcomes separate. Reuse `WalkDir`'s already-Lstat-derived
+root entry in its first callback instead of issuing another Lstat. Initialize
+buffer/encoder only after the root is validated; error callbacks still return
+before any output. Existing file/link/FIFO/root/byte regressions and Race tests
+pass. The parser/serializer source body is byte-identical to 3df2002, so retain
+its separately measured fifteen phases and refresh the full CLI/RSS once for
+this wrapper. No timing subtraction or universal speed claim is permitted.
