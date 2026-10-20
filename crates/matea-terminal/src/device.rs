@@ -225,6 +225,13 @@ trait DeviceIo: Read {
     fn password_state(&self, state: &Self::State) -> io::Result<Self::State>;
     fn ending(&self) -> Ending;
     fn size(&self) -> io::Result<Size>;
+    fn password_line(&mut self, maximum: usize) -> Result<Vec<u8>, PasswordError>
+    where
+        Self: Sized,
+    {
+        let ending = self.ending();
+        read_line(self, ending, maximum)
+    }
 }
 struct Guard<D: DeviceIo> {
     io: D,
@@ -271,14 +278,13 @@ impl<D: DeviceIo> Guard<D> {
             .map_err(PasswordError::io)?;
         let was_changed = self.changed;
         self.changed = true;
-        let ending = self.io.ending();
         let mut mode = ModeGuard {
             io: &mut self.io,
             previous,
             active: true,
         };
         let operation = match mode.io.set_state(&password) {
-            Ok(()) => read_line(mode.io, ending, maximum),
+            Ok(()) => mode.io.password_line(maximum),
             Err(error) => Err(PasswordError::io(error)),
         };
         let restoration = mode.restore().err();
@@ -329,13 +335,38 @@ fn read_line(
     ending: Ending,
     maximum: usize,
 ) -> Result<Vec<u8>, PasswordError> {
+    read_line_buffered::<1>(reader, ending, maximum)
+}
+
+// N > 1 is only valid for canonical Unix reads: the kernel returns at most one
+// line, so the completed line never consumes a following line. Other readers,
+// including the Windows console text decoder, keep the one-byte path.
+fn read_line_buffered<const N: usize>(
+    reader: &mut impl Read,
+    ending: Ending,
+    maximum: usize,
+) -> Result<Vec<u8>, PasswordError> {
     let mut bytes = Vec::new();
-    let mut byte = [0];
+    let mut input = [0; N];
     loop {
-        let failure = match reader.read(&mut byte) {
+        // At most one byte beyond the remaining limit: a limit error consumes
+        // exactly the triggering byte even when backspaces reduce the prefix.
+        let length = N.min(maximum.saturating_sub(bytes.len()).saturating_add(1));
+        let count = match reader.read(&mut input[..length]) {
             Ok(0) if !bytes.is_empty() => return Ok(bytes),
-            Ok(0) => Failure::Io(io::ErrorKind::UnexpectedEof.into()),
-            Ok(_) => match byte[0] {
+            Ok(0) => return Err(PasswordError::io(io::ErrorKind::UnexpectedEof.into())),
+            Ok(count) => count,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
+            Err(error) => {
+                return Err(PasswordError {
+                    partial: bytes,
+                    operation: Some(Failure::Io(error)),
+                    restoration: None,
+                });
+            }
+        };
+        for (index, &byte) in input[..count].iter().enumerate() {
+            let failure = match byte {
                 b'\x08' => {
                     bytes.pop();
                     continue;
@@ -345,22 +376,21 @@ fn read_line(
                 b'\r' | b'\n' => continue,
                 _ if bytes.len() >= maximum => Failure::Limit(maximum),
                 value => {
-                    if bytes.try_reserve(1).is_err() {
+                    let remaining = (count - index).min(maximum - bytes.len());
+                    if bytes.len() == bytes.capacity() && bytes.try_reserve(remaining).is_err() {
                         Failure::Io(io::ErrorKind::OutOfMemory.into())
                     } else {
                         bytes.push(value);
                         continue;
                     }
                 }
-            },
-            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
-            Err(error) => Failure::Io(error),
-        };
-        return Err(PasswordError {
-            partial: bytes,
-            operation: Some(failure),
-            restoration: None,
-        });
+            };
+            return Err(PasswordError {
+                partial: bytes,
+                operation: Some(failure),
+                restoration: None,
+            });
+        }
     }
 }
 
@@ -452,6 +482,57 @@ mod tests {
             read_line(&mut Cursor::new(b"ab\x08c\n"), Ending::Lf, 2).unwrap(),
             b"ac"
         );
+    }
+
+    #[test]
+    fn canonical_chunks_preserve_limits_backspaces_and_the_following_line() {
+        struct Canonical {
+            data: Cursor<Vec<u8>>,
+            calls: usize,
+        }
+        impl Read for Canonical {
+            fn read(&mut self, output: &mut [u8]) -> io::Result<usize> {
+                self.calls += 1;
+                let remaining = &self.data.get_ref()[self.data.position() as usize..];
+                let line = remaining
+                    .iter()
+                    .position(|&b| b == b'\n')
+                    .map_or(remaining.len(), |i| i + 1);
+                let length = line.min(output.len());
+                self.data.read(&mut output[..length])
+            }
+        }
+        for length in [0, 1, 7, 15, 31, 255, 256, 257, 511, 512] {
+            let mut input = vec![b'x'; length];
+            input.extend_from_slice(b"\x08!\nNEXT\n");
+            for maximum in [0, 1, 2, 7, 16, 255, 256, 512, usize::MAX] {
+                let mut reader = Canonical {
+                    data: Cursor::new(input.clone()),
+                    calls: 0,
+                };
+                let result = read_line_buffered::<256>(&mut reader, Ending::Lf, maximum);
+                let position = reader.data.position() as usize;
+                if maximum < length {
+                    let error = result.unwrap_err();
+                    assert_eq!(error.maximum_bytes(), Some(maximum));
+                    assert_eq!(error.partial(), vec![b'x'; maximum]);
+                    assert_eq!(position, maximum + 1);
+                } else if length == 0 && maximum == 0 {
+                    let error = result.unwrap_err();
+                    assert_eq!(error.maximum_bytes(), Some(0));
+                    assert!(error.partial().is_empty());
+                    assert_eq!(position, 2);
+                } else {
+                    let mut expected = vec![b'x'; length.saturating_sub(1)];
+                    expected.push(b'!');
+                    assert_eq!(result.unwrap(), expected);
+                    assert_eq!(&input[position..], b"NEXT\n");
+                    if maximum == usize::MAX {
+                        assert_eq!(reader.calls, (length + 3).div_ceil(256));
+                    }
+                }
+            }
+        }
     }
 
     #[test]

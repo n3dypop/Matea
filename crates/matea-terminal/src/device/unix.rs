@@ -1,4 +1,4 @@
-use super::{DeviceIo, Ending, TerminalFile};
+use super::{DeviceIo, Ending, PasswordError, TerminalFile, read_line_buffered};
 use matea_render::Size;
 use std::{
     io::{self, Read},
@@ -67,6 +67,11 @@ impl DeviceIo for Native<'_> {
     }
     fn ending(&self) -> Ending {
         Ending::Lf
+    }
+    fn password_line(&mut self, maximum: usize) -> Result<Vec<u8>, PasswordError> {
+        // Called only after the guard successfully installed ICANON. Canonical
+        // read(2) never crosses a line, unlike arbitrary Read implementations.
+        read_line_buffered::<256>(self, Ending::Lf, maximum)
     }
     fn size(&self) -> io::Result<Size> {
         let mut size = MaybeUninit::<libc::winsize>::uninit();
