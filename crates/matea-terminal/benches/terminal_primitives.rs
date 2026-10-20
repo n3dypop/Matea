@@ -77,6 +77,18 @@ fn device_measurements() {
         "device/owned_raw_cycle",
         n,
         || {
+            let mut device = TerminalDevice::open(black_box(&file)).unwrap();
+            black_box(device.make_raw().unwrap());
+            device.restore().unwrap();
+            1
+        },
+        "restored",
+        "Rust control: fresh exclusive lease and original capture, raw transition, explicit original restoration and guard/lease drop; four native calls",
+    );
+    measure(
+        "device/owned_raw_fused_cycle",
+        n,
+        || {
             let mut device = TerminalDevice::open_raw(black_box(&file)).unwrap();
             device.restore().unwrap();
             1
