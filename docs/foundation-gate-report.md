@@ -14,8 +14,9 @@ Goの埋め込み・戻り値・pointer等のexport解決は未完了で、独�
 ネイティブ入力の144計測を含む合計201計測・6,231標本と1,612 RSS子プロセスを検証しました。
 長い入力の確保は4→1回、要求120→65 bytes、固定128操作のp50は約41→15–16µsです。
 単発測定の遅い試行、途中の失敗、Go呼出し元snapshotの補正をすべて保持し、最大性能や全条件優位とは主張しません。
-未対応付け6,683宣言、部分／未測定21能力、91 module verdict、823 issue報告、115 source marker、
+未対応付け6,683宣言、部分／未測定21能力、91 module verdict、822 issue報告、115 source marker、
 未解決Rust export graph 2等が残ります。x/term #76は型付きhandleの説明と3 rustdoc試験で対応しました。
+x/ansi #926は65,633条件で負のz-index保持を確認し、参照元の32,816省略を再現しました。[比較と制約](kitty-placement-issue-audit.md)。
 Stage Aを継続し、Stage B／F5は閉じています。画像エンジン／CUDAには着手していません。
 追加した独立device単位の参照元一致／性能は50で残しており、直前の48軸から範囲を狭めていません。
 

@@ -1,0 +1,12 @@
+// Original caller: protocol control bytes only; no terminal side effects.
+use std::{collections::BTreeSet, io::{self,Write}, num::NonZeroU32};
+fn main()->io::Result<()> {
+ let mut values=Vec::new();let mut seen=BTreeSet::new();
+ let mut add=|z|{if seen.insert(z){values.push(z)}};
+ for z in i16::MIN..=i16::MAX {add(i32::from(z));}
+ let mut n=1i64;
+ while n<=i64::from(i32::MAX){for d in [-1,0,1] {let v=n+d;if v<=i64::from(i32::MAX){add(v as i32);add(-(v as i32));}}n*=2;}
+ add(i32::MIN);add(i32::MIN+1);add(i32::MAX-1);add(i32::MAX);
+ let id=NonZeroU32::new(7).unwrap();let mut out=io::BufWriter::new(io::stdout().lock());
+ for z in values {let bytes=matea_terminal::protocol::kitty_place(id,id,id,id,z);write!(out,"{z}\t")?;for b in bytes{write!(out,"{b:02x}")?;}writeln!(out)?;}out.flush()
+}
