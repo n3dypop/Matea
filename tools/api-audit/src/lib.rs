@@ -424,13 +424,16 @@ fn walk(
             entries.sort_unstable_by(|a, b| a.0.cmp(&b.0));
             pending.extend(entries.into_iter().rev());
         } else if kind.is_file() && path.extension().is_some_and(|e| e == "rs") {
-            let file = path
-                .strip_prefix(root)?
-                .to_str()
-                .ok_or_else(|| {
+            let relative = path.strip_prefix(root)?;
+            let mut file = String::with_capacity(relative.as_os_str().len());
+            for part in relative.components() {
+                if !file.is_empty() {
+                    file.push('/');
+                }
+                file.push_str(part.as_os_str().to_str().ok_or_else(|| {
                     io::Error::new(io::ErrorKind::InvalidData, "source path is not UTF-8")
-                })?
-                .replace('\\', "/");
+                })?);
+            }
             if file.split('/').any(|p| p == "tests.rs") {
                 continue;
             }

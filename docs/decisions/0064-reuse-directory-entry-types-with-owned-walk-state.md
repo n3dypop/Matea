@@ -35,3 +35,13 @@ complete parser projections again, and run fresh balanced complete-CLI/RSS
 measurements for 16 valid/boundary/error/tree cases. Native Linux, Windows and
 macOS must run junction, FIFO, invalid-byte and explicit DFS-order regressions
 where supported before portability is raised.
+
+Path review also reproduced a real identity collision: distinct POSIX paths
+`a/b.rs` and `a\b.rs` emitted identical declaration rows. Join actual path
+components with `/` instead of replacing filename backslashes globally. Preserve
+UTF-8 relative-name validation and add an independent POSIX regression. Parse
+CLI roots with `args_os`: an OS path need not itself be Unicode when all emitted
+relative names are valid UTF-8. Linux tests cover the non-UTF8 root argument;
+the local APFS filesystem rejects creation of that fixture. Keep these correctness
+changes separate from any matched-output performance ratio for normal pinned
+paths. The before-collision observation is retained.

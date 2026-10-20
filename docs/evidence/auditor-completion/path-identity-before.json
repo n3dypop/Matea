@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "source_head": "85a070e9630f4f107eee2ccb4f744aa7b3fee8f2",
+  "source_sha256": {
+    "tools/api-audit/src/main.rs": "8596599a321fadb2834cdd425cca0e47ae9a71d5d78c282848057e570d37cf7a",
+    "tools/api-audit/src/lib.rs": "67ca3bb43fac917819dee6c81a2dc1c3027f478e0dd5418f9dbf081131b35e5a"
+  },
+  "expected_files": [
+    "a/b.rs",
+    "a\\b.rs"
+  ],
+  "exit_code": 0,
+  "observed": [
+    {
+      "file": "a/b.rs",
+      "line": 1,
+      "kind": "const",
+      "symbol": "VALUE",
+      "cfg": ""
+    },
+    {
+      "file": "a/b.rs",
+      "line": 1,
+      "kind": "const",
+      "symbol": "VALUE",
+      "cfg": ""
+    }
+  ],
+  "observation": "Two distinct POSIX paths collapse to identical declaration rows because every backslash is converted to a slash."
+}

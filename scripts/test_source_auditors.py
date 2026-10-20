@@ -18,6 +18,30 @@ def go_environment():
 
 
 class SourceAuditorTests(unittest.TestCase):
+    @unittest.skipUnless(os.name == "posix", "backslash is a filename character on POSIX")
+    def test_rust_backslash_filename_cannot_alias_a_nested_path(self):
+        with tempfile.TemporaryDirectory(prefix="matea-audit-identity-") as folder:
+            root = Path(folder)
+            (root / "a").mkdir()
+            for name in ["a/b.rs", "a\\b.rs"]:
+                (root / name).write_text("pub const VALUE: u8 = 0;\n", encoding="utf-8")
+            result = subprocess.run([str(self.auditor()), folder], capture_output=True,
+                                    check=True, timeout=15)
+        self.assertEqual([json.loads(row)["file"] for row in result.stdout.splitlines()],
+                         ["a/b.rs", "a\\b.rs"])
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "non-UTF8 root names require a supporting filesystem")
+    def test_rust_root_argument_preserves_os_bytes_without_decoding_panics(self):
+        with tempfile.TemporaryDirectory(prefix="matea-audit-root-") as folder:
+            root = os.fsencode(folder) + b"/\xff-root"
+            os.mkdir(root)
+            with open(root + b"/lib.rs", "wb") as file:
+                file.write(b"pub const LOCAL: u8 = 0;\n")
+            result = subprocess.run([os.fsencode(self.auditor()), root], capture_output=True,
+                                    check=True, timeout=15)
+        self.assertEqual([(r["file"], r["symbol"]) for r in map(json.loads, result.stdout.splitlines())],
+                         [("lib.rs", "LOCAL")])
+
     def test_rust_cached_file_types_preserve_depth_first_filename_order(self):
         files = {"z.rs": "Z", "a/second.rs": "SECOND", "抹茶.rs": "UNICODE",
                  "a/inner/deep.rs": "DEEP", "A.rs": "UPPER", "a/first.rs": "FIRST"}
