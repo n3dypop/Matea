@@ -4,6 +4,7 @@ mod ansi;
 mod frame;
 mod input;
 pub use input::translate_event;
+pub mod device;
 mod modes;
 mod session;
 pub use modes::{InputOptions, KeyboardFlags, KeyboardMode};
@@ -11,7 +12,8 @@ use modes::{ModeLeases, apply_mode};
 use session::{Exclusive, Session};
 pub mod protocol;
 pub use frame::FrameEncoder;
-// sigaction has no safe standard-library wrapper; this is the only unsafe module.
+// sigaction and device's native termios/console calls have narrow reviewed
+// unsafe boundaries. Ordinary runtime, mode ownership and input parsing stay safe.
 #[cfg(unix)]
 #[allow(unsafe_code)]
 mod signals_unix;

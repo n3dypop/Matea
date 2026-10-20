@@ -1,0 +1,594 @@
+//! Borrowed native terminal handles and owned, exclusive restoration.
+use crate::{EXCLUSIVE, session::Lease};
+use matea_render::Size;
+use std::{
+    fmt,
+    io::{self, Read},
+    marker::PhantomData,
+    rc::Rc,
+};
+
+#[cfg(unix)]
+#[path = "device/unix.rs"]
+#[allow(unsafe_code)]
+mod native;
+#[cfg(windows)]
+#[path = "device/windows.rs"]
+#[allow(unsafe_code)]
+mod native;
+#[cfg(not(any(unix, windows)))]
+#[path = "device/unsupported.rs"]
+mod native;
+
+/// A borrowed native handle. The caller retains its ownership and close policy.
+#[cfg(unix)]
+pub trait TerminalFile: std::os::fd::AsFd {}
+#[cfg(unix)]
+impl<T: std::os::fd::AsFd + ?Sized> TerminalFile for T {}
+#[cfg(windows)]
+pub trait TerminalFile: std::os::windows::io::AsHandle {}
+#[cfg(windows)]
+impl<T: std::os::windows::io::AsHandle + ?Sized> TerminalFile for T {}
+/// Native descriptor access is unavailable on these targets; operations return
+/// Unsupported. This does not assert source Plan 9/other-OS feature parity.
+#[cfg(not(any(unix, windows)))]
+pub trait TerminalFile {}
+#[cfg(not(any(unix, windows)))]
+impl<T: ?Sized> TerminalFile for T {}
+
+/// Query this exact handle, without taking an exclusive lease or changing it.
+pub fn is_terminal(file: &(impl TerminalFile + ?Sized)) -> bool {
+    native::Native::new(file).state().is_ok()
+}
+
+/// Read-only native state query, allowed while a Matea session owns the device.
+pub fn terminal_state(file: &(impl TerminalFile + ?Sized)) -> io::Result<TerminalState> {
+    native::Native::new(file).state().map(TerminalState)
+}
+
+/// Visible terminal dimensions. Windows requires an output-console handle;
+/// an input handle or a pipe can return an OS error rather than a guessed size.
+pub fn terminal_size(file: &(impl TerminalFile + ?Sized)) -> io::Result<Size> {
+    native::Native::new(file).size()
+}
+
+/// Opaque platform state. Kernel-maintained transient flags may change when
+/// applying it; equality with a subsequent query is deliberately not promised.
+#[derive(Clone)]
+pub struct TerminalState(native::State);
+impl fmt::Debug for TerminalState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("TerminalState(..)")
+    }
+}
+
+/// UI-local, exclusively owned mode restoration over a borrowed native handle.
+/// The device and all native cleanup are dropped before the shared lease.
+///
+/// ```compile_fail
+/// fn require_send<T: Send>() {}
+/// require_send::<matea_terminal::device::TerminalDevice<'static>>();
+/// ```
+///
+/// ```compile_fail
+/// use matea_terminal::device::TerminalDevice;
+/// let file = std::fs::File::open("terminal")?;
+/// let mut terminal = TerminalDevice::open(&file)?;
+/// drop(file); // The native handle must outlive all restoration.
+/// terminal.restore()?;
+/// # Ok::<(), std::io::Error>(())
+/// ```
+pub struct TerminalDevice<'fd> {
+    inner: Guard<native::Native<'fd>>,
+    _lease: Lease<'static>,
+    _ui_thread: PhantomData<Rc<()>>,
+}
+impl<'fd> TerminalDevice<'fd> {
+    pub fn open(file: &'fd (impl TerminalFile + ?Sized)) -> io::Result<Self> {
+        let lease = Lease::acquire(&EXCLUSIVE)?;
+        let inner = Guard::new(native::Native::new(file))?;
+        Ok(Self {
+            inner,
+            _lease: lease,
+            _ui_thread: PhantomData,
+        })
+    }
+    pub fn state(&self) -> io::Result<TerminalState> {
+        self.inner.io.state().map(TerminalState)
+    }
+    pub fn set_state(&mut self, state: &TerminalState) -> io::Result<()> {
+        self.inner.set_state(&state.0)
+    }
+    /// Return the previous state, while keeping original-state restoration owned.
+    pub fn make_raw(&mut self) -> io::Result<TerminalState> {
+        self.inner.make_raw().map(TerminalState)
+    }
+    pub fn size(&self) -> io::Result<Size> {
+        self.inner.io.size()
+    }
+    /// Restore the original state now. Failure remains retryable, including Drop.
+    pub fn restore(&mut self) -> io::Result<()> {
+        self.inner.restore()
+    }
+    /// Read one non-echo line without consuming following input. The limit counts
+    /// bytes after byte-backspace editing, not characters. Partial/error values
+    /// remain bytes; no UTF-8 replacement or renderer sanitization is performed.
+    /// This is a blocking native-device operation; use outside the running TEA
+    /// session (whose exclusive lease deliberately prevents concurrent input).
+    pub fn read_password(&mut self, maximum_bytes: usize) -> Result<Vec<u8>, PasswordError> {
+        self.inner.read_password(maximum_bytes)
+    }
+}
+impl fmt::Debug for TerminalDevice<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("TerminalDevice").finish_non_exhaustive()
+    }
+}
+
+#[derive(Debug)]
+enum Failure {
+    Io(io::Error),
+    Limit(usize),
+}
+/// Reading/limit failures retain partial bytes. A simultaneous mode-restoration
+/// failure is accessible separately. Debug and Display never include input bytes.
+pub struct PasswordError {
+    partial: Vec<u8>,
+    operation: Option<Failure>,
+    restoration: Option<io::Error>,
+}
+impl PasswordError {
+    fn io(error: io::Error) -> Self {
+        Self {
+            partial: Vec::new(),
+            operation: Some(Failure::Io(error)),
+            restoration: None,
+        }
+    }
+    pub fn partial(&self) -> &[u8] {
+        &self.partial
+    }
+    pub fn into_partial(self) -> Vec<u8> {
+        self.partial
+    }
+    pub fn io_error(&self) -> Option<&io::Error> {
+        match &self.operation {
+            Some(Failure::Io(error)) => Some(error),
+            _ => None,
+        }
+    }
+    pub fn maximum_bytes(&self) -> Option<usize> {
+        match self.operation {
+            Some(Failure::Limit(limit)) => Some(limit),
+            _ => None,
+        }
+    }
+    pub fn restoration_error(&self) -> Option<&io::Error> {
+        self.restoration.as_ref()
+    }
+}
+impl fmt::Debug for PasswordError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PasswordError")
+            .field("operation", &self.operation)
+            .field("restoration", &self.restoration)
+            .finish_non_exhaustive()
+    }
+}
+impl fmt::Display for PasswordError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match &self.operation {
+            Some(Failure::Io(error)) => write!(f, "terminal input failed: {error}")?,
+            Some(Failure::Limit(limit)) => {
+                write!(f, "terminal input exceeds the {limit}-byte limit")?
+            }
+            None => f.write_str("terminal input mode restoration failed")?,
+        }
+        if let Some(error) = &self.restoration {
+            write!(f, "; terminal restoration: {error}")?;
+        }
+        Ok(())
+    }
+}
+impl std::error::Error for PasswordError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.io_error()
+            .or(self.restoration.as_ref())
+            .map(|e| e as _)
+    }
+}
+
+#[derive(Clone, Copy)]
+enum Ending {
+    #[cfg_attr(windows, allow(dead_code))]
+    Lf,
+    #[cfg_attr(not(windows), allow(dead_code))]
+    Cr,
+}
+trait DeviceIo: Read {
+    type State: Clone;
+    fn state(&self) -> io::Result<Self::State>;
+    fn set_state(&mut self, state: &Self::State) -> io::Result<()>;
+    fn raw_state(&self, state: &Self::State) -> io::Result<Self::State>;
+    fn password_state(&self, state: &Self::State) -> io::Result<Self::State>;
+    fn ending(&self) -> Ending;
+    fn size(&self) -> io::Result<Size>;
+}
+struct Guard<D: DeviceIo> {
+    io: D,
+    original: D::State,
+    changed: bool,
+}
+impl<D: DeviceIo> Guard<D> {
+    fn new(io: D) -> io::Result<Self> {
+        let original = io.state()?;
+        Ok(Self {
+            io,
+            original,
+            changed: false,
+        })
+    }
+    fn set_state(&mut self, state: &D::State) -> io::Result<()> {
+        self.changed = true;
+        self.io.set_state(state)
+    }
+    fn make_raw(&mut self) -> io::Result<D::State> {
+        let old = self.io.state()?;
+        let raw = self.io.raw_state(&old)?;
+        self.set_state(&raw)?;
+        Ok(old)
+    }
+    fn restore(&mut self) -> io::Result<()> {
+        if self.changed {
+            self.io.set_state(&self.original)?;
+            self.changed = false;
+        }
+        Ok(())
+    }
+    fn read_password(&mut self, maximum: usize) -> Result<Vec<u8>, PasswordError> {
+        let previous = self.io.state().map_err(PasswordError::io)?;
+        let password = self
+            .io
+            .password_state(&previous)
+            .map_err(PasswordError::io)?;
+        let was_changed = self.changed;
+        self.changed = true;
+        let ending = self.io.ending();
+        let mut mode = ModeGuard {
+            io: &mut self.io,
+            previous,
+            active: true,
+        };
+        let operation = match mode.io.set_state(&password) {
+            Ok(()) => read_line(mode.io, ending, maximum),
+            Err(error) => Err(PasswordError::io(error)),
+        };
+        let restoration = mode.restore().err();
+        if restoration.is_none() {
+            self.changed = was_changed;
+        }
+        match (operation, restoration) {
+            (Ok(bytes), None) => Ok(bytes),
+            (Ok(bytes), Some(error)) => Err(PasswordError {
+                partial: bytes,
+                operation: None,
+                restoration: Some(error),
+            }),
+            (Err(mut error), restoration) => {
+                error.restoration = restoration;
+                Err(error)
+            }
+        }
+    }
+}
+impl<D: DeviceIo> Drop for Guard<D> {
+    fn drop(&mut self) {
+        let _ = self.restore();
+    }
+}
+struct ModeGuard<'a, D: DeviceIo> {
+    io: &'a mut D,
+    previous: D::State,
+    active: bool,
+}
+impl<D: DeviceIo> ModeGuard<'_, D> {
+    fn restore(&mut self) -> io::Result<()> {
+        if self.active {
+            self.io.set_state(&self.previous)?;
+            self.active = false;
+        }
+        Ok(())
+    }
+}
+impl<D: DeviceIo> Drop for ModeGuard<'_, D> {
+    fn drop(&mut self) {
+        let _ = self.restore();
+    }
+}
+
+fn read_line(
+    reader: &mut impl Read,
+    ending: Ending,
+    maximum: usize,
+) -> Result<Vec<u8>, PasswordError> {
+    let mut bytes = Vec::new();
+    let mut byte = [0];
+    loop {
+        let failure = match reader.read(&mut byte) {
+            Ok(0) if !bytes.is_empty() => return Ok(bytes),
+            Ok(0) => Failure::Io(io::ErrorKind::UnexpectedEof.into()),
+            Ok(_) => match byte[0] {
+                b'\x08' => {
+                    bytes.pop();
+                    continue;
+                }
+                b'\n' if matches!(ending, Ending::Lf) => return Ok(bytes),
+                b'\r' if matches!(ending, Ending::Cr) => return Ok(bytes),
+                b'\r' | b'\n' => continue,
+                _ if bytes.len() >= maximum => Failure::Limit(maximum),
+                value => {
+                    if bytes.try_reserve(1).is_err() {
+                        Failure::Io(io::ErrorKind::OutOfMemory.into())
+                    } else {
+                        bytes.push(value);
+                        continue;
+                    }
+                }
+            },
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
+            Err(error) => Failure::Io(error),
+        };
+        return Err(PasswordError {
+            partial: bytes,
+            operation: Some(failure),
+            restoration: None,
+        });
+    }
+}
+
+#[cfg(any(windows, test))]
+#[derive(Default)]
+struct Utf16Decoder {
+    pending: Option<u16>,
+}
+#[cfg(any(windows, test))]
+impl Utf16Decoder {
+    fn next(
+        &mut self,
+        mut next: impl FnMut() -> io::Result<Option<u16>>,
+    ) -> io::Result<Option<char>> {
+        let lead = match self.pending.take() {
+            Some(unit) => unit,
+            None => match next()? {
+                Some(unit) => unit,
+                None => return Ok(None),
+            },
+        };
+        let value = match lead {
+            0xd800..=0xdbff => match next() {
+                Ok(Some(low @ 0xdc00..=0xdfff)) => char::from_u32(
+                    0x10000 + ((u32::from(lead) - 0xd800) << 10) + u32::from(low) - 0xdc00,
+                )
+                .expect("bounded surrogate pair"),
+                Ok(unit) => {
+                    self.pending = unit;
+                    char::REPLACEMENT_CHARACTER
+                }
+                Err(error) => {
+                    self.pending = Some(lead);
+                    return Err(error);
+                }
+            },
+            0xdc00..=0xdfff => char::REPLACEMENT_CHARACTER,
+            unit => char::from_u32(u32::from(unit)).expect("non-surrogate u16"),
+        };
+        Ok(Some(value))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{cell::RefCell, collections::VecDeque, io::Cursor};
+
+    #[test]
+    fn line_bytes_endings_eof_limits_and_no_overread() {
+        let fixtures: &[(&[u8], Ending, &[u8])] = &[
+            (b"tea\nnext", Ending::Lf, b"tea"),
+            (b"a\rb\n", Ending::Lf, b"ab"),
+            (b"a\nb\rnext", Ending::Cr, b"ab"),
+            (b"\x08ab\x08c\n", Ending::Lf, b"ac"),
+            (
+                b"\xff\x00\xe8\x8c\xb6\x08\n",
+                Ending::Lf,
+                b"\xff\x00\xe8\x8c",
+            ),
+            (b"tea", Ending::Lf, b"tea"),
+            (b"\n", Ending::Lf, b""),
+        ];
+        for &(input, ending, expected) in fixtures {
+            let mut cursor = Cursor::new(input);
+            assert_eq!(read_line(&mut cursor, ending, 8).unwrap(), expected);
+            if input.ends_with(b"next") {
+                assert_eq!(&input[cursor.position() as usize..], b"next");
+            }
+        }
+        let error = read_line(&mut Cursor::new([]), Ending::Lf, 0).unwrap_err();
+        assert_eq!(
+            error.io_error().unwrap().kind(),
+            io::ErrorKind::UnexpectedEof
+        );
+        assert!(
+            read_line(&mut Cursor::new(b"\n"), Ending::Lf, 0)
+                .unwrap()
+                .is_empty()
+        );
+        let error = read_line(&mut Cursor::new(b"tea\n"), Ending::Lf, 2).unwrap_err();
+        assert_eq!(error.maximum_bytes(), Some(2));
+        assert_eq!(error.partial(), b"te");
+        assert_eq!(
+            read_line(&mut Cursor::new(b"ab\x08c\n"), Ending::Lf, 2).unwrap(),
+            b"ac"
+        );
+    }
+
+    #[test]
+    fn input_errors_keep_partial_bytes_without_debugging_them() {
+        struct Reader(u8);
+        impl Read for Reader {
+            fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+                self.0 += 1;
+                match self.0 {
+                    1 => Err(io::ErrorKind::Interrupted.into()),
+                    2 => {
+                        out[0] = b'X';
+                        Ok(1)
+                    }
+                    _ => Err(io::ErrorKind::BrokenPipe.into()),
+                }
+            }
+        }
+        let error = read_line(&mut Reader(0), Ending::Lf, 20).unwrap_err();
+        assert_eq!(error.partial(), b"X");
+        assert_eq!(error.io_error().unwrap().kind(), io::ErrorKind::BrokenPipe);
+        assert!(!format!("{error:?}").contains('X'));
+        assert!(!error.to_string().contains('X'));
+    }
+
+    struct Mock {
+        state: Rc<RefCell<(u8, Vec<u8>)>>,
+        input: Cursor<Vec<u8>>,
+        writes: usize,
+        fail: VecDeque<usize>,
+        panic_read: bool,
+    }
+    impl Read for Mock {
+        fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+            assert!(!self.panic_read, "mock read panic");
+            self.input.read(out)
+        }
+    }
+    impl DeviceIo for Mock {
+        type State = u8;
+        fn state(&self) -> io::Result<u8> {
+            Ok(self.state.borrow().0)
+        }
+        fn set_state(&mut self, value: &u8) -> io::Result<()> {
+            self.writes += 1;
+            self.state.borrow_mut().1.push(*value);
+            if self.fail.front() == Some(&self.writes) {
+                self.fail.pop_front();
+                return Err(io::ErrorKind::PermissionDenied.into());
+            }
+            self.state.borrow_mut().0 = *value;
+            Ok(())
+        }
+        fn raw_state(&self, _: &u8) -> io::Result<u8> {
+            Ok(2)
+        }
+        fn password_state(&self, _: &u8) -> io::Result<u8> {
+            Ok(3)
+        }
+        fn ending(&self) -> Ending {
+            Ending::Lf
+        }
+        fn size(&self) -> io::Result<Size> {
+            Ok(Size::new(132, 42))
+        }
+    }
+    fn mock(fail: &[usize], panic_read: bool) -> Mock {
+        Mock {
+            state: Rc::new(RefCell::new((1, Vec::new()))),
+            input: Cursor::new(b"tea\n".to_vec()),
+            writes: 0,
+            fail: fail.iter().copied().collect(),
+            panic_read,
+        }
+    }
+    #[test]
+    fn restore_is_retryable_and_password_restores_the_current_mode() {
+        let io = mock(&[2], false);
+        let state = io.state.clone();
+        let mut guard = Guard::new(io).unwrap();
+        assert_eq!(guard.make_raw().unwrap(), 1);
+        assert!(guard.restore().is_err());
+        assert!(guard.changed);
+        guard.restore().unwrap();
+        assert!(!guard.changed);
+        assert_eq!(guard.make_raw().unwrap(), 1);
+        assert_eq!(guard.read_password(8).unwrap(), b"tea");
+        assert_eq!(state.borrow().0, 2);
+        drop(guard);
+        assert_eq!(state.borrow().0, 1);
+    }
+    #[test]
+    fn password_errors_and_unwind_keep_restoration_owned() {
+        let io = mock(&[2, 3], false);
+        let state = io.state.clone();
+        let mut guard = Guard::new(io).unwrap();
+        let error = guard.read_password(8).unwrap_err();
+        assert_eq!(error.partial(), b"tea");
+        assert!(error.restoration_error().is_some());
+        assert!(guard.changed);
+        drop(guard);
+        assert_eq!(state.borrow().0, 1);
+        let io = mock(&[], true);
+        let state = io.state.clone();
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut guard = Guard::new(io).unwrap();
+            let _ = guard.read_password(8);
+        }));
+        assert!(result.is_err());
+        assert_eq!(state.borrow().0, 1);
+    }
+    #[test]
+    fn utf16_stream_matches_standard_replacement_without_losing_lookahead() {
+        let step = if cfg!(miri) { 257 } else { 1 };
+        for unit in (0..=u16::MAX).step_by(step) {
+            let input = [unit, b'\r' as u16, b'X' as u16];
+            let mut source = input.into_iter();
+            let mut decoder = Utf16Decoder::default();
+            let mut actual = Vec::new();
+            while let Some(c) = decoder.next(|| Ok(source.next())).unwrap() {
+                actual.push(c);
+            }
+            assert_eq!(
+                actual,
+                char::decode_utf16(input)
+                    .map(|v| v.unwrap_or(char::REPLACEMENT_CHARACTER))
+                    .collect::<Vec<_>>()
+            );
+        }
+        for input in [[0xd800, 0xdc00], [0xdbff, 0xdfff], [0xd83c, 0xdf75]] {
+            let mut decoder = Utf16Decoder::default();
+            let mut index = 0;
+            assert_eq!(
+                decoder
+                    .next(|| {
+                        let v = input.get(index).copied();
+                        index += 1;
+                        Ok(v)
+                    })
+                    .unwrap(),
+                char::decode_utf16(input).next().unwrap().ok()
+            );
+        }
+        let mut decoder = Utf16Decoder::default();
+        let mut calls = 0;
+        assert_eq!(
+            decoder
+                .next(|| {
+                    calls += 1;
+                    if calls == 1 {
+                        Ok(Some(0xd83c))
+                    } else {
+                        Err(io::ErrorKind::Interrupted.into())
+                    }
+                })
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::Interrupted
+        );
+        assert_eq!(decoder.next(|| Ok(Some(0xdf75))).unwrap(), Some('🍵'));
+    }
+}

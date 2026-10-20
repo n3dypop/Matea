@@ -1215,6 +1215,40 @@
       ],
       "performance": "docs/ratatui-bridge-audit.md",
       "notes": "Exact pinned source widget builders/state render into owned Matea scenes without a foreign terminal. Declaration mapping is limited to called catalog surfaces; it does not assert full module/profile coverage. Halfwidth width policy, raw diff/skip/forced-width, complete module performance and compiler export graphs remain pending. See ADR 0061 and ratatui-widget-bridge-design.md."
+    },
+    {
+      "id": "terminal/native-device",
+      "status": "partial",
+      "reference_ids": [
+        "b4d8585def9cb6d51ca3",
+        "ef5e23a0cd061355f803",
+        "2271bf263db17c55bcb2",
+        "5f939bc2695f5837c14d",
+        "0a869f66d49efa082d4c",
+        "45aabb797e04002f4801",
+        "34a7a5d57799357b9dde",
+        "5498be82dd39d6ff6b84",
+        "ba20e0ef0333f7a62339",
+        "694d31ce0e0d866117d2",
+        "4c4a5592f5ce88312044",
+        "1c94775d772b791387d8",
+        "05cf24fad428fd56b354"
+      ],
+      "implementation": [
+        "crates/matea-terminal/src/device.rs",
+        "crates/matea-terminal/src/device/unix.rs",
+        "crates/matea-terminal/src/device/windows.rs",
+        "crates/matea-terminal/src/device/unsupported.rs",
+        "crates/matea-terminal/src/session.rs"
+      ],
+      "tests": [
+        "crates/matea-terminal/src/device.rs",
+        "crates/matea-terminal/examples/device_probe.rs",
+        "scripts/test_terminal_device.py",
+        "scripts/test_acceptance_driver.py"
+      ],
+      "performance": "pending",
+      "notes": "All 13 raw declaration candidates classified in terminal-device-audit.md; private State.state and private passwordReader.Read are not independently reachable APIs. Borrowed AsFd/AsHandle+std IO/owner Drop compose source File. Unix real PTY tests pass locally, exact Windows console/three-OS qualification and matched native syscall/input distributions remain pending. Source Plan 9 and other-OS conditions are recorded and explicitly not Rust-supported parity."
     }
   ]
 }

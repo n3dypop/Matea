@@ -92,6 +92,9 @@ def collect(root):
         env.pop("MATEA_PROBE_OUTPUT_ONLY", None)
     run([sys.executable, "scripts/example_smoke.py"], "coverage-examples.log")
     run([sys.executable, "scripts/test_source_auditors.py"], "coverage-auditors.log")
+    device_probe = ROOT / "target/quality-coverage/debug/examples" / ("device_probe.exe" if sys.platform == "win32" else "device_probe")
+    run([sys.executable, "scripts/test_terminal_device.py", "--probe", str(device_probe),
+         "--destination", str(profiles / "terminal-device")], "coverage-terminal-device.log")
     if sys.platform != "win32":
         run([sys.executable, "scripts/pty_smoke.py"], "coverage-pty.log")
     probe = ROOT / "target/quality-coverage/debug" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")

@@ -11,11 +11,43 @@ import unittest
 from unittest.mock import patch
 from types import SimpleNamespace
 import test_windows_console as console_oracle
+import test_terminal_device as device_oracle
 import verify_foundation as verifier
 from measure_rust_coverage import run_coverage, collect
 
 
 class AcceptanceDriverTests(unittest.TestCase):
+    def test_device_records_and_input_failures_cannot_pass_as_success(self):
+        self.assertEqual(device_oracle.parse_line(b"raw\t132\t42\n"), ["raw", "132", "42"])
+        for raw in [b"raw\t132\t42", b"raw\t0\t42\n", b"raw\t65536\t42\n", b"raw\t1\ttrue\n",
+                    b"result\tok\te88\tnone\tfalse\n", b"result\tok\tXX\tnone\tfalse\n",
+                    b"restored\textra\n", b"unknown\n"]:
+            with self.subTest(raw=raw), self.assertRaises((AssertionError, ValueError)):
+                device_oracle.parse_line(raw)
+        fields = ["result", "limit", "7465", "2", "false"]
+        device_oracle.check_password(fields, "limit", b"te", 2)
+        for index, wrong in [(1, "ok"), (2, "746561"), (3, "none"), (4, "true")]:
+            bad = fields.copy(); bad[index] = wrong
+            with self.subTest(index=index), self.assertRaises(AssertionError):
+                device_oracle.check_password(bad, "limit", b"te", 2)
+
+    def test_device_failed_native_observation_clears_success_and_retains_attempts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory); probe=folder/"probe"; probe.write_bytes(b"fixture")
+            journal=folder/"context.json"; journal.write_text('{"status":"complete"}')
+            with patch.object(device_oracle.sys, "platform", "linux"), patch.object(device_oracle, "unix_run", side_effect=ValueError("native timeout")):
+                self.assertFalse(device_oracle.run(probe,folder))
+            first=json.loads(journal.read_bytes())
+            self.assertEqual(first["status"], "failed")
+            self.assertIn("native timeout", first["error"])
+            self.assertEqual(json.loads((folder/first["attempt"]/"context.json").read_bytes()),first)
+            with patch.object(device_oracle.sys,"platform","win32"), patch.object(device_oracle.subprocess,"CREATE_NEW_CONSOLE",16,create=True), patch.object(device_oracle.subprocess,"run",return_value=subprocess.CompletedProcess([],0,b"",b"")):
+                self.assertFalse(device_oracle.run(probe,folder))
+            second=json.loads(journal.read_bytes())
+            self.assertEqual(second["status"],"failed")
+            self.assertNotEqual(first["attempt"],second["attempt"])
+            self.assertEqual(json.loads((folder/first["attempt"]/"context.json").read_bytes()),first)
+
     def console_trace(self):
         return {"schema":1,"kind":"native-windows-console-input","read_width":60,"frames":[
             {"case":f"{glyph}/{width}/{fraction}","width":width,"ansi":"\x1b[H","expected":"#"*width}

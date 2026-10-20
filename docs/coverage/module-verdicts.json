@@ -324,9 +324,15 @@
       "reference": "charm-x-term",
       "source_group": "term",
       "status": "pending",
-      "correctness": [],
+      "correctness": [
+        "crates/matea-terminal/src/device.rs",
+        "scripts/test_terminal_device.py",
+        "docs/evidence/terminal-device/context.json"
+      ],
       "performance_cases": [],
-      "notes": "Source directory grouping; resolve public reachability/cfg and map every observable capability before parity."
+      "notes": "Borrowed device, owned retryable restoration and bounded byte password input implemented; all 13 raw candidates classified, including private and conditional declarations. macOS real PTY positives and negative cfmakeraw/barrier trials retained. Windows/native CI, performance and unsupported source-OS boundaries remain pending; no full module parity.",
+      "source_audit": "docs/terminal-device-audit.md",
+      "declarations_reviewed": 13
     },
     {
       "reference": "crossterm",

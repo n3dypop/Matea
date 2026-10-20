@@ -41,7 +41,19 @@ impl<B: Backend> Drop for Session<B> {
     }
 }
 
-struct Lease<'a>(&'a AtomicBool);
+pub(super) struct Lease<'a>(&'a AtomicBool);
+impl<'a> Lease<'a> {
+    pub(super) fn acquire(flag: &'a AtomicBool) -> io::Result<Self> {
+        flag.compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+            .map_err(|_| {
+                io::Error::new(
+                    io::ErrorKind::WouldBlock,
+                    "another Matea terminal session is already active",
+                )
+            })?;
+        Ok(Self(flag))
+    }
+}
 impl Drop for Lease<'_> {
     fn drop(&mut self) {
         self.0.store(false, Ordering::Release);
@@ -59,14 +71,7 @@ impl<'a, B> Exclusive<'a, B> {
         flag: &'a AtomicBool,
         make: impl FnOnce() -> io::Result<B>,
     ) -> io::Result<Self> {
-        flag.compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
-            .map_err(|_| {
-                io::Error::new(
-                    io::ErrorKind::WouldBlock,
-                    "another Matea terminal session is already active",
-                )
-            })?;
-        let lease = Lease(flag);
+        let lease = Lease::acquire(flag)?;
         let inner = make()?;
         Ok(Self {
             inner,

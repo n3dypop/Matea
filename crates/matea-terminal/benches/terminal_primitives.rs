@@ -23,6 +23,70 @@ use measurement::measure;
 use modes::{InputOptions, KeyboardFlags, KeyboardMode, ModeLeases};
 use std::{hint::black_box, io, io::Write};
 
+// Opt-in native syscall measurements require the controller's disposable PTY.
+// Normal all-target tests never open or mutate the caller's terminal.
+#[cfg(unix)]
+fn device_measurements() {
+    use matea_terminal::device::{TerminalDevice, is_terminal, terminal_size, terminal_state};
+    let file = io::stdin();
+    assert!(is_terminal(&file), "a disposable PTY is required");
+    let n = measurement::iterations(20000);
+    measure(
+        "device/is_terminal",
+        n,
+        || u64::from(is_terminal(black_box(&file))),
+        "true",
+        "exact borrowed terminal handle query; one native state syscall, no terminal mutation",
+    );
+    measure(
+        "device/state",
+        n,
+        || {
+            black_box(terminal_state(black_box(&file)).unwrap());
+            1
+        },
+        "captured",
+        "capture current opaque owned native state and drop it; no terminal mutation",
+    );
+    let size = terminal_size(&file).unwrap();
+    measure(
+        "device/size",
+        n,
+        || {
+            let size = terminal_size(black_box(&file)).unwrap();
+            (u64::from(size.width) << 16) | u64::from(size.height)
+        },
+        &format!("{}x{}", size.width, size.height),
+        "visible native terminal dimensions; one ioctl and checked platform projection",
+    );
+    let mut device = TerminalDevice::open(&file).unwrap();
+    measure(
+        "device/raw_restore",
+        n,
+        || {
+            let previous = device.make_raw().unwrap();
+            device.set_state(black_box(&previous)).unwrap();
+            1
+        },
+        "restored",
+        "capture current state, set raw, restore captured state; three native calls; Rust lease already owned outside samples",
+    );
+    device.restore().unwrap();
+    drop(device);
+    measure(
+        "device/owned_raw_cycle",
+        n,
+        || {
+            let mut device = TerminalDevice::open(black_box(&file)).unwrap();
+            black_box(device.make_raw().unwrap());
+            device.restore().unwrap();
+            1
+        },
+        "restored",
+        "Rust control: fresh exclusive lease and original capture, raw transition, explicit original restoration and guard/lease drop; four native calls",
+    );
+}
+
 #[derive(Default)]
 struct Sink {
     bytes: Vec<u8>,
@@ -59,6 +123,13 @@ fn command<C: Command + Copy>(id: &str, command: C, expected: &str, n: usize) {
     }
 }
 fn main() {
+    if std::env::args().any(|argument| argument == "--device-measure") {
+        #[cfg(unix)]
+        device_measurements();
+        #[cfg(not(unix))]
+        panic!("native device timing currently requires a disposable Unix PTY");
+        return;
+    }
     let n = if std::env::args().any(|a| a == "--measure") {
         measurement::iterations(20000)
     } else {

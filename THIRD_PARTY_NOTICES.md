@@ -1,5 +1,16 @@
 # Third-party implementation notices
 
+## Native terminal devices
+
+The altered Rust native-device flag transitions and byte input behavior in
+matea-terminal are informed by Charmbracelet x/term at
+4542a189d0fbeb156bb1df8730d253f2ef443c00. Its MIT notice is Copyright (c) 2023
+Charmbracelet, Inc.; the full MIT permission and disclaimer below apply to these
+adapted sections as well. The source was audited outside this repository.
+Matea adds borrowed-handle lifetimes, owned retryable restoration, explicit input
+limits/partial errors and zero-read termination. It does not expose an unchecked
+descriptor API or reproduce the source's zero-read loop.
+
 ## Terminal color gradients
 
 Matea's gradient color conversions are an altered Rust implementation informed

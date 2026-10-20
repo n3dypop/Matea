@@ -33,6 +33,7 @@ def acceptance_commands(root):
         ("style-patch-exhaustive", ["cargo", "test", "--locked", "--release", "-p", "matea-style", "--test", "patches", "every_boolean_base_and_ternary_patch", "--", "--ignored"]),
         ("docs", ["cargo", "doc", "--locked", "--workspace", "--all-features", "--no-deps"]),
         ("build-examples", ["cargo", "build", "--locked", "--workspace", "--all-features", "--examples"]),
+        ("terminal-device", [sys.executable, str(root / "scripts/test_terminal_device.py")]),
         ("reference-text-fmt", ["cargo", "fmt", "--manifest-path", "tools/reference-text/Cargo.toml", "--check"]),
         ("reference-text-clippy", ["cargo", "clippy", "--locked", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets", "--", "-D", "warnings"]),
         ("reference-text-tests", ["cargo", "test", "--locked", "--manifest-path", "tools/reference-text/Cargo.toml", "--all-targets"]),

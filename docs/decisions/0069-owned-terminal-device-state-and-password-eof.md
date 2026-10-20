@@ -37,6 +37,11 @@ portable facade. Unsupported targets return explicit errors; Linux, macOS and
 Windows are required, while source Plan 9/other OS conditions stay visible in
 the ledger and cannot be described as tested Rust targets.
 
+The initial Darwin cfmakeraw trial failed the independently computed pinned
+raw-state fixture: it also changed IGNBRK/IMAXBEL and echo-edit bits. Retain that
+negative before switching to explicit pure Rust flag edits matching the source.
+Do not assume the platform convenience function has the same observable state.
+
 The device guard and interactive backend must share the same exclusive lease.
 Reject nested ownership before changing a device. Capture the original state
 once, restore on explicit completion, error and Drop/unwind, and retain the lease
