@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source_head": "87d9b84323b739ac1189395226087692567c55ce",
+  "source_files_verified": 110,
+  "seed": 223,
+  "context_sha256": "682b5b1fde4515cae7d04e844216204aa80c605f81a8138905f326bcaf74e84a",
+  "test_counts": {
+    "style-lib.log": [
+      "5"
+    ],
+    "style-depth.log": [
+      "1"
+    ],
+    "style-gradients.log": [
+      "7"
+    ],
+    "widget-progress.log": [
+      "11"
+    ],
+    "facade-progress.log": [
+      "2"
+    ]
+  },
+  "limits": [
+    "Only named style/Progress targets execute; no exhaustive safety or other-crate-test claim.",
+    "All 144 RGBA16 gradient, 576 RGBA16 Progress frame and 65536 scalar quantization conditions execute; legacy tests may use their documented cfg(miri) subsets.",
+    "Assessment metadata and unrelated tools are excluded from this Miri compile/test scope."
+  ]
+}

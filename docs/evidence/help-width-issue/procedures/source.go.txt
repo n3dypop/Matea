@@ -1,0 +1,25 @@
+package main
+
+import (
+ "encoding/json"
+ "os"
+ "charm.land/bubbles/v2/help"
+ "charm.land/bubbles/v2/key"
+ "charm.land/lipgloss/v2"
+)
+func main() {
+ a:=key.NewBinding(key.WithKeys("a"),key.WithHelp("a","go"))
+ b:=key.NewBinding(key.WithKeys("b"),key.WithHelp("b","back"))
+ long:=key.NewBinding(key.WithKeys("l"),key.WithHelp("long","x"))
+ e:=json.NewEncoder(os.Stdout)
+ for _,tail:=range []string{"…","","..."} {
+  for width:=0;width<=16;width++ {
+   m:=help.New();m.Styles=help.Styles{};m.ShortSeparator="/";m.FullSeparator="/";m.Ellipsis=tail;m.SetWidth(width)
+   for _,full:=range []bool{false,true} {
+    var text string
+    if full {text=m.FullHelpView([][]key.Binding{{a,long},{b}})} else {text=m.ShortHelpView([]key.Binding{a,b})}
+    if err:=e.Encode(map[string]any{"width":width,"tail":tail,"full":full,"text":text,"max_width":lipgloss.Width(text)});err!=nil {panic(err)}
+   }
+  }
+ }
+}

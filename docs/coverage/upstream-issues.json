@@ -1985,8 +1985,23 @@
           "url": "https://github.com/charmbracelet/bubbles/issues/1038",
           "updated_at": "2026-09-28T08:44:17Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "fixed_pin_source_reproduced_and_existing_matea_width_regressions_confirmed",
+          "disposition": "assessed_implemented_contract",
+          "analysis": "docs/key-help-audit.md",
+          "review": {
+            "status": "complete",
+            "reference": "bubbles",
+            "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+            "reviewed_updated_at": "2026-09-28T08:44:17Z",
+            "notes": "Read the unchanged issue body and reproduce 33 nonzero-width overflow cases at the fixed pin across 102 bounded short/full/ellipsis/height conditions. Independent fitting outputs and existing fresh native all-width tests confirm Matea rejects whole items/columns before emission and fits tails. Historical reporter fork/environment is not reproduced; rich style/geometry, Unicode and physical terminal parity remain separate obligations. No new production fix or benchmark win is claimed.",
+            "evidence_sha256": {
+              "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+              "docs/evidence/help-width-issue/context.json": "41c3b4fe6a0b195ed22631e268817269bb3f063b9a34b85de75f28913b58416d",
+              "docs/evidence/help-width-issue/report.json": "00108ec73c081ced81dec200b088dab62981162ab317eb136d35773c65e5da99",
+              "docs/evidence/help-width-issue/procedures/report.py.txt": "d9ba3f3c1404da6bb1d9ef4d363e1a29db443af160a11ed15161393f0e234bc8",
+              "docs/key-help-audit.md": "4641be81716d9a367f4231cbdb5dd9792545dacf9db162ff6e7edfe078363682"
+            }
+          }
         },
         {
           "number": 1023,
@@ -3387,15 +3402,16 @@
             "reference": "bubbles",
             "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
             "reviewed_updated_at": "2022-06-02T01:13:22Z",
-            "notes": "Historical WithGradient string/Hex input limitation is addressed by explicit typed xterm-index/RGB stops. All 256 starting indices have eight pinned samples; actual terminal ANSI16 palettes require caller-resolved RGB. No claim that the old API or historical black fallback was reproduced on the v2 pin.",
-            "scope": "Bounded indexed-color gradient enhancement, not full progress/Lip Gloss color parity, historical Go API compatibility, alpha/high-depth support or a physical-terminal appearance claim. Source 0199793 passes all 256 exact fixtures on Linux, Windows and macOS.",
+            "notes": "Historical WithGradient string/Hex input limitation is addressed by explicit typed xterm-index/RGB stops. All 256 starting indices have eight pinned samples; actual terminal ANSI16 palettes require caller-resolved RGB. No claim that the old API or historical black fallback was reproduced on the v2 pin. Source/doc drift is reassessed against the current exact 256-index native fixtures and seven passing Miri gradient tests; previous review/hashes are retained in indexed-issue-refresh.json.",
+            "scope": "Bounded typed indexed-color enhancement at current native source; historical API, actual emulator palettes and complete style/public-feature parity remain separate. Current CI qualification is tracked independently.",
             "evidence_sha256": {
-              "docs/progress-audit.md": "ff7a48dd2b90626ba7a00d8e75b60c5eaa5b53484f03321824c7355409ba5f2b",
-              "docs/evidence/progress/source-review.json": "da441191697e2688de0981b3b4f253481c93c50313c17ec3ece5675300e32b78",
-              "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483",
-              "crates/matea-style/src/gradient.rs": "34ae5ae284dec93a1bbd44ea8ce3219e0057a14b514406c0631f13dca48be65f",
-              "crates/matea-style/tests/gradients.rs": "e4a597aa505d221f7354ac2bb03f4eaa708809d7cb0aa87e6f3236341786827b",
-              "crates/matea-style/tests/fixtures/indexed-gradients.tsv": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff"
+              "crates/matea-style/src/gradient.rs": "344ba7852065611381d97ccd825711eb4dbfebe019c639859a277089d98a4f71",
+              "crates/matea-style/tests/gradients.rs": "072d1af6e363d92b88ba11134e1b627edb5764c078151e9d1e35959626db0e2c",
+              "crates/matea-style/tests/fixtures/indexed-gradients.tsv": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff",
+              "docs/evidence/precise-color-inputs/indexed-issue-refresh.json": "8c2fc565b438600dbe8330ebfb09b18b4ab82657b8740f6b4ad0c2405fe6e42e",
+              "docs/evidence/precise-color-inputs/native/source-bindings.json": "d491375fc28d064e18f9b6c2b04316048044e6357fe69348b53cace91ad6392b",
+              "docs/evidence/precise-color-inputs/native/test.log": "cc6381e184a966610ea870eb915d27bed4f6220cbb04deed95b5ec4f97c0e634",
+              "docs/evidence/precise-color-inputs/miri/verification.json": "b97e8785f617d6c64f935ed6e70de4851c293540ddd63bdf25ad5643e4277de1"
             }
           }
         },

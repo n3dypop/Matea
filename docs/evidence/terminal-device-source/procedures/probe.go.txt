@@ -1,0 +1,29 @@
+package main
+import (
+ "encoding/json"
+ "errors"
+ "io"
+ "os"
+ "reflect"
+ "github.com/charmbracelet/x/term"
+)
+var _ term.File = (*os.File)(nil)
+func main() {
+ e:=json.NewEncoder(os.Stdout);emit:=func(v any){if err:=e.Encode(v);err!=nil {panic(err)}}
+ fd:=os.Stdin.Fd();initial,err:=term.GetState(fd)
+ if err!=nil {emit(map[string]any{"phase":"error","is_terminal":term.IsTerminal(fd),"error":err.Error()});return}
+ defer term.Restore(fd,initial)
+ width,height,sizeErr:=term.GetSize(fd)
+ if len(os.Args)>1 && os.Args[1]=="password" {
+  emit(map[string]any{"phase":"ready","is_terminal":term.IsTerminal(fd),"width":width,"height":height,"size_ok":sizeErr==nil})
+  value,readErr:=term.ReadPassword(fd);after,afterErr:=term.GetState(fd);message:="";if readErr!=nil {message=readErr.Error()}
+  emit(map[string]any{"phase":"result","value":value,"error":message,"eof":errors.Is(readErr,io.EOF),"restored":afterErr==nil && reflect.DeepEqual(initial,after)})
+  return
+ }
+ old,rawErr:=term.MakeRaw(fd);raw,rawGetErr:=term.GetState(fd)
+ setErr:=term.SetState(fd,initial);afterSet,afterSetErr:=term.GetState(fd)
+ restoreErr:=term.Restore(fd,old);afterRestore,afterRestoreErr:=term.GetState(fd)
+ file,fileErr:=os.Open(os.Args[0]);if fileErr!=nil {panic(fileErr)};defer file.Close()
+ _,stateErr:=term.GetState(file.Fd());_,makeErr:=term.MakeRaw(file.Fd());_,_,nonSizeErr:=term.GetSize(file.Fd());_,passErr:=term.ReadPassword(file.Fd());nonSetErr:=term.SetState(file.Fd(),initial);nonRestoreErr:=term.Restore(file.Fd(),initial)
+ emit(map[string]any{"phase":"state","is_terminal":term.IsTerminal(fd),"width":width,"height":height,"size_ok":sizeErr==nil,"raw_ok":rawErr==nil && rawGetErr==nil,"raw_changed":!reflect.DeepEqual(initial,raw),"old_equals_initial":reflect.DeepEqual(initial,old),"set_restores":setErr==nil && afterSetErr==nil && reflect.DeepEqual(initial,afterSet),"restore_restores":restoreErr==nil && afterRestoreErr==nil && reflect.DeepEqual(initial,afterRestore),"regular_is_terminal":term.IsTerminal(file.Fd()),"regular_errors":[]bool{stateErr!=nil,makeErr!=nil,nonSizeErr!=nil,passErr!=nil,nonSetErr!=nil,nonRestoreErr!=nil}})
+}

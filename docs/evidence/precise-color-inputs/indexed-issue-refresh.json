@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "status": "reassessed_complete",
+  "issue_url": "https://github.com/charmbracelet/bubbles/issues/143",
+  "issue_updated_at": "2022-06-02T01:13:22Z",
+  "body_sha256": "c28a66ed97819b0d3645d6f76ed9380895c7eeb80acc81c19e9f2aab8753b8a2",
+  "previous_review": {
+    "status": "complete",
+    "reference": "bubbles",
+    "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "reviewed_updated_at": "2022-06-02T01:13:22Z",
+    "notes": "Historical WithGradient string/Hex input limitation is addressed by explicit typed xterm-index/RGB stops. All 256 starting indices have eight pinned samples; actual terminal ANSI16 palettes require caller-resolved RGB. No claim that the old API or historical black fallback was reproduced on the v2 pin.",
+    "scope": "Bounded indexed-color gradient enhancement, not full progress/Lip Gloss color parity, historical Go API compatibility, alpha/high-depth support or a physical-terminal appearance claim. Source 0199793 passes all 256 exact fixtures on Linux, Windows and macOS.",
+    "evidence_sha256": {
+      "docs/progress-audit.md": "ff7a48dd2b90626ba7a00d8e75b60c5eaa5b53484f03321824c7355409ba5f2b",
+      "docs/evidence/progress/source-review.json": "da441191697e2688de0981b3b4f253481c93c50313c17ec3ece5675300e32b78",
+      "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483",
+      "crates/matea-style/src/gradient.rs": "34ae5ae284dec93a1bbd44ea8ce3219e0057a14b514406c0631f13dca48be65f",
+      "crates/matea-style/tests/gradients.rs": "e4a597aa505d221f7354ac2bb03f4eaa708809d7cb0aa87e6f3236341786827b",
+      "crates/matea-style/tests/fixtures/indexed-gradients.tsv": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff"
+    }
+  },
+  "stale_evidence_reassessed": [
+    "docs/progress-audit.md",
+    "crates/matea-style/src/gradient.rs",
+    "crates/matea-style/tests/gradients.rs"
+  ],
+  "current_native_evidence": "docs/evidence/precise-color-inputs/native/source-bindings.json",
+  "current_miri_evidence": "docs/evidence/precise-color-inputs/miri/verification.json",
+  "limits": [
+    "The historical string/Hex API and black fallback are not present/reproduced at the v2 pin. This is a bounded typed-indexed-stop capability assessment.",
+    "Native exact fixtures cover all 256 starting indices with eight samples each; Miri gradients retain their documented 16-index subset plus complete new RGBA16 cases.",
+    "Current CI is still in progress. Previous 0199793 three-OS proof is historical; actual terminal ANSI16 palettes require explicit local RGB resolution."
+  ]
+}

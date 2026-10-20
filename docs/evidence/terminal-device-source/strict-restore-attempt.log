@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/docs/evidence/terminal-device-source/procedures/probe.py.txt", line 29, in <module>
+    proc.wait(timeout=3);assert proc.returncode==0;record['stderr']=proc.stderr.read().decode();assert not record['stderr'];after=termios.tcgetattr(slave);record['terminal_after']=state(after);record['child_restored_terminal']=after==settings;save('running');assert record['child_restored_terminal'],name
+AssertionError: state

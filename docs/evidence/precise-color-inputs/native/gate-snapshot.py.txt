@@ -1,0 +1,21 @@
+"""Source-bound gate snapshot; derive every current count, never hand-enter it."""
+import hashlib,json,re,subprocess,sys
+from collections import Counter
+from datetime import datetime,timezone
+from pathlib import Path
+if not __debug__:raise RuntimeError('snapshot refuses -O')
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from check_quality import assess,programs,validate_native,validate_coverage
+from check_coverage import issue_needs_review
+sha=lambda b:hashlib.sha256(b).hexdigest();plan=json.load(open(root/'docs/quality-plan.json'));a=assess(plan,programs(root));native=json.load(open(root/'docs/evidence/local-validation.json'));coverage=json.load(open(root/'docs/evidence/quality/rust-execution-coverage.json'));validate_native(native,root);validate_coverage(coverage,root)
+checks={}
+for name,path in [('quality','scripts/check_quality.py'),('coverage','scripts/check_coverage.py')]:
+ command=['python3',path,'--gate'];r=subprocess.run(command,capture_output=True,text=True,check=False);assert r.returncode in [0,1] and not r.stderr,(name,r.stderr)
+ checks[name]={'command':command,'exit_code':r.returncode,'stdout':r.stdout,'stderr':r.stderr}
+assert checks['quality']['exit_code']==int(not a['all_high'])
+pins={p['name']:p for p in json.load(open(root/'docs/upstream-lock.json'))};issues=json.load(open(root/'docs/coverage/upstream-issues.json'));pending=sum(issue_needs_review(root,i,r['repository'],pins) for r in issues['repositories'] for i in r['issues'])
+stdout=checks['coverage']['stdout'];assert int(re.search(r'(\d+) issue reports',stdout).group(1))==pending
+low=len(a['below_high']);assert f'{low} assessments below 75;' in checks['quality']['stdout']
+result={'schema':1,'status':'incomplete' if low or checks['coverage']['exit_code'] else 'awaiting_explicit_owner_approval','checked_at_utc':datetime.now(timezone.utc).isoformat(),'source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_context':'Current native/LLVM execution inputs are validated before publication. Current source-ledger hashes and command stdout bind subsequent issue assessments; old CI or assessment metadata is never relabeled as a new execution.','checks':checks,'program_files':a['programs'],'review_units':a['review_units'],'below_high_axes':low,'below_high_dimensions':dict(Counter(v['dimension'] for v in a['below_high'])),'unlinked_source_declarations':int(re.search(r'; (\d+) unlinked;',stdout).group(1)),'partial_or_unmeasured_capabilities':int(re.search(r'; (\d+) partial/unmeasured capabilities',stdout).group(1)),'pending_issue_reports':pending,'stage_a':'ongoing' if low else 'all_high','stage_b':'not_started','f5':'closed','native_report_sha256':sha((root/'docs/evidence/local-validation.json').read_bytes()),'coverage_report_sha256':sha((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes()),'ledger_sha256':{str(p.relative_to(root)):sha(p.read_bytes()) for p in sorted((root/'docs/coverage').glob('*.json'))},'procedure_sha256':sha(Path(__file__).read_bytes())}
+assert result['pending_issue_reports']==int(re.search(r'(\d+) issue reports',result['checks']['coverage']['stdout']).group(1))
+(root/'docs/evidence/quality/final-gate-status.json').write_text(json.dumps(result,indent=2)+'\n');print('Gate snapshot:',low,'unmet axes;',pending,'pending issue reports')

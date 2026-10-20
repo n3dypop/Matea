@@ -211,7 +211,7 @@
       "unit": "matea-widgets/progress",
       "dimension": "reference",
       "score": 50,
-      "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
+      "reason": "All 35 pinned progress declaration candidates are linked to bounded Rust equivalents. RGB8 and canonical RGBA16/premultiplied-prefix/zero-alpha paths have executed source projections with 28 explicit ANSI-depth corrections; percentage geometry/MaxWidth/transform, hyperlink and separate whitespace-style conditions remain partial."
     },
     {
       "unit": "matea-widgets/textinput",
@@ -557,7 +557,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
@@ -573,7 +573,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/decisions/0058-resolved-cell-style-and-explicit-style-patches.md",
-        "docs/style-patches-audit.md"
+        "docs/style-patches-audit.md",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1264,15 +1265,15 @@
         },
         "reference": {
           "score": 50,
-          "reason": "All 35 pinned progress declaration candidates linked to bounded Rust equivalents; full high-depth/alpha color behavior, styles and public-API conditions still require review."
+          "reason": "All 35 pinned progress declaration candidates are linked to bounded Rust equivalents. RGB8 and canonical RGBA16/premultiplied-prefix/zero-alpha paths have executed source projections with 28 explicit ANSI-depth corrections; percentage geometry/MaxWidth/transform, hyperlink and separate whitespace-style conditions remain partial."
         },
         "performance": {
           "score": 75,
-          "reason": "Bounded implemented-module scope: six matched complete frames and six separate borrowed-cell controls plus twenty native lifecycle/scale/public-API controls. Three balanced 108-record attempts and 403 distinct-child RSS observations retain all outputs, allocations, cold calls, calibration and adverse tails. Owned colored segments reduce frame requests 6 to 5; rejected CompactString normalization is replaced by measured String storage (long-label 32-33 to 15.5-15.9 us; requests 19 to 8). Full library/manifests/lock identity supports scoped reuse when supplementary callers are added. No fresh Go ratio, arbitrary-callback optimum, transport/runtime timing or universal/cross-OS speed guarantee."
+          "reason": "Bounded implemented lifecycle/scale/public API and precise-color scope: 44 legacy workloads preserve complete outputs/returns and allocation/byte counts in two balanced attempts (176 records each). Four new complete fresh/frame operations match pinned source outputs and scope; six new API controls have literal oracles. All 428 timing records, calibration histories and 403 distinct-child RSS observations are retained. Single precise-stop construction/sample/drop falls from 90\u201395 to 39 ns; a legacy narrow-path initial +4% median and a later adversarial short-path cohort are explicitly retained. This is reviewed macOS arm64 evidence, not every source style feature, physical transport latency, all-platform timing or universal maximum speed."
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
@@ -1286,7 +1287,11 @@
         "docs/evidence/progress/lifecycle/workspace-context.json",
         "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
         "docs/evidence/progress/lifecycle/final-miri/verification.json",
-        "docs/progress-color-scope-audit.md"
+        "docs/progress-color-scope-audit.md",
+        "docs/precise-color-inputs-audit.md",
+        "docs/evidence/precise-color-inputs/performance/report.json",
+        "docs/evidence/precise-color-inputs/performance/optimized/report.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "General premultiplied/high-depth color input APIs and source PercentageStyle geometry, hyperlink and separate whitespace conditions remain pending. Source brightness-jump behavior is intentionally corrected, with explicit raw output evidence.",
@@ -1537,14 +1542,15 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1582,7 +1588,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
@@ -1591,7 +1597,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/viewport-cell-geometry.md",
-        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1797,7 +1804,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
@@ -1809,7 +1816,8 @@
         "docs/viewport-cell-geometry.md",
         "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md",
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
-        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
@@ -2149,7 +2157,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current unit sources match successful 2fdf2fe Linux/Windows/macOS native, Rust 1.88 MSRV and pinned reference-probe CI: all seven required jobs and 45 acceptance checks per OS pass. Added lifecycle/scale/public-API operations execute natively, and the new output-only acceptance log contains five independently expected projections. Existing 120 source fixtures and complete styled frame probes remain exact. Physical emulator/font/IME/SSH behavior beyond recorded native-console and source fixtures remains unverified."
+          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
         }
       },
       "evidence": [
@@ -2158,7 +2166,8 @@
         "docs/evidence/measurement-drivers/ci-source-bindings.json",
         "docs/evidence/measurement-drivers/ci-run.json",
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
-        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json"
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
       ],
       "remaining": [
         "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
@@ -2314,7 +2323,7 @@
       ]
     }
   ],
-  "plan_sha256": "b32bbd16b431dbe9a052996c4cacfbff1bb3236c3faadb7f7810121bef5303e7",
+  "plan_sha256": "e304619a68a7d1e60e2b1161e1fca1b0ca0e0631f0cc1c94e16a760e8aae4210",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -3253,7 +3262,7 @@
     },
     {
       "file": "crates/matea-style/src/gradient.rs",
-      "sha256": "34ae5ae284dec93a1bbd44ea8ce3219e0057a14b514406c0631f13dca48be65f",
+      "sha256": "344ba7852065611381d97ccd825711eb4dbfebe019c639859a277089d98a4f71",
       "units": [
         "matea-style/lib"
       ],
@@ -3265,25 +3274,25 @@
             "compiler_filename": "crates/matea-style/src/gradient.rs",
             "summary": {
               "lines": {
-                "count": 243,
-                "covered": 230,
-                "percent": 94.65020576131687
+                "count": 303,
+                "covered": 292,
+                "percent": 96.36963696369637
               },
               "functions": {
-                "count": 42,
-                "covered": 39,
-                "percent": 92.85714285714286
+                "count": 54,
+                "covered": 52,
+                "percent": 96.29629629629629
               },
               "instantiations": {
-                "count": 130,
-                "covered": 41,
-                "percent": 31.538461538461537
+                "count": 164,
+                "covered": 54,
+                "percent": 32.926829268292686
               },
               "regions": {
-                "count": 396,
-                "covered": 373,
-                "notcovered": 23,
-                "percent": 94.1919191919192
+                "count": 503,
+                "covered": 473,
+                "notcovered": 30,
+                "percent": 94.03578528827038
               },
               "branches": {
                 "count": 0,
@@ -3304,7 +3313,7 @@
     },
     {
       "file": "crates/matea-style/src/lib.rs",
-      "sha256": "4adacdba33d91c51bd7f78f7571d12862de9a74e633862dea1e9ea81fbb93fe1",
+      "sha256": "ee2747d6b07a828ee53a7946a73f7d3f4272f45a6314d92ca327046e64a141e5",
       "units": [
         "matea-style/lib"
       ],
@@ -3316,25 +3325,25 @@
             "compiler_filename": "crates/matea-style/src/lib.rs",
             "summary": {
               "lines": {
-                "count": 248,
-                "covered": 245,
-                "percent": 98.79032258064517
+                "count": 251,
+                "covered": 248,
+                "percent": 98.80478087649402
               },
               "functions": {
-                "count": 32,
-                "covered": 32,
+                "count": 33,
+                "covered": 33,
                 "percent": 100
               },
               "instantiations": {
-                "count": 112,
-                "covered": 80,
-                "percent": 71.42857142857143
+                "count": 115,
+                "covered": 81,
+                "percent": 70.43478260869566
               },
               "regions": {
-                "count": 389,
-                "covered": 386,
+                "count": 393,
+                "covered": 390,
                 "notcovered": 3,
-                "percent": 99.22879177377892
+                "percent": 99.23664122137404
               },
               "branches": {
                 "count": 0,
@@ -3355,7 +3364,7 @@
     },
     {
       "file": "crates/matea-style/tests/colors.rs",
-      "sha256": "85d67a5bb8dbdd6e82822693b2b1a2c7291b8765adea4c3045c6e4160a0edb17",
+      "sha256": "cf745f1387d0091bed6f28f5e270fc6df22fec3dcd5d2aee41de0b480ed0b968",
       "units": [
         "matea-style/integration-tests"
       ],
@@ -3367,25 +3376,25 @@
             "compiler_filename": "crates/matea-style/tests/colors.rs",
             "summary": {
               "lines": {
-                "count": 114,
-                "covered": 104,
-                "percent": 91.22807017543859
+                "count": 132,
+                "covered": 120,
+                "percent": 90.9090909090909
               },
               "functions": {
-                "count": 5,
-                "covered": 4,
-                "percent": 80
+                "count": 6,
+                "covered": 5,
+                "percent": 83.33333333333334
               },
               "instantiations": {
-                "count": 5,
-                "covered": 4,
-                "percent": 80
+                "count": 6,
+                "covered": 5,
+                "percent": 83.33333333333334
               },
               "regions": {
-                "count": 217,
-                "covered": 195,
-                "notcovered": 22,
-                "percent": 89.86175115207374
+                "count": 249,
+                "covered": 225,
+                "notcovered": 24,
+                "percent": 90.36144578313254
               },
               "branches": {
                 "count": 0,
@@ -3406,7 +3415,7 @@
     },
     {
       "file": "crates/matea-style/tests/gradients.rs",
-      "sha256": "e4a597aa505d221f7354ac2bb03f4eaa708809d7cb0aa87e6f3236341786827b",
+      "sha256": "072d1af6e363d92b88ba11134e1b627edb5764c078151e9d1e35959626db0e2c",
       "units": [
         "matea-style/integration-tests"
       ],
@@ -3418,25 +3427,25 @@
             "compiler_filename": "crates/matea-style/tests/gradients.rs",
             "summary": {
               "lines": {
-                "count": 155,
-                "covered": 151,
-                "percent": 97.41935483870968
+                "count": 218,
+                "covered": 214,
+                "percent": 98.1651376146789
               },
               "functions": {
-                "count": 11,
-                "covered": 11,
+                "count": 15,
+                "covered": 15,
                 "percent": 100
               },
               "instantiations": {
-                "count": 12,
-                "covered": 12,
+                "count": 16,
+                "covered": 16,
                 "percent": 100
               },
               "regions": {
-                "count": 375,
-                "covered": 367,
+                "count": 512,
+                "covered": 504,
                 "notcovered": 8,
-                "percent": 97.86666666666667
+                "percent": 98.4375
               },
               "branches": {
                 "count": 0,
@@ -5002,7 +5011,7 @@
     },
     {
       "file": "crates/matea-widgets/tests/progress.rs",
-      "sha256": "5b55659097f855bbb7ff4b90884518f348619baf9c5943789f0b3708d98b8968",
+      "sha256": "32c9fe4bf732a2acd80c52053ab8aa548e723983190dec92e13ba9f9f2cb1d2f",
       "units": [
         "matea-widgets/integration-tests"
       ],
@@ -5014,25 +5023,25 @@
             "compiler_filename": "crates/matea-widgets/tests/progress.rs",
             "summary": {
               "lines": {
-                "count": 355,
-                "covered": 353,
-                "percent": 99.43661971830986
+                "count": 396,
+                "covered": 394,
+                "percent": 99.4949494949495
               },
               "functions": {
-                "count": 24,
-                "covered": 24,
+                "count": 27,
+                "covered": 27,
                 "percent": 100
               },
               "instantiations": {
-                "count": 24,
-                "covered": 24,
+                "count": 27,
+                "covered": 27,
                 "percent": 100
               },
               "regions": {
-                "count": 826,
-                "covered": 824,
+                "count": 900,
+                "covered": 898,
                 "notcovered": 2,
-                "percent": 99.75786924939467
+                "percent": 99.77777777777777
               },
               "branches": {
                 "count": 0,
@@ -6574,7 +6583,7 @@
     },
     {
       "file": "scripts/measure_rust_coverage.py",
-      "sha256": "caf3fa91485e8949216c12a18a5a8f38e1164605e1a05a1bc094f4cfa95f5d56",
+      "sha256": "d0c86a714a613f33c84ee70a1482c0464a51e5fb56a6adafc4153ea3c759b001",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -6822,7 +6831,7 @@
     },
     {
       "file": "scripts/verify_foundation.py",
-      "sha256": "e770e70e57b60253c364e18e97ab4fbd2a9d65193ecbb482243ae74c312ad9ee",
+      "sha256": "20ca78635f85a807a4a99f7abe975318f630c2ada3934e2d42cc1284d7489708",
       "units": [
         "scripts/test-and-acceptance-drivers"
       ],
@@ -7066,7 +7075,7 @@
     },
     {
       "file": "tools/perf-probe/src/gradients.rs",
-      "sha256": "76c737a37c74c442ec96e86331ae64b18a27ffdc918f96c5eab0c2bbea49e321",
+      "sha256": "149ccb52c81c1d2d9f5189366f39956b7bbae72b4a4f0cfd444c620cfdcd25c5",
       "units": [
         "tools/perf-probe"
       ],
@@ -7078,25 +7087,25 @@
             "compiler_filename": "tools/perf-probe/src/gradients.rs",
             "summary": {
               "lines": {
-                "count": 69,
-                "covered": 68,
-                "percent": 98.55072463768117
+                "count": 204,
+                "covered": 201,
+                "percent": 98.52941176470588
               },
               "functions": {
-                "count": 9,
-                "covered": 9,
+                "count": 18,
+                "covered": 18,
                 "percent": 100
               },
               "instantiations": {
-                "count": 24,
-                "covered": 15,
-                "percent": 62.5
+                "count": 41,
+                "covered": 28,
+                "percent": 68.29268292682927
               },
               "regions": {
-                "count": 121,
-                "covered": 120,
-                "notcovered": 1,
-                "percent": 99.17355371900827
+                "count": 327,
+                "covered": 323,
+                "notcovered": 4,
+                "percent": 98.77675840978594
               },
               "branches": {
                 "count": 0,
@@ -7117,7 +7126,7 @@
     },
     {
       "file": "tools/perf-probe/src/main.rs",
-      "sha256": "d3a6d7d50aafb74ad26f0e1b049ba8b8f6238d8b95dab0efa5513c6d5abd18f3",
+      "sha256": "b484819c812f34576b357460ead6a534499e77051a7e7631e6cc40243aafe1b9",
       "units": [
         "tools/perf-probe"
       ],
@@ -7129,25 +7138,25 @@
             "compiler_filename": "tools/perf-probe/src/main.rs",
             "summary": {
               "lines": {
-                "count": 1625,
-                "covered": 1620,
-                "percent": 99.6923076923077
+                "count": 1630,
+                "covered": 1625,
+                "percent": 99.69325153374233
               },
               "functions": {
-                "count": 133,
-                "covered": 132,
-                "percent": 99.24812030075188
+                "count": 134,
+                "covered": 133,
+                "percent": 99.25373134328358
               },
               "instantiations": {
-                "count": 266,
-                "covered": 132,
-                "percent": 49.62406015037594
+                "count": 268,
+                "covered": 133,
+                "percent": 49.62686567164179
               },
               "regions": {
-                "count": 2600,
-                "covered": 2595,
+                "count": 2608,
+                "covered": 2603,
                 "notcovered": 5,
-                "percent": 99.8076923076923
+                "percent": 99.80828220858896
               },
               "branches": {
                 "count": 0,
@@ -7307,9 +7316,9 @@
                 "percent": 83.72093023255815
               },
               "instantiations": {
-                "count": 1123,
-                "covered": 472,
-                "percent": 42.03027604630454
+                "count": 1159,
+                "covered": 475,
+                "percent": 40.98360655737705
               },
               "regions": {
                 "count": 509,
@@ -7375,7 +7384,7 @@
     },
     {
       "file": "tools/perf-probe/src/progress.rs",
-      "sha256": "1aeec217d9644420c82d6712597b76bb4d563f8a49ed350aafc3b14dbc37ac3c",
+      "sha256": "963603f95aaf5d4df7435c25d16a931a87ca135e388daca2b2f145355214b6ee",
       "units": [
         "tools/perf-probe"
       ],

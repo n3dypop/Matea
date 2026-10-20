@@ -1,0 +1,34 @@
+"""Observe real isolated PTY states and EOF/password handling at x/term's pin."""
+import base64,fcntl,hashlib,json,os,platform,pty,select,struct,subprocess,termios,time
+from pathlib import Path
+if not __debug__:raise RuntimeError('probe refuses -O')
+root=Path.cwd();base=root/'docs/evidence/terminal-device-source';binary=Path('/private/tmp/matea-terminal-device-source/probe');records=[]
+def state(value):return [v if isinstance(v,int) else [x.hex() if isinstance(x,bytes) else x for x in v] for v in value]
+def save(status,error=None):(base/'observations.json').write_text(json.dumps({'schema':1,'status':status,'error':error,'platform':platform.platform(),'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'records':records,'limits':['Real isolated macOS PTY only; all input is finite dummy data.','EOF observation waits 250ms then sends newline to release the call. No infinite-time, Rust implementation or performance claim.']},indent=2)+'\n')
+save('running')
+def line(proc,timeout):
+ if not select.select([proc.stdout],[],[],timeout)[0]:return None
+ raw=proc.stdout.readline();assert raw,proc.poll();return json.loads(raw)
+for name,data in [('state',None),('ascii',b'tea\n'),('cr_kernel_newline',b'a\rb\n'),('utf8_backspace', '茶'.encode()+b'\b\n'),('empty_eof',b'\x04'),('partial_eof',b'tea\x04\x04')]:
+ master,slave=pty.openpty();saved=termios.tcgetattr(slave);settings=termios.tcgetattr(slave);settings[6][termios.VERASE]=b'\x7f';termios.tcsetattr(slave,termios.TCSANOW,settings);fcntl.ioctl(slave,termios.TIOCSWINSZ,struct.pack('HHHH',42,132,0,0))
+ settings=termios.tcgetattr(slave)
+ proc=subprocess.Popen([str(binary),*(['password'] if data is not None else [])],stdin=slave,stdout=subprocess.PIPE,stderr=subprocess.PIPE,bufsize=0)
+ try:
+  first=line(proc,3);assert first is not None,name
+  record={'case':name,'first':first,'terminal_before':state(settings)};records.append(record);save('running')
+  if data is not None:
+   assert first['phase']=='ready';deadline=time.monotonic()+3
+   while termios.tcgetattr(slave)[3]&termios.ECHO:
+    if time.monotonic()>deadline:raise TimeoutError('echo was not disabled')
+    time.sleep(.005)
+   os.write(master,data);result=line(proc,.25);record['completed_without_extra_input']=result is not None
+   if result is None:
+    assert name.endswith('_eof'),name
+    os.write(master,b'\n');result=line(proc,3)
+   assert result is not None and result['phase']=='result';record['result']=result;record['value_hex']=base64.b64decode(result['value'] or '').hex()
+  proc.wait(timeout=3);assert proc.returncode==0;record['stderr']=proc.stderr.read().decode();assert not record['stderr'];after=termios.tcgetattr(slave);record['terminal_after']=state(after);record['child_restored_terminal']=after==settings;before_config=list(settings);after_config=list(after);pending=getattr(termios,'PENDIN',0);before_config[3]&=~pending;after_config[3]&=~pending;record['native_pendin_bit']=pending;record['configured_terminal_restored']=before_config==after_config;save('running');assert record['configured_terminal_restored'],name
+ except BaseException as e:save('failed',str(e));raise
+ finally:
+  if proc.poll() is None:proc.kill();proc.wait(timeout=3)
+  termios.tcsetattr(slave,termios.TCSANOW,saved);os.close(master);os.close(slave)
+save('complete');print('six pinned-source real-PTY state/password observations recorded')

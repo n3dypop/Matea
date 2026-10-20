@@ -31,6 +31,21 @@ only when possible, and emits nothing at width zero. Tests cover every width fro
 zero to sixty, exact tail fit, empty/emoji tails and disabled groups. These are
 executed source observations, not maintainer-confirmed bug claims.
 
+[Bubbles #1038](https://github.com/charmbracelet/bubbles/issues/1038) was subsequently
+read and reproduced at the fixed pin: when the first item/column fits with 0–2
+cells remaining, the source may append another whole item/column beyond the
+configured width. The [102-case independent replay](evidence/help-width-issue/report.json)
+covers widths 0–16, three ellipses, short/full output and unequal column heights.
+It retains 33 nonzero-width source violations; all 102 Matea outputs match the
+separate fitting model and stay bounded. For example width 4 produces source
+`a go/b back` versus Matea `a go`; width 9 produces a source 14-cell full column
+row versus Matea's bounded first column and tail. Existing native all-width
+regressions pass without another production change. Only 33 outputs are byte
+identical: hidden zero width, exact-fit tails and padding differences stay explicit.
+This completes that reported width defect's disposition, not rich-style parity
+or the entire help module. The historical reporter environment/fork is not claimed
+reproduced, and no issue was posted or modified upstream.
+
 [Bubbles #571](https://github.com/charmbracelet/bubbles/issues/571) describes the
 unstyled literal space between key and description. The pinned short/full code
 still emits that literal outside the key/description style. Matea's separate gap

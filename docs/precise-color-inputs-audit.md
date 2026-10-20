@@ -1,9 +1,10 @@
 # Explicit terminal color depth and premultiplied stops
 
 RGBA16 style input is implemented under [ADR 0068](decisions/0068-explicit-color-depth-and-premultiplied-gradient-inputs.md).
-Current-source Miri and all-platform qualification are pending. The bounded
-Progress performance verdict is 75; six changed-unit portability verdicts remain
-50. The fully qualified f96bbcd checkpoint remains historical. This
+Current-source native/Miri and all-platform CI qualification passes. The bounded
+Progress performance and six changed-unit portability verdicts are 75. All 46
+native checks and 92-source/99-instance LLVM collection pass again after assessment metadata updates; the 941623d
+native/CI execution inputs remain archived with their original assessment values. This
 increment does not advance Stage B/F5 or implement an image engine or CUDA.
 
 ## Behavioral and Rust ownership contracts
@@ -92,9 +93,34 @@ verdict returns to 75 with these limits, while full source styles remain pending
 
 ## Remaining scope
 
+The [native binding](evidence/precise-color-inputs/native/source-bindings.json)
+verifies all 192 execution inputs at 941623d, all 46 acceptance logs, 92 LLVM
+source paths and 99 compiler instances. The native Rust suite passes 269 tests
+plus nine doctests; optimized Python passes 142 tests with two platform-dependent
+skips. The [Miri binding](evidence/precise-color-inputs/miri/verification.json)
+verifies 110 crate/source/fixture/manifest inputs and 26 tests across five targets
+at seed 223. All 144 new gradient, 576 Progress and 65,536 quantization conditions
+execute under Miri; selected legacy fixtures retain their documented subsets.
+The three LLVM warnings were independently diagnosed again as missing zero-hash
+transitive hashbrown DefaultHasher records; logs are retained without suppression.
+
+[CI 39451395348](https://github.com/n3dypop/Matea/actions/runs/39451395348)
+targets 941623d and all seven required jobs pass. The [independent binding](evidence/precise-color-inputs/ci-941623d/source-bindings.json)
+checks all 192 execution inputs, 46 checks per OS, uploaded log hashes, ten complete
+precise-color outputs per host and six literal constructor/control oracles.
+Unix coverage records 92 sources/99 instances; Windows records 91/97. Six changed
+units qualify for portability; no shared-runner timing is performance evidence.
+
+Issue #1038 now has a 102-case independent width reproduction and bounded Matea
+outputs; indexed-color issue #143 is reassessed after gradient source drift. The
+live pending issue count is 824. The prior generated snapshot printed 826 in its
+raw gate output but incorrectly copied 825 into a derived field. Its original
+snapshot is preserved; the current generator derives counts and checks agreement
+with raw output before publication. No original executed log is rewritten.
+
 The ordinary host is macOS arm64 without affinity/frequency guarantees. Native
 measurements do not establish universal maximum speed or another OS's timing.
-Miri targets and CI must bind the final source before qualification. Percentage
+CI must bind the final source before all-platform qualification. Percentage
 geometry/MaxWidth/transform, hyperlink metadata, separate whitespace styling,
 and complete module/declaration/issue coverage remain open. Progress reference
 equivalence stays 50; this increment cannot close the entire Foundation gate.
