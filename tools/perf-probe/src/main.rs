@@ -103,6 +103,10 @@ fn main() {
         gradients::costs(iterations);
         return;
     }
+    if std::env::args().any(|arg| arg == "--precise-colors") {
+        gradients::precise_costs(iterations);
+        return;
+    }
     if std::env::args().any(|arg| arg == "--attributes" || arg == "--attribute-trace") {
         attributes::costs(iterations);
         return;

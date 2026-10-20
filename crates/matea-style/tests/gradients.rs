@@ -21,6 +21,71 @@ fn expected(text: &str) -> Vec<Color> {
 }
 
 #[test]
+fn premultiplied_rgba16_matches_canonical_pinned_source_color_projections() {
+    let mut checked = 0;
+    for line in include_str!("fixtures/rgba16-gradients.tsv").lines() {
+        let f = line.split('\t').collect::<Vec<_>>();
+        let channels = f[3]
+            .split(',')
+            .map(|v| v.parse::<u16>().unwrap())
+            .collect::<Vec<_>>();
+        let mut inputs = vec![channels.try_into().unwrap()];
+        if f[2] == "0" {
+            inputs.push([65535; 4]);
+        }
+        let gradient = Gradient::from_premultiplied_rgba16(&inputs).unwrap();
+        assert_eq!(
+            gradient.colors(f[1].parse().unwrap()).collect::<Vec<_>>(),
+            expected(f[4]),
+            "{line}"
+        );
+        checked += 1;
+    }
+    assert_eq!(checked, 144);
+}
+
+#[test]
+fn precise_stop_ownership_validation_prefix_and_opaque_interpolation_are_explicit() {
+    assert_eq!(
+        Gradient::from_premultiplied_rgba16(&[]).unwrap_err(),
+        GradientError::EmptyStops
+    );
+    let mut inputs = [[32768, 8192, 16384, 32768], [65535; 4]];
+    let gradient = Gradient::from_premultiplied_rgba16(&inputs).unwrap();
+    inputs[0] = [0; 4];
+    assert_eq!(inputs[0], [0; 4]);
+    assert_eq!(gradient.color_at(0, 1), Some(Color::Rgb(128, 32, 64)));
+    assert_eq!(gradient.color_at(0, 3), Some(Color::Rgb(255, 63, 127)));
+    assert_eq!(
+        gradient.clone().colors(17).collect::<Vec<_>>(),
+        gradient.colors(17).collect::<Vec<_>>()
+    );
+    for channel in 0..3 {
+        let mut invalid = [[0; 4], [1, 1, 1, 1]];
+        invalid[1][channel] = 2;
+        assert_eq!(
+            Gradient::from_premultiplied_rgba16(&invalid).unwrap_err(),
+            GradientError::InvalidPremultipliedStop { index: 1 }
+        );
+    }
+    assert!(
+        GradientError::InvalidPremultipliedStop { index: 1 }
+            .to_string()
+            .contains("stop 1")
+    );
+    let dark =
+        Gradient::from_premultiplied_rgba16(&[[0, 0, 0, 65535], [257, 257, 257, 65535]]).unwrap();
+    assert_eq!(
+        dark.colors(3).collect::<Vec<_>>(),
+        [
+            Color::Rgb(0, 0, 0),
+            Color::Rgb(0, 0, 0),
+            Color::Rgb(1, 1, 1)
+        ]
+    );
+}
+
+#[test]
 fn pinned_lip_gloss_rgb8_samples_match_complete_fixture_outputs() {
     let mut checked = 0;
     for (number, line) in include_str!("fixtures/gradients.tsv").lines().enumerate() {

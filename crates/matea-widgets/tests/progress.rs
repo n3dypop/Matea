@@ -66,6 +66,48 @@ fn all_public_reference_view_fixtures_match_cells_and_rgb8_styles() {
 }
 
 #[test]
+fn precise_rgba16_progress_frames_match_canonical_source_projections() {
+    let mut checked = 0;
+    for line in include_str!("fixtures/rgba16-progress.tsv").lines() {
+        let f = line.split('\t').collect::<Vec<_>>();
+        let width = f[1].parse().unwrap();
+        let channels = f[5]
+            .split(',')
+            .map(|v| v.parse::<u16>().unwrap())
+            .collect::<Vec<_>>();
+        let mut p = Progress::new();
+        p.set_width(width);
+        p.show_percentage = false;
+        p.set_glyphs(if f[3] == "1" { '▌' } else { '█' }, '░')
+            .unwrap();
+        p.styles.full = Some(Style::default());
+        p.styles.empty = Some(Style::default().fg(Color::Rgb(96, 96, 96)));
+        p.fill = ProgressFill::Gradient {
+            gradient: Gradient::from_premultiplied_rgba16(&[
+                channels.try_into().unwrap(),
+                [65535; 4],
+            ])
+            .unwrap(),
+            scaled: f[4] == "1",
+        };
+        let frame = p
+            .view_as(f[2].parse().unwrap(), &theme())
+            .unwrap()
+            .render(Size::new(width, 1))
+            .unwrap();
+        let actual = frame
+            .row(0)
+            .iter()
+            .map(|c| format!("{}:{}:{}", c.symbol(), rgb(c.style().fg), rgb(c.style().bg)))
+            .collect::<Vec<_>>()
+            .join(",");
+        assert_eq!(actual, f[6], "{line}");
+        checked += 1;
+    }
+    assert_eq!(checked, 576);
+}
+
+#[test]
 fn colored_owned_scene_preserves_child_boundaries_layout_and_callback_order() {
     use matea_render::View;
     use std::{cell::RefCell, rc::Rc};

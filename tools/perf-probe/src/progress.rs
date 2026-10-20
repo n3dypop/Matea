@@ -103,7 +103,7 @@ fn feed_color(value: u64, color: Color) -> u64 {
         _ => panic!("RGB fixture"),
     }
 }
-fn checksum(surface: &Surface) -> u64 {
+pub(crate) fn checksum(surface: &Surface) -> u64 {
     let mut value = 14695981039346656037;
     for cell in surface.row(0) {
         value = feed(value, cell.symbol().as_bytes());
@@ -112,7 +112,7 @@ fn checksum(surface: &Surface) -> u64 {
     }
     value
 }
-fn rgb(color: Color) -> String {
+pub(crate) fn rgb(color: Color) -> String {
     match color {
         Color::Default => "default".into(),
         Color::Rgb(r, g, b) => format!("{r:02x}{g:02x}{b:02x}"),

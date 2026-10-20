@@ -1,4 +1,4 @@
-//! Owned RGB8 terminal gradients with allocation-free borrowed sampling.
+//! Owned precise color stops, RGB8 output and allocation-free borrowed sampling.
 // Altered Rust implementation informed by Lip Gloss blending.go (19f011f1)
 // and go-colorful v1.4.1 colors.go. See THIRD_PARTY_NOTICES.md and ADR 0045.
 use crate::Color;
@@ -11,29 +11,40 @@ pub enum GradientError {
     NonFiniteAngle,
     AreaOverflow,
     UnresolvedDefaultColor,
+    InvalidPremultipliedStop { index: usize },
 }
 impl std::fmt::Display for GradientError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(match self {
-            Self::EmptyStops => "a gradient requires at least one RGB stop",
-            Self::AllocationFailed => "cannot reserve gradient stops",
-            Self::NonFiniteAngle => "gradient angle must be finite",
-            Self::AreaOverflow => "gradient grid area is not representable",
-            Self::UnresolvedDefaultColor => "resolve default terminal colors before blending",
-        })
+        match self {
+            Self::EmptyStops => f.write_str("a gradient requires at least one RGB stop"),
+            Self::AllocationFailed => f.write_str("cannot reserve gradient stops"),
+            Self::NonFiniteAngle => f.write_str("gradient angle must be finite"),
+            Self::AreaOverflow => f.write_str("gradient grid area is not representable"),
+            Self::UnresolvedDefaultColor => {
+                f.write_str("resolve default terminal colors before blending")
+            }
+            Self::InvalidPremultipliedStop { index } => write!(
+                f,
+                "gradient stop {index} has a channel above its nonzero alpha"
+            ),
+        }
     }
 }
 impl std::error::Error for GradientError {}
 
 #[derive(Clone, Copy, Debug)]
 struct Stop {
+    /// Original premultiplied projection for prefix and single-stop paths.
+    raw: [u8; 3],
+    /// Opaque normalized endpoint for an interpolated segment.
     rgb: [u8; 3],
     lab: [f64; 3],
 }
 
-/// Immutable RGB8 stops with CIELAB coordinates computed once at construction.
+/// Immutable stops with CIELAB coordinates computed once at construction.
 /// Sampling uses the reference's segmented distribution and prefix shortcut.
-/// Output is quantized to terminal RGB8; it is not a high-depth color container.
+/// RGB8 and precise premultiplied-RGBA16 inputs produce terminal RGB8 output.
+/// This is style color math, without image processing or background compositing.
 #[derive(Clone, Debug)]
 pub struct Gradient {
     stops: Vec<Stop>,
@@ -41,6 +52,63 @@ pub struct Gradient {
 impl Gradient {
     pub fn new(stops: &[[u8; 3]]) -> Result<Self, GradientError> {
         Self::from_rgb(stops.iter().copied())
+    }
+
+    /// Own explicit premultiplied 16-bit sRGB/alpha stops. For nonzero alpha,
+    /// every RGB channel must be at most alpha. Integer unpremultiplication
+    /// precedes Lab conversion; interpolation is opaque, not composited over
+    /// an unknown terminal background.
+    ///
+    /// Prefix counts (count <= stop count) and single-stop gradients retain
+    /// original premultiplied channel projections, matching the source's
+    /// shortcut contract. Multiple-stop interpolation uses normalized opaque
+    /// endpoints. Zero alpha follows Lip Gloss's documented lost-alpha rule:
+    /// recover opaque RGB8 from the original high bytes before blending.
+    /// Unknown/default terminal colors must be resolved separately.
+    ///
+    /// ```
+    /// use matea_style::{Color, Gradient};
+    /// let gradient = Gradient::from_premultiplied_rgba16(&[
+    ///     [32768, 8192, 16384, 32768], [65535; 4],
+    /// ])?;
+    /// assert_eq!(gradient.color_at(0, 1), Some(Color::Rgb(128, 32, 64)));
+    /// assert_eq!(gradient.color_at(0, 3), Some(Color::Rgb(255, 63, 127)));
+    /// # Ok::<(), matea_style::GradientError>(())
+    /// ```
+    pub fn from_premultiplied_rgba16(stops: &[[u16; 4]]) -> Result<Self, GradientError> {
+        if stops.is_empty() {
+            return Err(GradientError::EmptyStops);
+        }
+        for (index, &[r, g, b, alpha]) in stops.iter().enumerate() {
+            if alpha != 0 && [r, g, b].iter().any(|&c| c > alpha) {
+                return Err(GradientError::InvalidPremultipliedStop { index });
+            }
+        }
+        let mut owned = Vec::new();
+        owned
+            .try_reserve_exact(stops.len())
+            .map_err(|_| GradientError::AllocationFailed)?;
+        owned.extend(stops.iter().map(|&[r, g, b, alpha]| {
+            let raw = [r, g, b].map(|c| (c >> 8) as u8);
+            if alpha == 0 {
+                Stop {
+                    raw,
+                    rgb: raw,
+                    lab: to_lab(raw),
+                }
+            } else {
+                // All operands are u16 and c <= alpha. Use a wide unsigned
+                // product and preserve the source's integer division order.
+                let normalized =
+                    [r, g, b].map(|c| (u64::from(c) * 65535 / u64::from(alpha)) as u16);
+                Stop {
+                    raw,
+                    rgb: normalized.map(|c| (c >> 8) as u8),
+                    lab: to_lab16(normalized),
+                }
+            }
+        }));
+        Ok(Self { stops: owned })
     }
 
     /// Resolve RGB and indexed stops using the canonical xterm 256-color
@@ -70,6 +138,7 @@ impl Gradient {
             .try_reserve_exact(stops.len())
             .map_err(|_| GradientError::AllocationFailed)?;
         owned.extend(stops.map(|rgb| Stop {
+            raw: rgb,
             rgb,
             lab: to_lab(rgb),
         }));
@@ -130,9 +199,9 @@ impl Gradient {
 
     fn sample(&self, index: usize, count: usize) -> Color {
         let lab = if count <= self.stops.len() {
-            return rgb_color(self.stops[index].rgb);
+            return rgb_color(self.stops[index].raw);
         } else if self.stops.len() == 1 {
-            return rgb_color(self.stops[0].rgb);
+            return rgb_color(self.stops[0].raw);
         } else {
             let segments = self.stops.len() - 1;
             let base = count / segments;
@@ -283,8 +352,14 @@ impl FusedIterator for GradientGridColors<'_> {}
 
 #[allow(clippy::excessive_precision)] // Preserve audited matrix coefficients.
 fn to_lab(rgb: [u8; 3]) -> [f64; 3] {
-    let [r, g, b] = rgb.map(|c| {
-        let v = f64::from(c) / 255.0;
+    to_lab_srgb(rgb.map(|c| f64::from(c) / 255.0))
+}
+fn to_lab16(rgb: [u16; 3]) -> [f64; 3] {
+    to_lab_srgb(rgb.map(|c| f64::from(c) / 65535.0))
+}
+#[allow(clippy::excessive_precision)] // Preserve audited matrix coefficients.
+fn to_lab_srgb(rgb: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = rgb.map(|v| {
         if v <= 0.04045 {
             v / 12.92
         } else {
@@ -335,4 +410,16 @@ fn from_lab([l, a, b]: [f64; 3]) -> [u8; 3] {
         // Match color.Color.RGBA's 16-bit rounding followed by terminal RGB8.
         (((srgb.clamp(0.0, 1.0) * 65535.0 + 0.5) as u16) >> 8) as u8
     })
+}
+
+#[cfg(test)]
+mod layout_tests {
+    use super::*;
+    #[test]
+    fn precise_inputs_keep_stop_and_terminal_color_storage_bounded() {
+        if cfg!(target_pointer_width = "64") {
+            assert_eq!(std::mem::size_of::<Stop>(), 32);
+            assert_eq!(std::mem::size_of::<Color>(), 4);
+        }
+    }
 }

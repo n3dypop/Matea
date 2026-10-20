@@ -60,6 +60,7 @@ def acceptance_commands(root):
         ("python-syntax", [sys.executable, "-m", "compileall", "-q", str(root / "scripts")]),
         ("build-color-probe", ["cargo", "build", "--locked", "--release", "-p", "matea-perf-probe"]),
         ("progress-api-tests", ["cargo", "run", "--locked", "--quiet", "--release", "-p", "matea-perf-probe", "--", "--progress-api-controls"]),
+        ("precise-color-tests", ["cargo", "run", "--locked", "--quiet", "--release", "-p", "matea-perf-probe", "--", "--precise-colors"]),
         ("ratatui-bridge-outputs", [sys.executable, str(root / "scripts/check_ratatui_bridge.py")]),
         ("color-trace", [sys.executable, str(root / "scripts/check_color_trace.py"),
                          "--probe", str(root / "target/release" / ("matea-perf-probe.exe" if sys.platform == "win32" else "matea-perf-probe")),
@@ -114,7 +115,7 @@ def run_checks(root, commands, offline=False, timeout=180):
         environment=dict(os.environ,GOCACHE=str(Path(tempfile.gettempdir())/"matea-quality-go-cache"),
                          PYTHONPYCACHEPREFIX=str(Path(tempfile.gettempdir())/"matea-quality-python-cache"))
         if name=="docs":environment["RUSTDOCFLAGS"]="-D warnings"
-        if name=="progress-api-tests":environment["MATEA_PROBE_OUTPUT_ONLY"]="1"
+        if name in {"progress-api-tests","precise-color-tests"}:environment["MATEA_PROBE_OUTPUT_ONLY"]="1"
         start=time.monotonic()
         try:
             result=subprocess.run(command,cwd=root,env=environment,text=True,encoding="utf-8",errors="replace",

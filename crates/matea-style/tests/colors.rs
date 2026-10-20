@@ -1,5 +1,27 @@
 use matea_style::{Color, ColorLevel, Style, TextAttribute, UnderlineStyle};
 
+#[test]
+fn rgb16_quantization_is_monotonic_and_every_rgb8_bucket_has_256_inputs() {
+    let mut buckets = [0u16; 256];
+    let mut previous = 0;
+    for value in 0..=u16::MAX {
+        let Color::Rgb(r, g, b) = Color::rgb16(value, value, value) else {
+            panic!("known channels must remain RGB");
+        };
+        assert_eq!((r, g), (g, b));
+        assert!(r >= previous && r - previous <= 1);
+        buckets[usize::from(r)] += 1;
+        previous = r;
+    }
+    assert_eq!(previous, 255);
+    assert_eq!(buckets, [256; 256]);
+    assert_eq!(Color::rgb16(1, 255, 256), Color::Rgb(0, 0, 1));
+    assert_eq!(Color::rgb16(257, 65534, 65535), Color::Rgb(1, 255, 255));
+    if cfg!(target_pointer_width = "64") {
+        assert_eq!(std::mem::size_of::<Color>(), 4);
+    }
+}
+
 // Independent, literal canonical xterm palette. The production implementation's
 // private palette/distance/candidate helpers are intentionally not reused.
 fn palette() -> Vec<[i32; 3]> {

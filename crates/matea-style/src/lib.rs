@@ -15,6 +15,19 @@ pub enum Color {
     Indexed(u8),
     Rgb(u8, u8, u8),
 }
+impl Color {
+    /// Quantize known 16-bit sRGB channels to terminal RGB8. Input depth is
+    /// explicit: small values are never reinterpreted as already 8-bit.
+    /// Alpha/background compositing and unknown terminal colors are separate.
+    ///
+    /// ```
+    /// use matea_style::Color;
+    /// assert_eq!(Color::rgb16(255, 256, 65535), Color::Rgb(0, 1, 255));
+    /// ```
+    pub const fn rgb16(red: u16, green: u16, blue: u16) -> Self {
+        Self::Rgb((red >> 8) as u8, (green >> 8) as u8, (blue >> 8) as u8)
+    }
+}
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum ColorLevel {
