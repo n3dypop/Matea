@@ -1,0 +1,34 @@
+"""Verify all fixed/varied output boundaries and every retained timing cohort."""
+import hashlib,json,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verifier refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs/distributions';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+c=json.loads((base/'context.json').read_bytes());assert c['status']=='complete' and c['completed_cases']==252 and c['timing_records']==252 and c['retained_intervals']==7812
+assert sha((base/'measure.py.txt').read_bytes())==c['procedure_sha256'] and sha((base/c['raw']).read_bytes())==c['raw_sha256']
+for n,h in c['archive_sha256'].items():assert sha((base/n).read_bytes())==h,n
+variants=['baseline','pairs','small','forced','short','library','source'];oracle=read_probe_outputs((base/'source-outputs.jsonl').read_text());assert len(oracle)==12
+for n in variants:assert read_probe_outputs((base/(n+'-outputs.jsonl')).read_text())==oracle
+for n,r in oracle.items():assert len(r['output'].splitlines())==(256 if '/varied_' in n else 1)
+raw=read_records((base/c['raw']).read_text());assert len(raw)==252;rows=[]
+for cohort,order in enumerate(c['orders'],1):
+ assert set(order)==set(variants)
+ for variant in order:
+  p=base/c['attempt']/f'cohort-{cohort}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes()
+  records=read_records(p.read_text());assert set(records)==set(oracle)
+  for n,r in records.items():
+   for k in ['output','first_return_value','semantics']:assert r[k]==oracle[n][k],(n,k)
+   assert len(r['samples_ns'])==31
+   key=f'cohort-{cohort}/{variant}/{n}';assert raw[key]=={**r,'case':key,'source_case':n,'cohort':cohort,'variant':variant}
+   rows.append({'cohort':cohort,'variant':variant,'case':n,**summary(r)})
+assert rows==c['summary']
+comparisons=[]
+for cohort in range(1,4):
+ for n in sorted(oracle):
+  group={r['variant']:r for r in rows if r['cohort']==cohort and r['case']==n}
+  for variant in ['pairs','small','forced','short']:
+   comparisons.append({'cohort':cohort,'case':n,'variant':variant,'candidate':group[variant],'library':group['library'],'baseline':group['baseline'],'source':group['source'],'p50_above_library':group[variant]['p50_ns']>group['library']['p50_ns'],'p95_above_library':group[variant]['p95_ns']>group['library']['p95_ns'],'p50_above_source':group[variant]['p50_ns']>group['source']['p50_ns'],'p95_above_source':group[variant]['p95_ns']>group['source']['p95_ns']})
+adverse={v:{k:sum(r[k] for r in comparisons if r['variant']==v) for k in ['p50_above_library','p95_above_library','p50_above_source','p95_above_source']} for v in ['pairs','small','forced','short']}
+result={'schema':1,'status':'complete_prototype_only','source_head':c['source_head'],'timing_records':252,'retained_intervals':7812,'groups':c['groups'],'comparisons':comparisons,'adverse_counts':adverse,'procedure_sha256':sha(Path(__file__).read_bytes()),'context_sha256':sha((base/'context.json').read_bytes()),'limits':['All 252 timing records, calibration attempts and adverse cohorts retained. Varied cases are per-256 batch distributions, not individual-operation latencies.','Matched positive-duration formatter slice only; no active-clock scheduling, cancellation, retained-memory or production adoption proof.']}
+(base/'verification.json').write_text(json.dumps(result,indent=2)+'\n');print(adverse)

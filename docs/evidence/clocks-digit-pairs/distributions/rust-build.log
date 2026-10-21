@@ -1,0 +1,51 @@
+     Locking 15 packages to highest Rust 1.99.0 compatible versions
+   Compiling matea-clocks-distributions v0.0.0 (/private/tmp/matea-clocks-distributions)
+warning: method `into_string` is never used
+  --> baseline.rs:74:12
+   |
+52 | impl ClockText {
+   | -------------- method in this implementation
+...
+74 |     pub fn into_string(self) -> String {
+   |            ^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `into_string` is never used
+  --> pairs.rs:79:12
+   |
+57 | impl ClockText {
+   | -------------- method in this implementation
+...
+79 |     pub fn into_string(self) -> String {
+   |            ^^^^^^^^^^^
+
+warning: method `into_string` is never used
+   --> small.rs:105:12
+    |
+ 83 | impl ClockText {
+    | -------------- method in this implementation
+...
+105 |     pub fn into_string(self) -> String {
+    |            ^^^^^^^^^^^
+
+warning: method `into_string` is never used
+   --> forced.rs:105:12
+    |
+ 83 | impl ClockText {
+    | -------------- method in this implementation
+...
+105 |     pub fn into_string(self) -> String {
+    |            ^^^^^^^^^^^
+
+warning: method `into_string` is never used
+   --> short.rs:101:12
+    |
+ 79 | impl ClockText {
+    | -------------- method in this implementation
+...
+101 |     pub fn into_string(self) -> String {
+    |            ^^^^^^^^^^^
+
+warning: `matea-clocks-distributions` (bin "matea-clocks-distributions") generated 5 warnings
+    Finished `release` profile [optimized] target(s) in 1.30s

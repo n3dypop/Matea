@@ -1,0 +1,6553 @@
+{
+  "schema": 1,
+  "status": "complete_prototype_only",
+  "source_head": "52b37e2f9cd54400b05a6d12578e06ff912a42ea",
+  "timing_records": 252,
+  "retained_intervals": 7812,
+  "groups": {
+    "nanos": {
+      "entries": 256,
+      "distinct": 224,
+      "input_u64_le_sha256": "408a3ffd0784578527d7f017b15f834823b00152cf887ac2d29f9e54b3b92f26"
+    },
+    "micros": {
+      "entries": 256,
+      "distinct": 256,
+      "input_u64_le_sha256": "13469abf18c3bf4c0274ef8b4fc260e1110246767864a94c5c8b24993b3dca15"
+    },
+    "millis": {
+      "entries": 256,
+      "distinct": 256,
+      "input_u64_le_sha256": "7e99c2734ab61952fa144abcbe274bf5485a7ac74516e31a767c11c5eb9a066b"
+    },
+    "seconds": {
+      "entries": 256,
+      "distinct": 256,
+      "input_u64_le_sha256": "857e14a444eeaf428571111cdaf38fedea2bd71b0f904fc1447f46a7aae4d346"
+    },
+    "hours": {
+      "entries": 256,
+      "distinct": 256,
+      "input_u64_le_sha256": "fcf28790793d8c901542c4ab4f0852d2a98822e4e88af089b941a9100ee12105"
+    },
+    "mixed_u63": {
+      "entries": 256,
+      "distinct": 256,
+      "input_u64_le_sha256": "4d6f6e57e1c707958507e06946d835cb3f16a6c57749fc90c82ca748e2604633"
+    }
+  },
+  "comparisons": [
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.68242359161377,
+        "p95_ns": 27.90224552154541,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.882211685180664,
+        "p95_ns": 27.40009593963623,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.948253631591797,
+        "p95_ns": 27.088126182556152,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.827306747436523,
+        "p95_ns": 23.17527961730957,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 24.578174591064453,
+        "p95_ns": 24.831771850585938,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.882211685180664,
+        "p95_ns": 27.40009593963623,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.948253631591797,
+        "p95_ns": 27.088126182556152,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.827306747436523,
+        "p95_ns": 23.17527961730957,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.30929660797119,
+        "p95_ns": 21.666646003723145,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.882211685180664,
+        "p95_ns": 27.40009593963623,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.948253631591797,
+        "p95_ns": 27.088126182556152,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.827306747436523,
+        "p95_ns": 23.17527961730957,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.398624420166016,
+        "p95_ns": 21.620431900024414,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.882211685180664,
+        "p95_ns": 27.40009593963623,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 26.948253631591797,
+        "p95_ns": 27.088126182556152,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.827306747436523,
+        "p95_ns": 23.17527961730957,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 35.39208507537842,
+        "p95_ns": 37.26784420013428,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.7815055847168,
+        "p95_ns": 42.23442077636719,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.78667068481445,
+        "p95_ns": 42.06450843811035,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.31442642211914,
+        "p95_ns": 34.005324363708496,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 43.56368446350098,
+        "p95_ns": 45.17380332946777,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.7815055847168,
+        "p95_ns": 42.23442077636719,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.78667068481445,
+        "p95_ns": 42.06450843811035,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.31442642211914,
+        "p95_ns": 34.005324363708496,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 38.09626865386963,
+        "p95_ns": 38.38686180114746,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.7815055847168,
+        "p95_ns": 42.23442077636719,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.78667068481445,
+        "p95_ns": 42.06450843811035,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.31442642211914,
+        "p95_ns": 34.005324363708496,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 37.85689640045166,
+        "p95_ns": 38.94356918334961,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.7815055847168,
+        "p95_ns": 42.23442077636719,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 41.78667068481445,
+        "p95_ns": 42.06450843811035,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.31442642211914,
+        "p95_ns": 34.005324363708496,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.497455596923828,
+        "p95_ns": 23.26301670074463,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.70960807800293,
+        "p95_ns": 22.99952507019043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.142131805419922,
+        "p95_ns": 22.628982543945312,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.452617168426514,
+        "p95_ns": 17.679810523986816,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.32658863067627,
+        "p95_ns": 22.753040313720703,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.70960807800293,
+        "p95_ns": 22.99952507019043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.142131805419922,
+        "p95_ns": 22.628982543945312,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.452617168426514,
+        "p95_ns": 17.679810523986816,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 21.493117332458496,
+        "p95_ns": 21.83238697052002,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.70960807800293,
+        "p95_ns": 22.99952507019043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.142131805419922,
+        "p95_ns": 22.628982543945312,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.452617168426514,
+        "p95_ns": 17.679810523986816,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.03830051422119,
+        "p95_ns": 22.414406776428223,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.70960807800293,
+        "p95_ns": 22.99952507019043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.142131805419922,
+        "p95_ns": 22.628982543945312,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.452617168426514,
+        "p95_ns": 17.679810523986816,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.30124044418335,
+        "p95_ns": 14.465769290924072,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.63538408279419,
+        "p95_ns": 14.71171760559082,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.419714450836182,
+        "p95_ns": 14.574607372283936,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.553978443145752,
+        "p95_ns": 17.341594219207764,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.848033428192139,
+        "p95_ns": 15.03350305557251,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.63538408279419,
+        "p95_ns": 14.71171760559082,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.419714450836182,
+        "p95_ns": 14.574607372283936,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.553978443145752,
+        "p95_ns": 17.341594219207764,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.115055561065674,
+        "p95_ns": 14.204621315002441,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.63538408279419,
+        "p95_ns": 14.71171760559082,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.419714450836182,
+        "p95_ns": 14.574607372283936,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.553978443145752,
+        "p95_ns": 17.341594219207764,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 13.98022985458374,
+        "p95_ns": 14.138281345367432,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.63538408279419,
+        "p95_ns": 14.71171760559082,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.419714450836182,
+        "p95_ns": 14.574607372283936,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.553978443145752,
+        "p95_ns": 17.341594219207764,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 27.744214057922363,
+        "p95_ns": 28.132518768310547,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.51641845703125,
+        "p95_ns": 30.991276741027832,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.160022735595703,
+        "p95_ns": 29.36538028717041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.222407341003418,
+        "p95_ns": 23.614168167114258,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.255675315856934,
+        "p95_ns": 31.234423637390137,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.51641845703125,
+        "p95_ns": 30.991276741027832,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.160022735595703,
+        "p95_ns": 29.36538028717041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.222407341003418,
+        "p95_ns": 23.614168167114258,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.028104782104492,
+        "p95_ns": 30.944108963012695,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.51641845703125,
+        "p95_ns": 30.991276741027832,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.160022735595703,
+        "p95_ns": 29.36538028717041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.222407341003418,
+        "p95_ns": 23.614168167114258,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.74502182006836,
+        "p95_ns": 31.10627269744873,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.51641845703125,
+        "p95_ns": 30.991276741027832,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.160022735595703,
+        "p95_ns": 29.36538028717041,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.222407341003418,
+        "p95_ns": 23.614168167114258,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.133553504943848,
+        "p95_ns": 7.886618375778198,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.1320037841796875,
+        "p95_ns": 7.74770975112915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.4974894523620605,
+        "p95_ns": 8.05074954032898,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.689563274383545,
+        "p95_ns": 12.34223461151123,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.283290147781372,
+        "p95_ns": 7.384081602096558,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.1320037841796875,
+        "p95_ns": 7.74770975112915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.4974894523620605,
+        "p95_ns": 8.05074954032898,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.689563274383545,
+        "p95_ns": 12.34223461151123,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.310390472412109,
+        "p95_ns": 7.419536590576172,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.1320037841796875,
+        "p95_ns": 7.74770975112915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.4974894523620605,
+        "p95_ns": 8.05074954032898,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.689563274383545,
+        "p95_ns": 12.34223461151123,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.30826473236084,
+        "p95_ns": 7.376392602920532,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.1320037841796875,
+        "p95_ns": 7.74770975112915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.4974894523620605,
+        "p95_ns": 8.05074954032898,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.689563274383545,
+        "p95_ns": 12.34223461151123,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8659.891845703125,
+        "p95_ns": 8906.382080078125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9734.934326171875,
+        "p95_ns": 9894.785400390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9816.0400390625,
+        "p95_ns": 10250.7734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8544.769287109375,
+        "p95_ns": 8597.697021484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 10592.28515625,
+        "p95_ns": 10761.373046875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9734.934326171875,
+        "p95_ns": 9894.785400390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9816.0400390625,
+        "p95_ns": 10250.7734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8544.769287109375,
+        "p95_ns": 8597.697021484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9088.480712890625,
+        "p95_ns": 9276.560546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9734.934326171875,
+        "p95_ns": 9894.785400390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9816.0400390625,
+        "p95_ns": 10250.7734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8544.769287109375,
+        "p95_ns": 8597.697021484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8961.68017578125,
+        "p95_ns": 9058.28857421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9734.934326171875,
+        "p95_ns": 9894.785400390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9816.0400390625,
+        "p95_ns": 10250.7734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8544.769287109375,
+        "p95_ns": 8597.697021484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_micros",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7344.29931640625,
+        "p95_ns": 7470.062255859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7236.9384765625,
+        "p95_ns": 7323.974609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7410.46142578125,
+        "p95_ns": 7463.836669921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5253.60107421875,
+        "p95_ns": 5545.206787109375,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_micros",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7413.421630859375,
+        "p95_ns": 7526.804443359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7236.9384765625,
+        "p95_ns": 7323.974609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7410.46142578125,
+        "p95_ns": 7463.836669921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5253.60107421875,
+        "p95_ns": 5545.206787109375,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_micros",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7204.833984375,
+        "p95_ns": 7504.404541015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7236.9384765625,
+        "p95_ns": 7323.974609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7410.46142578125,
+        "p95_ns": 7463.836669921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5253.60107421875,
+        "p95_ns": 5545.206787109375,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_micros",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7109.130859375,
+        "p95_ns": 7267.822265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7236.9384765625,
+        "p95_ns": 7323.974609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7410.46142578125,
+        "p95_ns": 7463.836669921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5253.60107421875,
+        "p95_ns": 5545.206787109375,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_millis",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7358.439208984375,
+        "p95_ns": 7463.46044921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7416.208984375,
+        "p95_ns": 7541.168212890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7423.471923828125,
+        "p95_ns": 7465.179443359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5733.113525390625,
+        "p95_ns": 5813.690185546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_millis",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7436.981201171875,
+        "p95_ns": 7526.1435546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7416.208984375,
+        "p95_ns": 7541.168212890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7423.471923828125,
+        "p95_ns": 7465.179443359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5733.113525390625,
+        "p95_ns": 5813.690185546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_millis",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7370.60546875,
+        "p95_ns": 7458.01806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7416.208984375,
+        "p95_ns": 7541.168212890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7423.471923828125,
+        "p95_ns": 7465.179443359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5733.113525390625,
+        "p95_ns": 5813.690185546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_millis",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7298.614501953125,
+        "p95_ns": 7511.51513671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7416.208984375,
+        "p95_ns": 7541.168212890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7423.471923828125,
+        "p95_ns": 7465.179443359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5733.113525390625,
+        "p95_ns": 5813.690185546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10231.01806640625,
+        "p95_ns": 10370.0966796875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11879.0283203125,
+        "p95_ns": 12269.79541015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11839.66064453125,
+        "p95_ns": 11922.3427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10277.64892578125,
+        "p95_ns": 10403.91064453125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11938.41552734375,
+        "p95_ns": 13034.4033203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11879.0283203125,
+        "p95_ns": 12269.79541015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11839.66064453125,
+        "p95_ns": 11922.3427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10277.64892578125,
+        "p95_ns": 10403.91064453125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10525.2685546875,
+        "p95_ns": 10660.4208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11879.0283203125,
+        "p95_ns": 12269.79541015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11839.66064453125,
+        "p95_ns": 11922.3427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10277.64892578125,
+        "p95_ns": 10403.91064453125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10658.89501953125,
+        "p95_ns": 10826.72119140625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11879.0283203125,
+        "p95_ns": 12269.79541015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11839.66064453125,
+        "p95_ns": 11922.3427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10277.64892578125,
+        "p95_ns": 10403.91064453125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4254.2979736328125,
+        "p95_ns": 4309.8348388671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4152.2064208984375,
+        "p95_ns": 4196.955322265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4256.9783935546875,
+        "p95_ns": 4296.905517578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898.223876953125,
+        "p95_ns": 4002.4464111328125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4212.031005859375,
+        "p95_ns": 4296.5291748046875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4152.2064208984375,
+        "p95_ns": 4196.955322265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4256.9783935546875,
+        "p95_ns": 4296.905517578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898.223876953125,
+        "p95_ns": 4002.4464111328125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4179.631591796875,
+        "p95_ns": 4255.035400390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4152.2064208984375,
+        "p95_ns": 4196.955322265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4256.9783935546875,
+        "p95_ns": 4296.905517578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898.223876953125,
+        "p95_ns": 4002.4464111328125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4192.9931640625,
+        "p95_ns": 4280.8634033203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4152.2064208984375,
+        "p95_ns": 4196.955322265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4256.9783935546875,
+        "p95_ns": 4296.905517578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898.223876953125,
+        "p95_ns": 4002.4464111328125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 1,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 7466.49169921875,
+        "p95_ns": 7719.71630859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8369.720458984375,
+        "p95_ns": 8508.38232421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8040.7001953125,
+        "p95_ns": 8148.38671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6594.573974609375,
+        "p95_ns": 6651.774169921875,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 1,
+        "variant": "small",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8111.2568359375,
+        "p95_ns": 8219.19775390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8369.720458984375,
+        "p95_ns": 8508.38232421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8040.7001953125,
+        "p95_ns": 8148.38671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6594.573974609375,
+        "p95_ns": 6651.774169921875,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 1,
+        "variant": "forced",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8023.162841796875,
+        "p95_ns": 8076.84326171875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8369.720458984375,
+        "p95_ns": 8508.38232421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8040.7001953125,
+        "p95_ns": 8148.38671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6594.573974609375,
+        "p95_ns": 6651.774169921875,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 1,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 1,
+        "variant": "short",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8117.401123046875,
+        "p95_ns": 8346.903564453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 1,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8369.720458984375,
+        "p95_ns": 8508.38232421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 1,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8040.7001953125,
+        "p95_ns": 8148.38671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 1,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6594.573974609375,
+        "p95_ns": 6651.774169921875,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 28.180082321166992,
+        "p95_ns": 28.365492820739746,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.085423469543457,
+        "p95_ns": 27.322093963623047,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.498324394226074,
+        "p95_ns": 27.76376438140869,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.784313201904297,
+        "p95_ns": 23.124536514282227,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 24.75245761871338,
+        "p95_ns": 25.050719261169434,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.085423469543457,
+        "p95_ns": 27.322093963623047,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.498324394226074,
+        "p95_ns": 27.76376438140869,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.784313201904297,
+        "p95_ns": 23.124536514282227,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.54119873046875,
+        "p95_ns": 21.86866569519043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.085423469543457,
+        "p95_ns": 27.322093963623047,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.498324394226074,
+        "p95_ns": 27.76376438140869,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.784313201904297,
+        "p95_ns": 23.124536514282227,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.67379856109619,
+        "p95_ns": 21.90876007080078,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.085423469543457,
+        "p95_ns": 27.322093963623047,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.498324394226074,
+        "p95_ns": 27.76376438140869,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.784313201904297,
+        "p95_ns": 23.124536514282227,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 35.87043285369873,
+        "p95_ns": 36.46516799926758,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.07865333557129,
+        "p95_ns": 42.21153259277344,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.55509376525879,
+        "p95_ns": 42.916616439819336,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.36397838592529,
+        "p95_ns": 33.57839584350586,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 43.99784469604492,
+        "p95_ns": 44.25358772277832,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.07865333557129,
+        "p95_ns": 42.21153259277344,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.55509376525879,
+        "p95_ns": 42.916616439819336,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.36397838592529,
+        "p95_ns": 33.57839584350586,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 38.46367073059082,
+        "p95_ns": 38.79014587402344,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.07865333557129,
+        "p95_ns": 42.21153259277344,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.55509376525879,
+        "p95_ns": 42.916616439819336,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.36397838592529,
+        "p95_ns": 33.57839584350586,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 38.15297222137451,
+        "p95_ns": 38.50237560272217,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.07865333557129,
+        "p95_ns": 42.21153259277344,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.55509376525879,
+        "p95_ns": 42.916616439819336,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.36397838592529,
+        "p95_ns": 33.57839584350586,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.82702922821045,
+        "p95_ns": 23.656725883483887,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.922197341918945,
+        "p95_ns": 23.60526752471924,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.66649341583252,
+        "p95_ns": 22.75550365447998,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.514050006866455,
+        "p95_ns": 17.64887571334839,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.65298366546631,
+        "p95_ns": 23.06016254425049,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.922197341918945,
+        "p95_ns": 23.60526752471924,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.66649341583252,
+        "p95_ns": 22.75550365447998,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.514050006866455,
+        "p95_ns": 17.64887571334839,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 21.78776264190674,
+        "p95_ns": 22.208571434020996,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.922197341918945,
+        "p95_ns": 23.60526752471924,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.66649341583252,
+        "p95_ns": 22.75550365447998,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.514050006866455,
+        "p95_ns": 17.64887571334839,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.08224868774414,
+        "p95_ns": 22.23332691192627,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.922197341918945,
+        "p95_ns": 23.60526752471924,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.66649341583252,
+        "p95_ns": 22.75550365447998,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.514050006866455,
+        "p95_ns": 17.64887571334839,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.363110065460205,
+        "p95_ns": 14.428019523620605,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.72240686416626,
+        "p95_ns": 14.917333602905273,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.692723751068115,
+        "p95_ns": 14.925181865692139,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.73072576522827,
+        "p95_ns": 17.99297332763672,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.997383117675781,
+        "p95_ns": 15.367467880249023,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.72240686416626,
+        "p95_ns": 14.917333602905273,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.692723751068115,
+        "p95_ns": 14.925181865692139,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.73072576522827,
+        "p95_ns": 17.99297332763672,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.255086421966553,
+        "p95_ns": 14.351765632629395,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.72240686416626,
+        "p95_ns": 14.917333602905273,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.692723751068115,
+        "p95_ns": 14.925181865692139,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.73072576522827,
+        "p95_ns": 17.99297332763672,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.062066555023193,
+        "p95_ns": 14.487465381622314,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.72240686416626,
+        "p95_ns": 14.917333602905273,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.692723751068115,
+        "p95_ns": 14.925181865692139,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.73072576522827,
+        "p95_ns": 17.99297332763672,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 28.19951343536377,
+        "p95_ns": 28.779149055480957,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61544132232666,
+        "p95_ns": 30.030409812927246,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.750267028808594,
+        "p95_ns": 30.34623432159424,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.110231399536133,
+        "p95_ns": 23.364583015441895,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.7125244140625,
+        "p95_ns": 31.457980155944824,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61544132232666,
+        "p95_ns": 30.030409812927246,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.750267028808594,
+        "p95_ns": 30.34623432159424,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.110231399536133,
+        "p95_ns": 23.364583015441895,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.30693531036377,
+        "p95_ns": 31.436443328857422,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61544132232666,
+        "p95_ns": 30.030409812927246,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.750267028808594,
+        "p95_ns": 30.34623432159424,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.110231399536133,
+        "p95_ns": 23.364583015441895,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.827038764953613,
+        "p95_ns": 30.812899589538574,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61544132232666,
+        "p95_ns": 30.030409812927246,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.750267028808594,
+        "p95_ns": 30.34623432159424,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.110231399536133,
+        "p95_ns": 23.364583015441895,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.209012746810913,
+        "p95_ns": 7.824361324310303,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.127732038497925,
+        "p95_ns": 7.538348436355591,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.406651973724365,
+        "p95_ns": 7.805119037628174,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.616230010986328,
+        "p95_ns": 12.036959171295166,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.338851690292358,
+        "p95_ns": 7.41418194770813,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.127732038497925,
+        "p95_ns": 7.538348436355591,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.406651973724365,
+        "p95_ns": 7.805119037628174,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.616230010986328,
+        "p95_ns": 12.036959171295166,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.366379261016846,
+        "p95_ns": 7.437765598297119,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.127732038497925,
+        "p95_ns": 7.538348436355591,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.406651973724365,
+        "p95_ns": 7.805119037628174,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.616230010986328,
+        "p95_ns": 12.036959171295166,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.358173608779907,
+        "p95_ns": 7.381150960922241,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.127732038497925,
+        "p95_ns": 7.538348436355591,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.406651973724365,
+        "p95_ns": 7.805119037628174,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.616230010986328,
+        "p95_ns": 12.036959171295166,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8740.102294921875,
+        "p95_ns": 8784.535888671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9807.6171875,
+        "p95_ns": 9925.39453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9984.029296875,
+        "p95_ns": 10035.5224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8559.783935546875,
+        "p95_ns": 8884.56201171875,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 10752.8486328125,
+        "p95_ns": 10964.7216796875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9807.6171875,
+        "p95_ns": 9925.39453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9984.029296875,
+        "p95_ns": 10035.5224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8559.783935546875,
+        "p95_ns": 8884.56201171875,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9137.2578125,
+        "p95_ns": 9294.189453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9807.6171875,
+        "p95_ns": 9925.39453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9984.029296875,
+        "p95_ns": 10035.5224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8559.783935546875,
+        "p95_ns": 8884.56201171875,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9040.934326171875,
+        "p95_ns": 9063.375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9807.6171875,
+        "p95_ns": 9925.39453125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9984.029296875,
+        "p95_ns": 10035.5224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8559.783935546875,
+        "p95_ns": 8884.56201171875,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_micros",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7453.369140625,
+        "p95_ns": 8736.338134765625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.26171875,
+        "p95_ns": 7362.040283203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7514.24169921875,
+        "p95_ns": 7635.79296875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5261.820556640625,
+        "p95_ns": 5329.640869140625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_micros",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7473.032470703125,
+        "p95_ns": 7711.323974609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.26171875,
+        "p95_ns": 7362.040283203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7514.24169921875,
+        "p95_ns": 7635.79296875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5261.820556640625,
+        "p95_ns": 5329.640869140625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_micros",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7272.05419921875,
+        "p95_ns": 7320.3125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.26171875,
+        "p95_ns": 7362.040283203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7514.24169921875,
+        "p95_ns": 7635.79296875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5261.820556640625,
+        "p95_ns": 5329.640869140625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_micros",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7171.5595703125,
+        "p95_ns": 7270.6806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.26171875,
+        "p95_ns": 7362.040283203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7514.24169921875,
+        "p95_ns": 7635.79296875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5261.820556640625,
+        "p95_ns": 5329.640869140625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_millis",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7465.403076171875,
+        "p95_ns": 7521.464111328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7431.060791015625,
+        "p95_ns": 7540.48681640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7567.413330078125,
+        "p95_ns": 7728.708984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5753.621337890625,
+        "p95_ns": 5840.46435546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_millis",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7521.30126953125,
+        "p95_ns": 7577.606201171875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7431.060791015625,
+        "p95_ns": 7540.48681640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7567.413330078125,
+        "p95_ns": 7728.708984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5753.621337890625,
+        "p95_ns": 5840.46435546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_millis",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7481.93359375,
+        "p95_ns": 18777.445556640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7431.060791015625,
+        "p95_ns": 7540.48681640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7567.413330078125,
+        "p95_ns": 7728.708984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5753.621337890625,
+        "p95_ns": 5840.46435546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_millis",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7438.700439453125,
+        "p95_ns": 7581.807373046875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7431.060791015625,
+        "p95_ns": 7540.48681640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7567.413330078125,
+        "p95_ns": 7728.708984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5753.621337890625,
+        "p95_ns": 5840.46435546875,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10402.30322265625,
+        "p95_ns": 10497.74169921875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11829.52880859375,
+        "p95_ns": 11905.92431640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12020.83349609375,
+        "p95_ns": 12115.9462890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10398.11181640625,
+        "p95_ns": 10593.68896484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12047.68896484375,
+        "p95_ns": 12179.6875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11829.52880859375,
+        "p95_ns": 11905.92431640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12020.83349609375,
+        "p95_ns": 12115.9462890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10398.11181640625,
+        "p95_ns": 10593.68896484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10667.236328125,
+        "p95_ns": 10775.45166015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11829.52880859375,
+        "p95_ns": 11905.92431640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12020.83349609375,
+        "p95_ns": 12115.9462890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10398.11181640625,
+        "p95_ns": 10593.68896484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10723.6328125,
+        "p95_ns": 10771.4033203125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11829.52880859375,
+        "p95_ns": 11905.92431640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12020.83349609375,
+        "p95_ns": 12115.9462890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10398.11181640625,
+        "p95_ns": 10593.68896484375,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4307.7138671875,
+        "p95_ns": 4343.292236328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4185.33837890625,
+        "p95_ns": 4224.299072265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4332.8907470703125,
+        "p95_ns": 4342.193603515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898,
+        "p95_ns": 3914.58642578125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4279.8970947265625,
+        "p95_ns": 4335.3475341796875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4185.33837890625,
+        "p95_ns": 4224.299072265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4332.8907470703125,
+        "p95_ns": 4342.193603515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898,
+        "p95_ns": 3914.58642578125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4227.508544921875,
+        "p95_ns": 4757.6090087890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4185.33837890625,
+        "p95_ns": 4224.299072265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4332.8907470703125,
+        "p95_ns": 4342.193603515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898,
+        "p95_ns": 3914.58642578125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4218.0989990234375,
+        "p95_ns": 4324.81884765625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4185.33837890625,
+        "p95_ns": 4224.299072265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4332.8907470703125,
+        "p95_ns": 4342.193603515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3898,
+        "p95_ns": 3914.58642578125,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 2,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 7593.424560546875,
+        "p95_ns": 7665.63916015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8415.374755859375,
+        "p95_ns": 8563.8427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8186.920166015625,
+        "p95_ns": 8288.564208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6575.846435546875,
+        "p95_ns": 6607.28955078125,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 2,
+        "variant": "small",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8228.33251953125,
+        "p95_ns": 8275.777099609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8415.374755859375,
+        "p95_ns": 8563.8427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8186.920166015625,
+        "p95_ns": 8288.564208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6575.846435546875,
+        "p95_ns": 6607.28955078125,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 2,
+        "variant": "forced",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8099.507568359375,
+        "p95_ns": 8135.48779296875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8415.374755859375,
+        "p95_ns": 8563.8427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8186.920166015625,
+        "p95_ns": 8288.564208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6575.846435546875,
+        "p95_ns": 6607.28955078125,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 2,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 2,
+        "variant": "short",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8201.812744140625,
+        "p95_ns": 8258.8603515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 2,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8415.374755859375,
+        "p95_ns": 8563.8427734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 2,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8186.920166015625,
+        "p95_ns": 8288.564208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 2,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6575.846435546875,
+        "p95_ns": 6607.28955078125,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 28.275132179260254,
+        "p95_ns": 42.85736846923828,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.201096534729004,
+        "p95_ns": 27.755538940429688,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.47992706298828,
+        "p95_ns": 27.777990341186523,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.804537773132324,
+        "p95_ns": 23.30958843231201,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 24.79271125793457,
+        "p95_ns": 25.000770568847656,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.201096534729004,
+        "p95_ns": 27.755538940429688,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.47992706298828,
+        "p95_ns": 27.777990341186523,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.804537773132324,
+        "p95_ns": 23.30958843231201,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.479567527770996,
+        "p95_ns": 21.666288375854492,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.201096534729004,
+        "p95_ns": 27.755538940429688,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.47992706298828,
+        "p95_ns": 27.777990341186523,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.804537773132324,
+        "p95_ns": 23.30958843231201,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 21.658738136291504,
+        "p95_ns": 21.835923194885254,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.201096534729004,
+        "p95_ns": 27.755538940429688,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 27.47992706298828,
+        "p95_ns": 27.777990341186523,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_hours",
+        "p50_ns": 22.804537773132324,
+        "p95_ns": 23.30958843231201,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 35.97839641571045,
+        "p95_ns": 36.91085147857666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.19826126098633,
+        "p95_ns": 42.35267639160156,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.71364212036133,
+        "p95_ns": 42.95802116394043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.42592716217041,
+        "p95_ns": 33.70006847381592,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 44.181108474731445,
+        "p95_ns": 44.63871192932129,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.19826126098633,
+        "p95_ns": 42.35267639160156,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.71364212036133,
+        "p95_ns": 42.95802116394043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.42592716217041,
+        "p95_ns": 33.70006847381592,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 38.633506774902344,
+        "p95_ns": 38.9748420715332,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.19826126098633,
+        "p95_ns": 42.35267639160156,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.71364212036133,
+        "p95_ns": 42.95802116394043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.42592716217041,
+        "p95_ns": 33.70006847381592,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_maximum_go",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 38.074652671813965,
+        "p95_ns": 38.43343257904053,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.19826126098633,
+        "p95_ns": 42.35267639160156,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 42.71364212036133,
+        "p95_ns": 42.95802116394043,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_maximum_go",
+        "p50_ns": 33.42592716217041,
+        "p95_ns": 33.70006847381592,
+        "allocations": 1,
+        "allocated_bytes": 24
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.81033992767334,
+        "p95_ns": 23.231188774108887,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.90821075439453,
+        "p95_ns": 23.288846015930176,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.64237403869629,
+        "p95_ns": 43.657501220703125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.559548377990723,
+        "p95_ns": 17.682055473327637,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.55856990814209,
+        "p95_ns": 22.86867332458496,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.90821075439453,
+        "p95_ns": 23.288846015930176,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.64237403869629,
+        "p95_ns": 43.657501220703125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.559548377990723,
+        "p95_ns": 17.682055473327637,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 21.83349895477295,
+        "p95_ns": 22.056221961975098,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.90821075439453,
+        "p95_ns": 23.288846015930176,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.64237403869629,
+        "p95_ns": 43.657501220703125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.559548377990723,
+        "p95_ns": 17.682055473327637,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_microseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.142410278320312,
+        "p95_ns": 22.28395175933838,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.90821075439453,
+        "p95_ns": 23.288846015930176,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 22.64237403869629,
+        "p95_ns": 43.657501220703125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_microseconds",
+        "p50_ns": 17.559548377990723,
+        "p95_ns": 17.682055473327637,
+        "allocations": 1,
+        "allocated_bytes": 8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.390250205993652,
+        "p95_ns": 14.518062114715576,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.714221000671387,
+        "p95_ns": 14.79812479019165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.70587682723999,
+        "p95_ns": 14.87809419631958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.71967887878418,
+        "p95_ns": 17.258266925811768,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 15.02533769607544,
+        "p95_ns": 15.162110328674316,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.714221000671387,
+        "p95_ns": 14.79812479019165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.70587682723999,
+        "p95_ns": 14.87809419631958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.71967887878418,
+        "p95_ns": 17.258266925811768,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.31657886505127,
+        "p95_ns": 14.612635135650635,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.714221000671387,
+        "p95_ns": 14.79812479019165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.70587682723999,
+        "p95_ns": 14.87809419631958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.71967887878418,
+        "p95_ns": 17.258266925811768,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_nanoseconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.25991439819336,
+        "p95_ns": 17.094016075134277,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.714221000671387,
+        "p95_ns": 14.79812479019165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 14.70587682723999,
+        "p95_ns": 14.87809419631958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_nanoseconds",
+        "p50_ns": 16.71967887878418,
+        "p95_ns": 17.258266925811768,
+        "allocations": 1,
+        "allocated_bytes": 4.8
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 28.197407722473145,
+        "p95_ns": 28.45366859436035,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.771248817443848,
+        "p95_ns": 32.07000160217285,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61603832244873,
+        "p95_ns": 77.0229902267456,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.44989776611328,
+        "p95_ns": 23.94696044921875,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.60487937927246,
+        "p95_ns": 32.25100040435791,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.771248817443848,
+        "p95_ns": 32.07000160217285,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61603832244873,
+        "p95_ns": 77.0229902267456,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.44989776611328,
+        "p95_ns": 23.94696044921875,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.912034034729004,
+        "p95_ns": 31.2061710357666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.771248817443848,
+        "p95_ns": 32.07000160217285,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61603832244873,
+        "p95_ns": 77.0229902267456,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.44989776611328,
+        "p95_ns": 23.94696044921875,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 30.255436897277832,
+        "p95_ns": 31.390905380249023,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.771248817443848,
+        "p95_ns": 32.07000160217285,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 29.61603832244873,
+        "p95_ns": 77.0229902267456,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_seconds",
+        "p50_ns": 23.44989776611328,
+        "p95_ns": 23.94696044921875,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.2437427043914795,
+        "p95_ns": 7.860779762268066,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.850140333175659,
+        "p95_ns": 8.214036703109741,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.2376627922058105,
+        "p95_ns": 8.136669635772705,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.647403240203857,
+        "p95_ns": 11.736889839172363,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.351259469985962,
+        "p95_ns": 7.386118173599243,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.850140333175659,
+        "p95_ns": 8.214036703109741,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.2376627922058105,
+        "p95_ns": 8.136669635772705,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.647403240203857,
+        "p95_ns": 11.736889839172363,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.3562164306640625,
+        "p95_ns": 7.632265329360962,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.850140333175659,
+        "p95_ns": 8.214036703109741,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.2376627922058105,
+        "p95_ns": 8.136669635772705,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.647403240203857,
+        "p95_ns": 11.736889839172363,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/fixed_zero",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.584244012832642,
+        "p95_ns": 8.027851581573486,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.850140333175659,
+        "p95_ns": 8.214036703109741,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 7.2376627922058105,
+        "p95_ns": 8.136669635772705,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/fixed_zero",
+        "p50_ns": 11.647403240203857,
+        "p95_ns": 11.736889839172363,
+        "allocations": 1,
+        "allocated_bytes": 3.2
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": false,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_hours",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8786.346435546875,
+        "p95_ns": 9550.384521484375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9825.947998046875,
+        "p95_ns": 9878.122802734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9968.15966796875,
+        "p95_ns": 10037.353515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8613.444091796875,
+        "p95_ns": 8870.930908203125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_hours",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 10734.15087890625,
+        "p95_ns": 10857.36083984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9825.947998046875,
+        "p95_ns": 9878.122802734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9968.15966796875,
+        "p95_ns": 10037.353515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8613.444091796875,
+        "p95_ns": 8870.930908203125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_hours",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9136.322021484375,
+        "p95_ns": 9187.9375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9825.947998046875,
+        "p95_ns": 9878.122802734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9968.15966796875,
+        "p95_ns": 10037.353515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8613.444091796875,
+        "p95_ns": 8870.930908203125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_hours",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9087.14794921875,
+        "p95_ns": 9129.313232421875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9825.947998046875,
+        "p95_ns": 9878.122802734375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 9968.15966796875,
+        "p95_ns": 10037.353515625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_hours",
+        "p50_ns": 8613.444091796875,
+        "p95_ns": 8870.930908203125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_micros",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7473.59228515625,
+        "p95_ns": 7520.965576171875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.953369140625,
+        "p95_ns": 11283.9560546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7531.8603515625,
+        "p95_ns": 7591.29833984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5305.48095703125,
+        "p95_ns": 5419.44384765625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_micros",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7479.299072265625,
+        "p95_ns": 7519.775390625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.953369140625,
+        "p95_ns": 11283.9560546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7531.8603515625,
+        "p95_ns": 7591.29833984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5305.48095703125,
+        "p95_ns": 5419.44384765625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_micros",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7286.844970703125,
+        "p95_ns": 7476.064208984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.953369140625,
+        "p95_ns": 11283.9560546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7531.8603515625,
+        "p95_ns": 7591.29833984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5305.48095703125,
+        "p95_ns": 5419.44384765625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_micros",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7253.275634765625,
+        "p95_ns": 8529.449462890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7320.953369140625,
+        "p95_ns": 11283.9560546875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 7531.8603515625,
+        "p95_ns": 7591.29833984375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_micros",
+        "p50_ns": 5305.48095703125,
+        "p95_ns": 5419.44384765625,
+        "allocations": 256,
+        "allocated_bytes": 4048
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_millis",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7474.55859375,
+        "p95_ns": 7516.632080078125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7478.007080078125,
+        "p95_ns": 7501.56640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7568.989990234375,
+        "p95_ns": 7628.814697265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5763.285400390625,
+        "p95_ns": 5857.859130859375,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_millis",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7543.20263671875,
+        "p95_ns": 7701.47705078125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7478.007080078125,
+        "p95_ns": 7501.56640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7568.989990234375,
+        "p95_ns": 7628.814697265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5763.285400390625,
+        "p95_ns": 5857.859130859375,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_millis",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7457.03125,
+        "p95_ns": 7614.369873046875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7478.007080078125,
+        "p95_ns": 7501.56640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7568.989990234375,
+        "p95_ns": 7628.814697265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5763.285400390625,
+        "p95_ns": 5857.859130859375,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_millis",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7430.389404296875,
+        "p95_ns": 7530.507568359375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7478.007080078125,
+        "p95_ns": 7501.56640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 7568.989990234375,
+        "p95_ns": 7628.814697265625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_millis",
+        "p50_ns": 5763.285400390625,
+        "p95_ns": 5857.859130859375,
+        "allocations": 256,
+        "allocated_bytes": 4088
+      },
+      "p50_above_library": false,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10616.0888671875,
+        "p95_ns": 11984.0087890625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11862.24365234375,
+        "p95_ns": 12216.61376953125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12059.7333984375,
+        "p95_ns": 12394.0224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10510.2744140625,
+        "p95_ns": 11056.74267578125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12041.259765625,
+        "p95_ns": 12117.431640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11862.24365234375,
+        "p95_ns": 12216.61376953125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12059.7333984375,
+        "p95_ns": 12394.0224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10510.2744140625,
+        "p95_ns": 11056.74267578125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": true,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10671.18359375,
+        "p95_ns": 10752.88916015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11862.24365234375,
+        "p95_ns": 12216.61376953125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12059.7333984375,
+        "p95_ns": 12394.0224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10510.2744140625,
+        "p95_ns": 11056.74267578125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_mixed_u63",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10719.4619140625,
+        "p95_ns": 10801.3916015625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 11862.24365234375,
+        "p95_ns": 12216.61376953125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 12059.7333984375,
+        "p95_ns": 12394.0224609375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_mixed_u63",
+        "p50_ns": 10510.2744140625,
+        "p95_ns": 11056.74267578125,
+        "allocations": 256,
+        "allocated_bytes": 6144
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": false
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4310.5316162109375,
+        "p95_ns": 6174.0926513671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4180.8929443359375,
+        "p95_ns": 4208.21630859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4331.8990478515625,
+        "p95_ns": 4342.976806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3901.606201171875,
+        "p95_ns": 3984.5784912109375,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4288.8387451171875,
+        "p95_ns": 4374.8270263671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4180.8929443359375,
+        "p95_ns": 4208.21630859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4331.8990478515625,
+        "p95_ns": 4342.976806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3901.606201171875,
+        "p95_ns": 3984.5784912109375,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4242.0145263671875,
+        "p95_ns": 4300.577880859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4180.8929443359375,
+        "p95_ns": 4208.21630859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4331.8990478515625,
+        "p95_ns": 4342.976806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3901.606201171875,
+        "p95_ns": 3984.5784912109375,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_nanos",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4249.7406005859375,
+        "p95_ns": 4317.682861328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4180.8929443359375,
+        "p95_ns": 4208.21630859375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 4331.8990478515625,
+        "p95_ns": 4342.976806640625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_nanos",
+        "p50_ns": 3901.606201171875,
+        "p95_ns": 3984.5784912109375,
+        "allocations": 256,
+        "allocated_bytes": 1393.6
+      },
+      "p50_above_library": true,
+      "p95_above_library": true,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "pairs",
+      "candidate": {
+        "cohort": 3,
+        "variant": "pairs",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 7558.41064453125,
+        "p95_ns": 7603.23095703125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8435.150146484375,
+        "p95_ns": 8585.968017578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8194.620849609375,
+        "p95_ns": 8252.370361328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6607.279296875,
+        "p95_ns": 6666.218994140625,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "small",
+      "candidate": {
+        "cohort": 3,
+        "variant": "small",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8328.72509765625,
+        "p95_ns": 8558.53271484375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8435.150146484375,
+        "p95_ns": 8585.968017578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8194.620849609375,
+        "p95_ns": 8252.370361328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6607.279296875,
+        "p95_ns": 6666.218994140625,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "forced",
+      "candidate": {
+        "cohort": 3,
+        "variant": "forced",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8107.421875,
+        "p95_ns": 8179.09765625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8435.150146484375,
+        "p95_ns": 8585.968017578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8194.620849609375,
+        "p95_ns": 8252.370361328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6607.279296875,
+        "p95_ns": 6666.218994140625,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    },
+    {
+      "cohort": 3,
+      "case": "clock-distribution/varied_seconds",
+      "variant": "short",
+      "candidate": {
+        "cohort": 3,
+        "variant": "short",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8193.41015625,
+        "p95_ns": 8236.8671875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "library": {
+        "cohort": 3,
+        "variant": "library",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8435.150146484375,
+        "p95_ns": 8585.968017578125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "baseline": {
+        "cohort": 3,
+        "variant": "baseline",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 8194.620849609375,
+        "p95_ns": 8252.370361328125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "source": {
+        "cohort": 3,
+        "variant": "source",
+        "case": "clock-distribution/varied_seconds",
+        "p50_ns": 6607.279296875,
+        "p95_ns": 6666.218994140625,
+        "allocations": 256,
+        "allocated_bytes": 4096
+      },
+      "p50_above_library": false,
+      "p95_above_library": false,
+      "p50_above_source": true,
+      "p95_above_source": true
+    }
+  ],
+  "adverse_counts": {
+    "pairs": {
+      "p50_above_library": 12,
+      "p95_above_library": 13,
+      "p50_above_source": 29,
+      "p95_above_source": 27
+    },
+    "small": {
+      "p50_above_library": 26,
+      "p95_above_library": 21,
+      "p50_above_source": 30,
+      "p95_above_source": 30
+    },
+    "forced": {
+      "p50_above_library": 9,
+      "p95_above_library": 7,
+      "p50_above_source": 27,
+      "p95_above_source": 26
+    },
+    "short": {
+      "p50_above_library": 9,
+      "p95_above_library": 8,
+      "p50_above_source": 27,
+      "p95_above_source": 26
+    }
+  },
+  "procedure_sha256": "e7a846c630d1370f7f963eb52c67dceffb747f8df89974ee5fd2ca3d230ebc1b",
+  "context_sha256": "a32d6e044b999ced4979c5f6514f370136fb618ec6d48b973cebde7c0b3ea5f2",
+  "limits": [
+    "All 252 timing records, calibration attempts and adverse cohorts retained. Varied cases are per-256 batch distributions, not individual-operation latencies.",
+    "Matched positive-duration formatter slice only; no active-clock scheduling, cancellation, retained-memory or production adoption proof."
+  ]
+}

@@ -1,0 +1,30 @@
+"""Verify every prototype cohort; keep adverse comparisons and no score change."""
+import hashlib,json,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verifier refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+c=json.loads((base/'context.json').read_bytes());assert c['status']=='complete' and c['completed_cases']==72 and c['timing_records']==72 and c['retained_intervals']==2232
+assert sha((base/'measure.py.txt').read_bytes())==c['procedure_sha256'] and sha((base/c['raw']).read_bytes())==c['raw_sha256']
+for n,h in c['archive_sha256'].items():assert sha((base/n).read_bytes())==h,n
+rows=[];raw=read_records((base/c['raw']).read_text());assert len(raw)==72
+oracle=read_probe_outputs((base/'source-outputs.jsonl').read_text());assert len(oracle)==6
+for cohort,order in enumerate(c['orders'],1):
+ for variant in order:
+  assert read_probe_outputs((base/(variant+'-outputs.jsonl')).read_text())==oracle
+  p=base/c['attempt']/f'cohort-{cohort}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes()
+  records=read_records(p.read_text());assert set(records)==set(oracle)
+  for n,r in records.items():
+   for k in ['output','first_return_value','semantics']:assert r[k]==oracle[n][k]
+   assert len(r['samples_ns'])==31
+   key=f'cohort-{cohort}/{variant}/{n}';assert raw[key]=={**r,'case':key,'source_case':n,'cohort':cohort,'variant':variant}
+   rows.append({'cohort':cohort,'variant':variant,'case':n,**summary(r)})
+assert rows==c['summary']
+comparisons=[]
+for cohort in range(1,4):
+ for n in sorted(oracle):
+  group={r['variant']:r for r in rows if r['cohort']==cohort and r['case']==n}
+  comparisons.append({'cohort':cohort,'case':n,**group,'candidate_p50_above_library':group['candidate']['p50_ns']>group['library']['p50_ns'],'candidate_p95_above_library':group['candidate']['p95_ns']>group['library']['p95_ns'],'candidate_p50_above_source':group['candidate']['p50_ns']>group['source']['p50_ns'],'candidate_p95_above_source':group['candidate']['p95_ns']>group['source']['p95_ns']})
+result={'schema':1,'status':'complete_prototype_only','source_head':c['source_head'],'timing_records':72,'retained_intervals':2232,'comparisons':comparisons,'adverse_counts':{k:sum(r[k] for r in comparisons) for k in ['candidate_p50_above_library','candidate_p95_above_library','candidate_p50_above_source','candidate_p95_above_source']},'context_sha256':sha((base/'context.json').read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['All cohorts retained; unchanged actual production API and private boundary baseline are separate controls. Private-candidate timing is not production performance or adoption evidence.','No assessment promotion, image engine, CUDA, scheduling or framework-wide optimization claim.']}
+(base/'verification.json').write_text(json.dumps(result,indent=2)+'\n');print(result['adverse_counts'])
