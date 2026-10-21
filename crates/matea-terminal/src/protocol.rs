@@ -2,6 +2,8 @@
 //! Specifications and limitations: ADR 0009. Encoding never establishes support.
 use std::num::NonZeroU32;
 
+pub mod kitty;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Protocol {
     Kitty,

@@ -26,6 +26,20 @@ pub use matea_motion as motion;
 pub use matea_ratatui as ratatui;
 pub use matea_render as render;
 pub use matea_style as style;
+/// Terminal lifecycle and pure protocol encoders. Encoding bytes alone does not
+/// establish terminal graphics support or open a terminal session.
+///
+/// ```
+/// use matea::terminal::protocol::{Limits, kitty::{Action, Control}};
+/// let control = Control {
+///     action: Action::Put,
+///     image_id: std::num::NonZeroU32::new(7),
+///     no_cursor_movement: true,
+///     ..Control::default()
+/// };
+/// let packet = control.encode(&[], Limits::default()).unwrap();
+/// assert_eq!(packet, b"\x1b_Gi=7,C=1,a=p;\x1b\\");
+/// ```
 pub use matea_terminal as terminal;
 pub use matea_terminal::{run, run_with_options};
 pub use matea_widgets as widgets;

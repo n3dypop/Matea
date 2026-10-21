@@ -1,0 +1,9 @@
+package main
+import("encoding/json";"os";"github.com/charmbracelet/x/ansi/kitty")
+func main(){
+ original:=kitty.Options{Action:kitty.Put,ID:7,DoNotMoveCursor:true,Columns:40,Rows:12}
+ raw,err:=original.MarshalText();if err!=nil{panic(err)}
+ var parsed kitty.Options;err=parsed.UnmarshalText(raw);if err!=nil{panic(err)}
+ value:=map[string]any{"original_header":string(raw),"parsed_header":parsed.String(),"cursor_policy_before":original.DoNotMoveCursor,"cursor_policy_after":parsed.DoNotMoveCursor,"source_revision":"faa4adf95555331dfb439b716cc83767ecdadeb4"}
+ if err=json.NewEncoder(os.Stdout).Encode(value);err!=nil{panic(err)}
+}

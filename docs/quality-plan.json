@@ -448,8 +448,8 @@
           "reason": "12 complete mock-backend event-loop/lifecycle cases include idle, resize, quit and five I/O failures, with 31 samples and allocation passes. Native terminal input/output, effects and scheduling/resident memory remain incomplete."
         },
         "portability": {
-          "score": 75,
-          "reason": "Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
+          "score": 50,
+          "reason": "New typed Kitty control/packet API and facade example pass selected native checks. Exact changed-source Linux/Windows/macOS, pinned-reference and Rust 1.88 qualification remain pending; prior green source is retained as history."
         }
       },
       "evidence": [
@@ -461,7 +461,8 @@
         "docs/evidence/optimization/foundation-paths/current.jsonl",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -514,7 +515,8 @@
     {
       "id": "matea-terminal/protocol",
       "files": [
-        "crates/matea-terminal/src/protocol.rs"
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/src/protocol/kitty.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -538,8 +540,8 @@
           "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
         },
         "portability": {
-          "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "score": 50,
+          "reason": "New typed Kitty control/packet API and facade example pass selected native checks. Exact changed-source Linux/Windows/macOS, pinned-reference and Rust 1.88 qualification remain pending; prior green source is retained as history."
         }
       },
       "evidence": [
@@ -548,7 +550,8 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/protocol/report.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/kitty-controls-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1093,8 +1096,8 @@
           "reason": "The current facade contains only crate/item reexports. Executed identities cover prelude types and all function aliases; direct/module/prelude text construction uses the same underlying implementation in three 31-sample cases. There is no wrapper allocation/runtime dispatch introduced by these reexports. This does not award underlying modules or missing upstream features parity."
         },
         "portability": {
-          "score": 75,
-          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
+          "score": 50,
+          "reason": "New typed Kitty control/packet API and facade example pass selected native checks. Exact changed-source Linux/Windows/macOS, pinned-reference and Rust 1.88 qualification remain pending; prior green source is retained as history."
         }
       },
       "evidence": [
@@ -1107,7 +1110,8 @@
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
         "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
-        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json",
+        "docs/kitty-controls-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1339,7 +1343,8 @@
       "files": [
         "crates/matea-terminal/tests/graphics_encoding.rs",
         "crates/matea-terminal/tests/input.rs",
-        "crates/matea-terminal/examples/device_probe.rs"
+        "crates/matea-terminal/examples/device_probe.rs",
+        "crates/matea-terminal/tests/graphics_controls.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1363,8 +1368,8 @@
           "reason": "No production latency path: test/config correctness, not speed, is the acceptance criterion."
         },
         "portability": {
-          "score": 75,
-          "reason": "Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
+          "score": 50,
+          "reason": "New typed Kitty control/packet API and facade example pass selected native checks. Exact changed-source Linux/Windows/macOS, pinned-reference and Rust 1.88 qualification remain pending; prior green source is retained as history."
         }
       },
       "evidence": [
@@ -1373,7 +1378,8 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
