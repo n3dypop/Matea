@@ -1,7 +1,8 @@
 # ADR 0073: Owned clock text without a formatting adapter
 
-Status: provisional implementation; actual-library performance, Miri and
-three-OS qualification pending. Foundation remains before F5.
+Status: provisional implementation; actual-library performance and targeted
+Miri, three-OS and final assessment-input local/LLVM qualification verified.
+Foundation remains before F5.
 
 Clock views currently convert ClockText through formatting arguments into Text.
 Both that path and the proposed direct path own immutable, normalized display
@@ -29,6 +30,13 @@ library. Rebuild and measure the actual API before accepting the implementation;
 retain the prototype and unchanged controls. Preserve all shared outputs and
 theme/cursor/Runtime behavior in native tests and exercise the new path under
 targeted Miri. Qualify current program inputs on the three Foundation OSes.
+
+The subsequent actual-library experiment retains 90 records/2,790 samples and
+all original controls. All eighteen cohort/input medians improve over the old
+Text path. One seconds p95 is worse and four shared inputs remain slower than
+source; all observations are retained. The combined independent verification
+covers 162 records/5,022 samples. Current native tests and three targeted Miri
+tests pass. [Evidence and remaining limits](../clock-owned-text-audit.md).
 
 Short inline storage is an implementation opportunity, not a public allocation
 guarantee; wider Rust durations can allocate. Allocation counters across Rust and

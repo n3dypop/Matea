@@ -1,0 +1,22 @@
+// Original finite caller, keeping the production workspace unchanged.
+#[path="/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]mod measurement;
+mod direct;
+use std::{hint::black_box,time::Duration};
+use matea_render::Text;
+use matea_widgets::ClockText;
+fn current(value:Duration)->Text{Text::from(format_args!("{}",ClockText(value)))}
+fn main(){
+ for line in include_str!("/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-widgets/tests/fixtures/durations.tsv").lines(){let(n,expected)=line.split_once('\t').unwrap();let value=Duration::from_nanos(n.parse().unwrap());assert_eq!(current(value).as_str(),expected);assert_eq!(direct::owned(value).as_str(),expected);assert_eq!(ClockText(value).into_text().as_str(),expected);}
+ assert_eq!(direct::owned(Duration::MAX).as_str(),ClockText(Duration::MAX).into_string());assert_eq!(ClockText(Duration::MAX).into_text().as_str(),ClockText(Duration::MAX).into_string());
+ let variant=std::env::args().nth(1).expect("string/current/direct");let n=measurement::iterations(300);
+ for(name,nanos)in[("zero",0),("nanoseconds",42),("microseconds",1500),("seconds",1234567890),("hours",3723400000000),("maximum_go",9223372036854775807)]{
+  let value=Duration::from_nanos(nanos);let id=format!("clock-text/owned_{name}");let output=ClockText(value).into_string();let semantics="fresh owned immutable duration text; default formatting; consume byte length; no scheduling, rendering or terminal IO";
+  match variant.as_str(){
+   "string"=>measurement::measure(&id,n,||black_box(ClockText(black_box(value)).into_string()).len()as u64,&output,semantics),
+   "current"=>measurement::measure(&id,n,||black_box(current(black_box(value))).len()as u64,&output,semantics),
+   "library"=>measurement::measure(&id,n,||black_box(ClockText(black_box(value)).into_text()).len()as u64,&output,semantics),
+   "direct"=>measurement::measure(&id,n,||black_box(direct::owned(black_box(value))).len()as u64,&output,semantics),
+   _=>panic!("unknown variant"),
+  }
+ }
+}

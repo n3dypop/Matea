@@ -1,12 +1,13 @@
 # Matea Foundation gate report
 
-直近の検証済み782f7d6は156 program／44評価単位、未達49軸（参照元一致21・性能28）です。
-現在はClockText::into_textと既定viewへの適用を実装し、影響4単位の移植性を再検証中です。
-作業評価は53軸。既存5 issueのソースhash再確認も保留し、未評価報告は一時827件です。
-72計測・2,232標本の別workspace試作で直接Text生成の改善を確認しました。[ADR 0073](decisions/0073-owned-clock-text-without-format-adapters.md)。
-本体の再測定・Miri・現ソースの3 OS CIは未完了で、時計の性能評価は50のままです。
-時計2 packageの43公開項目を3対象のcompiler export・既存試験と照合し、参照元一致を75へ更新しました。
-評価入力更新後の47検証・Rust277＋11 doctest・Python146（条件付きskip 2）・LLVM95 source／102 instanceも成功しました。
+現在の検証済み実装6ffc1eaは156 program／44評価単位、未達49軸（参照元一致21・性能28）です。
+ClockText::into_textと既定viewへの適用を実装し、影響4単位の移植性を再検証しました。
+[現ソースの必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39522044053)が成功。198入力と生ログを照合し、既存5 issueを元の範囲で再確認しました。未評価報告は822件です。
+試作と本体の計162計測・5,022標本を照合し、既存Text経路比で全18組のp50改善と1組のp95悪化を保持しています。
+最終評価入力の47検証・Rust277＋12 doctest・Python146（条件付きskip 2）・Miri3・LLVM95 source／102 instanceが成功しました。
+[本体の測定と残件](clock-owned-text-audit.md)。時計性能は50で、依存profilingの3警告と遅い試行も保持しています。
+先行782f7d6では時計2 packageの43公開項目を3対象のcompiler export・既存試験と照合し、参照元一致を75へ更新しました。
+その時点の47検証・Rust277＋11 doctest・Python146（条件付きskip 2）・LLVM95 source／102 instanceも履歴として保持しています。
 [時計の限定評価と残件](clocks-export-review.md)。性能評価と全体Go export gateは未達のままです。
 追加発見したWindows State.ModeとUnix State.Termiosの公開機能を実装し、再検証待ち7軸を57→50へ更新しました。
 x/termの13宣言候補を分類・対応付けし、借用handle、排他的な状態復元、raw取得、上限付きbyte入力を実装しました。

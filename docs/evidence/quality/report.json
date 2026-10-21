@@ -151,7 +151,7 @@
       "unit": "matea-widgets/clocks",
       "dimension": "performance",
       "score": 50,
-      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+      "reason": "162 raw timing records / 5022 retained samples cover six repeated immutable owned-text inputs across prototype and actual API, with identical outputs. Actual into_text improves all eighteen cohort/input medians over the prior Text adapter, retaining one adverse seconds p95. Four inputs remain slower than source. Active scheduling/cancellation/notification latency, variable-duration workloads and retained memory remain unmeasured; no module-high or universal optimum verdict."
     },
     {
       "unit": "matea-widgets/help",
@@ -906,11 +906,11 @@
       "criteria": {
         "rust_design": {
           "score": 75,
-          "reason": "Typed ownership, explicit error/lifecycle contracts and warning-free all-target checks; provisional API, no soundness proof."
+          "reason": "Exclusive clock state and typed generation/time contracts remain unchanged; owned immutable Text is built through the renderer validation API from the existing bounded formatter. Display/String remain explicit formatting/conversion choices. No new allocator, dependency, unsafe constructor or public API lock-in."
         },
         "memory_safety": {
           "score": 75,
-          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+          "reason": "No new unsafe or FFI. Temporary formatter bytes are copied into the existing owning Text type; no borrowed buffer escapes. Miri seed 223 passes three actual-source formatter/themed-Unicode/Runtime tests, including 269 source strings and Duration::MAX. Native source-bound three-OS tests pass. No exhaustive soundness or whole-dependency proof."
         },
         "behavior": {
           "score": 75,
@@ -918,15 +918,15 @@
         },
         "reference": {
           "score": 75,
-          "reason": "All 43 public clock members (21 stopwatch/22 timer) match raw and compiler exports on Linux amd64, macOS arm64 and Windows amd64, including three pointer-only timer controls. Every member maps to implemented typed capabilities. Current program/fixture hashes match exact-source three-OS CI: eight maintained clock tests, 269 fixed duration strings and retained source edge/output checks. ADR 0019 deliberate fixes and external Cmd/Msg/Event/Duration boundaries are explicit; global Go dependency/target/export closure remains false. Finite own-package functional review, no literal defect compatibility or exhaustive application-schedule claim."
+          "reason": "All 43 own public clock members match the existing raw/compiler surfaces on three profiles. Current implementation and test hashes bind to successful 6ffc1ea three-OS native/reference CI, including 269 strings, clock source observations and sixteen outputs. New Text conversion preserves the finite output contract; ADR 0019 intentional behavior fixes and external API/dependency/target limits remain explicit. Project-wide Go export closure is false."
         },
         "performance": {
           "score": 50,
-          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+          "reason": "162 raw timing records / 5022 retained samples cover six repeated immutable owned-text inputs across prototype and actual API, with identical outputs. Actual into_text improves all eighteen cohort/input medians over the prior Text adapter, retaining one adverse seconds p95. Four inputs remain slower than source. Active scheduling/cancellation/notification latency, variable-duration workloads and retained memory remain unmeasured; no module-high or universal optimum verdict."
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
         }
       },
       "evidence": [
@@ -936,10 +936,16 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/clocks-export-review.md",
-        "docs/evidence/clocks-exports/verification.json"
+        "docs/evidence/clocks-exports/verification.json",
+        "docs/decisions/0073-owned-clock-text-without-format-adapters.md",
+        "docs/evidence/clocks-owned-text/prototype/context.json",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json",
+        "docs/clock-owned-text-audit.md",
+        "docs/evidence/clocks-owned-text/verification.json",
+        "docs/evidence/clocks-owned-text/miri/verification.json"
       ],
       "remaining": [
-        "Complete matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained-memory measurements; preserve formatter regressions and old samples. External framework dependency/target/export closure remains a separate Foundation gate."
+        "Measure matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained memory; investigate remaining source formatter gaps with prior failed arithmetic candidates preserved. Global external API/dependency/target closure remains a separate Foundation gate."
       ]
     },
     {
@@ -1059,7 +1065,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
         }
       },
       "evidence": [
@@ -1078,7 +1084,8 @@
         "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md",
         "docs/viewport-wrapping-audit.md",
         "docs/decisions/0059-validated-byte-highlights-and-cell-style-composition.md",
-        "docs/viewport-highlights-audit.md"
+        "docs/viewport-highlights-audit.md",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
@@ -1380,7 +1387,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
+          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
         }
       },
       "evidence": [
@@ -1392,7 +1399,8 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1600,7 +1608,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified."
+          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
         }
       },
       "evidence": [
@@ -1610,7 +1618,10 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/viewport-cell-geometry.md",
         "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
-        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/decisions/0073-owned-clock-text-without-format-adapters.md",
+        "docs/evidence/clocks-owned-text/prototype/context.json",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -2398,7 +2409,7 @@
       ]
     }
   ],
-  "plan_sha256": "00d9b45e1cd664199d1e94243dfbd958d2adb40a0934619d92b921d546a4a478",
+  "plan_sha256": "9a9d067d55b703c4f6c9508aa2d057dc9b5748bb8cd17f5e235c7322b59fa400",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2483,8 +2494,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 709,
-                "percent": 94.65954606141523
+                "covered": 708,
+                "percent": 94.5260347129506
               },
               "functions": {
                 "count": 101,
@@ -2498,9 +2509,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1125,
-                "notcovered": 58,
-                "percent": 95.09721048182587
+                "covered": 1124,
+                "notcovered": 59,
+                "percent": 95.01267962806425
               },
               "branches": {
                 "count": 0,
@@ -2849,9 +2860,9 @@
                 "percent": 94.52054794520548
               },
               "instantiations": {
-                "count": 271,
-                "covered": 218,
-                "percent": 80.44280442804428
+                "count": 277,
+                "covered": 224,
+                "percent": 80.86642599277978
               },
               "regions": {
                 "count": 1364,
@@ -4490,7 +4501,7 @@
     },
     {
       "file": "crates/matea-widgets/src/clocks.rs",
-      "sha256": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+      "sha256": "8b4e8e51a79075a6c2d6a09a3ddc3c7bc9a9209e4b945145cf5af7b3547e8c1f",
       "units": [
         "matea-widgets/clocks"
       ],
@@ -4502,25 +4513,25 @@
             "compiler_filename": "crates/matea-widgets/src/clocks.rs",
             "summary": {
               "lines": {
-                "count": 380,
-                "covered": 364,
-                "percent": 95.78947368421052
+                "count": 385,
+                "covered": 369,
+                "percent": 95.84415584415584
               },
               "functions": {
-                "count": 70,
-                "covered": 67,
-                "percent": 95.71428571428572
+                "count": 71,
+                "covered": 68,
+                "percent": 95.77464788732394
               },
               "instantiations": {
-                "count": 258,
-                "covered": 145,
-                "percent": 56.201550387596896
+                "count": 261,
+                "covered": 147,
+                "percent": 56.32183908045977
               },
               "regions": {
-                "count": 541,
-                "covered": 520,
+                "count": 549,
+                "covered": 528,
                 "notcovered": 21,
-                "percent": 96.11829944547135
+                "percent": 96.17486338797814
               },
               "branches": {
                 "count": 0,
@@ -5102,7 +5113,7 @@
     },
     {
       "file": "crates/matea-widgets/tests/clocks.rs",
-      "sha256": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+      "sha256": "d709b2c30e11bcaeaaf5cbdad8a89d429581d6418fcc7ba9dd936acbae4b01f1",
       "units": [
         "matea-widgets/integration-tests"
       ],
@@ -5114,8 +5125,8 @@
             "compiler_filename": "crates/matea-widgets/tests/clocks.rs",
             "summary": {
               "lines": {
-                "count": 255,
-                "covered": 255,
+                "count": 257,
+                "covered": 257,
                 "percent": 100
               },
               "functions": {
@@ -5129,8 +5140,8 @@
                 "percent": 100
               },
               "regions": {
-                "count": 704,
-                "covered": 704,
+                "count": 710,
+                "covered": 710,
                 "notcovered": 0,
                 "percent": 100
               },
