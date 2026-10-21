@@ -1,0 +1,56 @@
+#[path = "/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]
+mod measurement;
+#[allow(dead_code)]
+mod baseline;
+use matea_widgets as current;
+use matea_render::{Size, Surface};
+use std::{hint::black_box, hash::{Hash,Hasher}, collections::hash_map::DefaultHasher};
+struct Fixture {name:&'static str, width:Option<u16>, full:bool, groups:Vec<Vec<(&'static str,&'static str,bool)>>}
+fn fixtures()->Vec<Fixture>{
+ let ordinary=vec![vec![("enter","continue",true)],vec![("esc","back",true),("?","help",true)],vec![("H","home",true),("ctrl+c","quit",true),("ctrl+l","log",true)]];
+ let unicode=vec![vec![("茶","e\u{301}を選ぶ",true),("←/→","移動",true),("q","終了",true)]];
+ let large=vec![("enter","continue",true);4096];
+ let wide=vec![("long_key_that_cannot_fit_this_column","description",true);4096];
+ let mut disabled=vec![("hidden long key","hidden long description",false);4096];disabled.extend(vec![("q","quit",true);4]);
+ vec![
+ Fixture{name:"short_unbounded",width:None,full:false,groups:ordinary.clone()},
+ Fixture{name:"short_40",width:Some(40),full:false,groups:ordinary.clone()},
+ Fixture{name:"short_unicode_80",width:Some(80),full:false,groups:unicode.clone()},
+ Fixture{name:"short_clipped_4096",width:Some(20),full:false,groups:vec![large.clone()]},
+ Fixture{name:"full_40",width:Some(40),full:true,groups:ordinary},
+ Fixture{name:"full_unicode_80",width:Some(80),full:true,groups:unicode},
+ Fixture{name:"full_clipped_4096",width:Some(20),full:true,groups:vec![vec![("enter","continue",true)],wide]},
+ Fixture{name:"full_tall_1024",width:Some(20),full:true,groups:vec![vec![("q","quit",true);1024]]},
+ Fixture{name:"short_zero_4096",width:Some(0),full:false,groups:vec![large]},
+ Fixture{name:"full_disabled_4096",width:Some(40),full:true,groups:vec![disabled]},
+ Fixture{name:"short_controls",width:Some(40),full:false,groups:vec![vec![("\u{1b}[31m","new\nline\tend",true),("\u{301}","visible",true)]]},
+ Fixture{name:"full_rejected_maxima",width:Some(13),full:true,groups:vec![vec![("a","go",true),("q","up",true)],vec![("long","x",true),("b","wide",true)]]},
+ ]
+}
+fn cells(surface:&Surface)->u64 {let mut h=DefaultHasher::new();for y in 0..surface.size().height{for c in surface.row(y){c.symbol().hash(&mut h);c.style().hash(&mut h);c.width().hash(&mut h);c.is_continuation().hash(&mut h);}}h.finish()}
+macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str)->(String,Box<dyn FnMut()->u64+'_>){
+ let groups:Vec<Vec<$api::HelpItem>>=f.groups.iter().map(|g|g.iter().map(|&(key,description,enabled)|$api::HelpItem{key,description,enabled}).collect()).collect();
+ let short:Vec<_>=groups.iter().flatten().copied().collect();
+ let help=$api::Help{width:f.width,show_all:f.full,full_separator:" | ".into(),..$api::Help::default()};
+ // Callers own fixture metadata and output; moving it into the closure is outside timings.
+ match mode{
+ "text"=>{let output=if f.full{help.full_text(&groups.iter().map(Vec::as_slice).collect::<Vec<_>>())}else{help.short_text(&short)};
+  (output,Box::new(move||if help.show_all{black_box(help.full_text(black_box(&groups.iter().map(Vec::as_slice).collect::<Vec<_>>()))).len()as u64}else{black_box(help.short_text(black_box(&short))).len()as u64}))},
+ "view"=>{let size=Size::new(80,4);let make=|h:&$api::Help|h.view($api::HelpMap{short:&short,full:&groups.iter().map(Vec::as_slice).collect::<Vec<_>>()}).render(size).unwrap();let output=make(&help).plain();
+  (output,Box::new(move||cells(&help.view($api::HelpMap{short:black_box(&short),full:&groups.iter().map(Vec::as_slice).collect::<Vec<_>>()}).render(size).unwrap())))},
+ "reuse"=>{let output=help.short_text(&short);let mut buffer=String::with_capacity(256);(output,Box::new(move||{buffer.clear();help.short_text_into(black_box(&short),&mut buffer);black_box(&buffer).len()as u64}))},
+ _=>panic!("unknown mode")
+ }
+}}}
+runner!(old,baseline);runner!(new,current);
+fn main(){
+ let variant=std::env::args().nth(1).expect("baseline/current");let n=measurement::iterations(1);
+ for f in fixtures(){for mode in ["text","view","reuse"]{
+  if mode=="view" && !["short_40","short_unicode_80","full_40","full_unicode_80","full_clipped_4096","short_controls"].contains(&f.name){continue}
+  if mode=="reuse" && !["short_40","short_unicode_80","short_clipped_4096","short_zero_4096"].contains(&f.name){continue}
+  let(a,mut before)=old(&f,mode);let(b,mut after)=new(&f,mode);assert_eq!(a,b,"output {mode}/{}",f.name);assert_eq!(before(),after(),"result {mode}/{}",f.name);
+  let operation=if variant=="baseline"{&mut before}else{assert_eq!(variant,"current");&mut after};
+  let semantics=match mode{"text"=>"fresh plain key help; existing metadata; consume byte length; no styling or terminal IO","view"=>"owned help view and 80x4 styled cells; consume all symbols/styles/widths; no terminal IO",_=>"append help into cleared caller-owned capacity; consume byte length; no terminal IO"};
+  measurement::measure(&format!("help-bounded/{mode}/{}",f.name),n,operation,&a,semantics);
+ }}
+}

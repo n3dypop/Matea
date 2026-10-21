@@ -1,0 +1,25 @@
+"""Retry only the failed native PTY command and preserve the original full suite."""
+import copy,hashlib,json,shutil,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded/native-pty-retry';base.mkdir(exist_ok=True);sys.path.insert(0,str(root/'scripts'))
+from verify_foundation import run_checks
+from check_quality import execution_inputs,validate_native
+sha=lambda b:hashlib.sha256(b).hexdigest()
+report_path=root/'docs/evidence/local-validation.json';original=json.loads(report_path.read_bytes())
+assert original['status']=='failed' and len(original['checks'])==47 and original['source_changed_during_run']==[]
+assert [c['name'] for c in original['checks'] if c['exit_code']!=0]==['pty-smoke']
+assert {n:sha((root/n).read_bytes()) for n in execution_inputs(root)}==original['source_sha256']
+shutil.copy2(report_path,base/'original-local-validation.json');shutil.copy2(root/'docs/evidence/pty-smoke.log',base/'original-pty-smoke.log')
+assert "('quit', 'timed out', b'')" in (base/'original-pty-smoke.log').read_text()
+retry=run_checks(root,[('pty-smoke',[sys.executable,str(root/'scripts/pty_smoke.py')])],offline=True)
+(base/'retry-local-validation.json').write_text(json.dumps(retry,indent=2)+'\n');shutil.copy2(root/'docs/evidence/pty-smoke.log',base/'retry-pty-smoke.log')
+assert retry['status']=='complete' and retry['all_local_checks_passed'] and retry['source_sha256']==original['source_sha256']
+assert all(retry[t]==original[t] for t in ['rustc','cargo'])
+merged=copy.deepcopy(original);merged.update(status='complete',all_local_checks_passed=True,finished_at_utc=retry['finished_at_utc'])
+merged['checks']=[retry['checks'][0] if c['name']=='pty-smoke' else c for c in original['checks']]
+merged['retry_provenance']={'scope':'Only PTY command re-executed in a separate permitted launch context; 46 unchanged-input successful commands retained. Original zero-output startup timeout is not relabeled successful or assigned a proven root cause.',
+ 'original_report_sha256':sha((base/'original-local-validation.json').read_bytes()),'retry_report_sha256':sha((base/'retry-local-validation.json').read_bytes()),
+ 'retried_checks':['pty-smoke'],'successful_checks_reused':46,'procedure_sha256':sha(Path(__file__).read_bytes())}
+validate_native(merged,root)
+report_path.write_text(json.dumps(merged,indent=2)+'\n');(base/'consolidated-report.json').write_bytes(report_path.read_bytes())
+print('47 native commands qualified; original PTY timeout retained, only PTY rerun',flush=True)

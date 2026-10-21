@@ -1,0 +1,82 @@
+"""Bind adopted Help CI, Miri, outputs and performance; qualify one bounded axis."""
+import copy,hashlib,json,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('qualification refuses -O')
+root=Path.cwd();base=root/'docs/evidence/help-bounded';raw=root/'docs/evidence/terminal-device/ci-63ef696-help';raw.mkdir(exist_ok=True)
+source=Path('/private/tmp/matea-help-ci-adopted');sha=lambda b:hashlib.sha256(b).hexdigest()
+run=json.loads(Path('/private/tmp/matea-help-ci-adopted-run.json').read_bytes());head=subprocess.check_output(['git','rev-parse','63ef696'],text=True).strip()
+required={f'{kind} ({os}-latest)' for kind in ['foundation','reference-probes'] for os in ['ubuntu','macos','windows']}|{'msrv'}
+assert run['headSha']==head and run['status']=='completed' and run['conclusion']=='success'
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+(raw/'run.json').write_text(json.dumps(run,indent=2)+'\n');shutil.copy2('/private/tmp/matea-help-msrv.log',raw/'msrv.log')
+assert '1.88.0' in (raw/'msrv.log').read_text() and 'cargo test --locked --workspace' in (raw/'msrv.log').read_text()
+binding=None;hosts={}
+test_names=['all_widths_fit_complete_items_and_columns_including_exact_tail_fit','reference_columns_are_top_aligned_and_disabled_groups_are_omitted','clipped_columns_are_rejected_whole_when_different_rows_set_the_maxima','shared_binding_state_unicode_safety_and_gap_styles_reach_cells']
+for os in ['ubuntu','macos','windows']:
+ folder=source/f'native-drivers-{os}-latest';e=folder/'docs/evidence';dest=raw/os;dest.mkdir(exist_ok=True)
+ report=json.loads((e/'local-validation.json').read_bytes());assert report['status']=='complete' and report['all_local_checks_passed'] is True and report['source_changed_during_run']==[]
+ assert len(report['checks'])==47 and len({c['name'] for c in report['checks']})==47 and all(c['exit_code']==0 for c in report['checks'])
+ hashes=report['source_sha256'];assert len(hashes)==198 and (binding is None or hashes==binding);binding=hashes
+ verified=[];missing=[]
+ for c in report['checks']:
+  assert Path(c['log']).name==c['log'];p=e/c['log']
+  if p.exists():assert sha(p.read_bytes())==c['log_sha256'];shutil.copy2(p,dest/p.name);verified.append(c['name'])
+  else:missing.append(c['name'])
+ shutil.copy2(e/'local-validation.json',dest/'local-validation.json')
+ coverage=json.loads((e/'quality/rust-execution-coverage.json').read_bytes());assert coverage['status']=='complete' and coverage['input_sha256']==binding
+ for name,h in coverage['source_sha256'].items():assert h==binding[name]
+ shutil.copy2(e/'quality/rust-execution-coverage.json',dest/'rust-execution-coverage.json')
+ release=(dest/'release-tests.log').read_text();assert all('help::tests::'+n+' ... ok' in release for n in test_names)
+ native=json.loads((e/'terminal-device/context.json').read_bytes());assert native['status']=='complete' and all(c['status']=='passed' and c['exit_code']==0 for c in native['cases'])
+ assert len(native['cases'])==(9 if os=='windows' else 12)
+ shutil.copy2(e/'terminal-device/context.json',dest/'native-device-context.json')
+ probes=source/f'reference-paths-{os}-latest';checks=json.loads((probes/'path-checks.json').read_bytes());assert checks['source_inventories']==11 and checks['matched_cases']==84 and checks['progress_fixture_cases']==120
+ shutil.copy2(probes/'path-checks.json',dest/'path-checks.json')
+ hosts[os]={'native_checks':47,'help_regressions_in_release_log':4,'native_device_cases':len(native['cases']),'rust_paths':len(coverage['files']),'rust_instances':sum(len(f['instances']) for f in coverage['files']),'verified_uploaded_logs':verified,'logs_not_uploaded':missing}
+for n,h in binding.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h
+assert {n for n,h in binding.items() if sha((root/n).read_bytes())!=h}<=set(['docs/quality-plan.json'])
+m=json.loads((base/'miri-small/context.json').read_bytes());assert m['status']=='complete' and m['seed']==229 and m['exit_code']==0
+assert m['procedure_sha256']==sha((base/'miri-small.py.txt').read_bytes()) and m['log_sha256']==sha((base/'miri-small/help.log').read_bytes())
+assert b'test result: ok. 4 passed;' in (base/'miri-small/help.log').read_bytes()
+for n,h in m['source_sha256'].items():assert sha((root/n).read_bytes())==h==binding[n]
+performance=json.loads((base/'final-verification.json').read_bytes());assert performance['status']=='complete' and performance['source_head']==head and performance['timing_records']==538
+actual=json.loads((base/'adopted-small-reservation/context.json').read_bytes());assert actual['status']=='complete' and actual['root_input_sha256']==binding
+assert performance['procedure_sha256']==sha((base/'verify-final.py.txt').read_bytes())
+assert sum(c['p50_worse_than_source'] is True for c in performance['adopted_comparisons'])==0
+for c in performance['adopted_comparisons']:
+ if c['case']=='help-bounded/text/full_tall_1024':assert c['baseline']['allocations']==c['current']['allocations']==3 and c['baseline']['allocated_bytes']==c['current']['allocated_bytes']==72863
+width=json.loads((base/'width-replay-small/context.json').read_bytes());assert width['status']=='complete' and width['source_head']==head and width['fresh_cases']==102 and width['actual_help_source_sha256']==binding['crates/matea-widgets/src/help.rs']
+binding_report={'schema':1,'status':'complete','source_head':head,'run_url':run['url'],'required_successful_jobs':sorted(required),'input_sha256':binding,'hosts':hosts,'raw_directory':str(raw.relative_to(root)),
+ 'miri_seed':229,'miri_tests':4,'fresh_width_cases':102,'performance_verification_sha256':sha((base/'final-verification.json').read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['All 198 execution inputs match the successful adopted-source CI; missing uploaded logs remain explicit. Current assessment metadata may differ and receives a fresh native/LLVM suite separately.',
+ 'Only implemented Help performance is qualified. Rich decorator/full export/target/source closure remains partial. No physical emulator, whole dependency soundness, other-host speed or Foundation completion claim.']}
+(base/'ci-source-bindings.json').write_text(json.dumps(binding_report,indent=2)+'\n')
+plan_path=root/'docs/quality-plan.json';plan=json.loads(plan_path.read_bytes());before=copy.deepcopy(plan)
+unit=next(u for u in plan['units'] if u['id']=='matea-widgets/help');assert unit['criteria']['performance']['score']==50 and unit['criteria']['reference']['score']==50
+unit['criteria']['performance']={'score':75,'reason':'Implemented Help operation families now have 25 controls covering construction/configuration/clone/borrow/event, short/full/plain/owned styled cells, append reuse, normalization and zero/disabled/clipped/tall scale. Three actual-source candidates plus a separate selection retain 538 records, 16678 positive intervals and 279 whole-fixture RSS children. The adopted actual API preserves all outputs, beats eight matched source medians in all three orders, restores tall-column allocations to 3/72863 bytes and fixes ordinary-full-help overhead. Adverse controls/tails and both independently recovered collection failures remain explicit. This native macOS finite implemented-module review excludes rich decorators, other-host timings and transport; no universal optimum or full-reference claim.'}
+unit['criteria']['memory_safety']={'score':75,'reason':'Safe Option-held stack prefix moves into exactly reserved Vec ownership; early rejection drops prepared values and live borrows never escape. No new unsafe, dependency or cache. All four actual-source Help regressions pass Miri seed 229, including Unicode, early/late rejection and 1024 visible rows; native source-bound three-OS tests pass. No exhaustive soundness proof.'}
+unit['criteria']['portability']={'score':75,'reason':'Adopted Help source 63ef696 passes all seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV CI jobs. All 198 execution inputs match Git; 47 acceptance commands per host, four Help regressions in each release log and pinned source output probes pass. Actual-source Miri and 102 fresh independent width cases provide additional native evidence. Physical emulators and other-host performance remain unverified.'}
+for p in ['docs/help-preparation-performance-audit.md','docs/evidence/help-bounded/final-verification.json','docs/evidence/help-bounded/miri-small/context.json','docs/evidence/help-bounded/width-replay-small/context.json','docs/evidence/help-bounded/ci-source-bindings.json']:
+ assert (root/p).is_file();unit['evidence'].append(p)
+unit['remaining']=['Complete rich per-field decorator behavior and full compiler/dependency/target/source equivalence. Bounded implemented-module performance is qualified; physical terminal transport and cross-module optimization retain separate owners.']
+assert plan['high_threshold']==before['high_threshold']==75
+assert [u for u in plan['units'] if u['id']!='matea-widgets/help']==[u for u in before['units'] if u['id']!='matea-widgets/help']
+plan_path.write_text(json.dumps(plan,indent=2)+'\n')
+cap_path=root/'docs/coverage/capabilities.json';caps=json.loads(cap_path.read_bytes());cap=next(c for c in caps['capabilities'] if c['id']=='widgets/key-help');assert cap['status']=='partial'
+cap['performance']='docs/help-preparation-performance-audit.md';cap['notes']+=' Implemented-module performance follow-up qualifies 25 finite operation/scale controls with three candidate comparisons, matched source outputs, owned styled cells and RSS. Rich decorator/reference conditions remain partial; no source-module or export closure is implied.';cap_path.write_text(json.dumps(caps,indent=2)+'\n')
+issues_path=root/'docs/coverage/upstream-issues.json';issues=json.loads(issues_path.read_bytes());updates=[]
+for repo in issues['repositories']:
+ if repo['repository']!='charmbracelet/bubbles':continue
+ for issue in repo['issues']:
+  if issue['number'] not in [1038,571]:continue
+  old_review=copy.deepcopy(issue['review']);assert old_review['reference_sha']=='c3bde0d166c2ca607d9864493453fd77bdcae7e4'
+  issue['review']['evidence_sha256']['crates/matea-widgets/src/help.rs']=binding['crates/matea-widgets/src/help.rs']
+  for p in ['docs/evidence/help-bounded/width-replay-small/context.json','docs/evidence/help-bounded/miri-small/context.json','docs/evidence/help-bounded/ci-source-bindings.json']:
+   issue['review']['evidence_sha256'][p]=sha((root/p).read_bytes())
+  issue['review']['notes']+=' Revalidated at 63ef696: 102 fresh Rust outputs match the retained independent fitting model; all four actual Help regressions pass Miri seed 229 and source-bound three-OS CI. Original issue body, fixed source observations and historical-reporter limits are unchanged; no new body fetch or rich decorator reproduction is claimed.'
+  assert issue['review']['status']==('complete' if issue['number']==1038 else 'partial')
+  updates.append({'number':issue['number'],'previous_review':old_review,'current_review_sha256':sha(json.dumps(issue['review'],sort_keys=True).encode())})
+assert len(updates)==2;issues_path.write_text(json.dumps(issues,indent=2)+'\n')
+(base/'issue-revalidation.json').write_text(json.dumps({'schema':1,'status':'complete','source_head':head,'reviews':updates,'limits':'Only #1038 complete disposition is revalidated. #571 stays partial; original body/source/environment observations are not relabeled as new executions.'},indent=2)+'\n')
+(base/'assessment-delta.json').write_text(json.dumps({'schema':1,'status':'complete','plan_before':before,'plan_after_sha256':sha(plan_path.read_bytes()),'changed_scores':[{'unit':'matea-widgets/help','dimension':'performance','before':50,'after':75}],'procedure_sha256':sha(Path(__file__).read_bytes())},indent=2)+'\n')
+print('Qualified one implemented Help performance axis; reference stays partial; #1038 revalidated and #571 remains pending')

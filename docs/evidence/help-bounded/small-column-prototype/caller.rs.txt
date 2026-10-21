@@ -1,0 +1,65 @@
+#[path = "/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]
+mod measurement;
+use matea_widgets as baseline;
+use matea_help_fast as current;
+use matea_render::{Size, Surface};
+use std::{hint::black_box, hash::{Hash,Hasher}, collections::hash_map::DefaultHasher};
+struct Fixture {name:&'static str, width:Option<u16>, full:bool, groups:Vec<Vec<(&'static str,&'static str,bool)>>}
+fn fixtures()->Vec<Fixture>{
+ let ordinary=vec![vec![("enter","continue",true)],vec![("esc","back",true),("?","help",true)],vec![("H","home",true),("ctrl+c","quit",true),("ctrl+l","log",true)]];
+ let unicode=vec![vec![("茶","e\u{301}を選ぶ",true),("←/→","移動",true),("q","終了",true)]];
+ let large=vec![("enter","continue",true);4096];
+ let wide=vec![("long_key_that_cannot_fit_this_column","description",true);4096];
+ let mut disabled=vec![("hidden long key","hidden long description",false);4096];disabled.extend(vec![("q","quit",true);4]);
+ vec![
+ Fixture{name:"short_unbounded",width:None,full:false,groups:ordinary.clone()},
+ Fixture{name:"short_40",width:Some(40),full:false,groups:ordinary.clone()},
+ Fixture{name:"short_unicode_80",width:Some(80),full:false,groups:unicode.clone()},
+ Fixture{name:"short_clipped_4096",width:Some(20),full:false,groups:vec![large.clone()]},
+ Fixture{name:"full_40",width:Some(40),full:true,groups:ordinary},
+ Fixture{name:"full_unicode_80",width:Some(80),full:true,groups:unicode},
+ Fixture{name:"full_clipped_4096",width:Some(20),full:true,groups:vec![vec![("enter","continue",true)],wide]},
+ Fixture{name:"full_tall_1024",width:Some(20),full:true,groups:vec![vec![("q","quit",true);1024]]},
+ Fixture{name:"short_zero_4096",width:Some(0),full:false,groups:vec![large]},
+ Fixture{name:"full_disabled_4096",width:Some(40),full:true,groups:vec![disabled]},
+ Fixture{name:"short_controls",width:Some(40),full:false,groups:vec![vec![("\u{1b}[31m","new\nline\tend",true),("\u{301}","visible",true)]]},
+ Fixture{name:"full_rejected_maxima",width:Some(13),full:true,groups:vec![vec![("a","go",true),("q","up",true)],vec![("long","x",true),("b","wide",true)]]},
+ ]
+}
+fn cells(surface:&Surface)->u64 {let mut h=DefaultHasher::new();for y in 0..surface.size().height{for c in surface.row(y){c.symbol().hash(&mut h);c.style().hash(&mut h);c.width().hash(&mut h);c.is_continuation().hash(&mut h);}}h.finish()}
+macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str,n:usize){
+ let groups:Vec<Vec<$api::HelpItem>>=f.groups.iter().map(|g|g.iter().map(|&(key,description,enabled)|$api::HelpItem{key,description,enabled}).collect()).collect();
+ let refs:Vec<_>=groups.iter().map(Vec::as_slice).collect();
+ let short:Vec<_>=groups.iter().flatten().copied().collect();
+ let mut help=$api::Help{width:f.width,show_all:f.full,full_separator:" | ".into(),..$api::Help::default()};
+ let id=format!("help-bounded/{mode}/{}",f.name);
+ match mode{
+ "text"=>{let output=if f.full{help.full_text(&refs)}else{help.short_text(&short)};
+  measurement::measure(&id,n,||if help.show_all{black_box(help.full_text(black_box(&refs))).len()as u64}else{black_box(help.short_text(black_box(&short))).len()as u64},&output,"fresh plain key help; existing metadata; consume byte length; no styling or terminal IO");},
+ "view"=>{let style=matea_style::Style::default().fg(matea_style::Color::Indexed(3)).bg(matea_style::Color::Indexed(4)).underline();
+  help.styles.short_gap=style;help.styles.full_gap=style;help.styles.short_key=style;help.styles.full_key=style;
+  let size=Size::new(80,4);let make=||help.view($api::HelpMap{short:black_box(&short),full:black_box(&refs)}).render(size).unwrap();
+  let surface=make();let output=format!("{};checksum={}",surface.plain(),cells(&surface));
+  measurement::measure(&id,n,||cells(&make()),&output,"owned help view and 80x4 styled cells; consume all symbols/styles/widths; no terminal IO");},
+ "reuse"=>{let output=help.short_text(&short);let mut buffer=String::with_capacity(256);measurement::measure(&id,n,||{buffer.clear();help.short_text_into(black_box(&short),&mut buffer);black_box(&buffer).len()as u64},&output,"append help into cleared caller-owned capacity; consume byte length; no terminal IO");},
+ _=>panic!("unknown mode")
+ }
+}}}
+runner!(old,baseline);runner!(new,current);
+macro_rules! api_runner {($name:ident,$api:ident)=>{fn $name(n:usize){
+ use matea_core::{Input,Key,KeyCode};
+ measurement::measure("help-bounded/api/default",n,||{let h=black_box($api::Help::default());assert!(!h.show_all&&h.width.is_none());h.short_separator.len()as u64+h.full_separator.len()as u64+h.ellipsis.len()as u64},"12","construct and drop default Help with owned separators and theme styles; validate defaults");
+ measurement::measure("help-bounded/api/configure_clone_event",n,||{let mut h=$api::Help{show_all:true,width:Some(64),styles:$api::HelpStyles::light(),..$api::Help::default()};h.styles=$api::HelpStyles::from_theme(&matea_style::Theme::plain());h.styles=$api::HelpStyles::dark();let mut copy=h.clone();let result=copy.event(black_box(&Input::Key(Key::new(KeyCode::Enter))));assert!(!result.consumed&&result.message.is_none());assert_eq!(copy.full_separator,h.full_separator);black_box(copy).width.unwrap()as u64},"64","configure/clone/drop Help including style constructors; passive input event; validate state");
+ let binding=matea_widgets::key::Binding::new([Key::new(KeyCode::Enter)],"enter","continue");
+ measurement::measure("help-bounded/api/borrow_binding",n,||{let item=$api::HelpItem::from(black_box(&binding));assert!(item.enabled);(item.key.len()+item.description.len())as u64},"13","borrow typed Binding metadata into enabled HelpItem; no cloning or rendering");
+}}}
+api_runner!(old_api,baseline);api_runner!(new_api,current);
+fn main(){
+ let variant=std::env::args().nth(1).expect("baseline/current");let n=measurement::iterations(1);
+ for f in fixtures(){if !["full_40","full_unicode_80","full_tall_1024","full_clipped_4096"].contains(&f.name){continue} for mode in ["text"]{
+  if mode=="view" && !["short_40","short_unicode_80","full_40","full_unicode_80","full_clipped_4096","short_controls"].contains(&f.name){continue}
+  if mode=="reuse" && !["short_40","short_unicode_80","short_clipped_4096","short_zero_4096"].contains(&f.name){continue}
+  if variant=="baseline"{old(&f,mode,n)}else{assert_eq!(variant,"current");new(&f,mode,n)}
+ }}
+
+}

@@ -1,0 +1,85 @@
+"""Reconstruct every Help sample, output comparison and actual RSS observation."""
+import hashlib,json,statistics,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verifier refuses -O')
+root=Path.cwd();base=root/'docs/evidence/help-bounded';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+result={};comparisons=[]
+for label,folder in [('initial',base),('exact_capacity',base/'exact-capacity')]:
+ ctx=json.loads((folder/'context.json').read_bytes());attempt=folder/ctx['attempt']
+ assert json.loads((attempt/'context.json').read_bytes())==ctx
+ assert ctx['completed_cases']==174
+ if label=='initial':
+  assert ctx['status']=='failed' and 'Operation not permitted' in (attempt/'rss-baseline-0.stderr').read_text()
+  recovery=folder/'rss-recovery';complete=json.loads((recovery/'context.json').read_bytes());rss_folder=recovery/complete['attempt']
+  assert complete['status']=='complete' and complete['producer_context_sha256']==sha((folder/'context.json').read_bytes())
+  assert complete['procedure_sha256']==sha((folder/'recover-rss.py.txt').read_bytes())
+  assert json.loads((rss_folder/'context.json').read_bytes())==complete
+  assert (rss_folder/'cases.jsonl').read_bytes()==(recovery/complete['raw']).read_bytes()==(attempt/'cases.jsonl').read_bytes()
+  assert sha((recovery/complete['raw']).read_bytes())==complete['raw_sha256']==ctx['partial_raw_sha256']
+ else:
+  assert ctx['status']=='failed' and ctx['error']=='exact-measurement.log'
+  recovery=folder/'output-log-recovery';complete=json.loads((recovery/'context.json').read_bytes());rss_folder=attempt
+  assert complete['status']=='complete' and complete['producer_context_sha256']==sha((folder/'context.json').read_bytes())
+  assert complete['procedure_sha256']==sha((folder/'recover-output-log.py.txt').read_bytes())
+  assert complete['misclassified_output_log']=='exact-measurement.log'
+  assert complete['output_log_sha256']==sha((folder/'collector-progress.log').read_bytes())
+  assert (recovery/complete['raw']).read_bytes()==(attempt/'cases.jsonl').read_bytes()
+  assert sha((recovery/complete['raw']).read_bytes())==complete['raw_sha256']==ctx['partial_raw_sha256']
+  assert json.loads((recovery/complete['attempt']/'context.json').read_bytes())==complete
+  assert complete['corrected_private_compile_input_sha256']=={n:h for n,h in ctx['private_input_sha256'].items() if Path(n).suffix in ['.rs','.go','.toml','.lock','.mod','.sum']}
+ assert ctx['procedure_sha256']==sha((folder/'measure.py.txt').read_bytes())
+ for name,h in ctx['archive_sha256'].items():assert sha((folder/name).read_bytes())==h,(label,name)
+ for name,h in ctx['root_input_sha256'].items():assert sha(subprocess.check_output(['git','show',ctx['source_head']+':'+name]))==h,(label,name)
+ old=subprocess.check_output(['git','show',ctx['baseline_head']+':crates/matea-widgets/src/help.rs'],text=True)
+ assert (folder/'baseline/lib.rs.txt').read_text()==old.replace('use crate::key::Binding;','use matea_widgets::key::Binding;',1)
+ assert (folder/'reference-helper.go.txt').read_text()==(root/'tools/perf-upstream/main.go').read_text().replace('func main() {','func historicalMain() {',1)
+ oracle=read_probe_outputs((folder/'baseline-outputs.jsonl').read_text());assert len(oracle)==25
+ assert read_probe_outputs((folder/'current-outputs.jsonl').read_text())==oracle
+ source=read_probe_outputs((folder/'source-outputs.jsonl').read_text());assert len(source)==8
+ for k,v in source.items():assert oracle[k]==v
+ rows=[];rebuilt={};raw_hashes={}
+ for cohort,order in enumerate(ctx['orders'],1):
+  assert set(order)=={'baseline','source','current'} and len(order)==3
+  for variant in order:
+   path=attempt/f'cohort-{cohort}-{variant}.jsonl';assert not path.with_suffix('.stderr').read_bytes()
+   raw_hashes[str(path.relative_to(folder))]=sha(path.read_bytes())
+   records=read_records(path.read_text());expected=source if variant=='source' else oracle;assert set(records)==set(expected)
+   for case,r in records.items():
+    assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20_000_000
+    for key in ['output','semantics','first_return_value']:assert r[key]==expected[case][key]
+    key=f'cohort-{cohort}/{variant}/{case}';assert key not in rebuilt
+    rebuilt[key]={**r,'case':key,'source_case':case,'cohort':cohort,'variant':variant}
+    rows.append({'cohort':cohort,'variant':variant,'case':case,**summary(r)})
+ assert rebuilt==read_records((attempt/'cases.jsonl').read_text())
+ assert len(rebuilt)==174 and sum(len(r['samples_ns']) for r in rebuilt.values())==5394
+ assert rows==complete['summary']
+ rss=[]
+ for item in complete['rss']:
+  variant,index=item['variant'],item['index'];p=rss_folder/f'rss-{variant}-{index}.jsonl';err=p.with_suffix('.stderr')
+  assert sha(p.read_bytes())==item['stdout_sha256'] and sha(err.read_bytes())==item['stderr_sha256']
+  assert read_probe_outputs(p.read_text())==(source if variant=='source' else oracle)
+  values=[int(line.split()[0]) for line in err.read_text().splitlines() if line.strip().endswith('maximum resident set size')]
+  assert values==[item['maximum_resident_set_bytes']] and values[0]>0
+  rss.append(item)
+ assert {(r['variant'],r['index']) for r in rss}=={(v,i) for v in ['baseline','current','source'] for i in range(31)}
+ groups={v:[r['maximum_resident_set_bytes'] for r in rss if r['variant']==v] for v in ['baseline','current','source']}
+ result[label]={'source_head':ctx['source_head'],'context_sha256':sha((folder/'context.json').read_bytes()),'qualification_context_sha256':sha((folder/('rss-recovery/context.json' if label=='initial' else 'output-log-recovery/context.json')).read_bytes()),'timing_records':174,'retained_intervals':5394,'summary':rows,'raw_process_sha256':raw_hashes,'rss_children':93,'rss_summary':{v:{'min':min(a),'median':statistics.median(a),'max':max(a)} for v,a in groups.items()},'binary_sha256':ctx['binary_sha256']}
+ for cohort in range(1,4):
+  for case in oracle:
+   before,after=[summary(rebuilt[f'cohort-{cohort}/{v}/{case}']) for v in ['baseline','current']]
+   upstream=summary(rebuilt[f'cohort-{cohort}/source/{case}']) if case in source else None
+   comparisons.append({'experiment':label,'cohort':cohort,'case':case,'baseline':before,'current':after,'source':upstream,'p50_worse_than_baseline':after['p50_ns']>before['p50_ns'],'p95_worse_than_baseline':after['p95_ns']>before['p95_ns'],'p50_worse_than_source':after['p50_ns']>upstream['p50_ns'] if upstream else None})
+assert result['initial']['binary_sha256']['source']==result['exact_capacity']['binary_sha256']['source']
+for c in comparisons:
+ if c['case']=='help-bounded/text/full_tall_1024':
+  if c['experiment']=='initial':assert c['baseline']['allocations']==3 and c['current']['allocations']==9
+  else:assert c['baseline']['allocations']==c['current']['allocations']==3 and c['baseline']['allocated_bytes']==c['current']['allocated_bytes']==72863
+output={'schema':1,'status':'complete','experiments':result,'comparisons':comparisons,'timing_records':348,'retained_intervals':10788,'rss_children':186,'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['25 implemented-module controls and eight matched source paths, repeated across two candidates; these are not 348 distinct capabilities.',
+ 'Initial producer failed only at the sandbox-denied RSS step. The complete timing process outputs are independently reconstructed by a separately completed recovery journal; no ordinary timing was repeated to repair an RSS failure.',
+ 'The exact-capacity producer completed timings and RSS, then rejected its own changing stdout log as input drift. Its original failure is retained; a separate completed journal checks every actual compile input and independently reconstructs all records without rerunning measurements.',
+ 'RSS is a complete fixture-process high-water value; Rust request counters and Go MemStats are not retained-memory parity.',
+ 'Native macOS arm64 observations, default release build, no affinity/frequency/ASLR controls. All adverse medians/tails stay retained. Other-host timings, physical terminal transport and rich Lip Gloss decorators are outside this finite review.']}
+(base/'verification.json').write_text(json.dumps(output,indent=2)+'\n');print('Verified 348 records / 10788 intervals and 186 distinct RSS children')

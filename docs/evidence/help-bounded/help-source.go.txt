@@ -1,0 +1,15 @@
+package main
+import("os";"strconv";"charm.land/bubbles/v2/help";"charm.land/bubbles/v2/key")
+type helpItem struct{k,d string}
+type helpFixture struct{name string; width int; full bool; groups [][]helpItem}
+func main(){
+ ordinary:=[][]helpItem{{{"enter","continue"}},{{"esc","back"},{"?","help"}},{{"H","home"},{"ctrl+c","quit"},{"ctrl+l","log"}}}
+ unicode:=[][]helpItem{{{"茶","e\u0301を選ぶ"},{"←/→","移動"},{"q","終了"}}}
+ large:=make([]helpItem,4096);wide:=make([]helpItem,4096);tall:=make([]helpItem,1024);for i:=range large{large[i]=helpItem{"enter","continue"};wide[i]=helpItem{"long_key_that_cannot_fit_this_column","description"}};for i:=range tall{tall[i]=helpItem{"q","quit"}}
+ fixtures:=[]helpFixture{{"short_unbounded",0,false,ordinary},{"short_40",40,false,ordinary},{"short_unicode_80",80,false,unicode},{"short_clipped_4096",20,false,[][]helpItem{large}},{"full_40",40,true,ordinary},{"full_unicode_80",80,true,unicode},{"full_clipped_4096",20,true,[][]helpItem{{{"enter","continue"}},wide}},{"full_tall_1024",20,true,[][]helpItem{tall}}}
+ n:=1;if v,e:=strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS"));e==nil&&v>0{n=v}
+ for _,f:=range fixtures{m:=help.New();m.Styles=help.Styles{};m.FullSeparator=" | ";m.SetWidth(f.width);groups:=make([][]key.Binding,len(f.groups));var short []key.Binding;for i,g:=range f.groups{for _,v:=range g{b:=key.NewBinding(key.WithKeys(v.k),key.WithHelp(v.k,v.d));groups[i]=append(groups[i],b);short=append(short,b)}}
+ render:=func()string{if f.full{return m.FullHelpView(groups)};return m.ShortHelpView(short)}
+ measure("help-bounded/text/"+f.name,n,func()uint64{clockTextSink=render();return uint64(len(clockTextSink))},render(),"fresh plain key help; existing metadata; consume byte length; no styling or terminal IO")
+ }
+}

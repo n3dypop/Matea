@@ -1,0 +1,23 @@
+use matea_widgets::{Help, HelpItem};
+fn item(key: &'static str, description: &'static str) -> HelpItem<'static> {
+    HelpItem { key, description, enabled: true }
+}
+fn main() {
+    let a = item("a", "go");
+    let b = item("b", "back");
+    let first = [a, item("long", "x")];
+    let second = [b];
+    for (tail_id, tail) in ["…", "", "..."].into_iter().enumerate() {
+        for width in 0..=16 {
+            let help = Help { width: Some(width), short_separator: "/".into(),
+                full_separator: "/".into(), ellipsis: tail.into(), ..Help::default() };
+            for full in [false, true] {
+                let text = if full { help.full_text(&[&first, &second]) } else { help.short_text(&[a, b]) };
+                // This finite corpus contains ASCII plus U+2026 (one cell).
+                let max_width = text.lines().map(|l| l.chars().count()).max().unwrap_or(0);
+                let hex: String = text.as_bytes().iter().map(|b| format!("{b:02x}")).collect();
+                println!("{width}\t{tail_id}\t{full}\t{max_width}\t{hex}");
+            }
+        }
+    }
+}

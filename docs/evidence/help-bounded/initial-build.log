@@ -1,0 +1,53 @@
+     Locking 15 packages to highest Rust 1.99.0 compatible versions
+   Compiling rustversion v1.0.23
+   Compiling static_assertions v1.1.0
+   Compiling ryu v1.0.23
+   Compiling itoa v1.0.18
+   Compiling cfg-if v1.0.5
+   Compiling unicode-width v0.2.2
+   Compiling unicode-segmentation v1.13.3
+   Compiling matea-style v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-style)
+   Compiling bitflags v2.13.2
+   Compiling matea-motion v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-motion)
+   Compiling castaway v0.2.4
+   Compiling compact_str v0.9.0
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+   Compiling matea-core v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-core)
+   Compiling matea-widgets v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-widgets)
+   Compiling matea-help-bounded v0.0.0 (/private/tmp/matea-help-bounded)
+error[E0106]: missing lifetime specifier
+  --> caller.rs:31:110
+   |
+31 | macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str)->(String,Box<dyn FnMut()->u64+'_>){
+   |                                                            --------      ----                                ^^ expected named lifetime parameter
+...
+45 | runner!(old,baseline);runner!(new,current);
+   | --------------------- in this macro invocation
+   |
+   = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `f` or `mode`
+   = note: this error originates in the macro `runner` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider introducing a named lifetime parameter
+   |
+31 - macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str)->(String,Box<dyn FnMut()->u64+'_>){
+31 + macro_rules! runner {($name:ident,$api:ident)=>{fn $name<'a>(f:&'a Fixture,mode:&'a str)->(String,Box<dyn FnMut()->u64+'a>){
+   |
+
+error[E0106]: missing lifetime specifier
+  --> caller.rs:31:110
+   |
+31 | macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str)->(String,Box<dyn FnMut()->u64+'_>){
+   |                                                            --------      ----                                ^^ expected named lifetime parameter
+...
+45 | runner!(old,baseline);runner!(new,current);
+   |                       -------------------- in this macro invocation
+   |
+   = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `f` or `mode`
+   = note: this error originates in the macro `runner` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider introducing a named lifetime parameter
+   |
+31 - macro_rules! runner {($name:ident,$api:ident)=>{fn $name(f:&Fixture,mode:&str)->(String,Box<dyn FnMut()->u64+'_>){
+31 + macro_rules! runner {($name:ident,$api:ident)=>{fn $name<'a>(f:&'a Fixture,mode:&'a str)->(String,Box<dyn FnMut()->u64+'a>){
+   |
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `matea-help-bounded` (bin "matea-help-bounded") due to 2 previous errors

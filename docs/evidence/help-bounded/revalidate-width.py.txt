@@ -1,0 +1,22 @@
+"""Bind the existing #1038 issue disposition to 102 fresh current-source outputs."""
+import ast,copy,hashlib,json,shutil,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded/width-replay';base.mkdir(exist_ok=True);work=Path('/private/tmp/matea-help-width-final')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+historical=root/'docs/evidence/help-width-issue';raw=(work/'matea.tsv').read_bytes();assert raw==(historical/'matea.tsv').read_bytes()
+text=(historical/'procedures/report.py.txt').read_text();tree=ast.parse(text);function=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='expected'];assert len(function)==1
+namespace={};exec(compile(ast.Module(body=function,type_ignores=[]),'<retained-independent-fitting-model>','exec'),namespace)
+for line in raw.decode().splitlines():
+ w,t,f,m,h=line.split('\t');expected=namespace['expected'](int(w),['…','','...'][int(t)],f=='true');actual=bytes.fromhex(h).decode();assert actual==expected;assert int(m)==max([len(s) for s in actual.splitlines()] or [0])<=int(w)
+assert len(raw.splitlines())==102
+for n in ['main.rs','Cargo.toml','Cargo.lock','build.log','matea.tsv']:
+ p=Path(n);dest=base/(n+'.txt' if p.suffix in ['.rs','.toml','.lock'] else n);shutil.copy2(work/n,dest)
+m=json.loads((root/'docs/evidence/help-bounded/miri/context.json').read_bytes());assert m['status']=='complete' and m['seed']==227 and m['exit_code']==0
+assert sha((root/'docs/evidence/help-bounded/miri/help.log').read_bytes())==m['log_sha256']
+for n,h in m['source_sha256'].items():assert sha((root/n).read_bytes())==h
+ctx={'schema':1,'status':'complete','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'fresh_cases':102,'identical_retained_outputs':102,
+ 'actual_help_source_sha256':sha((root/'crates/matea-widgets/src/help.rs').read_bytes()),'independent_model_ast_sha256':sha(ast.dump(function[0]).encode()),
+ 'original_report_sha256':sha((historical/'report.json').read_bytes()),'miri_context_sha256':sha((root/'docs/evidence/help-bounded/miri/context.json').read_bytes()),
+ 'files_sha256':{p.name:sha(p.read_bytes()) for p in base.iterdir() if p.is_file() and p.name!='context.json'},'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['Fresh current Rust replay and the retained independent fitting model; pinned source results and issue body remain their original observations. No new historical-reporter environment, body fetch, rich decorator or emulator reproduction.']}
+(base/'context.json').write_text(json.dumps(ctx,indent=2)+'\n');print('102 fresh width cases match the independent model and retained bounded output')

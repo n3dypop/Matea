@@ -1,0 +1,1485 @@
+msrv	UNKNOWN STEP	﻿2026-10-21T02:58:50.9333169Z Current runner version: '2.338.0'
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9360422Z ##[group]Runner Image Provisioner
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9361274Z Hosted Compute Agent
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9362009Z Version: 20261012.601
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9362755Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9363799Z Build Date: 2026-10-12T17:48:21Z
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9364518Z Worker ID: {1c50d99e-1a13-4bcb-9933-76507e16dac3}
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9365290Z Region: northcentralus
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9365966Z Cloud: Azure
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9366566Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9368286Z ##[group]Operating System
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9368947Z Ubuntu
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9369500Z 24.04.5
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9370090Z LTS
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9370707Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9371269Z ##[group]Runner Image
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9371963Z Image: ubuntu-24.04
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9372600Z Version: 20261012.334.1
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9374203Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9375775Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9376871Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9378001Z ##[group]GITHUB_TOKEN Permissions
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9380063Z Contents: read
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9380677Z Metadata: read
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9381361Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9383812Z Secret source: Actions
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9384910Z Cache mode: write
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9385702Z Prepare workflow directory
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9830533Z Prepare all required actions
+msrv	UNKNOWN STEP	2026-10-21T02:58:50.9898913Z Getting action download info
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.2072586Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.3212739Z Download action repository 'dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de' (SHA:02cb101ec7c40f2c49e1d9714d64511d8e1b74de)
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6210343Z Complete job name: msrv
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6970342Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6971374Z with:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6971822Z   repository: n3dypop/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6975838Z   token: ***
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6976282Z   ssh-strict: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6976792Z   ssh-user: git
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6977250Z   persist-credentials: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6977730Z   clean: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6978179Z   sparse-checkout-cone-mode: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6978694Z   fetch-depth: 1
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6979122Z   fetch-tags: false
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6979568Z   show-progress: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6980015Z   lfs: false
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6980431Z   submodules: false
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6980886Z   set-safe-directory: true
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6981389Z   allow-unsafe-pr-checkout: false
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.6982098Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.7965478Z Syncing repository: n3dypop/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.7967602Z ##[group]Getting Git version info
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.7968467Z Working directory is '/home/runner/work/Matea/Matea'
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.7969567Z [command]/usr/bin/git version
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8044551Z git version 2.55.0
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8067964Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8079866Z Temporarily overriding HOME='/home/runner/work/_temp/3281af60-21b2-4f46-8ee9-ee99258ef23d' before making global git config changes
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8082313Z Adding repository directory to the temporary git global config as a safe directory
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8086391Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Matea/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8136458Z Deleting the contents of '/home/runner/work/Matea/Matea'
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8140052Z ##[group]Determining repository object format
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8141682Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8142880Z ##[group]Initializing the repository
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8146753Z [command]/usr/bin/git init /home/runner/work/Matea/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8257334Z hint: Using 'master' as the name for the initial branch. This default branch name
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8259375Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8261254Z hint: to use in all of your new repositories, which will suppress this warning,
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8262436Z hint: call:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8263049Z hint:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8263999Z hint: 	git config --global init.defaultBranch <name>
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8264948Z hint:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8265815Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8267245Z hint: 'development'. The just-created branch can be renamed via this command:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8268367Z hint:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8269007Z hint: 	git branch -m <name>
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8269733Z hint:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8270718Z hint: Disable this message with "git config set advice.defaultBranchName false"
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8272284Z Initialized empty Git repository in /home/runner/work/Matea/Matea/.git/
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8280426Z [command]/usr/bin/git remote add origin https://github.com/n3dypop/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8329669Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8330857Z ##[group]Disabling automatic garbage collection
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8333903Z [command]/usr/bin/git config --local gc.auto 0
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8411610Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8412387Z ##[group]Setting up auth
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8412939Z Removing SSH command configuration
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8415993Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8456563Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8830217Z Removing HTTP extra header
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8836101Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.8878195Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9131933Z Removing includeIf entries pointing to credentials config files
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9138367Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9176337Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9427706Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9480564Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Matea/Matea/.git.path /home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9521483Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9565542Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9606025Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9641882Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9643501Z ##[group]Fetching the repository
+msrv	UNKNOWN STEP	2026-10-21T02:58:51.9648552Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +63ef696740261c134b5c3ba2834738f7bd1ee315:refs/remotes/origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7899335Z From https://github.com/n3dypop/Matea
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7901333Z  * [new ref]         63ef696740261c134b5c3ba2834738f7bd1ee315 -> origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7909835Z [command]/usr/bin/git branch --list --remote origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7942282Z   origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7950189Z [command]/usr/bin/git rev-parse refs/remotes/origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7978959Z 63ef696740261c134b5c3ba2834738f7bd1ee315
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7982980Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7984153Z ##[group]Determining the checkout info
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7985069Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.7988138Z [command]/usr/bin/git sparse-checkout disable
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.8045735Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.8082276Z ##[group]Checking out the ref
+msrv	UNKNOWN STEP	2026-10-21T02:58:53.8086614Z [command]/usr/bin/git checkout --progress --force -B foundation-coverage refs/remotes/origin/foundation-coverage
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.3966674Z Switched to a new branch 'foundation-coverage'
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.3969612Z branch 'foundation-coverage' set up to track 'origin/foundation-coverage'.
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4010183Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4064998Z [command]/usr/bin/git log -1 --format=%H
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4097400Z 63ef696740261c134b5c3ba2834738f7bd1ee315
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4741702Z ##[group]Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4743540Z with:
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4744470Z   toolchain: 1.88
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4745438Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.4917656Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5000424Z ##[group]Run if [[ -z $toolchain ]]; then
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5001777Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5004161Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5006354Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5007604Z ^[[36;1m  exit 1^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5009003Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5010677Z ^[[36;1m  if [[ Linux == macOS ]]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5012864Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5014980Z ^[[36;1m  else^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5016602Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5018445Z ^[[36;1m  fi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5019683Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5021758Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5023702Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5025761Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5027728Z ^[[36;1melse^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5028816Z ^[[36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5030073Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5281325Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5282730Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5283774Z   toolchain: 1.88
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5284676Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5468535Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=54]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5487158Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5541031Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5543684Z ^[[36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5546101Z ^[[36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5548254Z ^[[36;1mecho "downgrade=" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5618940Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5620256Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5621075Z   targets: 
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5621914Z   components: 
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5622788Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5747704Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=25]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5755435Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5798785Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5800568Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5867826Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5869174Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5985269Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=22]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.5992130Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6046641Z ##[group]Run if ! command -v rustup &>/dev/null; then
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6048130Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6050878Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6053751Z ^[[36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6054978Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6121897Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6123357Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6124224Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6125286Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6238134Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=24]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6245315Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6261626Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6278327Z ##[start-action display=rustup toolchain install 1.88;id=__dtolnay_rust-toolchain.__run_4]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6321404Z ##[group]Run rustup toolchain install 1.88 --profile minimal --no-self-update --force-non-host
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6323909Z ^[[36;1mrustup toolchain install 1.88 --profile minimal --no-self-update --force-non-host^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6392995Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6394511Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6395411Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6396487Z   RUSTUP_PERMIT_COPY_RENAME: 1
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6397485Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.6874298Z info: syncing channel updates for 1.88-x86_64-unknown-linux-gnu
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.7954423Z info: latest update on 2025-06-26 for version 1.88.0 (6b00bc388 2025-06-23)
+msrv	UNKNOWN STEP	2026-10-21T02:58:54.7956820Z info: downloading 3 components
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6166245Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6246213Z   1.88-x86_64-unknown-linux-gnu installed - rustc 1.88.0 (6b00bc388 2025-06-23)
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6246817Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6323873Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=8004]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6332333Z ##[start-action display=rustup default 1.88;id=__dtolnay_rust-toolchain.__run_5]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6357245Z ##[group]Run rustup default 1.88 --force-non-host
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6357660Z ^[[36;1mrustup default 1.88 --force-non-host^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6428980Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6429347Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6429580Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6429851Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6567101Z info: using existing install for 1.88-x86_64-unknown-linux-gnu
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6572280Z info: default toolchain set to 1.88-x86_64-unknown-linux-gnu
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6572573Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6648525Z   1.88-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6648905Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6667839Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=33]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6670683Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6695052Z ##[group]Run DATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6695834Z ^[[36;1mDATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6696488Z ^[[36;1mHASH=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6696992Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6767502Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6767865Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6768294Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.6768560Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7154466Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=48]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7157463Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7179405Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7179834Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7180186Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7180481Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7255429Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7255801Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7256069Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7256353Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7355296Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=19]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7357689Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7377874Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7378259Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7378601Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7378915Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7446691Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7447048Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7447274Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7447543Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7447771Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7567111Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=20]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7569519Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7592408Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7592975Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7593944Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7594655Z ^[[36;1m  if rustc +1.88 --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7595205Z ^[[36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7595737Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7596227Z ^[[36;1m  elif rustc +1.88 --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7596776Z ^[[36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7597523Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7597893Z ^[[36;1m  fi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7598121Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7666441Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7666809Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7667034Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7667313Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7667548Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.7667789Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8022989Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=45]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8026324Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8049314Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8050124Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8050749Z ^[[36;1mif rustc +1.88 --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8051419Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8051759Z ^[[36;1mfi^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8126208Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8126584Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8126842Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8127123Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8127367Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8127609Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8362104Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=33]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8367040Z ##[start-action display=rustc +1.88 --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8388623Z ##[group]Run rustc +1.88 --version --verbose
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8388999Z ^[[36;1mrustc +1.88 --version --verbose^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8462399Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8462767Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8463002Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8463504Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8463741Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8463979Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8672806Z rustc 1.88.0 (6b00bc388 2025-06-23)
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8673399Z binary: rustc
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8673695Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8674022Z commit-date: 2025-06-23
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8674371Z host: x86_64-unknown-linux-gnu
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8674748Z release: 1.88.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8675320Z LLVM version: 20.1.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8691841Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=32]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8756882Z ##[group]Run cargo test --locked --workspace
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8757289Z ^[[36;1mcargo test --locked --workspace^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8831634Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8831909Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8832135Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8832416Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8832650Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.8832886Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.9316950Z ^[[1m^[[32m    Updating^[[0m crates.io index
+msrv	UNKNOWN STEP	2026-10-21T02:59:02.9471206Z ^[[1m^[[32m    Updating^[[0m git repository `https://github.com/ratatui/ratatui`
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8414399Z ^[[1m^[[32m Downloading^[[0m crates ...
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8806527Z ^[[1m^[[32m  Downloaded^[[0m atomic v0.6.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8830546Z ^[[1m^[[32m  Downloaded^[[0m approx v0.5.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8858646Z ^[[1m^[[32m  Downloaded^[[0m bit-set v0.5.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8881012Z ^[[1m^[[32m  Downloaded^[[0m bit-vec v0.6.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8905905Z ^[[1m^[[32m  Downloaded^[[0m time-core v0.1.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8930298Z ^[[1m^[[32m  Downloaded^[[0m rustversion v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8972213Z ^[[1m^[[32m  Downloaded^[[0m palette_math v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.8997532Z ^[[1m^[[32m  Downloaded^[[0m num-traits v0.2.19
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9036313Z ^[[1m^[[32m  Downloaded^[[0m sha2 v0.10.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9077891Z ^[[1m^[[32m  Downloaded^[[0m strsim v0.11.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9099360Z ^[[1m^[[32m  Downloaded^[[0m phf_codegen v0.11.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9122894Z ^[[1m^[[32m  Downloaded^[[0m strum v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9144756Z ^[[1m^[[32m  Downloaded^[[0m phf v0.11.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9166798Z ^[[1m^[[32m  Downloaded^[[0m signal-hook-mio v0.2.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9190042Z ^[[1m^[[32m  Downloaded^[[0m strum_macros v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9229489Z ^[[1m^[[32m  Downloaded^[[0m serde_derive v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9277590Z ^[[1m^[[32m  Downloaded^[[0m wezterm-color-types v0.3.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9293991Z ^[[1m^[[32m  Downloaded^[[0m either v1.19.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9317019Z ^[[1m^[[32m  Downloaded^[[0m wezterm-blob-leases v0.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9336661Z ^[[1m^[[32m  Downloaded^[[0m wezterm-dynamic-derive v0.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9353410Z ^[[1m^[[32m  Downloaded^[[0m generic-array v0.14.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9375740Z ^[[1m^[[32m  Downloaded^[[0m num_threads v0.1.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9393780Z ^[[1m^[[32m  Downloaded^[[0m by_address v1.2.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9409258Z ^[[1m^[[32m  Downloaded^[[0m wezterm-dynamic v0.2.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9431296Z ^[[1m^[[32m  Downloaded^[[0m zmij v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9459643Z ^[[1m^[[32m  Downloaded^[[0m wezterm-input-types v0.1.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9474358Z ^[[1m^[[32m  Downloaded^[[0m terminfo v0.9.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9511691Z ^[[1m^[[32m  Downloaded^[[0m thiserror v1.0.69
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9579343Z ^[[1m^[[32m  Downloaded^[[0m unicode-ident v1.0.27
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9617172Z ^[[1m^[[32m  Downloaded^[[0m ucd-trie v0.1.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9649254Z ^[[1m^[[32m  Downloaded^[[0m uuid v1.18.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9690254Z ^[[1m^[[32m  Downloaded^[[0m proc-macro2 v1.0.107
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9734776Z ^[[1m^[[32m  Downloaded^[[0m wezterm-bidi v0.2.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9763910Z ^[[1m^[[32m  Downloaded^[[0m bitflags v1.3.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9810069Z ^[[1m^[[32m  Downloaded^[[0m unicode-segmentation v1.13.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9856398Z ^[[1m^[[32m  Downloaded^[[0m bytemuck v1.23.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9900820Z ^[[1m^[[32m  Downloaded^[[0m darling v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:04.9981341Z ^[[1m^[[32m  Downloaded^[[0m bitflags v2.13.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0040517Z ^[[1m^[[32m  Downloaded^[[0m log v0.4.34
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0077236Z ^[[1m^[[32m  Downloaded^[[0m fancy-regex v0.11.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0120145Z ^[[1m^[[32m  Downloaded^[[0m rustix v1.1.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0420045Z ^[[1m^[[32m  Downloaded^[[0m syn v1.0.109
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0528004Z ^[[1m^[[32m  Downloaded^[[0m mio v1.2.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0599930Z ^[[1m^[[32m  Downloaded^[[0m memchr v2.8.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0664715Z ^[[1m^[[32m  Downloaded^[[0m syn v3.0.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0797937Z ^[[1m^[[32m  Downloaded^[[0m unicode-width v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0863745Z ^[[1m^[[32m  Downloaded^[[0m syn v2.0.119
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.0980803Z ^[[1m^[[32m  Downloaded^[[0m derive_more-impl v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1043347Z ^[[1m^[[32m  Downloaded^[[0m pest v2.8.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1097737Z ^[[1m^[[32m  Downloaded^[[0m nom v7.1.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1157852Z ^[[1m^[[32m  Downloaded^[[0m termwiz v0.23.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1296348Z ^[[1m^[[32m  Downloaded^[[0m hashbrown v0.16.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1354944Z ^[[1m^[[32m  Downloaded^[[0m regex-automata v0.4.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1518655Z ^[[1m^[[32m  Downloaded^[[0m itertools v0.15.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1599972Z ^[[1m^[[32m  Downloaded^[[0m portable-atomic v1.15.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1681759Z ^[[1m^[[32m  Downloaded^[[0m palette v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1822878Z ^[[1m^[[32m  Downloaded^[[0m crossterm v0.29.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.1902150Z ^[[1m^[[32m  Downloaded^[[0m regex v1.11.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2048480Z ^[[1m^[[32m  Downloaded^[[0m libm v0.2.16
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2175621Z ^[[1m^[[32m  Downloaded^[[0m nix v0.29.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2300305Z ^[[1m^[[32m  Downloaded^[[0m hashbrown v0.17.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2358160Z ^[[1m^[[32m  Downloaded^[[0m compact_str v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2403011Z ^[[1m^[[32m  Downloaded^[[0m time v0.3.55
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2560879Z ^[[1m^[[32m  Downloaded^[[0m regex-syntax v0.8.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2639416Z ^[[1m^[[32m  Downloaded^[[0m minimal-lexical v0.2.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2689272Z ^[[1m^[[32m  Downloaded^[[0m derive_more v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2831107Z ^[[1m^[[32m  Downloaded^[[0m darling_core v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2896587Z ^[[1m^[[32m  Downloaded^[[0m finl_unicode v1.3.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2934816Z ^[[1m^[[32m  Downloaded^[[0m rand v0.8.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.2978481Z ^[[1m^[[32m  Downloaded^[[0m euclid v0.22.11
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3012864Z ^[[1m^[[32m  Downloaded^[[0m compact_str v0.9.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3052234Z ^[[1m^[[32m  Downloaded^[[0m typenum v1.18.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3087784Z ^[[1m^[[32m  Downloaded^[[0m pest_derive v2.8.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3116293Z ^[[1m^[[32m  Downloaded^[[0m parking_lot v0.12.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3144507Z ^[[1m^[[32m  Downloaded^[[0m getrandom v0.3.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3181717Z ^[[1m^[[32m  Downloaded^[[0m csscolorparser v0.6.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3196588Z ^[[1m^[[32m  Downloaded^[[0m termina v0.4.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3239431Z ^[[1m^[[32m  Downloaded^[[0m serde v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3281896Z ^[[1m^[[32m  Downloaded^[[0m signal-hook v0.3.18
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3316542Z ^[[1m^[[32m  Downloaded^[[0m semver v1.0.28
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3342785Z ^[[1m^[[32m  Downloaded^[[0m pest_meta v2.8.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3366045Z ^[[1m^[[32m  Downloaded^[[0m parking_lot_core v0.9.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3390329Z ^[[1m^[[32m  Downloaded^[[0m rand_core v0.6.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3406433Z ^[[1m^[[32m  Downloaded^[[0m foldhash v0.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3421408Z ^[[1m^[[32m  Downloaded^[[0m digest v0.10.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3442314Z ^[[1m^[[32m  Downloaded^[[0m convert_case v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3462625Z ^[[1m^[[32m  Downloaded^[[0m termios v0.3.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3482679Z ^[[1m^[[32m  Downloaded^[[0m indoc v2.0.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.3516537Z ^[[1m^[[32m  Downloaded^[[0m libc v0.2.190
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4036937Z ^[[1m^[[32m  Downloaded^[[0m unicode-truncate v3.0.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4055799Z ^[[1m^[[32m  Downloaded^[[0m thiserror-impl v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4073914Z ^[[1m^[[32m  Downloaded^[[0m thiserror v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4144776Z ^[[1m^[[32m  Downloaded^[[0m static_assertions v1.1.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4161075Z ^[[1m^[[32m  Downloaded^[[0m signal-hook-registry v1.4.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4176021Z ^[[1m^[[32m  Downloaded^[[0m quote v1.0.47
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4206040Z ^[[1m^[[32m  Downloaded^[[0m pest_generator v2.8.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4220765Z ^[[1m^[[32m  Downloaded^[[0m kasuari v0.4.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4247219Z ^[[1m^[[32m  Downloaded^[[0m deranged v0.5.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4269323Z ^[[1m^[[32m  Downloaded^[[0m critical-section v1.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4288608Z ^[[1m^[[32m  Downloaded^[[0m thiserror-impl v1.0.69
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4304639Z ^[[1m^[[32m  Downloaded^[[0m siphasher v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4319383Z ^[[1m^[[32m  Downloaded^[[0m lru v0.18.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4334897Z ^[[1m^[[32m  Downloaded^[[0m vtparse v0.6.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4345782Z ^[[1m^[[32m  Downloaded^[[0m lazy_static v1.5.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4366594Z ^[[1m^[[32m  Downloaded^[[0m lab v0.11.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4381806Z ^[[1m^[[32m  Downloaded^[[0m heck v0.5.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4395951Z ^[[1m^[[32m  Downloaded^[[0m crypto-common v0.1.6
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4406647Z ^[[1m^[[32m  Downloaded^[[0m cfg_aliases v0.2.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4417596Z ^[[1m^[[32m  Downloaded^[[0m fixedbitset v0.4.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4432483Z ^[[1m^[[32m  Downloaded^[[0m cfg-if v1.0.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4447524Z ^[[1m^[[32m  Downloaded^[[0m version_check v0.9.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4462029Z ^[[1m^[[32m  Downloaded^[[0m phf_generator v0.11.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4476289Z ^[[1m^[[32m  Downloaded^[[0m equivalent v1.0.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4489180Z ^[[1m^[[32m  Downloaded^[[0m utf8parse v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4500276Z ^[[1m^[[32m  Downloaded^[[0m num-conv v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4510560Z ^[[1m^[[32m  Downloaded^[[0m instability v0.3.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4528619Z ^[[1m^[[32m  Downloaded^[[0m ident_case v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4538255Z ^[[1m^[[32m  Downloaded^[[0m errno v0.3.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4556121Z ^[[1m^[[32m  Downloaded^[[0m serde_core v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4586240Z ^[[1m^[[32m  Downloaded^[[0m hex v0.4.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4604220Z ^[[1m^[[32m  Downloaded^[[0m cpufeatures v0.2.17
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4620264Z ^[[1m^[[32m  Downloaded^[[0m castaway v0.2.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4636132Z ^[[1m^[[32m  Downloaded^[[0m smallvec v1.16.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4651880Z ^[[1m^[[32m  Downloaded^[[0m powerfmt v0.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4664432Z ^[[1m^[[32m  Downloaded^[[0m darling_macro v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4672002Z ^[[1m^[[32m  Downloaded^[[0m block-buffer v0.10.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4684833Z ^[[1m^[[32m  Downloaded^[[0m memoffset v0.9.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4698707Z ^[[1m^[[32m  Downloaded^[[0m fnv v1.0.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4708835Z ^[[1m^[[32m  Downloaded^[[0m document-features v0.2.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4723360Z ^[[1m^[[32m  Downloaded^[[0m mac_address v1.1.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4741265Z ^[[1m^[[32m  Downloaded^[[0m itoa v1.0.18
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4757666Z ^[[1m^[[32m  Downloaded^[[0m scopeguard v1.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4770914Z ^[[1m^[[32m  Downloaded^[[0m phf_shared v0.11.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4781278Z ^[[1m^[[32m  Downloaded^[[0m phf_macros v0.11.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4792525Z ^[[1m^[[32m  Downloaded^[[0m num-derive v0.4.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4812645Z ^[[1m^[[32m  Downloaded^[[0m ryu v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4849415Z ^[[1m^[[32m  Downloaded^[[0m memmem v0.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4860325Z ^[[1m^[[32m  Downloaded^[[0m litrs v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4892466Z ^[[1m^[[32m  Downloaded^[[0m palette_derive v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4912623Z ^[[1m^[[32m  Downloaded^[[0m lock_api v0.4.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4927371Z ^[[1m^[[32m  Downloaded^[[0m line-clipping v0.3.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4945806Z ^[[1m^[[32m  Downloaded^[[0m filedescriptor v0.8.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.4956856Z ^[[1m^[[32m  Downloaded^[[0m aho-corasick v1.1.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5012984Z ^[[1m^[[32m  Downloaded^[[0m rustc_version v0.4.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5027262Z ^[[1m^[[32m  Downloaded^[[0m base64 v0.22.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5069423Z ^[[1m^[[32m  Downloaded^[[0m anyhow v1.0.99
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5124785Z ^[[1m^[[32m  Downloaded^[[0m deltae v0.3.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5297150Z ^[[1m^[[32m  Downloaded^[[0m ordered-float v4.6.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5314314Z ^[[1m^[[32m  Downloaded^[[0m allocator-api2 v0.2.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5343144Z ^[[1m^[[32m  Downloaded^[[0m autocfg v1.5.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:05.5482684Z ^[[1m^[[32m  Downloaded^[[0m linux-raw-sys v0.12.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3141204Z ^[[1m^[[32m   Compiling^[[0m unicode-segmentation v1.13.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3141913Z ^[[1m^[[32m   Compiling^[[0m rustversion v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3142614Z ^[[1m^[[32m   Compiling^[[0m cfg-if v1.0.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3164362Z ^[[1m^[[32m   Compiling^[[0m itoa v1.0.18
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3513654Z ^[[1m^[[32m   Compiling^[[0m static_assertions v1.1.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.3812870Z ^[[1m^[[32m   Compiling^[[0m unicode-width v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.4483821Z ^[[1m^[[32m   Compiling^[[0m matea-style v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-style)
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.5565897Z ^[[1m^[[32m   Compiling^[[0m unicode-ident v1.0.27
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.6210498Z ^[[1m^[[32m   Compiling^[[0m quote v1.0.47
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.7124828Z ^[[1m^[[32m   Compiling^[[0m ryu v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.8270986Z ^[[1m^[[32m   Compiling^[[0m bitflags v2.13.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.8396606Z ^[[1m^[[32m   Compiling^[[0m proc-macro2 v1.0.107
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.8464759Z ^[[1m^[[32m   Compiling^[[0m libc v0.2.190
+msrv	UNKNOWN STEP	2026-10-21T02:59:06.9925634Z ^[[1m^[[32m   Compiling^[[0m matea-motion v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-motion)
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.0610903Z ^[[1m^[[32m   Compiling^[[0m equivalent v1.0.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.0914455Z ^[[1m^[[32m   Compiling^[[0m foldhash v0.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.1712760Z ^[[1m^[[32m   Compiling^[[0m castaway v0.2.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.1934695Z ^[[1m^[[32m   Compiling^[[0m allocator-api2 v0.2.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.2153659Z ^[[1m^[[32m   Compiling^[[0m compact_str v0.9.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.4715288Z ^[[1m^[[32m   Compiling^[[0m strsim v0.11.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.7175278Z ^[[1m^[[32m   Compiling^[[0m matea-render v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-render)
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.8464749Z ^[[1m^[[32m   Compiling^[[0m ident_case v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:07.8984248Z ^[[1m^[[32m   Compiling^[[0m thiserror v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.0047127Z ^[[1m^[[32m   Compiling^[[0m matea-core v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-core)
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.1895312Z ^[[1m^[[32m   Compiling^[[0m syn v2.0.119
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.1914714Z ^[[1m^[[32m   Compiling^[[0m syn v3.0.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.3337978Z ^[[1m^[[32m   Compiling^[[0m zmij v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.3754789Z ^[[1m^[[32m   Compiling^[[0m errno v0.3.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.4874856Z ^[[1m^[[32m   Compiling^[[0m either v1.19.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.5875055Z ^[[1m^[[32m   Compiling^[[0m parking_lot_core v0.9.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.6879528Z ^[[1m^[[32m   Compiling^[[0m heck v0.5.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.7805828Z ^[[1m^[[32m   Compiling^[[0m signal-hook v0.3.18
+msrv	UNKNOWN STEP	2026-10-21T02:59:08.8385084Z ^[[1m^[[32m   Compiling^[[0m itertools v0.15.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:09.2745022Z ^[[1m^[[32m   Compiling^[[0m signal-hook-registry v1.4.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:09.4965107Z ^[[1m^[[32m   Compiling^[[0m matea-widgets v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-widgets)
+msrv	UNKNOWN STEP	2026-10-21T02:59:10.3317753Z ^[[1m^[[32m   Compiling^[[0m hashbrown v0.17.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:10.7208793Z ^[[1m^[[32m   Compiling^[[0m strum_macros v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:10.9224832Z ^[[1m^[[32m   Compiling^[[0m hashbrown v0.16.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:11.2714994Z ^[[1m^[[32m   Compiling^[[0m convert_case v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:11.5025853Z ^[[1m^[[32m   Compiling^[[0m darling_core v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:11.5534808Z ^[[1m^[[32m   Compiling^[[0m log v0.4.34
+msrv	UNKNOWN STEP	2026-10-21T02:59:11.6684947Z ^[[1m^[[32m   Compiling^[[0m scopeguard v1.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:11.7064553Z ^[[1m^[[32m   Compiling^[[0m rustix v1.1.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:12.0064857Z ^[[1m^[[32m   Compiling^[[0m smallvec v1.16.3
+msrv	UNKNOWN STEP	2026-10-21T02:59:12.4467927Z ^[[1m^[[32m   Compiling^[[0m lock_api v0.4.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:12.6424739Z ^[[1m^[[32m   Compiling^[[0m mio v1.2.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:12.9465242Z ^[[1m^[[32m   Compiling^[[0m thiserror-impl v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:12.9886952Z ^[[1m^[[32m   Compiling^[[0m strum v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.0484853Z ^[[1m^[[32m   Compiling^[[0m derive_more-impl v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.1475631Z ^[[1m^[[32m   Compiling^[[0m lru v0.18.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.2624927Z ^[[1m^[[32m   Compiling^[[0m unicode-truncate v3.0.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.6121143Z ^[[1m^[[32m   Compiling^[[0m compact_str v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.9114984Z ^[[1m^[[32m   Compiling^[[0m critical-section v1.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:13.9594911Z ^[[1m^[[32m   Compiling^[[0m time-core v0.1.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.1194837Z ^[[1m^[[32m   Compiling^[[0m litrs v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.3095392Z ^[[1m^[[32m   Compiling^[[0m num_threads v0.1.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.4024884Z ^[[1m^[[32m   Compiling^[[0m linux-raw-sys v0.12.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.5549349Z ^[[1m^[[32m   Compiling^[[0m num-conv v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.5761104Z ^[[1m^[[32m   Compiling^[[0m darling_macro v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.5803121Z ^[[1m^[[32m   Compiling^[[0m kasuari v0.4.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.6626004Z ^[[1m^[[32m   Compiling^[[0m powerfmt v0.2.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.7844647Z ^[[1m^[[32m   Compiling^[[0m deranged v0.5.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:14.8085338Z ^[[1m^[[32m   Compiling^[[0m indoc v2.0.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:15.1625423Z ^[[1m^[[32m   Compiling^[[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:15.2575034Z ^[[1m^[[32m   Compiling^[[0m darling v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:15.2902605Z ^[[1m^[[32m   Compiling^[[0m instability v0.3.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:15.9444877Z ^[[1m^[[32m   Compiling^[[0m time v0.3.55
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.0505377Z ^[[1m^[[32m   Compiling^[[0m document-features v0.2.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.1444866Z ^[[1m^[[32m   Compiling^[[0m derive_more v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.1735169Z ^[[1m^[[32m   Compiling^[[0m signal-hook-mio v0.2.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.2255499Z ^[[1m^[[32m   Compiling^[[0m parking_lot v0.12.5
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.5814798Z ^[[1m^[[32m   Compiling^[[0m line-clipping v0.3.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.6005249Z ^[[1m^[[32m   Compiling^[[0m crossterm v0.29.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:16.7675486Z ^[[1m^[[32m   Compiling^[[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:17.3115373Z ^[[1m^[[32m   Compiling^[[0m matea-terminal v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-terminal)
+msrv	UNKNOWN STEP	2026-10-21T02:59:17.9542685Z ^[[1m^[[32m   Compiling^[[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:17.9939317Z ^[[1m^[[32m   Compiling^[[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:18.1015363Z ^[[1m^[[32m   Compiling^[[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+msrv	UNKNOWN STEP	2026-10-21T02:59:18.2865017Z ^[[1m^[[32m   Compiling^[[0m matea v0.1.0 (/home/runner/work/Matea/Matea/crates/matea)
+msrv	UNKNOWN STEP	2026-10-21T02:59:20.5395214Z ^[[1m^[[32m   Compiling^[[0m matea-api-audit v0.1.0 (/home/runner/work/Matea/Matea/tools/api-audit)
+msrv	UNKNOWN STEP	2026-10-21T02:59:20.8285619Z ^[[1m^[[32m   Compiling^[[0m matea-perf-probe v0.1.0 (/home/runner/work/Matea/Matea/tools/perf-probe)
+msrv	UNKNOWN STEP	2026-10-21T02:59:25.7848315Z ^[[1m^[[32m   Compiling^[[0m matea-example-external-widget v0.1.0 (/home/runner/work/Matea/Matea/examples/external-widget)
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.8925166Z ^[[1m^[[32m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 31.99s
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9352790Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea-0959ec9a0a9d161a)
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9375432Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9375708Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9376296Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9376637Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9376984Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9378925Z ^[[1m^[[32m     Running^[[0m tests/progress.rs (target/debug/deps/progress-05c25746c3fab4c4)
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9389899Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9390055Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9394895Z test runtime_retargets_and_cancels_reduced_motion_subscriptions ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9400394Z test structured_progress_preserves_geometry_and_terminal_color_unicode_fallback ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9400827Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9401206Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9401745Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9405388Z ^[[1m^[[32m     Running^[[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-1e1469e6b15ec169)
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9415032Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9415180Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9425094Z test snapshot_scenes_reach_runtime_and_terminal_with_the_same_cells_cursor_and_bytes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9425520Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9425785Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9426120Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9428113Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_api_audit-4add0c90a57d4e83)
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9438312Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9438457Z running 6 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9460388Z test tests::borrowed_json_preserves_unicode_and_escapes_without_changing_bytes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9461564Z test tests::later_syntax_errors_never_publish_partial_file_declarations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9494616Z test tests::incremental_items_match_whole_file_parser_including_module_boundaries ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9608615Z test tests::public_source_path_propagates_short_writes_and_failures ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:34.9653684Z test tests::final_flush_failure_cannot_report_a_successful_inventory ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0158268Z test tests::output_failure_at_every_byte_is_reported_without_panicking ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0158825Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0159199Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0159779Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0162904Z ^[[1m^[[32m     Running^[[0m unittests src/main.rs (target/debug/deps/matea_api_audit-4270a9d3167ba525)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0175555Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0175726Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0176025Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0176526Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0177406Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0180013Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_core-79ec9793079a7541)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0189784Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0189934Z running 14 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0193968Z test input::tests::chords_ignore_repeat_and_lock_state_but_preserve_modifiers_and_release ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0195192Z test input::tests::focus_ring_ignores_release_and_modified_tab ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0196807Z test tests::deterministic_subscriptions_resize_and_focus ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0197761Z test tests::cancelled_queued_results_are_discarded ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0228042Z test tests::cancellation_interrupts_wait_and_worker_limit_is_enforced ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0228905Z test tests::model_state_can_remain_non_send ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0229559Z test tests::full_completion_queue_does_not_prevent_shutdown ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0237632Z test tests::saturated_clock_never_refires_or_rounds_down_unrepresentable_deadlines ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0239605Z test tests::replacing_an_id_discards_the_old_generation ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0242739Z test tests::small_or_duplicate_heavy_focus_rings_never_construct_a_hash_table ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0243872Z test tests::sequence_and_failures ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0244692Z test tests::subscription_deadline_distinguishes_maximum_from_unrepresentable_future ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0245709Z test tests::subscription_deadline_tracks_nearest_logical_time_removal_and_coalescing ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0302258Z test tests::large_focus_rings_preserve_first_order_even_with_total_hash_collision ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0302975Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0303492Z test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0303986Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0306615Z ^[[1m^[[32m     Running^[[0m tests/subscription_atomicity.rs (target/debug/deps/subscription_atomicity-7741c7d101a320e9)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0318673Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0319069Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0321733Z test rejected_duplicate_configuration_does_not_lose_existing_deadlines ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0322124Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0322438Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0322949Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0325356Z ^[[1m^[[32m     Running^[[0m tests/subscription_identity.rs (target/debug/deps/subscription_identity-ce718eafcd2e1200)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0335693Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0335943Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0401621Z test namespaces_and_named_text_are_distinct_and_revision_controls_callback_replacement ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0402346Z test zero_period_and_limit_errors_preserve_all_preexisting_deadlines ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0402864Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0404651Z ^[[1m^[[32m     Running^[[0m unittests src/main.rs (target/debug/deps/matea_example_external_widget-983b65e97051f401)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0405846Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_motion-31b73f87d49437ab)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0406851Z ^[[1m^[[32m     Running^[[0m tests/reference.rs (target/debug/deps/reference-c430f9b003903024)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0407960Z ^[[1m^[[32m     Running^[[0m unittests src/main.rs (target/debug/deps/matea_perf_probe-7820b2c2769cdd8e)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0408712Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0409061Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0409072Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0409360Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0410133Z test tests::extension_routes_input_and_renders_without_internals ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0410776Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0411313Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0411930Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0412137Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0412425Z running 6 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0413063Z test tests::analytical_oscillator_and_all_damping_regimes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0414581Z test tests::extreme_overdamping_keeps_the_slow_decay_instead_of_cancelling_it ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0415360Z test tests::frame_duration_boundaries_and_zero_steps ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0416045Z test tests::projectile_matches_forward_euler_and_exact_partition ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0416818Z test tests::rejects_invalid_states_and_identity_and_rest_are_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0417599Z test tests::velocity_overflow_cannot_partially_commit_position ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0418030Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0418408Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0418932Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0418937Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0419073Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0419632Z test reference_projectiles_cover_xyz_gravity_zero_steps_and_nanosecond_periods ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0420459Z test reference_trajectories_across_frequencies_and_damping ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0420898Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0421256Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0421791Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0421796Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0421968Z running 12 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0422576Z test measurement::tests::allocation_tracking_is_released_on_unwind_and_rejects_nesting ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0423849Z test gradients::precise_tests::precise_controls_match_independent_source_projections_and_literal_validation ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0424969Z test measurement::tests::calibration_failure_preserves_coarse_clock_history_at_the_cap ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0425838Z test measurement::tests::calibration_growth_never_overflows_usize ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0426637Z test measurement::tests::calibration_keeps_all_observations_and_requires_three_confirmations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0427236Z test measurement::tests::configuration_is_bounded_and_fixed_mode_is_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0427754Z test measurement::tests::invalid_calibration_performs_no_operations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0428281Z test measurement::tests::retained_samples_keep_every_interval_and_never_retry_a_zero ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0428857Z test measurement::tests::shared_batch_runs_exactly_the_requested_stateful_operations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0429412Z test progress::tests::lifecycle_controls_check_results_and_transactional_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.0429971Z test progress::tests::supplementary_controls_check_public_ownership_and_adapters ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1091208Z test progress::tests::scale_controls_match_independent_complete_cell_digests ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1091801Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1092231Z test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1092740Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1095219Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-b4e1ceb081a308b8)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1107269Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1107456Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1107672Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1108043Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1108575Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1109983Z ^[[1m^[[32m     Running^[[0m tests/bridge.rs (target/debug/deps/bridge-e31ae2031a8df1ea)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1121083Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1121231Z running 9 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1129015Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1144109Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1169192Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1185946Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1187132Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1188449Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1189955Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1194331Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1242123Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1242672Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1243060Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1243861Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1247194Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_render-e2dbe32731831d16)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1259894Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1260027Z running 12 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1268281Z test rich_text::tests::every_scalar_context_matches_per_grapheme_width ... ignored, exhaustive scalar contexts, explicitly executed by native acceptance
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1269330Z test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1270539Z test tests::cursor_metadata_does_not_damage_cells_and_invalid_positions_hide ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1282910Z test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1283987Z test tests::extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1284879Z test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1285615Z test tests::cursor_composes_through_layout_panel_and_layers ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1286419Z test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1287143Z test tests::unicode_clipping_and_controls ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1287962Z test tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1289612Z test tests::zero_and_oversized_geometry ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1450626Z test rich_text::tests::fast_width_preserves_cross_grapheme_script_and_emoji_policies ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1451190Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1451435Z test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1451815Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1454775Z ^[[1m^[[32m     Running^[[0m tests/invariants.rs (target/debug/deps/invariants-27de5619d97eef57)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1468086Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1468236Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.1471472Z test extreme_empty_clips_never_write_or_wrap_coordinates ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4042982Z test bounded_paint_sequences_preserve_glyph_ownership_and_determinism ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4043769Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4044141Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4047356Z ^[[1m^[[32m     Running^[[0m tests/rich_text.rs (target/debug/deps/rich_text-fa9ffd961a9fc66a)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4047882Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4062116Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4062330Z running 10 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4070195Z test chunks_normalize_once_and_ranges_follow_normalized_utf8 ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4071448Z test caller_iterator_failure_keeps_the_preexisting_document ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4072273Z test clipped_rows_skip_offscreen_styles_without_losing_byte_positions ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4073807Z test rich_layers_clear_complete_old_wide_glyphs_and_keep_layout_height ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4074928Z test every_scalar_split_of_complex_sequences_preserves_complete_cell_output ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4076170Z test pinned_public_span_cells_have_four_matches_and_four_literal_cluster_deviations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4077395Z test ownership_sharing_threads_and_old_view_snapshots_are_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4080518Z test single_style_matches_existing_text_for_controls_multiline_and_clipping ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4091997Z test untrusted_hints_and_irregular_chunks_preserve_canonical_content ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4093362Z test whole_graphemes_cross_style_boundaries_and_use_the_leading_style ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4094112Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4094450Z test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4094793Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4096791Z ^[[1m^[[32m     Running^[[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-33161251c69e3e44)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4108659Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4108818Z running 7 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4112648Z test extreme_and_empty_geometry_never_wraps_or_publishes_orphan_continuations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4114195Z test copying_cells_invalidates_old_cursors_and_snapshot_metadata_maps_like_view_cursors ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4116770Z test consuming_unique_roots_transfers_cells_while_shared_and_constrained_scenes_remain_independent ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4117848Z test long_heap_graphemes_and_nondefault_blank_cells_are_owned_exactly ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4118702Z test natural_height_layout_panels_and_clipped_glyphs_have_literal_results ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.4119558Z test snapshots_share_owned_immutable_cells_and_keep_the_scene_budget ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5235037Z test row_clone_matches_independent_per_glyph_paint_for_clips_offsets_and_damage ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5235682Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5236083Z test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5236623Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5238852Z ^[[1m^[[32m     Running^[[0m tests/text.rs (target/debug/deps/text-03d75079e46358dc)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5252649Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5252844Z running 6 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5256889Z test arguments_format_once_and_the_scene_retains_no_ui_borrow ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5270651Z test failed_display_panics_instead_of_returning_partial_text ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5271647Z test standard_inputs_normalize_identically_and_own_their_snapshot ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5272247Z test typed_views_and_raw_canvas_preserve_cells_styles_and_clipping_at_every_size ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.5347475Z test c2_candidates_in_mixed_utf8_keep_controls_and_valid_latin_distinct ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9277268Z test byte_scan_preserves_standard_control_policy_for_every_unicode_scalar ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9277851Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9278250Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9278861Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9281093Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_style-44ab9b4975d2770d)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9294933Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9295089Z running 5 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9300082Z test gradient::layout_tests::precise_inputs_keep_stop_and_terminal_color_storage_bounded ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9301012Z test tests::default_rgb_tokens_have_readable_contrast ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9301664Z test tests::layout_does_not_overflow_at_small_sizes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9302720Z test tests::fallback_is_bounded_and_no_color_keeps_focus ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9536430Z test attributes::tests::all_typed_states_preserve_independent_choices_and_clear_back_to_default ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9537035Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9537326Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9537682Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9539990Z ^[[1m^[[32m     Running^[[0m tests/colors.rs (target/debug/deps/colors-0877cde980dff11c)
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9553540Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9553705Z running 4 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9562101Z test every_rgb_triple_matches_full_palette_search ... ignored, Run explicitly in release: exhaustive 16,777,216 RGB triples against full search
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9563699Z test profiles_preserve_indices_attributes_and_first_index_ties ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:35.9593571Z test rgb16_quantization_is_monotonic_and_every_rgb8_bucket_has_256_inputs ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1567372Z test palette_and_midpoint_boundaries_match_independent_search ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1567905Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1568330Z test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.20s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1569251Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1570758Z ^[[1m^[[32m     Running^[[0m tests/gradients.rs (target/debug/deps/gradients-ef6b1640323d152f)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1585326Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1585480Z running 7 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1603994Z test configuration_owns_stops_and_rejects_invalid_angle_or_empty_input ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1620775Z test precise_single_stop_stays_constant_for_large_ranges_and_rotated_grids ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1624216Z test precise_stop_ownership_validation_prefix_and_opaque_interpolation_are_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1625305Z test premultiplied_rgba16_matches_canonical_pinned_source_color_projections ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1626299Z test all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1703882Z test pinned_lip_gloss_rgb8_samples_match_complete_fixture_outputs ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1979192Z test indexed_and_mixed_ended_iterators_preserve_exact_remaining_ranges ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1979746Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1980131Z test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1980719Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1982929Z ^[[1m^[[32m     Running^[[0m tests/layout.rs (target/debug/deps/layout-839291267c1bee30)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1996211Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.1996401Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2005896Z test weighted_layout_preserves_budget_zero_weights_and_fixed_priority ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2006268Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2006540Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2006894Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2010098Z ^[[1m^[[32m     Running^[[0m tests/patches.rs (target/debug/deps/patches-9827be50e60f4679)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2019987Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2020237Z running 7 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2027693Z test composition_is_associative_and_equivalent_to_sequential_resolution ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2028830Z test compact_copy_values_work_in_const_contexts_and_across_threads ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2030283Z test every_boolean_base_and_ternary_patch_matches_a_branching_value_model ... ignored, finite full flag domain, explicitly executed by native acceptance
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2031348Z test inheritance_false_and_terminal_default_are_distinct_intents ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2032024Z test each_boolean_composes_all_inherit_set_clear_sequences ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2032548Z test reset_and_complete_override_preserve_no_implicit_inheritance ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2033193Z test enum_groups_never_leak_into_other_attributes_or_each_other ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2033903Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2034251Z test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2034589Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2035508Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_terminal-9c214150191fec28)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2043930Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2044064Z running 49 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2047437Z test ansi::tests::encoding_does_not_consult_console_support_or_execute_winapi ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2048405Z test ansi::tests::preserves_original_io_error ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2049295Z test ansi::tests::underline_reset_and_partial_writer_failure_preserve_the_io_contract ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2050224Z test device::tests::fresh_raw_captures_once_and_owns_failed_transition_cleanup ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2051082Z test device::tests::input_errors_keep_partial_bytes_without_debugging_them ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2051861Z test device::tests::line_bytes_endings_eof_limits_and_no_overread ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2052621Z test device::tests::password_errors_and_unwind_keep_restoration_owned ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2053596Z test device::tests::restore_is_retryable_and_password_restores_the_current_mode ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2063557Z test device::tests::canonical_chunks_preserve_limits_backspaces_and_the_following_line ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2064532Z test device::unix::tests::native_attributes_are_owned_and_preserve_every_control_byte ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2065664Z test frame::tests::changing_ascii_row_does_not_reemit_unchanged_wide_row ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2069058Z test frame::tests::cursor_moves_use_short_relative_sequences_only_from_known_positions ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2069987Z test frame::tests::cursor_only_updates_show_move_hide_without_repainting_cells ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2070851Z test frame::tests::fallback_padding_failure_invalidates_state_before_retry ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2071699Z test frame::tests::io_failure_invalidates_cache_and_capability_change_repaints ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2072647Z test frame::tests::logical_color_cache_survives_recovery_without_reusing_physical_pen_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2073715Z test frame::tests::missing_previous_forces_unknown_cursor_and_style_reset ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2074555Z test frame::tests::one_cell_updates_are_two_bytes_and_invalidation_repaints ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2084126Z test frame::tests::quantization_remains_correct_after_eviction_level_changes_and_attributes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2085552Z test frame::tests::reduced_motion_suppresses_blink_but_preserves_other_decorations_and_repaints_on_change ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2087064Z test frame::tests::row_changes_address_absolutely_without_scrolling_or_margin_clamping ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2088315Z test frame::tests::visible_cursor_is_hidden_during_damage_then_restored_after_paint ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2089534Z test modes::tests::partial_acquisition_restores_only_attempted_modes_and_is_idempotent ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2090695Z test modes::tests::retries_failed_modes_without_repeating_successful_releases ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2092014Z test modes::tests::unsupported_keyboard_requests_fail_before_mode_acquisition ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2125366Z test protocol::tests::header_formatting_is_bounded_and_failed_headers_are_not_appended ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2126609Z test protocol::tests::invalid_dimensions_and_lengths_are_rejected ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2139080Z test protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2161737Z test protocol::tests::kitty_chunk_boundaries_padding_and_limits ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2162813Z test protocol::tests::sixel_bit_order_bands_transparency_and_runs ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2164166Z test session::tests::exclusive_lease_outlives_backend_body_and_nested_destructors ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2165335Z test session::tests::failed_and_panicking_constructors_release_their_owned_lease ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2166543Z test signals_unix::tests::partial_installation_journal_never_restores_unacquired_signals ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2167851Z test signals_unix::tests::restoration_retries_only_failed_records_in_reverse_install_order ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2168919Z test tests::conservative_environment_and_key_release ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2170143Z test tests::ctrl_c_policy_delivers_releases_and_other_modifier_chords ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2171182Z test tests::diff_transport_clears_wide_rows_and_is_idle_when_equal ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2172285Z test tests::fixed_attribute_sequences_match_crossterm_for_every_supported_combination ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2173503Z test tests::input_wait_respects_a_short_subscription_deadline ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2174624Z test tests::resize_to_empty_still_clears_old_content ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2177955Z test tests::restoration_on_success_failure_and_unwind ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2178933Z test tests::sparse_ascii_damage_preserves_unchanged_cells_and_styles ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2180027Z test tests::style_patch_resets_and_false_intents_reach_literal_terminal_commands ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2199601Z test frame::tests::palette_reuse_preserves_each_callers_attributes_across_eviction_and_color_levels ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2200947Z test tests::subscription_wait_subtracts_render_time_and_preserves_idle_cap ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2201911Z test tests::underline_color_headers_and_resolved_attribute_removal_are_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2280067Z test tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2448008Z test tests::all_resolved_attribute_requests_match_reference_sgr_commands ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2467463Z test device::tests::utf16_stream_matches_standard_replacement_without_losing_lookahead ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2468038Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2468410Z test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2469015Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2472609Z ^[[1m^[[32m     Running^[[0m tests/graphics_encoding.rs (target/debug/deps/graphics_encoding-18d07e2acb5e05cf)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2485072Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2485211Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2507591Z test sixel_band_rewinds_runs_and_transparency_preserve_every_pixel ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2555240Z test kitty_transfers_round_trip_formats_chunk_edges_and_exact_limits ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2555770Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2556174Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2556769Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2558388Z ^[[1m^[[32m     Running^[[0m tests/input.rs (target/debug/deps/input-b0aa3c240c6c8d37)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2569466Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2569598Z running 4 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2573655Z test every_nonpayload_function_media_and_modifier_code_survives ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2574397Z test mouse_coordinates_buttons_scroll_and_modifiers_are_preserved ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2575061Z test paste_is_moved_intact_and_focus_resize_are_delivered ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2576293Z test key_kinds_modifiers_and_lock_state_survive_all_combinations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2576740Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2577135Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2577712Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2582994Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_widgets-264f4b5bd51e38ad)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2590989Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2591142Z running 32 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2599111Z test help::tests::reference_columns_are_top_aligned_and_disabled_groups_are_omitted ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2600346Z test help::tests::shared_binding_state_unicode_safety_and_gap_styles_reach_cells ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2601648Z test key::tests::custom_tokens_share_enable_unbind_help_and_borrowed_matching ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2602831Z test key::tests::unbinding_disabled_and_repeat_keep_help_and_matching_consistent ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2604279Z test pagination::tests::explicit_pages_are_independent_and_stale_collections_never_panic ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2605517Z test help::tests::all_widths_fit_complete_items_and_columns_including_exact_tail_fit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2606994Z test pagination::tests::index_limits_preserve_slice_invariants_across_all_setters ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2608273Z test paginator::tests::custom_bindings_repeat_release_focus_and_boundaries_share_one_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2609453Z test paginator::tests::custom_formatting_and_dots_use_bounded_coherent_views ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2610422Z test tests::custom_filter_and_keys_share_enabled_help ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2611193Z test tests::form_focus_validation_and_submit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2611950Z test tests::list_filter_selection_empty_and_table ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2612930Z test help::tests::clipped_columns_are_rejected_whole_when_different_rows_set_the_maxima ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2614485Z test tests::releases_command_modifiers_and_nontext_events_do_not_edit_or_submit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2615557Z test pagination::tests::range_remains_valid_on_empty_data_and_resize ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2616460Z test tests::viewport_bounds_and_reduced_motion ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2617262Z test tests::input_graphemes_focus_paste_and_scroll ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2618394Z test textinput::tests::completion_handles_empty_selection_unicode_case_expansion_and_combining_marks ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2620031Z test textinput::tests::completions_respect_limits_and_live_validation_and_form_tab_ownership ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2621068Z test textinput::tests::context_merging_at_limit_and_paste_truncation_preserve_existing_suffix ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2621850Z test textinput::tests::custom_styles_switch_with_focus_without_embedded_terminal_sequences ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2622587Z test textinput::tests::deleting_at_word_end_never_panics_or_erases_the_next_word ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2636467Z test textinput::tests::form_submission_rechecks_validators_that_capture_other_ui_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2643022Z test textinput::tests::form_validation_cannot_bypass_the_input_validator ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2647043Z test textinput::tests::ignored_events_keep_error_and_state_and_repeat_is_an_edit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2647747Z test textinput::tests::native_cursor_uses_visible_cells_prompt_and_focus_without_reverse_style ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2648777Z test textinput::tests::placeholders_clip_by_cell_width_without_nuls_and_views_keep_cursor_visible ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2649599Z test textinput::tests::wide_completion_reserves_the_cursor_and_preview_respects_limits ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2653924Z test textinput::tests::words_custom_bindings_and_masks_share_the_editing_contract ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2654768Z test textinput::tests::edits_preserve_global_grapheme_boundaries_without_splitting_xyz_or_flags ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2655384Z test viewport::tests::viewport_vertical_work_does_not_initialize_width_cache ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2724205Z test textinput::tests::byte_budget_and_sanitizer_are_independent_of_grapheme_limits ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2724792Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2725055Z test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2725409Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2727797Z ^[[1m^[[32m     Running^[[0m tests/clocks.rs (target/debug/deps/clocks-48b83563a65b88b3)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2739305Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2739455Z running 8 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2743065Z test countdown_shortens_last_period_and_notifies_timeout_once_without_overshoot ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2744222Z test clock_views_keep_compact_unicode_units_and_theme_style ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2745532Z test defaults_reject_zero_intervals_and_zero_deadlines_do_not_schedule ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2746726Z test repeated_start_foreign_ticks_and_backward_controls_cannot_accelerate_clocks ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2747950Z test stopwatch_accounts_partial_intervals_pause_reset_and_invalidates_old_ticks ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2749221Z test runtime_reconciles_short_final_deadlines_and_coalesces_without_losing_elapsed_time ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2752193Z test compact_duration_display_matches_fixed_reference_fixtures ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2759666Z test identities_are_unique_across_clock_types_and_concurrent_construction ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2760021Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2760273Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2760597Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2762833Z ^[[1m^[[32m     Running^[[0m tests/collections.rs (target/debug/deps/collections-2279f72262c28b73)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2773849Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2779799Z running 4 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2780429Z test forms_validate_all_fields_focus_first_failure_and_clear_stale_submission ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2781490Z test caught_filter_panics_leave_a_valid_visible_prefix_and_selection ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2787889Z test list_navigation_clamps_and_preserves_original_filtered_indices ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2804757Z test table_ragged_rows_empty_headers_and_navigation_are_bounded ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2805240Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2805643Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2806240Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2808183Z ^[[1m^[[32m     Running^[[0m tests/cursor.rs (target/debug/deps/cursor-ce27e6ed072162e6)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2819617Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2819820Z running 6 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2824460Z test every_control_invalidates_queued_ticks_even_for_same_timestamp_or_value ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2826622Z test cursor_text_is_inline_before_grapheme_clipping ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2827478Z test phase_coalesces_elapsed_periods_and_rejects_duplicate_foreign_and_backward_ticks ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2828341Z test modes_focus_and_styles_follow_the_reference_contract ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2829141Z test runtime_reconciles_blur_mode_reduced_motion_and_delayed_notifications ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2831025Z test text_input_composition_preserves_graphemes_passwords_suggestions_and_native_cursor ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2831645Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2832015Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2832602Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2834013Z ^[[1m^[[32m     Running^[[0m tests/progress.rs (target/debug/deps/progress-86583904fd02d908)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2846730Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2846955Z running 11 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2864824Z test callback_policy_replacement_styles_and_owned_view_are_independent ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2865887Z test cells_are_exact_double_ended_and_exhausted_without_hidden_work ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2880638Z test invalid_input_is_transactional_and_finite_values_clamp ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2881468Z test narrow_formatting_is_single_line_sanitized_and_grapheme_clipped ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2897748Z test negative_velocity_is_not_rest_and_final_state_snaps_exactly ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2911914Z test reduced_motion_uses_target_suppresses_schedules_and_can_snap_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2913110Z test retargeting_rejects_stale_foreign_duplicate_and_backward_ticks ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2914452Z test all_public_reference_view_fixtures_match_cells_and_rgb8_styles ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.2995766Z test precise_rgba16_progress_frames_match_canonical_source_projections ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3027499Z test colored_owned_scene_preserves_child_boundaries_layout_and_callback_order ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3052498Z test single_pass_label_normalization_matches_previous_complete_text_contract ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3053055Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3053487Z test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3053827Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3056148Z ^[[1m^[[32m     Running^[[0m tests/spinner.rs (target/debug/deps/spinner-895ae1061ffbdb4d)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3069121Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3069249Z running 5 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3073190Z test custom_frames_are_validated_and_shared_without_cloning_live_state ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3074169Z test phase_uses_elapsed_time_and_controls_invalidate_old_schedules ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3075344Z test all_preset_frames_and_intervals_match_pinned_data ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3075949Z test manual_cadence_reduced_motion_labels_and_style_are_independent ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3076534Z test runtime_coalesces_animation_and_removes_paused_or_reduced_motion_schedules ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3077044Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3077407Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3077960Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3078495Z ^[[1m^[[32m     Running^[[0m tests/viewport.rs (target/debug/deps/viewport-8c7800a0f0abf792)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3089268Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3089419Z running 25 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3093188Z test ensure_visible_validates_before_mutation_and_handles_extreme_regions ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3094149Z test explicit_resize_commits_clamping_and_zero_movement_does_not ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3095434Z test failed_line_iteration_preserves_content_position_and_derived_index ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3096374Z test horizontal_navigation_obeys_focus_step_and_key_lifecycle ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3097517Z test focused_wheel_navigation_obeys_direction_modifiers_enable_delta_and_step ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3098686Z test horizontal_positions_resize_replace_and_clone_keep_owned_geometry ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3099410Z test horizontal_controls_match_an_independent_bounded_position_model ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3100109Z test ignored_navigation_does_not_commit_a_resize_position_change ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3100852Z test line_inputs_normalize_individually_without_borrowing_or_changing_the_caller ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3123821Z test owned_replacement_reuses_clean_utf8_and_normalizes_other_input ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3129398Z test pager_overrides_share_help_enable_exact_modifiers_precedence_and_reset ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3130542Z test pager_defaults_match_each_documented_chord_and_keep_existing_shift_navigation ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3131652Z test longest_width_handles_repeated_varied_ascii_indexes_and_replacement ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3132698Z test horizontal_public_controls_match_all_pinned_observations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3133830Z test public_controls_match_an_independent_bounded_position_model ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3134790Z test replacements_own_input_and_old_views_keep_their_snapshot ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3135701Z test resize_clamps_observed_position_before_applying_navigation ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3136735Z test source_resize_replace_overflow_edges_have_explicit_bounded_rust_outcomes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3137751Z test trailing_empty_lines_are_scrollable_and_crlf_is_structural ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3138720Z test pinned_public_controls_match_and_crlf_content_deviation_is_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3150633Z test visible_lines_borrow_aligned_slices_and_owned_views_keep_their_snapshot ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3154341Z test public_input_state_matches_source_with_literal_command_wheel_policy_difference ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3155262Z test pinned_cut_outputs_match_or_have_literal_reviewed_cell_policy_deviations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3196914Z test visible_windows_preserve_independently_specified_grapheme_cell_coordinates ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3222017Z test viewport_slices_match_an_independent_line_model ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3222433Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3222864Z test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3223207Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3226007Z ^[[1m^[[32m     Running^[[0m tests/viewport_highlights.rs (target/debug/deps/viewport_highlights-facfbc163812daa3)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3238579Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3238705Z running 10 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3245310Z test adversarial_size_hints_do_not_control_reservations_or_match_semantics ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3246200Z test clipped_wide_left_padding_and_oversized_replacements_keep_source_styles ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3246978Z test combining_and_emoji_matches_cover_complete_intersecting_graphemes ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3248129Z test multiline_empty_matches_clear_and_content_replacement_have_defined_semantics ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3248957Z test navigation_tracks_first_logical_range_and_wrapped_display_rows ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3249696Z test invalid_ranges_and_iterator_panics_are_transactional ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3264504Z test ordinary_selected_and_explicit_false_intents_reach_cells ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3269804Z test shared_geometry_old_views_and_independent_selections_are_safe_across_threads ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3482460Z test pinned_420_source_states_retain_190_matches_and_230_literal_deviations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3967303Z test every_scalar_boundary_range_preserves_plain_geometry_across_clipping_and_wrap ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3967900Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3968167Z test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3968531Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3971858Z ^[[1m^[[32m     Running^[[0m tests/viewport_wrap.rs (target/debug/deps/viewport_wrap-bc35f7e175874fe8)
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3985821Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3985987Z running 8 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3995293Z test ensure_visible_maps_logical_cell_columns_to_wrapped_rows_transactionally ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3997073Z test fill_height_includes_borrowed_empty_rows_and_respects_empty_geometry ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3998197Z test caches_clones_and_old_views_keep_independent_content_and_geometry ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.3999237Z test wrapping_uses_display_rows_without_changing_logical_content ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4000311Z test whole_graphemes_fit_rows_and_oversized_clusters_get_one_replacement ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4001406Z test zero_sizes_resize_and_parent_width_have_defined_position_semantics ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4049262Z test every_wrapped_row_obeys_its_budget_and_preserves_the_complete_glyph_stream ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4126141Z test pinned_source_matrix_has_586_exact_states_and_422_literal_reviewed_deviations ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4126506Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4126795Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4127143Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:36.4129365Z ^[[1m^[[32m   Doc-tests^[[0m matea
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0919847Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0920377Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0921404Z test crates/matea/src/lib.rs - (line 4) - compile ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0921824Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0922222Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0922782Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.0966823Z ^[[1m^[[32m   Doc-tests^[[0m matea_api_audit
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1172923Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1173580Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1173772Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1174053Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1174409Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1185240Z ^[[1m^[[32m   Doc-tests^[[0m matea_core
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1572503Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1573063Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1573528Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1574003Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1574529Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1588043Z ^[[1m^[[32m   Doc-tests^[[0m matea_motion
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1760733Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1761310Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1761517Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1761812Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1762161Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.1776001Z ^[[1m^[[32m   Doc-tests^[[0m matea_ratatui
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2034236Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2034726Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2035004Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2035436Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2035976Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.2051371Z ^[[1m^[[32m   Doc-tests^[[0m matea_render
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5613389Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5614133Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5627868Z test crates/matea-render/src/rich_text.rs - rich_text::RichText (line 27) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5628533Z test crates/matea-render/src/snapshot.rs - snapshot::View::surface (line 12) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5628945Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5629319Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5629847Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5644127Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5644313Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5939316Z test crates/matea-render/src/text.rs - text::Text (line 14) - compile fail ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5939716Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5955114Z ^[[1m^[[32m   Doc-tests^[[0m matea_style
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5955785Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.5956133Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8851400Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8851927Z running 3 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8867225Z test crates/matea-style/src/gradient.rs - gradient::Gradient::from_premultiplied_rgba16 (line 69) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8868005Z test crates/matea-style/src/attributes/patch.rs - attributes::patch::StylePatch (line 17) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8869801Z test crates/matea-style/src/lib.rs - Color::rgb16 (line 23) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8870621Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8871028Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8871642Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.8897190Z ^[[1m^[[32m   Doc-tests^[[0m matea_terminal
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9365001Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9365532Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9657117Z test crates/matea-terminal/src/device.rs - device::TerminalDevice (line 190) - compile fail ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9664172Z test crates/matea-terminal/src/device.rs - device::TerminalDevice (line 195) - compile fail ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9664820Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9665215Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9665665Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:37.9678392Z ^[[1m^[[32m   Doc-tests^[[0m matea_widgets
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3886049Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3886656Z running 3 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3902819Z test crates/matea-widgets/src/clocks.rs - clocks::ClockText::into_text (line 481) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3903888Z test crates/matea-widgets/src/viewport/highlights.rs - viewport::highlights::Viewport::set_highlights (line 97) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3904592Z test crates/matea-widgets/src/viewport.rs - viewport::Viewport (line 182) ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3905106Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3905486Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.3906027Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4031804Z ##[group]Run cargo test --locked -p matea-ratatui --no-default-features
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4032315Z ^[[36;1mcargo test --locked -p matea-ratatui --no-default-features^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4100013Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4100271Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4100483Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4100785Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4101014Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.4101246Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.5204984Z ^[[1m^[[32m   Compiling^[[0m unicode-ident v1.0.27
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.5206225Z ^[[1m^[[32m   Compiling^[[0m quote v1.0.47
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.5545305Z ^[[1m^[[32m   Compiling^[[0m proc-macro2 v1.0.107
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.8933794Z ^[[1m^[[32m   Compiling^[[0m syn v3.0.9
+msrv	UNKNOWN STEP	2026-10-21T02:59:38.8934413Z ^[[1m^[[32m   Compiling^[[0m syn v2.0.119
+msrv	UNKNOWN STEP	2026-10-21T02:59:40.2767378Z ^[[1m^[[32m   Compiling^[[0m strum_macros v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:41.0753109Z ^[[1m^[[32m   Compiling^[[0m darling_core v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:41.6946496Z ^[[1m^[[32m   Compiling^[[0m strum v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:41.9519155Z ^[[1m^[[32m   Compiling^[[0m thiserror-impl v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:42.9324825Z ^[[1m^[[32m   Compiling^[[0m thiserror v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T02:59:42.9476617Z ^[[1m^[[32m   Compiling^[[0m darling_macro v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:42.9551740Z ^[[1m^[[32m   Compiling^[[0m kasuari v0.4.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:43.1110543Z ^[[1m^[[32m   Compiling^[[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:43.4595396Z ^[[1m^[[32m   Compiling^[[0m darling v0.24.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:43.4811138Z ^[[1m^[[32m   Compiling^[[0m instability v0.3.14
+msrv	UNKNOWN STEP	2026-10-21T02:59:44.0465818Z ^[[1m^[[32m   Compiling^[[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:44.7998542Z ^[[1m^[[32m   Compiling^[[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:44.8595240Z ^[[1m^[[32m   Compiling^[[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8369590Z ^[[1m^[[32m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 7.41s
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8478861Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-ccb7227968c5a0d8)
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8491200Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8491363Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8491587Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8491981Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8492780Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8494050Z ^[[1m^[[32m     Running^[[0m tests/bridge.rs (target/debug/deps/bridge-67359b2e374d4c70)
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8505545Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8505697Z running 9 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8524055Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8525033Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8553465Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8564197Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8571668Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8572675Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8573864Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8580178Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8659707Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8660053Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8660306Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8660641Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8664156Z ^[[1m^[[32m   Doc-tests^[[0m matea_ratatui
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8909550Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8909940Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8910130Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8910423Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.8910789Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9011708Z ##[group]Run cargo test --locked -p matea-ratatui --all-features
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9012484Z ^[[36;1mcargo test --locked -p matea-ratatui --all-features^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9080492Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9080761Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9080975Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9081245Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9081473Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9081701Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:45.9830061Z ^[[1m^[[32m Downloading^[[0m crates ...
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0408082Z ^[[1m^[[32m  Downloaded^[[0m termion v4.0.6
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0443140Z ^[[1m^[[32m  Downloaded^[[0m numtoa v0.2.4
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0470060Z ^[[1m^[[32m  Downloaded^[[0m portable-atomic-util v0.2.6
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0541375Z ^[[1m^[[32m  Downloaded^[[0m rustix v0.38.44
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0824028Z ^[[1m^[[32m  Downloaded^[[0m crossterm v0.28.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.0959771Z ^[[1m^[[32m  Downloaded^[[0m linux-raw-sys v0.4.15
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.1591620Z ^[[1m^[[32m   Compiling^[[0m serde_core v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.1592286Z ^[[1m^[[32m   Compiling^[[0m syn v2.0.119
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.1593020Z ^[[1m^[[32m   Compiling^[[0m portable-atomic v1.15.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.1593763Z ^[[1m^[[32m   Compiling^[[0m libm v0.2.16
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.4143533Z ^[[1m^[[32m   Compiling^[[0m portable-atomic-util v0.2.6
+msrv	UNKNOWN STEP	2026-10-21T02:59:46.5884828Z ^[[1m^[[32m   Compiling^[[0m serde v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:47.0161796Z ^[[1m^[[32m   Compiling^[[0m serde_derive v1.0.229
+msrv	UNKNOWN STEP	2026-10-21T02:59:48.2076950Z ^[[1m^[[32m   Compiling^[[0m by_address v1.2.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:48.2604806Z ^[[1m^[[32m   Compiling^[[0m palette_math v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:48.5044937Z ^[[1m^[[32m   Compiling^[[0m kasuari v0.4.12
+msrv	UNKNOWN STEP	2026-10-21T02:59:48.6225337Z ^[[1m^[[32m   Compiling^[[0m bitflags v2.13.2
+msrv	UNKNOWN STEP	2026-10-21T02:59:48.7955378Z ^[[1m^[[32m   Compiling^[[0m line-clipping v0.3.8
+msrv	UNKNOWN STEP	2026-10-21T02:59:49.1745020Z ^[[1m^[[32m   Compiling^[[0m strum_macros v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:49.1920076Z ^[[1m^[[32m   Compiling^[[0m palette_derive v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:50.0045560Z ^[[1m^[[32m   Compiling^[[0m palette v0.7.7
+msrv	UNKNOWN STEP	2026-10-21T02:59:50.2444777Z ^[[1m^[[32m   Compiling^[[0m compact_str v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:50.7860678Z ^[[1m^[[32m   Compiling^[[0m strum v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:53.7070817Z ^[[1m^[[32m   Compiling^[[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:54.6984611Z ^[[1m^[[32m   Compiling^[[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:55.6716560Z ^[[1m^[[32m   Compiling^[[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:55.6953815Z ^[[1m^[[32m   Compiling^[[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:55.8007321Z ^[[1m^[[32m   Compiling^[[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8031353Z ^[[1m^[[32m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 10.87s
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8160354Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea_ratatui-461bda8f02d98d0e)
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8172795Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8173065Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8173503Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8173933Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8174504Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8175751Z ^[[1m^[[32m     Running^[[0m tests/bridge.rs (target/debug/deps/bridge-68458c4900c7ac57)
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8187085Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8187283Z running 9 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8214039Z test foreign_panics_release_ui_state_borrows_without_claiming_rollback ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8244310Z test geometry_is_checked_before_widget_entry_and_local_model_state_need_not_be_send ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8245632Z test source_buffers_drop_without_retaining_borrows_and_wide_placeholders_are_owned ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8247263Z test cached_styles_and_ascii_runs_preserve_chunk_style_unicode_and_row_boundaries ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8253145Z test all_named_indexed_rgb_colors_and_resolved_modifier_groups_survive_import ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8255023Z test stateful_render_updates_scoped_ui_state_without_putting_borrows_in_the_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8256387Z test unsupported_source_cells_and_invalid_buffers_fail_before_returning_a_scene ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8263585Z test theme_conversion_preserves_explicit_false_default_colors_and_every_supported_group ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8310047Z test catalog_widgets_render_through_owned_scenes_without_a_foreign_terminal ... ok
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8310604Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8310999Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8311572Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8312882Z ^[[1m^[[32m   Doc-tests^[[0m matea_ratatui
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8589564Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8590015Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8590306Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8590736Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8591299Z 
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8679821Z ##[group]Run cargo test --locked -p matea --all-targets --features ratatui
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8680394Z ^[[36;1mcargo test --locked -p matea --all-targets --features ratatui^[[0m
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8747213Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8747469Z env:
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8747697Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8747968Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8748201Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.8748437Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.9916642Z ^[[1m^[[32m   Compiling^[[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:56.9918220Z ^[[1m^[[32m   Compiling^[[0m derive_more-impl v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:57.5410773Z ^[[1m^[[32m   Compiling^[[0m derive_more v2.1.1
+msrv	UNKNOWN STEP	2026-10-21T02:59:57.5577124Z ^[[1m^[[32m   Compiling^[[0m crossterm v0.29.0
+msrv	UNKNOWN STEP	2026-10-21T02:59:57.7178293Z ^[[1m^[[32m   Compiling^[[0m ratatui-widgets v0.3.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:58.2225431Z ^[[1m^[[32m   Compiling^[[0m matea-terminal v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-terminal)
+msrv	UNKNOWN STEP	2026-10-21T02:59:58.7433916Z ^[[1m^[[32m   Compiling^[[0m ratatui-macros v0.7.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:58.7645735Z ^[[1m^[[32m   Compiling^[[0m ratatui v0.30.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T02:59:58.8525335Z ^[[1m^[[32m   Compiling^[[0m matea-ratatui v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-ratatui)
+msrv	UNKNOWN STEP	2026-10-21T02:59:58.9889842Z ^[[1m^[[32m   Compiling^[[0m matea v0.1.0 (/home/runner/work/Matea/Matea/crates/matea)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7646033Z ^[[1m^[[32m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 4.87s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7782488Z ^[[1m^[[32m     Running^[[0m unittests src/lib.rs (target/debug/deps/matea-701355c068d5c91d)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7795233Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7795420Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7795675Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7795948Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7796305Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7798196Z ^[[1m^[[32m     Running^[[0m tests/progress.rs (target/debug/deps/progress-cda0bba2ada85954)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7809573Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7809747Z running 2 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7814526Z test runtime_retargets_and_cancels_reduced_motion_subscriptions ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7819210Z test structured_progress_preserves_geometry_and_terminal_color_unicode_fallback ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7819811Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7820215Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7820803Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7822788Z ^[[1m^[[32m     Running^[[0m tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-7cce4a8157f8a87a)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7833510Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7833675Z running 1 test
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7843729Z test snapshot_scenes_reach_runtime_and_terminal_with_the_same_cells_cursor_and_bytes ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7844385Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7844781Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7845386Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7846561Z ^[[1m^[[32m     Running^[[0m benches/foundation_paths.rs (target/debug/deps/foundation_paths-a6cfe08a03ac8199)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7862879Z ^[[1m^[[32m     Running^[[0m unittests examples/attributes.rs (target/debug/examples/attributes-a61a81e6480b51af)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7872555Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7872697Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7872898Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7873549Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7873898Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7876595Z ^[[1m^[[32m     Running^[[0m unittests examples/clocks.rs (target/debug/examples/clocks-5b50de7533f64432)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7885837Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7886425Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7886926Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7887420Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7887942Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7888836Z ^[[1m^[[32m     Running^[[0m unittests examples/counter.rs (target/debug/examples/counter-063d735ca19229c1)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7898653Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7898877Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7899179Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7899583Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7900145Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7901936Z ^[[1m^[[32m     Running^[[0m unittests examples/cursor.rs (target/debug/examples/cursor-4fed4ab600b5135a)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7911432Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7911620Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7911820Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7912221Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7912772Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7914558Z ^[[1m^[[32m     Running^[[0m unittests examples/dashboard.rs (target/debug/examples/dashboard-a0f2b0162c60afbc)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7924370Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7924516Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7926355Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7926750Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7927292Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7928369Z ^[[1m^[[32m     Running^[[0m unittests examples/effects.rs (target/debug/examples/effects-13109175dcce660a)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7936718Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7936866Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7937061Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7937516Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7938049Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7939426Z ^[[1m^[[32m     Running^[[0m unittests examples/form.rs (target/debug/examples/form-531afc3242e5e15c)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7949001Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7949158Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7949364Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7949833Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7950382Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7951881Z ^[[1m^[[32m     Running^[[0m unittests examples/gradients.rs (target/debug/examples/gradients-37f03fff5af9d5e7)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7961186Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7961337Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7962749Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7963119Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7964125Z ^[[1m^[[32m     Running^[[0m unittests examples/help.rs (target/debug/examples/help-bb839c851c5d166d)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7964482Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7974096Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7974391Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7974627Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7974908Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7975248Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7976892Z ^[[1m^[[32m     Running^[[0m unittests examples/input.rs (target/debug/examples/input-1a6e64da82add9b3)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7986085Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7986225Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7986575Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7987054Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7987628Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7989152Z ^[[1m^[[32m     Running^[[0m unittests examples/lifecycle.rs (target/debug/examples/lifecycle-da4e6fcc8a2671ec)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7999494Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7999645Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.7999872Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8000261Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8000816Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8002409Z ^[[1m^[[32m     Running^[[0m unittests examples/list.rs (target/debug/examples/list-16387321fc6621c9)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8011406Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8011553Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8011767Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8012167Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8012972Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8014309Z ^[[1m^[[32m     Running^[[0m unittests examples/motion.rs (target/debug/examples/motion-83fd16b92ce91eed)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8023359Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8023626Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8023832Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8024331Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8024868Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8026288Z ^[[1m^[[32m     Running^[[0m unittests examples/pagination.rs (target/debug/examples/pagination-9843980bb4c33302)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8035698Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8035847Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8037710Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8038102Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8038631Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8039219Z ^[[1m^[[32m     Running^[[0m unittests examples/progress.rs (target/debug/examples/progress-2465075f313008db)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8047736Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8047898Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8048110Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8048878Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8049404Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8050656Z ^[[1m^[[32m     Running^[[0m unittests examples/ratatui_widgets.rs (target/debug/examples/ratatui_widgets-0d970ba8c24aa407)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8060193Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8060346Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8062113Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8062515Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8064035Z ^[[1m^[[32m     Running^[[0m unittests examples/render_probe.rs (target/debug/examples/render_probe-b6f04627d300db44)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8064602Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8072008Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8072161Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8072347Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8072966Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8073645Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8075023Z ^[[1m^[[32m     Running^[[0m unittests examples/spinners.rs (target/debug/examples/spinners-76650b455fb5b1ab)
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8084352Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8084520Z running 0 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8084843Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8085212Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8085739Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8155979Z ##[group]Run cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8156626Z ^[[36;1mcargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check^[[0m
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8223924Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8224185Z env:
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8224402Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8224666Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8224895Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8225131Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.8829416Z ^[[1m^[[32m Downloading^[[0m crates ...
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9105337Z ^[[1m^[[32m  Downloaded^[[0m itoa v1.0.15
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9137875Z ^[[1m^[[32m  Downloaded^[[0m quote v1.0.45
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9169690Z ^[[1m^[[32m  Downloaded^[[0m equivalent v1.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9181438Z ^[[1m^[[32m  Downloaded^[[0m either v1.15.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9199197Z ^[[1m^[[32m  Downloaded^[[0m unicode-ident v1.0.18
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9230627Z ^[[1m^[[32m  Downloaded^[[0m proc-macro2 v1.0.106
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9264989Z ^[[1m^[[32m  Downloaded^[[0m zmij v1.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9285523Z ^[[1m^[[32m  Downloaded^[[0m rustversion v1.0.22
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9317104Z ^[[1m^[[32m  Downloaded^[[0m cfg-if v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9332563Z ^[[1m^[[32m  Downloaded^[[0m autocfg v1.5.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9393782Z ^[[1m^[[32m  Downloaded^[[0m syn v3.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9515582Z ^[[1m^[[32m  Downloaded^[[0m libm v0.2.15
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9654241Z ^[[1m^[[32m  Downloaded^[[0m portable-atomic v1.13.1
+msrv	UNKNOWN STEP	2026-10-21T03:00:01.9733168Z ^[[1m^[[32m  Downloaded^[[0m syn v2.0.117
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0013734Z ^[[1m^[[32m   Compiling^[[0m proc-macro2 v1.0.106
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0014495Z ^[[1m^[[32m   Compiling^[[0m unicode-ident v1.0.18
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0015453Z ^[[1m^[[32m   Compiling^[[0m quote v1.0.45
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0015788Z ^[[1m^[[32m   Compiling^[[0m rustversion v1.0.22
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0614830Z ^[[1m^[[32m   Compiling^[[0m equivalent v1.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.0884923Z ^[[1m^[[32m   Compiling^[[0m foldhash v0.2.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.2024796Z ^[[1m^[[32m   Compiling^[[0m allocator-api2 v0.2.21
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.2364688Z ^[[1m^[[32m   Compiling^[[0m zmij v1.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.4534894Z ^[[1m^[[32m   Compiling^[[0m static_assertions v1.1.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.4819632Z ^[[1m^[[32m   Compiling^[[0m itoa v1.0.15
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.4874532Z ^[[1m^[[32m   Compiling^[[0m thiserror v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.5565203Z ^[[1m^[[32m   Compiling^[[0m cfg-if v1.0.1
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.5913061Z ^[[1m^[[32m   Compiling^[[0m either v1.15.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.7974803Z ^[[1m^[[32m   Compiling^[[0m unicode-segmentation v1.13.3
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.8168276Z ^[[1m^[[32m   Compiling^[[0m castaway v0.2.4
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.8571649Z ^[[1m^[[32m   Compiling^[[0m unicode-width v0.2.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.9279954Z ^[[1m^[[32m   Compiling^[[0m syn v3.0.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:02.9326083Z ^[[1m^[[32m   Compiling^[[0m syn v2.0.117
+msrv	UNKNOWN STEP	2026-10-21T03:00:03.0394690Z ^[[1m^[[32m   Compiling^[[0m heck v0.5.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:03.1774701Z ^[[1m^[[32m   Compiling^[[0m itertools v0.15.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:03.2944876Z ^[[1m^[[32m   Compiling^[[0m hashbrown v0.17.1
+msrv	UNKNOWN STEP	2026-10-21T03:00:03.8735410Z ^[[1m^[[32m   Compiling^[[0m hashbrown v0.16.1
+msrv	UNKNOWN STEP	2026-10-21T03:00:04.4315002Z ^[[1m^[[32m   Compiling^[[0m ryu v1.0.23
+msrv	UNKNOWN STEP	2026-10-21T03:00:04.5502047Z ^[[1m^[[32m   Compiling^[[0m compact_str v0.9.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:04.6504890Z ^[[1m^[[32m   Compiling^[[0m unicode-truncate v3.0.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:04.7324847Z ^[[1m^[[32m   Compiling^[[0m lru v0.18.5
+msrv	UNKNOWN STEP	2026-10-21T03:00:04.8454774Z ^[[1m^[[32m   Compiling^[[0m compact_str v0.10.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:05.1674820Z ^[[1m^[[32m   Compiling^[[0m bitflags v2.13.2
+msrv	UNKNOWN STEP	2026-10-21T03:00:05.3405067Z ^[[1m^[[32m   Compiling^[[0m matea-style v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-style)
+msrv	UNKNOWN STEP	2026-10-21T03:00:05.3964785Z ^[[1m^[[32m   Compiling^[[0m strum_macros v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:05.4079921Z ^[[1m^[[32m   Compiling^[[0m thiserror-impl v2.0.21
+msrv	UNKNOWN STEP	2026-10-21T03:00:05.5279326Z ^[[1m^[[32m   Compiling^[[0m matea-render v0.1.0 (/home/runner/work/Matea/Matea/crates/matea-render)
+msrv	UNKNOWN STEP	2026-10-21T03:00:06.4096486Z ^[[1m^[[32m   Compiling^[[0m kasuari v0.4.12
+msrv	UNKNOWN STEP	2026-10-21T03:00:06.8099113Z ^[[1m^[[32m   Compiling^[[0m strum v0.28.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:06.8354423Z ^[[1m^[[32m   Compiling^[[0m ratatui-core v0.1.2 (https://github.com/ratatui/ratatui?rev=d1ef782b48ddf0cb825c111d4d8b9adef572c0e1#d1ef782b)
+msrv	UNKNOWN STEP	2026-10-21T03:00:07.7576733Z ^[[1m^[[32m   Compiling^[[0m matea-reference-text-probe v0.0.0 (/home/runner/work/Matea/Matea/tools/reference-text)
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.4928142Z ^[[1m^[[32m    Finished^[[0m `dev` profile [unoptimized + debuginfo] target(s) in 6.65s
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.4985854Z ^[[1m^[[32m     Running^[[0m `tools/reference-text/target/debug/matea-reference-text-probe --check`
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.8945455Z 8 cases / 80 pinned public reference cells and 2 complete styled corpora match; 579933 style-patch observations match
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.8987865Z ##[group]Run cargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.8988587Z ^[[36;1mcargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets^[[0m
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9056589Z shell: /usr/bin/bash -e {0}
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9056959Z env:
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9057264Z   CARGO_HOME: /home/runner/.cargo
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9057654Z   CARGO_INCREMENTAL: 0
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9058000Z   CARGO_TERM_COLOR: always
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9058290Z ##[endgroup]
+msrv	UNKNOWN STEP	2026-10-21T03:00:08.9631459Z ^[[1m^[[32m   Compiling^[[0m matea-reference-text-probe v0.0.0 (/home/runner/work/Matea/Matea/tools/reference-text)
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3790534Z ^[[1m^[[32m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 0.45s
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3836188Z ^[[1m^[[32m     Running^[[0m unittests src/main.rs (tools/reference-text/target/debug/deps/matea_reference_text_probe-f10149b57380e18c)
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3847810Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3848058Z running 8 tests
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3852022Z test measurement::tests::allocation_tracking_is_released_on_unwind_and_rejects_nesting ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3852794Z test measurement::tests::calibration_failure_preserves_coarse_clock_history_at_the_cap ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3853890Z test measurement::tests::calibration_growth_never_overflows_usize ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3854743Z test measurement::tests::configuration_is_bounded_and_fixed_mode_is_explicit ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3855564Z test measurement::tests::calibration_keeps_all_observations_and_requires_three_confirmations ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3856152Z test measurement::tests::invalid_calibration_performs_no_operations ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3856688Z test measurement::tests::retained_samples_keep_every_interval_and_never_retry_a_zero ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3857260Z test measurement::tests::shared_batch_runs_exactly_the_requested_stateful_operations ... ok
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3857868Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3858130Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3858475Z 
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.3999009Z Post job cleanup.
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4849647Z [command]/usr/bin/git version
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4895767Z git version 2.55.0
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4941665Z Temporarily overriding HOME='/home/runner/work/_temp/48a7b53d-fc0d-4a56-8ab8-0b45bc01d3a4' before making global git config changes
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4942989Z Adding repository directory to the temporary git global config as a safe directory
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4947851Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Matea/Matea
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4985788Z Removing SSH command configuration
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.4993160Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5034312Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5322333Z Removing HTTP extra header
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5328771Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5369730Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5658905Z Removing includeIf entries pointing to credentials config files
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5667881Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5715228Z includeif.gitdir:/home/runner/work/Matea/Matea/.git.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5734401Z includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5735284Z includeif.gitdir:/github/workspace/.git.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5736302Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5738498Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Matea/Matea/.git.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5758414Z /home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5769692Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Matea/Matea/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-22d253b7\-f037\-44dd\-87d5\-d7b5ce8e581d\.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5817208Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5849087Z /home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5885960Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Matea/Matea/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-22d253b7\-f037\-44dd\-87d5\-d7b5ce8e581d\.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5921121Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5954046Z /github/runner_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.5965481Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-22d253b7\-f037\-44dd\-87d5\-d7b5ce8e581d\.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6010733Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6042122Z /github/runner_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6053939Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-22d253b7\-f037\-44dd\-87d5\-d7b5ce8e581d\.config
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6099328Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6382455Z Removing credentials config '/home/runner/work/_temp/git-credentials-22d253b7-f037-44dd-87d5-d7b5ce8e581d.config'
+msrv	UNKNOWN STEP	2026-10-21T03:00:09.6572012Z Cleaning up orphan processes

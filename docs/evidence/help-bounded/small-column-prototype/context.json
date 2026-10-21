@@ -1,0 +1,178 @@
+{
+  "schema": 2,
+  "status": "complete",
+  "attempt": "attempts/context/5321269f283c48caa9e26b34976cd032",
+  "started_at_utc": "2026-10-21T02:56:15.865267+00:00",
+  "completed_cases": 16,
+  "validity": "Only status=complete with matching raw_sha256 qualifies this invocation; older public files may remain.",
+  "source_head": "9aa25df24e05869591278a0e9062d21a679ad903",
+  "production_help_sha256": "d82d13e982135b89b288447884e4ea3a3222136b9c661a2c5b669913eb7edd71",
+  "private_input_sha256": {
+    "caller.rs": "529920f16a9f0a5b611e724d66dae08472080f75b7e9fd9c4abb5b09e979e5c5",
+    "fast/lib.rs": "b1bcc1c209b1e13336e89566c03d2d256ca76228ba7edf313faf1a22824d7286",
+    "fast/Cargo.toml": "8e63a5e30ba97bd84c8080024b70814d4f02b0ba0c705f91eff8735f673e143f",
+    "Cargo.toml": "244fe45ae7bd6a5ebb2d088ca3fc5f33062b4fc560b0c99fd66def24a7d72278",
+    "Cargo.lock": "a45a0d4517e3158c5ca8c8805304a8d884e7cd14de47058af5ae61de25cbe54b"
+  },
+  "binary_sha256": "1342ca0dd7a87c45574609f8bde7bf01d948598e28fef314d362887c099de97a",
+  "procedure_sha256": "dd8566ad3d66b0b1308deb57bbee330c35a8a2649cf31ab9038ae7a3bc1e18ad",
+  "orders": [
+    "baseline",
+    "current",
+    "current",
+    "baseline"
+  ],
+  "scope": "Four full plain-output cases, actual 9aa25df library versus private import-adjusted candidate; selection experiment only, no current-public-API qualification or fresh upstream ratio.",
+  "partial_raw_sha256": "c5c22aa6b4c996b508c8b36b5443ed0b1df47ad3c6a67d26e0fa4528fe0aaaca",
+  "timing_records": 16,
+  "retained_intervals": 496,
+  "summary": [
+    {
+      "variant": "baseline",
+      "cohort": 1,
+      "case": "help-bounded/text/full_40",
+      "p50_ns": 419.21742248535156,
+      "p95_ns": 421.6454772949219,
+      "allocations": 5,
+      "allocated_bytes": 663
+    },
+    {
+      "variant": "baseline",
+      "cohort": 1,
+      "case": "help-bounded/text/full_unicode_80",
+      "p50_ns": 515.4234466552734,
+      "p95_ns": 516.7395324707031,
+      "allocations": 3,
+      "allocated_bytes": 401
+    },
+    {
+      "variant": "baseline",
+      "cohort": 1,
+      "case": "help-bounded/text/full_clipped_4096",
+      "p50_ns": 211.91946411132812,
+      "p95_ns": 219.90013122558594,
+      "allocations": 3,
+      "allocated_bytes": 242
+    },
+    {
+      "variant": "baseline",
+      "cohort": 1,
+      "case": "help-bounded/text/full_tall_1024",
+      "p50_ns": 25907.8369140625,
+      "p95_ns": 26060.4658203125,
+      "allocations": 3,
+      "allocated_bytes": 72863
+    },
+    {
+      "variant": "current",
+      "cohort": 2,
+      "case": "help-bounded/text/full_40",
+      "p50_ns": 380.47218322753906,
+      "p95_ns": 386.9253845214844,
+      "allocations": 5,
+      "allocated_bytes": 663
+    },
+    {
+      "variant": "current",
+      "cohort": 2,
+      "case": "help-bounded/text/full_unicode_80",
+      "p50_ns": 494.44517517089844,
+      "p95_ns": 499.176025390625,
+      "allocations": 3,
+      "allocated_bytes": 401
+    },
+    {
+      "variant": "current",
+      "cohort": 2,
+      "case": "help-bounded/text/full_clipped_4096",
+      "p50_ns": 203.08335876464844,
+      "p95_ns": 204.35936737060547,
+      "allocations": 3,
+      "allocated_bytes": 242
+    },
+    {
+      "variant": "current",
+      "cohort": 2,
+      "case": "help-bounded/text/full_tall_1024",
+      "p50_ns": 25707.2353515625,
+      "p95_ns": 25923.54296875,
+      "allocations": 3,
+      "allocated_bytes": 72863
+    },
+    {
+      "variant": "current",
+      "cohort": 3,
+      "case": "help-bounded/text/full_40",
+      "p50_ns": 380.700439453125,
+      "p95_ns": 385.8051300048828,
+      "allocations": 5,
+      "allocated_bytes": 663
+    },
+    {
+      "variant": "current",
+      "cohort": 3,
+      "case": "help-bounded/text/full_unicode_80",
+      "p50_ns": 497.4237976074219,
+      "p95_ns": 541.5643005371094,
+      "allocations": 3,
+      "allocated_bytes": 401
+    },
+    {
+      "variant": "current",
+      "cohort": 3,
+      "case": "help-bounded/text/full_clipped_4096",
+      "p50_ns": 200.503662109375,
+      "p95_ns": 207.70740509033203,
+      "allocations": 3,
+      "allocated_bytes": 242
+    },
+    {
+      "variant": "current",
+      "cohort": 3,
+      "case": "help-bounded/text/full_tall_1024",
+      "p50_ns": 25725.056640625,
+      "p95_ns": 25867.146484375,
+      "allocations": 3,
+      "allocated_bytes": 72863
+    },
+    {
+      "variant": "baseline",
+      "cohort": 4,
+      "case": "help-bounded/text/full_40",
+      "p50_ns": 422.3887023925781,
+      "p95_ns": 438.25848388671875,
+      "allocations": 5,
+      "allocated_bytes": 663
+    },
+    {
+      "variant": "baseline",
+      "cohort": 4,
+      "case": "help-bounded/text/full_unicode_80",
+      "p50_ns": 528.0348510742188,
+      "p95_ns": 551.7279357910156,
+      "allocations": 3,
+      "allocated_bytes": 401
+    },
+    {
+      "variant": "baseline",
+      "cohort": 4,
+      "case": "help-bounded/text/full_clipped_4096",
+      "p50_ns": 211.9299545288086,
+      "p95_ns": 239.11285400390625,
+      "allocations": 3,
+      "allocated_bytes": 242
+    },
+    {
+      "variant": "baseline",
+      "cohort": 4,
+      "case": "help-bounded/text/full_tall_1024",
+      "p50_ns": 25865.396484375,
+      "p95_ns": 30682.5771484375,
+      "allocations": 3,
+      "allocated_bytes": 72863
+    }
+  ],
+  "raw": "current.jsonl",
+  "raw_sha256": "c5c22aa6b4c996b508c8b36b5443ed0b1df47ad3c6a67d26e0fa4528fe0aaaca",
+  "finished_at_utc": "2026-10-21T02:56:32.777164+00:00"
+}

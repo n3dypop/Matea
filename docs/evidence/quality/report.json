@@ -160,12 +160,6 @@
       "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
     },
     {
-      "unit": "matea-widgets/help",
-      "dimension": "performance",
-      "score": 50,
-      "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
-    },
-    {
       "unit": "matea-widgets/lib",
       "dimension": "reference",
       "score": 50,
@@ -960,7 +954,7 @@
         },
         "memory_safety": {
           "score": 75,
-          "reason": "Owned/borrowed data stays in safe Rust, except the explicitly reviewed Unix sigaction/measurement allocator boundaries; Miri is targeted, not exhaustive."
+          "reason": "Safe Option-held stack prefix moves into exactly reserved Vec ownership; early rejection drops prepared values and live borrows never escape. No new unsafe, dependency or cache. All four actual-source Help regressions pass Miri seed 229, including Unicode, early/late rejection and 1024 visible rows; native source-bound three-OS tests pass. No exhaustive soundness proof."
         },
         "behavior": {
           "score": 75,
@@ -971,12 +965,12 @@
           "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
         },
         "performance": {
-          "score": 50,
-          "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
+          "score": 75,
+          "reason": "Implemented Help operation families now have 25 controls covering construction/configuration/clone/borrow/event, short/full/plain/owned styled cells, append reuse, normalization and zero/disabled/clipped/tall scale. Three actual-source candidates plus a separate selection retain 538 records, 16678 positive intervals and 279 whole-fixture RSS children. The adopted actual API preserves all outputs, beats eight matched source medians in all three orders, restores tall-column allocations to 3/72863 bytes and fixes ordinary-full-help overhead. Adverse controls/tails and both independently recovered collection failures remain explicit. This native macOS finite implemented-module review excludes rich decorators, other-host timings and transport; no universal optimum or full-reference claim."
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Adopted Help source 63ef696 passes all seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV CI jobs. All 198 execution inputs match Git; 47 acceptance commands per host, four Help regressions in each release log and pinned source output probes pass. Actual-source Miri and 102 fresh independent width cases provide additional native evidence. Physical emulators and other-host performance remain unverified."
         }
       },
       "evidence": [
@@ -984,10 +978,15 @@
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/help-preparation-performance-audit.md",
+        "docs/evidence/help-bounded/final-verification.json",
+        "docs/evidence/help-bounded/miri-small/context.json",
+        "docs/evidence/help-bounded/width-replay-small/context.json",
+        "docs/evidence/help-bounded/ci-source-bindings.json"
       ],
       "remaining": [
-        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+        "Complete rich per-field decorator behavior and full compiler/dependency/target/source equivalence. Bounded implemented-module performance is qualified; physical terminal transport and cross-module optimization retain separate owners."
       ]
     },
     {
@@ -2409,7 +2408,7 @@
       ]
     }
   ],
-  "plan_sha256": "9a9d067d55b703c4f6c9508aa2d057dc9b5748bb8cd17f5e235c7322b59fa400",
+  "plan_sha256": "c9e19349b868f787f8855bf8c9d074a3fb50da5d594eb79f19adfcce76eed82d",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -4603,7 +4602,7 @@
     },
     {
       "file": "crates/matea-widgets/src/help.rs",
-      "sha256": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+      "sha256": "b4b7b185288461fe782f8218ff6b4f036fdf0c7c4366b2a8817237538b9000a0",
       "units": [
         "matea-widgets/help"
       ],
@@ -4615,25 +4614,25 @@
             "compiler_filename": "crates/matea-widgets/src/help.rs",
             "summary": {
               "lines": {
-                "count": 422,
-                "covered": 415,
-                "percent": 98.34123222748815
+                "count": 480,
+                "covered": 469,
+                "percent": 97.70833333333333
               },
               "functions": {
-                "count": 42,
-                "covered": 41,
-                "percent": 97.61904761904762
+                "count": 40,
+                "covered": 39,
+                "percent": 97.5
               },
               "instantiations": {
-                "count": 98,
-                "covered": 91,
-                "percent": 92.85714285714286
+                "count": 89,
+                "covered": 83,
+                "percent": 93.25842696629213
               },
               "regions": {
-                "count": 778,
-                "covered": 767,
-                "notcovered": 11,
-                "percent": 98.58611825192803
+                "count": 920,
+                "covered": 896,
+                "notcovered": 24,
+                "percent": 97.3913043478261
               },
               "branches": {
                 "count": 0,
