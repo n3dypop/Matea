@@ -1,0 +1,226 @@
+"""Frozen one-host experiment. Execute from repository root; never imports old finalizers."""
+import argparse
+import contextlib
+from datetime import datetime, timezone
+import hashlib
+import importlib.machinery
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import platform
+import resource
+import statistics
+import subprocess
+import sys
+import tempfile
+import time
+import tracemalloc
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale/candidate-2"
+sys.path.insert(0, str(ROOT / "scripts"))
+from measurement_run import MeasurementRun
+from performance_records import read_probe_outputs
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def load(name, variant):
+    path = ROOT / "scripts" / (name + ".py") if variant == "current" else BASE / (name + ".py.before.txt")
+    loader = importlib.machinery.SourceFileLoader(name + "_" + variant, str(path))
+    spec = importlib.util.spec_from_loader(loader.name, loader)
+    module = importlib.util.module_from_spec(spec)
+    loader.exec_module(module)
+    module.ROOT = ROOT
+    return module
+
+
+def synthetic(width, height, kind, styled=False):
+    fill = "".join(f"\x1b[{y + 1};1H" + "a" * width for y in range(height))
+    style = "\x1b[1;38;2;9;8;7;48;5;17m" if styled else ""
+    if kind == "K":
+        tail = "".join(f"\x1b[{1 + i % height};{1 + i % width}H\x1b[{i % 3}K" for i in range(32))
+    elif kind == "J":
+        tail = "".join(f"\x1b[{1 + i % height};{1 + i % width}H\x1b[{i % 3}J" for i in range(16))
+    else:
+        tail = "".join(f"\x1b[{1 + i % height};{1 + i % width}H\x1b[{i % 3}{'JKX'[i % 3]}" for i in range(48))
+    return {"width": width, "height": height, "sequences": [fill + style + tail]}
+
+
+def operation(case, variant):
+    ascii_oracle, color, bridge = [load(n, variant) for n in
+                                    ["check_terminal_trace", "check_color_trace", "check_ratatui_bridge"]]
+    traces = ROOT / "docs/evidence/performance/2026-10-16"
+    if case in ("ascii/retained", "ascii/cursor"):
+        trace = json.loads((traces / ("matea-trace.json" if case.endswith("retained") else "matea-cursor-trace.json")).read_bytes())
+        return lambda: canonical(ascii_oracle.replay(trace, include_cursor=case.endswith("cursor"))), canonical(trace)
+    if case in ("color/profiles", "color/margins", "color/fallback"):
+        path = ROOT / "docs/evidence/optimization/fallback/after-trace.json" if case.endswith("fallback") else traces / "matea-color-trace.json"
+        trace = json.loads(path.read_bytes())
+        function = (lambda: color.verify_fallback(trace)) if case.endswith("fallback") else (lambda: color.verify(trace, nondefault_margins=case.endswith("margins")))
+        return lambda: canonical(function()), canonical(trace)
+    if case.startswith(("ascii/erase", "color/erase")):
+        width, height, kind = {"erase-K": (256, 128, "K"), "erase-J": (128, 64, "J"), "erase-mixed": (160, 64, "mixed")}[case.split("/")[1]]
+        trace = synthetic(width, height, kind, case.startswith("color"))
+        function = color.replay if case.startswith("color") else ascii_oracle.replay
+        return lambda: canonical(function(trace)), canonical(trace)
+    if case == "bridge/all-retained":
+        data = (ROOT / "docs/evidence/ratatui-bridge/outputs/source-outputs.jsonl").read_bytes()
+        records = read_probe_outputs(data.decode())
+        return lambda: canonical(bridge.validate(records)), data
+    if case == "bridge/large-projection":
+        width, height = 256, 64
+        cell = b"\1\0\1\0\0\0x" + b"\0" * 14
+        raw = width.to_bytes(2, "little") + height.to_bytes(2, "little") + cell * width * height
+        text = raw.hex()
+        return lambda: canonical(bridge.decode(text, width, height)), text.encode()
+    if case.startswith("cli/"):
+        # Complete CLI processes include Python import/startup, read/parse,
+        # validation and exit. Bridge also executes the prebuilt source/managed
+        # probe and atomic publication in its own temporary directory.
+        environment = dict(os.environ, PYTHONPATH=str(ROOT / "scripts"))
+        if case == "cli/ascii":
+            path = ROOT / "scripts/check_terminal_trace.py" if variant == "current" else BASE / "check_terminal_trace.py.before.txt"
+            command = [sys.executable, str(path), str(traces / "matea-trace.json"), str(traces / "matea-cursor-trace.json")]
+            def run():
+                return subprocess.check_output(command, cwd=ROOT, env=environment, timeout=30)
+        elif case == "cli/color":
+            path = ROOT / "scripts/check_color_trace.py" if variant == "current" else BASE / "check_color_trace.py.before.txt"
+            command = [sys.executable, str(path), "--nondefault-margins", str(traces / "matea-color-trace.json"),
+                       str(ROOT / "docs/evidence/optimization/fallback/after-trace.json")]
+            def run():
+                return subprocess.check_output(command, cwd=ROOT, env=environment, timeout=30)
+        else:
+            def run():
+                with tempfile.TemporaryDirectory(prefix="matea-oracle-cli-") as temporary:
+                    result = subprocess.run([sys.executable, str(__file__), "--bridge-child", variant, temporary],
+                                            cwd=ROOT, env=environment, capture_output=True, check=True, timeout=30)
+                    return result.stdout
+        return run, canonical({"case": case, "trace_hashes": {p.name: sha(p.read_bytes()) for p in traces.glob("*trace.json")},
+                               "probe_sha256": sha((ROOT / "target/release/matea-perf-probe").read_bytes())})
+    errors = {
+        "reject/ascii-parameters": (ascii_oracle.replay, {"width": 4, "height": 2, "sequences": ["\x1b[1;2X"]}),
+        "reject/color-RGB": (color.replay, {"width": 4, "height": 2, "sequences": ["\x1b[38;2;1;2m"]}),
+        "reject/geometry": (color.replay, {"width": 4096, "height": 4096, "sequences": []}),
+    }
+    if case in errors:
+        function, trace = errors[case]
+        def run():
+            try:
+                function(trace)
+            except AssertionError as error:
+                return canonical({"rejected": str(error)})
+            raise ValueError("accepted malformed trace")
+        return run, canonical(trace)
+    special = {"edge/clamped-cursor": (ascii_oracle.replay, {"width": 4, "height": 2, "sequences": ["\x1b[999;999HX"]}),
+               "edge/wrap-erase": (color.replay, {"width": 4, "height": 2, "sequences": ["abcd\x1b[48;5;17m\x1b[2X"]})}
+    if case in special:
+        function, trace = special[case]
+        return lambda: canonical(function(trace)), canonical(trace)
+    raise ValueError(case)
+
+
+COMMON = ["ascii/retained", "ascii/cursor", "ascii/erase-K", "ascii/erase-J", "ascii/erase-mixed",
+          "color/profiles", "color/margins", "color/fallback", "color/erase-K", "color/erase-J", "color/erase-mixed",
+          "bridge/all-retained", "cli/ascii", "cli/color", "cli/bridge"]
+CURRENT_ONLY = ["bridge/large-projection", "reject/ascii-parameters", "reject/color-RGB", "reject/geometry",
+                "edge/clamped-cursor", "edge/wrap-erase"]
+
+
+def execute_child(case, variant):
+    operation_, _ = operation(case, variant)
+    result = operation_()
+    scale = 1 if sys.platform == "darwin" else 1024
+    return {"output_sha256": sha(result), "output_bytes": len(result),
+            "self_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * scale,
+            "descendant_peak_rss_bytes": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss * scale}
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rss-child", nargs=2)
+    parser.add_argument("--bridge-child", nargs=2)
+    args = parser.parse_args()
+    if args.rss_child:
+        print(json.dumps(execute_child(*args.rss_child)))
+        return
+    if args.bridge_child:
+        variant, destination = args.bridge_child
+        module = load("check_ratatui_bridge", variant)
+        with contextlib.redirect_stdout(io.StringIO()):
+            module.check(ROOT / "target/release/matea-perf-probe", Path(destination))
+        report = json.loads((Path(destination) / "outputs-check.json").read_bytes())
+        print(canonical(report).decode())
+        return
+    names = ["scripts/" + n + ".py" for n in ["check_terminal_trace", "check_color_trace", "check_ratatui_bridge", "test_color_trace",
+                                                "measurement_run", "performance_records", "evidence_checks", "fetch_upstream_issues"]]
+    names += [str(Path(__file__).resolve().relative_to(ROOT)), "target/release/matea-perf-probe"]
+    names += [str(p.relative_to(ROOT)) for p in BASE.glob("check_*.py.before.txt")]
+    names += ["docs/evidence/performance/2026-10-16/" + n for n in
+              ["matea-trace.json", "matea-cursor-trace.json", "matea-color-trace.json"]]
+    names += ["docs/evidence/optimization/fallback/after-trace.json", "docs/evidence/ratatui-bridge/outputs/source-outputs.jsonl"]
+    hashes = {n: sha((ROOT / n).read_bytes()) for n in names}
+    expected = {}
+    with MeasurementRun(BASE / "performance", root=ROOT) as journal:
+        journal.update(producer_sha256=sha(Path(__file__).read_bytes()), input_sha256=hashes,
+                       python=sys.version, platform=platform.platform(), machine=platform.machine(),
+                       sample_count=31, timing_scope="one complete operation per sample; serialization included except CLI payload output checks",
+                       exclusions=["No instrumented timings", "No physical terminal/Unicode/renderer throughput inference",
+                                   "Peak RSS is fresh whole-fixture process including imports/input; never retained-only or per-operation allocation"])
+        for cohort, order in enumerate([("before", "current"), ("current", "before"), ("before", "current")], 1):
+            for variant in order:
+                for case in COMMON + (CURRENT_ONLY if variant == "current" else []):
+                    function, inputs = operation(case, variant)
+                    output = function()
+                    if case in expected and expected[case] != output:
+                        raise ValueError("before/current complete output mismatch: " + case)
+                    expected[case] = output
+                    (BASE / "performance/outputs").mkdir(exist_ok=True)
+                    (BASE / "performance/outputs" / (case.replace("/", "-") + ".json.txt")).write_bytes(output)
+                    samples = []
+                    for _ in range(31):
+                        start = time.perf_counter_ns()
+                        observed = function()
+                        elapsed = time.perf_counter_ns() - start
+                        if observed != output or elapsed <= 0:
+                            raise ValueError("changed output or nonpositive sample")
+                        samples.append(elapsed)
+                    tracemalloc.start()
+                    observed = function()
+                    retained, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
+                    if observed != output:
+                        raise ValueError("heap output mismatch")
+                    rss = []
+                    for _ in range(3):
+                        result = subprocess.run([sys.executable, str(__file__), "--rss-child", case, variant],
+                                                capture_output=True, cwd=ROOT, check=True, timeout=30)
+                        value = json.loads(result.stdout)
+                        if value["output_sha256"] != sha(output):
+                            raise ValueError("RSS child output mismatch")
+                        rss.append(value)
+                    journal.record({"case": f"cohort-{cohort}/{variant}/{case}", "workload": case, "variant": variant,
+                                    "cohort": cohort, "input_sha256": sha(inputs), "output_sha256": sha(output),
+                                    "output_bytes": len(output), "samples_ns": samples,
+                                    "p50_ns": statistics.median(samples), "p95_ns": sorted(samples)[29],
+                                    "python_traced_retained_bytes": retained, "python_traced_peak_bytes": peak,
+                                    "whole_fixture_rss_children": rss,
+                                    "ratio_eligible": case in COMMON})
+            print(f"cohort {cohort} complete", flush=True)
+        if hashes != {n: sha((ROOT / n).read_bytes()) for n in names}:
+            raise ValueError("source/binary changed during measurement")
+        journal.complete(records=len(journal.records), positive_intervals=31 * len(journal.records),
+                         whole_fixture_rss_children=3 * len(journal.records), paired_cases=len(COMMON),
+                         current_only_cases=len(CURRENT_ONLY))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,212 @@
+"""Independent ASCII cell/SGR replay for the finite colored-frame fixtures."""
+from evidence_checks import require
+import argparse
+import json
+import os
+import re
+import subprocess
+from pathlib import Path
+
+CSI = re.compile(r"\x1b\[([0-?]*)([ -/]*)([@-~])")
+
+
+def replay(trace):
+    width, height = trace["width"], trace["height"]
+    require(type(width) is int and type(height) is int
+            and 1 <= width <= 4096 and 1 <= height <= 4096
+            and width * height <= 1_048_576, "unsupported replay geometry")
+    streams = trace["sequences"]
+    require(isinstance(streams, list) and len(streams) <= 4096
+            and all(isinstance(s, str) for s in streams)
+            and sum(map(len, streams)) <= 16_777_216, "unsupported replay streams")
+    cells = [[(" ", None, None, 0)] * width for _ in range(height)]
+    x = y = attrs = 0
+    fg = bg = None
+    visible, last = True, " "
+    top, bottom = trace.get("scroll_region", [0, height - 1])
+    require(type(top) is int and type(bottom) is int and 0 <= top <= bottom < height)
+    def linefeed():
+        nonlocal y
+        if y == bottom:
+            cells[top:bottom + 1] = cells[top + 1:bottom + 1] + [[(" ", fg, bg, attrs)] * width]
+        else:
+            y = min(height - 1, y + 1)
+    def put(char):
+        nonlocal x, y, last
+        if x == width:
+            x = 0
+            linefeed()
+        cells[y][x] = (char, fg, bg, attrs)
+        x += 1
+        last = char
+    for stream in streams:
+        offset = 0
+        while offset < len(stream):
+            char = stream[offset]
+            if char != "\x1b":
+                if char == "\r": x = 0
+                elif char == "\n": linefeed()
+                elif char == "\b": x = max(0, x - 1)
+                else:
+                    require(" " <= char <= "~", lambda: repr(char))
+                    put(char)
+                offset += 1
+                continue
+            match = CSI.match(stream, offset)
+            require(match, lambda: repr(stream[offset:offset + 40]))
+            body, intermediate, final = match.groups()
+            require(not intermediate, lambda: repr(match.group()))
+            private = body.startswith("?")
+            parameters = (body[1:] if private else body).split(";")
+            require(len(parameters) <= 32 and all(not p or (p.isascii() and p.isdecimal() and len(p) <= 10)
+                                                 for p in parameters), "invalid CSI parameters")
+            values = [int(p or 0) for p in parameters]
+            n = values[0] or 1
+            if not private and final in "HfABCDGbJKX":
+                require(len(values) <= (2 if final in "Hf" else 1), "unexpected CSI parameters")
+            if private:
+                require(final in "hl" and all(v in (25, 1049, 7, 2026) for v in values))
+                if 25 in values: visible = final == "h"
+                if 1049 in values and final == "h":
+                    cells = [[(" ", None, None, 0)] * width for _ in range(height)]
+                    x = y = 0
+            elif final in "Hf":
+                y = min(height - 1, (values[0] or 1) - 1)
+                x = min(width - 1, (values[1] or 1) - 1) if len(values) > 1 else 0
+            elif final in "ABCD":
+                if final == "A": y = max(top if y >= top else 0, y - n)
+                if final == "B": y = min(bottom if y <= bottom else height - 1, y + n)
+                if final == "C": x = min(width - 1, x + n)
+                if final == "D": x = max(0, x - n)
+            elif final == "G": x = min(width - 1, n - 1)
+            elif final == "b":
+                require(n <= 1_048_576, "unsupported repeat count")
+                for _ in range(n): put(last)
+            elif final == "m":
+                i = 0
+                while i < len(values):
+                    code = values[i]
+                    if code == 0: fg = bg = None; attrs = 0
+                    elif code == 39: fg = None
+                    elif code == 49: bg = None
+                    elif 30 <= code <= 37: fg = code - 30
+                    elif 90 <= code <= 97: fg = code - 90 + 8
+                    elif 40 <= code <= 47: bg = code - 40
+                    elif 100 <= code <= 107: bg = code - 100 + 8
+                    elif code in (38, 48):
+                        require(i + 1 < len(values), "missing color mode")
+                        if values[i + 1] == 5:
+                            require(i + 2 < len(values) and values[i + 2] <= 255, "invalid indexed color")
+                            color = values[i + 2]
+                            i += 2
+                        else:
+                            require(values[i + 1] == 2, lambda: repr(match.group()))
+                            require(i + 4 < len(values) and all(v <= 255 for v in values[i + 2:i + 5]), "invalid RGB color")
+                            color = ("rgb", *values[i + 2:i + 5])
+                            i += 4
+                        if code == 38: fg = color
+                        else: bg = color
+                    elif code in (1, 2, 3, 4, 5, 7, 8, 9): attrs |= 1 << code
+                    elif code in (22, 23, 24, 25, 27, 28, 29):
+                        for flag in ({22: [1, 2]}.get(code, [code - 20])): attrs &= ~(1 << flag)
+                    else: raise AssertionError(repr(match.group()))
+                    i += 1
+            elif final in "JK":
+                mode = values[0]
+                require(mode in (0, 1, 2))
+                column = min(x, width - 1)
+                first = y if final == "K" or mode == 0 else 0
+                last = y + 1 if final == "K" or mode == 1 else height
+                blank = (" ", fg, bg, attrs)
+                for row in range(first, last):
+                    left = column if mode == 0 and row == y else 0
+                    right = column + 1 if mode == 1 and row == y else width
+                    cells[row][left:right] = [blank] * (right - left)
+            elif final == "X":
+                column = min(x, width - 1)
+                right = min(width, column + n)
+                cells[y][column:right] = [(" ", fg, bg, attrs)] * (right - column)
+            else:
+                raise AssertionError(repr(match.group()))
+            offset = match.end()
+    return cells, visible
+
+
+def verify(document, nondefault_margins=False):
+    require({t["profile"] for t in document["traces"]} == {"ansi16", "ansi256", "truecolor", "none"})
+    for trace in document["traces"]:
+        require((trace["width"], trace["height"]) == (80, 24))
+        foreground, background = {"ansi16": (15, 0), "ansi256": (67, 132),
+                                  "truecolor": (("rgb", 95, 135, 175), ("rgb", 175, 95, 135)),
+                                  "none": (None, None)}[trace["profile"]]
+        for end in range(1, len(trace["sequences"]) + 1):
+            configuration = {"scroll_region": [3, 7]} if nondefault_margins else {}
+            cells, visible = replay({**trace, **configuration, "sequences": trace["sequences"][:end]})
+            require(not visible)
+            for y, row in enumerate(cells):
+                for x, cell in enumerate(row):
+                    if y < 20:
+                        require(cell == ("a", foreground, background, 0), lambda: (trace["profile"], x, y, cell))
+                    else:
+                        # Foreground on blanks is invisible; background/attrs
+                        # must still be at the default erasure state.
+                        require(cell[0] == " " and cell[2] is None and cell[3] == 0, lambda: (x, y, cell))
+
+
+def verify_fallback(document):
+    require(document["kind"] == "unicode_fallback")
+    require({t["profile"] for t in document["traces"]} == {"none", "truecolor"})
+    for trace in document["traces"]:
+        require((trace["width"], trace["height"]) == (8, 2))
+        require(len(trace["sequences"]) == 4)
+        fg, bg = (None, None) if trace["profile"] == "none" else (("rgb", 95, 135, 175), ("rgb", 175, 95, 135))
+        for stage in range(4):
+            cells, visible = replay({**trace, "sequences": trace["sequences"][:stage + 1]})
+            expected = [[(" ", None, None, 0) for _ in range(8)] for _ in range(2)]
+            if stage == 0:
+                for x, char in enumerate("? x?"): expected[0][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            elif stage == 1:
+                expected[0][0] = ("q", None, None, 0)
+            elif stage == 2:
+                for x, char in [(6, "?"), (7, " ")]: expected[1][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            else:
+                for x, y, char in [(0, 0, "a"), (0, 1, "?"), (1, 1, " ")]: expected[y][x] = (char, fg, bg, (1 << 1) | (1 << 7))
+            require(cells == expected, lambda: (trace["profile"], stage, cells, expected))
+            require(visible == (stage == 3))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("traces", type=Path, nargs="*")
+    parser.add_argument("--probe", type=Path)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--nondefault-margins", action="store_true")
+    args = parser.parse_args()
+    require(args.traces or args.probe, lambda: "provide trace paths or a built probe")
+    if args.probe:
+        # A fresh process observes NO_COLOR before Crossterm initializes its
+        # global policy. Explicit capabilities must still encode every profile.
+        env = dict(os.environ, NO_COLOR="1")
+        output = subprocess.check_output([str(args.probe.resolve()), "--color-trace"], env=env)
+        document = json.loads(output)
+        verify(document)
+        verify(document, nondefault_margins=True)
+        fallback = json.loads(subprocess.check_output([str(args.probe.resolve()), "--fallback-trace"], env=env))
+        verify_fallback(fallback)
+        if args.output:
+            args.output.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+        print("NO_COLOR=1: four-profile capabilities and styled Unicode fallback preserved")
+    for path in args.traces:
+        document = json.loads(path.read_text(encoding="utf-8"))
+        if document.get("kind") == "unicode_fallback":
+            verify_fallback(document)
+            print(f"{path.name}: exact fallback cells/styles/visibility")
+            continue
+        verify(document)
+        if args.nondefault_margins:
+            verify(document, nondefault_margins=True)
+        print(f"{path.name}: exact glyph/palette/background/hidden-cursor fixtures")
+
+
+if __name__ == "__main__":
+    main()

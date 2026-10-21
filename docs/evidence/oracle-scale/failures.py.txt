@@ -1,0 +1,102 @@
+"""Complete managed-check failure journaling; no old-framework speed ratios."""
+import contextlib
+import hashlib
+import io
+import json
+from pathlib import Path
+import platform
+import resource
+import statistics
+import subprocess
+import sys
+import tempfile
+import time
+import tracemalloc
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+sys.path.insert(0, str(ROOT / "scripts"))
+from check_ratatui_bridge import check
+from measurement_run import MeasurementRun
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def operation(case):
+    with tempfile.TemporaryDirectory(prefix="matea-oracle-failure-") as temporary:
+        directory = Path(temporary)
+        probe = directory / "probe"
+        if case != "missing-probe":
+            body = "raise SystemExit(9)\n" if case == "failed-probe" else "print('not a probe record')\n"
+            probe.write_text("#!" + sys.executable + "\n" + body)
+            probe.chmod(0o700)
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                check(probe, directory / "destination")
+        except Exception as error:
+            report = json.loads((directory / "destination/outputs-check.json").read_bytes())
+            if report["status"] != "failed" or not report["error"]:
+                raise ValueError("failure journal missing")
+            # Temp path strings vary; normalize only that documented prefix.
+            normalized = {**report, "error": report["error"].replace(temporary, "${FAILURE_TEMP}")}
+            return json.dumps({"journal": normalized, "exception_type": type(error).__name__}, sort_keys=True).encode()
+        raise ValueError("failed source was accepted")
+
+
+def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--rss-child":
+        value = operation(sys.argv[2])
+        scale = 1 if sys.platform == "darwin" else 1024
+        print(json.dumps({"output_sha256": sha(value), "self_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * scale,
+                          "descendant_peak_rss_bytes": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss * scale}))
+        return
+    paths = [Path(__file__).resolve()] + [ROOT / "scripts" / (n + ".py") for n in
+                                        ["check_ratatui_bridge", "performance_records", "fetch_upstream_issues", "measurement_run"]]
+    hashes = {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}
+    with MeasurementRun(BASE / "failure-performance", root=ROOT) as journal:
+        journal.update(input_sha256=hashes, platform=platform.platform(), python=sys.version,
+                       semantics="complete check failure including temp/helper creation, child exec, malformed/missing/failing probe, failed journal publication/read/parse/normalization, cleanup",
+                       exclusions=["Synthetic local probe, no actual network failure", "Whole-fixture RSS; no allocation/retained-only claim",
+                                   "Only the unique temp path prefix in errors is normalized; exception and full failed journal are preserved"])
+        for cohort in range(1, 4):
+            for case in ["missing-probe", "failed-probe", "malformed-probe"]:
+                expected = operation(case)
+                output = BASE / "failure-performance/outputs" / (case + ".json.txt")
+                output.parent.mkdir(exist_ok=True)
+                output.write_bytes(expected)
+                samples = []
+                for _ in range(31):
+                    start = time.perf_counter_ns()
+                    value = operation(case)
+                    elapsed = time.perf_counter_ns() - start
+                    if value != expected or elapsed <= 0:
+                        raise ValueError("changed journal/nonpositive interval")
+                    samples.append(elapsed)
+                tracemalloc.start()
+                value = operation(case)
+                retained, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+                if value != expected:
+                    raise ValueError("changed heap journal")
+                children = []
+                for _ in range(3):
+                    result = subprocess.run([sys.executable, str(__file__), "--rss-child", case],
+                                            cwd=ROOT, capture_output=True, check=True, timeout=30)
+                    child = json.loads(result.stdout)
+                    if child["output_sha256"] != sha(expected):
+                        raise ValueError("changed RSS journal")
+                    children.append(child)
+                journal.record({"case": f"cohort-{cohort}/{case}", "workload": case, "cohort": cohort,
+                                "samples_ns": samples, "p50_ns": statistics.median(samples), "p95_ns": sorted(samples)[29],
+                                "output_sha256": sha(expected), "output_bytes": len(expected),
+                                "python_traced_retained_bytes": retained, "python_traced_peak_bytes": peak,
+                                "whole_fixture_rss_children": children, "ratio_eligible": False})
+        if hashes != {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}:
+            raise ValueError("input drift")
+        journal.complete(records=9, positive_intervals=279, whole_fixture_rss_children=27)
+
+
+if __name__ == "__main__":
+    main()

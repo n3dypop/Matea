@@ -7,21 +7,28 @@ import re
 import subprocess
 from pathlib import Path
 
-CSI = re.compile(r"\x1b\[([0-?]*)([ -/]*)([@-~])")
+CSI = re.compile(r"\x1b\[(\??[0-9]{0,10}(?:;[0-9]{0,10}){0,31})([ -/]*)([@-~])")
 
 
 def replay(trace):
     width, height = trace["width"], trace["height"]
-    cells = [[(" ", None, None, 0) for _ in range(width)] for _ in range(height)]
+    require(type(width) is int and type(height) is int
+            and 1 <= width <= 4096 and 1 <= height <= 4096
+            and width * height <= 1_048_576, "unsupported replay geometry")
+    streams = trace["sequences"]
+    require(isinstance(streams, list) and len(streams) <= 4096
+            and all(isinstance(s, str) for s in streams)
+            and sum(map(len, streams)) <= 16_777_216, "unsupported replay streams")
+    cells = [[(" ", None, None, 0)] * width for _ in range(height)]
     x = y = attrs = 0
     fg = bg = None
     visible, last = True, " "
     top, bottom = trace.get("scroll_region", [0, height - 1])
-    require(0 <= top < bottom < height)
+    require(type(top) is int and type(bottom) is int and 0 <= top <= bottom < height)
     def linefeed():
         nonlocal y
         if y == bottom:
-            cells[top:bottom + 1] = cells[top + 1:bottom + 1] + [[(" ", fg, bg, attrs) for _ in range(width)]]
+            cells[top:bottom + 1] = cells[top + 1:bottom + 1] + [[(" ", fg, bg, attrs)] * width]
         else:
             y = min(height - 1, y + 1)
     def put(char):
@@ -32,7 +39,7 @@ def replay(trace):
         cells[y][x] = (char, fg, bg, attrs)
         x += 1
         last = char
-    for stream in trace["sequences"]:
+    for stream in streams:
         offset = 0
         while offset < len(stream):
             char = stream[offset]
@@ -49,24 +56,28 @@ def replay(trace):
             require(match, lambda: repr(stream[offset:offset + 40]))
             body, intermediate, final = match.groups()
             require(not intermediate, lambda: repr(match.group()))
-            values = [int(n or 0) for n in body.lstrip("?").split(";")]
+            private = body.startswith("?")
+            values = [int(p or 0) for p in (body[1:] if private else body).split(";")]
             n = values[0] or 1
-            if body.startswith("?"):
+            if not private and final in "HfABCDGbJKX":
+                require(len(values) <= (2 if final in "Hf" else 1), "unexpected CSI parameters")
+            if private:
                 require(final in "hl" and all(v in (25, 1049, 7, 2026) for v in values))
                 if 25 in values: visible = final == "h"
                 if 1049 in values and final == "h":
-                    cells = [[(" ", None, None, 0) for _ in range(width)] for _ in range(height)]
+                    cells = [[(" ", None, None, 0)] * width for _ in range(height)]
                     x = y = 0
             elif final in "Hf":
-                y = (values[0] or 1) - 1
-                x = (values[1] or 1) - 1 if len(values) > 1 else 0
+                y = min(height - 1, (values[0] or 1) - 1)
+                x = min(width - 1, (values[1] or 1) - 1) if len(values) > 1 else 0
             elif final in "ABCD":
                 if final == "A": y = max(top if y >= top else 0, y - n)
                 if final == "B": y = min(bottom if y <= bottom else height - 1, y + n)
                 if final == "C": x = min(width - 1, x + n)
                 if final == "D": x = max(0, x - n)
-            elif final == "G": x = n - 1
+            elif final == "G": x = min(width - 1, n - 1)
             elif final == "b":
+                require(n <= 1_048_576, "unsupported repeat count")
                 for _ in range(n): put(last)
             elif final == "m":
                 i = 0
@@ -80,11 +91,14 @@ def replay(trace):
                     elif 40 <= code <= 47: bg = code - 40
                     elif 100 <= code <= 107: bg = code - 100 + 8
                     elif code in (38, 48):
+                        require(i + 1 < len(values), "missing color mode")
                         if values[i + 1] == 5:
+                            require(i + 2 < len(values) and values[i + 2] <= 255, "invalid indexed color")
                             color = values[i + 2]
                             i += 2
                         else:
                             require(values[i + 1] == 2, lambda: repr(match.group()))
+                            require(i + 4 < len(values) and all(v <= 255 for v in values[i + 2:i + 5]), "invalid RGB color")
                             color = ("rgb", *values[i + 2:i + 5])
                             i += 4
                         if code == 38: fg = color
@@ -97,14 +111,18 @@ def replay(trace):
             elif final in "JK":
                 mode = values[0]
                 require(mode in (0, 1, 2))
-                for row in range(height):
-                    for col in range(width):
-                        position = row * width + col if final == "J" else col
-                        cursor = y * width + min(x, width - 1) if final == "J" else min(x, width - 1)
-                        if (final == "J" or row == y) and (mode == 2 or mode == 0 and position >= cursor or mode == 1 and position <= cursor):
-                            cells[row][col] = (" ", fg, bg, attrs)
+                column = min(x, width - 1)
+                first = y if final == "K" or mode == 0 else 0
+                last = y + 1 if final == "K" or mode == 1 else height
+                blank = (" ", fg, bg, attrs)
+                for row in range(first, last):
+                    left = column if mode == 0 and row == y else 0
+                    right = column + 1 if mode == 1 and row == y else width
+                    cells[row][left:right] = [blank] * (right - left)
             elif final == "X":
-                for col in range(x, min(width, x + n)): cells[y][col] = (" ", fg, bg, attrs)
+                column = min(x, width - 1)
+                right = min(width, column + n)
+                cells[y][column:right] = [(" ", fg, bg, attrs)] * (right - column)
             else:
                 raise AssertionError(repr(match.group()))
             offset = match.end()

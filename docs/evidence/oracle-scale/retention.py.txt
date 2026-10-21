@@ -1,0 +1,73 @@
+"""Separate, untimed steady-input memory observations in three fresh processes."""
+import gc
+import hashlib
+import importlib.machinery
+import importlib.util
+import json
+import os
+from pathlib import Path
+import resource
+import subprocess
+import sys
+import tracemalloc
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+sys.path.insert(0, str(ROOT / "scripts"))
+from measurement_run import MeasurementRun
+loader = importlib.machinery.SourceFileLoader("experiment", str(BASE / "measure.py.txt"))
+spec = importlib.util.spec_from_loader(loader.name, loader)
+experiment = importlib.util.module_from_spec(spec)
+loader.exec_module(experiment)
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def child(case):
+    function, inputs = experiment.operation(case, "current")
+    expected = function()
+    gc.collect()
+    observations = []
+    tracemalloc.start()
+    for group in range(5):
+        if group:
+            for _ in range(8):
+                value = function()
+                if value != expected:
+                    raise ValueError("memory pass changed complete output")
+                del value
+        gc.collect()
+        retained, peak = tracemalloc.get_traced_memory()
+        command = ["/bin/ps", "-p", str(os.getpid()), "-o", "rss="]
+        raw = subprocess.check_output(command, timeout=10)
+        rss = int(raw.strip()) * 1024
+        observations.append({"completed_operations": group * 8, "python_traced_retained_bytes": retained,
+                             "python_traced_peak_bytes": peak, "self_current_rss_bytes": rss,
+                             "ps_stdout": raw.decode(), "ps_command": ["/bin/ps", "-p", "${OWN_PID}", "-o", "rss="]})
+    tracemalloc.stop()
+    return {"case": case, "record_kind": "memory-observation", "input_sha256": sha(inputs),
+            "output_sha256": sha(expected), "output_bytes": len(expected), "observations": observations,
+            "self_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+            "scope": "macOS own-process RSS, warm input/expected output held; no retained-only native claim. Traced bytes include growing observation metadata, not input/import allocations."}
+
+
+if len(sys.argv) == 3 and sys.argv[1] == "--child":
+    print(json.dumps(child(sys.argv[2])))
+else:
+    paths = [Path(__file__).resolve(), BASE / "measure.py.txt"] + [ROOT / "scripts" / (n + ".py") for n in
+                                                               ["check_terminal_trace", "check_color_trace", "check_ratatui_bridge"]]
+    hashes = {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}
+    with MeasurementRun(BASE / "retention", root=ROOT) as journal:
+        journal.update(input_sha256=hashes, semantics="three fresh processes; baseline and four eight-call groups, dropping results/collecting GC before each own-process RSS observation",
+                       exclusions=["No timing data from traced/ps executions", "Finite memory observations, not a leak/soundness proof or global maximum",
+                                   "No other process inspected; only the producer child's own PID"])
+        for case in ["ascii/erase-K", "color/erase-K", "bridge/all-retained"]:
+            result = subprocess.run([sys.executable, str(__file__), "--child", case], cwd=ROOT,
+                                    capture_output=True, check=True, timeout=180)
+            journal.record(json.loads(result.stdout))
+        if hashes != {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}:
+            raise ValueError("input drift")
+        journal.complete(records=3, observations=15, completed_operations=96)
+    print("15 untimed memory observations in 3 fresh processes; 96 complete operations")

@@ -1,0 +1,28 @@
+{
+  "schema": 2,
+  "status": "complete",
+  "attempt": "attempts/context/bbf6c27dab804d95ac872214da7f0610",
+  "started_at_utc": "2026-10-21T22:52:05.070481+00:00",
+  "completed_cases": 3,
+  "validity": "Only status=complete with matching raw_sha256 qualifies this invocation; older public files may remain.",
+  "input_sha256": {
+    "docs/evidence/oracle-scale/retention.py.txt": "80623e7a5fdfbfa32538fddfb23ed7a88265cdfb76175057dba00ec35e188da9",
+    "docs/evidence/oracle-scale/measure.py.txt": "d264096687ae005effd2991d6113e3ff3055d18c25af1453da3c27553a7939b2",
+    "scripts/check_terminal_trace.py": "2be1ee10939fcce1c22a64fddad98612a514e200a005b727fdef8fc0c13689c0",
+    "scripts/check_color_trace.py": "784a6d265b98893f011886b2c1a6d547a11ae5e6e5ad93322fce9edcc706a6a2",
+    "scripts/check_ratatui_bridge.py": "160581b26fac7bef190516351b53107c88808692bdce848782b25c17e0fbfb2e"
+  },
+  "semantics": "three fresh processes; baseline and four eight-call groups, dropping results/collecting GC before each own-process RSS observation",
+  "exclusions": [
+    "No timing data from traced/ps executions",
+    "Finite memory observations, not a leak/soundness proof or global maximum",
+    "No other process inspected; only the producer child's own PID"
+  ],
+  "partial_raw_sha256": "ce559d39779fc44f13090c28f7f1c88384ac12df18f825faa45201e4c2c7ab3b",
+  "records": 3,
+  "observations": 15,
+  "completed_operations": 96,
+  "raw": "current.jsonl",
+  "raw_sha256": "ce559d39779fc44f13090c28f7f1c88384ac12df18f825faa45201e4c2c7ab3b",
+  "finished_at_utc": "2026-10-21T22:52:22.087852+00:00"
+}

@@ -1,0 +1,1497 @@
+{
+  "schema": 1,
+  "as_of_local_date": "2026-10-22",
+  "produced_at_utc": "2026-10-21T22:40:02.536237+00:00",
+  "base_commit": "f6a8292848d81846c93923e221371766f0214737",
+  "quality_plan_sha256": "9dc44269aa2b0c31e56e5de2c30d6992690955bb12bb2584ef79522f96dd536d",
+  "analysis_producer_sha256": "9dca9d4bc75df3397f1686618eaf0109addaeb6628dd9208b3ea76b81a194a51",
+  "axis_counts": {
+    "reference": 21,
+    "performance": 27
+  },
+  "primary_cause_counts": {
+    "capability_closure": 21,
+    "measurement_gap": 17,
+    "measured_deficit": 6,
+    "semantic_mismatch": 1,
+    "comparator_boundary": 2,
+    "test_design_gap": 1
+  },
+  "scores_changed": false,
+  "scope_reduced": false,
+  "axes": [
+    {
+      "id": "matea-core/input/reference",
+      "unit": "matea-core/input",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "入力型の対応付けは部分的。Crossterm の変換実装があっても、全イベント・修飾・プラットフォーム条件の公開契約が閉じていない。",
+      "next_action": "Bubble Tea / Crossterm / Ultraviolet のイベント宣言を型・変換・焦点の責務へ振り分け、未対応の入力表現を実装し、条件別の正負 fixture を結ぶ。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-core/src/input.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/input/performance",
+      "unit": "matea-core/input",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "37 Rust-only primitive では source と同意味の入力経路・focus 変更/lookup 分布・保持メモリがない。",
+      "next_action": "型変換/focus の cold/build/warm/mutate、件数0/1/64/多、重複/無効入力、native event burst を分けて source と完全出力を比較し、保持後/解放後のメモリを測る。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-core/src/input.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/lib/reference",
+      "unit": "matea-core/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "37入力 primitive の証拠が runtime 全体にも流用されている。効果・購読・外部プロセス・終了等の全公開契約の対応付けがない。",
+      "next_action": "Program/options/commands/subscriptions の公開項目を runtime と terminal に割り当てる。取消・終了・panic・worker の保証範囲を独立モデルと照合し、未実装契約を縦に実装する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-core/src/lib.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-core/lib/performance",
+      "unit": "matea-core/lib",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "入力 primitive を runtime 性能の根拠に流用している。timer/effect/queue/cancel/worker の通知と保持コストが残る。",
+      "next_action": "同じ生成/通知/処理/取消を行う runtime workload を用意する。購読維持/差替え/終了、遅延/多量メッセージ、期限誤差、p50/p95、CPU/保持メモリを測る。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-core/src/lib.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/miri-core.log",
+        "docs/subscription-performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/lib/reference",
+      "unit": "matea-render/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "所有 scene、rich text、snapshot は実装済みの一部。Ultraviolet/Ratatui の全描画・buffer・cursor 契約、出力条件が閉じていない。",
+      "next_action": "scene/compositor と transport の境界を維持し、原点・clipping・wide cell・resize・dirty/diff・cursor の公開契約を全件分類し、独立セル/端末モデルへ結ぶ。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-render/src/rich_text.rs",
+        "crates/matea-render/tests/rich_text.rs",
+        "crates/matea-render/src/snapshot.rs",
+        "crates/matea-render/tests/surface_snapshot.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0053-owned-rich-text-with-whole-content-graphemes.md",
+        "docs/evidence/ratatui-span-boundaries/context.json",
+        "docs/decisions/0055-pinned-width-fast-path-with-script-fallback.md",
+        "docs/decisions/0060-owned-cell-scenes-and-consuming-frame-transfer.md",
+        "crates/matea-render/tests/surface_snapshot.rs",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/lib/performance",
+      "unit": "matea-render/lib",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "scene20件等は部分。構築/正規化/装飾/再描画で adverse 分布があり、大規模/変更密度/保持の比較がない。",
+      "next_action": "constructor と build→compose、share/consume、full/diff を分離する。短長ASCII/Unicode/control、変更多寡、resize を保持し、候補は現APIで全出力/分布/メモリを再比較する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-render/src/lib.rs",
+        "crates/matea-render/src/rich_text.rs",
+        "crates/matea-render/tests/rich_text.rs",
+        "crates/matea-render/src/snapshot.rs",
+        "crates/matea-render/tests/surface_snapshot.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0053-owned-rich-text-with-whole-content-graphemes.md",
+        "docs/evidence/ratatui-span-boundaries/context.json",
+        "docs/decisions/0055-pinned-width-fast-path-with-script-fallback.md",
+        "docs/decisions/0060-owned-cell-scenes-and-consuming-frame-transfer.md",
+        "crates/matea-render/tests/surface_snapshot.rs",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/text/reference",
+      "unit": "matea-render/text",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "安全な Text と owned RichText は ANSI/Unicode 全ユーティリティの代替を証明しない。source の escape-aware 処理と Matea の正規化は同じ意味ではない。",
+      "next_action": "x/ansi と Ratatui text の公開操作を保全する rich parser / 正規化する plain text へ分類し、wrap/truncate/width/controls/hyperlink 等の不足を入力と出力の契約ごとに実装する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-render/src/text.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-render/text/performance",
+      "unit": "matea-render/text",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "Text 正規化の構築コストと source の意味差がある。時計 profile も UTF8/正規化を含む構築コストを示すが原因の寄与率は未確定。",
+      "next_action": "安全性を維持する所有/検証境界の候補を実APIで試す。正規化済/制御混在/多言語/小長/clone/owned formatting と retained storage を分け、source と意味が一致する操作だけ比率を出す。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-render/src/text.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-render/tests/invariants.rs",
+        "docs/evidence/quality/miri-render.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/lib/reference",
+      "unit": "matea-style/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "resolved attributes・RGB8 gradient・patch は部分 capability。Lip Gloss の装飾/geometry、全色入力、条件付き API の同等性が未完。",
+      "next_action": "padding/margin/border/alignment/wrapping/transform と色入力の公開項目を分離して実装する。既定値だけでなく組合せ、max/min size、空白と継承をセル fixture で検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-style/src/lib.rs",
+        "crates/matea-style/src/attributes.rs",
+        "crates/matea-style/src/gradient.rs",
+        "crates/matea-style/src/attributes/patch.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0058-resolved-cell-style-and-explicit-style-patches.md",
+        "docs/style-patches-audit.md",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-style/lib/performance",
+      "unit": "matea-style/lib",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "semantic_mismatch",
+      "why_unmet": "x/ansi の色距離と Matea の色距離が違い、既存46 primitive を全 style の速度比へ使えない。",
+      "next_action": "同じ色距離/alpha/depth で比較可能なケースを作る。style patch/装飾/gradient の cold/warm/varied/大規模と保持コストを測り、既存 adverse を残して最適化する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-style/src/lib.rs",
+        "crates/matea-style/src/attributes.rs",
+        "crates/matea-style/src/gradient.rs",
+        "crates/matea-style/src/attributes/patch.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/style/report.json",
+        "docs/evidence/optimization/style/exhaustive.log",
+        "docs/evidence/optimization/style/miri.log",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/decisions/0058-resolved-cell-style-and-explicit-style-patches.md",
+        "docs/style-patches-audit.md",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+      ],
+      "original_assessment_reason": "46 executed primitive fixtures and output-checked before/after quantization; exact all-RGB ANSI256 correctness. x/ansi uses a different metric; full style semantics, resident storage and policy-matched upstream workloads remain incomplete.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/ansi/reference",
+      "unit": "matea-terminal/ansi",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "26 private fixtures は任意 Crossterm Command や x/ansi 全公開制御列を網羅しない。",
+      "next_action": "公開 command family を列挙し、typed encoding・能力照会・生制御の所有者を定める。未対応 command と platform branch を literal bytes と独立 interpreter で検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/ansi.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/ansi/performance",
+      "unit": "matea-terminal/ansi",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "26 private fixtures は一般 Command と native OS 出力のコストを含まない。",
+      "next_action": "実装済 command 全族の生成/encode/バッチ/色fallback/失敗を測る。source と同 byte 列・同 flush 条件の比較と非同等ケースを分け、output bytes/alloc/RSS を記録する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/ansi.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "26 native private color/command cases, exact literal outputs, 31 samples and requested allocations. Arbitrary Command implementations and policy-matched pinned source/OS workloads remain incomplete.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/frame/reference",
+      "unit": "matea-terminal/frame",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "現在の FrameEncoder は全 Ultraviolet renderer/buffer/diff 契約の対応表がない。",
+      "next_action": "diff/cursor/resize/style reset/color fallback/invalidated frame の全公開契約を frame と render に分配し、復旧フレームを含む連続出力を独立再生する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/frame.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/frame/performance",
+      "unit": "matea-terminal/frame",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "属性/テーマ/色fallback/フレームの adverse が残り、差分密度やnative transportを網羅しない。",
+      "next_action": "空/疎/全面/resize/cursor-only/失敗復旧を同じ frame schedule と能力で比較する。bytes/write/flush を保持し、state reuse と出力 batching を実測して適用する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/frame.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/fallback/before-trace.json",
+        "docs/evidence/optimization/fallback/after-trace.json",
+        "docs/evidence/optimization/fallback/miri.log",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/input/reference",
+      "unit": "matea-terminal/input",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "Crossterm event→typed Input は実装済みだが byte parsing、モード依存・OS 条件を含む source 全体の対応がない。",
+      "next_action": "parser の再利用境界と Matea の変換を明示し、release/repeat/IME/paste/mouse/focus/resize と unsupported 表現の契約を条件ごとに検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/input.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/input/performance",
+      "unit": "matea-terminal/input",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "37 primitive は byte→event→Input の native parser、burst、resident を含まない。",
+      "next_action": "parser単体/変換単体/実入力配送を分ける。ASCII/Unicode/paste/mouse/key-kind と境界分割、取消、OS条件を同入力で測り、source を二重parseした不公平比較を避ける。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/input.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/input/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/lib/reference",
+      "unit": "matea-terminal/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "mock の正常/失敗 event loop は native session・実プロセス/effect・全 Program API の代替証拠ではない。",
+      "next_action": "core の runtime 項目と重複しない native lifecycle/exec/suspend/error/cleanup の責任を対応付け、各失敗点と復旧を実行する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/lib.rs",
+        "crates/matea-terminal/src/session.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/foundation-paths/current.jsonl",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/lib/performance",
+      "unit": "matea-terminal/lib",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "12 mock loops は実I/O、effect・scheduling・保持メモリを含まない。",
+      "next_action": "PTY/native console と mock を分け、同イベント列の入力→update→render→flush、終了/失敗と保持を測る。CPU/待機/通知遅延を別記し、source と同じ lifecycle を比較する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/lib.rs",
+        "crates/matea-terminal/src/session.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/foundation-paths/current.jsonl",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "12 complete mock-backend event-loop/lifecycle cases include idle, resize, quit and five I/O failures, with 31 samples and allocation passes. Native terminal input/output, effects and scheduling/resident memory remain incomplete.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/modes/reference",
+      "unit": "matea-terminal/modes",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "lease の局所実装は公開 terminal mode/capability 全体の同等性を閉じていない。",
+      "next_action": "query/enable/disable/restore の source 条件を列挙し、共有 lease・初期状態・途中失敗・Windows native 分岐ごとに復旧を検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/modes.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/modes/performance",
+      "unit": "matea-terminal/modes",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "6 lease/Unix cycle の logical writes から physical I/O・失敗・Windows の速度は導けない。",
+      "next_action": "既存状態からの共有/排他 lease、途中失敗、復旧、native Windows を同じ mode set/flush で測る。transport 往復は encoder と別分布にする。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/modes.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Three lease and three Unix command cycles have exact before/after bytes, 31 samples, allocations and logical writes/flushes. Fixed reset removes two allocations; physical I/O, failure timing and Windows native modes remain unmeasured.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/protocol/reference",
+      "unit": "matea-terminal/protocol",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "Kitty 82 raw 宣言中64は bounded実装、2部分、16 pending。Sixel/能力/lifecycle も部分。codec 等は承認待ちの別 scope。",
+      "next_action": "File/ChunkFormatter と非codec protocol operations の不足を埋める。画像処理/codec を実装せず、placeholder/diacritic、transport、Sixel 制御、照会/取消を固定 source と検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/src/protocol/kitty.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/protocol/performance",
+      "unit": "matea-terminal/protocol",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "comparator_boundary",
+      "why_unmet": "14 eligible Kitty cases は全writer比較ではなく public primitive composition。空delimiter差、strict rejection、他transport/Sixel/throughput は別。",
+      "next_action": "既存14条件を保持し、非codec writer/chunkiterator/transport/large payload/control parse/Sixel の完全出力とcold/warm/retained/RSSを測る。delimiter差や image writer と packet を同一比率へ混ぜない。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/src/protocol/kitty.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/protocol/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Typed Kitty controls add 105 records/3255 positive intervals/62 whole-fixture RSS children; 14 exact-output source cases in three orders, all eligible p50/p95 lower. Packet comparator composes public source primitives, not its image writer. Empty delimiter difference and five Rust-only rejection paths get no ratio. Legacy 41 Rust-only fixtures remain historical. Full protocol public-feature scope, other transports and terminal throughput remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/signals_unix/reference",
+      "unit": "matea-terminal/signals_unix",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "安全な所有/復旧の局所試験は全 signal/OS 条件の公開契約対応を示さない。",
+      "next_action": "Bubble Tea/Ultraviolet の signal lifecycle を列挙し、再入・既存 handler・部分設置失敗・終了・OS 条件を設計に対応させ、実行可能な failure injection と実 signal を分けて検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/signals_unix.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-terminal/src/signals_unix.rs",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-terminal/signals_unix/performance",
+      "unit": "matea-terminal/signals_unix",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "31 install/restore と4 synthetic tests に実signal配送・syscall failure・OS別性能がない。",
+      "next_action": "自プロセス/子の signal install→receive→cleanup と既存handler復旧を測る。合成失敗の処理時間と実OS配送遅延を分離し、Linux/macOS の native 分布と保持を記録する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/signals_unix.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-terminal/src/signals_unix.rs",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/terminal-internals/report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "31 native successful sigaction install/restore samples remove one 96-byte requested allocation. Four synthetic restoration/ownership tests cover failure records, but actual syscall failure timing, signal-delivery latency and OS matrix performance remain incomplete.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/clocks/performance",
+      "unit": "matea-widgets/clocks",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "算術4候補は全て adverse があり不採用。追加468recordsで可変durationは測定済みだが source差、active timer/cancel/notification/retained は残る。",
+      "next_action": "ADR0076 に従い算術だけの再試行を止め、安全な Text 構築を実APIで比較する。同時に actual source timer 作成/通知/取消を含む同意味 workload、変化するclock状態と保持を測る。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-widgets/src/clocks.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/clocks-export-review.md",
+        "docs/evidence/clocks-exports/verification.json",
+        "docs/decisions/0073-owned-clock-text-without-format-adapters.md",
+        "docs/evidence/clocks-owned-text/prototype/context.json",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json",
+        "docs/clock-owned-text-audit.md",
+        "docs/evidence/clocks-owned-text/verification.json",
+        "docs/evidence/clocks-owned-text/miri/verification.json"
+      ],
+      "original_assessment_reason": "162 raw timing records / 5022 retained samples cover six repeated immutable owned-text inputs across prototype and actual API, with identical outputs. Actual into_text improves all eighteen cohort/input medians over the prior Text adapter, retaining one adverse seconds p95. Four inputs remain slower than source. Active scheduling/cancellation/notification latency, variable-duration workloads and retained memory remain unmeasured; no module-high or universal optimum verdict.",
+      "original_remaining": [
+        "Measure matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained memory; investigate remaining source formatter gaps with prior failed arithmetic candidates preserved. Global external API/dependency/target closure remains a separate Foundation gate."
+      ]
+    },
+    {
+      "id": "matea-widgets/help/reference",
+      "unit": "matea-widgets/help",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "27宣言はリンク済みだが、7 style role の arbitrary Lip Gloss decorators が部分。文字列の幅修正や高速化では padding/border/wrap の不足を埋められない。",
+      "next_action": "共通 decorator の geometry/空白/背景/transform 契約を先に実装し、各 help role の装飾前後の列幅/ellipsis を source fixture と比較する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/help.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/help-preparation-performance-audit.md",
+        "docs/evidence/help-bounded/final-verification.json",
+        "docs/evidence/help-bounded/miri-small/context.json",
+        "docs/evidence/help-bounded/width-replay-small/context.json",
+        "docs/evidence/help-bounded/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Complete rich per-field decorator behavior and full compiler/dependency/target/source equivalence. Bounded implemented-module performance is qualified; physical terminal transport and cross-module optimization retain separate owners."
+      ]
+    },
+    {
+      "id": "matea-widgets/lib/reference",
+      "unit": "matea-widgets/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "Viewport の wrap/highlight 等は部分、基本 List/Table/Form は Bubbles/Huh の全機能ではない。",
+      "next_action": "List delegate/filter/keymap、Table selection/style、Form/field lifecycle と Viewport gutter/highlight/wrap を独立 capability に分解し、全 source 宣言を所有者と試験へ結ぶ。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/lib.rs",
+        "crates/matea-widgets/tests/collections.rs",
+        "crates/matea-widgets/src/viewport.rs",
+        "crates/matea-widgets/tests/viewport_wrap.rs",
+        "crates/matea-widgets/src/viewport/highlights.rs",
+        "crates/matea-widgets/tests/viewport_highlights.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/evidence/viewport-before.log",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "crates/matea-widgets/tests/collections.rs",
+        "docs/evidence/optimization/collections/filter-before.log",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md",
+        "docs/decisions/0056-viewport-whole-grapheme-wrapping.md",
+        "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md",
+        "docs/viewport-wrapping-audit.md",
+        "docs/decisions/0059-validated-byte-highlights-and-cell-style-composition.md",
+        "docs/viewport-highlights-audit.md",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
+        "Viewport parsing/resident-memory cost and matched Bubbles rendering/scheduling remain unmeasured; basic List/Table/Form breadth is incomplete."
+      ]
+    },
+    {
+      "id": "matea-widgets/lib/performance",
+      "unit": "matea-widgets/lib",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "wrap10+borrowed2 は List/Table/Form や viewport parse/gutter/highlight/large-varied/resident 全体を覆わない。",
+      "next_action": "機能を先に埋め、parse/cold reflow/warm scroll/幅変更/highlight更新、List filter/select/Table/Form を別 operation として source 完全出力/保持量と比較する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-widgets/src/lib.rs",
+        "crates/matea-widgets/tests/collections.rs",
+        "crates/matea-widgets/src/viewport.rs",
+        "crates/matea-widgets/tests/viewport_wrap.rs",
+        "crates/matea-widgets/src/viewport/highlights.rs",
+        "crates/matea-widgets/tests/viewport_highlights.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/evidence/viewport-before.log",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "crates/matea-widgets/tests/collections.rs",
+        "docs/evidence/optimization/collections/filter-before.log",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md",
+        "docs/decisions/0056-viewport-whole-grapheme-wrapping.md",
+        "docs/decisions/0057-deferred-exclusive-wrapping-buffer-reuse.md",
+        "docs/viewport-wrapping-audit.md",
+        "docs/decisions/0059-validated-byte-highlights-and-cell-style-composition.md",
+        "docs/viewport-highlights-audit.md",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
+      ],
+      "original_assessment_reason": "Ten matched repeated/aligned wrapping workloads plus two separate borrowed controls retain complete source/Matea outputs and before/after distributions. Exclusive deferred reflow changes five warm allocations to zero; full widget/wrap/style/gutter/highlight, varied/large documents and residency remain pending, so the containing module stays partial.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence.",
+        "Viewport parsing/resident-memory cost and matched Bubbles rendering/scheduling remain unmeasured; basic List/Table/Form breadth is incomplete."
+      ]
+    },
+    {
+      "id": "matea-widgets/cursor/reference",
+      "unit": "matea-widgets/cursor",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "21宣言リンクと stale-tick 改善はあるが、rich decorators と source の cursor appearance/terminal 契約全体は部分。",
+      "next_action": "virtual/native cursor の appearance と rich character decoration を別契約にし、focus/mode/blur/reduced-motion/重複通知を含む source fixture を追加する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/cursor.rs"
+      ],
+      "existing_evidence": [
+        "crates/matea-widgets/tests/cursor.rs",
+        "docs/evidence/cursor-source-edges.json",
+        "docs/evidence/cursor/performance/report.json",
+        "docs/evidence/cursor/miri.log",
+        "docs/evidence/cursor/miri-context.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "All 21 pinned cursor declarations linked to the typed cursor/composition API; executed source edge fixtures reproduce a mode-roundtrip stale-tick defect. Arbitrary Lip Gloss style decorators and complete physical terminal behavior remain partial.",
+      "original_remaining": [
+        "Complete rich-style equivalence, active scheduling/notification comparison, scale/residency and current three-OS validation."
+      ]
+    },
+    {
+      "id": "matea-widgets/cursor/performance",
+      "unit": "matea-widgets/cursor",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "7 finite case で制御改善後も source より遅い。active配送、scale/rich style/RSSはない。",
+      "next_action": "制御単体と文字所有/描画を分けて残コストを特定する。実timer/blur/mode変更/通知破棄と多数cursor、styled character、保持/解放を測り、stale-tick改善を維持する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-widgets/src/cursor.rs"
+      ],
+      "existing_evidence": [
+        "crates/matea-widgets/tests/cursor.rs",
+        "docs/evidence/cursor-source-edges.json",
+        "docs/evidence/cursor/performance/report.json",
+        "docs/evidence/cursor/miri.log",
+        "docs/evidence/cursor/miri-context.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Seven exact-output finite cases, 31 samples each, matched Go controls and balanced byte-identical old/new binaries. Single checked phase transitions reduce control medians; they remain slower than Go. Active timer delivery, scale, rich styling and RSS remain unmeasured.",
+      "original_remaining": [
+        "Complete rich-style equivalence, active scheduling/notification comparison, scale/residency and current three-OS validation."
+      ]
+    },
+    {
+      "id": "matea-widgets/spinner/reference",
+      "unit": "matea-widgets/spinner",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "29宣言はリンク済みだが Model.Style/WithStyle の rich decorators が部分。Huh の action/accessibility/lifecycle は別の不足。",
+      "next_action": "spinner の frame を共通 decorator で描けるようにし、複数行・padding/border・frame差替えを検証する。Huh spinner を単なる label 結合で完了扱いしない。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/spinner.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/spinner/performance",
+      "unit": "matea-widgets/spinner",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "comparator_boundary",
+      "why_unmet": "14 case は借用frame/ignored tick。Go Style.Render と Rust frame借用の経路差を含み、active timer とdescriptorだけの比較は不公平。",
+      "next_action": "plain/label/styled view/constructor/custom差替え/active通知を分ける。source 実timerを含む等しい lifecycle、12preset/custom scale/reduced-motion/retained を測る。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-widgets/src/spinner.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/spinner/report.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/progress/reference",
+      "unit": "matea-widgets/progress",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "35宣言リンク済みでも一般 premultiplied/high-depth input と PercentageStyle geometry/MaxWidth/transform/hyperlink/whitespace が部分。",
+      "next_action": "色入力の変換規約と decoration を共通 API で実装し、progress の幅配分・bar/percentage/gap の分離を source の raw ANSI と cell projection で検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/progress.rs"
+      ],
+      "existing_evidence": [
+        "docs/progress-audit.md",
+        "crates/matea-widgets/tests/progress.rs",
+        "crates/matea/tests/progress.rs",
+        "docs/evidence/windows-console-design/ci-source-bindings.json",
+        "docs/progress-performance-audit.md",
+        "docs/evidence/progress/lifecycle/string/report.json",
+        "docs/evidence/progress/lifecycle/api/report.json",
+        "docs/evidence/progress/lifecycle/workspace-context.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/progress/lifecycle/final-miri/verification.json",
+        "docs/progress-color-scope-audit.md",
+        "docs/precise-color-inputs-audit.md",
+        "docs/evidence/precise-color-inputs/performance/report.json",
+        "docs/evidence/precise-color-inputs/performance/optimized/report.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+      ],
+      "original_assessment_reason": "All 35 pinned progress declaration candidates are linked to bounded Rust equivalents. RGB8 and canonical RGBA16/premultiplied-prefix/zero-alpha paths have executed source projections with 28 explicit ANSI-depth corrections; percentage geometry/MaxWidth/transform, hyperlink and separate whitespace-style conditions remain partial.",
+      "original_remaining": [
+        "General premultiplied/high-depth color input APIs and source PercentageStyle geometry, hyperlink and separate whitespace conditions remain pending. Source brightness-jump behavior is intentionally corrected, with explicit raw output evidence.",
+        "Performance is native-host evidence for the implemented contract; full runtime/transport optimization remains separate. Native Windows console evidence is one Server build/BMP-ASCII/no-color scope, not modern emulator/font/IME/SSH coverage."
+      ]
+    },
+    {
+      "id": "matea-widgets/textinput/reference",
+      "unit": "matea-widgets/textinput",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "editing/suggestions と presentation/lifecycle は別。後二者は partial で、clipboard/blink/装飾/default/style 条件を閉じていない。",
+      "next_action": "TextInput の純粋編集と runtime が所有する focus/blink/clipboard を分け、エラー・取消・echo/privacy・装飾と suggestion geometry を source 条件別に検証する。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea-widgets/textinput/performance",
+      "unit": "matea-widgets/textinput",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "finite editing/suggestion fixtures があるが長文/Unicode境界/候補scale/validation/表示/retained を網羅しない。",
+      "next_action": "短長ASCII/Unicode/combining/ZWJ、端/中央編集、limits、候補0/1/多・case expansion・validation、echo/focus/viewportの同意味操作をsourceと測り、再走査/割当を削減する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-widgets/src/textinput.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "matea/lib/reference",
+      "unit": "matea/lib",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "reexport の追加処理がないことは性能証拠になるが、再公開先の全 feature/target/public API の同等性は別。",
+      "next_action": "facade の各再公開を compiler export と capability に結び、feature 組合せと独立利用例を検証する。名前/ライセンス/公開固定は別の最終 review とする。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea/src/lib.rs",
+        "crates/matea/tests/progress.rs",
+        "crates/matea/tests/surface_snapshot.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/performance.md",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/foundation-paths/current.jsonl",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending.",
+      "original_remaining": [
+        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+      ]
+    },
+    {
+      "id": "examples/performance",
+      "unit": "examples",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "12旧snapshotのprocess分布は現在の全examplesと操作中のlatency/RSSを覆わない。",
+      "next_action": "現行全exampleの決定的snapshotとinteractive入力→表示/退出、resize、reduced motion、メモリ保持を測る。support/mod は呼ばれる経路で扱い、standalone架空時間を作らない。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea/examples/clocks.rs",
+        "crates/matea/examples/counter.rs",
+        "crates/matea/examples/dashboard.rs",
+        "crates/matea/examples/effects.rs",
+        "crates/matea/examples/form.rs",
+        "crates/matea/examples/help.rs",
+        "crates/matea/examples/input.rs",
+        "crates/matea/examples/lifecycle.rs",
+        "crates/matea/examples/list.rs",
+        "crates/matea/examples/motion.rs",
+        "crates/matea/examples/pagination.rs",
+        "crates/matea/examples/render_probe.rs",
+        "crates/matea/examples/spinners.rs",
+        "crates/matea/examples/support/mod.rs",
+        "examples/external-widget/src/main.rs",
+        "crates/matea/examples/cursor.rs",
+        "crates/matea/examples/attributes.rs",
+        "crates/matea/examples/gradients.rs",
+        "crates/matea/examples/progress.rs"
+      ],
+      "existing_evidence": [
+        "docs/evidence/example-smoke.log",
+        "docs/evidence/pty-smoke.log",
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "31 release-process samples for all 12 snapshot examples, complete deterministic outputs, expected content and dashboard golden. Includes spawn/pipe/exit; interactive lifecycle, resident memory and physical terminals remain unmeasured.",
+      "original_remaining": [
+        "Snapshot/PTY examples run; application latency and physical terminal behavior remain unmeasured."
+      ]
+    },
+    {
+      "id": "tools/perf-probe/performance",
+      "unit": "tools/perf-probe",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "probeのrecord内operationを測っても計測器自身のtimer/startup/serialization/校正 overheadは未定量。reference-textも別経路。",
+      "next_action": "空/既知コストcontrol、fixed/calibrated/output-only、CLI startup/record量/失敗の全維持モードを測る。reference-text API全経路とRSSを追加し、instrumented timingを除く。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "tools/perf-probe/src/main.rs",
+        "tools/perf-probe/src/protocol.rs",
+        "tools/perf-probe/src/measurement.rs",
+        "crates/matea-terminal/benches/terminal_primitives.rs",
+        "crates/matea/benches/foundation_paths.rs",
+        "tools/perf-probe/src/attributes.rs",
+        "tools/perf-probe/src/gradients.rs",
+        "tools/perf-probe/src/progress.rs",
+        "tools/reference-text/src/main.rs",
+        "tools/perf-probe/src/viewport_wrap.rs",
+        "tools/reference-text/src/patches.rs",
+        "tools/perf-probe/src/viewport_highlights.rs",
+        "tools/perf-probe/src/ratatui_bridge.rs"
+      ],
+      "existing_evidence": [
+        "docs/performance.md",
+        "docs/evidence/quality/viewport-report.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/viewport-cell-geometry.md",
+        "docs/decisions/0054-isolated-rust-reference-lock-and-native-oracle.md",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
+        "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned.",
+        "Qualify the added progress lifecycle and scale controls on all required CI jobs; their timing remains native-host evidence, not a cross-OS speed claim."
+      ]
+    },
+    {
+      "id": "tools/go-performance-probe/performance",
+      "unit": "tools/go-performance-probe",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "source fixtureが正しいこととprobe自身の overhead は別。MemStats bytes と System requested bytes の非同等性も残る。",
+      "next_action": "Go probe のtimer/loop/calibration/output-only/serialization/startup/RSSを独立 control で測る。言語間のallocation定義はそのまま明記し、無理に同一化/高速化しない。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "tools/perf-upstream/main.go",
+        "tools/perf-upstream/main_test.go"
+      ],
+      "existing_evidence": [
+        "docs/performance.md",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json"
+      ],
+      "original_assessment_reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict.",
+      "original_remaining": [
+        "Pinned external references and fixture outputs validated; Go allocation accounting differs from requested System bytes."
+      ]
+    },
+    {
+      "id": "scripts/compiler-export-audit/performance",
+      "unit": "scripts/compiler-export-audit",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "20 retained validation+2 native extractは compiler/fetch/他profile scale/native RSSまで測っていない。",
+      "next_action": "collect/fetch/parse/extract/import の全維持経路を分離し、graph規模・失敗・native RSSを追加する。外部compiler/network時間とPythonアルゴリズムを同じ比率へ混ぜない。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "scripts/collect_rustdoc.py",
+        "scripts/collect_rustdoc_batch.py",
+        "scripts/fetch_rust_references.py",
+        "scripts/import_rustdoc.py",
+        "scripts/rustdoc_exports.py"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/compiler-extraction/report.json",
+        "scripts/test_source_snapshot.py",
+        "scripts/test_rustdoc_exports.py",
+        "scripts/test_rustdoc_import.py",
+        "docs/evidence/optimization/compiler-extraction/ci-cohort-comparison.json",
+        "docs/evidence/optimization/ci-source-bindings.json",
+        "docs/evidence/cursor/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "31 complete validations/canonicalizations of all 20 retained profiles plus two captured native compiler JSON read/parse/extract/serialize paths. Full graph outputs match; repeated path resolution removed with before/after distributions and separate Python traced peak. External compiler/network latency, other profile scale and native RSS remain unmeasured.",
+      "original_remaining": [
+        "Complete target/feature and external-signature closure; expand extraction/profile performance, real failure/scale schedules and native RSS. Existing 20 profiles are not whole-reference coverage."
+      ]
+    },
+    {
+      "id": "scripts/coverage-and-issues/performance",
+      "unit": "scripts/coverage-and-issues",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "current ledger CLIと841 mergeの31標本は全reference audit・pagination/fetch・規模/native RSSではない。",
+      "next_action": "audit/scan/全ledger/merge/publishを測り、file数/graph数/issue数を増やした入出力一致、失敗、native RSSを追加する。822未分析issueはツール速度とは独立に処理する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "scripts/audit_references.py",
+        "scripts/check_coverage.py",
+        "scripts/fetch_upstream_issues.py"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/optimization/ci-source-bindings.json",
+        "scripts/test_coverage.py",
+        "scripts/test_issue_refresh.py",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "scripts/test_reference_audit.py",
+        "docs/evidence/reference-cohort/before-failure.json",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+      ],
+      "original_assessment_reason": "31 complete current-ledger CLI samples plus all 841 retained issue records merged/serialized with simulated pages; stable complete outputs and separate Python heap. External fetch/audit paths, network distributions and native residency remain unmeasured.",
+      "original_remaining": [
+        "All required public declarations and issue dispositions remain pending separately from audit-tool correctness. External network latency, all-reference scale/allocation/residency and schema evolution remain incomplete."
+      ]
+    },
+    {
+      "id": "scripts/independent-terminal-oracles/performance",
+      "unit": "scripts/independent-terminal-oracles",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "test_design_gap",
+      "why_unmet": "旧測定は5小fixtureのみ。行消去が画面全走査でscaleが悪く、不完全RGB/座標/遅延wrap/過大入力の試験も不足。bridgeの完全check/RSSも未測定。",
+      "next_action": "独立flat cell回帰、bounded malformed入力、行/画面/文字消去の範囲処理へ改修する。3維持programの小/大/失敗/CLI/probe→publicationを同出力で旧新版測定し、native RSSを別passで記録する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "scripts/check_color_trace.py",
+        "scripts/check_terminal_trace.py",
+        "scripts/check_ratatui_bridge.py"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/quality/ci-run.json",
+        "docs/evidence/optimization/ci-run.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete.",
+      "original_remaining": [
+        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+      ]
+    },
+    {
+      "id": "scripts/performance-reporters/performance",
+      "unit": "scripts/performance-reporters",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "84case report/46compare/readerは他reporter・prepare・external pathとnative RSSを覆わない。",
+      "next_action": "全維持reporterとprepare/journal/qualificationの代表成功/失敗/増加入力を実行し、完全rawhash・出力・時間/RSSを記録する。外部tool待機はalgorithmと別集計にする。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "scripts/prepare_upstream_bench.py",
+        "scripts/report_clock_format_performance.py",
+        "scripts/report_performance.py",
+        "scripts/report_subscription_performance.py",
+        "scripts/report_view_performance.py",
+        "scripts/report_viewport_performance.py",
+        "scripts/optimization_evidence.py",
+        "scripts/measure_auditor_performance.py",
+        "scripts/performance_records.py",
+        "scripts/measure_remaining_performance.py",
+        "scripts/report_attribute_performance.py",
+        "scripts/measure_reader_performance.py",
+        "scripts/measurement_run.py",
+        "scripts/qualify_measurement_drivers.py"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/measurement-lifecycle.md",
+        "docs/evidence/measurement-lifecycle/ci-source-bindings.json"
+      ],
+      "original_assessment_reason": "31 complete 84-case retained report generations, 46-case strict comparisons and 84-case historical-reader samples, with exact outputs and separate Python heap. Other reporter/prepare/external paths and native residency remain unmeasured.",
+      "original_remaining": [
+        "Other reporter/preparation performance workloads and native residency remain unmeasured. Qualification collects two native all-feature profiles per host and does not close all twenty-profile/public-capability scope. Raw files qualify only with a matching complete attempt; one writer per directory and no power-loss durability guarantee."
+      ]
+    },
+    {
+      "id": "scripts/test-and-acceptance-drivers/performance",
+      "unit": "scripts/test-and-acceptance-drivers",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "全3OS動作はverifiedだが性能測定はGit discovery/assessのみ。47suite、LLVM、PTY/native console、fault scale/RSSが未測定。",
+      "next_action": "既存完全実行journalから壁時間を事実として扱い、専用の反復でorchestration/child時間/RSSを分ける。dry-run/helperだけで全driverを高評価にしない。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "scripts/check_quality.py",
+        "scripts/example_smoke.py",
+        "scripts/measure_rust_coverage.py",
+        "scripts/pty_smoke.py",
+        "scripts/verify_foundation.py",
+        "scripts/evidence_checks.py",
+        "scripts/check_reference_paths.py",
+        "scripts/test_windows_console.py",
+        "scripts/windows_console_oracle.ps1",
+        "scripts/test_terminal_device.py"
+      ],
+      "existing_evidence": [
+        "docs/evidence/local-validation.json",
+        "docs/evidence/optimization/remaining-report.json",
+        "docs/evidence/measurement-drivers/ci-source-bindings.json",
+        "docs/evidence/measurement-drivers/ci-run.json",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/evidence/progress/lifecycle/ci-2fdf2fe/source-bindings.json",
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+      ],
+      "original_assessment_reason": "31 complete Git program-discovery and six-dimension assessment samples, stable output and separate Python peak. Full acceptance suite, LLVM/PTY orchestration, fault scale and native residency remain unmeasured.",
+      "original_remaining": [
+        "Full acceptance/LLVM execution is now verified on all three native hosts; timing, native residency, larger/fault schedules and physical terminal behavior remain incomplete.",
+        "Strict source/log binding intentionally requires native revalidation after changing program/build/check inputs; profiling is never performance evidence."
+      ]
+    },
+    {
+      "id": "matea-ratatui/bridge/reference",
+      "unit": "matea-ratatui/bridge",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "77直接利用宣言の map は全 source module ではない。raw diff/skip/forced width と半角カナ width policy は明示 error のまま。",
+      "next_action": "管理 scene へ取り込む契約と source の raw backend 契約を分け、危険な escape/width を黙って受理せず、不足の保持表現または独立 adapter を実装して全条件へ結ぶ。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-ratatui/src/lib.rs",
+        "crates/matea-ratatui/tests/bridge.rs",
+        "crates/matea/examples/ratatui_widgets.rs"
+      ],
+      "existing_evidence": [
+        "docs/decisions/0061-pinned-ratatui-widget-adapter-and-ui-local-state.md",
+        "crates/matea-ratatui/tests/bridge.rs",
+        "crates/matea/examples/ratatui_widgets.rs",
+        "docs/evidence/ratatui-bridge/miri/context.json",
+        "docs/ratatui-bridge-audit.md",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "Pinned public widgets/layout/text/style are reusable through actual source dependency; only tested managed cell contracts have evidence. Width-policy, raw diff/skip/forced-width and complete public module mapping are pending.",
+      "original_remaining": [
+        "Reduce measured adapter overhead; add separate render-only, residency, varied/hostile and terminal-I/O workloads without relaxing output equivalence.",
+        "Resolve or explicitly track every public source declaration, raw buffer diff contract and differing width policy.",
+        "Qualify the optimized importer with targeted Miri, full native/LLVM, all feature profiles and three-host/MSRV CI before raising portability."
+      ]
+    },
+    {
+      "id": "matea-ratatui/bridge/performance",
+      "unit": "matea-ratatui/bridge",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measured_deficit",
+      "why_unmet": "full projection比較で2追加allocationと約40–52µsのimport overhead。render-only/varied/hostile/retained未測定。直接sourceは所有sceneを作らない。",
+      "next_action": "borrowed source bufferとimmutable sceneの責務を保ち、copy/ownership/cache境界をprofileする。別render-only、反復/変更scene、hostile/大grid、RSSを追加し、全projection/terminal bytesを維持する。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-ratatui/src/lib.rs",
+        "crates/matea-ratatui/tests/bridge.rs",
+        "crates/matea/examples/ratatui_widgets.rs"
+      ],
+      "existing_evidence": [
+        "docs/decisions/0061-pinned-ratatui-widget-adapter-and-ui-local-state.md",
+        "crates/matea-ratatui/tests/bridge.rs",
+        "crates/matea/examples/ratatui_widgets.rs",
+        "docs/evidence/ratatui-bridge/miri/context.json",
+        "docs/ratatui-bridge-audit.md",
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+      ],
+      "original_assessment_reason": "Twelve matched full widget-to-owned-frame projections, 144 retained timing / 72 output-only records across three trials. Import caching/batching reduces latency but retains two allocations and measurable overhead over direct source rendering. Render-only, residency and complete module workloads remain pending.",
+      "original_remaining": [
+        "Reduce measured adapter overhead; add separate render-only, residency, varied/hostile and terminal-I/O workloads without relaxing output equivalence.",
+        "Resolve or explicitly track every public source declaration, raw buffer diff contract and differing width policy.",
+        "Qualify the optimized importer with targeted Miri, full native/LLVM, all feature profiles and three-host/MSRV CI before raising portability."
+      ]
+    },
+    {
+      "id": "matea-terminal/device/reference",
+      "unit": "matea-terminal/device",
+      "axis": "reference",
+      "score_at_analysis": 50,
+      "primary_cause": "capability_closure",
+      "why_unmet": "quality-plan の『新規実装、qualification pending』は古い。native/CI は既に通過。ただし Plan9/他Unix、error/cancel、全 source 契約は残るため点数は50。",
+      "next_action": "既存12 Unix/9 Windows 試験を繰り返すだけにせず、未検証 OS 条件・query/raw/password/error/cancel を宣言単位で分類し、追加の native/fault evidence を付ける。",
+      "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
+      "source_files": [
+        "crates/matea-terminal/src/device.rs",
+        "crates/matea-terminal/src/device/unix.rs",
+        "crates/matea-terminal/src/device/windows.rs",
+        "crates/matea-terminal/src/device/unsupported.rs"
+      ],
+      "existing_evidence": [
+        "docs/terminal-device-audit.md",
+        "docs/decisions/0069-owned-terminal-device-state-and-password-eof.md",
+        "docs/evidence/terminal-device-source/context.json",
+        "docs/evidence/terminal-device/performance/context.json",
+        "docs/evidence/terminal-device/miri/verification.json",
+        "docs/decisions/0070-canonical-terminal-input-batching.md",
+        "docs/evidence/terminal-device/performance-verification.json",
+        "docs/evidence/terminal-device/password-performance-verification.json",
+        "docs/evidence/terminal-device/password-single-source-binding-correction.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/decisions/0071-promoted-go-state-mode-and-explicit-windows-api.md",
+        "docs/decisions/0072-explicit-unix-native-attributes.md",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+      ],
+      "original_assessment_reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending.",
+      "original_remaining": [
+        "Qualify canonical batching with updated Miri, native/LLVM and three-OS/MSRV CI; advance only evidenced dimensions.",
+        "Keep Plan 9/other Unix platform conditions explicit; Rust Unsupported is not source platform parity.",
+        "Complete native error/cancellation, Windows/other-host performance and full source module contracts; abrupt process termination does not run this guard Drop."
+      ]
+    },
+    {
+      "id": "matea-terminal/device/performance",
+      "unit": "matea-terminal/device",
+      "axis": "performance",
+      "score_at_analysis": 50,
+      "primary_cause": "measurement_gap",
+      "why_unmet": "macOS10操作の201records/6231samplesはOS/error/cancel/full moduleではない。canonical long入力改善だけで短入力 adverseを消せない。",
+      "next_action": "既存qualification pending文言を整理したうえで、実Windows/Linuxとquery/raw/password/error/cancel/短長入力を測る。OS syscall/待機/encoder/保持を分ける。",
+      "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
+      "source_files": [
+        "crates/matea-terminal/src/device.rs",
+        "crates/matea-terminal/src/device/unix.rs",
+        "crates/matea-terminal/src/device/windows.rs",
+        "crates/matea-terminal/src/device/unsupported.rs"
+      ],
+      "existing_evidence": [
+        "docs/terminal-device-audit.md",
+        "docs/decisions/0069-owned-terminal-device-state-and-password-eof.md",
+        "docs/evidence/terminal-device-source/context.json",
+        "docs/evidence/terminal-device/performance/context.json",
+        "docs/evidence/terminal-device/miri/verification.json",
+        "docs/decisions/0070-canonical-terminal-input-batching.md",
+        "docs/evidence/terminal-device/performance-verification.json",
+        "docs/evidence/terminal-device/password-performance-verification.json",
+        "docs/evidence/terminal-device/password-single-source-binding-correction.json",
+        "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
+        "docs/decisions/0071-promoted-go-state-mode-and-explicit-windows-api.md",
+        "docs/decisions/0072-explicit-unix-native-attributes.md",
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+      ],
+      "original_assessment_reason": "Ten matched macOS native operations plus owned controls now have 201 timing records, 6231 positive retained intervals and 1612 whole-process RSS children across separate fixed/calibrated protocols. Four source query/raw and six byte-input fixtures match; canonical long-input allocations improve 4/120 to 1/65 and queued latency about 41 to 15-16 microseconds. Adverse single-call cohorts remain retained; OS/error/cancellation and complete module performance are still partial, so no high/full-module verdict.",
+      "original_remaining": [
+        "Qualify canonical batching with updated Miri, native/LLVM and three-OS/MSRV CI; advance only evidenced dimensions.",
+        "Keep Plan 9/other Unix platform conditions explicit; Rust Unsupported is not source platform parity.",
+        "Complete native error/cancellation, Windows/other-host performance and full source module contracts; abrupt process termination does not run this guard Drop."
+      ]
+    }
+  ],
+  "global_blockers": {
+    "unlinked_raw_declarations": 6683,
+    "raw_declarations": 7455,
+    "partial_or_unmeasured_capabilities": 21,
+    "pending_module_verdicts": 91,
+    "pending_issue_reports": 822,
+    "unresolved_rust_export_graphs": 2,
+    "unlinked_compiler_keys_overlapping_raw": 6902,
+    "dependency_target_feature_signature_closure": false
+  },
+  "limits": [
+    "48 axes are verdicts, not 48 confirmed defects; categories can coexist within one row.",
+    "Compiler keys overlap raw declarations and must never be added to them.",
+    "Historical generic/stale reasons do not establish missing implementation or justify a score increase.",
+    "All-high precedes whole-framework Stage B; full public-feature coverage precedes revised F5; owner approval precedes image engine/CUDA."
+  ]
+}

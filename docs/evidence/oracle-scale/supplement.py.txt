@@ -1,0 +1,139 @@
+"""Additional maintained CLI/control/failure paths; original raw run stays immutable."""
+import hashlib
+import importlib.machinery
+import importlib.util
+import json
+import os
+from pathlib import Path
+import platform
+import resource
+import statistics
+import subprocess
+import sys
+import tempfile
+import time
+import tracemalloc
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+sys.path.insert(0, str(ROOT / "scripts"))
+from measurement_run import MeasurementRun
+
+loader = importlib.machinery.SourceFileLoader("experiment", str(BASE / "measure.py.txt"))
+spec = importlib.util.spec_from_loader(loader.name, loader)
+original = importlib.util.module_from_spec(spec)
+loader.exec_module(original)
+canonical, sha = original.canonical, original.sha
+PAIRED = ["cli/color-probe", "ascii/control-series", "color/control-series"]
+UNPAIRED = ["reject/bridge-hex-limit", "reject/bridge-truncated", "reject/color-repeat-limit"]
+
+
+def operation(case, variant):
+    ascii_, color, bridge = [original.load(n, variant) for n in
+                             ["check_terminal_trace", "check_color_trace", "check_ratatui_bridge"]]
+    if case == "cli/color-probe":
+        path = ROOT / "scripts/check_color_trace.py" if variant == "current" else BASE / "check_color_trace.py.before.txt"
+        def run():
+            with tempfile.TemporaryDirectory(prefix="matea-color-probe-cli-") as directory:
+                output = Path(directory) / "colors.json"
+                result = subprocess.run([sys.executable, str(path), "--probe", str(ROOT / "target/release/matea-perf-probe"),
+                                         "--output", str(output)], env=dict(os.environ, PYTHONPATH=str(ROOT / "scripts")),
+                                        capture_output=True, check=True, timeout=30)
+                return result.stdout + output.read_bytes()
+        return run
+    if case == "ascii/control-series":
+        trace = {"width": 8, "height": 3,
+                 "sequences": ["ab\x1b7\x1b[2B\x1b[2C!\x1b8Z\x1b[1D\x1b[1A\x1b[0m\x1b[?25h"]}
+        def run():
+            value = ascii_.replay(trace, include_cursor=True)
+            expected = [{"screen": "abZ\n\n    !", "cursor": [2, 0], "visible": True}]
+            if value != expected:
+                raise ValueError("literal control-series mismatch")
+            return canonical(value)
+        return run
+    if case == "color/control-series":
+        trace = {"width": 8, "height": 3, "scroll_region": [1, 2],
+                 "sequences": ["\x1b[38;5;255;48;2;1;2;3;1;2;3;4;5;7;8;9mX\x1b[3b\x1b[0m\x1b[3;1Hq\n\x1b[?25l"]}
+        def run():
+            value = color.replay(trace)
+            cells, visible = value
+            flags = sum(1 << n for n in [1, 2, 3, 4, 5, 7, 8, 9])
+            if visible or cells[0][:4] != [("X", 255, ("rgb", 1, 2, 3), flags)] * 4 or cells[1][0] != ("q", None, None, 0):
+                raise ValueError("literal color/REP/scroll mismatch")
+            return canonical(value)
+        return run
+    def reject():
+        try:
+            if case == "reject/bridge-hex-limit":
+                bridge.decode("0" * 1_000_002, 1, 1)
+            elif case == "reject/bridge-truncated":
+                bridge.decode("01000100", 1, 1)
+            else:
+                color.replay({"width": 4, "height": 2, "sequences": ["\x1b[1048577b"]})
+        except (ValueError, AssertionError) as error:
+            return canonical({"rejected": str(error)})
+        raise ValueError("accepted unsupported projection/repeat")
+    return reject
+
+
+def main():
+    if len(sys.argv) == 4 and sys.argv[1] == "--rss-child":
+        data = operation(sys.argv[2], sys.argv[3])()
+        scale = 1 if sys.platform == "darwin" else 1024
+        print(json.dumps({"output_sha256": sha(data), "self_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * scale,
+                          "descendant_peak_rss_bytes": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss * scale}))
+        return
+    paths = [Path(__file__).resolve(), BASE / "measure.py.txt"]
+    paths += [ROOT / "scripts" / (n + ".py") for n in ["check_terminal_trace", "check_color_trace", "check_ratatui_bridge"]]
+    paths += list(BASE.glob("check_*.py.before.txt")) + [ROOT / "target/release/matea-perf-probe"]
+    hashes = {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}
+    expected = {}
+    with MeasurementRun(BASE / "supplement", root=ROOT) as journal:
+        journal.update(input_sha256=hashes, python=sys.version, platform=platform.platform(),
+                       rss_scope="fresh whole-fixture process, interpreter/setup included; descendants separately; no retained-only claim")
+        for cohort, order in enumerate([("before", "current"), ("current", "before"), ("before", "current")], 1):
+            for variant in order:
+                for case in PAIRED + (UNPAIRED if variant == "current" else []):
+                    function = operation(case, variant)
+                    value = function()
+                    if case in expected and value != expected[case]:
+                        raise ValueError("changed full output")
+                    expected[case] = value
+                    output = BASE / "supplement/outputs" / (case.replace("/", "-") + ".json.txt")
+                    output.parent.mkdir(exist_ok=True)
+                    output.write_bytes(value)
+                    samples = []
+                    for _ in range(31):
+                        start = time.perf_counter_ns()
+                        actual = function()
+                        elapsed = time.perf_counter_ns() - start
+                        if actual != value or elapsed <= 0:
+                            raise ValueError("changed output/nonpositive duration")
+                        samples.append(elapsed)
+                    tracemalloc.start()
+                    actual = function()
+                    retained, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
+                    if actual != value:
+                        raise ValueError("heap output mismatch")
+                    children = []
+                    for _ in range(3):
+                        result = subprocess.run([sys.executable, str(__file__), "--rss-child", case, variant],
+                                                capture_output=True, cwd=ROOT, check=True, timeout=30)
+                        child = json.loads(result.stdout)
+                        if child["output_sha256"] != sha(value):
+                            raise ValueError("RSS output mismatch")
+                        children.append(child)
+                    journal.record({"case": f"cohort-{cohort}/{variant}/{case}", "workload": case, "variant": variant,
+                                    "cohort": cohort, "samples_ns": samples, "p50_ns": statistics.median(samples),
+                                    "p95_ns": sorted(samples)[29], "output_sha256": sha(value), "output_bytes": len(value),
+                                    "python_traced_retained_bytes": retained, "python_traced_peak_bytes": peak,
+                                    "whole_fixture_rss_children": children, "ratio_eligible": case in PAIRED})
+        if hashes != {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}:
+            raise ValueError("input drift")
+        journal.complete(records=len(journal.records), positive_intervals=31 * len(journal.records),
+                         whole_fixture_rss_children=3 * len(journal.records), paired_cases=3, current_only_cases=3)
+
+
+if __name__ == "__main__":
+    main()
