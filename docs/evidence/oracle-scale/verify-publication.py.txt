@@ -1,0 +1,33 @@
+"""Check committed bytes for the qualified execution inputs and raw CI logs."""
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+native = json.loads((BASE / "final-native/archive.json").read_bytes())
+ci = json.loads((BASE / "ci-bindings.json").read_bytes())
+verified = {}
+for name, expected in {**native["source_sha256"], **ci["raw_files"]}.items():
+    committed = subprocess.check_output(["git", "show", head + ":" + name])
+    if sha(committed) != expected or sha((ROOT / name).read_bytes()) != expected:
+        raise ValueError("committed/source byte mismatch: " + name)
+    verified[name] = expected
+result = {"schema": 1, "status": "verified_committed_bytes", "qualified_commit": head,
+          "execution_input_count": len(native["source_sha256"]), "raw_ci_files": len(ci["raw_files"]),
+          "ci_code_commit": ci["source_commit"], "ci_run": ci["run"],
+          "assessment_only_delta_from_ci": native["assessment_only_delta_from_ci"],
+          "native_archive_sha256": sha((BASE / "final-native/archive.json").read_bytes()),
+          "ci_bindings_sha256": sha((BASE / "ci-bindings.json").read_bytes()), "verified_sha256": verified,
+          "limits": "Committed-byte verification, not a new test/benchmark/CI execution; current quality-plan assessment alone differs from the qualifying CI commit.",
+          "producer_sha256": sha(Path(__file__).read_bytes())}
+(BASE / "publication.json").write_text(json.dumps(result, indent=2) + "\n")
+print(head, ":", len(native["source_sha256"]), "execution inputs and", len(ci["raw_files"]), "raw CI files match committed blobs")
