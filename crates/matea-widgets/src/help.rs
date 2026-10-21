@@ -115,21 +115,26 @@ impl Help {
         sink.finish()
     }
     pub fn short_text(&self, items: &[HelpItem<'_>]) -> String {
+        if self.width == Some(0) {
+            return String::new();
+        }
         // Byte lengths are a capacity hint, not a width/sanitization decision.
-        // A finite cell budget avoids reserving the entire unshown input.
-        let estimate = items
-            .iter()
-            .filter(|item| item.enabled)
-            .fold(0usize, |size, item| {
-                size.saturating_add(item.key.len())
-                    .saturating_add(item.description.len())
-                    .saturating_add(1)
-                    .saturating_add(self.short_separator.len())
-            });
+        // Once the finite hint is full, unseen metadata cannot improve it.
         let hint = self
             .width
             .map(|width| usize::from(width).saturating_mul(4))
-            .unwrap_or(estimate);
+            .unwrap_or(usize::MAX);
+        let mut estimate = 0usize;
+        for item in items.iter().filter(|item| item.enabled) {
+            estimate = estimate
+                .saturating_add(item.key.len())
+                .saturating_add(item.description.len())
+                .saturating_add(1)
+                .saturating_add(self.short_separator.len());
+            if estimate >= hint {
+                break;
+            }
+        }
         let mut result = String::with_capacity(estimate.min(hint));
         self.short_text_into(items, &mut result);
         result
@@ -199,36 +204,41 @@ impl Help {
         let mut columns = Vec::new();
         let mut used = 0usize;
         let mut truncated = false;
-        for group in groups {
-            let mut items = Vec::with_capacity(group.iter().filter(|item| item.enabled).count());
-            items.extend(
-                group
-                    .iter()
-                    .filter(|item| item.enabled)
-                    .map(|item| (inline(item.key), inline(item.description))),
-            );
-            if items.is_empty() {
-                continue;
-            }
-            let keys = items.iter().map(|(key, _)| key.width()).max().unwrap_or(0);
-            let descriptions = items
-                .iter()
-                .map(|(_, description)| description.width())
-                .max()
-                .unwrap_or(0);
+        'groups: for group in groups {
             let gap = if columns.is_empty() {
                 0
             } else {
                 separator.width()
             };
+            let available = self.limit().saturating_sub(used.saturating_add(gap));
+            let mut items = Vec::new();
+            let mut keys = 0;
+            let mut descriptions = 0;
+            for item in group.iter().filter(|item| item.enabled) {
+                let key = inline(item.key);
+                let description = inline(item.description);
+                keys = keys.max(key.width());
+                descriptions = descriptions.max(description.width());
+                // Both maxima only grow: a rejected column cannot become visible
+                // after preparing more rows. Discard its prefix as a whole.
+                if keys.saturating_add(1).saturating_add(descriptions) > available {
+                    truncated = true;
+                    break 'groups;
+                }
+                if items.is_empty() {
+                    // Delay allocation until one row fits. Do not reserve an
+                    // arbitrarily large hidden column from a metadata hint.
+                    items.reserve_exact(group.len().min(16));
+                }
+                items.push((key, description));
+            }
+            if items.is_empty() {
+                continue;
+            }
             let width = keys
                 .saturating_add(1)
                 .saturating_add(descriptions)
                 .saturating_add(gap);
-            if used.saturating_add(width) > self.limit() {
-                truncated = true;
-                break;
-            }
             used += width;
             columns.push(Column {
                 items,
@@ -490,6 +500,49 @@ mod tests {
         let mut help = help;
         help.show_all = true;
         assert_eq!(help.view(map).render(Size::new(40, 3)).unwrap(), surface);
+    }
+    #[test]
+    fn clipped_columns_are_rejected_whole_when_different_rows_set_the_maxima() {
+        let shown = [item("a", "go"), item("q", "up")];
+        // Each row fits alone in six cells, but the aligned column needs nine.
+        let rejected = [item("long", "x"), item("b", "wide")];
+        let mut hidden = rejected.to_vec();
+        hidden.extend(std::iter::repeat_n(
+            item("\u{1b}\t茶", "never\nshown"),
+            4_096,
+        ));
+        let help = Help {
+            width: Some(13),
+            full_separator: " | ".into(),
+            ..Help::default()
+        };
+        assert_eq!(help.full_text(&[&shown, &rejected]), "a go …\nq up");
+        assert_eq!(help.full_text(&[&shown, &hidden]), "a go …\nq up");
+        assert_eq!(
+            help.full_view(&[&shown, &rejected])
+                .render(Size::new(13, 2))
+                .unwrap(),
+            help.full_view(&[&shown, &hidden])
+                .render(Size::new(13, 2))
+                .unwrap()
+        );
+        // Disabled wide metadata cannot reject a column. A tall visible column
+        // must retain all rows even after the bounded initial capacity grows.
+        let mut tall = vec![HelpItem {
+            enabled: false,
+            ..item("disabled long key", "disabled long description")
+        }];
+        tall.extend(std::iter::repeat_n(item("q", "quit"), 1_024));
+        let narrow = Help {
+            width: Some(6),
+            ..Help::default()
+        };
+        assert_eq!(narrow.full_text(&[&tall]), vec!["q quit"; 1_024].join("\n"));
+        let zero = Help {
+            width: Some(0),
+            ..Help::default()
+        };
+        assert!(zero.short_text(&hidden).is_empty());
     }
     #[test]
     fn shared_binding_state_unicode_safety_and_gap_styles_reach_cells() {
