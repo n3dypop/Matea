@@ -1,6 +1,9 @@
 # Matea Foundation gate report
 
-現在は156 program／44評価単位、未達50軸（参照元一致22・性能28）です。
+現在の検証済み範囲は156 program／44評価単位、未達49軸（参照元一致21・性能28）です。
+時計2 packageの43公開項目を3対象のcompiler export・既存試験と照合し、参照元一致を75へ更新しました。
+評価入力更新後の47検証・Rust277＋11 doctest・Python146（条件付きskip 2）・LLVM95 source／102 instanceも成功しました。
+[時計の限定評価と残件](clocks-export-review.md)。性能評価と全体Go export gateは未達のままです。
 追加発見したWindows State.ModeとUnix State.Termiosの公開機能を実装し、再検証待ち7軸を57→50へ更新しました。
 x/termの13宣言候補を分類・対応付けし、借用handle、排他的な状態復元、raw取得、上限付きbyte入力を実装しました。
 [04e81bcの必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39495143723)はすべて成功。

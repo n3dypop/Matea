@@ -149,12 +149,6 @@
     },
     {
       "unit": "matea-widgets/clocks",
-      "dimension": "reference",
-      "score": 50,
-      "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
-    },
-    {
-      "unit": "matea-widgets/clocks",
       "dimension": "performance",
       "score": 50,
       "reason": "Some matched measurements exist, but uncovered workloads, regressions or incomplete module comparisons prevent a high verdict."
@@ -923,8 +917,8 @@
           "reason": "Native tests/smokes and linked regressions validate the implemented subset."
         },
         "reference": {
-          "score": 50,
-          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+          "score": 75,
+          "reason": "All 43 public clock members (21 stopwatch/22 timer) match raw and compiler exports on Linux amd64, macOS arm64 and Windows amd64, including three pointer-only timer controls. Every member maps to implemented typed capabilities. Current program/fixture hashes match exact-source three-OS CI: eight maintained clock tests, 269 fixed duration strings and retained source edge/output checks. ADR 0019 deliberate fixes and external Cmd/Msg/Event/Duration boundaries are explicit; global Go dependency/target/export closure remains false. Finite own-package functional review, no literal defect compatibility or exhaustive application-schedule claim."
         },
         "performance": {
           "score": 50,
@@ -940,10 +934,12 @@
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/clocks-export-review.md",
+        "docs/evidence/clocks-exports/verification.json"
       ],
       "remaining": [
-        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+        "Complete matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained-memory measurements; preserve formatter regressions and old samples. External framework dependency/target/export closure remains a separate Foundation gate."
       ]
     },
     {
@@ -2402,7 +2398,7 @@
       ]
     }
   ],
-  "plan_sha256": "779692502eff7e92582f972bc0170788b5772d38ca877555d103ae01016bf454",
+  "plan_sha256": "00d9b45e1cd664199d1e94243dfbd958d2adb40a0934619d92b921d546a4a478",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2487,8 +2483,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 708,
-                "percent": 94.5260347129506
+                "covered": 709,
+                "percent": 94.65954606141523
               },
               "functions": {
                 "count": 101,
@@ -2502,9 +2498,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1124,
-                "notcovered": 59,
-                "percent": 95.01267962806425
+                "covered": 1125,
+                "notcovered": 58,
+                "percent": 95.09721048182587
               },
               "branches": {
                 "count": 0,

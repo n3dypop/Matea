@@ -619,8 +619,8 @@
           "reason": "Native tests/smokes and linked regressions validate the implemented subset."
         },
         "reference": {
-          "score": 50,
-          "reason": "Only a subset of pinned upstream public behavior is mapped; unimplemented/unlinked capabilities remain pending."
+          "score": 75,
+          "reason": "All 43 public clock members (21 stopwatch/22 timer) match raw and compiler exports on Linux amd64, macOS arm64 and Windows amd64, including three pointer-only timer controls. Every member maps to implemented typed capabilities. Current program/fixture hashes match exact-source three-OS CI: eight maintained clock tests, 269 fixed duration strings and retained source edge/output checks. ADR 0019 deliberate fixes and external Cmd/Msg/Event/Duration boundaries are explicit; global Go dependency/target/export closure remains false. Finite own-package functional review, no literal defect compatibility or exhaustive application-schedule claim."
         },
         "performance": {
           "score": 50,
@@ -636,10 +636,12 @@
         "docs/performance.md",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/clocks-export-review.md",
+        "docs/evidence/clocks-exports/verification.json"
       ],
       "remaining": [
-        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+        "Complete matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained-memory measurements; preserve formatter regressions and old samples. External framework dependency/target/export closure remains a separate Foundation gate."
       ]
     },
     {
