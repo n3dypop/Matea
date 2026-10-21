@@ -169,9 +169,11 @@ fn compact_duration_display_matches_fixed_reference_fixtures() {
         let value = Duration::from_nanos(nanos.parse().unwrap());
         assert_eq!(ClockText(value).to_string(), expected);
         assert_eq!(ClockText(value).into_string(), expected);
+        assert_eq!(ClockText(value).into_text().as_str(), expected);
     }
     let maximum = ClockText(Duration::MAX).to_string();
     assert!(maximum.ends_with(".999999999s") && !maximum.contains('-'));
+    assert_eq!(ClockText(Duration::MAX).into_text().as_str(), maximum);
     assert_eq!(
         format!("{:>7}", ClockText(Duration::from_nanos(1500))),
         "  1.5µs"

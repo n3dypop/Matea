@@ -1,0 +1,62 @@
+"""Finite owned-text representation prototype. Production files stay unchanged."""
+import hashlib,json,os,platform,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('measurement refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-owned-text/prototype';work=Path('/private/tmp/matea-clock-owned-text')
+sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+from measurement_run import MeasurementRun
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+rust=Path('/private/tmp/matea-clock-owned-text-target/release/matea-clock-owned-text');go=work/'source-probe'
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+files=['Cargo.toml','Cargo.lock','go.mod','go.sum','caller.rs','direct.rs','reference-helper.go','clock-text.go','rust-build.log','go-build.log']
+for n in files:shutil.copy2(work/n,base/(n+'.txt' if Path(n).suffix in ['.toml','.lock','.mod','.sum','.go','.rs'] else n))
+for n in ['string','current','direct','source']:shutil.copy2(work/(n+'-outputs.jsonl'),base/(n+'-outputs.jsonl'))
+oracle=read_probe_outputs((base/'source-outputs.jsonl').read_text());assert len(oracle)==6
+for n in ['string','current','direct']:assert read_probe_outputs((base/(n+'-outputs.jsonl')).read_text())==oracle
+source=(root/'tools/perf-upstream/main.go').read_text();assert source.replace('func main() {','func historicalMain() {',1)==(work/'reference-helper.go').read_text()
+code=(root/'crates/matea-widgets/src/clocks.rs').read_text();segment=code[code.index('struct DurationText {'):code.index('\nimpl fmt::Display for ClockText')];assert segment in (work/'direct.rs').read_text()
+dependency=lambda name:sorted([[p['name'],p['version'],p.get('source')] for p in json.load(open(work/(name+'-metadata.json')))['packages']])
+deps={n:dependency(n) for n in ['root','private']}
+assert set(map(tuple,deps['private']))-set(map(tuple,deps['root']))=={('matea-clock-owned-text','0.0.0',None)}
+(base/'dependencies.json').write_text(json.dumps(deps,indent=2)+'\n')
+for name,cmd in [('rustc',['rustc','-vV']),('go',['go','version']),('source-build-info',['go','version','-m',str(go)])]:(base/(name+'.txt')).write_bytes(subprocess.check_output(cmd))
+binaries={'rust':sha(rust.read_bytes()),'source':sha(go.read_bytes())}
+private_inputs={n:sha((work/n).read_bytes()) for n in files}
+environment=dict(os.environ,MATEA_PERF_ITERATIONS='300',MATEA_PERF_MIN_SAMPLE_NS='20000000');environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+orders=[['string','source','current','direct'],['direct','current','source','string'],['source','direct','string','current']]
+results=[]
+with MeasurementRun(base,root=root) as run:
+ run.update(scope='Six finite owned immutable text inputs; three Rust representations and one actual pinned Timer.View, repeated in three orders. No new capabilities, active scheduling, RSS or performance promotion.',source_head=head,root_input_sha256=inputs,
+  binary_sha256=binaries,private_input_sha256=private_inputs,prototype_formatter_segment_sha256=sha(segment.encode()),
+  platform=platform.platform(),architecture=platform.machine(),orders=orders,
+  environment={k:environment[k] for k in ['MATEA_PERF_ITERATIONS','MATEA_PERF_MIN_SAMPLE_NS']},
+  limits=['All 31 positive samples and adverse cohorts retained; no affinity/frequency/ASLR control or universal optimum.',
+   'No build/test/Miri/LLVM/download overlaps ordinary timing. Output validation and 269-string preflight precede samples; first observation is not process-cold.',
+   'Rust String and typed Text have different owned representations with the same immutable display bytes. Text validates/sanitizes arbitrary text; this finite numeric domain is already safe.',
+   'Direct Text uses an original private prototype copied from unchanged Matea formatter helpers, not a newly implemented public API. Re-measure the actual library before adopting a result.',
+   'Rust requested allocator bytes and Go MemStats/tiny rounding are distinct; no retained-memory or physical RSS conclusion. Archived callers are historical reproductions.'])
+ for cohort,order in enumerate(orders,1):
+  for variant in order:
+   command=[str(go)] if variant=='source' else [str(rust),variant]
+   result=subprocess.run(command,env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False,timeout=120)
+   raw_name=f'cohort-{cohort}-{variant}.jsonl';raw=base/run.attempt/raw_name;raw.write_bytes(result.stdout);raw.with_suffix('.stderr').write_bytes(result.stderr)
+   assert result.returncode==0 and not result.stderr,(cohort,variant,result.returncode,result.stderr)
+   records=read_records(result.stdout.decode());assert set(records)==set(oracle)
+   medians={}
+   for name,record in records.items():
+    assert len(record['samples_ns'])==31
+    for key in ['output','semantics','first_return_value']:assert record[key]==oracle[name][key],(cohort,variant,name,key)
+    transformed={**record,'case':f'cohort-{cohort}/{variant}/{name}','source_case':name,'cohort':cohort,'variant':variant}
+    run.record(transformed);medians[name]=summary(record);results.append({'cohort':cohort,'variant':variant,'case':name,**summary(record)})
+   print(json.dumps({'cohort':cohort,'variant':variant,'p50_ns':{k:v['p50_ns'] for k,v in medians.items()}}),flush=True)
+ assert {n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}==inputs
+ assert {n:sha((work/n).read_bytes()) for n in files}==private_inputs
+ assert sha(rust.read_bytes())==binaries['rust'] and sha(go.read_bytes())==binaries['source']
+ assert len(results)==72
+ run.complete(timing_records=72,retained_intervals=2232,finite_inputs=6,summary=results,procedure_sha256=sha(Path(__file__).read_bytes()),
+  archive_sha256={p.name:sha(p.read_bytes()) for p in sorted(base.iterdir()) if p.is_file() and p.name not in ['context.json','current.jsonl']})
+print('Complete: 72 records / 2232 retained intervals; production source unchanged',flush=True)

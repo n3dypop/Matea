@@ -1,6 +1,10 @@
 # Matea Foundation gate report
 
-現在の検証済み範囲は156 program／44評価単位、未達49軸（参照元一致21・性能28）です。
+直近の検証済み782f7d6は156 program／44評価単位、未達49軸（参照元一致21・性能28）です。
+現在はClockText::into_textと既定viewへの適用を実装し、影響4単位の移植性を再検証中です。
+作業評価は53軸。既存5 issueのソースhash再確認も保留し、未評価報告は一時827件です。
+72計測・2,232標本の別workspace試作で直接Text生成の改善を確認しました。[ADR 0073](decisions/0073-owned-clock-text-without-format-adapters.md)。
+本体の再測定・Miri・現ソースの3 OS CIは未完了で、時計の性能評価は50のままです。
 時計2 packageの43公開項目を3対象のcompiler export・既存試験と照合し、参照元一致を75へ更新しました。
 評価入力更新後の47検証・Rust277＋11 doctest・Python146（条件付きskip 2）・LLVM95 source／102 instanceも成功しました。
 [時計の限定評価と残件](clocks-export-review.md)。性能評価と全体Go export gateは未達のままです。

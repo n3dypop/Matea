@@ -1,6 +1,6 @@
 //! Monotonic UI clocks with cheap, generation-safe scheduling descriptors.
 use matea_core::{Subscription, SubscriptionId};
-use matea_render::View;
+use matea_render::{Text, View};
 use matea_style::Theme;
 use std::{
     fmt,
@@ -343,7 +343,7 @@ macro_rules! controls {
                 ClockText(self.0.value)
             }
             pub fn view(&self, theme: &Theme) -> View {
-                View::styled(format_args!("{}", self.text()), theme.text)
+                View::styled(self.text().into_text(), theme.text)
             }
         }
     };
@@ -473,6 +473,25 @@ impl DurationText {
     }
 }
 impl ClockText {
+    /// Owned immutable display text, ready for structured views. The existing
+    /// bounded formatter feeds Text directly, avoiding a formatting-arguments
+    /// adapter. Short text may use inline storage; allocation is not an API
+    /// guarantee. Standard Display width/precision options remain separate.
+    ///
+    /// ```
+    /// use matea_widgets::ClockText;
+    /// use std::time::Duration;
+    /// let text = ClockText(Duration::from_nanos(1500)).into_text();
+    /// assert_eq!(text.as_str(), "1.5µs");
+    /// ```
+    #[inline]
+    pub fn into_text(self) -> Text {
+        if self.0.is_zero() {
+            Text::from("0s")
+        } else {
+            Text::from(self.formatted().as_str())
+        }
+    }
     /// One exact-size owned string allocation; no growing intermediate String.
     #[inline]
     pub fn into_string(self) -> String {
