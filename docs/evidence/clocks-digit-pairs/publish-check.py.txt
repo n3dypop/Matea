@@ -1,0 +1,26 @@
+"""Verify committed experiment bytes and preserve literal raw tool whitespace."""
+import hashlib,json,re,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('publication check refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','6351ab9'],text=True).strip()
+names=subprocess.check_output(['git','ls-tree','-r','--name-only',head,'--',str(base.relative_to(root))],text=True).splitlines();assert len(names)==231
+files={}
+for n in names:
+ h=sha((root/n).read_bytes());assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n;files[n]=h
+full=['git','diff','52b37e2..'+head,'--check','--','*.md','*.json','*.txt'];r=subprocess.run(full,capture_output=True,text=True)
+assert r.returncode==2 and not r.stderr
+paths=re.findall(r'^(.+?):\d+: trailing whitespace\.$',r.stdout,re.M);assert len(paths)==12 and set(paths)=={'docs/evidence/clocks-digit-pairs/distributions/source-build-info.txt'}
+(base/'publication-whitespace.log').write_text(r.stdout)
+source=['git','diff','52b37e2..'+head,'--check','--','*.md','*.json','*.py.txt','*.rs.txt','*.go.txt','*.toml.txt','*.lock.txt','*.mod.txt','*.sum.txt'];clean=subprocess.run(source,capture_output=True,text=True);assert clean.returncode==0 and not clean.stdout and not clean.stderr
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root)
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes());validate_coverage(coverage,root)
+assert inputs==native['source_sha256']==coverage['input_sha256']
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+attempt='docs/evidence/terminal-device/attempts/86e7876bcc2b4ef68a4b30e5f566dfc9/context.json';assert (root/attempt).read_bytes()==(root/'docs/evidence/terminal-device/context.json').read_bytes()
+c=json.loads((root/attempt).read_bytes());assert c['status']=='complete' and len(c['cases'])==12 and all(v['status']=='passed' for v in c['cases'])
+result={'schema':1,'status':'complete','committed_experiment_head':head,'experiment_files_sha256':files,'execution_input_count':len(inputs),'execution_input_sha256':inputs,'native_device_attempt':attempt,'native_device_attempt_sha256':sha((root/attempt).read_bytes()),'whitespace_checks':{'all_text_command':full,'all_text_exit_code':r.returncode,'literal_tool_stdout_paths':sorted(set(paths)),'literal_tool_stdout_warning_lines':len(paths),'raw_diagnostic_sha256':sha((base/'publication-whitespace.log').read_bytes()),'source_docs_command':source,'source_docs_exit_code':clean.returncode},'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['Twelve trailing-tab lines are literal go version -m stdout. They remain byte-identical to the producer hashes; raw evidence is not rewritten to satisfy a style check. Maintained source/docs/archived code/config diffs pass the bounded whitespace check.','The complete native device attempt is a duplicate frozen journal of the already committed current context and is saved separately; it adds no new executed test. No native, LLVM or benchmark execution is repeated.']}
+(base/'publication.json').write_text(json.dumps(result,indent=2)+'\n');print('231 committed experiment files / 200 unchanged inputs verified; literal Go build-info tabs preserved; source/doc whitespace clean.')
