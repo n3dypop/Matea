@@ -25,7 +25,7 @@
       "unit": "matea-core/lib",
       "dimension": "performance",
       "score": 50,
-      "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+      "reason": "Typed input primitives, five retained-subscription workloads and deadline/waiting experiments cover implemented slices. Matched source active effect/queue/timer delivery, cancellation, complete runtime workloads and retained memory remain incomplete; the historical input-only reason did not describe all existing evidence."
     },
     {
       "unit": "matea-render/lib",
@@ -151,7 +151,7 @@
       "unit": "matea-widgets/clocks",
       "dimension": "performance",
       "score": 50,
-      "reason": "162 raw timing records / 5022 retained samples cover six repeated immutable owned-text inputs across prototype and actual API, with identical outputs. Actual into_text improves all eighteen cohort/input medians over the prior Text adapter, retaining one adverse seconds p95. Four inputs remain slower than source. Active scheduling/cancellation/notification latency, variable-duration workloads and retained memory remain unmeasured; no module-high or universal optimum verdict."
+      "reason": "Existing 162 owned-text records plus 468 retained fixed/varied-duration experiment records and two CPU profiles identify source gaps and construction/normalization costs. Four arithmetic candidates are not adopted because each has adverse cases. Variable-duration formatting is now measured; active scheduling/cancellation/timeout notification, varied live clock states and retained memory remain incomplete. No module-high or universal optimum verdict."
     },
     {
       "unit": "matea-widgets/help",
@@ -250,12 +250,6 @@
       "reason": "31 complete current-ledger CLI samples plus all 841 retained issue records merged/serialized with simulated pages; stable complete outputs and separate Python heap. External fetch/audit paths, network distributions and native residency remain unmeasured."
     },
     {
-      "unit": "scripts/independent-terminal-oracles",
-      "dimension": "performance",
-      "score": 50,
-      "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
-    },
-    {
       "unit": "scripts/performance-reporters",
       "dimension": "performance",
       "score": 50,
@@ -283,7 +277,7 @@
       "unit": "matea-terminal/device",
       "dimension": "reference",
       "score": 50,
-      "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+      "reason": "The native implementation and canonical batching have completed prior targeted Miri, full native/LLVM and exact-source three-OS/MSRV qualification. Full x/term/native-device public contracts, Plan9/other Unix conditions, errors and cancellation remain partial; completed qualification is not source-platform parity."
     },
     {
       "unit": "matea-terminal/device",
@@ -364,7 +358,7 @@
         },
         "performance": {
           "score": 50,
-          "reason": "37 executed Rust-only typed input/translation/focus primitive fixtures, with exact before/after outputs and 31 samples. Full lifecycle/event-loop/OS parsing, residency and matched upstream paths remain unmeasured."
+          "reason": "Typed input primitives, five retained-subscription workloads and deadline/waiting experiments cover implemented slices. Matched source active effect/queue/timer delivery, cancellation, complete runtime workloads and retained memory remain incomplete; the historical input-only reason did not describe all existing evidence."
         },
         "portability": {
           "score": 75,
@@ -921,7 +915,7 @@
         },
         "performance": {
           "score": 50,
-          "reason": "162 raw timing records / 5022 retained samples cover six repeated immutable owned-text inputs across prototype and actual API, with identical outputs. Actual into_text improves all eighteen cohort/input medians over the prior Text adapter, retaining one adverse seconds p95. Four inputs remain slower than source. Active scheduling/cancellation/notification latency, variable-duration workloads and retained memory remain unmeasured; no module-high or universal optimum verdict."
+          "reason": "Existing 162 owned-text records plus 468 retained fixed/varied-duration experiment records and two CPU profiles identify source gaps and construction/normalization costs. Four arithmetic candidates are not adopted because each has adverse cases. Variable-duration formatting is now measured; active scheduling/cancellation/timeout notification, varied live clock states and retained memory remain incomplete. No module-high or universal optimum verdict."
         },
         "portability": {
           "score": 75,
@@ -944,7 +938,7 @@
         "docs/evidence/clocks-owned-text/miri/verification.json"
       ],
       "remaining": [
-        "Measure matched active scheduling/cancellation/timeout delivery, variable-duration workloads and retained memory; investigate remaining source formatter gaps with prior failed arithmetic candidates preserved. Global external API/dependency/target closure remains a separate Foundation gate."
+        "Measure matched active scheduling/cancellation/timeout delivery, varied live clock states and retained memory; prototype safe Text construction under ADR 0076 with prior failed arithmetic candidates preserved. Variable-duration formatter distributions are already retained and need not be repeated without a new hypothesis. Global external API/dependency/target closure is a separate Foundation gate."
       ]
     },
     {
@@ -1220,7 +1214,7 @@
         "docs/evidence/cursor/ci-source-bindings.json"
       ],
       "remaining": [
-        "Complete rich-style equivalence, active scheduling/notification comparison, scale/residency and current three-OS validation."
+        "Complete rich-style equivalence, active scheduling/notification comparison and scale/residency. Existing byte-identical cursor source already has three-OS qualification."
       ]
     },
     {
@@ -1858,7 +1852,7 @@
       "remaining": [
         "System allocator wrapper is measurement-only unsafe; benchmark timer overhead/host noise and whole-program startup remain unquantified.",
         "RichText reference oracle uses the pinned Git source with an independent lock; all-platform results and complete native text comparisons are pending, so no whole-module performance verdict is assigned.",
-        "Qualify the added progress lifecycle and scale controls on all required CI jobs; their timing remains native-host evidence, not a cross-OS speed claim."
+        "Progress lifecycle/scale controls already have prior three-OS source qualification. Their timing is native-host evidence; complete probe overhead/startup/residency and unmatched workloads remain separate gaps."
       ]
     },
     {
@@ -2084,8 +2078,8 @@
           "reason": "Original tooling/type contract without a standalone upstream equivalent."
         },
         "performance": {
-          "score": 50,
-          "reason": "31 samples each for complete ASCII, cursor, four-profile color, nondefault-margin and fallback replay/verification paths; stable outputs and separate Python peak. Larger/malformed streams and residency remain incomplete."
+          "score": 75,
+          "reason": "Bounded implemented-oracle review: 297 timing records / 9207 retained positive intervals, 837 fresh whole-fixture RSS children and 15 separate steady-input memory observations across all three maintained programs. Complete replay, large J/K/X, four-profile/margin/fallback, full file/probe/bridge CLIs and failed-journal paths are measured. Strict geometry/CSI/RGB validation deliberately adds about 1.3-2.5 microseconds to calibrated short controls versus the underchecking baseline; both failed candidates/cohorts and unchanged-checker noise remain visible. This accepted correctness cost is not hidden as universal speed parity; no physical-emulator or production-framework maximum claim."
         },
         "portability": {
           "score": 75,
@@ -2098,10 +2092,15 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/optimization/remaining-report.json",
         "docs/evidence/cursor/ci-source-bindings.json",
-        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/oracle-performance-audit.md",
+        "docs/evidence/oracle-scale/verified-comparison.json",
+        "docs/evidence/oracle-scale/after-tests.json",
+        "docs/evidence/oracle-scale/ci-bindings.json"
       ],
       "remaining": [
-        "Compile/import/CLI or integration execution is bounded evidence. Offline/network failure, schema evolution and load coverage must not be inferred from syntax checks."
+        "Bounded ASCII fixture models and managed-widget projections only. Physical terminal/Unicode/transport conformance and whole-framework performance retain their original owners; finite measurements are not a universal speed, allocation or leak proof.",
+        "Strict validation costs and every adverse cohort remain in the audit. The three maintained programs, all original review dimensions and the Foundation public-feature scope are unchanged."
       ]
     },
     {
@@ -2359,7 +2358,7 @@
       "remaining": [
         "Reduce measured adapter overhead; add separate render-only, residency, varied/hostile and terminal-I/O workloads without relaxing output equivalence.",
         "Resolve or explicitly track every public source declaration, raw buffer diff contract and differing width policy.",
-        "Qualify the optimized importer with targeted Miri, full native/LLVM, all feature profiles and three-host/MSRV CI before raising portability."
+        "Optimized-importer Miri, native/LLVM, feature profiles and three-OS/MSRV qualification are already complete for the byte-identical Rust source. Remaining reference/performance gaps are raw buffer/width policy, complete declaration mapping, overhead and unmeasured workloads."
       ]
     },
     {
@@ -2385,7 +2384,7 @@
         },
         "reference": {
           "score": 50,
-          "reason": "New native device implementation: targeted Unix checks pass; complete shared-lease/FFI/error review and qualification remain pending."
+          "reason": "The native implementation and canonical batching have completed prior targeted Miri, full native/LLVM and exact-source three-OS/MSRV qualification. Full x/term/native-device public contracts, Plan9/other Unix conditions, errors and cancellation remain partial; completed qualification is not source-platform parity."
         },
         "portability": {
           "score": 75,
@@ -2412,13 +2411,13 @@
         "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
       ],
       "remaining": [
-        "Qualify canonical batching with updated Miri, native/LLVM and three-OS/MSRV CI; advance only evidenced dimensions.",
-        "Keep Plan 9/other Unix platform conditions explicit; Rust Unsupported is not source platform parity.",
+        "Prior canonical-batching qualification is complete; reuse byte-identical device-source evidence rather than treating it as pending.",
+        "Keep Plan9/other Unix platform conditions explicit; Rust Unsupported is not source-platform parity.",
         "Complete native error/cancellation, Windows/other-host performance and full source module contracts; abrupt process termination does not run this guard Drop."
       ]
     }
   ],
-  "plan_sha256": "9dc44269aa2b0c31e56e5de2c30d6992690955bb12bb2584ef79522f96dd536d",
+  "plan_sha256": "fdc56017c2d44e9afc118d0e18bb4bfdeef6fe33f0a1dc4101f6dbe6879d694d",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2503,8 +2502,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 709,
-                "percent": 94.65954606141523
+                "covered": 708,
+                "percent": 94.5260347129506
               },
               "functions": {
                 "count": 101,
@@ -2518,9 +2517,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1125,
-                "notcovered": 58,
-                "percent": 95.09721048182587
+                "covered": 1124,
+                "notcovered": 59,
+                "percent": 95.01267962806425
               },
               "branches": {
                 "count": 0,
@@ -6821,7 +6820,7 @@
     },
     {
       "file": "scripts/check_color_trace.py",
-      "sha256": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+      "sha256": "784a6d265b98893f011886b2c1a6d547a11ae5e6e5ad93322fce9edcc706a6a2",
       "units": [
         "scripts/independent-terminal-oracles"
       ],
@@ -6861,7 +6860,7 @@
     },
     {
       "file": "scripts/check_terminal_trace.py",
-      "sha256": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+      "sha256": "2be1ee10939fcce1c22a64fddad98612a514e200a005b727fdef8fc0c13689c0",
       "units": [
         "scripts/independent-terminal-oracles"
       ],
@@ -7069,7 +7068,7 @@
     },
     {
       "file": "scripts/test_color_trace.py",
-      "sha256": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+      "sha256": "eb312d7fa24178b0708f840b97b5898350f34f4d2b244cd239855dcf8a1366fd",
       "units": [
         "scripts/regression-tests"
       ],

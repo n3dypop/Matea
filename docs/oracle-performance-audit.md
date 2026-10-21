@@ -77,3 +77,13 @@ ASCIIは旧14.02–14.10、第1候補17.44–17.63、第2候補15.35–15.51µs�
 正しい検証の固定コストを明示したうえで、残っていたscale/CLI/失敗/native memoryの
 測定とsource一致のnative/3 OS qualificationが必要。完了前に昇格しない。
 基盤公開機能の全件実装、全export閉包、Stage B、F5は独立した未達のまま。
+
+qualification完了。ce3d203の[3 OS＋MSRV 4ジョブ](https://github.com/n3dypop/Matea/actions/runs/39689754567)を
+[200入力・生ログへ照合](evidence/oracle-scale/ci-bindings.json)した。各OSの47受入、新規10試験、Python151試験が成功。
+参照／計測ドライバー再収集はskip。評価表はscore1件と古い理由のみを変更し、プログラムのCIソースは同一。
+評価更新後のローカルは47受入、Rust285＋14 doctest、Python151（skip 2）、LLVM97/104が成功。
+CI証拠ファイル未取得による最初のinventory失敗を保存し、同一入力の成功46項目を保持して、その1項目だけを再実行した。
+[両journalと最終source binding](evidence/oracle-scale/final-native/archive.json)。
+依存hashbrownの3 profiling警告を診断して保持。Rust/manifestは0c95c37と同一で、Miriの追加実行はない。
+性能75はこの3プログラムの実装済み・有限scopeの評価で、全ケース旧版以下の時間や普遍的最大速度を意味しない。
+未達は48→47（参照21・性能26）。全閾値・44単位・158プログラムの範囲とF5/Stage Bの順序を維持した。

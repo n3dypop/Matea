@@ -203,3 +203,11 @@ correctness records masquerading as timings, incomplete calibration and a
 negative cold counter). These are recorded pending fixes; ordinary green CI
 does not erase the behavioral gap. The 111-program/41-unit inventory still has
 49 low assessments. No threshold, scope or gate is relaxed.
+
+
+2026-10-22の[全48軸の原因分析](unmet-axes-analysis.md)と[監査器の修正・測定](oracle-performance-audit.md)により、
+維持プログラム158／44単位の性能1軸を75へ更新し、未達は47（参照21・性能26）です。
+校正した短制御列の追加検証コスト1.3–2.5µsと全adverseを明記し、平均や範囲縮小で点数を上げていません。
+3 OS＋MSRVの4必須CI成功と200入力を照合し、評価更新後47受入、Rust285＋14 doctest、Python151（skip 2）、LLVM97/104を確認しました。
+最初のinventory失敗を保存し、同一ソースの46成功を保持して1件のみ再試験。Rust変更がないためMiriを追加実行していません。
+Stage Aは継続、Stage BとF5は閉じています。

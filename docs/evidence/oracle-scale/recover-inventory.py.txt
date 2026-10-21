@@ -1,0 +1,58 @@
+"""Reexecute only the missing-evidence inventory check; retain the other 46 results."""
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import sys
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+sys.path.insert(0, str(ROOT / "scripts"))
+from check_quality import execution_inputs, validate_native
+from verify_foundation import acceptance_commands, run_checks
+from fetch_upstream_issues import atomic_json
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+ci = json.loads((BASE / "ci-bindings.json").read_bytes())
+require(ci["status"] == "qualified", "CI evidence not collected")
+first_path = BASE / "native-first-attempt/local-validation.json"
+first = json.loads(first_path.read_bytes())
+require(first["status"] == "failed" and first["source_changed_during_run"] == [] and len(first["checks"]) == 47,
+        "original native scope not preserved")
+failed = [(c["name"], c["exit_code"]) for c in first["checks"] if c["exit_code"]]
+require(failed == [("quality-inventory", 1)], "unexpected earlier failure")
+inputs = {n: sha((ROOT / n).read_bytes()) for n in sorted(execution_inputs(ROOT))}
+require(inputs == first["source_sha256"], "source changed after 46 successful checks")
+for check in first["checks"]:
+    require(sha((BASE / "native-first-attempt" / check["log"]).read_bytes()) == check["log_sha256"], "first log lost")
+    if check["exit_code"] == 0:
+        require(sha((ROOT / "docs/evidence" / check["log"]).read_bytes()) == check["log_sha256"], "successful log changed")
+commands = [(name, command) for name, command in acceptance_commands(ROOT) if name == "quality-inventory"]
+require(len(commands) == 1, "inventory command identity changed")
+recovery = run_checks(ROOT, commands, offline=True)
+require(recovery["status"] == "complete" and recovery["all_local_checks_passed"], "recovery failed")
+require(recovery["source_sha256"] == inputs and recovery["source_changed_during_run"] == [], "recovery source drift")
+require(all(first[k] == recovery[k] for k in ["rustc", "cargo"]), "toolchain changed")
+folder = BASE / "inventory-recovery"
+folder.mkdir(exist_ok=True)
+shutil.copyfile(ROOT / "docs/evidence/local-validation.json", folder / "local-validation.json")
+shutil.copyfile(ROOT / "docs/evidence/quality-inventory.log", folder / "quality-inventory.log")
+merged = {**first, "checks": [recovery["checks"][0] if c["name"] == "quality-inventory" else c for c in first["checks"]],
+          "status": "complete", "all_local_checks_passed": True, "finished_at_utc": recovery["finished_at_utc"],
+          "recovery": {"scope": "46 successful source-identical checks retained; only the failed inventory check reexecuted after CI evidence file was collected",
+                       "first_journal": str(first_path.relative_to(ROOT)), "first_journal_sha256": sha(first_path.read_bytes()),
+                       "recovery_journal": str((folder / "local-validation.json").relative_to(ROOT)),
+                       "recovery_journal_sha256": sha((folder / "local-validation.json").read_bytes()),
+                       "source_input_changes": []}}
+atomic_json(ROOT / "docs/evidence/local-validation.json", merged)
+validate_native(merged, ROOT)
+print("47 current native checks qualified: 46 retained successes +1 actually reexecuted inventory; both attempts preserved")

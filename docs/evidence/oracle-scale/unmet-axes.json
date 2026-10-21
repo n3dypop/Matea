@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "as_of_local_date": "2026-10-22",
-  "produced_at_utc": "2026-10-21T22:40:02.536237+00:00",
-  "base_commit": "f6a8292848d81846c93923e221371766f0214737",
+  "produced_at_utc": "2026-10-21T22:55:12.664115+00:00",
+  "base_commit": "ce3d2038c6f788bce87af9e165019045e6e7d761",
   "quality_plan_sha256": "9dc44269aa2b0c31e56e5de2c30d6992690955bb12bb2584ef79522f96dd536d",
-  "analysis_producer_sha256": "9dca9d4bc75df3397f1686618eaf0109addaeb6628dd9208b3ea76b81a194a51",
+  "analysis_producer_sha256": "2acc7b9312df4f7aab271b5adf2d8e23b4802116e7cb887afe01c27a6edb003b",
   "axis_counts": {
     "reference": 21,
     "performance": 27
@@ -80,7 +80,7 @@
       "axis": "reference",
       "score_at_analysis": 50,
       "primary_cause": "capability_closure",
-      "why_unmet": "37入力 primitive の証拠が runtime 全体にも流用されている。効果・購読・外部プロセス・終了等の全公開契約の対応付けがない。",
+      "why_unmet": "37入力 primitive という古い評価理由は runtime 全体を説明しない。購読/期限の既存改善はあるが、効果・外部プロセス・終了等の全公開契約の対応付けがない。",
       "next_action": "Program/options/commands/subscriptions の公開項目を runtime と terminal に割り当てる。取消・終了・panic・worker の保証範囲を独立モデルと照合し、未実装契約を縦に実装する。",
       "acceptance": "元の公開機能範囲を維持し、宣言/feature/target→契約→実装→独立correctness→performance verdictを全件結ぶ。意図した改善はsource実出力と回帰試験で明示し、未対応は残す。",
       "source_files": [
@@ -108,7 +108,7 @@
       "axis": "performance",
       "score_at_analysis": 50,
       "primary_cause": "measurement_gap",
-      "why_unmet": "入力 primitive を runtime 性能の根拠に流用している。timer/effect/queue/cancel/worker の通知と保持コストが残る。",
+      "why_unmet": "古い理由は入力37件だけを記すが、購読5件や期限待機の既存測定もある。実source同等のactive timer/effect/queue/cancel/worker通知・保持コストは未完。",
       "next_action": "同じ生成/通知/処理/取消を行う runtime workload を用意する。購読維持/差替え/終了、遅延/多量メッセージ、期限誤差、p50/p95、CPU/保持メモリを測る。",
       "acceptance": "記載した不足経路を測定し、全出力/意味/入力条件を一致させる。各cohortの全分布・割当/保持・cold/warm/失敗・adverseを保持し、現実装の欠陥/必須未測定を解消する。75は限定証拠、普遍的最大速度ではない。",
       "source_files": [

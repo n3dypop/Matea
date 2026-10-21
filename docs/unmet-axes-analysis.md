@@ -1,6 +1,8 @@
 # 未達48軸の原因と達成条件
 
-2026-10-22。基準コミット `f6a8292848d81846c93923e221371766f0214737`。点数・閾値・範囲を変更せず、21参照軸と27性能軸を全件分析した。
+追補：検証器の性能1軸を、修正・全操作測定・native/3 OS qualificationに基づき50→75へ更新しました。現在は47軸未達（参照21・性能26）です。[達成の証拠と追加検証コスト](oracle-performance-audit.md)、[範囲を維持した評価差分](evidence/oracle-scale/assessment-review.json)。以下の48軸表は分析時点の元の理由と範囲を保持します。
+
+2026-10-22。基準コミット `ce3d2038c6f788bce87af9e165019045e6e7d761`。点数・閾値・範囲を変更せず、21参照軸と27性能軸を全件分析した。
 
 未達の主因は、機能/公開条件の未完、測定範囲の不足、非同等な比較経路、実測の adverse、試験設計の不足である。48は確認済みバグの件数ではない。詳細な元理由・ファイル・証拠・各軸の達成条件は [機械可読表](evidence/oracle-scale/unmet-axes.json) に保持した。
 
@@ -10,8 +12,8 @@
 | --- | --- | --- |
 | `matea-core/input` / reference | 入力型の対応付けは部分的。Crossterm の変換実装があっても、全イベント・修飾・プラットフォーム条件の公開契約が閉じていない。 | Bubble Tea / Crossterm / Ultraviolet のイベント宣言を型・変換・焦点の責務へ振り分け、未対応の入力表現を実装し、条件別の正負 fixture を結ぶ。 |
 | `matea-core/input` / performance | 37 Rust-only primitive では source と同意味の入力経路・focus 変更/lookup 分布・保持メモリがない。 | 型変換/focus の cold/build/warm/mutate、件数0/1/64/多、重複/無効入力、native event burst を分けて source と完全出力を比較し、保持後/解放後のメモリを測る。 |
-| `matea-core/lib` / reference | 37入力 primitive の証拠が runtime 全体にも流用されている。効果・購読・外部プロセス・終了等の全公開契約の対応付けがない。 | Program/options/commands/subscriptions の公開項目を runtime と terminal に割り当てる。取消・終了・panic・worker の保証範囲を独立モデルと照合し、未実装契約を縦に実装する。 |
-| `matea-core/lib` / performance | 入力 primitive を runtime 性能の根拠に流用している。timer/effect/queue/cancel/worker の通知と保持コストが残る。 | 同じ生成/通知/処理/取消を行う runtime workload を用意する。購読維持/差替え/終了、遅延/多量メッセージ、期限誤差、p50/p95、CPU/保持メモリを測る。 |
+| `matea-core/lib` / reference | 37入力 primitive という古い評価理由は runtime 全体を説明しない。購読/期限の既存改善はあるが、効果・外部プロセス・終了等の全公開契約の対応付けがない。 | Program/options/commands/subscriptions の公開項目を runtime と terminal に割り当てる。取消・終了・panic・worker の保証範囲を独立モデルと照合し、未実装契約を縦に実装する。 |
+| `matea-core/lib` / performance | 古い理由は入力37件だけを記すが、購読5件や期限待機の既存測定もある。実source同等のactive timer/effect/queue/cancel/worker通知・保持コストは未完。 | 同じ生成/通知/処理/取消を行う runtime workload を用意する。購読維持/差替え/終了、遅延/多量メッセージ、期限誤差、p50/p95、CPU/保持メモリを測る。 |
 | `matea-render/lib` / reference | 所有 scene、rich text、snapshot は実装済みの一部。Ultraviolet/Ratatui の全描画・buffer・cursor 契約、出力条件が閉じていない。 | scene/compositor と transport の境界を維持し、原点・clipping・wide cell・resize・dirty/diff・cursor の公開契約を全件分類し、独立セル/端末モデルへ結ぶ。 |
 | `matea-render/lib` / performance | scene20件等は部分。構築/正規化/装飾/再描画で adverse 分布があり、大規模/変更密度/保持の比較がない。 | constructor と build→compose、share/consume、full/diff を分離する。短長ASCII/Unicode/control、変更多寡、resize を保持し、候補は現APIで全出力/分布/メモリを再比較する。 |
 | `matea-render/text` / reference | 安全な Text と owned RichText は ANSI/Unicode 全ユーティリティの代替を証明しない。source の escape-aware 処理と Matea の正規化は同じ意味ではない。 | x/ansi と Ratatui text の公開操作を保全する rich parser / 正規化する plain text へ分類し、wrap/truncate/width/controls/hyperlink 等の不足を入力と出力の契約ごとに実装する。 |
