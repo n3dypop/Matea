@@ -1,0 +1,33 @@
+#[path="/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]mod measurement;
+use matea::terminal::protocol::{kitty::{Action,CommandError,Control,Format,Transmission},Limits};
+use std::hint::black_box;
+fn checksum(c:&Control)->u64{
+ let values=[c.action as u8 as u64,c.responses as u8 as u64,c.format as u8 as u64,c.transmission as u8 as u64,
+  c.image_id.map_or(0,|v|v.get())as u64,c.placement_id.map_or(0,|v|v.get())as u64,c.image_number.map_or(0,|v|v.get())as u64,
+  c.image_width as u64,c.image_height as u64,c.size as u64,c.offset as u64,u64::from(c.compression==matea::terminal::protocol::kitty::Compression::Zlib),
+  c.x as u64,c.y as u64,c.z as u32 as u64,c.width as u64,c.height as u64,c.offset_x as u64,c.offset_y as u64,c.columns as u64,c.rows as u64,
+  u64::from(c.virtual_placement),u64::from(c.no_cursor_movement),c.parent_id.map_or(0,|v|v.get())as u64,c.parent_placement_id.map_or(0,|v|v.get())as u64,
+  c.delete_target as u8 as u64,u64::from(c.delete_resources),u64::from(c.more.unwrap_or(false))];
+ values.into_iter().fold(14695981039346656037,|h,v|(h^v).wrapping_mul(1099511628211))
+}
+fn main(){let n=measurement::iterations(1);
+ let headers=[("default",""),("rgb","f=24,q=2,i=7,s=1024,v=1,a=T"),("placement","q=2,i=7,p=3,C=1,x=2,y=3,z=12,c=40,r=12,a=p"),
+ ("full","f=100,q=2,i=7,p=3,I=4,s=5,v=6,t=s,S=7,O=8,o=z,U=1,C=1,P=9,Q=10,x=11,y=12,z=13,w=14,h=15,X=16,Y=17,c=18,r=19,d=I,a=T"),
+ ("delete","q=2,i=7,d=I,a=d")];
+ for(name,text)in headers{let control=Control::parse(text).unwrap();assert_eq!(control.to_string(),text);
+  measurement::measure(&format!("kitty-controls/header_{name}"),n,||black_box(black_box(&control).to_string()).len()as u64,text,"fresh canonical Kitty controls from existing immutable values; consume byte length; no payload, terminal IO or construction");}
+ for(name,text)in[("default",""),("rgb","f=24,q=2,i=7,s=1024,v=1,a=T"),("placement","q=2,i=7,p=3,x=2,y=3,z=12,c=40,r=12,a=p"),
+  ("full","f=100,q=2,i=7,p=3,I=4,s=5,v=6,t=s,S=7,O=8,o=z,U=1,P=9,Q=10,x=11,y=12,z=13,w=14,h=15,X=16,Y=17,c=18,r=19,d=I,a=T"),
+  ("frame_m1","q=2,i=7,s=4,v=5,a=f,m=1")]{let output=checksum(&Control::parse(text).unwrap()).to_string();
+  measurement::measure(&format!("kitty-controls/parse_{name}"),n,||checksum(&Control::parse(black_box(text)).unwrap()),&output,"parse valid shared Kitty header into fresh state; consume normalized shared-field checksum; no output formatting, payload or terminal IO");}
+ for(name,action,format,width,len)in[("empty",Action::Delete,Format::Rgba,0,0),("small_rgb",Action::TransmitDisplay,Format::Rgb,1,3),("exact_rgb",Action::Transmit,Format::Rgb,1024,3072),("rgba_two",Action::TransmitDisplay,Format::Rgba,1024,4096),("frame_two_exact",Action::Frame,Format::Rgba,1536,6144)]{
+  let payload:Vec<u8>=(0..len).map(|i|(i*17+3)as u8).collect();let control=Control{action,format,image_width:width,image_height:u32::from(width!=0),image_id:std::num::NonZeroU32::new(7),responses:matea::terminal::protocol::kitty::Responses::Suppressed,..Control::default()};
+  let output=String::from_utf8(control.encode(&payload,Limits::default()).unwrap()).unwrap();
+  measurement::measure(&format!("kitty-controls/packet_{name}"),n,||black_box(control.encode(black_box(&payload),Limits::default()).unwrap()).len()as u64,&output,"fresh complete Kitty packet sequence from existing controls/prepared bytes; include headers/base64/ownership; consume byte length; no image conversion or terminal IO; source comparator uses public Options and ansi.KittyGraphics composition");}
+ for(name,input)in[("duplicate","i=1,i=2"),("range","q=257"),("unknown","j=1")]{
+  assert!(Control::parse(input).is_err());measurement::measure(&format!("kitty-controls/native_reject_{name}"),n,||u64::from(Control::parse(black_box(input)).is_err()),"rejected","strict Rust-only header rejection; existing input; no upstream speed ratio");}
+ let payload=vec![0;4096];let control=Control::default();let limit=Limits{max_encoded_bytes:0,..Limits::default()};
+ measurement::measure("kitty-controls/native_preflight_limit",n,||u64::from(matches!(control.encode(black_box(&payload),limit),Err(CommandError::Limit))),"limit","Rust-only whole-sequence byte-budget preflight before allocation; no upstream speed ratio");
+ let file=Control{transmission:Transmission::File,..Control::default()};
+ measurement::measure("kitty-controls/native_name_nul",n,||u64::from(matches!(file.encode(black_box(b"name\0suffix"),Limits::default()),Err(CommandError::Name))),"name","Rust-only prepared-name rejection; no OS object opened; no upstream speed ratio");
+}

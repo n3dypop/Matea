@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "shared_equal_output_cases": 14,
+  "excluded_from_ratios": {
+    "kitty-controls/packet_empty": {
+      "rust": {
+        "record_kind": "probe-output",
+        "case": "kitty-controls/packet_empty",
+        "semantics": "fresh complete Kitty packet sequence from existing controls/prepared bytes; include headers/base64/ownership; consume byte length; no image conversion or terminal IO; source comparator uses public Options and ansi.KittyGraphics composition",
+        "first_return_value": 17,
+        "output": "\u001b_Gq=2,i=7,a=d;\u001b\\"
+      },
+      "source": {
+        "case": "kitty-controls/packet_empty",
+        "first_return_value": 16,
+        "output": "\u001b_Gq=2,i=7,a=d\u001b\\",
+        "record_kind": "probe-output",
+        "semantics": "fresh complete Kitty packet sequence from existing controls/prepared bytes; include headers/base64/ownership; consume byte length; no image conversion or terminal IO; source comparator uses public Options and ansi.KittyGraphics composition"
+      },
+      "reason": "Empty data includes a semicolon in Rust; the source framing function omits it. Raw outputs differ; no speed ratio is qualified."
+    }
+  },
+  "initial_preflight": "Initial exact-output assertion rejected the empty case before any timing; retained here rather than silently normalizing packet bytes."
+}

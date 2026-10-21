@@ -5437,7 +5437,7 @@
             "reference": "charm-x-ansi",
             "reference_sha": "faa4adf95555331dfb439b716cc83767ecdadeb4",
             "reviewed_updated_at": "2026-07-29T12:41:01Z",
-            "notes": "Body and official specification reviewed. Actual fixed Options.String drops 32816 requested negatives in 65633 finite cases; existing Matea kitty_place preserves all requested signed z values and unrelated controls. Persistent exact-byte z=-1 regression predates this audit, so no production correction was necessary. Native macOS private caller adds only its own package to root dependency identities. Raw compressed outputs, source hashes and independent parsed-control oracle retained.",
+            "notes": "Body and official specification reviewed. Actual fixed Options.String drops 32816 requested negatives in 65633 finite cases; existing Matea kitty_place preserves all requested signed z values and unrelated controls. Persistent exact-byte z=-1 regression predates this audit, so no production correction was necessary. Native macOS private caller adds only its own package to root dependency identities. Raw compressed outputs, source hashes and independent parsed-control oracle retained. Revalidated for typed-child-module source 0c95c37: removing only its pub mod declaration reproduces the entire old parent byte-for-byte. The unchanged signed-placement regression passes the three OS release suites and Miri seed 233. Original 65633-case comparison remains historical and was not rerun.",
             "scope": "Negative placement-control serialization only; finite i16 domain plus 97 i32 boundaries, not all Kitty options, physical terminal layering, image processing or whole-module parity/performance.",
             "evidence_sha256": {
               "docs/kitty-placement-issue-audit.md": "29aa528db0006f5c9cdbbf1e2904b8b256869a3bec1c1bd58ea23f686e8faa89",
@@ -5445,7 +5445,10 @@
               "docs/evidence/kitty-z-index/context.json": "8cb6ce2abb34c6b120ef2f6ae1fbf43230ccc938041e9a01018d5d05eb39510c",
               "docs/evidence/kitty-z-index/verification.json": "3678f1c69efea1729452702a5bb7129408c85b40bdfa2670b30555faface17d4",
               "docs/evidence/kitty-z-index/verify.py.txt": "d3f2d29eb69477761063f1cd613a58abdaf47e828b3b0b9d53c97b139a5a52b7",
-              "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25"
+              "crates/matea-terminal/src/protocol.rs": "624ff14291aa0a2abcbd7e7771f563a6887b94394486023eb8117f41881f15c8",
+              "docs/evidence/kitty-controls/legacy-encoder-delta.json": "12bcb4e16e47f6674aa317ba0392e862ec65e7c987c93def0fef5a36d8792c5e",
+              "docs/evidence/kitty-controls/ci-source-bindings.json": "fdbae000401c98fa18123521d1d9fb2960872aea8748df84bafe487ce9eca102",
+              "docs/evidence/kitty-controls/miri/context.json": "7294d4c0705fff026039f8ea14d7e62d3222d0a37ee4641a7c0d2d67bfc73edb"
             }
           }
         },

@@ -1,0 +1,47 @@
+"""Review every raw declaration in pinned Kitty; do not promote partial scope."""
+import hashlib,json
+from collections import Counter
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/kitty-controls'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+inventory=json.loads((root/'docs/coverage/charm-x-ansi.json').read_bytes())
+rows=[]
+for d in inventory['declarations']:
+ if not d['file'].startswith('ansi/kitty/'):continue
+ symbol=d['symbol'];file=d['file'];status='pending';tests=[];performance='pending';reason='Outside the new typed-control slice; no new parity or performance verdict.'
+ if file.endswith('/options.go'):
+  status='bounded_implemented';reason='Typed Control/Display/parse/FromStr provides the public wire-value role; strictness and nonmutating defaults differ deliberately. This is a Rust composition, not Go signature equivalence.'
+  tests=['every_control_role_round_trips_the_independent_literal_header','integer_domains_and_all_wire_byte_choices_are_bounded','malformed_headers_fail_without_partial_state_or_control_echo']
+  performance='Five valid parse shapes and five canonical header shapes; whole value families, not an exhaustive distribution for every individual field.'
+  if symbol in ['Options.File','Options.ChunkFormatter']:
+   status='partial';reason='Prepared-name encoding or Iterator::map composition is available; source filesystem media lifecycle and arbitrary formatter integration are not fully qualified.'
+   tests=['explicit_chunks_named_payloads_and_declared_geometry_are_checked']
+   performance='Prepared raw packet assembly measured; named-medium/formatter distribution pending.'
+  elif symbol=='Options.Chunk':
+   reason='Explicit more packet state plus automatic chunking/Packets replaces the source writer policy flag; source m=0 also means Chunk=true, deliberately a different contract.'
+   tests=['packet_boundaries_budgets_and_frame_continuations_match_the_wire_contract','explicit_chunks_named_payloads_and_declared_geometry_are_checked']
+   performance='Four exact-output prepared packet shapes versus public source-primitive composition; no full writer parity.'
+  elif symbol=='Options.DoNotMoveCursor':
+   tests.append('cursor_policy_survives_text_conversion_unlike_the_fixed_reference')
+   reason+=' Actual source round trip loses C=1; independent Rust literal regression retains it.'
+ elif file.endswith('/graphics.go') and d['kind']=='const' and symbol!='Placeholder':
+  status='bounded_implemented';reason='Typed format/transmission/compression/action/deletion values and bounded chunk policy. Metadata flags do not implement codecs or compression.'
+  tests=['integer_domains_and_all_wire_byte_choices_are_bounded','packet_boundaries_budgets_and_frame_continuations_match_the_wire_contract'];performance='Control/packet fixture families measured; no individual-constant speed claim.'
+ elif file.endswith('/decoder.go') or file.endswith('/encoder.go'):
+  reason='Source image.Image conversion, PNG codec or compression/decompression algorithm remains gated by owner approval. Prepared bytes/format flags are implemented separately and do not establish this capability.'
+ elif symbol in ['EncodeGraphics','GraphicsTempDir','GraphicsTempPattern','ErrMissingFile']:
+  reason='Whole image writer and OS resource creation/disposal remain pending. Pure bounded name/payload encoding is qualified separately; it does not prove writer lifecycle equivalence.'
+ rows.append({'reference_id':d['id'],'symbol':symbol,'file':file,'line':d['line'],'source_url':d['source_url'],'status':status,'implementation':['crates/matea-terminal/src/protocol/kitty.rs'] if status!='pending' else [],'tests':tests,'performance_verdict':performance,'reason':reason})
+assert len(rows)==len({r['reference_id'] for r in rows})
+result={'schema':1,'status':'partial','reference_sha':inventory['sha'],'inventory_sha256':sha((root/'docs/coverage/charm-x-ansi.json').read_bytes()),'rows':rows,'counts':dict(Counter(r['status'] for r in rows)),'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['Every raw Kitty declaration is reviewed, including pending codec, placeholder and OS writer roles. This is not complete compiler export/target/signature closure.','Existing raw references are already linked to the partial Kitty capability; this review adds no artificial declaration-count reduction.']}
+(base/'declaration-review.json').write_text(json.dumps(result,indent=2)+'\n')
+caps_path=root/'docs/coverage/capabilities.json';caps=json.loads(caps_path.read_bytes());c=next(c for c in caps['capabilities'] if c['id']=='protocol/kitty');assert c['status']=='partial'
+c['implementation']=['crates/matea-terminal/src/protocol.rs','crates/matea-terminal/src/protocol/kitty.rs']
+c['tests']=['crates/matea-terminal/src/protocol.rs','crates/matea-terminal/tests/graphics_controls.rs']
+c['performance']='docs/kitty-controls-audit.md'
+c['notes']='Partial: legacy RGB/RGBA, query/placement/deletion plus typed wire control/header parsing, prepared direct/named payloads and bounded packet iterator. 105 records/3255 intervals/62 RSS children; 14 exact-output source cases, empty delimiter difference excluded. Pure prepared PNG/compressed metadata is not an image codec. Whole writer/OS lifecycle, placeholder/diacritic, image codec/compression and full compiler graph remain pending. Per-declaration scope: docs/evidence/kitty-controls/declaration-review.json.'
+caps_path.write_text(json.dumps(caps,indent=2)+'\n')
+plan_path=root/'docs/quality-plan.json';plan=json.loads(plan_path.read_bytes());u=next(u for u in plan['units'] if u['id']=='matea-terminal/protocol');assert u['criteria']['performance']['score']==50 and u['criteria']['reference']['score']==50
+u['criteria']['performance']['reason']='Typed Kitty controls add 105 records/3255 positive intervals/62 whole-fixture RSS children; 14 exact-output source cases in three orders, all eligible p50/p95 lower. Packet comparator composes public source primitives, not its image writer. Empty delimiter difference and five Rust-only rejection paths get no ratio. Legacy 41 Rust-only fixtures remain historical. Full protocol public-feature scope, other transports and terminal throughput remain pending.'
+plan_path.write_text(json.dumps(plan,indent=2)+'\n')
+print(result['counts'],'; whole protocol reference/performance remain 50')

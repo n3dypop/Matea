@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 156,
+  "programs": 158,
   "review_units": 44,
   "below_high": [
     {
@@ -133,7 +133,7 @@
       "unit": "matea-terminal/protocol",
       "dimension": "performance",
       "score": 50,
-      "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+      "reason": "Typed Kitty controls add 105 records/3255 positive intervals/62 whole-fixture RSS children; 14 exact-output source cases in three orders, all eligible p50/p95 lower. Packet comparator composes public source primitives, not its image writer. Empty delimiter difference and five Rust-only rejection paths get no ratio. Legacy 41 Rust-only fixtures remain historical. Full protocol public-feature scope, other transports and terminal throughput remain pending."
     },
     {
       "unit": "matea-terminal/signals_unix",
@@ -741,7 +741,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
+          "reason": "Exact typed-control source 0c95c37 passes all seven required three-OS native/reference-probe and Rust 1.88 jobs. All 200 inputs match Git blobs; seven new regressions and unchanged legacy Kitty regression occur in each release log. Eight targeted pure tests pass Miri seed 233. Physical terminal graphics support and full upstream/target closure remain unverified."
         }
       },
       "evidence": [
@@ -753,7 +753,9 @@
         "docs/evidence/optimization/foundation-paths/current.jsonl",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -806,7 +808,8 @@
     {
       "id": "matea-terminal/protocol",
       "files": [
-        "crates/matea-terminal/src/protocol.rs"
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/src/protocol/kitty.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -827,11 +830,11 @@
         },
         "performance": {
           "score": 50,
-          "reason": "41 executed Rust-only complete packet/control/reply fixtures, bounded-header allocation improvements and unchanged outputs. No matched upstream packet workload, retained memory or terminal throughput measurement; public-feature scope remains partial."
+          "reason": "Typed Kitty controls add 105 records/3255 positive intervals/62 whole-fixture RSS children; 14 exact-output source cases in three orders, all eligible p50/p95 lower. Packet comparator composes public source primitives, not its image writer. Empty delimiter difference and five Rust-only rejection paths get no ratio. Legacy 41 Rust-only fixtures remain historical. Full protocol public-feature scope, other transports and terminal throughput remain pending."
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Exact typed-control source 0c95c37 passes all seven required three-OS native/reference-probe and Rust 1.88 jobs. All 200 inputs match Git blobs; seven new regressions and unchanged legacy Kitty regression occur in each release log. Eight targeted pure tests pass Miri seed 233. Physical terminal graphics support and full upstream/target closure remain unverified."
         }
       },
       "evidence": [
@@ -840,7 +843,9 @@
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/protocol/report.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1386,7 +1391,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Actual ClockText::into_text implementation at 6ffc1ea passes seven required Linux/Windows/macOS Foundation/reference and Rust 1.88 MSRV jobs. All 198 inputs match the fixed Git source; 47 native checks per host and native/instrumented terminal fixtures are independently bound. Existing pinned clock observations, 269 duration strings and sixteen output cases are rechecked on three OSes. Three actual-source pure clock/render/Runtime Miri tests pass. No physical emulator, other-target, wake-precision or shared-runner performance qualification."
+          "reason": "Exact typed-control source 0c95c37 passes all seven required three-OS native/reference-probe and Rust 1.88 jobs. All 200 inputs match Git blobs; seven new regressions and unchanged legacy Kitty regression occur in each release log. Eight targeted pure tests pass Miri seed 233. Physical terminal graphics support and full upstream/target closure remain unverified."
         }
       },
       "evidence": [
@@ -1399,7 +1404,9 @@
         "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
         "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
-        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json"
+        "docs/evidence/clocks-owned-text/ci-6ffc1ea/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1631,7 +1638,8 @@
       "files": [
         "crates/matea-terminal/tests/graphics_encoding.rs",
         "crates/matea-terminal/tests/input.rs",
-        "crates/matea-terminal/examples/device_probe.rs"
+        "crates/matea-terminal/examples/device_probe.rs",
+        "crates/matea-terminal/tests/graphics_controls.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1656,7 +1664,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact current program files match 04e81bc successful Linux/Windows/macOS Foundation, Rust 1.88 MSRV and pinned-reference CI: seven required jobs, 47 native checks per host. Native and instrumented real device fixtures pass 12 cases per Unix host and 9 in isolated Windows consoles, with mode/size/bytes/Drop/unwind and UTF-16 supplementary input checked. All 198 CI inputs and uploaded logs are hash-bound. Assessment metadata changes remain separate. Native Unix attributes/control bytes and Windows mode/role edits are exercised inside every exact-source fixture. No physical-font/IME/SSH/Plan9 or shared-runner timing qualification."
+          "reason": "Exact typed-control source 0c95c37 passes all seven required three-OS native/reference-probe and Rust 1.88 jobs. All 200 inputs match Git blobs; seven new regressions and unchanged legacy Kitty regression occur in each release log. Eight targeted pure tests pass Miri seed 233. Physical terminal graphics support and full upstream/target closure remain unverified."
         }
       },
       "evidence": [
@@ -1665,7 +1673,9 @@
         "docs/evidence/optimization/ci-run.json",
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json",
-        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json"
+        "docs/evidence/terminal-device/ci-04e81bc/source-bindings.json",
+        "docs/kitty-controls-audit.md",
+        "docs/evidence/kitty-controls/ci-source-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -2408,7 +2418,7 @@
       ]
     }
   ],
-  "plan_sha256": "c9e19349b868f787f8855bf8c9d074a3fb50da5d594eb79f19adfcce76eed82d",
+  "plan_sha256": "9dc44269aa2b0c31e56e5de2c30d6992690955bb12bb2584ef79522f96dd536d",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2493,8 +2503,8 @@
             "summary": {
               "lines": {
                 "count": 749,
-                "covered": 708,
-                "percent": 94.5260347129506
+                "covered": 709,
+                "percent": 94.65954606141523
               },
               "functions": {
                 "count": 101,
@@ -2508,9 +2518,9 @@
               },
               "regions": {
                 "count": 1183,
-                "covered": 1124,
-                "notcovered": 59,
-                "percent": 95.01267962806425
+                "covered": 1125,
+                "notcovered": 58,
+                "percent": 95.09721048182587
               },
               "branches": {
                 "count": 0,
@@ -4206,7 +4216,7 @@
     },
     {
       "file": "crates/matea-terminal/src/protocol.rs",
-      "sha256": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+      "sha256": "624ff14291aa0a2abcbd7e7771f563a6887b94394486023eb8117f41881f15c8",
       "units": [
         "matea-terminal/protocol"
       ],
@@ -4237,6 +4247,57 @@
                 "covered": 521,
                 "notcovered": 36,
                 "percent": 93.53680430879713
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-terminal/src/protocol/kitty.rs",
+      "sha256": "4a73ffe8de61700fd7b2e7b8d84cd183e9c3f2e3079c0acd8bf13f7cc6ff3c3c",
+      "units": [
+        "matea-terminal/protocol"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/src/protocol/kitty.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-terminal/src/protocol/kitty.rs",
+            "summary": {
+              "lines": {
+                "count": 401,
+                "covered": 370,
+                "percent": 92.26932668329178
+              },
+              "functions": {
+                "count": 42,
+                "covered": 36,
+                "percent": 85.71428571428571
+              },
+              "instantiations": {
+                "count": 217,
+                "covered": 86,
+                "percent": 39.63133640552996
+              },
+              "regions": {
+                "count": 653,
+                "covered": 565,
+                "notcovered": 88,
+                "percent": 86.52373660030628
               },
               "branches": {
                 "count": 0,
@@ -4378,6 +4439,57 @@
                 "covered": 149,
                 "notcovered": 5,
                 "percent": 96.75324675324676
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-terminal/tests/graphics_controls.rs",
+      "sha256": "0d91ff6dc860217e680b16c15251074ad3d37a7395fff909c87c0af952a2f7bd",
+      "units": [
+        "matea-terminal/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-terminal/tests/graphics_controls.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-terminal/tests/graphics_controls.rs",
+            "summary": {
+              "lines": {
+                "count": 275,
+                "covered": 274,
+                "percent": 99.63636363636364
+              },
+              "functions": {
+                "count": 12,
+                "covered": 12,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 12,
+                "covered": 12,
+                "percent": 100
+              },
+              "regions": {
+                "count": 450,
+                "covered": 447,
+                "notcovered": 3,
+                "percent": 99.33333333333333
               },
               "branches": {
                 "count": 0,
@@ -6540,7 +6652,7 @@
     },
     {
       "file": "crates/matea/src/lib.rs",
-      "sha256": "0a130a7bc132db1d6f8309428cc7f2e055f1d4bfecf7bf94b75dcb31ded1a860",
+      "sha256": "7404a6877241422ecf44b7b8a24808ea7c23eabb2ab47aef69eaaf76580c0278",
       "units": [
         "matea/lib"
       ],

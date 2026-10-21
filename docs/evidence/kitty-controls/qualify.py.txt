@@ -1,0 +1,73 @@
+"""Qualify the exact typed-control slice without closing full protocol scope."""
+import copy,hashlib,json,shutil,subprocess
+from pathlib import Path
+if not __debug__:raise RuntimeError('qualification refuses -O')
+root=Path.cwd();base=root/'docs/evidence/kitty-controls';raw=root/'docs/evidence/terminal-device/ci-0c95c37-kitty';raw.mkdir(exist_ok=True)
+source=Path('/private/tmp/matea-kitty-controls-ci');sha=lambda b:hashlib.sha256(b).hexdigest()
+run=json.loads(Path('/private/tmp/matea-kitty-controls-ci-run.json').read_bytes());head=subprocess.check_output(['git','rev-parse','0c95c37'],text=True).strip()
+required={f'{kind} ({os}-latest)' for kind in ['foundation','reference-probes'] for os in ['ubuntu','macos','windows']}|{'msrv'}
+assert run['headSha']==head and run['status']=='completed' and run['conclusion']=='success'
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+(raw/'run.json').write_text(json.dumps(run,indent=2)+'\n');shutil.copy2('/private/tmp/matea-kitty-controls-msrv.log',raw/'msrv.log')
+assert '1.88.0' in (raw/'msrv.log').read_text() and 'cargo test --locked --workspace' in (raw/'msrv.log').read_text()
+binding=None;hosts={};tests=['every_control_role_round_trips_the_independent_literal_header','cursor_policy_survives_text_conversion_unlike_the_fixed_reference','integer_domains_and_all_wire_byte_choices_are_bounded','malformed_headers_fail_without_partial_state_or_control_echo','packet_boundaries_budgets_and_frame_continuations_match_the_wire_contract','explicit_chunks_named_payloads_and_declared_geometry_are_checked','reservation_failure_is_atomic_or_fuses_after_the_successful_prefix']
+for os in ['ubuntu','macos','windows']:
+ e=source/f'native-drivers-{os}-latest/docs/evidence';dest=raw/os;dest.mkdir(exist_ok=True)
+ report=json.loads((e/'local-validation.json').read_bytes());assert report['status']=='complete' and report['all_local_checks_passed'] is True and report['source_changed_during_run']==[]
+ assert len(report['checks'])==47 and len({c['name'] for c in report['checks']})==47 and all(c['exit_code']==0 for c in report['checks'])
+ hashes=report['source_sha256'];assert len(hashes)==200 and (binding is None or hashes==binding);binding=hashes
+ verified=[];missing=[]
+ for c in report['checks']:
+  assert Path(c['log']).name==c['log'];p=e/c['log']
+  if p.exists():assert sha(p.read_bytes())==c['log_sha256'];shutil.copy2(p,dest/p.name);verified.append(c['name'])
+  else:missing.append(c['name'])
+ shutil.copy2(e/'local-validation.json',dest/'local-validation.json')
+ coverage=json.loads((e/'quality/rust-execution-coverage.json').read_bytes());assert coverage['status']=='complete' and coverage['input_sha256']==binding
+ for n,h in coverage['source_sha256'].items():assert h==binding[n]
+ shutil.copy2(e/'quality/rust-execution-coverage.json',dest/'rust-execution-coverage.json')
+ release=(dest/'release-tests.log').read_text();assert all(n+' ... ok' in release for n in tests)
+ assert 'protocol::tests::kitty_byte_snapshots_and_lifecycle ... ok' in release
+ device=json.loads((e/'terminal-device/context.json').read_bytes());assert device['status']=='complete' and all(c['status']=='passed' and c['exit_code']==0 for c in device['cases'])
+ assert len(device['cases'])==(9 if os=='windows' else 12)
+ shutil.copy2(e/'terminal-device/context.json',dest/'native-device-context.json')
+ checks=json.loads((source/f'reference-paths-{os}-latest/path-checks.json').read_bytes());assert checks['source_inventories']==11 and checks['matched_cases']==84 and checks['progress_fixture_cases']==120
+ shutil.copy2(source/f'reference-paths-{os}-latest/path-checks.json',dest/'path-checks.json')
+ hosts[os]={'native_checks':47,'new_kitty_regressions_in_release_log':7,'unchanged_legacy_regression':True,'native_device_cases':len(device['cases']),'rust_paths':len(coverage['files']),'rust_instances':sum(len(f['instances']) for f in coverage['files']),'verified_uploaded_logs':verified,'logs_not_uploaded':missing}
+for n,h in binding.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+assert {n for n,h in binding.items() if sha((root/n).read_bytes())!=h}<=set(['docs/quality-plan.json'])
+m=json.loads((base/'miri/context.json').read_bytes());assert m['status']=='complete' and m['seed']==233
+assert m['procedure_sha256']==sha((base/'miri.py.txt').read_bytes())
+for cmd in m['commands']:
+ assert cmd['exit_code']==0 and sha((base/'miri'/cmd['log']).read_bytes())==cmd['log_sha256']
+ assert f"test result: ok. {cmd['expected_passed']} passed;" in (base/'miri'/cmd['log']).read_text()
+assert sum(c['expected_passed'] for c in m['commands'])==8
+for n,h in m['source_sha256'].items():assert sha((root/n).read_bytes())==h==binding[n],n
+perf=json.loads((base/'performance/verification.json').read_bytes());assert perf['status']=='complete' and perf['source_head']==head and perf['timing_records']==105
+assert not perf['adverse_p50'] and not perf['adverse_p95'] and len(perf['ratios'])==42
+assert perf['procedure_sha256']==sha((base/'performance/verify.py.txt').read_bytes())
+assert json.loads((base/'performance/context.json').read_bytes())['root_input_sha256']==binding
+binding_report={'schema':1,'status':'complete','source_head':head,'run_url':run['url'],'required_successful_jobs':sorted(required),'input_sha256':binding,'hosts':hosts,'raw_directory':str(raw.relative_to(root)),'miri_seed':233,'miri_tests':8,'performance_verification_sha256':sha((base/'performance/verification.json').read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['All 200 execution inputs match actual CI Git blobs. Uploaded logs are byte-hashed; omitted logs are explicit. Current metadata receives fresh native/LLVM verification.','Only the implemented typed-control slice is qualified; physical emulator, OS medium lifecycle, full protocol/compiler export scope and image engine remain unqualified.']}
+(base/'ci-source-bindings.json').write_text(json.dumps(binding_report,indent=2)+'\n')
+# Revalidate only the old issue whose proof references the changed parent file.
+issues_path=root/'docs/coverage/upstream-issues.json';issues=json.loads(issues_path.read_bytes());issue=next(i for r in issues['repositories'] if r['repository']=='charmbracelet/x' for i in r['issues'] if i['number']==926)
+(base/'issue-926-before.json').write_text(json.dumps(issue,indent=2)+'\n')
+old=subprocess.check_output(['git','show','b1eab95:crates/matea-terminal/src/protocol.rs']);current=(root/'crates/matea-terminal/src/protocol.rs').read_bytes()
+assert current.replace(b'pub mod kitty;\n\n',b'',1)==old
+delta=json.loads((base/'legacy-encoder-delta.json').read_bytes());assert sha(old)==delta['parent_source_before_sha256'] and sha(current)==delta['parent_source_after_sha256']
+for n,h in issue['review']['evidence_sha256'].items():
+ if n!='crates/matea-terminal/src/protocol.rs':assert sha((root/n).read_bytes())==h,n
+review=issue['review'];review['evidence_sha256']['crates/matea-terminal/src/protocol.rs']=sha(current)
+for n in ['legacy-encoder-delta.json','ci-source-bindings.json','miri/context.json']:
+ review['evidence_sha256'][str((base/n).relative_to(root))]=sha((base/n).read_bytes())
+review['notes']+=' Revalidated for typed-child-module source 0c95c37: removing only its pub mod declaration reproduces the entire old parent byte-for-byte. The unchanged signed-placement regression passes the three OS release suites and Miri seed 233. Original 65633-case comparison remains historical and was not rerun.'
+issues_path.write_text(json.dumps(issues,indent=2)+'\n')
+plan_path=root/'docs/quality-plan.json';plan=json.loads(plan_path.read_bytes());before=copy.deepcopy(plan)
+affected={'matea-terminal/protocol','matea-terminal/integration-tests','matea-terminal/lib','matea/lib'}
+for u in plan['units']:
+ if u['id'] not in affected:continue
+ assert u['criteria']['portability']['score']==50
+ u['criteria']['portability']={'score':75,'reason':'Exact typed-control source 0c95c37 passes all seven required three-OS native/reference-probe and Rust 1.88 jobs. All 200 inputs match Git blobs; seven new regressions and unchanged legacy Kitty regression occur in each release log. Eight targeted pure tests pass Miri seed 233. Physical terminal graphics support and full upstream/target closure remain unverified.'}
+ if 'docs/evidence/kitty-controls/ci-source-bindings.json' not in u['evidence']:u['evidence'].append('docs/evidence/kitty-controls/ci-source-bindings.json')
+assert sum(u['criteria']['portability']['score']!=b['criteria']['portability']['score'] for u,b in zip(plan['units'],before['units']))==4
+plan_path.write_text(json.dumps(plan,indent=2)+'\n')
+print('Qualified 7 CI jobs, 200 inputs, Miri 8 and 105 timing records; four portability dimensions restored. Full protocol reference/performance remain 50.')

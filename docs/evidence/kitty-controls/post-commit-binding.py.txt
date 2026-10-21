@@ -1,0 +1,26 @@
+"""Bind committed assessment inputs and raw CI bytes without rerunning tests."""
+import copy,hashlib,json,subprocess
+from pathlib import Path
+if not __debug__:raise RuntimeError('binding refuses -O')
+root=Path.cwd();base=root/'docs/evidence/kitty-controls';sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+native=json.loads((base/'final-native/local-validation.json').read_bytes());assert native['status']=='complete' and native['all_local_checks_passed'] is True
+inputs=native['source_sha256']
+for n,h in inputs.items():assert sha((root/n).read_bytes())==h==sha(subprocess.check_output(['git','show',head+':'+n])),n
+ci=json.loads((base/'ci-source-bindings.json').read_bytes());delta={n for n,h in ci['input_sha256'].items() if inputs[n]!=h};assert delta=={'docs/quality-plan.json'}
+old=json.loads(subprocess.check_output(['git','show',ci['source_head']+':docs/quality-plan.json']));new=json.loads((root/'docs/quality-plan.json').read_bytes());restored=copy.deepcopy(new);numeric=[]
+assert len(old['units'])==len(new['units'])==44
+for before,after,normal in zip(old['units'],new['units'],restored['units']):
+ assert before['id']==after['id'] and before['files']==after['files']
+ for dim,v in before['criteria'].items():
+  if v['score']!=after['criteria'][dim]['score']:numeric.append([before['id'],dim,v['score'],after['criteria'][dim]['score']])
+  normal['criteria'][dim]=v
+ normal['evidence']=before['evidence']
+assert restored==old
+assert sorted(numeric)==sorted([[n,'portability',50,75] for n in ['matea-terminal/protocol','matea-terminal/integration-tests','matea-terminal/lib','matea/lib']])
+raw=root/ci['raw_directory'];raw_hashes={}
+for p in sorted(raw.rglob('*')):
+ if p.is_file():
+  n=str(p.relative_to(root));h=sha(p.read_bytes());assert h==sha(subprocess.check_output(['git','show',head+':'+n])),n;raw_hashes[n]=h
+result={'schema':1,'status':'complete','committed_assessment_head':head,'tested_code_head':ci['source_head'],'execution_input_count':len(inputs),'input_sha256':inputs,'ci_to_assessment_delta':sorted(delta),'numeric_changes':numeric,'raw_ci_files_sha256':raw_hashes,'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['CI executes the exact Rust/program inputs; only quality assessment metadata differs in the committed final native/LLVM checkpoint. All four numeric changes are reviewed portability 50→75, not changed thresholds or implementation.','Committed raw Windows/Unix CI bytes are checked directly against Git blobs. No CI, source observation, performance interval or native test is rerun or relabeled.']}
+(base/'post-qualification-binding.json').write_text(json.dumps(result,indent=2)+'\n');print('Bound',len(inputs),'committed inputs and',len(raw_hashes),'raw CI files; only four portability scores change.')

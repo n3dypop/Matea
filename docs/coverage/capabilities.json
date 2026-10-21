@@ -142,13 +142,15 @@
         "c9b9b6fb52cd62f75f2e"
       ],
       "implementation": [
-        "crates/matea-terminal/src/protocol.rs"
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/src/protocol/kitty.rs"
       ],
       "tests": [
-        "crates/matea-terminal/src/protocol.rs"
+        "crates/matea-terminal/src/protocol.rs",
+        "crates/matea-terminal/tests/graphics_controls.rs"
       ],
-      "performance": "pending",
-      "notes": "Partial: direct uncompressed RGB/RGBA, query, placements and scoped deletion. Compression, PNG and other transports/advanced operations pending."
+      "performance": "docs/kitty-controls-audit.md",
+      "notes": "Partial: legacy RGB/RGBA, query/placement/deletion plus typed wire control/header parsing, prepared direct/named payloads and bounded packet iterator. 105 records/3255 intervals/62 RSS children; 14 exact-output source cases, empty delimiter difference excluded. Pure prepared PNG/compressed metadata is not an image codec. Whole writer/OS lifecycle, placeholder/diacritic, image codec/compression and full compiler graph remain pending. Per-declaration scope: docs/evidence/kitty-controls/declaration-review.json."
     },
     {
       "id": "protocol/sixel",

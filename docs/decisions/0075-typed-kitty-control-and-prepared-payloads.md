@@ -40,7 +40,7 @@ let bytes = control.encode(&[], Limits::default())?;
 
 The [primary specification](https://sw.kovidgoyal.net/kitty/graphics-protocol/),
 read 2026-10-21, defines 32-bit controls, signed stacking/relative offsets,
-base64 payloads and 4,096-byte direct chunks. Subsequent frame chunks retain
+base64 payloads and direct chunks of at most 4,096 encoded bytes. Subsequent frame chunks retain
 their action and response policy. File/shared-memory names are protocol payloads;
 encoding a name establishes neither its existence nor a shared filesystem.
 PNG/compression flags describe already prepared bytes. No codec, decoder,
@@ -50,8 +50,9 @@ creation or CUDA implementation is introduced. These remain outside this slice.
 Parse into a new value and reject malformed, duplicate, unknown, out-of-range or
 control-containing input rather than silently accepting a partially updated
 receiver. In particular, preserve signed z values and the cursor policy `C`.
-Pinned source inspection finds that `UnmarshalText` omits `C`; reproduce this
-before calling it a confirmed source observation. Strict parsing, explicit chunk
+An actual pinned public-method round trip confirms that `UnmarshalText` omits
+`C`; the original caller, output and source binding are retained in the audit.
+Strict parsing, explicit chunk
 state and immutable defaults are intentional Rust contract differences.
 
 The advanced controls describe wire parameters. Some keys have action-dependent

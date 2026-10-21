@@ -1,0 +1,24 @@
+"""Interpret typed controls, allocation-failure transitions and unchanged legacy packets."""
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();out=root/'docs/evidence/kitty-controls/miri';out.mkdir(exist_ok=True);sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest()
+names=sorted(n for n in execution_inputs(root) if n.startswith('crates/') or n in ['Cargo.toml','Cargo.lock']);sources={n:sha((root/n).read_bytes()) for n in names}
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+for n,h in sources.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+targets=[(['--test','graphics_controls'],6),(['--lib','reservation_failure_is_atomic_or_fuses_after_the_successful_prefix'],1),(['--lib','protocol::tests::kitty_byte_snapshots_and_lifecycle'],1)]
+ctx={'schema':1,'status':'running','source_head':head,'source_sha256':sources,'seed':233,'procedure_sha256':sha(Path(__file__).read_bytes()),'commands':[],
+ 'limits':['Eight targeted actual-source pure tests: six integration controls/packet tests, deterministic reservation-failure injection and the unchanged legacy Kitty packet/lifecycle regression. No real OOM, native terminal FFI, physical emulator or whole-dependency soundness proof.', 'No ordinary performance timing overlaps interpretation.']}
+def save():(out/'context.json').write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+try:
+ for index,(filters,count) in enumerate(targets,1):
+  command=['cargo','+nightly','miri','test','--locked','--offline','-p','matea-terminal',*filters];log=f'{index}.log'
+  with open(out/log,'wb') as stream:r=subprocess.run(command,env={**os.environ,'MIRIFLAGS':'-Zmiri-seed=233'},stdout=stream,stderr=subprocess.STDOUT,timeout=1800)
+  ctx['commands'].append({'command':command,'exit_code':r.returncode,'expected_passed':count,'log':log,'log_sha256':sha((out/log).read_bytes())});save()
+  assert r.returncode==0 and f'test result: ok. {count} passed;'.encode() in (out/log).read_bytes()
+  print('Miri',index,count,'passed',flush=True)
+ assert {n:sha((root/n).read_bytes()) for n in names}==sources
+ ctx['status']='complete';save()
+except BaseException as error:ctx.update(status='failed',error=str(error));save();raise
