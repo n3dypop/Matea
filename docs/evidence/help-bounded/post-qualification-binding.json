@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "committed_assessment_head": "e90f0c75a36167bed497fb30476c0cf88327a91a",
+  "ci_source_head": "63ef696740261c134b5c3ba2834738f7bd1ee315",
+  "execution_inputs": 198,
+  "changed_ci_execution_inputs": [
+    "docs/quality-plan.json"
+  ],
+  "only_score_changes": [
+    [
+      "matea-widgets/help",
+      "performance",
+      50,
+      75
+    ]
+  ],
+  "verified_committed_evidence_files": 872,
+  "native_report_sha256": "00efeb6ae864c4dfd3245a6ff376e131508070f8c7478d914277c97232d90948",
+  "coverage_report_sha256": "54bb645e6dd7f7b4bdcef2bc5d1505f439cf838bf837bd0983abb109c9e813bc",
+  "quality_gate_sha256": "7ea0e80bec5c75cc323c4dbe4eb3812d59aa441203115a7a9404cdedbe9c0ff1",
+  "procedure_sha256": "675178a32e9ef2479b778272529f2ba4b06563e355a0f67bf9a06cbe92080314",
+  "limits": [
+    "All current native/LLVM execution inputs are actual committed blobs. CI executes the unchanged production/tooling inputs at 63ef696; only the explicitly reviewed assessment metadata differs.",
+    "Every archived Help and raw CI file is byte-identical to its committed blob, including protected Windows log line endings. This does not relabel newer metadata commits as new CI executions.",
+    "Performance remains bounded to implemented Help; 48 axes and 822 issue reports remain unmet. Stage B and F5 stay closed; image engine/CUDA untouched."
+  ]
+}

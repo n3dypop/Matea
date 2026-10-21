@@ -1,0 +1,31 @@
+"""Bind the qualified assessment to actual committed blobs, preserving CI scope."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded';sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest();head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+inputs={n:sha((root/n).read_bytes()) for n in execution_inputs(root)}
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root)
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes());validate_coverage(coverage,root)
+assert native['source_sha256']==coverage['input_sha256']==inputs and len(inputs)==198
+ci=json.loads((base/'ci-source-bindings.json').read_bytes());changed=sorted(n for n,h in ci['input_sha256'].items() if inputs[n]!=h);assert changed==['docs/quality-plan.json']
+old=json.loads(subprocess.check_output(['git','show',ci['source_head']+':docs/quality-plan.json']));new=json.loads((root/'docs/quality-plan.json').read_bytes())
+assert old['high_threshold']==new['high_threshold']==75 and old['scope']==new['scope'] and len(old['units'])==len(new['units'])==44
+score_changes=[]
+for a,b in zip(old['units'],new['units']):
+ assert a['id']==b['id'] and a['files']==b['files']
+ if a['id']!='matea-widgets/help':assert a==b
+ for dimension,v in a['criteria'].items():
+  if v['score']!=b['criteria'][dimension]['score']:score_changes.append((a['id'],dimension,v['score'],b['criteria'][dimension]['score']))
+assert score_changes==[('matea-widgets/help','performance',50,75)]
+paths=[p for folder in [base,root/ci['raw_directory']] for p in folder.rglob('*') if p.is_file() and p.name not in ['post-commit-binding.py.txt','post-qualification-binding.json']]
+for p in paths:assert sha(p.read_bytes())==sha(subprocess.check_output(['git','show',head+':'+str(p.relative_to(root))])),str(p)
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes());assert gate['below_high_axes']==48 and gate['pending_issue_reports']==822
+result={'schema':1,'status':'complete','committed_assessment_head':head,'ci_source_head':ci['source_head'],'execution_inputs':198,'changed_ci_execution_inputs':changed,'only_score_changes':score_changes,
+ 'verified_committed_evidence_files':len(paths),'native_report_sha256':sha((root/'docs/evidence/local-validation.json').read_bytes()),'coverage_report_sha256':sha((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes()),
+ 'quality_gate_sha256':sha((root/'docs/evidence/quality/final-gate-status.json').read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['All current native/LLVM execution inputs are actual committed blobs. CI executes the unchanged production/tooling inputs at 63ef696; only the explicitly reviewed assessment metadata differs.',
+ 'Every archived Help and raw CI file is byte-identical to its committed blob, including protected Windows log line endings. This does not relabel newer metadata commits as new CI executions.',
+ 'Performance remains bounded to implemented Help; 48 axes and 822 issue reports remain unmet. Stage B and F5 stay closed; image engine/CUDA untouched.']}
+(base/'post-qualification-binding.json').write_text(json.dumps(result,indent=2)+'\n');print('Bound committed assessment, 198 execution inputs and',len(paths),'archived evidence blobs; CI metadata delta only')
