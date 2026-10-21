@@ -35,6 +35,17 @@ fits five rows and fails later may have reserved the remaining count before its
 rejection; no universal hidden-memory bound is claimed. All rows of a visible
 tall column remain present. The fixed stack prefix uses safe Option values;
 there is no uninitialized buffer or unsafe lifetime conversion.
+
+The stack-prefix-only candidate restores the tall column's three allocations but
+costs about 418–428 ns versus 382–387 ns in ordinary three-column full help.
+A separate 16-record selection experiment compares that actual library against
+a private import-adjusted candidate: columns containing at most four metadata
+entries reserve their exact enabled count immediately; larger columns retain the
+stack prefix. This restores ordinary full help to 380–381 ns versus the control's
+419–422 ns, without increasing tall-column allocations. Preserve both earlier
+candidates and qualify the adopted actual library separately. A rejected small
+column may allocate its bounded item vector; this is an explicit tradeoff to
+avoid imposing prefix-management cost on ordinary help.
 Disabled rows do not contribute. Ellipsis placement, padding, style roles,
 sanitization, clipping and resize behavior retain the same rendering contracts.
 

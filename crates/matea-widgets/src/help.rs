@@ -216,7 +216,8 @@ impl Help {
             // must not repeatedly grow a vector from a bounded capacity hint.
             let mut prefix = [None, None, None, None];
             let mut prefix_len = 0;
-            let mut items: Option<Vec<_>> = None;
+            let mut items: Option<Vec<_>> = (group.len() <= 4)
+                .then(|| Vec::with_capacity(group.iter().filter(|item| item.enabled).count()));
             let mut keys = 0;
             let mut descriptions = 0;
             let mut enabled = group.iter().filter(|item| item.enabled);
@@ -252,6 +253,9 @@ impl Help {
                     items
                 }
             };
+            if items.is_empty() {
+                continue;
+            }
             let width = keys
                 .saturating_add(1)
                 .saturating_add(descriptions)
