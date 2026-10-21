@@ -211,10 +211,16 @@ impl Help {
                 separator.width()
             };
             let available = self.limit().saturating_sub(used.saturating_add(gap));
-            let mut items = Vec::new();
+            // Hold a small prefix on the stack until width rejection is known
+            // or one exact-sized allocation is justified. Visible tall columns
+            // must not repeatedly grow a vector from a bounded capacity hint.
+            let mut prefix = [None, None, None, None];
+            let mut prefix_len = 0;
+            let mut items: Option<Vec<_>> = None;
             let mut keys = 0;
             let mut descriptions = 0;
-            for item in group.iter().filter(|item| item.enabled) {
+            let mut enabled = group.iter().filter(|item| item.enabled);
+            while let Some(item) = enabled.next() {
                 let key = inline(item.key);
                 let description = inline(item.description);
                 keys = keys.max(key.width());
@@ -225,16 +231,27 @@ impl Help {
                     truncated = true;
                     break 'groups;
                 }
-                if items.is_empty() {
-                    // Delay allocation until one row fits. Do not reserve an
-                    // arbitrarily large hidden column from a metadata hint.
-                    items.reserve_exact(group.len().min(16));
+                if let Some(items) = items.as_mut() {
+                    items.push((key, description));
+                } else if prefix_len < prefix.len() {
+                    prefix[prefix_len] = Some((key, description));
+                    prefix_len += 1;
+                } else {
+                    let mut prepared = Vec::with_capacity(prefix_len + 1 + enabled.clone().count());
+                    prepared.extend(prefix.iter_mut().filter_map(Option::take));
+                    prepared.push((key, description));
+                    items = Some(prepared);
                 }
-                items.push((key, description));
             }
-            if items.is_empty() {
-                continue;
-            }
+            let items = match items {
+                Some(items) => items,
+                None if prefix_len == 0 => continue,
+                None => {
+                    let mut items = Vec::with_capacity(prefix_len);
+                    items.extend(prefix.into_iter().flatten());
+                    items
+                }
+            };
             let width = keys
                 .saturating_add(1)
                 .saturating_add(descriptions)
@@ -518,6 +535,9 @@ mod tests {
         };
         assert_eq!(help.full_text(&[&shown, &rejected]), "a go …\nq up");
         assert_eq!(help.full_text(&[&shown, &hidden]), "a go …\nq up");
+        let mut later_rejection = vec![item("q", "quit"); 6];
+        later_rejection.push(item("long", "wide"));
+        assert_eq!(help.full_text(&[&shown, &later_rejection]), "a go …\nq up");
         assert_eq!(
             help.full_view(&[&shown, &rejected])
                 .render(Size::new(13, 2))

@@ -21,8 +21,20 @@ decision. Keep grapheme preparation and the actual width test unchanged.
 While preparing a full column, accumulate maximum key and description cell
 widths. Their sum plus the mandatory gap can only increase. Once it exceeds the
 remaining column budget, discard that entire column and stop; a later row cannot
-make it fit. Allocate the row vector only after a row fits, with an initial
-capacity capped at 16. Visible tall columns continue to grow and retain all rows.
+make it fit. The initial candidate delayed allocation until a row fit and capped
+the initial capacity at 16. Its matched 1,024-row case increased allocation
+requests from three to nine and requested bytes from 72,863 to 137,375. Retain
+that candidate's complete three-cohort distributions rather than accepting the
+clipped-input improvement as sufficient.
+
+The revised candidate holds four prepared rows on the stack. If a fifth row fits,
+count only the remaining enabled entries and allocate the exact final capacity
+once, moving the prefix into it. Smaller accepted columns allocate once at their
+actual row count. Early rejected columns allocate no item vector. A column that
+fits five rows and fails later may have reserved the remaining count before its
+rejection; no universal hidden-memory bound is claimed. All rows of a visible
+tall column remain present. The fixed stack prefix uses safe Option values;
+there is no uninitialized buffer or unsafe lifetime conversion.
 Disabled rows do not contribute. Ellipsis placement, padding, style roles,
 sanitization, clipping and resize behavior retain the same rendering contracts.
 
