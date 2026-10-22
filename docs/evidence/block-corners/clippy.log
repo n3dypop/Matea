@@ -1,0 +1,33 @@
+    Checking unicode-width v0.2.2
+    Checking unicode-segmentation v1.13.3
+    Checking itoa v1.0.18
+    Checking cfg-if v1.0.5
+    Checking static_assertions v1.1.0
+    Checking ryu v1.0.23
+    Checking castaway v0.2.4
+    Checking compact_str v0.9.0
+    Checking matea-style v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-style)
+error[E0505]: cannot move out of `full` because it is borrowed
+   --> crates/matea-style/src/decoration.rs:833:21
+    |
+801 |         let full = original
+    |             ---- binding `full` declared here
+...
+812 |         let mut glyphs = full.corner_glyphs(BorderPart::TopRight);
+    |                          ---- borrow of `full` occurs here
+...
+833 |         let reset = full.with_corner_mode(CornerMode::FirstCluster).unwrap();
+    |                     ^^^^ move out of `full` occurs here
+...
+854 |     }
+    |     - borrow might be used here, when `glyphs` is dropped and runs the destructor for type `impl std::iter::ExactSizeIterator + std::iter::Iterator<Item = (&str, u16)> + std::iter::DoubleEndedIterator + std::iter::FusedIterator + '_`
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+812 |         let mut glyphs = full.clone().corner_glyphs(BorderPart::TopRight);
+    |                              ++++++++
+
+For more information about this error, try `rustc --explain E0505`.
+    Checking matea-render v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-render)
+error: could not compile `matea-style` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

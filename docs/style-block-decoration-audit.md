@@ -87,8 +87,12 @@ The42 correction rows run natively. LLVM reports102 paths/109 separate compiler
 instances; its3 zero-hash transitive hashbrown warnings are diagnosed and retained.
 New production line execution is98.72% block/99.29% decoration(includes embedded
 tests in decoration); these are not branch or memory-safety proofs. Native
-Linux/macOS/Windows+MSRV CI is pending for current code; older green evidence
-is not current qualification. No benchmark was performed,
+[Linux/macOS/Windows+MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39746958503)
+passes all four required jobs at f9c34b7. All212 current execution inputs match
+that commit exactly; each OS executes47 acceptance commands and all15 new
+style/render methods. Uploaded raw journals/logs are hash verified; missing
+upload members are explicit. Reference/measurement-driver recollection is skipped.
+[Qualification](evidence/block-style/qualification.json) does not close this axis. No benchmark was performed,
 no performance axis promoted,and no image engine/codec/CUDA work started.
 
 

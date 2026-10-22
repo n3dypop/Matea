@@ -1,0 +1,16 @@
+   Compiling matea-style v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-style)
+   Compiling matea-render v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-render)
+error[E0425]: cannot find value `rg` in this scope
+   --> crates/matea-render/src/block.rs:543:52
+    |
+543 |                 draw_pattern(s, x + column, row_y, rg, |offset| {
+    |                                                    ^^
+    |
+help: a local variable with a similar name exists
+    |
+543 -                 draw_pattern(s, x + column, row_y, rg, |offset| {
+543 +                 draw_pattern(s, x + column, row_y, rw, |offset| {
+    |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `matea-render` (lib) due to 1 previous error

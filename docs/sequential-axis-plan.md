@@ -20,7 +20,8 @@ Progress、TextInputの装飾互換性が依存するため、共通の契約を
 3. 装飾した文字の構造化描画：wrap、clip、transform、hyperlink、空白の
    個別styleと背景、Unicode境界を参照元と独立セルモデルに結ぶ。
    現在は共通装飾・構造化描画の3573観測、独立モデル、native47、Miri15、
-   LLVM102 paths／109 instancesまで確認。現在ソースの3 OS／MSRV CIは資格確認中。
+   LLVM102 paths／109 instancesまで確認。f9c34b7の3 OS／MSRV CI必須4件が成功し、
+   212入力・各OSの47受入・新規15試験を照合済み。
    hyperlinkは残件であり、2・3の実装増加を軸完了とは数えない。
 4. 全宣言の閉包：Lip GlossだけでなくRatatuiとx/ansiのstyle公開項目、
    feature/target、精密色とgradientを照合する。未対応項目は実装する。
@@ -46,3 +47,11 @@ Ratatui248未リンクの順に依存関係を確認する。既存の型付き�
 参照試験とfeature/target条件を照合するまで完了扱いしない。点数の上がらない
 主因は測定の反復ではなく未実装／未照合の公開契約なので、この順で不足を埋める。
 Lip Gloss#522は固定版で再現せず、#114/#605/#731は残条件を明示して部分評価のまま。
+
+
+同じ参照軸内の次の是正候補は[ADR0080](decisions/0080-whole-corner-patterns.md)。
+issue114の空本文と指定幅の不整合を固定版で再現し、issue605の複数文字の角を
+明示的なモードで実装する独立試作を作成した。参照3573行を維持し、新規Miri5成功・
+上限幅1件はnativeのみ。まだ本体には統合しておらず、軸の完了にも数えていない。
+CI完了を固定した後、4ファイルの差分とfacade公開を本体へ統合し、受入・coverage・
+現ソースのCI・issue台帳を更新してからhyperlink等の残契約へ進む。

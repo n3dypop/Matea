@@ -1,6 +1,7 @@
 # ADR 0079: Separate block decoration from resolved cell styles
 
-Status: implementation in progress, API provisional. Active axis remains
+Status: decorator increment implemented and qualified at f9c34b7; API provisional.
+[Qualification](../evidence/block-style/qualification.json). Active axis remains
 matea-style/lib reference; no other axis is promoted by this increment.
 
 Keep the compact Copy Color/Style representation unchanged. Add BlockStyle,

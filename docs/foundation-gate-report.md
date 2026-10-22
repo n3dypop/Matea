@@ -5,7 +5,9 @@
 42件の意図した是正は独立モデルに一致しました。狭幅hyphen、下線色、結合文字付き空白の
 不具合を修正し、失敗ログを保持しています。native47、Rust306＋17 doctest、
 Python151（条件付きskip2）、Miri15（参照49行を選択）、LLVM102 paths／109 instancesが成功。
-現在ソースの3 OS＋MSRV CIは未資格確認です。以前の色入力CIを現在の結果として扱いません。
+[f9c34b7の3 OS＋MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39746958503)の必須4ジョブが成功。
+各OSの47受入・新規15試験、212実行入力と生ログを固定コミットに照合しました。
+現在入力はCIと完全一致し、参照／計測ドライバーの再収集は今回はskipです。
 [範囲・独立モデル・未完了契約](style-block-decoration-audit.md)。
 176 raw宣言を部分リンクし、全体の未リンク6474、部分／未測定能力23、pending issue821。
 163 program／44単位、未達47軸（参照21・性能26）は変わりません。点数の昇格はありません。

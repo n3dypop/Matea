@@ -48,7 +48,7 @@
   "exact_source_cells": 3531,
   "independent_corrections": 42,
   "ordinary_timing_performed": false,
-  "qualification": "47 current native checks,Miri15 tests and LLVM102 paths/109 instances complete;CI pending",
+  "qualification": "qualified_for_decorator_increment_only",
   "x_ansi_source_sha256": {
     "wrap.go": "22a54c803b4e5d172e7d8d27e883da2645839f468b0f8865dbbfe63a21067309",
     "go.mod": "37eb859ba45ddd27690bfa8d617e8744c37b090e121c03a3b8c8d72b1a3437f5",
@@ -92,5 +92,24 @@
       "miri-blocks-final.log": "e23131280b2e34d687b7ac5a931a4083ae05b3a5c58f6e0a1d3db763941800df"
     }
   },
-  "module_verification_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+  "module_verification_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+  "ci": {
+    "source_commit": "f9c34b7f15391f2a1af0e53406b34423c6288780",
+    "run": "https://github.com/n3dypop/Matea/actions/runs/39746958503",
+    "required_jobs": [
+      "foundation (macos-latest)",
+      "foundation (ubuntu-latest)",
+      "foundation (windows-latest)",
+      "msrv"
+    ],
+    "execution_inputs": 212,
+    "source_observations_per_os": 3573,
+    "new_render_test_methods_per_os": 11,
+    "new_style_test_methods_per_os": 4,
+    "skipped_jobs": [
+      "reference-probes",
+      "reference-api",
+      "measurement-drivers"
+    ]
+  }
 }

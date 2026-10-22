@@ -1,0 +1,29 @@
+"""Preserve isolated new corner behavior before integration; no axis promotion."""
+import difflib,hashlib,json,shutil,subprocess
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-corners';t=Path('/private/tmp/matea-corner-pattern-prototype')
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+paths=['crates/matea-style/src/decoration.rs','crates/matea-style/src/lib.rs','crates/matea-render/src/block.rs','crates/matea-render/tests/blocks.rs']
+patch=[]
+for p in paths:
+ dst=b/(p.replace('/','--')+'.txt');shutil.copyfile(t/p,dst)
+ patch.extend(difflib.unified_diff((r/p).read_text().splitlines(True),(t/p).read_text().splitlines(True),fromfile='a/'+p,tofile='b/'+p))
+(b/'prototype.patch.txt').write_text(''.join(patch))
+for n in ['Cargo.toml','Cargo.lock','crates/matea-style/Cargo.toml','crates/matea-render/Cargo.toml']:
+ shutil.copyfile(t/n,b/(n.replace('/','--')+'.txt'))
+logs=['first','cached','clippy','tests','clippy-second','tests-second','clippy-final','tests-final','clippy-rendered-width','tests-rendered-width','clippy-matched','tests-matched','clippy-named','tests-named']
+for name in logs:
+ p=Path('/private/tmp/matea-corner-pattern-prototype-'+name+'.log')
+ if p.exists():shutil.copyfile(p,b/(name+'.log'))
+for name in ['style','style-final','render']:
+ p=Path('/private/tmp/matea-corner-pattern-miri-'+name+'.log');shutil.copyfile(p,b/('miri-'+name+'.log'))
+assert '2 passed; 0 failed; 1 ignored' in (b/'miri-style-final.log').read_text()
+assert '3 passed; 0 failed; 0 ignored' in (b/'miri-render.log').read_text()
+assert 'error:' not in (b/'clippy-named.log').read_text()
+assert 'FAILED' not in (b/'tests-named.log').read_text()
+# Current source observer has two independent issue114 reproductions.
+raw=subprocess.check_output(['/private/tmp/matea-block-style-go/wide-corner-observe']);assert raw==(b/'source-wide.tsv').read_bytes()
+rows=[x.split('\t') for x in raw.decode().splitlines()];assert rows[0][1:5]==['0','3','3','3'] and rows[1][1:5]==['5','3','4','4']
+context={'schema':1,'status':'isolated_prototype_only','base_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'active_axis':'matea-style/lib/reference','score_changes':[],'reference_axis_complete':False,'root_execution_inputs_changed':False,'source_pin':'19f011f1cc573e5d2bf9d7a9c4f14d429647759e','root_before_sha256':{p:sha(r/p) for p in paths},'prototype_sha256':{p:sha(t/p) for p in paths},'prototype_root_manifest_sha256':sha(t/'Cargo.toml'),'prototype_root_lock_sha256':sha(t/'Cargo.lock'),'source_observer_sha256':sha(b/'source-wide.go.txt'),'source_binary_sha256':sha(Path('/private/tmp/matea-block-style-go/wide-corner-observe')),'source_observation_sha256':sha(b/'source-wide.tsv'),'validation':{'native':'both isolated style/render crate suites plus doctests;all3573 inherited source rows still pass,with42 existing independent corrections','clippy':'both isolated crates all-targets -D warnings','miri':{'seed':251,'passed':5,'ignored':1,'scope':'Only new corner/mode/ownership/gradient/crop methods;eleven existing render methods filtered out.65535/65536 boundary native-only.'}},'limits':['Not current repository code or3OS qualification.','Temporary manifest contains only two workspace members;root integration must use its own approved manifest/lock and acceptance checks.','No timing distribution,performance win,other-axis promotion,F5 or image/CUDA advancement.'],'files':{p.name:sha(p) for p in b.iterdir() if p.is_file() and p.name!='prototype-context.json'}}
+(b/'prototype-context.json').write_text(json.dumps(context,indent=2,ensure_ascii=False)+'\n')
+print('Prototype preserved;root212 execution inputs unchanged;new Miri5 pass/1 explicit native-only boundary')
