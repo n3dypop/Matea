@@ -6,6 +6,8 @@ pub use attributes::{
 };
 mod gradient;
 pub use gradient::{Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors};
+mod color_input;
+pub use color_input::{AdaptiveColor, ColorError, PremultipliedRgba16, ProfileColors, Rgba16};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -57,7 +59,7 @@ const ANSI: [(u8, u8, u8); 16] = [
     (255, 255, 255),
 ];
 
-fn palette(n: u8) -> (u8, u8, u8) {
+const fn palette(n: u8) -> (u8, u8, u8) {
     match n {
         0..=15 => ANSI[n as usize],
         16..=231 => {

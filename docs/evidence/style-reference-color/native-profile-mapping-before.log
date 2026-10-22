@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests/color_input.rs (target/debug/deps/color_input-1208b5482c90de94)
+
+running 1 test
+test pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth ... FAILED
+
+failures:
+
+---- pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth stdout ----
+
+thread 'pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth' (1905131) panicked at crates/matea-style/tests/color_input.rs:338:17:
+assertion `left == right` failed
+  left: Rgb(18, 171, 52)
+ right: Rgb(0, 0, 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p matea-style --test color_input`

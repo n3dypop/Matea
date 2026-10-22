@@ -240,7 +240,8 @@
         "crates/matea-style/src/lib.rs",
         "crates/matea-style/src/attributes.rs",
         "crates/matea-style/src/gradient.rs",
-        "crates/matea-style/src/attributes/patch.rs"
+        "crates/matea-style/src/attributes/patch.rs",
+        "crates/matea-style/src/color_input.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -282,10 +283,13 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/decisions/0058-resolved-cell-style-and-explicit-style-patches.md",
         "docs/style-patches-audit.md",
-        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json"
+        "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
+        "docs/style-color-input-audit.md",
+        "docs/evidence/style-reference-color/fixture-verification.json",
+        "docs/sequential-axis-plan.md"
       ],
       "remaining": [
-        "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
+        "Active reference axis: first color-input subtask implemented; shared decoration/geometry, rich whitespace/hyperlink/transform, precise/custom transformations, full source/feature/target closure remain pending. No score promotion before the full axis qualifies."
       ]
     },
     {
@@ -1251,7 +1255,8 @@
         "crates/matea-style/tests/layout.rs",
         "crates/matea-style/tests/colors.rs",
         "crates/matea-style/tests/gradients.rs",
-        "crates/matea-style/tests/patches.rs"
+        "crates/matea-style/tests/patches.rs",
+        "crates/matea-style/tests/color_input.rs"
       ],
       "criteria": {
         "rust_design": {

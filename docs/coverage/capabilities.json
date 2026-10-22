@@ -1520,6 +1520,56 @@
           "performance": "pending"
         }
       ]
+    },
+    {
+      "id": "style/explicit-color-input-and-selection",
+      "status": "partial",
+      "reference_ids": [
+        "19368c731d4efba0c5f0",
+        "0bda3e94a3b888ffd899",
+        "5627d5bb1f93c0466bd2",
+        "b97f73c19b29bf1536e6",
+        "9c680402925a5f87de09",
+        "77ff2c1665039b42c1a1",
+        "384493d7788df0488a88",
+        "9e8307e579d82fd3c19f",
+        "29bb845040666a72291e",
+        "1944ccbabbff5b4f3c62",
+        "469c5624ad431ceef06b",
+        "5386026780a7ae06ec87",
+        "6900139f4ecfbe9b389f",
+        "39111aac0db043c3d428",
+        "4aa460365abacc6fc622",
+        "f201891322adf69e19b7",
+        "a6ba941e63672d859822",
+        "1d3f7bee6b69cc5bf9b3",
+        "675fbb0acdedb2f1c3a9",
+        "2d34faad4d4e6478a2da",
+        "e13b5a97d2d70b5706b2",
+        "67bc8b9886517e235a81",
+        "b2d86c8ea454d2d03335",
+        "0212c3fb656a46524781",
+        "30c76c2c0a4a8f9e34aa",
+        "5f12894671bbe7118ff3",
+        "2ea5605e775f96a802c7",
+        "f5dcb14ddb609a434e55",
+        "c0828d6e48a1dcc8a858",
+        "7db5622eda68a5c43246",
+        "d4f49732f49f2ccb2151",
+        "0780a47e8bdf780d5ea2",
+        "d0021aa333c3243f4c1f"
+      ],
+      "implementation": [
+        "crates/matea-style/src/color_input.rs",
+        "crates/matea-style/src/lib.rs"
+      ],
+      "tests": [
+        "crates/matea-style/tests/color_input.rs",
+        "crates/matea-style/tests/fixtures/color-inputs.tsv",
+        "crates/matea-style/tests/fixtures/color-contracts.tsv"
+      ],
+      "performance": "pending",
+      "notes": "The one active style reference axis gains 30180 actual pinned source observations across all33 raw color.go declarations, plus typed negative/depth/alpha models. RGB8/indexed parsing/adjustments, canonical Rgba16 and validated premultiplication, explicit light/dark/profile choices implemented. Source Alpha invalid premultiplication and shift-only RGBColor depth are corrected deliberately. Arbitrary precise/custom Color transforms, full style decoration/geometry, source feature closure and performance remain pending. This capability records an already-required unmapped scope; no evaluation axis is added or promoted."
     }
   ]
 }

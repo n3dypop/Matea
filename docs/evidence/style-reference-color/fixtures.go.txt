@@ -1,0 +1,60 @@
+// Frozen source-observation producer. Run in the disposable pinned Go module.
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "image/color"
+    "os"
+    "strconv"
+    "charm.land/lipgloss/v2"
+)
+
+func main() {
+    out := bufio.NewWriter(os.Stdout)
+    defer out.Flush()
+    emit := func(op, arg, parameter, kind string, c color.Color) {
+        r,g,b,a := c.RGBA()
+        fmt.Fprintf(out,"%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\n",op,arg,parameter,kind,r,g,b,a)
+    }
+    parse := func(text string) {
+        c := lipgloss.Color(text)
+        kind := "rgb"
+        if _, ok := c.(lipgloss.NoColor); ok { kind = "default" }
+        if n, err := strconv.ParseInt(text, 10, 64); err == nil && n != -9223372036854775808 {
+            if n<0 { n = -n }; if n<256 {kind = fmt.Sprintf("index:%d",n)}
+        }
+        emit("parse",text,"-",kind,c)
+    }
+    for n:=0; n<4096; n++ { parse(fmt.Sprintf("#%03x",n)) }
+    for n:=-512; n<=512; n++ { parse(strconv.Itoa(n)) }
+    for _, text := range []string{"#A0F","#aBcDeF","#000000","#FFFFFF","+12","00012","16777215","16777216","-16777216","9223372036854775807","-9223372036854775807","","#","#ggg","#0000","#00000000","abc"," 1","1 ","0x12","++1","--1","#\u001b00","#茶茶茶","99999999999999999999999999"} { parse(text) }
+    colors := []color.RGBA{{0,0,0,255},{255,255,255,255},{255,0,0,255},{0,255,0,255},{0,0,255,255}}
+    state := uint32(233)
+    for i:=0; i<1024; i++ {
+        state = state*1664525+1013904223
+        colors = append(colors,color.RGBA{uint8(state>>16),uint8(state>>8),uint8(state),255})
+    }
+    for i:=0; i<256; i++ { colors = append(colors,color.RGBA{uint8(i),uint8(i),uint8(i),255}) }
+    for _, c := range colors {
+        arg := fmt.Sprintf("#%02x%02x%02x",c.R,c.G,c.B)
+        emit("complementary",arg,"-","rgb",lipgloss.Complementary(c))
+        for _, amount := range []float64{-2,0,0.0001,0.1,0.25,0.5,0.75,1,2} {
+            parameter := strconv.FormatFloat(amount,'g',-1,64)
+            emit("darken",arg,parameter,"rgb",lipgloss.Darken(c,amount))
+            emit("lighten",arg,parameter,"rgb",lipgloss.Lighten(c,amount))
+        }
+    }
+    for _, channel := range []uint16{0,1,255,256,257,32767,32768,65534,65535} {
+        for _, alpha := range []uint16{0,1,255,256,257,32767,32768,65534,65535} {
+            c := color.NRGBA64{channel,65535-channel,32768,alpha}
+            emit("premultiply",strconv.Itoa(int(channel)),strconv.Itoa(int(alpha)),"premultiplied",c)
+        }
+    }
+    // Preserve the upstream representation issue: Alpha returns color.RGBA
+    // with unchanged RGB channels even when a channel now exceeds alpha.
+    for n:=0; n<256; n++ {
+        c := color.RGBA{uint8(n),0,0,255}
+        emit("source-alpha",strconv.Itoa(n),"0.5","raw-premultiplied",lipgloss.Alpha(c,0.5))
+    }
+}
