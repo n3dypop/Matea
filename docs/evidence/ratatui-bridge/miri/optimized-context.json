@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "flags": "-Zmiri-seed=317",
+  "command": "cargo +nightly miri test --offline --locked -p matea-ratatui --test bridge",
+  "passed": 9,
+  "seconds": 140.15,
+  "targeted_source_sha256": {
+    "crates/matea-ratatui/src/lib.rs": "b40db04bf75cafd65e038c4d3b23862f83670f208b17d9da61ae1c19cb29ee10",
+    "crates/matea-ratatui/tests/bridge.rs": "38e92b7a753471ae61f0d29f88309d6a50d3468890457a8782f6a80a88937f65",
+    "crates/matea-ratatui/Cargo.toml": "27c3db227b76352159ac29b23c98235daa04fd74a328293cb0fe55be1a54401c",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4"
+  },
+  "log_sha256": "79d373241c07d996ebc47df4fb0cb2745351d30622cebf76840040c30e5ab108",
+  "limits": [
+    "Targeted default-profile Miri, not soundness proof or all profiles.",
+    "Indexed color loop uses 8 instead of 256 in Miri; the complete loop runs in native acceptance.",
+    "Includes the full 600x2 chunk/style/Unicode/row regression and late invalid cells."
+  ]
+}

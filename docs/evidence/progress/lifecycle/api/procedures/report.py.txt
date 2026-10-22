@@ -1,0 +1,25 @@
+"""Validate additional API control source/output/calibration/RSS records."""
+import hashlib,json,re,statistics,subprocess,sys,tarfile
+from pathlib import Path
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/progress/lifecycle/api';sys.path.insert(0,str(ROOT/'scripts'));from performance_records import read_records,read_probe_outputs,summary
+if not __debug__:raise RuntimeError('verification refuses -O')
+sha=lambda b:hashlib.sha256(b).hexdigest();ctx=json.load(open(BASE/'context.json'));assert ctx['status']=='complete';assert ctx['procedure_sha256']==sha((BASE/'procedures/measure.py.txt').read_bytes())
+for n,d in ctx['source_sha256'].items():assert sha(subprocess.check_output(['git','show',ctx['source_head']+':'+n]))==d,n
+for n,d in ctx['production_sha256'].items():assert sha(subprocess.check_output(['git','show',ctx['production_identity_with_prior_27_case_head']+':'+n]))==d,n
+oracle=read_probe_outputs((BASE/'outputs.jsonl').read_text());assert sha((BASE/'outputs.jsonl').read_bytes())==ctx['outputs_sha256'];assert len(oracle)==5
+frame=read_probe_outputs((ROOT/'docs/evidence/progress/matea-outputs.jsonl').read_text())['progress/frame_0_40'];assert oracle['progress/api_component_live_frame']['first_return_value']==frame['first_return_value']
+runs=[]
+for run in ctx['runs']:
+ raw=(BASE/run['raw']).read_bytes();assert sha(raw)==run['raw_sha256'];records=read_records(raw.decode());assert records.keys()==oracle.keys()
+ for n,r in records.items():assert all(r[k]==oracle[n][k] for k in ['semantics','output','first_return_value']) and summary(r)==run['summaries'][n]
+ runs.append({'run':run['run'],'summaries':{n:summary(r) for n,r in records.items()}})
+archived=None;values=[]
+for n,d in ctx['rss_raw_sha256'].items():
+ if (BASE/n).is_file():raw=(BASE/n).read_bytes()
+ else:
+  if archived is None:
+   with tarfile.open(BASE/'rss-raw.tar.gz','r:gz') as t:archived={m.name:t.extractfile(m).read() for m in t.getmembers() if m.isfile() and Path(m.name).name==m.name}
+  raw=archived[n]
+ assert sha(raw)==d;values.append(int(re.search(rb'(\d+)\s+maximum resident set size',raw).group(1)))
+assert len(runs)==2 and len(values)==31 and values==ctx['rss_bytes']
+result={'schema':1,'status':'complete','source_head':ctx['source_head'],'context_sha256':sha((BASE/'context.json').read_bytes()),'reporter_sha256':sha(Path(__file__).read_bytes()),'timing_records':10,'rss_observations':31,'runs':runs,'rss_group_bytes':{'p50':statistics.median(values),'p95':sorted(values)[29],'min':min(values),'max':max(values)},'limits':ctx['limits']};(BASE/'report.json').write_text(json.dumps(result,indent=2)+'\n');print('10 API timing records, 31 RSS observations and unchanged production inputs verified')

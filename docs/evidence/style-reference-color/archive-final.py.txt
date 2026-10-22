@@ -1,0 +1,51 @@
+"""Bind one-axis color increment to final native/Miri/LLVM and exact-code CI facts."""
+import hashlib,json,re,shutil,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/style-reference-color';out=base/'final-native';out.mkdir(exist_ok=True)
+sys.path.insert(0,str(root/'scripts'))
+from check_quality import assess,programs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def read(p):return json.loads(p.read_bytes())
+def write(p,o):p.write_text(json.dumps(o,indent=2)+'\n')
+native=read(root/'docs/evidence/local-validation.json');cov=read(root/'docs/evidence/quality/rust-execution-coverage.json')
+validate_native(native,root);validate_coverage(cov,root)
+ci=read(base/'ci-bindings.json');assert ci['status']=='qualified'
+assert set(native['source_sha256'])==set(ci['ci_execution_input_sha256'])
+delta=[p for p,h in native['source_sha256'].items() if h!=ci['ci_execution_input_sha256'][p]]
+assert delta==['docs/quality-plan.json'],delta
+initial=read(base/'initial-native/local-validation.json')
+assert initial['source_sha256']==ci['ci_execution_input_sha256']
+before=read(base/'quality-plan-before.json.txt');after=read(root/'docs/quality-plan.json')
+assert before['high_threshold']==after['high_threshold']==75 and before['scope']==after['scope']
+assert [u['id'] for u in before['units']]==[u['id'] for u in after['units']]
+score_changes=[];reason_changes=[];added=[]
+for a,b in zip(before['units'],after['units']):
+ assert set(a['files'])<=set(b['files'])
+ added.extend(sorted(set(b['files'])-set(a['files'])))
+ for dimension,value in a['criteria'].items():
+  if value['score']!=b['criteria'][dimension]['score']:score_changes.append((b['id'],dimension))
+  if value['reason']!=b['criteria'][dimension]['reason']:reason_changes.append((b['id'],dimension))
+assert not score_changes
+assert set(reason_changes)=={(u,'portability') for u in ['matea-style/lib','matea-style/integration-tests','matea/lib']}
+assert set(added)=={'crates/matea-style/src/color_input.rs','crates/matea-style/tests/color_input.rs'}
+fixture=read(base/'fixture-verification.json')
+for name,digest in fixture['miri_input_sha256'].items():assert sha((root/name).read_bytes())==digest
+for name,digest in fixture['fixture_sha256'].items():assert sha((root/name).read_bytes())==digest
+miri=(base/'miri.log').read_text();assert '5 passed; 0 failed; 1 ignored' in miri
+passed=lambda s:sum(map(int,re.findall(r'test result: ok\. (\d+) passed',s)))
+regular=passed((root/'docs/evidence/all-targets.log').read_text());docs=passed((root/'docs/evidence/test.log').read_text())-regular
+py=(root/'docs/evidence/optimized-python-tests.log').read_text();py_count=int(re.search(r'Ran (\d+) tests',py)[1]);skips=int(re.search(r'OK \(skipped=(\d+)\)',py)[1])
+a=assess(after,programs(root));assert (regular,docs,py_count,skips)==(291,15,151,2)
+assert len(native['checks'])==47 and len(native['source_sha256'])==204
+assert a['programs']==160 and a['review_units']==44 and len(a['below_high'])==47
+subprocess.run([sys.executable,'scripts/check_quality.py','--report'],check=True)
+subprocess.run([sys.executable,'docs/evidence/precise-color-inputs/native/gate-snapshot.py.txt'],check=True)
+for check in native['checks']:shutil.copyfile(root/'docs/evidence'/check['log'],out/check['log'])
+for name,target in [('docs/evidence/local-validation.json','local-validation.json'),('docs/evidence/quality/rust-execution-coverage.json','rust-execution-coverage.json'),('docs/evidence/quality/report.json','report.json'),('docs/evidence/quality/final-gate-status.json','final-gate-status.json')]:shutil.copyfile(root/name,out/target)
+metrics={'schema':1,'native_commands':47,'execution_inputs':204,'rust_regular':regular,'rust_doctests':docs,'python_tests':py_count,'python_conditional_skips':skips,'new_native_color_tests':6,'source_observations':30180,'miri_passed':5,'miri_ignored':1,'miri_seed':239,'miri_limits':'Nine scalar/opacity boundaries;282 source type/selector observations.29898-row corpus native-only.','llvm_source_paths':len(cov['files']),'llvm_instances':sum(len(f['instances']) for f in cov['files']),'programs':160,'review_units':44,'below_high_axes':47,'active_axis':'matea-style/lib/reference','score_changes':[],'performance_measurements_added':False}
+write(out/'metrics.json',metrics)
+archive={'schema':1,'status':'qualified','ci_commit':ci['source_commit'],'ci_run':ci['run'],'source_sha256':native['source_sha256'],'assessment_only_delta_from_ci':delta,'scores_changed':score_changes,'reason_corrections':reason_changes,'maintained_programs_added':added,'scope_shrunk':False,'metrics':metrics,'files':{p.name:sha(p.read_bytes()) for p in out.iterdir() if p.is_file()},'producer_sha256':sha(Path(__file__).read_bytes())}
+write(out/'archive.json',archive)
+assessment=read(base/'assessment-review.json');assessment.update(status='qualified',qualification='complete_for_color_increment_only',score_changes=[],reason_corrections=reason_changes,native_archive_sha256=sha((out/'archive.json').read_bytes()),ci_bindings_sha256=sha((base/'ci-bindings.json').read_bytes()),reference_axis_complete=False)
+write(base/'assessment-review.json',assessment)
+print(json.dumps(metrics))

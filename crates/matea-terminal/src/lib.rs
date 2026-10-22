@@ -1,25 +1,34 @@
 #![deny(unsafe_code)]
 //! Exclusive terminal lifecycle and a replaceable I/O backend.
-// sigaction has no safe standard-library wrapper; this is the only unsafe module.
+mod ansi;
+mod frame;
+mod input;
+pub use input::translate_event;
+pub mod device;
+mod modes;
+mod session;
+pub use modes::{InputOptions, KeyboardFlags, KeyboardMode};
+use modes::{ModeLeases, apply_mode};
+use session::{Exclusive, Session};
+pub mod protocol;
+pub use frame::FrameEncoder;
+// sigaction and device's native termios/console calls have narrow reviewed
+// unsafe boundaries. Ordinary runtime, mode ownership and input parsing stay safe.
 #[cfg(unix)]
 #[allow(unsafe_code)]
 mod signals_unix;
 use crossterm::{
-    cursor::{Hide, MoveTo, Show},
-    event::{
-        self, DisableBracketedPaste, DisableFocusChange, EnableBracketedPaste, EnableFocusChange,
-        KeyEventKind, KeyModifiers,
-    },
-    execute, queue,
-    style::{Attribute, Print, ResetColor, SetAttribute, SetBackgroundColor, SetForegroundColor},
-    terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
+    event, execute,
+    terminal::{self, Clear, ClearType},
 };
-use matea_core::{Event, Input, Key, KeyCode, Model, Runtime};
+use matea_core::{Event, Input, KeyCode, Model, Modifiers, Runtime};
 use matea_render::{Size, Surface};
-use matea_style::{Border, Color, ColorLevel, Style, Theme};
+use matea_style::{
+    BlinkStyle, Border, Color, ColorLevel, Style, TextAttribute, TextFrame, Theme, UnderlineStyle,
+};
 use std::{
     io::{self, IsTerminal, Write},
-    sync::atomic::{AtomicBool, Ordering},
+    sync::atomic::AtomicBool,
     time::{Duration, Instant},
 };
 
@@ -58,12 +67,16 @@ impl Capabilities {
 pub struct RunOptions {
     pub theme: Theme,
     pub capabilities: Capabilities,
+    pub input: InputOptions,
+    pub ctrl_c: CtrlCBehavior,
 }
 impl Default for RunOptions {
     fn default() -> Self {
         Self {
             theme: Theme::default(),
             capabilities: Capabilities::detect(),
+            input: InputOptions::default(),
+            ctrl_c: CtrlCBehavior::Quit,
         }
     }
 }
@@ -72,6 +85,19 @@ pub enum TerminalEvent {
     Input(Input),
     Resize(Size),
     Interrupt,
+}
+/// Policy for Ctrl-C key-down. OS signals still trigger restoration and exit;
+/// releases are forwarded. Shift is allowed, other command modifiers are not.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum CtrlCBehavior {
+    #[default]
+    Quit,
+    Deliver,
+}
+fn ctrl_c(key: matea_core::Key) -> bool {
+    key.is_down()
+        && key.modifiers.difference(Modifiers::SHIFT) == Modifiers::CONTROL
+        && matches!(key.code, KeyCode::Char('c' | 'C'))
 }
 
 /// Only the transport owns terminal side effects. One poller per backend/session.
@@ -82,40 +108,6 @@ pub trait Backend {
     fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>>;
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()>;
 }
-struct Session<B: Backend> {
-    backend: B,
-    active: bool,
-}
-impl<B: Backend> Session<B> {
-    fn enter(backend: B) -> io::Result<Self> {
-        let mut session = Self {
-            backend,
-            active: true,
-        };
-        if let Err(error) = session.backend.enter() {
-            return match session.restore() {
-                Ok(()) => Err(error),
-                Err(cleanup) => Err(io::Error::other(format!(
-                    "{error}; terminal restoration also failed: {cleanup}"
-                ))),
-            };
-        }
-        Ok(session)
-    }
-    fn restore(&mut self) -> io::Result<()> {
-        if self.active {
-            self.backend.restore()?;
-            self.active = false;
-        }
-        Ok(())
-    }
-}
-impl<B: Backend> Drop for Session<B> {
-    fn drop(&mut self) {
-        let _ = self.restore();
-    }
-}
-
 pub fn run<A: Model>(model: A) -> Result<(), Error> {
     run_with_options(model, RunOptions::default())
 }
@@ -124,14 +116,23 @@ pub fn run_with_options<A: Model>(model: A, mut options: RunOptions) -> Result<(
     if !options.capabilities.unicode {
         options.theme.border_kind = Border::Ascii;
     }
-    let native = Native::new(options.capabilities)?;
-    run_with_backend(model, options.theme, native)
+    let native = Native::new(options.capabilities, options.input)?;
+    run_with_backend_and_ctrl_c(model, options.theme, native, options.ctrl_c)
 }
 /// Drive the same loop with a mock backend in integration tests or an alternate transport.
 pub fn run_with_backend<A: Model, B: Backend>(
     model: A,
     theme: Theme,
     backend: B,
+) -> Result<(), Error> {
+    run_with_backend_and_ctrl_c(model, theme, backend, CtrlCBehavior::Quit)
+}
+/// Configure key policy for another backend; mode acquisition stays with it.
+pub fn run_with_backend_and_ctrl_c<A: Model, B: Backend>(
+    model: A,
+    theme: Theme,
+    backend: B,
+    behavior: CtrlCBehavior,
 ) -> Result<(), Error> {
     let mut session = Session::enter(backend)?;
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<(), Error> {
@@ -140,29 +141,41 @@ pub fn run_with_backend<A: Model, B: Backend>(
         let mut last = Instant::now();
         let mut dirty = true;
         while !runtime.is_quitting() {
+            if runtime.take_worker_panic_notice() {
+                // A caught worker panic runs the normal stderr hook first. Even
+                // canceled results can therefore invalidate cells/cursor/style.
+                previous = None;
+                dirty = true;
+            }
             if dirty {
                 let frame = runtime.frame()?;
                 session.backend.draw(&frame, previous.as_ref())?;
                 previous = Some(frame);
             }
-            if let Some(event) = session.backend.poll(Duration::from_millis(16))? {
+            let timeout =
+                subscription_poll_timeout(runtime.next_subscription_delay(), || last.elapsed());
+            let pending = match session.backend.poll(timeout)? {
+                Some(TerminalEvent::Interrupt) => break,
+                Some(TerminalEvent::Input(Input::Key(k)))
+                    if behavior == CtrlCBehavior::Quit && ctrl_c(k) =>
+                {
+                    break;
+                }
+                pending => pending,
+            };
+            // Synchronize time before input can create a new subscription.
+            // Already-due subscriptions run first; interrupts still take priority.
+            let now = Instant::now();
+            dirty = runtime.advance(now.duration_since(last))?;
+            last = now;
+            if let Some(event) = pending {
                 match event {
                     TerminalEvent::Interrupt => break,
-                    TerminalEvent::Input(Input::Key(k))
-                        if k.ctrl && matches!(k.code, KeyCode::Char('c' | 'C')) =>
-                    {
-                        break;
-                    }
                     TerminalEvent::Input(input) => runtime.dispatch(Event::Input(input))?,
                     TerminalEvent::Resize(size) => runtime.dispatch(Event::Resize(size))?,
                 }
                 dirty = true;
-            } else {
-                dirty = false;
             }
-            let now = Instant::now();
-            dirty |= runtime.advance(now.duration_since(last))?;
-            last = now;
             dirty |= runtime.poll_effects()?;
         }
         runtime.shutdown();
@@ -185,37 +198,43 @@ pub fn run_with_backend<A: Model, B: Backend>(
     }
 }
 
+fn subscription_poll_timeout(next: Option<Duration>, spent: impl FnOnce() -> Duration) -> Duration {
+    let maximum = Duration::from_millis(16);
+    next.map_or(maximum, |delay| delay.saturating_sub(spent()).min(maximum))
+}
+
 static EXCLUSIVE: AtomicBool = AtomicBool::new(false);
 struct Native {
     out: io::Stdout,
+    encoded: Vec<u8>,
+    encoder: FrameEncoder,
     caps: Capabilities,
-    entered: bool,
+    input: InputOptions,
+    modes: ModeLeases,
     raw: bool,
     #[cfg(unix)]
     signals: Option<signals_unix::SignalGuard>,
 }
 impl Native {
-    fn new(caps: Capabilities) -> io::Result<Self> {
+    fn new(caps: Capabilities, input: InputOptions) -> io::Result<Exclusive<'static, Self>> {
+        input.validate()?;
         if !io::stdin().is_terminal() || !io::stdout().is_terminal() {
             return Err(io::Error::other(
                 "interactive Matea requires TTY stdin/stdout; use an example's --snapshot option for plain output",
             ));
         }
-        if EXCLUSIVE
-            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
-            .is_err()
-        {
-            return Err(io::Error::other(
-                "another Matea terminal session is already active",
-            ));
-        }
-        Ok(Self {
-            out: io::stdout(),
-            caps,
-            entered: false,
-            raw: false,
-            #[cfg(unix)]
-            signals: None,
+        Exclusive::acquire(&EXCLUSIVE, || {
+            Ok(Self {
+                out: io::stdout(),
+                encoded: Vec::new(),
+                encoder: FrameEncoder::default(),
+                caps,
+                input,
+                modes: ModeLeases::default(),
+                raw: false,
+                #[cfg(unix)]
+                signals: None,
+            })
         })
     }
 }
@@ -232,38 +251,36 @@ impl Backend for Native {
         }
         terminal::enable_raw_mode()?;
         self.raw = true;
-        self.entered = true;
         // Install the resize listener before the first frame is observable.
         // Otherwise a SIGWINCH between first paint and first poll can be lost.
         let _ = event::poll(Duration::ZERO)?;
-        execute!(
-            self.out,
-            EnterAlternateScreen,
-            Hide,
-            EnableBracketedPaste,
-            EnableFocusChange,
-            Clear(ClearType::All)
-        )
+        self.modes.enter(self.input, |mode, enable, flags| {
+            apply_mode(&mut self.out, mode, enable, flags)
+        })?;
+        // Native mode commands have now selected Crossterm's real transport.
+        // The frame writer emits ANSI bytes only; never paint them through a
+        // known legacy-console fallback. Session rolls acquired modes back.
+        #[cfg(windows)]
+        if !crossterm::ansi_support::supports_ansi() {
+            return Err(io::Error::new(
+                io::ErrorKind::Unsupported,
+                "Matea native frame output requires ANSI; legacy WinAPI frame rendering is not implemented",
+            ));
+        }
+        execute!(self.out, Clear(ClearType::All))
     }
     fn restore(&mut self) -> io::Result<()> {
         let mut error = None;
-        if self.entered {
+        if self.modes.active() {
             // Attempt every operation even if an earlier write fails.
             for result in [
-                execute!(self.out, ResetColor),
-                execute!(self.out, SetAttribute(Attribute::Reset)),
-                execute!(self.out, DisableBracketedPaste),
-                execute!(self.out, DisableFocusChange),
-                execute!(self.out, Show),
-                execute!(self.out, LeaveAlternateScreen),
+                self.modes
+                    .restore(|mode, enable, flags| apply_mode(&mut self.out, mode, enable, flags)),
                 self.out.flush(),
             ] {
                 if let Err(e) = result {
                     error.get_or_insert(e);
                 }
-            }
-            if error.is_none() {
-                self.entered = false;
             }
         }
         if self.raw {
@@ -297,165 +314,387 @@ impl Backend for Native {
         if !event::poll(timeout)? {
             return Ok(None);
         }
-        Ok(translate(event::read()?))
+        Ok(Some(translate_event(event::read()?)))
     }
     fn draw(&mut self, frame: &Surface, previous: Option<&Surface>) -> io::Result<()> {
-        write_frame(&mut self.out, frame, previous, self.caps)
+        self.encoded.clear();
+        self.encoder
+            .write(&mut self.encoded, frame, previous, self.caps)?;
+        if self.encoded.is_empty() {
+            return Ok(());
+        }
+        let mut out = self.out.lock();
+        out.write_all(&self.encoded)?;
+        out.flush()
     }
 }
 impl Drop for Native {
     fn drop(&mut self) {
         let _ = self.restore();
-        EXCLUSIVE.store(false, Ordering::Release);
     }
 }
 
-fn translate(event: event::Event) -> Option<TerminalEvent> {
-    use event::{Event as E, KeyCode as C};
-    Some(match event {
-        E::Resize(w, h) => TerminalEvent::Resize(Size::new(w, h)),
-        E::Paste(s) => TerminalEvent::Input(Input::Paste(s)),
-        E::FocusGained => TerminalEvent::Input(Input::Focus(true)),
-        E::FocusLost => TerminalEvent::Input(Input::Focus(false)),
-        E::Key(k) if k.kind != KeyEventKind::Release => {
-            let code = match k.code {
-                C::Char(c) => KeyCode::Char(c),
-                C::Enter => KeyCode::Enter,
-                C::Esc => KeyCode::Esc,
-                C::Backspace => KeyCode::Backspace,
-                C::Delete => KeyCode::Delete,
-                C::Left => KeyCode::Left,
-                C::Right => KeyCode::Right,
-                C::Up => KeyCode::Up,
-                C::Down => KeyCode::Down,
-                C::Home => KeyCode::Home,
-                C::End => KeyCode::End,
-                C::Tab => KeyCode::Tab,
-                C::BackTab => KeyCode::BackTab,
-                C::PageUp => KeyCode::PageUp,
-                C::PageDown => KeyCode::PageDown,
-                _ => return None,
-            };
-            TerminalEvent::Input(Input::Key(Key {
-                code,
-                ctrl: k.modifiers.contains(KeyModifiers::CONTROL),
-                alt: k.modifiers.contains(KeyModifiers::ALT),
-                shift: k.modifiers.contains(KeyModifiers::SHIFT),
-            }))
-        }
-        _ => return None,
-    })
-}
-fn color(c: Color) -> crossterm::style::Color {
-    use crossterm::style::Color as C;
-    match c {
-        Color::Default => C::Reset,
-        Color::Rgb(r, g, b) => C::Rgb { r, g, b },
-        Color::Indexed(n) => match n {
-            0 => C::Black,
-            1 => C::DarkRed,
-            2 => C::DarkGreen,
-            3 => C::DarkYellow,
-            4 => C::DarkBlue,
-            5 => C::DarkMagenta,
-            6 => C::DarkCyan,
-            7 => C::Grey,
-            8 => C::DarkGrey,
-            9 => C::Red,
-            10 => C::Green,
-            11 => C::Yellow,
-            12 => C::Blue,
-            13 => C::Magenta,
-            14 => C::Cyan,
-            15 => C::White,
-            _ => C::AnsiValue(n),
-        },
-    }
-}
 fn set_style(w: &mut impl Write, s: Style) -> io::Result<()> {
-    queue!(
-        w,
-        SetAttribute(Attribute::Reset),
-        SetForegroundColor(color(s.fg)),
-        SetBackgroundColor(color(s.bg))
-    )?;
-    if s.bold {
-        queue!(w, SetAttribute(Attribute::Bold))?;
+    w.write_all(b"\x1b[0m")?;
+    if s.fg != Color::Default {
+        ansi::color(w, s.fg, false)?;
     }
-    if s.underline {
-        queue!(w, SetAttribute(Attribute::Underlined))?;
+    if s.bg != Color::Default {
+        ansi::color(w, s.bg, true)?;
     }
-    if s.reverse {
-        queue!(w, SetAttribute(Attribute::Reverse))?;
+    if s.underline_color != Color::Default {
+        ansi::underline_color(w, s.underline_color)?;
+    }
+    let attributes = s.attributes;
+    if attributes.is_empty() {
+        return Ok(());
+    }
+    if attributes.contains(TextAttribute::Bold) {
+        w.write_all(b"\x1b[1m")?;
+    }
+    if attributes.contains(TextAttribute::Dim) {
+        w.write_all(b"\x1b[2m")?;
+    }
+    if attributes.contains(TextAttribute::Italic) {
+        w.write_all(b"\x1b[3m")?;
+    }
+    match attributes.underline() {
+        UnderlineStyle::None => {}
+        UnderlineStyle::Single => w.write_all(b"\x1b[4m")?,
+        UnderlineStyle::Double => w.write_all(b"\x1b[4:2m")?,
+        UnderlineStyle::Curly => w.write_all(b"\x1b[4:3m")?,
+        UnderlineStyle::Dotted => w.write_all(b"\x1b[4:4m")?,
+        UnderlineStyle::Dashed => w.write_all(b"\x1b[4:5m")?,
+    }
+    match attributes.blink() {
+        BlinkStyle::None => {}
+        BlinkStyle::Slow => w.write_all(b"\x1b[5m")?,
+        BlinkStyle::Rapid => w.write_all(b"\x1b[6m")?,
+    }
+    if attributes.contains(TextAttribute::Reverse) {
+        w.write_all(b"\x1b[7m")?;
+    }
+    if attributes.contains(TextAttribute::Hidden) {
+        w.write_all(b"\x1b[8m")?;
+    }
+    if attributes.contains(TextAttribute::Strikethrough) {
+        w.write_all(b"\x1b[9m")?;
+    }
+    if attributes.contains(TextAttribute::Fraktur) {
+        w.write_all(b"\x1b[20m")?;
+    }
+    match attributes.frame() {
+        TextFrame::None => {}
+        TextFrame::Framed => w.write_all(b"\x1b[51m")?,
+        TextFrame::Encircled => w.write_all(b"\x1b[52m")?,
+    }
+    if attributes.contains(TextAttribute::Overline) {
+        w.write_all(b"\x1b[53m")?;
     }
     Ok(())
 }
-/// Emit only changed rows, clear before painting, and explicitly position each grapheme.
+/// Encode damage to a writer. ASCII rows use cell damage; uncertain-width rows
+/// clear and repaint atomically. No terminal ownership is acquired here.
 pub fn write_frame(
     w: &mut impl Write,
     frame: &Surface,
     previous: Option<&Surface>,
     caps: Capabilities,
 ) -> io::Result<()> {
-    let rows = frame.diff(previous);
-    if rows.is_empty() {
-        return Ok(());
-    }
-    if previous.is_some_and(|p| p.size() != frame.size()) {
-        queue!(
-            w,
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::All)
-        )?;
-    }
-    for y in rows {
-        queue!(
-            w,
-            MoveTo(0, y),
-            ResetColor,
-            SetAttribute(Attribute::Reset),
-            Clear(ClearType::CurrentLine)
-        )?;
-        let mut current = None;
-        for (x, cell) in frame
-            .row(y)
-            .iter()
-            .enumerate()
-            .filter(|(_, c)| !c.is_continuation())
-        {
-            let style = cell.style().adapt(caps.color);
-            if cell.symbol() == " " && style == Style::default() {
-                continue;
-            }
-            if current != Some(style) {
-                set_style(w, style)?;
-                current = Some(style);
-            }
-            let symbol = if !caps.unicode && !cell.symbol().is_ascii() {
-                "?"
-            } else {
-                cell.symbol()
-            };
-            queue!(w, MoveTo(x as u16, y), Print(symbol))?;
-        }
-    }
-    queue!(
-        w,
-        ResetColor,
-        SetAttribute(Attribute::Reset),
-        MoveTo(0, 0),
-        Hide
-    )?;
-    w.flush()
+    FrameEncoder::default().write(w, frame, previous, caps)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn subscription_wait_subtracts_render_time_and_preserves_idle_cap() {
+        let maximum = Duration::from_millis(16);
+        for spent in [Duration::ZERO, Duration::from_millis(1), Duration::MAX] {
+            assert_eq!(subscription_poll_timeout(None, || spent), maximum);
+        }
+        assert_eq!(
+            subscription_poll_timeout(None, || panic!("idle path must not read the clock")),
+            maximum
+        );
+        for delay in [
+            Duration::ZERO,
+            Duration::from_nanos(1),
+            Duration::from_millis(1),
+            maximum,
+            Duration::MAX,
+        ] {
+            for spent in [
+                Duration::ZERO,
+                Duration::from_nanos(1),
+                Duration::from_millis(1),
+                Duration::from_millis(20),
+                Duration::MAX,
+            ] {
+                let expected = if spent >= delay {
+                    Duration::ZERO
+                } else {
+                    (delay - spent).min(maximum)
+                };
+                assert_eq!(subscription_poll_timeout(Some(delay), || spent), expected);
+            }
+        }
+    }
+    #[test]
+    fn fixed_attribute_sequences_match_crossterm_for_every_supported_combination() {
+        use crossterm::style::{Attribute, SetAttribute};
+        for mask in 0..8 {
+            let style = Style::default()
+                .attribute(TextAttribute::Bold, mask & 1 != 0)
+                .underline_style(if mask & 2 != 0 {
+                    UnderlineStyle::Single
+                } else {
+                    UnderlineStyle::None
+                })
+                .attribute(TextAttribute::Reverse, mask & 4 != 0);
+            let mut actual = Vec::new();
+            set_style(&mut actual, style).unwrap();
+            let mut reference = Vec::new();
+            ansi::command(&mut reference, SetAttribute(Attribute::Reset)).unwrap();
+            for (enabled, attribute) in [
+                (style.has(TextAttribute::Bold), Attribute::Bold),
+                (
+                    style.attributes.underline() != UnderlineStyle::None,
+                    Attribute::Underlined,
+                ),
+                (style.has(TextAttribute::Reverse), Attribute::Reverse),
+            ] {
+                if enabled {
+                    ansi::command(&mut reference, SetAttribute(attribute)).unwrap();
+                }
+            }
+            assert_eq!(actual, reference);
+        }
+    }
+    #[test]
+    fn all_resolved_attribute_requests_match_reference_sgr_commands() {
+        use crossterm::style::{Attribute, Attributes, SetAttribute, SetAttributes};
+        use matea_style::TextAttributes;
+        let masks: Vec<u16> = if cfg!(miri) {
+            vec![0, 85, 255]
+        } else {
+            (0..=255).collect()
+        };
+        let underlines = if cfg!(miri) {
+            vec![UnderlineStyle::None, UnderlineStyle::Curly]
+        } else {
+            UnderlineStyle::ALL.to_vec()
+        };
+        let blinks = if cfg!(miri) {
+            vec![BlinkStyle::None, BlinkStyle::Rapid]
+        } else {
+            BlinkStyle::ALL.to_vec()
+        };
+        let frames = if cfg!(miri) {
+            vec![TextFrame::None, TextFrame::Encircled]
+        } else {
+            TextFrame::ALL.to_vec()
+        };
+        let reference_flags = [
+            Attribute::Bold,
+            Attribute::Dim,
+            Attribute::Italic,
+            Attribute::Reverse,
+            Attribute::Hidden,
+            Attribute::CrossedOut,
+            Attribute::Fraktur,
+            Attribute::OverLined,
+        ];
+        for mask in masks {
+            for &underline in &underlines {
+                for &blink in &blinks {
+                    for &frame in &frames {
+                        let mut attrs = TextAttributes::new()
+                            .with_underline(underline)
+                            .with_blink(blink)
+                            .with_frame(frame);
+                        let mut expected_attrs = Attributes::default();
+                        for (index, attribute) in TextAttribute::ALL.into_iter().enumerate() {
+                            if mask & (1 << index) != 0 {
+                                attrs = attrs.with(attribute);
+                                expected_attrs.set(reference_flags[index]);
+                            }
+                        }
+                        if let Some(attribute) = match underline {
+                            UnderlineStyle::None => None,
+                            UnderlineStyle::Single => Some(Attribute::Underlined),
+                            UnderlineStyle::Double => Some(Attribute::DoubleUnderlined),
+                            UnderlineStyle::Curly => Some(Attribute::Undercurled),
+                            UnderlineStyle::Dotted => Some(Attribute::Underdotted),
+                            UnderlineStyle::Dashed => Some(Attribute::Underdashed),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        if let Some(attribute) = match blink {
+                            BlinkStyle::None => None,
+                            BlinkStyle::Slow => Some(Attribute::SlowBlink),
+                            BlinkStyle::Rapid => Some(Attribute::RapidBlink),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        if let Some(attribute) = match frame {
+                            TextFrame::None => None,
+                            TextFrame::Framed => Some(Attribute::Framed),
+                            TextFrame::Encircled => Some(Attribute::Encircled),
+                        } {
+                            expected_attrs.set(attribute);
+                        }
+                        let mut actual = Vec::new();
+                        set_style(
+                            &mut actual,
+                            Style {
+                                attributes: attrs,
+                                ..Style::default()
+                            },
+                        )
+                        .unwrap();
+                        let mut expected = Vec::new();
+                        ansi::command(&mut expected, SetAttribute(Attribute::Reset)).unwrap();
+                        ansi::command(&mut expected, SetAttributes(expected_attrs)).unwrap();
+                        assert_eq!(actual, expected, "{mask} {underline:?} {blink:?} {frame:?}");
+                    }
+                }
+            }
+        }
+    }
+    #[test]
+    fn underline_color_headers_and_resolved_attribute_removal_are_explicit() {
+        for (color, expected) in [
+            (Color::Default, "\x1b[0m\x1b[4:3m"),
+            (Color::Indexed(0), "\x1b[0m\x1b[58;5;0m\x1b[4:3m"),
+            (Color::Indexed(255), "\x1b[0m\x1b[58;5;255m\x1b[4:3m"),
+            (
+                Color::Rgb(13, 41, 227),
+                "\x1b[0m\x1b[58;2;13;41;227m\x1b[4:3m",
+            ),
+        ] {
+            let style = Style::default()
+                .bold()
+                .attribute(TextAttribute::Bold, false)
+                .underline_style(UnderlineStyle::Curly)
+                .underline_color(color);
+            let mut bytes = Vec::new();
+            set_style(&mut bytes, style).unwrap();
+            assert_eq!(bytes, expected.as_bytes());
+            bytes.clear();
+            set_style(&mut bytes, Style::default()).unwrap();
+            assert_eq!(bytes, b"\x1b[0m");
+        }
+    }
+    #[test]
+    fn style_patch_resets_and_false_intents_reach_literal_terminal_commands() {
+        use matea_style::StylePatch;
+        let base = Style::default()
+            .fg(Color::Indexed(2))
+            .bg(Color::Rgb(1, 2, 3))
+            .underline_color(Color::Indexed(5))
+            .bold()
+            .italic()
+            .underline_style(UnderlineStyle::Double)
+            .blink(BlinkStyle::Rapid)
+            .text_frame(TextFrame::Framed);
+        let patch = StylePatch::reset().then(
+            StylePatch::new()
+                .fg(Color::Indexed(4))
+                .underline_style(UnderlineStyle::Single),
+        );
+        let mut bytes = Vec::new();
+        set_style(&mut bytes, base.patched(patch)).unwrap();
+        assert_eq!(bytes, b"\x1b[0m\x1b[34m\x1b[4m");
+        bytes.clear();
+        set_style(
+            &mut bytes,
+            Style::default()
+                .bold()
+                .patched(StylePatch::new().attribute(TextAttribute::Bold, false)),
+        )
+        .unwrap();
+        assert_eq!(bytes, b"\x1b[0m");
+    }
     use matea_core::{Effect, ViewContext};
     use matea_render::View;
     use std::sync::{Arc, Mutex};
+    #[test]
+    fn ctrl_c_policy_delivers_releases_and_other_modifier_chords() {
+        use matea_core::{Key, KeyKind};
+        use std::collections::VecDeque;
+        struct Keys(Arc<Mutex<Vec<Key>>>);
+        impl Model for Keys {
+            type Message = ();
+            fn update(&mut self, event: Event<()>) -> Effect<()> {
+                if let Event::Input(Input::Key(key)) = event {
+                    self.0.lock().unwrap().push(key);
+                    if key.is_char('q') {
+                        return Effect::quit();
+                    }
+                }
+                Effect::none()
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("keys")
+            }
+        }
+        struct Events {
+            events: VecDeque<TerminalEvent>,
+            restored: Arc<Mutex<bool>>,
+        }
+        impl Backend for Events {
+            fn enter(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn restore(&mut self) -> io::Result<()> {
+                *self.restored.lock().unwrap() = true;
+                Ok(())
+            }
+            fn size(&self) -> io::Result<Size> {
+                Ok(Size::new(8, 1))
+            }
+            fn poll(&mut self, _: Duration) -> io::Result<Option<TerminalEvent>> {
+                Ok(self.events.pop_front().or(Some(TerminalEvent::Interrupt)))
+            }
+            fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let c = Key::new(KeyCode::Char('c')).with_modifiers(Modifiers::CONTROL);
+        for (behavior, expected) in [(CtrlCBehavior::Quit, 2), (CtrlCBehavior::Deliver, 4)] {
+            let keys = Arc::new(Mutex::new(Vec::new()));
+            let restored = Arc::new(Mutex::new(false));
+            let events = [
+                c.with_kind(KeyKind::Release),
+                c.with_modifiers(Modifiers::CONTROL | Modifiers::ALT),
+                c,
+                Key::new(KeyCode::Char('q')),
+            ]
+            .into_iter()
+            .map(|k| TerminalEvent::Input(Input::Key(k)))
+            .collect();
+            run_with_backend_and_ctrl_c(
+                Keys(keys.clone()),
+                Theme::plain(),
+                Events {
+                    events,
+                    restored: restored.clone(),
+                },
+                behavior,
+            )
+            .unwrap();
+            assert_eq!(keys.lock().unwrap().len(), expected);
+            assert!(*restored.lock().unwrap());
+        }
+        assert!(ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SHIFT)
+        ));
+        assert!(!ctrl_c(c.with_kind(KeyKind::Release)));
+        assert!(!ctrl_c(
+            c.with_modifiers(Modifiers::CONTROL | Modifiers::SUPER)
+        ));
+    }
     struct App {
         panic: bool,
     }
@@ -491,7 +730,13 @@ mod tests {
         fn size(&self) -> io::Result<Size> {
             Ok(Size::new(4, 2))
         }
-        fn poll(&mut self, _: Duration) -> io::Result<Option<TerminalEvent>> {
+        fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>> {
+            if self.fail == "short-poll" {
+                assert!(
+                    timeout <= Duration::from_millis(1),
+                    "1ms subscription postponed by input wait {timeout:?}"
+                );
+            }
             Ok(Some(TerminalEvent::Interrupt))
         }
         fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
@@ -502,6 +747,100 @@ mod tests {
                 Ok(())
             }
         }
+    }
+    #[test]
+    fn input_wait_respects_a_short_subscription_deadline() {
+        struct ShortClock;
+        impl Model for ShortClock {
+            type Message = ();
+            fn update(&mut self, _: Event<()>) -> Effect<()> {
+                Effect::none()
+            }
+            fn subscriptions(&self) -> Vec<matea_core::Subscription<()>> {
+                vec![matea_core::Subscription::every(
+                    "short",
+                    Duration::from_millis(1),
+                    || (),
+                )]
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("tick")
+            }
+        }
+        let log = Arc::new(Mutex::new(Vec::new()));
+        run_with_backend(
+            ShortClock,
+            Theme::plain(),
+            Mock {
+                log: log.clone(),
+                fail: "short-poll",
+            },
+        )
+        .unwrap();
+        assert_eq!(log.lock().unwrap().last(), Some(&"restore"));
+    }
+    #[test]
+    fn subscription_started_by_input_does_not_inherit_the_previous_input_wait() {
+        struct StartClock(bool);
+        impl Model for StartClock {
+            type Message = ();
+            fn update(&mut self, event: Event<()>) -> Effect<()> {
+                match event {
+                    Event::Input(_) => self.0 = true,
+                    Event::Message(()) => return Effect::quit(),
+                    _ => {}
+                }
+                Effect::none()
+            }
+            fn subscriptions(&self) -> Vec<matea_core::Subscription<()>> {
+                if self.0 {
+                    vec![matea_core::Subscription::every(
+                        "new-clock",
+                        Duration::from_millis(2),
+                        || (),
+                    )]
+                } else {
+                    Vec::new()
+                }
+            }
+            fn view(&self, _: ViewContext<'_>) -> View {
+                View::text("clock")
+            }
+        }
+        struct StartInput(Arc<Mutex<usize>>);
+        impl Backend for StartInput {
+            fn enter(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn restore(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+            fn size(&self) -> io::Result<Size> {
+                Ok(Size::new(8, 1))
+            }
+            fn draw(&mut self, _: &Surface, _: Option<&Surface>) -> io::Result<()> {
+                Ok(())
+            }
+            fn poll(&mut self, timeout: Duration) -> io::Result<Option<TerminalEvent>> {
+                let mut calls = self.0.lock().unwrap();
+                *calls += 1;
+                if *calls == 1 {
+                    std::thread::sleep(Duration::from_millis(10));
+                    Ok(Some(TerminalEvent::Input(Input::Key(
+                        matea_core::Key::new(matea_core::KeyCode::Char('s')),
+                    ))))
+                } else {
+                    std::thread::sleep(timeout);
+                    Ok(None)
+                }
+            }
+        }
+        let calls = Arc::new(Mutex::new(0));
+        run_with_backend(StartClock(false), Theme::plain(), StartInput(calls.clone())).unwrap();
+        assert!(
+            *calls.lock().unwrap() >= 2,
+            "new 2ms subscription fired using the 10ms wait before it existed"
+        );
     }
     #[test]
     fn restoration_on_success_failure_and_unwind() {
@@ -535,10 +874,12 @@ mod tests {
         assert!(!caps.unicode);
         let event = event::KeyEvent::new_with_kind(
             event::KeyCode::Char('a'),
-            KeyModifiers::NONE,
-            KeyEventKind::Release,
+            event::KeyModifiers::NONE,
+            event::KeyEventKind::Release,
         );
-        assert!(translate(event::Event::Key(event)).is_none());
+        assert!(
+            matches!(translate_event(event::Event::Key(event)),TerminalEvent::Input(Input::Key(key)) if key.kind==matea_core::KeyKind::Release)
+        );
     }
     #[test]
     fn diff_transport_clears_wide_rows_and_is_idle_when_equal() {
@@ -558,5 +899,46 @@ mod tests {
         out.clear();
         write_frame(&mut out, &b, Some(&b), caps).unwrap();
         assert!(out.is_empty());
+    }
+    #[test]
+    fn sparse_ascii_damage_preserves_unchanged_cells_and_styles() {
+        let a = View::text("aaaa").render(Size::new(4, 1)).unwrap();
+        let b = View::text("abaa").render(Size::new(4, 1)).unwrap();
+        let caps = Capabilities {
+            color: ColorLevel::None,
+            unicode: true,
+            reduced_motion: true,
+        };
+        let mut out = Vec::new();
+        write_frame(&mut out, &b, Some(&a), caps).unwrap();
+        let s = String::from_utf8(out).unwrap();
+        assert!(s.contains("\x1b[1;2H"));
+        assert!(!s.contains("\x1b[2K"));
+        assert_eq!(s.chars().filter(|&c| c == 'b').count(), 1);
+        assert!(!s.contains('a'));
+        let bold = View::styled("abaa", Style::default().bold())
+            .render(Size::new(4, 1))
+            .unwrap();
+        let mut out = Vec::new();
+        write_frame(&mut out, &bold, Some(&b), caps).unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[1m"));
+    }
+    #[test]
+    fn resize_to_empty_still_clears_old_content() {
+        let a = View::text("old").render(Size::new(4, 1)).unwrap();
+        let b = View::text("").render(Size::new(0, 0)).unwrap();
+        let mut out = Vec::new();
+        write_frame(
+            &mut out,
+            &b,
+            Some(&a),
+            Capabilities {
+                color: ColorLevel::None,
+                unicode: true,
+                reduced_motion: true,
+            },
+        )
+        .unwrap();
+        assert!(String::from_utf8(out).unwrap().contains("\x1b[2J"));
     }
 }

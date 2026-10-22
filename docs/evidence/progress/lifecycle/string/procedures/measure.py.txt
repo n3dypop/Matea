@@ -1,0 +1,55 @@
+"""Balanced same-caller Progress experiment; ordinary timings then child RSS."""
+import hashlib,json,os,platform,subprocess,sys,time
+from pathlib import Path
+if not __debug__:raise RuntimeError('measurement refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/progress/lifecycle/string';sys.path.insert(0,str(ROOT/'scripts'))
+from measure_reader_performance import source_snapshot
+from performance_records import read_records,read_probe_outputs,summary
+from fetch_upstream_issues import atomic_json
+sha=lambda b:hashlib.sha256(b).hexdigest()
+heads={'before':'82728c35ea822f14d5770cc65f559ed5840c76af','candidate':'34b1ac3a7b50a738787064606e3a7bd5355b0688'}
+binaries={'before':Path('/private/tmp/matea-progress-before-surface'),'candidate':Path('/private/tmp/matea-progress-string-candidate')}
+flags={'frames':'--progress','controls':'--progress-lifecycle'}
+current=source_snapshot(heads['candidate']);sources={label:{n:sha(subprocess.check_output(['git','show',head+':'+n])) for n in current} for label,head in heads.items()}
+for n in ['tools/perf-probe/src/progress.rs','tools/perf-probe/src/measurement.rs','tools/perf-probe/src/main.rs']:assert sources['before'][n]==sources['candidate'][n],n
+hashes={label:sha(p.read_bytes()) for label,p in binaries.items()}
+env={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+output_env={**env,'MATEA_PROBE_OUTPUT_ONLY':'1'}
+context={'schema':1,'status':'running','heads':heads,'source_sha256':sources,'binary_sha256':hashes,'procedure_sha256':sha(Path(__file__).read_bytes()),'platform':platform.platform(),'python':sys.version,'environment':{k:env[k] for k in ['MATEA_PERF_ITERATIONS','MATEA_PERF_MIN_SAMPLE_NS']},'runs':[],'rss':[],'limits':['No local owned builds, tests, LLVM, Miri or downloads overlap ordinary timing.','Same 27 cases and hot caller across both source heads; complete outputs and first returns match.','Nine lifecycle controls include fresh construction/drop, all named validation/assertion work; six scale controls include full render and all-cell checksum. These fifteen have no upstream timing ratio.','Existing six matched complete frames and six distinct borrowed-cell controls retain their established semantics; this experiment reports old/new Rust costs, not a fresh Go speed ratio.','Native one-host calibrated batches and distinct-child process RSS; requested allocations are separate operations. No outlier deletion or retries.','Candidate targeted ten widget/ten probe tests and independent literal scale projections pass; previous 44-check full native evidence is historical, not reattributed to candidate.']}
+atomic_json(BASE/'measurement-context.json',context)
+try:
+ oracles={}
+ for label in binaries:
+  oracles[label]={}
+  for group,flag in flags.items():
+   raw=subprocess.check_output([str(binaries[label]),flag],env=output_env,timeout=60);(BASE/f'{label}-{group}-outputs.jsonl').write_bytes(raw);oracles[label][group]=read_probe_outputs(raw.decode())
+ for group in flags:assert oracles['before'][group]==oracles['candidate'][group],group
+ assert len(oracles['before']['frames'])==12 and len(oracles['before']['controls'])==15
+ prior=read_probe_outputs((ROOT/'docs/evidence/progress/matea-outputs.jsonl').read_text());assert prior==oracles['before']['frames']
+ all_records=[]
+ for number,label in enumerate(['before','candidate','candidate','before'],1):
+  for group,flag in flags.items():
+   result=subprocess.run([str(binaries[label]),flag],env=env,capture_output=True,timeout=180)
+   name=f'run-{number}-{label}-{group}';(BASE/(name+'.jsonl')).write_bytes(result.stdout);(BASE/(name+'.stderr')).write_bytes(result.stderr)
+   assert result.returncode==0,(label,group,result.stderr.decode())
+   records=read_records(result.stdout.decode());assert records.keys()==oracles[label][group].keys()
+   for n,r in records.items():
+    assert all(r[k]==oracles[label][group][n][k] for k in ['semantics','output','first_return_value']),n
+    assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20000000 and all(len(b['confirmations_ns'])==2 for b in r['calibration']['batches'])
+   entry={'run':number,'label':label,'group':group,'raw':name+'.jsonl','raw_sha256':sha(result.stdout),'cases':len(records)};context['runs'].append(entry);all_records.append((entry,records));atomic_json(BASE/'measurement-context.json',context);print(name,len(records),flush=True)
+ # All ordinary measurements above finish before the RSS pass. Each invocation
+ # runs one whole output-only fixture group; RSS is not a per-frame estimate.
+ for label in binaries:
+  for group,flag in flags.items():
+   expected=(BASE/f'{label}-{group}-outputs.jsonl').read_bytes();values=[]
+   for sample in range(31):
+    import re
+    name=f'rss-{label}-{group}-{sample}.txt';result=subprocess.run(['/usr/bin/time','-l',str(binaries[label]),flag],env=output_env,capture_output=True,timeout=60);(BASE/name).write_bytes(result.stderr)
+    assert result.returncode==0 and result.stdout==expected,(label,group,sample)
+    match=re.search(rb'(\d+)\s+maximum resident set size',result.stderr);assert match is not None;values.append(int(match.group(1)))
+   context['rss'].append({'label':label,'group':group,'peak_rss_bytes':values,'raw_sha256':{f'rss-{label}-{group}-{i}.txt':sha((BASE/f'rss-{label}-{group}-{i}.txt').read_bytes()) for i in range(31)}});atomic_json(BASE/'measurement-context.json',context);print('rss',label,group,31,flush=True)
+ assert source_snapshot(heads['candidate'])==current
+ assert hashes=={label:sha(p.read_bytes()) for label,p in binaries.items()}
+ context['status']='complete';atomic_json(BASE/'measurement-context.json',context)
+except BaseException as e:
+ context.update(status='failed',error=str(e));atomic_json(BASE/'measurement-context.json',context);raise

@@ -1,0 +1,20 @@
+package main
+import (
+ "encoding/json"
+ "os"
+ "charm.land/bubbles/v2/viewport"
+)
+func main() {
+ lines:=[]string{"tea","coffee"}
+ m:=viewport.New(viewport.WithWidth(3),viewport.WithHeight(2))
+ m.SetContentLines(lines)
+ initial:=m.GetContent()
+ lines[0]="abcdefghijklmnop"
+ observed:=m.GetContent()
+ m.ScrollRight(100)
+ normalized:=[]string{"tea\r\ncoffee","抹茶"}
+ n:=viewport.New(viewport.WithWidth(20),viewport.WithHeight(3))
+ n.SetContentLines(normalized)
+ if initial!="tea\ncoffee" || observed!="abcdefghijklmnop\ncoffee" || m.XOffset()!=3 || normalized[0]!="tea\ncoffee" {panic("source observation changed")}
+ json.NewEncoder(os.Stdout).Encode(map[string]any{"initial_content":initial,"content_after_caller_slice_mutation":observed,"horizontal_offset_after_scroll_to_end":m.XOffset(),"expected_offset_for_current_longest_line":13,"caller_slice_after_crlf_normalization":normalized,"normalized_viewport_content":n.GetContent(),"scope":"public API only; no edited sources, reflection, concurrency or private field reads"})
+}

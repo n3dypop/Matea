@@ -1,0 +1,16 @@
+"""Verify publication Git bytes for the qualified current corner increment."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-corners';sha=lambda raw:hashlib.sha256(raw).hexdigest()
+sys.path.insert(0,str(r/'scripts'));from check_quality import execution_inputs,validate_native,validate_coverage
+n=json.loads((r/'docs/evidence/local-validation.json').read_bytes());validate_native(n,r);validate_coverage(json.loads((r/'docs/evidence/quality/rust-execution-coverage.json').read_bytes()),r)
+ci=json.loads((b/'ci-bindings.json').read_bytes());q=json.loads((b/'qualification.json').read_bytes())
+assert q['status']=='qualified_for_corner_increment_only' and ci['status']=='qualified';assert n['source_sha256']==ci['ci_execution_input_sha256']
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+for names in [n['source_sha256'],ci['raw_files']]:
+ for name,digest in names.items():
+  raw=subprocess.check_output(['git','show',head+':'+name]);assert sha(raw)==digest,(name,'Git blob differs from verified bytes')
+assert not subprocess.check_output(['git','ls-files','--','AGENTS.md','references/**','.agents/**'])
+result={'schema':1,'status':'verified','source_publication_commit':head,'qualified_ci_commit':ci['source_commit'],'qualified_ci_run':ci['run'],'execution_input_git_blobs':len(n['source_sha256']),'raw_ci_git_blobs':len(ci['raw_files']),'maintained_programs':163,'below_high_axes':47,'active_reference_axis_complete':False,'score_changes':[],'source_sha256':n['source_sha256'],'limits':['Historical publication proof for the qualified corner increment.','All212 execution-input bytes exactly match the qualified CI commit;no assessment-only exception.','No performance measurements,image engine or CUDA work;no other axis promotion.'],'procedure_sha256':sha(Path(__file__).read_bytes())}
+(b/'publication.json').write_text(json.dumps(result,indent=2)+'\n')
+print('Verified',len(n['source_sha256']),'input Git blobs and',len(ci['raw_files']),'raw CI Git blobs at',head)

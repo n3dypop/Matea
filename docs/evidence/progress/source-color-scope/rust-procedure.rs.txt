@@ -1,0 +1,14 @@
+use matea_style::{Color, Gradient, Theme};
+use matea_render::Size;
+use matea_widgets::{Progress, ProgressFill};
+fn rgb(c:Color)->String {let Color::Rgb(r,g,b)=c else {panic!("RGB fixture")};format!("[{r},{g},{b}]")}
+fn main(){
+ for steps in [2,3,6,17] {
+  let colors=Gradient::new(&[[0,0,0],[1,1,1]]).unwrap().colors(steps).map(rgb).collect::<Vec<_>>();
+  println!("{{\"case\":\"low-gradient/{steps}\",\"colors\":[{}]}}", colors.join(","));
+ }
+ let mut p=Progress::new();p.set_width(3);p.show_percentage=false;p.set_glyphs('█','░').unwrap();
+ p.fill=ProgressFill::Gradient{gradient:Gradient::new(&[[0,0,0],[1,1,1]]).unwrap(),scaled:false};
+ let frame=p.view_as(1.0,&Theme::plain()).unwrap().render(Size::new(3,1)).unwrap();
+ println!("{{\"case\":\"progress/low-gradient/3\",\"colors\":[{}]}}",frame.row(0).iter().map(|c|rgb(c.style().fg)).collect::<Vec<_>>().join(","));
+}

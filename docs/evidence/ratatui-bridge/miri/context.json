@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "seed": 317,
+  "flags": "-Zmiri-seed=317",
+  "toolchain": "miri 0.1.0 (6f5da406b5 2026-10-10)",
+  "commands": [
+    {
+      "command": "cargo +nightly miri test --offline --locked -p matea-render --test surface_snapshot",
+      "passed": 7,
+      "seconds": 37.48
+    },
+    {
+      "command": "cargo +nightly miri test --offline --locked -p matea-ratatui --test bridge",
+      "passed": 8,
+      "seconds": 142.0
+    }
+  ],
+  "targeted_source_sha256": {
+    "crates/matea-render/src/lib.rs": "124e6ae3c0c95d4802a62c3e8c9e3b77a1884184cce4f83b38c34789ccd6637d",
+    "crates/matea-render/src/snapshot.rs": "7578bc33049c9e2b670e31303c9a43fd6f4c1334c36d463f0375ac2c25213fe7",
+    "crates/matea-render/tests/surface_snapshot.rs": "ab6777221ba8c977318bfd341b3f4a69cfb394c069b3373a57786fdd401b1412",
+    "crates/matea-ratatui/src/lib.rs": "e2e03f6a7f3ae87bf4308eed4f6917eda674df5da5f61df156dd0f9d47908456",
+    "crates/matea-ratatui/tests/bridge.rs": "d4a7a1913222df7eca1c1d72eeea4d2f5ee86df2fb462729edf81903641e188b",
+    "crates/matea-ratatui/Cargo.toml": "27c3db227b76352159ac29b23c98235daa04fd74a328293cb0fe55be1a54401c",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4"
+  },
+  "logs_sha256": {
+    "snapshot.log": "d4470ef1efcc398bf638fd836a01ab298b1291db435cdbdf3804adbfe5081bf3",
+    "bridge.log": "af2cdefb73d98959138ea7e22dd205523459dab95470b12074876c04e1b4264d"
+  },
+  "limits": [
+    "Targeted default-profile tests only; no complete runtime or soundness proof.",
+    "Miri clips randomized copy steps from 4096 to 96 and indexed color range from 256 to 8; full bounds execute in native tests."
+  ]
+}

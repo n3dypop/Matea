@@ -1,0 +1,76 @@
+"""Publish the actual final assessment-input native and LLVM checkpoint."""
+import hashlib,json,re,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('finalizer refuses -O')
+root=Path.cwd();base=root/'docs/evidence/kitty-controls';out=base/'final-native';out.mkdir(exist_ok=True);sys.path.insert(0,str(root/'scripts'))
+from check_quality import validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root);assert len(native['checks'])==47
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes());validate_coverage(coverage,root);assert coverage['input_sha256']==native['source_sha256']
+subprocess.run(['python3',str(out/'llvm-diagnostic-procedure.py.txt')],check=True)
+subprocess.run(['python3','scripts/check_quality.py','--report'],check=True)
+subprocess.run(['python3','docs/evidence/precise-color-inputs/native/gate-snapshot.py.txt'],check=True)
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes());assert gate['program_files']==158 and gate['review_units']==44 and gate['below_high_axes']==48 and gate['below_high_dimensions']=={'reference':21,'performance':27}
+assert gate['pending_issue_reports']==822 and gate['stage_b']=='not_started' and gate['f5']=='closed'
+regular=sum(map(int,re.findall(r'test result: ok\. (\d+) passed;', (root/'docs/evidence/all-targets.log').read_text())))
+total=sum(map(int,re.findall(r'test result: ok\. (\d+) passed;', (root/'docs/evidence/test.log').read_text())))
+py=(root/'docs/evidence/optimized-python-tests.log').read_text();assert 'Ran 146 tests' in py and 'OK (skipped=2)' in py
+assert regular==285 and total-regular==14
+metrics={'schema':1,'native_commands':47,'rust_regular_passed':regular,'rust_doctests_passed':total-regular,'python_tests':146,'python_conditional_skips':2,'miri_kitty_tests':8,'miri_seed':233,'llvm_source_paths':len(coverage['files']),'llvm_instances':sum(len(f['instances']) for f in coverage['files']),'pty_checks':len(re.findall(r'^PASS ',(root/'docs/evidence/pty-smoke.log').read_text(),re.M)),'execution_inputs':len(native['source_sha256']),'derivation':'Actual all-target test-result sum; workspace sum minus all-target gives doctests. Python optimized discovery, native driver journal, source-bound Miri and canonical LLVM instances are separate evidence.'}
+assert metrics['llvm_source_paths']==97 and metrics['llvm_instances']==104 and metrics['execution_inputs']==200
+(out/'metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
+for n in ['local-validation.json','all-targets.log','test.log','optimized-python-tests.log','pty-smoke.log']:shutil.copy2(root/'docs/evidence'/n,out/n)
+for n in ['report.json','rust-execution-coverage.json','final-gate-status.json']:shutil.copy2(root/'docs/evidence/quality'/n,out/n)
+audit=root/'docs/kitty-controls-audit.md';text=audit.read_text();text=text.replace('# Typed Kitty controls: implementation candidate','# Typed Kitty controls and prepared payloads',1).replace('Status: native correctness, matched distributions and eight targeted Miri tests\ncomplete; changed-source three-OS/MSRV qualification is being collected. Full protocol','Status: implemented slice qualified at 0c95c37 with actual-source native,\nthree-OS/MSRV, matched performance and targeted Miri evidence. Full protocol',1)
+text+='''
+## Exact-source qualification and remaining scope
+
+[All seven required CI jobs](https://github.com/n3dypop/Matea/actions/runs/39581387396)
+succeed. The [artifact binding](evidence/kitty-controls/ci-source-bindings.json)
+matches 200 inputs to source Git blobs. Every host completes 47 native checks;
+each release log includes seven new regressions and the unchanged legacy Kitty
+regression. LLVM records 97 paths/104 instances on Linux/macOS and 96/102 on
+Windows. Omitted uploaded logs remain explicit. Native device tests pass twelve
+cases per Unix host and nine in disposable Windows consoles, without implying
+graphics protocol support in those consoles.
+
+The [final assessment-input suite](evidence/kitty-controls/final-native/metrics.json)
+also passes all 47 checks: Rust 285 plus 14 doctests, Python 146 with two
+conditional skips, Miri eight pure tests and LLVM 97 paths/104 instances. Three
+transitive hashbrown zero-hash profile warnings remain diagnosed and retained;
+these results do not prove all branches, dependencies or physical terminals.
+
+The [declaration review](evidence/kitty-controls/declaration-review.json) records
+all 82 raw Kitty declarations: 64 bounded implemented roles, two partial roles
+and sixteen pending roles. Existing raw declarations were already linked to a
+partial capability, so this does not artificially reduce unlinked counts.
+Full writer/media lifecycle, placeholder/diacritic and codec roles remain
+explicit. Source C loss is fixed in Matea's parser. The old #926 negative-z
+assessment is revalidated by a byte-identical legacy body, new CI and Miri; its
+65,633-case source comparison remains historical and was not repeated.
+
+Four portability dimensions return to 75 after qualification. Whole protocol
+reference/performance stay 50; 48 global axes remain below 75 (21 reference,
+27 performance), with 822 issue reports pending. Stage A continues; Stage B,
+F5, image engine and CUDA remain gated.
+'''
+audit.write_text(text)
+report=root/'docs/foundation-gate-report.md';text=report.read_text();prefix='# Matea Foundation gate report\n\n';assert text.startswith(prefix)
+candidate='進行中の追加候補:';offset=text.find('現在の検証済み実装63ef696');assert candidate in text[:offset]
+new='''現在の検証済み実装0c95c37は158 program／44評価単位、未達48軸（参照元一致21・性能27）です。
+Kittyの型付き制御値・上限付き分割送信を実装し、参照元が読み落とすC=1を保持します。
+105計測・3,255標本・62 RSS子プロセスを照合しました。出力一致14ケースは全3試行でp50/p95が参照元側より短く、空ペイロードの区切り差とRust固有5経路は速度比から除外しています。
+分割送信の比較は参照元の公開部品の合成で、画像ライター全体の互換性・性能とは扱いません。
+[必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39581387396)と200入力・生ログを照合し、移植性4軸を再確定しました。
+最終評価入力の47検証・Rust285＋14 doctest・Python146（条件付きskip 2）・Miri8・LLVM97 source／104 instanceが成功しました。
+既存#926は関数本体が同一である証拠と現在の回帰試験で再検証し、以前の65,633ケース測定は繰り返していません。
+依存profilingの3警告を保持しています。[範囲・全記録・残件](kitty-controls-audit.md)。
+プロトコル全体の参照元一致・性能は50です。未評価報告822件、未対応付け6,683宣言、部分／未測定21能力、91 module verdict、未解決Rust export graph 2等が残ります。
+今回の追加は公開機能の不足を埋めるもので、未達48軸の純減とは扱いません。Stage Aを継続し、Stage B／F5は閉じています。画像エンジン／CUDAには着手していません。
+
+以下は直前までの検証履歴です。
+
+'''
+report.write_text(prefix+new+text[offset:])
+manifest={'schema':1,'status':'complete','metrics':metrics,'source_input_sha256':native['source_sha256'],'procedure_sha256':sha(Path(__file__).read_bytes()),'archive_sha256':{p.name:sha(p.read_bytes()) for p in out.iterdir() if p.is_file() and p.name!='archive.json'}}
+(out/'archive.json').write_text(json.dumps(manifest,indent=2)+'\n');print('Final: 48 unmet axes / 822 pending reports; native 47, Rust 285+14, Python 146/skip2, Miri8, LLVM97/104')

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source_head": "6ffc1eae6cadb7204c4ac45cee14579d198de8e7",
+  "reviewed_issues": [
+    128,
+    237,
+    862,
+    867,
+    1007
+  ],
+  "original_reviews": {
+    "1007": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2026-06-26T01:41:30Z",
+      "notes": "A captured source timer tick survives pause/resume because its tag never advances. Matea invalidates generations and rejects stale/duplicate/foreign timestamps in deterministic clock and Runtime tests.",
+      "evidence_sha256": {
+        "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+        "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+        "docs/evidence/cursor/clocks-revalidation.log": "7a1abd6e4f273cbb069a264e7d47b28a97b91ef98bfdf5880cb33c76bc1c5000",
+        "docs/evidence/cursor/clocks-source-recheck.json": "6e29dc80b5c54b6e79693558bb757ca81d909f94689ca31b6d64dd7d8f872d53",
+        "docs/evidence/progress/native/test.log": "f656811c9f2a4371920b913196460bbaaea5aa0e8f6b9b42842b559b787eb233",
+        "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483"
+      },
+      "scope": "Eight native clock regressions rerun at 0199793 after adding a private Progress tick-acceptance helper; existing clock tests are unchanged. All 145 known inputs and full test-log hashes independently verified on Linux, Windows and macOS. Original source observations and limits retained; no physical scheduling guarantee or historical environment reproduction claimed."
+    },
+    "867": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2026-03-19T21:33:25Z",
+      "notes": "Two public source starts produce two callbacks. Matea start is idempotent and retains one subscription; injected-clock tests verify reconciliation, without a real-time wake guarantee.",
+      "evidence_sha256": {
+        "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+        "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+        "docs/evidence/cursor/clocks-revalidation.log": "7a1abd6e4f273cbb069a264e7d47b28a97b91ef98bfdf5880cb33c76bc1c5000",
+        "docs/evidence/cursor/clocks-source-recheck.json": "6e29dc80b5c54b6e79693558bb757ca81d909f94689ca31b6d64dd7d8f872d53",
+        "docs/evidence/progress/native/test.log": "f656811c9f2a4371920b913196460bbaaea5aa0e8f6b9b42842b559b787eb233",
+        "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483"
+      },
+      "scope": "Eight native clock regressions rerun at 0199793 after adding a private Progress tick-acceptance helper; existing clock tests are unchanged. All 145 known inputs and full test-log hashes independently verified on Linux, Windows and macOS. Original source observations and limits retained; no physical scheduling guarantee or historical environment reproduction claimed."
+    },
+    "862": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2026-03-11T03:50:44Z",
+      "notes": "Pinned constructor observation confirms a zero default interval. Matea uses one second and validates positive periods; no infinite source loop or CPU-spin measurement was executed.",
+      "evidence_sha256": {
+        "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+        "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+        "docs/evidence/cursor/clocks-revalidation.log": "7a1abd6e4f273cbb069a264e7d47b28a97b91ef98bfdf5880cb33c76bc1c5000",
+        "docs/evidence/cursor/clocks-source-recheck.json": "6e29dc80b5c54b6e79693558bb757ca81d909f94689ca31b6d64dd7d8f872d53",
+        "docs/evidence/progress/native/test.log": "f656811c9f2a4371920b913196460bbaaea5aa0e8f6b9b42842b559b787eb233",
+        "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483"
+      },
+      "scope": "Eight native clock regressions rerun at 0199793 after adding a private Progress tick-acceptance helper; existing clock tests are unchanged. All 145 known inputs and full test-log hashes independently verified on Linux, Windows and macOS. Original source observations and limits retained; no physical scheduling guarantee or historical environment reproduction claimed."
+    },
+    "237": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2023-11-15T23:28:08Z",
+      "notes": "Source advances nominal periods and can lose delayed elapsed time. Matea accounts monotonic elapsed time and coalesced late handling in injected-clock tests. The report's wall-clock figures were not reproduced; physical scheduling accuracy remains unverified.",
+      "evidence_sha256": {
+        "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+        "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+        "docs/evidence/cursor/clocks-revalidation.log": "7a1abd6e4f273cbb069a264e7d47b28a97b91ef98bfdf5880cb33c76bc1c5000",
+        "docs/evidence/cursor/clocks-source-recheck.json": "6e29dc80b5c54b6e79693558bb757ca81d909f94689ca31b6d64dd7d8f872d53",
+        "docs/evidence/progress/native/test.log": "f656811c9f2a4371920b913196460bbaaea5aa0e8f6b9b42842b559b787eb233",
+        "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483"
+      },
+      "scope": "Eight native clock regressions rerun at 0199793 after adding a private Progress tick-acceptance helper; existing clock tests are unchanged. All 145 known inputs and full test-log hashes independently verified on Linux, Windows and macOS. Original source observations and limits retained; no physical scheduling guarantee or historical environment reproduction claimed."
+    },
+    "128": {
+      "status": "complete",
+      "reference": "bubbles",
+      "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "reviewed_updated_at": "2022-04-08T21:33:50Z",
+      "notes": "Formatting is composed from exposed Duration/ClockText values independently of scheduling. This is an extension request, not a missing pinned public formatting callback. Calendar month policy and arithmetic are not claimed.",
+      "evidence_sha256": {
+        "docs/clocks-audit.md": "aedb7da348d261b37573cb531ad128f323f2cd0b44fffc00343c11296692d054",
+        "docs/evidence/clocks-source-edges.json": "ad87cc3ea3f32727c41c00bc0f526355a42c6dbea587d999f5f9ac964b391ae4",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/src/clocks.rs": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+        "docs/evidence/cursor/clocks-revalidation.log": "7a1abd6e4f273cbb069a264e7d47b28a97b91ef98bfdf5880cb33c76bc1c5000",
+        "docs/evidence/cursor/clocks-source-recheck.json": "6e29dc80b5c54b6e79693558bb757ca81d909f94689ca31b6d64dd7d8f872d53",
+        "docs/evidence/progress/native/test.log": "f656811c9f2a4371920b913196460bbaaea5aa0e8f6b9b42842b559b787eb233",
+        "docs/evidence/progress/ci-source-bindings.json": "25386429d27d644fad042e2664000a6361e17665bbe9f6d49a4c9ea891cc5483"
+      },
+      "scope": "Eight native clock regressions rerun at 0199793 after adding a private Progress tick-acceptance helper; existing clock tests are unchanged. All 145 known inputs and full test-log hashes independently verified on Linux, Windows and macOS. Original source observations and limits retained; no physical scheduling guarantee or historical environment reproduction claimed."
+    }
+  },
+  "structural_delta_sha256": "82b3e345cf278655484c6005e324463f54422ac3ec33c466c675d26fa3b0895f",
+  "ci_source_binding_sha256": "293d4c293d5455b9777050fe6e4d97517ca3e56c4ebf25f314f2dab747afa4a6",
+  "miri_context_sha256": "7dfc189330b087e58998d1756f9f5e85a9ac5f314564eba64b64296b554bc3c6",
+  "current_code_sha256": {
+    "crates/matea-widgets/src/clocks.rs": "8b4e8e51a79075a6c2d6a09a3ddc3c7bc9a9209e4b945145cf5af7b3547e8c1f",
+    "crates/matea-widgets/tests/clocks.rs": "d709b2c30e11bcaeaaf5cbdad8a89d429581d6418fcc7ba9dd936acbae4b01f1"
+  },
+  "scope": "Five existing state/formatting-extension issue contracts only. Their original source/body observations are unchanged. Current native/reference CI and Miri validate the additive Text path; no historical defect, body fetch, timing run or earlier CI is relabeled.",
+  "procedure_sha256": "39bda6479406a03c58b8c189ef5afe046634276a8883298175627eaa2557198b"
+}

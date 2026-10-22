@@ -1,6 +1,6 @@
 # Matea Foundation architecture
 
-Status: implemented experimental Foundation; Linux/Windows/macOS CI and MSRV 1.88 verified; owner approval pending. Image/CUDA implementation is deferred until the Foundation gate.
+Status: experimental Foundation, reopened for full reference coverage. Earlier CI covers the smaller prototype only; current evidence is tracked separately. F5 remains closed. Terminal image encoders are owner-authorized in Foundation; the image processing engine, decoders and CUDA remain deferred.
 
 ```mermaid
 graph LR
@@ -15,6 +15,7 @@ graph LR
     terminal --> crossterm[Crossterm]
     facade[matea facade] --> widgets
     facade --> terminal
+    facade --> motion[matea-motion]
 ```
 
 ## Ownership
@@ -25,8 +26,9 @@ graph LR
 | core | UI-thread transitions, eight effect slots, 32 completion envelopes, 64 subscriptions, generations, timers and focus order | OS input or terminal writes |
 | render | Immutable View tree, geometry, grapheme cells, clipping, layering, row damage | Model mutation, OS terminal commands |
 | style | Color/style/theme values, integer fixed/fill allocation | Terminal I/O or mutable global theme |
-| widgets | Input/list/table/viewport/spinner/form state and Component implementation | Runtime internals or terminal session lifecycle |
+| widgets | Input/list/table/viewport/spinner/form/paginator state and Component implementation | Runtime internals or terminal session lifecycle |
 | terminal | Exclusive session, Crossterm translation, signal shutdown, output batching, restoration | Domain state or layout policy |
+| motion | Cached spring coefficients and explicit-time projectile integration | Timers, threads, renderer or terminal state |
 | facade | Short imports and convenient run entry point | Additional state machine or duplicated contracts |
 
 The Cargo workspace is the repository root; engineering documentation lives in `docs/`. All packages have `publish=false`. Facade and internal crate names have not been checked for registry or trademark availability. Distribution license and API stabilization require owner decisions before publication.
@@ -35,13 +37,27 @@ The Cargo workspace is the repository root; engineering documentation lives in `
 
 See the runnable counter at `crates/matea/examples/counter.rs` and the facade rustdoc. Implement `Model` with an associated Message; Update mutates `&mut self` and returns Effect, View receives size/theme and returns an owned View. Unit tests can create Runtime directly, dispatch input/completion/resize events, advance logical time, and inspect Surface without a terminal. Applications need no executor annotations, macros, terminal setup, or message downcasts.
 
-The live loop reads one input per poll, dispatches it, advances timers, drains up to 32 completions and draws if state may have changed. The renderer suppresses unchanged rows. Update/View remain on the calling thread; only effect closures/messages must be Send. Update must not perform blocking I/O.
+The live loop reads one input per poll, honors an interrupt/configured Ctrl-C
+first, aligns logical time and advances already due timers, dispatches ordinary
+input/resize, then drains up to 32 completions. It draws if state may have changed.
+This prevents newly started subscriptions from inheriting time spent waiting for
+their triggering input. [ADR 0040](decisions/0040-align-logical-time-before-input-dispatch.md)
+records the deterministic ordering. The renderer suppresses unchanged rows.
+Update/View remain on the calling thread; only effect closures/messages must be
+Send. Update must not perform blocking I/O.
+
+Input waiting is capped by `Runtime::next_subscription_delay()` and the existing
+16ms idle bound. Subtract time spent since the last logical advance, including
+rendering; an already due subscription requests a nonblocking poll. This avoids
+quantizing short subscription periods to the idle wait. It does not provide a
+unified wake source for worker completions or hard real-time delivery. See
+[ADR 0039](decisions/0039-deadline-aware-terminal-polling.md).
 
 ## Effects and shutdown
 
 `Effect::perform(id, closure)` produces one typed result. `Effect::batch` starts independent tasks; result ordering is unspecified. `Effect::sequence` consumes one worker slot and emits child results in order; it does not wait for Update before starting the next child. The first child failure stops the sequence. Replacing or canceling an ID invalidates its generation, so queued old results are discarded. At eight workers, new work fails with RuntimeError; canceled workers still count until they actually finish.
 
-Closure errors and unwinding worker panics become `Event::Failure` with the task ID, message and panic flag. An application's failure handler decides recovery. Runtime errors and transport/geometry errors end run and trigger terminal cleanup. On UI-thread panic the driver restores first, then resumes unwinding. The normal panic hook may print before restoration; no global hook is replaced. Cleanup errors are returned on ordinary success/error paths; during panic, cleanup is best effort and the original unwind resumes. Success is never inferred after an I/O restoration failure.
+Closure errors and unwinding worker panics become `Event::Failure` with the task ID, message and panic flag. An application's failure handler decides recovery. Runtime errors and transport/geometry errors end run and trigger terminal cleanup. On UI-thread panic the driver restores first, then resumes unwinding. The normal panic hook may print before restoration; no global hook is replaced. A per-Runtime atomic notice also records caught worker panics independently of cancellation/results; the driver forces a complete cell/cursor/style rebuild before rendering resumes. Cleanup errors are returned on ordinary success/error paths; during panic, cleanup is best effort and the original unwind resumes. Success is never inferred after an I/O restoration failure.
 
 Cancellation is cooperative. `Cancellation::wait` is interruptible; blocking network calls require their own deadlines. Runtime Drop/shutdown cancels tasks and does not wait indefinitely. Unfinished user threads are detached and may outlive the Runtime. They must never own terminal resources or mutate model state directly. The narrow Unix sigaction module saves/restores prior handlers; applications must not replace those handlers concurrently during a live session. SIGKILL/abort cannot run destructors. See ADR 0003/0006 for limitations.
 
@@ -51,10 +67,87 @@ Subscriptions currently implement periodic UI-thread messages, keyed by stable I
 
 Columns use natural/fixed heights unless `fill()` is requested. Rows share available width unless fixed; gaps consume cells first. Fixed space wins over weighted fill. Integer remainder is deterministic from left to right. Text clips rather than wraps. Panels are opaque, ordered layers paint back to front, and all descendants inherit a clip. A wide grapheme is atomic: overwriting either half erases its whole old footprint (including a blank just outside the overlay clip if necessary). A cluster that cannot fit at the right edge is omitted entirely.
 
-Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-width rule. Combining clusters and ZWJ emoji are preserved. Standalone zero-width clusters are omitted. Tabs become four spaces, newlines are structural, C0/C1 control/escape characters become replacement glyphs. No raw ANSI view is accepted. Surfaces reject over 1,048,576 cells. Resize invalidates previous dimensions; each changed row is reset/cleared and leading cells are explicitly positioned. Default blank cells need no writes after the clear. This prioritizes correctness over bandwidth optimization.
+Unicode uses extended graphemes and unicode-width's default non-CJK ambiguous-width rule. Combining clusters and ZWJ emoji are preserved. Standalone zero-width clusters are omitted. Tabs become four spaces, newlines are structural, C0/C1 control/escape characters become replacement glyphs. No raw ANSI view is accepted. Surfaces reject over 1,048,576 cells. Common graphemes are stored inline; longer clusters remain intact on the heap. Sanitization borrows safe input. Resize invalidates previous dimensions, including resize to an empty surface. ASCII-only rows paint changed cells; rows containing uncertain-width graphemes clear and repaint atomically. Default blank cells need no writes after a clear. Output is staged in a reused buffer before a single stdout lock/write. Native transport owns a stateful FrameEncoder that retains cursor/adapted-style state, uses safe CR/BS shortcuts, and invalidates on external output, capability changes and writer errors. The standalone write_frame helper starts fresh. The measured one-cell trace is 2 bytes per update in both encoders; other workloads remain pending. See performance.md.
 
 ## Portability and extensions
 
-The terminal backend trait is public and tested with failure-injecting mocks. Native input handles key press/repeat (release ignored), paste, focus and resize. Mouse, function keys, enhanced keyboard protocol, clipboard, suspend/resume, true inline interactive layout and screen-reader prompt sessions are not implemented. Color capability detection uses environment hints and supports explicit overrides; no graphics support is inferred.
+Frame color policy is resolved in explicit Capabilities; encoding does not read
+Crossterm's process-global color flag. Each FrameEncoder owns a bounded eight-entry
+inline palette cache. Logical mappings may survive physical output invalidation;
+cursor/style/visibility may not. None/TrueColor bypass palette search. Vertical
+changes use absolute row addresses, avoiding LF scrolling and CUU/CUD clamping at
+existing margins. Origin and horizontal-margin modes must be off; automatic mode
+normalization is pending. [ADR 0017](decisions/0017-frame-color-policy-and-bounded-quantization.md)
+records the measured scope and cache policy limits.
 
-See extension-contracts.md for the non-image component example and design-only future graphics ownership. Architecture ADRs 0003–0006 remain open to owner API review; no image/CUDA implementation exists.
+Help composes borrowed binding metadata into short/full layouts without runtime
+coupling. Plain strings and structured views share cell fitting and fragment
+widths; style roles include the key-description gap. Bound zero-width views emit
+nothing, disabled bindings disappear, and untrusted controls are sanitized.
+Rich per-field decorators remain pending. [ADR 0018](decisions/0018-borrowed-and-width-bounded-key-help.md).
+
+Stopwatch/countdown state lives in widgets, using monotonic Instant observations,
+typed identities/generations and positive refresh intervals. UI controls mutate
+state directly; schedules adapt to core subscriptions without per-clock workers.
+Late ticks account for actual elapsed time, stale/duplicate messages are ignored,
+and timeout is a filtered update outcome. Cached values and pure projections are
+distinct. Subscription construction and matched active-scheduler performance
+remain pending. Logical deadlines beyond Duration::MAX are represented as absent,
+avoiding repeat ticks at a saturated timestamp. [ADR 0019](decisions/0019-monotonic-clocks-and-generation-safe-schedules.md).
+
+Cursor hints are local render metadata, translated through the same clip/layout
+as their view. A later opaque glyph/panel covering a hint suppresses it. Wide-cell
+continuations normalize to the lead. The terminal applies native visibility and
+position after cell damage, including frames with cursor-only changes. It hides a
+visible caret during painting. Shape/color/blink and actual-emulator negotiation
+remain pending. The pure encoder calls Crossterm Command::write_ansi directly;
+it never invokes WinAPI based on process-global console detection. Transport mode
+leases still own terminal side effects and restoration. [ADR 0014](decisions/0014-composed-cursor-and-pure-encoding.md).
+
+The terminal backend trait is public and tested with failure-injecting mocks. Transport-neutral input preserves key press/repeat/release, six modifiers, keypad/lock state, function/media/modifier keys, mouse, paste, focus and resize from released Crossterm 0.29. Widgets consume down events; apps can inspect releases. Mouse capture and Kitty keyboard reporting are explicit options; Kitty requests currently fail before setup on the Windows command backend. Automatic keyboard negotiation, richer physical/associated-text data, clipboard, suspend/resume, true inline interactive layout and screen-reader prompt sessions remain pending. Ctrl-C defaults to cleanup/quit and can be delivered to the app. [Input audit and limits](input-audit.md), [ADR 0011](decisions/0011-input-events-and-mode-leases.md).
+
+Terminal acquisition tracks independent alternate-screen, cursor, style, paste, focus, mouse and keyboard leases. Successful restorations are cleared individually; keyboard flags are popped before leaving their alternate-screen stack. Partial I/O still makes remote terminal state uncertain. Color capability detection uses environment hints and supports explicit overrides; no graphics support is inferred.
+
+See extension-contracts.md for the non-image component example and future runtime graphics ownership. Pure Kitty/Sixel encoders are implemented under terminal::protocol (ADR 0009); automatic negotiation, resource reconciliation and real-emulator validation remain pending. matea-motion is independent (ADR 0010). No image processing engine, decoder or CUDA implementation exists. Public APIs remain provisional.
+
+Motion offers a raw IEEE `Spring::sample` and explicitly checked `Spring::step`. Both are pure cached numeric operations. See ADR 0010 and the separated performance cases.
+
+TextInput owns UTF-8 state with private grapheme boundaries and cached ASCII/count
+metadata. It reuses edit/match buffers and stores optional non-Send UI callbacks
+in Rc. The parent owns focus, Tab traversal and effect scheduling. Input changes
+and completion share limit/validation paths; form submission rechecks callbacks.
+Terminal/native cursor and clipboard lifecycle are still separate pending work.
+
+Spinner state reuses the UI-thread clock identity/generation contract. Immutable
+validated animation data is shared independently from non-Clone live state; plain
+frame text can be borrowed. Total active elapsed time determines phase after late
+updates, avoiding catch-up loops and nominal tick drift. Reduced-motion views are
+static and their subscription adapters omit schedules. Explicit manual cadence
+remains available. See [ADR 0020](decisions/0020-validated-spinner-animations.md).
+
+SubscriptionId offers named IDs and an opt-in scoped tuple with a private type
+namespace. Clock adapters use inline identities. Configuration validation precedes
+timer table mutation; retained subscriptions reuse nodes, callbacks and deadlines.
+Duplicate/zero/limit errors preserve that table, while model updates/effects are
+not rolled back. Scope identity is process-local. See
+[ADR 0021](decisions/0021-scoped-subscription-identities-and-retained-timers.md) and
+[measured costs](subscription-performance.md).
+
+Scene leaves and panel titles now hold immutable normalized Text. Standard string
+inputs and fmt::Arguments convert immediately to owned content with inline storage
+for small values. Typed leaf drawing avoids repeated control scans, while public
+Canvas::text retains its arbitrary-string validation. Constructor bounds are
+provisionally Into<Text>; custom Into<String>-only conversions need adaptation.
+The facade/counter and independent widget demonstrate ownership, theme/focus and
+formatting ergonomics. [ADR 0022](decisions/0022-owned-normalized-scene-text.md),
+[API](text-api.md), [measured costs and regressions](view-performance.md).
+
+VirtualCursor owns one non-Clone clock identity and blink phase. Typed modes and
+positive periods avoid invalid settings; controls invalidate queued generations
+and reject backward time before mutation. Elapsed time determines coalesced blink
+phase. Reduced motion, static mode and blur omit subscriptions. TextInput borrows
+this state through view_with_cursor so text models can still clone independently;
+the owner forwards focus/ticks and restarts after editing. See
+[ADR 0035](decisions/0035-owned-virtual-cursor-and-expiring-notifications.md) and
+the executable `cursor` example. Structured rendering retains compositor ownership
+of Unicode, clipping, fallback and native cursor hints.

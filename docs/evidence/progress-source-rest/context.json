@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "scope": "pinned upstream public-API reproduction only; Matea progress widget not implemented yet",
+  "references": {
+    "bubbles": {
+      "sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+      "source_sha256": {
+        "progress/progress.go": "6f6d66605552fb9c6658b395c2f671f8019c2e8dde7d133e1f1184fd7ecf5b3c"
+      }
+    },
+    "harmonica": {
+      "sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+      "source_sha256": {
+        "spring.go": "affcae11a9fbe1f358bd43b6e932293b5db4df62cd6848b9a8850afe3bf242e3"
+      }
+    },
+    "lipgloss": {
+      "sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+      "source_sha256": {
+        "blending.go": "9fea665f7c047102abc1d28c139f3212404501365f0c2063746c6d6b4dd8681c"
+      }
+    }
+  },
+  "procedure": "go run the retained source-probe in the isolated pinned reference Go module, with GOPROXY=off/GOSUMDB=off; source contains its own result checks",
+  "retained_sha256": {
+    "source-probe.go.txt": "0c0d88d6bff2c80858a1f65af4ff76015916669c3274793a4a9e62a625c28275",
+    "initial-ansi-parser.stderr": "4c0b831a8e0245c3a4f09de8e9c821d496858d3cbe860f47cca0c3275a269318",
+    "observed.json": "3831d997bcb5c9e97b1d705d08ffeddf7e151493eb21b6c4e23a76e5c19c8768"
+  },
+  "finding": "142 public animation commands stop near 0.5 while finite-difference velocity is about -0.127; signed-velocity stop condition is the source cause",
+  "limits": [
+    "Finite difference is observed through formatted View, not a direct measurement of the private velocity.",
+    "The first probe failed to strip ANSI from the public View; that fixture parser failure is retained, not counted as an upstream defect.",
+    "No performance comparison, module parity or existing Matea fix is claimed."
+  ],
+  "upstream_lock_sha256": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+  "go_version": "go version go1.27.2 darwin/arm64",
+  "module_checksum_sha256": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d"
+}

@@ -1,0 +1,42 @@
+"""Depth-input change: complete legacy regression and matched precise workloads."""
+import hashlib,json,os,platform,re,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('measurement refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/precise-color-inputs/performance/optimized';sys.path.insert(0,str(ROOT/'scripts'));from measure_reader_performance import source_snapshot
+from performance_records import read_records,read_probe_outputs
+from fetch_upstream_issues import atomic_json
+sha=lambda b:hashlib.sha256(b).hexdigest();head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip();before='f96bbcd149fec815a414a9735e68ed00967b7cc6';current=source_snapshot(head)
+old_names=set(subprocess.check_output(['git','ls-tree','-r','--name-only',before],text=True).splitlines());old={n:sha(subprocess.check_output(['git','show',before+':'+n])) for n in current if n in old_names}
+assert old['tools/perf-probe/src/measurement.rs']==current['tools/perf-probe/src/measurement.rs']
+binaries={'before':Path('/private/tmp/matea-depth16-before/matea-perf-probe'),'after':Path('/private/tmp/matea-depth16-optimized/matea-perf-probe'),'prior':Path('/private/tmp/matea-depth16-after/matea-perf-probe'),'upstream':Path('/private/tmp/matea-precise-upstream/precise-probe')};hashes={k:sha(p.read_bytes()) for k,p in binaries.items()}
+go_dir=binaries['upstream'].parent;go_names=['main.go','main_test.go','precise.go','go.mod','go.sum'];go_sources={n:sha((go_dir/n).read_bytes()) for n in go_names};assert (go_dir/'main.go').read_bytes()==(ROOT/'tools/perf-upstream/main.go').read_bytes();assert (go_dir/'precise.go').read_bytes()==(BASE/'procedures/upstream-extra.go.txt').read_bytes()
+prior='ca7214a7dc81acc08b9cb7bedeca18a9a067ae49';prior_names=set(subprocess.check_output(['git','ls-tree','-r','--name-only',prior],text=True).splitlines());prior_sources={n:sha(subprocess.check_output(['git','show',prior+':'+n])) for n in current if n in prior_names}
+ctx={'schema':1,'status':'running','heads':{'before':before,'after':head,'prior':prior},'source_sha256':{'before':old,'after':current,'prior':prior_sources},'binary_sha256':hashes,'go_source_sha256':go_sources,'go_setup':json.load(open(go_dir/'source-pin.json')),'procedure_sha256':sha(Path(__file__).read_bytes()),'platform':platform.platform(),'runs':[],'rss':[],'limits':['No local owned builds/tests/Miri/LLVM/downloads overlap ordinary timing. All positive 31-sample cohorts and calibrations are retained without retry or filtering.','Legacy 44 workloads compare before/after/after/before; identical outputs, returns, semantics and shared measurement caller.','New precision: Go/prior/current/current/prior/Go; four matched complete linear/frame operations. Six additional Rust API controls have no Go constructor ratio.','Fresh operations include constructor, normalized output allocation and all-color checksum; frames include full scene/render and every cell/style checksum.','Distinct-child RSS uses whole output-only fixture groups, not per-operation residency. Allocator passes are separate.','Native macOS arm64 only, no affinity/frequency guarantee, maximum-speed or universal platform inference.']};atomic_json(BASE/'context.json',ctx)
+env={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000','GOMAXPROCS':'1'};env.pop('MATEA_PROBE_OUTPUT_ONLY',None);oe={**env,'MATEA_PROBE_OUTPUT_ONLY':'1'};groups={'progress':'--progress','lifecycle':'--progress-lifecycle','api':'--progress-api-controls','gradients':'--gradients'}
+try:
+ oracles={}
+ for label in ['before','after']:
+  for group,flag in groups.items():
+   raw=subprocess.check_output([str(binaries[label]),flag],env=oe,timeout=60);name=f'{label}-{group}-outputs.jsonl';(BASE/name).write_bytes(raw);oracles[label,group]=read_probe_outputs(raw.decode())
+ for group in groups:assert oracles['before',group]==oracles['after',group],group
+ assert sum(len(oracles['before',g]) for g in groups)==44
+ for label in ['after','prior','upstream']:
+  raw=subprocess.check_output([str(binaries[label]),'--precise-colors'],env=oe,timeout=60);(BASE/f'{label}-precise-outputs.jsonl').write_bytes(raw);oracles[label,'precise']=read_probe_outputs(raw.decode())
+ assert len(oracles['upstream','precise'])==4 and len(oracles['after','precise'])==10
+ assert oracles['prior','precise']==oracles['after','precise']
+ for n,item in oracles['upstream','precise'].items():assert all(item[k]==oracles['after','precise'][n][k] for k in ['semantics','output','first_return_value']),n
+ def run(number,label,group,flag,phase):
+  result=subprocess.run([str(binaries[label]),flag],env=env,capture_output=True,timeout=180);name=f'{phase}-{number}-{label}-{group}';(BASE/(name+'.jsonl')).write_bytes(result.stdout);(BASE/(name+'.stderr')).write_bytes(result.stderr);assert result.returncode==0,(name,result.stderr.decode());records=read_records(result.stdout.decode());assert records.keys()==oracles[label,group].keys()
+  for n,item in records.items():assert all(item[k]==oracles[label,group][n][k] for k in ['semantics','output','first_return_value']) and len(item['samples_ns'])==31 and item['calibration']['target_ns']==20000000 and all(len(b['confirmations_ns'])==2 for b in item['calibration']['batches']),n
+  ctx['runs'].append({'phase':phase,'run':number,'label':label,'group':group,'raw':name+'.jsonl','raw_sha256':sha(result.stdout),'cases':len(records)});atomic_json(BASE/'context.json',ctx);print(name,len(records),flush=True)
+ for number,label in enumerate(['before','after','after','before'],1):
+  for group,flag in groups.items():run(number,label,group,flag,'legacy')
+ for number,label in enumerate(['upstream','prior','after','after','prior','upstream'],1):run(number,label,'precise','--precise-colors','precise')
+ for label,group,flag in [('before','lifecycle',groups['lifecycle']),('after','lifecycle',groups['lifecycle']),('before','gradients',groups['gradients']),('after','gradients',groups['gradients']),('prior','precise','--precise-colors'),('after','precise','--precise-colors'),('upstream','precise','--precise-colors')]:
+  expected=(BASE/f'{label}-{group}-outputs.jsonl').read_bytes();values=[];raws={}
+  for i in range(31):
+   result=subprocess.run(['/usr/bin/time','-l',str(binaries[label]),flag],env=oe,capture_output=True,timeout=60);name=f'rss-{label}-{group}-{i}.txt';(BASE/name).write_bytes(result.stderr);assert result.returncode==0 and result.stdout==expected,(label,group,i);values.append(int(re.search(rb'(\d+)\s+maximum resident set size',result.stderr).group(1)));raws[name]=sha(result.stderr)
+  ctx['rss'].append({'label':label,'group':group,'peak_rss_bytes':values,'raw_sha256':raws});atomic_json(BASE/'context.json',ctx);print('RSS',label,group,31,flush=True)
+ assert source_snapshot(head)==current and hashes=={k:sha(p.read_bytes()) for k,p in binaries.items()};assert go_sources=={n:sha((go_dir/n).read_bytes()) for n in go_names};ctx['status']='complete';atomic_json(BASE/'context.json',ctx)
+except BaseException as e:
+ ctx.update(status='failed',error=str(e));atomic_json(BASE/'context.json',ctx);raise

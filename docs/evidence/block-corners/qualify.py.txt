@@ -1,0 +1,27 @@
+"""Qualify the current integrated corner source,with no axis promotion."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-corners';sha=lambda p:hashlib.sha256((r/p).read_bytes()).hexdigest()
+def read(p):return json.loads(p.read_bytes())
+def write(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+sys.path.insert(0,str(r/'scripts'));from check_quality import validate_native,validate_coverage
+n=read(r/'docs/evidence/local-validation.json');cov=read(r/'docs/evidence/quality/rust-execution-coverage.json');validate_native(n,r);validate_coverage(cov,r)
+ci=read(b/'ci-bindings.json');assert ci['status']=='qualified' and ci['source_commit']=='220995617f4698e508cf51bdb625de40fb85ba63'
+assert ci['ci_execution_input_sha256']==n['source_sha256']==cov['input_sha256'] and len(n['source_sha256'])==212
+for name,h in ci['raw_files'].items():assert sha(name)==h
+methods=['custom_borders_validate_all_parts_and_share_whole_graphemes','explicit_zero_false_and_reset_inherit_without_padding_or_margin','presets_cover_all_thirteen_parts_and_legacy_border_conversion','sides_presence_frame_arithmetic_and_unsetting']
+new=['full_patterns_cache_extents_and_share_validated_storage','full_corner_width_limit_is_checked_before_publication','named_parts_are_owned_and_match_the_array_contract']
+raw=r/'docs/evidence/terminal-device/ci-2209956-block-corners'
+for host in ['ubuntu','windows','macos']:
+ log=(raw/host/'release-tests.log').read_text()
+ assert all('test decoration::tests::'+m+' ... ok' in log for m in methods)
+ assert all('test decoration::full_corner_tests::'+m+' ... ok' in log for m in new)
+subprocess.run([sys.executable,str(b/'issues-review.py.txt')],check=True)
+subprocess.run([sys.executable,'scripts/check_quality.py','--report'],check=True)
+subprocess.run([sys.executable,'docs/evidence/precise-color-inputs/native/gate-snapshot.py.txt'],check=True)
+gate=read(r/'docs/evidence/quality/final-gate-status.json');assert gate['below_high_axes']==47 and gate['pending_issue_reports']==819
+metrics=read(b/'native/metrics.json');assert metrics['miri']['passed']==20 and metrics['miri']['ignored']==1
+q={'schema':1,'status':'qualified_for_corner_increment_only','active_axis':{'unit':'matea-style/lib','dimension':'reference','score':50},'reference_axis_complete':False,'score_changes':[],'below_high_axes':47,'ci_commit':ci['source_commit'],'ci_run':ci['run'],'ci_execution_input_sha256':ci['ci_execution_input_sha256'],'current_native_exactly_matches_ci':True,'assessment_only_delta_from_ci':[],'native_archive_sha256':sha('docs/evidence/block-corners/native/archive.json'),'ci_bindings_sha256':sha('docs/evidence/block-corners/ci-bindings.json'),'native_checks':47,'rust_tests':312,'rust_doctests':18,'python_tests':151,'python_local_conditional_skips':2,'new_style_test_methods_per_os':methods+new,'native_style_and_block_methods_per_os':21,'inherited_source_observations_per_os':3573,'exact_source_cells':3531,'inherited_independent_source_corrections':42,'additional_wide_corner_source_probes':2,'miri_passed':20,'miri_ignored':1,'miri_seed':251,'miri_scope':metrics['miri']['scope'],'llvm_paths':102,'llvm_instances':109,'profiling_warnings':'3 transitive hashbrown zero-hash records,diagnosed and retained','pending_issue_reports':819,'source_issues_complete_in_scope':[522,114,605],'source_issues_still_partial':[731],'pending_style_candidates':499,'ordinary_timing_performed':False,'limits':['Current-source qualification covers the implemented corner subset;whole reference axis remains50.','Only four Foundation/MSRV jobs;reference/measurement-driver recollection skipped.','Physical emulator and native32-bit behavior remain unverified.','No other-axis promotion,StageB,F5,image engine,codec or CUDA advancement.'],'procedure_sha256':sha('docs/evidence/block-corners/qualify.py.txt')}
+write(b/'qualification.json',q)
+i=read(b/'integration.json');i.update(status='qualified_for_corner_increment_only',ci_commit=ci['source_commit'],ci_run=ci['run'],native_archive_sha256=q['native_archive_sha256'],ci_bindings_sha256=q['ci_bindings_sha256']);write(b/'integration.json',i)
+print('Current corner increment qualified:212 inputs/4 required CI jobs,Miri20+1native-only corpus;47 axes remain;819 pending reports')

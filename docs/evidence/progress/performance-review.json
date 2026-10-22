@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "baseline_head": "a51f9a3b09cfd8224250f46cf584831c11e1fa9e",
+  "final_head": "019979373555e088d609533ee33a1ddc3d6db478",
+  "baseline": "performance/report.json",
+  "final": "performance-inline/report.json",
+  "same_reference_binary": true,
+  "metrics": {
+    "samples": "31 positive calibrated batch-averaged per-operation values; p95 is a percentile of batch means, not individual-call tail latency",
+    "rust_allocation": "separate System allocation/reallocation requests and requested Layout byte sums",
+    "go_allocation": "testing.AllocsPerRun and separate average MemStats.TotalAlloc; Go accounting may be fractional/rounded; neither metric is RSS",
+    "timing": "Normal Go GC during timing; both probes calibrate to three confirmations at 20 ms. Adaptive iteration counts differ; historical fixed-count comparator is unchanged."
+  },
+  "findings": [
+    "All six complete frame outputs, styles, first-return values and semantics match in both balanced pairs for both sources.",
+    "Default percentage labels remove two requested heap operations and 12 requested bytes per call. All six borrowed-cell controls request zero allocations in both final runs.",
+    "Full frame construction remains six requested allocations per measured case; no zero-allocation View/Surface claim.",
+    "Finite current frame medians are about 4.6\u201322.9% of the reference. Some p95 observations worsen versus the baseline; retain both cohorts without a blanket timing improvement claim."
+  ],
+  "limits": [
+    "One macOS arm64 host, no frequency/affinity control, background system work uncontrolled. Owned build/test/Miri/LLVM/download work finished before each measurement.",
+    "Complete 0.625-fraction frames at six fixed configurations only; constructors, dynamic lifecycle, scheduling/errors/other widths/percentages and high-depth/alpha inputs remain pending.",
+    "No current-source cross-platform timing comparison, whole-framework optimization, module parity, global maximum speed or quality score promotion."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "reference_sha": "4542a189d0fbeb156bb1df8730d253f2ef443c00",
+  "files_sha256": {
+    "strict-restore-attempt.json": "c7d4642cdc87c60b1be78cbaf0042f41fa442538e3878f5db3ec4574a0c907ba",
+    "initial-attempt.json": "704621863a8ad78556019ee4eeedb5a016eef09757c3953af1857e9860463d52",
+    "observations.json": "220aa2efaa4aa263bedc4502379521c325077850dc8f14b006b4cd47671f6e1b",
+    "strict-restore-attempt.log": "397354324ba57bd09cc41f2d3353ee8be308a07039fa6bc0458f4ff1984488e5",
+    "build-info.txt": "f568daea8573173a3e476870fe201c28f645c8eeec294690e38cb17fe8e3d8a3",
+    "pins.json": "8c660531c29d5626320f8f0f69a49391613fdd54dac1a68d010d816cd9509580",
+    "procedures/go.sum.txt": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+    "procedures/strict-restore-probe.py.txt": "56dbe77890f59939b833d4c9aa3c58ca05beac92772d23ad1474529ae7768dfb",
+    "procedures/probe.go.txt": "72a9abad9c1d2e3134fd68b91c8b979a38649f8619d8e8fa134b5ddeb674f373",
+    "procedures/go.mod.txt": "925d757356cea2b18498836d715a06476b316dcecf56a4616e4b6c690c8b3c5d",
+    "procedures/probe.py.txt": "86c399c85f960a94f4387887a6140b70e83cb430339e68997221f73d0bcaa1b6",
+    "procedures/initial-probe.py.txt": "cadd0aa29fbe592f99611713a37dca56b456adec7390a7210d98641dd25654d4"
+  },
+  "limits": [
+    "Real isolated macOS PTY only; all input is finite dummy data.",
+    "EOF observation waits 250ms then sends newline to release the call. No infinite-time, Rust implementation or performance claim.",
+    "Initial strict state comparison fails because the observed macOS PENDIN bit changes after native raw restoration. Both failures and raw before/after states are retained; only that named platform bit is excluded in the configured-state comparison.",
+    "Current pinned x/term sources were materialized outside Matea; only source hashes and original probes, not reference implementation code, are stored in the repository."
+  ]
+}

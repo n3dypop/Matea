@@ -1,0 +1,39 @@
+from pathlib import Path
+import sys,os,json,hashlib,subprocess,time
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea')
+sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_probe_outputs,read_records
+from check_ratatui_bridge import validate
+folder=ROOT/'docs/evidence/ratatui-bridge'/sys.argv[1]
+folder.mkdir(parents=True,exist_ok=False)
+def hashes():return {f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in sorted(execution_inputs(ROOT))}
+inputs=hashes();probe=ROOT/'target/release/matea-perf-probe';exehash=hashlib.sha256(probe.read_bytes()).hexdigest()
+env=dict(os.environ,MATEA_PERF_MIN_SAMPLE_NS='20000000',MATEA_PERF_ITERATIONS='300');env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+ctx={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)),'execution_inputs_sha256':inputs,'executable_sha256':exehash,'sequence':['source','matea','matea','source'],'target_ns':20000000,'raw':{}}
+def save(): (folder/'context.json').write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+try:
+ for mode in ['source','matea']:
+  path=folder/(mode+'-outputs.jsonl')
+  with path.open('wb') as out:subprocess.run([str(probe),'--ratatui-bridge-'+mode],cwd=ROOT,env=dict(env,MATEA_PROBE_OUTPUT_ONLY='1'),stdout=out,check=True,timeout=60)
+  records=read_probe_outputs(path.read_text());validate(records)
+  ctx['raw'][path.name]=hashlib.sha256(path.read_bytes()).hexdigest()
+ source=read_probe_outputs((folder/'source-outputs.jsonl').read_text());matea=read_probe_outputs((folder/'matea-outputs.jsonl').read_text())
+ if source!=matea:raise ValueError('full output mismatch')
+ for index,mode in enumerate(ctx['sequence']):
+  path=folder/f'{index+1}-{mode}.jsonl';start=time.monotonic()
+  with path.open('wb') as out:subprocess.run([str(probe),'--ratatui-bridge-'+mode],cwd=ROOT,env=env,stdout=out,check=True,timeout=120)
+  # Same strict timing reader and independent complete projection validation.
+  records=read_records(path.read_text())
+  if isinstance(records,list):records={r['case']:r for r in records}
+  validate(records)
+  if len(records)!=12:raise ValueError('incomplete cohort')
+  for case,record in records.items():
+   if record['output']!=source[case]['output'] or record['first_return_value']!=source[case]['first_return_value']:raise ValueError('timed output mismatch')
+  ctx['raw'][path.name]=hashlib.sha256(path.read_bytes()).hexdigest();save()
+  print(path.name,round(time.monotonic()-start,2),'seconds',flush=True)
+ if hashes()!=inputs or hashlib.sha256(probe.read_bytes()).hexdigest()!=exehash:raise ValueError('source/executable drift')
+ ctx['status']='complete';ctx['source_changed_during_run']=[];save()
+except Exception as error:
+ ctx['status']='failed';ctx['error']=str(error);save();raise

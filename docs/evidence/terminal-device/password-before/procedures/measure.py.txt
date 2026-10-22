@@ -1,0 +1,93 @@
+"""Finite native password experiment, fixed one-call samples and dummy bytes."""
+import hashlib,json,os,platform,pty,re,select,statistics,subprocess,sys,termios,threading,time,uuid
+from pathlib import Path
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs,summary
+from check_quality import execution_inputs
+from fetch_upstream_issues import atomic_json
+stage=sys.argv[1] if len(sys.argv)>1 else 'before'
+base=root/'docs/evidence/terminal-device'/('password-'+stage);base.mkdir(exist_ok=True)
+attempt=base/'attempts'/uuid.uuid4().hex;attempt.mkdir(parents=True)
+sha=lambda b:hashlib.sha256(b).hexdigest()
+binaries={k:Path('/private/tmp/matea-password-'+stage)/k for k in ['matea','source']}
+digests={k:sha(v.read_bytes()) for k,v in binaries.items()}
+sources={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+fixtures={'ascii':(b'tea\n',b'tea'),'utf8':('茶🍵\n'.encode(),'茶🍵'.encode()),'bytes':(b'\xff\x00\n',b'\xff\x00'),'empty':(b'\n',b''),'backspace':('茶'.encode()+b'\x08\n',bytes.fromhex('e88c')),'long':(b'x'*64+b'\n',b'x'*64)}
+def hash_bytes(value):
+ h=14695981039346656037
+ for b in value:h=((h^b)*1099511628211)&((1<<64)-1)
+ return h
+procedures=base/'procedures';procedures.mkdir(exist_ok=True)
+for path,name in [(Path(__file__),'measure.py.txt'),(Path('/private/tmp/matea-device-password/src/main.rs'),'matea-caller.rs.txt'),(Path('/private/tmp/matea-device-password/Cargo.toml'),'Cargo.toml.txt'),(Path('/private/tmp/matea-device-password/Cargo.lock'),'Cargo.lock.txt'),(Path('/private/tmp/matea-device-password-go/main.go'),'source-caller.go.txt'),(Path('/private/tmp/matea-device-password-go/go.mod'),'go.mod.txt'),(Path('/private/tmp/matea-device-password-go/go.sum'),'go.sum.txt')]:
+ (procedures/name).write_bytes(path.read_bytes())
+pin=json.loads((root/'docs/evidence/terminal-device-source/pins.json').read_bytes())
+for name,expected in pin['source_file_sha256'].items():require(sha((Path('/private/tmp/matea-terminal-device-reference')/Path(name).name).read_bytes())==expected,'reference drift')
+context={'schema':1,'status':'running','stage':stage,'source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_sha256':sources,'binary_sha256':digests,'reference_sha':pin['sha'],'reference_source_sha256':pin['source_file_sha256'],'procedure_sha256':{p.name:sha(p.read_bytes()) for p in procedures.iterdir()},'platform':platform.platform(),'attempt':attempt.relative_to(base).as_posix(),'children':[],'limits':['Isolated macOS PTY native read_password, six finite dummy lines; no real secrets.','31 positive fixed one-call samples, explicit sample target 0. No calibrated 20ms or maximum-speed claim. Cold first call includes producer startup and is retained separately.','Exact helper call counts prefeed 133 Rust /153 Go lines for each timing child (first+100 warm+31 samples+allocation passes); output-only RSS child feeds one line.','A finite writer may block on the real kernel input queue for long lines; this is native queue/read latency, not a pure parser benchmark. Native data and configured state are checked.','Descriptor acquisition and initial outer capture are outside samples; current capture/non-echo transition/read/allocation/current restore are included.','Three alternating cohorts; no build, tests, Miri, LLVM or downloads overlap ordinary timings. Whole-process RSS includes language startup/runtime, not per-operation peak memory.']}
+def save():atomic_json(attempt/'context.json',context);atomic_json(base/'context.json',context)
+def portable(v):return [x if isinstance(x,int) else [y.hex() if isinstance(y,bytes) else y for y in x] for x in v]
+def configured(v):v=list(v);v[3]&=~getattr(termios,'PENDIN',0);return v
+def run(implementation,fixture,label,rss=False):
+ master,slave=pty.openpty();original=termios.tcgetattr(slave);settings=termios.tcgetattr(slave);settings[6][termios.VERASE]=b'\x7f';termios.tcsetattr(slave,termios.TCSANOW,settings);before=termios.tcgetattr(slave)
+ command=[str(binaries[implementation]),fixture]
+ if rss:command=['/usr/bin/time','-l',*command]
+ env=dict(os.environ,MATEA_PERF_ITERATIONS='1',MATEA_PERF_MIN_SAMPLE_NS='0')
+ if rss:env['MATEA_PROBE_OUTPUT_ONLY']='1'
+ else:env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+ name=f'{implementation}-{fixture}-{label}';item={'implementation':implementation,'fixture':fixture,'label':label,'rss':rss,'before':portable(before)};context['children'].append(item);save()
+ proc=None;writer=None;errors=[];written=[]
+ try:
+  proc=subprocess.Popen(command,stdin=slave,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=env)
+  deadline=time.monotonic()+5
+  while termios.tcgetattr(slave)[3]&termios.ECHO:
+   require(proc.poll() is None and time.monotonic()<deadline,'password mode not reached');time.sleep(.001)
+  count=1 if rss else (133 if implementation=='matea' else 153)
+  payload=fixtures[fixture][0]*count;item.update(lines_supplied=count,input_sha256=sha(payload),input_bytes=len(payload))
+  def feed():
+   try:
+    remaining=memoryview(payload);total=0
+    while remaining:
+     n=os.write(master,remaining);require(n>0,'zero input write');total+=n;remaining=remaining[n:]
+    written.append(total)
+   except BaseException as error:errors.append(repr(error))
+  writer=threading.Thread(target=feed,daemon=True);writer.start()
+  stdout,stderr=proc.communicate(timeout=20);writer.join(timeout=2)
+  (attempt/(name+'.jsonl')).write_bytes(stdout);(attempt/(name+'.stderr.txt')).write_bytes(stderr)
+  after=termios.tcgetattr(slave);item.update(exit_code=proc.returncode,stdout=name+'.jsonl',stderr=name+'.stderr.txt',stdout_sha256=sha(stdout),stderr_sha256=sha(stderr),after=portable(after),written_bytes=written,writer_errors=errors);save()
+  require(proc.returncode==0 and not errors and written==[len(payload)] and not writer.is_alive(),'native password probe/producer failed')
+  require(configured(before)==configured(after),'configured native mode changed')
+  records=(read_probe_outputs if rss else read_records)(stdout.decode());key='device/password_'+fixture
+  require(set(records)=={key},'missing/duplicate password case');record=records[key]
+  require((record['first_return_value'],record['output'])==(hash_bytes(fixtures[fixture][1]),fixtures[fixture][1].hex()),'independent byte oracle mismatch')
+  if rss:
+   match=re.findall(rb'^\s*(\d+)\s+maximum resident set size\s*$',stderr,re.M);require(len(match)==1 and int(match[0])>0,'missing RSS');item['maximum_resident_set_size_bytes']=int(match[0])
+  else:
+   require(not stderr and record['iterations_per_sample']==1 and 'calibration' not in record,'unexpected timer mode/stderr')
+  os.set_blocking(slave,False)
+  try:extra=os.read(slave,1)
+  except BlockingIOError:extra=b''
+  require(not extra,'supplied input did not correspond to exact helper call count')
+  item['status']='passed';save();return record
+ finally:
+  if proc is not None and proc.poll() is None:proc.kill();proc.wait(timeout=5)
+  termios.tcsetattr(slave,termios.TCSANOW,original);os.close(slave);os.close(master)
+  if writer is not None:writer.join(timeout=1)
+save()
+try:
+ cohorts=[]
+ for index in range(3):
+  values={}
+  for name in fixtures:
+   for implementation in (['source','matea'] if index%2==0 else ['matea','source']):values[(implementation,name)]=run(implementation,name,'timing-'+str(index))
+  cases=[]
+  for name in fixtures:
+   m,s=values[('matea',name)],values[('source',name)];require(all(m[k]==s[k] for k in ['case','semantics','output','first_return_value']),'mismatched public operation')
+   cases.append({'case':m['case'],'matea':summary(m),'source':summary(s),'output_equivalent_for_this_fixture':True,'source_over_matea_p50':statistics.median(s['samples_ns'])/statistics.median(m['samples_ns'])})
+  cohorts.append({'cohort':index,'cases':cases});context['cohorts']=cohorts;save();print('password timing cohort',index,'complete',flush=True)
+ for index in range(31):
+  for name in fixtures:
+   for implementation in (['source','matea'] if index%2==0 else ['matea','source']):run(implementation,name,'rss-'+str(index),True)
+ require(sources=={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))},'execution input drift')
+ require(digests=={k:sha(p.read_bytes()) for k,p in binaries.items()},'probe drift')
+ report={'schema':1,'status':'complete','cohorts':cohorts,'limits':context['limits']};atomic_json(attempt/'report.json',report);context.update(status='complete',report='report.json',report_sha256=sha((attempt/'report.json').read_bytes()));save()
+except BaseException as error:context.update(status='failed',error=f'{type(error).__name__}: {error}');save();raise

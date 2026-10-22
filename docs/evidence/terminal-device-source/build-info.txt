@@ -1,0 +1,18 @@
+/private/tmp/matea-terminal-device-source/probe: go1.27.2
+	path	matea-foundation-comparison
+	mod	matea-foundation-comparison	(devel)	
+	dep	github.com/charmbracelet/x/term	v0.2.2
+	=>	/private/tmp/matea-terminal-device-reference	(devel)	
+	
+	dep	golang.org/x/sys	v0.47.0	h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	DefaultGODEBUG=tracebacklabels=0,x509sslcertoverrideplatform=0
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=arm64
+	build	GOOS=darwin
+	build	GOARM64=v8.0

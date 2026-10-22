@@ -1,0 +1,18 @@
+"""Review the exact issue snapshot against fixed-source and current typed contract."""
+from pathlib import Path
+from datetime import datetime,timezone
+import hashlib,json,subprocess
+r=Path.cwd();b=r/'docs/evidence/block-style';sha=lambda p:hashlib.sha256((r/p).read_bytes()).hexdigest()
+obs=(b/'issue-522-source.tsv').read_text().splitlines();assert len(obs)==2
+for n,line in enumerate(obs):assert list(map(int,line.split('\t')[:7]))==[n,2,2,2,2,3,3]
+notes={522:'Complete bounded assessment: the reported implicit-border size0 defect is not reproduced at Lip Gloss19f011f1. Current get.go explicitly handles isBorderStyleSetWithoutSides. Both actual Go styles report2x2 frame overhead and render3x3. Matea default side presence and frame extents are covered by existing style unit test and built-in corpus. This is source-pin verification,not a claim of an upstream fix or terminal emulator support.',114:'Partial: source report asks for padding narrower body rows when right corners are wide. Matea reserves maximum side/corner cell width and tests whole-cluster borders; the exact only-wide-right-corner scenario and full side alignment require a dedicated follow-up regression before closure.',605:'Partial: Matea preserves a full combining/ZWJ cluster instead of one source rune. Multiple separate graphemes in one corner are still intentionally truncated; the requested multi-character corner contract is not implemented.',731:'Partial: independent Option<bool> border/inline intent avoids truncating high property bits into pointer-width integers. Typed intent tests cover left/inline overrides,but native32-bit source and Rust runs have not been performed; do not infer32-bit qualification from64-bit CI.'}
+p=r/'docs/coverage/upstream-issues.json';data=json.loads(p.read_bytes());repo=next(x for x in data['repositories'] if x['repository']=='charmbracelet/lipgloss')
+proof=['crates/matea-style/src/decoration.rs','crates/matea-render/src/block.rs','crates/matea-render/tests/blocks.rs','docs/evidence/block-style/fixture-verification.json','docs/evidence/block-style/issues.go.txt','docs/evidence/block-style/issue-522-source.tsv']
+for number,note in notes.items():
+ issue=next(i for i in repo['issues'] if i['number']==number);snapshot=json.loads((b/f'issue-{number}.json').read_bytes())['issue'];assert issue['updated_at']==snapshot['updated_at']
+ issue['matea_reproduction']='not_reproduced_at_fixed_source_and_typed_regression' if number==522 else 'partially_assessed_explicit_remaining_contract'
+ issue['disposition']='fixed_source_behavior_verified' if number==522 else 'partially_assessed_pending_followup'
+ paths=proof+[f'docs/evidence/block-style/issue-{number}.json']
+ issue['review']={'status':'complete' if number==522 else 'partial','reference':'lipgloss','reference_sha':'19f011f1cc573e5d2bf9d7a9c4f14d429647759e','reviewed_updated_at':issue['updated_at'],'notes':note,'evidence_sha256':{name:sha(name) for name in paths}}
+p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
+print('One source issue assessed complete at fixed pin;three remain explicitly partial;no GitHub issue mutated')

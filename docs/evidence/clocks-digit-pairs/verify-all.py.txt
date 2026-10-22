@@ -1,0 +1,40 @@
+"""Cross-check all four experiments, CPU profiles and unchanged production."""
+import hashlib,json,re,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verifier refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))};experiments=[]
+for folder,count in [('',72),('small-decimals',72),('forced-integer',72),('distributions',252)]:
+ p=base/folder;c=json.loads((p/'context.json').read_bytes());v=json.loads((p/'verification.json').read_bytes())
+ assert c['status']=='complete' and v['status']=='complete_prototype_only' and c['root_input_sha256']==inputs
+ assert c['timing_records']==v['timing_records']==count and c['retained_intervals']==v['retained_intervals']==count*31
+ assert v['context_sha256']==sha((p/'context.json').read_bytes()) and v['procedure_sha256']==sha((p/'verify.py.txt').read_bytes())
+ assert c['procedure_sha256']==sha((p/'measure.py.txt').read_bytes()) and c['raw_sha256']==sha((p/c['raw']).read_bytes())
+ experiments.append({'folder':folder,'timing_records':count,'retained_intervals':count*31,'adverse_counts':v['adverse_counts'],'context_sha256':sha((p/'context.json').read_bytes()),'verification_sha256':sha((p/'verification.json').read_bytes())})
+profile=json.loads((base/'profile/context.json').read_bytes());assert profile['status']=='complete' and len(profile['cases'])==2 and profile['root_input_sha256']==inputs
+assert profile['procedure_sha256']==sha((base/'profile/collect.py.txt').read_bytes())
+for n,h in profile['archive_sha256'].items():assert sha((base/'profile'/n).read_bytes())==h,n
+tops={}
+for case in profile['cases']:
+ n=case['kind'];p=base/'profile'/(n+'.sample.txt');assert sha(p.read_bytes())==case['sample_sha256'] and sha((base/'profile'/(n+'.sampler.log')).read_bytes())==case['sampler_log_sha256']
+ assert case['sampler_exit_code']==0 and case['child_exit_code']==-15
+ text=p.read_text();part=text.split('Sort by top of stack, same collapsed (when >= 5):',1)[1].split('Binary Images:',1)[0]
+ rows=[]
+ for line in part.splitlines():
+  m=re.search(r'^\s+(.+?)\s+\(in .+?\)\s+(\d+)\s*$',line)
+  if m:rows.append({'symbol':m[1],'samples':int(m[2])})
+ assert rows
+ categories={}
+ for label,needle in [('clock_formatter','ClockText9formatted'),('utf8_validation','converts9from_utf8'),('text_from_str','7convert4FromReE4from')]:
+  values=[r['samples'] for r in rows if needle in r['symbol']];assert len(values)==1,(n,label,rows);categories[label]=values[0]
+ tops[n]={'collapsed_top_rows':rows,'selected_categories':categories,'limits':'Sampled top-stack observations with a >=5 reporting threshold, not exact exclusive CPU percentages or causal attribution of every instruction.'}
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root)
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes());validate_coverage(coverage,root)
+assert native['source_sha256']==coverage['input_sha256']==inputs
+binding=json.loads((root/'docs/evidence/kitty-controls/post-qualification-binding.json').read_bytes());assert inputs==binding['input_sha256']
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',binding['committed_assessment_head']+':'+n]))==h,n
+total=sum(e['timing_records'] for e in experiments);assert total==468
+result={'schema':1,'status':'complete_prototype_review_production_unchanged','timing_records':total,'retained_intervals':total*31,'experiments':experiments,'profiles':tops,'profile_context_sha256':sha((base/'profile/context.json').read_bytes()),'execution_inputs_sha256':inputs,'committed_native_assessment_head':binding['committed_assessment_head'],'native_commands_reused_unchanged':len(native['checks']),'procedure_sha256':sha(Path(__file__).read_bytes()),'decision':'No prototype is adopted: every candidate retains adverse fixed/varied cohorts, and matched source gaps remain. Profile-guided validation/formatting boundary work is required; safety checks and scores are unchanged.','limits':['All retained measurements are prototype experiments with different declared consumption boundaries. They are not 468 distinct capabilities or production performance improvements.','Native/LLVM evidence remains valid because every execution input is byte-identical to the qualified checkpoint. No completed native suite is rerun or relabeled.','Clock active scheduling/cancellation/timeout delivery, retained memory and full module performance remain pending; Stage A continues.']}
+(base/'verification-all.json').write_text(json.dumps(result,indent=2)+'\n');print('Verified 468 records / 14508 intervals, two actual-library CPU profiles and 200 unchanged execution inputs.');print({n:v['selected_categories'] for n,v in tops.items()})

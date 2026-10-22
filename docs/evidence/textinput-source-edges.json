@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "command": "upstream probe --textinput-source-edges",
+  "source_pins": {
+    "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+    "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+    "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+    "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+    "harness": "tools/perf-upstream/main.go"
+  },
+  "harness_sha256": "3ade5d70d5d43136082a6d37164a2a928d810d74d8a7bcc4a4c564164d9a1b3e",
+  "upstream_observed": {
+    "alt_delete_inside_word": "a d",
+    "alt_delete_last_rune_of_word": "a",
+    "alt_delete_last_rune_panics": true,
+    "chinese_placeholder_contains_nul": true,
+    "completion_limit": 2,
+    "completion_value": "tea",
+    "empty_previous_current_suggestion_panics": true,
+    "native_cjk_cursor_x": 3,
+    "native_cjk_expected_columns": 6,
+    "native_scrolled_left_cursor_x": 22,
+    "native_scrolled_left_expected_columns": 21,
+    "reported_down_case_panics_on_pinned_v2": false,
+    "suggestion_after_set_value_without_refresh": "",
+    "validation_calls_after": 1,
+    "validation_calls_before": 1,
+    "zero_width_placeholder": "> S"
+  },
+  "notes": "Source-derived reproductions. #1056 and #906 reproduced; #1001 scroll-offset behavior adapted to one Left after overflow reproduced. #562 pinned-v2 adaptation did not panic. Matea position/visibility regressions and Unix PTY pass; shape/color/blink/real-emulator limits remain. No clipboard read."
+}

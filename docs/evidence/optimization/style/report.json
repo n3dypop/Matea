@@ -1,0 +1,828 @@
+{
+  "schema": 1,
+  "stage": "individual_modules",
+  "case_count": 46,
+  "contexts": {
+    "before": {
+      "git_head": "581560ba308b41770276ac4e04673813ffa68e08",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+        "crates/matea-style/src/lib.rs": "515f652dc09ce427156938feee3d38c580227a11f3ff8bd4692f4442b4036a6a",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "tools/perf-probe/src/main.rs": "d8d5072800f7fe05e7ef963d7bb5521720d6b2693441922875fbdfba8d293b7d"
+      },
+      "binary_sha256": "1921b95ca4bf15a294b7a69ae8c975a61bf6c15382c4ce20bfb010d1dcdb76a6",
+      "raw_sha256": "576fb6ad373e76cc72a1c0bd7c485b0c14a06fa584c8fcaffedbcba2afc87be5",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "iterations_per_sample": 10000,
+      "run_order": "baseline before source optimization; no concurrent builds/tests/downloads"
+    },
+    "after": {
+      "git_head_before_uncommitted_changes": "581560ba308b41770276ac4e04673813ffa68e08",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "tools/perf-probe/src/main.rs": "d8d5072800f7fe05e7ef963d7bb5521720d6b2693441922875fbdfba8d293b7d"
+      },
+      "binary_sha256": "7bcfa731085a9f51bee699c82bc9315716370b94e4dc9d215cb012fab97b0ebd",
+      "raw_sha256": "5b1185a48625d0eaa040e36ec3a82da10866520728f0b0512bc715b6fc04a56f",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "scope": "Rust-only module primitives, 46 exact output fixtures, no terminal I/O or upstream speed ratio",
+      "git_head": "ab7c29c646f1808b11003f25eabeaea3e5efed77"
+    }
+  },
+  "cases": [
+    {
+      "case": "style/adapt_default_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.3417,
+        "p95_ns": 4.525,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_9_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9042,
+        "p95_ns": 2.9084,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_200_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_black_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9084,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_white_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_cube_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.9,
+        "p95_ns": 4.1125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_gray_tie_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.5625,
+        "p95_ns": 2.6666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_arbitrary_none",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.5666,
+        "p95_ns": 5.875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.9,
+        "p95_ns": 2.9125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_pair_none",
+      "semantics": "adapt foreground/background while preserving attributes; no global cache, scene or terminal I/O",
+      "output": "Style { fg: Default, bg: Default, bold: true, underline: false, reverse: true }",
+      "before": {
+        "p50_ns": 5.6875,
+        "p95_ns": 5.7125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 6.4417,
+        "p95_ns": 6.4667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_varied_256_none",
+      "semantics": "adapt 256 distinct RGB triples in fixed order; squared RGB distance, first-index ties, no cache or terminal I/O",
+      "output": "[Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default, Default]",
+      "before": {
+        "p50_ns": 662.5,
+        "p95_ns": 693.34,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 662.09,
+        "p95_ns": 750,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_default_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 2.3125,
+        "p95_ns": 2.325,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.0541,
+        "p95_ns": 2.0667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_9_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(9)",
+      "before": {
+        "p50_ns": 2.7625,
+        "p95_ns": 2.7709,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.5666,
+        "p95_ns": 2.5792,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_200_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(13)",
+      "before": {
+        "p50_ns": 33.7459,
+        "p95_ns": 37.6667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 16.9208,
+        "p95_ns": 20.7042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_black_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(0)",
+      "before": {
+        "p50_ns": 28.6958,
+        "p95_ns": 29.2791,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 11.55,
+        "p95_ns": 11.5958,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_white_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(15)",
+      "before": {
+        "p50_ns": 26.4375,
+        "p95_ns": 27.6291,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 10.3625,
+        "p95_ns": 10.6542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_cube_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(8)",
+      "before": {
+        "p50_ns": 24.7292,
+        "p95_ns": 25.3667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 10.3625,
+        "p95_ns": 10.3875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_gray_tie_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(0)",
+      "before": {
+        "p50_ns": 22.95,
+        "p95_ns": 24.4875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 9.4709,
+        "p95_ns": 10.3042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_arbitrary_ansi16",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(14)",
+      "before": {
+        "p50_ns": 22.9292,
+        "p95_ns": 23.2417,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 9.475,
+        "p95_ns": 10.4334,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_pair_ansi16",
+      "semantics": "adapt foreground/background while preserving attributes; no global cache, scene or terminal I/O",
+      "output": "Style { fg: Indexed(14), bg: Indexed(0), bold: true, underline: false, reverse: true }",
+      "before": {
+        "p50_ns": 47.8583,
+        "p95_ns": 50.525,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 22.1209,
+        "p95_ns": 24.0083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_varied_256_ansi16",
+      "semantics": "adapt 256 distinct RGB triples in fixed order; squared RGB distance, first-index ties, no cache or terminal I/O",
+      "output": "[Indexed(0), Indexed(6), Indexed(2), Indexed(14), Indexed(4), Indexed(12), Indexed(6), Indexed(10), Indexed(6), Indexed(6), Indexed(14), Indexed(4), Indexed(2), Indexed(6), Indexed(10), Indexed(12), Indexed(6), Indexed(10), Indexed(4), Indexed(2), Indexed(14), Indexed(10), Indexed(12), Indexed(6), Indexed(10), Indexed(4), Indexed(6), Indexed(14), Indexed(14), Indexed(2), Indexed(6), Indexed(10), Indexed(12), Indexed(6), Indexed(2), Indexed(14), Indexed(2), Indexed(6), Indexed(6), Indexed(0), Indexed(6), Indexed(2), Indexed(14), Indexed(6), Indexed(14), Indexed(6), Indexed(0), Indexed(6), Indexed(6), Indexed(14), Indexed(6), Indexed(2), Indexed(14), Indexed(4), Indexed(6), Indexed(6), Indexed(10), Indexed(6), Indexed(2), Indexed(14), Indexed(4), Indexed(12), Indexed(6), Indexed(10), Indexed(12), Indexed(8), Indexed(14), Indexed(5), Indexed(3), Indexed(8), Indexed(10), Indexed(12), Indexed(8), Indexed(10), Indexed(5), Indexed(3), Indexed(8), Indexed(8), Indexed(1), Indexed(8), Indexed(10), Indexed(5), Indexed(8), Indexed(14), Indexed(8), Indexed(1), Indexed(8), Indexed(8), Indexed(12), Indexed(8), Indexed(3), Indexed(7), Indexed(5), Indexed(8), Indexed(8), Indexed(1), Indexed(8), Indexed(3), Indexed(7), Indexed(5), Indexed(7), Indexed(8), Indexed(1), Indexed(8), Indexed(8), Indexed(14), Indexed(5), Indexed(3), Indexed(7), Indexed(5), Indexed(8), Indexed(8), Indexed(10), Indexed(5), Indexed(3), Indexed(7), Indexed(5), Indexed(3), Indexed(8), Indexed(3), Indexed(5), Indexed(8), Indexed(7), Indexed(5), Indexed(3), Indexed(8), Indexed(8), Indexed(5), Indexed(8), Indexed(3), Indexed(5), Indexed(8), Indexed(7), Indexed(7), Indexed(1), Indexed(8), Indexed(3), Indexed(5), Indexed(8), Indexed(7), Indexed(7), Indexed(1), Indexed(8), Indexed(8), Indexed(13), Indexed(8), Indexed(3), Indexed(7), Indexed(5), Indexed(7), Indexed(8), Indexed(1), Indexed(8), Indexed(3), Indexed(7), Indexed(5), Indexed(3), Indexed(7), Indexed(1), Indexed(8), Indexed(8), Indexed(7), Indexed(5), Indexed(3), Indexed(7), Indexed(5), Indexed(7), Indexed(8), Indexed(11), Indexed(5), Indexed(8), Indexed(7), Indexed(5), Indexed(3), Indexed(7), Indexed(11), Indexed(13), Indexed(8), Indexed(7), Indexed(5), Indexed(3), Indexed(7), Indexed(7), Indexed(13), Indexed(8), Indexed(3), Indexed(5), Indexed(8), Indexed(7), Indexed(7), Indexed(1), Indexed(8), Indexed(11), Indexed(13), Indexed(8), Indexed(3), Indexed(7), Indexed(9), Indexed(7), Indexed(7), Indexed(13), Indexed(8), Indexed(3), Indexed(7), Indexed(5), Indexed(7), Indexed(7), Indexed(9), Indexed(8), Indexed(8), Indexed(7), Indexed(5), Indexed(3), Indexed(7), Indexed(9), Indexed(13), Indexed(8), Indexed(15), Indexed(5), Indexed(3), Indexed(7), Indexed(9), Indexed(13), Indexed(7), Indexed(11), Indexed(13), Indexed(8), Indexed(7), Indexed(5), Indexed(9), Indexed(7), Indexed(11), Indexed(13), Indexed(8), Indexed(11), Indexed(13), Indexed(9), Indexed(7), Indexed(11), Indexed(13), Indexed(7), Indexed(11), Indexed(13), Indexed(9), Indexed(7), Indexed(7), Indexed(9), Indexed(7), Indexed(11), Indexed(13), Indexed(8), Indexed(11), Indexed(7), Indexed(9), Indexed(7), Indexed(7)]",
+      "before": {
+        "p50_ns": 5493.33,
+        "p95_ns": 5856.67,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2158.75,
+        "p95_ns": 2310,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_default_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4833,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.45,
+        "p95_ns": 1.4542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_9_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(9)",
+      "before": {
+        "p50_ns": 1.6833,
+        "p95_ns": 1.6875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.8083,
+        "p95_ns": 1.8125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_200_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(200)",
+      "before": {
+        "p50_ns": 1.6792,
+        "p95_ns": 1.6875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.8083,
+        "p95_ns": 1.8125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_black_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(0)",
+      "before": {
+        "p50_ns": 485.3209,
+        "p95_ns": 502.2083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 8.4084,
+        "p95_ns": 9.5042,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_white_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(15)",
+      "before": {
+        "p50_ns": 487.0833,
+        "p95_ns": 510.9959,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 7.8,
+        "p95_ns": 8.4167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_cube_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(67)",
+      "before": {
+        "p50_ns": 481.575,
+        "p95_ns": 495.6625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 10.8958,
+        "p95_ns": 11.1834,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_gray_tie_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(232)",
+      "before": {
+        "p50_ns": 481.7959,
+        "p95_ns": 506.9292,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 11.6792,
+        "p95_ns": 11.7,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_arbitrary_ansi256",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(38)",
+      "before": {
+        "p50_ns": 483.5292,
+        "p95_ns": 634.6125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 13.1459,
+        "p95_ns": 14.7708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_pair_ansi256",
+      "semantics": "adapt foreground/background while preserving attributes; no global cache, scene or terminal I/O",
+      "output": "Style { fg: Indexed(38), bg: Indexed(232), bold: true, underline: false, reverse: true }",
+      "before": {
+        "p50_ns": 975.3042,
+        "p95_ns": 1044.8375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 30.8667,
+        "p95_ns": 36.7292,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_varied_256_ansi256",
+      "semantics": "adapt 256 distinct RGB triples in fixed order; squared RGB distance, first-index ties, no cache or terminal I/O",
+      "output": "[Indexed(0), Indexed(24), Indexed(28), Indexed(44), Indexed(17), Indexed(27), Indexed(36), Indexed(10), Indexed(25), Indexed(29), Indexed(44), Indexed(4), Indexed(22), Indexed(37), Indexed(47), Indexed(26), Indexed(29), Indexed(40), Indexed(19), Indexed(23), Indexed(38), Indexed(47), Indexed(27), Indexed(30), Indexed(40), Indexed(19), Indexed(23), Indexed(39), Indexed(48), Indexed(235), Indexed(31), Indexed(41), Indexed(20), Indexed(24), Indexed(34), Indexed(49), Indexed(237), Indexed(32), Indexed(41), Indexed(234), Indexed(24), Indexed(34), Indexed(50), Indexed(238), Indexed(33), Indexed(42), Indexed(235), Indexed(25), Indexed(71), Indexed(86), Indexed(60), Indexed(64), Indexed(79), Indexed(236), Indexed(62), Indexed(71), Indexed(82), Indexed(61), Indexed(65), Indexed(80), Indexed(53), Indexed(63), Indexed(72), Indexed(82), Indexed(61), Indexed(65), Indexed(81), Indexed(54), Indexed(58), Indexed(73), Indexed(83), Indexed(62), Indexed(66), Indexed(76), Indexed(55), Indexed(239), Indexed(74), Indexed(83), Indexed(58), Indexed(66), Indexed(77), Indexed(56), Indexed(240), Indexed(75), Indexed(84), Indexed(237), Indexed(67), Indexed(77), Indexed(56), Indexed(60), Indexed(70), Indexed(85), Indexed(239), Indexed(68), Indexed(77), Indexed(52), Indexed(61), Indexed(71), Indexed(86), Indexed(240), Indexed(69), Indexed(78), Indexed(52), Indexed(61), Indexed(71), Indexed(87), Indexed(60), Indexed(64), Indexed(79), Indexed(53), Indexed(62), Indexed(72), Indexed(82), Indexed(61), Indexed(65), Indexed(80), Indexed(89), Indexed(94), Indexed(108), Indexed(119), Indexed(98), Indexed(101), Indexed(117), Indexed(90), Indexed(94), Indexed(109), Indexed(119), Indexed(98), Indexed(8), Indexed(112), Indexed(91), Indexed(95), Indexed(110), Indexed(119), Indexed(94), Indexed(103), Indexed(113), Indexed(92), Indexed(95), Indexed(111), Indexed(120), Indexed(94), Indexed(103), Indexed(113), Indexed(93), Indexed(96), Indexed(106), Indexed(115), Indexed(95), Indexed(104), Indexed(114), Indexed(88), Indexed(97), Indexed(107), Indexed(116), Indexed(95), Indexed(136), Indexed(150), Indexed(125), Indexed(134), Indexed(143), Indexed(153), Indexed(132), Indexed(136), Indexed(249), Indexed(125), Indexed(134), Indexed(144), Indexed(148), Indexed(133), Indexed(137), Indexed(146), Indexed(126), Indexed(130), Indexed(248), Indexed(149), Indexed(134), Indexed(137), Indexed(147), Indexed(126), Indexed(130), Indexed(249), Indexed(149), Indexed(129), Indexed(138), Indexed(142), Indexed(127), Indexed(131), Indexed(146), Indexed(150), Indexed(124), Indexed(139), Indexed(143), Indexed(128), Indexed(131), Indexed(136), Indexed(187), Indexed(161), Indexed(176), Indexed(179), Indexed(165), Indexed(168), Indexed(172), Indexed(187), Indexed(161), Indexed(176), Indexed(180), Indexed(160), Indexed(169), Indexed(173), Indexed(253), Indexed(162), Indexed(172), Indexed(181), Indexed(161), Indexed(170), Indexed(173), Indexed(189), Indexed(162), Indexed(166), Indexed(182), Indexed(161), Indexed(171), Indexed(174), Indexed(184), Indexed(163), Indexed(167), Indexed(182), Indexed(162), Indexed(166), Indexed(175), Indexed(185), Indexed(164), Indexed(167), Indexed(178), Indexed(163), Indexed(203), Indexed(212), Indexed(221), Indexed(13), Indexed(204), Indexed(214), Indexed(199), Indexed(203), Indexed(213), Indexed(222), Indexed(9), Indexed(205), Indexed(215), Indexed(200), Indexed(204), Indexed(208), Indexed(223), Indexed(197), Indexed(206), Indexed(215)]",
+      "before": {
+        "p50_ns": 124320.83,
+        "p95_ns": 126093.75,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3217.92,
+        "p95_ns": 3421.25,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_default_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Default",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_9_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(9)",
+      "before": {
+        "p50_ns": 1.4084,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.25,
+        "p95_ns": 1.2584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_indexed_200_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Indexed(200)",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2542,
+        "p95_ns": 1.3375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_black_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Rgb(0, 0, 0)",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_white_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Rgb(255, 255, 255)",
+      "before": {
+        "p50_ns": 1.4084,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_cube_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Rgb(95, 135, 175)",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.2541,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_gray_tie_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Rgb(13, 13, 13)",
+      "before": {
+        "p50_ns": 1.4084,
+        "p95_ns": 1.425,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.25,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_rgb_arbitrary_truecolor",
+      "semantics": "adapt one semantic color using squared RGB distance and first-index ties; no global cache, scene or terminal I/O",
+      "output": "Rgb(41, 173, 227)",
+      "before": {
+        "p50_ns": 1.4083,
+        "p95_ns": 1.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.25,
+        "p95_ns": 1.2583,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_pair_truecolor",
+      "semantics": "adapt foreground/background while preserving attributes; no global cache, scene or terminal I/O",
+      "output": "Style { fg: Rgb(41, 173, 227), bg: Rgb(13, 13, 13), bold: true, underline: false, reverse: true }",
+      "before": {
+        "p50_ns": 3.4541,
+        "p95_ns": 3.4667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.4625,
+        "p95_ns": 3.6208,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/adapt_varied_256_truecolor",
+      "semantics": "adapt 256 distinct RGB triples in fixed order; squared RGB distance, first-index ties, no cache or terminal I/O",
+      "output": "[Rgb(0, 0, 0), Rgb(1, 73, 151), Rgb(2, 146, 46), Rgb(3, 219, 197), Rgb(4, 36, 92), Rgb(5, 109, 243), Rgb(6, 182, 138), Rgb(7, 255, 33), Rgb(8, 72, 184), Rgb(9, 145, 79), Rgb(10, 218, 230), Rgb(11, 35, 125), Rgb(12, 108, 20), Rgb(13, 181, 171), Rgb(14, 254, 66), Rgb(15, 71, 217), Rgb(16, 144, 112), Rgb(17, 217, 7), Rgb(18, 34, 158), Rgb(19, 107, 53), Rgb(20, 180, 204), Rgb(21, 253, 99), Rgb(22, 70, 250), Rgb(23, 143, 145), Rgb(24, 216, 40), Rgb(25, 33, 191), Rgb(26, 106, 86), Rgb(27, 179, 237), Rgb(28, 252, 132), Rgb(29, 69, 27), Rgb(30, 142, 178), Rgb(31, 215, 73), Rgb(32, 32, 224), Rgb(33, 105, 119), Rgb(34, 178, 14), Rgb(35, 251, 165), Rgb(36, 68, 60), Rgb(37, 141, 211), Rgb(38, 214, 106), Rgb(39, 31, 1), Rgb(40, 104, 152), Rgb(41, 177, 47), Rgb(42, 250, 198), Rgb(43, 67, 93), Rgb(44, 140, 244), Rgb(45, 213, 139), Rgb(46, 30, 34), Rgb(47, 103, 185), Rgb(48, 176, 80), Rgb(49, 249, 231), Rgb(50, 66, 126), Rgb(51, 139, 21), Rgb(52, 212, 172), Rgb(53, 29, 67), Rgb(54, 102, 218), Rgb(55, 175, 113), Rgb(56, 248, 8), Rgb(57, 65, 159), Rgb(58, 138, 54), Rgb(59, 211, 205), Rgb(60, 28, 100), Rgb(61, 101, 251), Rgb(62, 174, 146), Rgb(63, 247, 41), Rgb(64, 64, 192), Rgb(65, 137, 87), Rgb(66, 210, 238), Rgb(67, 27, 133), Rgb(68, 100, 28), Rgb(69, 173, 179), Rgb(70, 246, 74), Rgb(71, 63, 225), Rgb(72, 136, 120), Rgb(73, 209, 15), Rgb(74, 26, 166), Rgb(75, 99, 61), Rgb(76, 172, 212), Rgb(77, 245, 107), Rgb(78, 62, 2), Rgb(79, 135, 153), Rgb(80, 208, 48), Rgb(81, 25, 199), Rgb(82, 98, 94), Rgb(83, 171, 245), Rgb(84, 244, 140), Rgb(85, 61, 35), Rgb(86, 134, 186), Rgb(87, 207, 81), Rgb(88, 24, 232), Rgb(89, 97, 127), Rgb(90, 170, 22), Rgb(91, 243, 173), Rgb(92, 60, 68), Rgb(93, 133, 219), Rgb(94, 206, 114), Rgb(95, 23, 9), Rgb(96, 96, 160), Rgb(97, 169, 55), Rgb(98, 242, 206), Rgb(99, 59, 101), Rgb(100, 132, 252), Rgb(101, 205, 147), Rgb(102, 22, 42), Rgb(103, 95, 193), Rgb(104, 168, 88), Rgb(105, 241, 239), Rgb(106, 58, 134), Rgb(107, 131, 29), Rgb(108, 204, 180), Rgb(109, 21, 75), Rgb(110, 94, 226), Rgb(111, 167, 121), Rgb(112, 240, 16), Rgb(113, 57, 167), Rgb(114, 130, 62), Rgb(115, 203, 213), Rgb(116, 20, 108), Rgb(117, 93, 3), Rgb(118, 166, 154), Rgb(119, 239, 49), Rgb(120, 56, 200), Rgb(121, 129, 95), Rgb(122, 202, 246), Rgb(123, 19, 141), Rgb(124, 92, 36), Rgb(125, 165, 187), Rgb(126, 238, 82), Rgb(127, 55, 233), Rgb(128, 128, 128), Rgb(129, 201, 23), Rgb(130, 18, 174), Rgb(131, 91, 69), Rgb(132, 164, 220), Rgb(133, 237, 115), Rgb(134, 54, 10), Rgb(135, 127, 161), Rgb(136, 200, 56), Rgb(137, 17, 207), Rgb(138, 90, 102), Rgb(139, 163, 253), Rgb(140, 236, 148), Rgb(141, 53, 43), Rgb(142, 126, 194), Rgb(143, 199, 89), Rgb(144, 16, 240), Rgb(145, 89, 135), Rgb(146, 162, 30), Rgb(147, 235, 181), Rgb(148, 52, 76), Rgb(149, 125, 227), Rgb(150, 198, 122), Rgb(151, 15, 17), Rgb(152, 88, 168), Rgb(153, 161, 63), Rgb(154, 234, 214), Rgb(155, 51, 109), Rgb(156, 124, 4), Rgb(157, 197, 155), Rgb(158, 14, 50), Rgb(159, 87, 201), Rgb(160, 160, 96), Rgb(161, 233, 247), Rgb(162, 50, 142), Rgb(163, 123, 37), Rgb(164, 196, 188), Rgb(165, 13, 83), Rgb(166, 86, 234), Rgb(167, 159, 129), Rgb(168, 232, 24), Rgb(169, 49, 175), Rgb(170, 122, 70), Rgb(171, 195, 221), Rgb(172, 12, 116), Rgb(173, 85, 11), Rgb(174, 158, 162), Rgb(175, 231, 57), Rgb(176, 48, 208), Rgb(177, 121, 103), Rgb(178, 194, 254), Rgb(179, 11, 149), Rgb(180, 84, 44), Rgb(181, 157, 195), Rgb(182, 230, 90), Rgb(183, 47, 241), Rgb(184, 120, 136), Rgb(185, 193, 31), Rgb(186, 10, 182), Rgb(187, 83, 77), Rgb(188, 156, 228), Rgb(189, 229, 123), Rgb(190, 46, 18), Rgb(191, 119, 169), Rgb(192, 192, 64), Rgb(193, 9, 215), Rgb(194, 82, 110), Rgb(195, 155, 5), Rgb(196, 228, 156), Rgb(197, 45, 51), Rgb(198, 118, 202), Rgb(199, 191, 97), Rgb(200, 8, 248), Rgb(201, 81, 143), Rgb(202, 154, 38), Rgb(203, 227, 189), Rgb(204, 44, 84), Rgb(205, 117, 235), Rgb(206, 190, 130), Rgb(207, 7, 25), Rgb(208, 80, 176), Rgb(209, 153, 71), Rgb(210, 226, 222), Rgb(211, 43, 117), Rgb(212, 116, 12), Rgb(213, 189, 163), Rgb(214, 6, 58), Rgb(215, 79, 209), Rgb(216, 152, 104), Rgb(217, 225, 255), Rgb(218, 42, 150), Rgb(219, 115, 45), Rgb(220, 188, 196), Rgb(221, 5, 91), Rgb(222, 78, 242), Rgb(223, 151, 137), Rgb(224, 224, 32), Rgb(225, 41, 183), Rgb(226, 114, 78), Rgb(227, 187, 229), Rgb(228, 4, 124), Rgb(229, 77, 19), Rgb(230, 150, 170), Rgb(231, 223, 65), Rgb(232, 40, 216), Rgb(233, 113, 111), Rgb(234, 186, 6), Rgb(235, 3, 157), Rgb(236, 76, 52), Rgb(237, 149, 203), Rgb(238, 222, 98), Rgb(239, 39, 249), Rgb(240, 112, 144), Rgb(241, 185, 39), Rgb(242, 2, 190), Rgb(243, 75, 85), Rgb(244, 148, 236), Rgb(245, 221, 131), Rgb(246, 38, 26), Rgb(247, 111, 177), Rgb(248, 184, 72), Rgb(249, 1, 223), Rgb(250, 74, 118), Rgb(251, 147, 13), Rgb(252, 220, 164), Rgb(253, 37, 59), Rgb(254, 110, 210), Rgb(255, 183, 105)]",
+      "before": {
+        "p50_ns": 355.42,
+        "p95_ns": 468.75,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 328.75,
+        "p95_ns": 330,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/layout_0",
+      "semantics": "allocate fixed and zero/weighted-fill widths under 65535-cell budget; construct/drop result Vec",
+      "output": "[]",
+      "before": {
+        "p50_ns": 1.8458,
+        "p95_ns": 1.85,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 1.8417,
+        "p95_ns": 1.85,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/layout_3",
+      "semantics": "allocate fixed and zero/weighted-fill widths under 65535-cell budget; construct/drop result Vec",
+      "output": "[3, 0, 65532]",
+      "before": {
+        "p50_ns": 31.15,
+        "p95_ns": 32.9625,
+        "allocations": 1,
+        "allocated_bytes": 6
+      },
+      "after": {
+        "p50_ns": 30.1208,
+        "p95_ns": 33.1,
+        "allocations": 1,
+        "allocated_bytes": 6
+      }
+    },
+    {
+      "case": "style/layout_64",
+      "semantics": "allocate fixed and zero/weighted-fill widths under 65535-cell budget; construct/drop result Vec",
+      "output": "[3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2729, 3, 0, 1365, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728, 3, 0, 1364, 2728]",
+      "before": {
+        "p50_ns": 396.3459,
+        "p95_ns": 410.275,
+        "allocations": 1,
+        "allocated_bytes": 128
+      },
+      "after": {
+        "p50_ns": 397.2084,
+        "p95_ns": 415.625,
+        "allocations": 1,
+        "allocated_bytes": 128
+      }
+    },
+    {
+      "case": "style/layout_1024",
+      "semantics": "allocate fixed and zero/weighted-fill widths under 65535-cell budget; construct/drop result Vec",
+      "output": "[3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 169, 3, 0, 85, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168, 3, 0, 84, 168]",
+      "before": {
+        "p50_ns": 6390.6916,
+        "p95_ns": 6882.9833,
+        "allocations": 1,
+        "allocated_bytes": 2048
+      },
+      "after": {
+        "p50_ns": 6388.9416,
+        "p95_ns": 6748.0333,
+        "allocations": 1,
+        "allocated_bytes": 2048
+      }
+    },
+    {
+      "case": "style/theme_default",
+      "semantics": "construct/drop explicit theme tokens without environment lookup or terminal I/O",
+      "output": "Theme { text: Style { fg: Rgb(229, 235, 223), bg: Rgb(23, 31, 24), bold: false, underline: false, reverse: false }, muted: Style { fg: Rgb(160, 176, 150), bg: Rgb(23, 31, 24), bold: false, underline: false, reverse: false }, accent: Style { fg: Rgb(175, 215, 135), bg: Rgb(23, 31, 24), bold: true, underline: false, reverse: false }, surface: Style { fg: Rgb(229, 235, 223), bg: Rgb(23, 31, 24), bold: false, underline: false, reverse: false }, border: Style { fg: Rgb(116, 145, 92), bg: Rgb(23, 31, 24), bold: false, underline: false, reverse: false }, error: Style { fg: Rgb(255, 150, 140), bg: Rgb(23, 31, 24), bold: false, underline: true, reverse: false }, focus: Style { fg: Rgb(229, 235, 223), bg: Rgb(23, 31, 24), bold: true, underline: false, reverse: true }, gap: 1, padding: 1, border_kind: Rounded, reduced_motion: false }",
+      "before": {
+        "p50_ns": 3.9875,
+        "p95_ns": 4.9666,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.9834,
+        "p95_ns": 4.2292,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "style/theme_plain",
+      "semantics": "construct/drop explicit theme tokens without environment lookup or terminal I/O",
+      "output": "Theme { text: Style { fg: Default, bg: Default, bold: false, underline: false, reverse: false }, muted: Style { fg: Default, bg: Default, bold: false, underline: false, reverse: false }, accent: Style { fg: Default, bg: Default, bold: true, underline: false, reverse: false }, surface: Style { fg: Default, bg: Default, bold: false, underline: false, reverse: false }, border: Style { fg: Default, bg: Default, bold: false, underline: false, reverse: false }, error: Style { fg: Default, bg: Default, bold: false, underline: true, reverse: false }, focus: Style { fg: Default, bg: Default, bold: false, underline: false, reverse: true }, gap: 1, padding: 1, border_kind: Ascii, reduced_motion: true }",
+      "before": {
+        "p50_ns": 2.6375,
+        "p95_ns": 3.775,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.5,
+        "p95_ns": 2.6584,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    }
+  ],
+  "limits": [
+    "Rust-only matched before/after fixtures; no upstream speed ratio or full-framework-stage claim.",
+    "One macOS arm64 host, sequential release probes, 31 samples. No affinity/frequency control; retain p95 and unchanged-path regressions.",
+    "Requested System allocation counters are separate from timing and are not resident-memory measurements.",
+    "Successful measurements do not automatically raise a quality score or establish universal optimality."
+  ],
+  "reporter_sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da"
+}

@@ -1,0 +1,59 @@
+"""Independently rebuild both representation experiments from all raw cohorts."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-owned-text';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+expected={f'clock-text/owned_{k}':v for k,v in {'zero':'0s','nanoseconds':'42ns','microseconds':'1.5µs','seconds':'1.23456789s','hours':'1h2m3.4s','maximum_go':'2562047h47m16.854775807s'}.items()}
+experiments={};contexts={}
+for name,count,intervals,variants in [('prototype',72,2232,{'string','current','direct','source'}),('library',90,2790,{'string','current','direct','library','source'})]:
+ folder=base/name;context=json.loads((folder/'context.json').read_bytes());contexts[name]=context
+ assert context['status']=='complete' and context['timing_records']==count and context['retained_intervals']==intervals and context['finite_inputs']==6
+ attempt=Path(context['attempt']);assert not attempt.is_absolute() and '..' not in attempt.parts
+ assert json.loads((folder/attempt/'context.json').read_bytes())==context
+ assert sha((folder/context['raw']).read_bytes())==context['raw_sha256']
+ assert (folder/attempt/'cases.jsonl').read_bytes()==(folder/context['raw']).read_bytes()
+ for n,h in context['archive_sha256'].items():assert sha((folder/n).read_bytes())==h,(name,n)
+ for n,h in context['root_input_sha256'].items():assert sha(subprocess.check_output(['git','show',context['source_head']+':'+n]))==h,(name,n)
+ oracle=read_probe_outputs((folder/'source-outputs.jsonl').read_text());assert set(oracle)==set(expected)
+ for key,value in oracle.items():assert value['output']==expected[key] and value['first_return_value']==len(expected[key].encode())
+ for variant in variants-{'source'}:assert read_probe_outputs((folder/(variant+'-outputs.jsonl')).read_text())==oracle
+ journal=read_records((folder/context['raw']).read_text());reconstructed={};rows=[];raw_hashes={}
+ for cohort,order in enumerate(context['orders'],1):
+  assert set(order)==variants and len(order)==len(variants)
+  for variant in order:
+   raw=folder/attempt/f'cohort-{cohort}-{variant}.jsonl';assert not raw.with_suffix('.stderr').read_bytes()
+   raw_hashes[str(raw.relative_to(folder))]=sha(raw.read_bytes())
+   records=read_records(raw.read_text());assert set(records)==set(expected)
+   for case,record in records.items():
+    assert len(record['samples_ns'])==31 and record['calibration']['target_ns']==20_000_000
+    for key in ['output','semantics','first_return_value']:assert record[key]==oracle[case][key]
+    key=f'cohort-{cohort}/{variant}/{case}';assert key not in reconstructed
+    reconstructed[key]={**record,'case':key,'source_case':case,'cohort':cohort,'variant':variant}
+    rows.append({'cohort':cohort,'variant':variant,'case':case,**summary(record)})
+ assert reconstructed==journal and len(journal)==count and sum(len(r['samples_ns']) for r in journal.values())==intervals
+ assert rows==context['summary']
+ experiments[name]={'source_head':context['source_head'],'timing_records':count,'retained_intervals':intervals,'finite_inputs':6,'raw_sha256':context['raw_sha256'],'context_sha256':sha((folder/'context.json').read_bytes()),'process_raw_sha256':raw_hashes,'summary':rows}
+assert contexts['prototype']['binary_sha256']['source']==contexts['library']['binary_sha256']['source']
+assert contexts['prototype']['binary_sha256']['rust']!=contexts['library']['binary_sha256']['rust']
+comparisons=[]
+for cohort in range(1,4):
+ rows={(r['variant'],r['case']):r for r in experiments['library']['summary'] if r['cohort']==cohort}
+ for case in expected:
+  current,library,source=(rows[(v,case)] for v in ['current','library','source'])
+  assert library['p50_ns']<current['p50_ns'] and library['allocations']==current['allocations']==0
+  comparisons.append({'cohort':cohort,'case':case,'current_text':current,'actual_library':library,'source':source,
+   'p50_reduction_percent':100*(current['p50_ns']-library['p50_ns'])/current['p50_ns'],
+   'library_p95_worse_than_current':library['p95_ns']>current['p95_ns'],
+   'library_p50_slower_than_source':library['p50_ns']>source['p50_ns']})
+assert sum(r['library_p95_worse_than_current'] for r in comparisons)==1
+assert sum(r['library_p50_slower_than_source'] for r in comparisons)==12
+result={'schema':1,'status':'complete','experiments':experiments,'total_timing_records':162,'total_retained_intervals':5022,'comparison_inputs':6,'comparisons':comparisons,
+ 'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'decision':'Retain actual owned Text API: all eighteen cohort/input medians improve over the existing Text formatting path. Keep the adverse seconds p95 in cohort one and all original controls. Four shared inputs remain slower than source; clock performance stays partial.',
+ 'limits':['Six repeated finite display inputs, not 162 new capabilities; no active scheduling, transport throughput, retained memory or physical RSS measurement.',
+ 'Counter accounting differs across Rust and Go; both Rust Text paths allocate zero only in this measured shared range. Wider Rust Duration output can allocate.',
+ 'Prototype and actual-library binaries/inputs stay separate. Original source helper binary is identical. All raw/calibration data remain; no samples or adverse cohorts are excluded.',
+ 'No affinity/frequency/ASLR control, universal optimum, entire-module parity, exhaustive soundness or Foundation completion claim.']}
+(base/'verification.json').write_text(json.dumps(result,indent=2)+'\n');print('Verified 162 records / 5022 intervals; 18 improved medians, one adverse p95 and 12 slower-than-source observations retained')

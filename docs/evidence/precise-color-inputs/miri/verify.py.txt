@@ -1,0 +1,13 @@
+"""Check current compile-input bytes and every retained Miri target result."""
+import hashlib,json,re
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+p=Path('docs/evidence/precise-color-inputs/miri');c=json.load(open(p/'context.json'));assert c['status']=='complete' and len(c['commands'])==5
+for n,d in c['source_sha256'].items():assert hashlib.sha256(Path(n).read_bytes()).hexdigest()==d,n
+counts={}
+for a in c['commands']:
+ raw=(p/a['log']).read_bytes();assert hashlib.sha256(raw).hexdigest()==a['log_sha256'] and a['exit_code']==0
+ counts[a['log']]=re.findall(r'test result: ok\. (\d+) passed',raw.decode())
+assert list(counts.values())==[['5'],['1'],['7'],['11'],['2']]
+v={'schema':1,'status':'complete','source_head':c['source_head'],'source_files_verified':len(c['source_sha256']),'seed':c['seed'],'context_sha256':hashlib.sha256((p/'context.json').read_bytes()).hexdigest(),'test_counts':counts,'limits':c['limits']}
+(p/'verification.json').write_text(json.dumps(v,indent=2)+'\n');print('110 compile-input files and 26 tests across five Miri targets verified')

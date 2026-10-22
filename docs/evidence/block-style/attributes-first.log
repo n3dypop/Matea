@@ -1,0 +1,34 @@
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running tests/blocks.rs (target/debug/deps/blocks-e88ba50b38fd2a77)
+
+running 11 tests
+test construction_normalizes_after_one_capturing_transform ... ok
+test pinned_custom_border_patterns_and_first_corner ... ok
+test rich_styles_survive_inline_cluster_merging_and_block_overrides ... ok
+test clipping_and_view_composition_preserve_whole_graphemes_and_damage ... ok
+test validation_and_user_panic_never_publish_partial_blocks ... ok
+test wide_custom_borders_preserve_clusters_and_fill_unfit_cells ... ok
+test pinned_attribute_groups_and_combining_spaces ... FAILED
+test pinned_inheritance_preserves_explicit_resets_and_child_spacing ... ok
+test pinned_border_gradient_perimeter_and_offsets ... ok
+test pinned_block_projection ... ok
+test generated_wraps_preserve_non_whitespace_and_bound_every_row ... ok
+
+failures:
+
+---- pinned_attribute_groups_and_combining_spaces stdout ----
+attribute attributes-1 input " \u{301}a" actual 1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20cc81,b42358,173229,1234ab,15,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0; source 1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20cc81,b42358,173229,1234ab,8,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;
+attribute attributes-3 input " \u{301}a" actual 1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20cc81,b42358,173229,1234ab,15,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0; source 1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20cc81,b42358,173229,1234ab,8,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;1,20,b42358,173229,1234ab,4,0;
+attribute attributes-5 input " \u{301}a" actual 1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20cc81,b42358,173229,1234ab,15,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0; source 1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20cc81,b42358,173229,1234ab,0,0;1,61,b42358,173229,1234ab,15,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;1,20,b42358,-,-,4,0;
+
+thread 'pinned_attribute_groups_and_combining_spaces' (2270029) panicked at crates/matea-render/tests/blocks.rs:690:5:
+144 mismatches; first ["attributes-1", "attributes-3", "attributes-5", "attributes-7", "attributes-9", "attributes-11", "attributes-13", "attributes-15", "attributes-17", "attributes-19", "attributes-21", "attributes-23"]
+
+
+failures:
+    pinned_attribute_groups_and_combining_spaces
+
+test result: FAILED. 10 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+error: test failed, to rerun pass `-p matea-render --test blocks`

@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "reference_sha": "4542a189d0fbeb156bb1df8730d253f2ef443c00",
+  "source_url": "https://github.com/charmbracelet/x/blob/4542a189d0fbeb156bb1df8730d253f2ef443c00/term/term_windows.go#L13",
+  "checks": [
+    {
+      "target": "windows",
+      "exit_code": 0,
+      "expected_result": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "target": "darwin",
+      "exit_code": 1,
+      "expected_result": true,
+      "log_sha256": "9105ea07851537c9ba38fff06e4817df2bac02591e895902a310068a591864ce"
+    },
+    {
+      "target": "linux",
+      "exit_code": 1,
+      "expected_result": true,
+      "log_sha256": "9105ea07851537c9ba38fff06e4817df2bac02591e895902a310068a591864ce"
+    }
+  ],
+  "limits": [
+    "Compiler reachability only, not native console execution. No copied upstream implementation is stored in Matea."
+  ],
+  "finding": "The public State embeds private state; Windows state.Mode is exported and promoted. The 13 raw declaration candidates do not enumerate this selector. Matea opaque state currently does not expose its customization capability."
+}

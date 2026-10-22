@@ -1,0 +1,529 @@
+{
+  "recorded_at_utc": "2026-10-17T07:42:05.458186+00:00",
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "baseline": {
+    "recorded_at_utc": "2026-10-17T07:22:31.971934+00:00",
+    "git_head": "79b538e9586aec12e82aaa54bf295da5fc939a63",
+    "host": "macOS-27.0.1-arm64-arm-64bit",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+    "raw_sha256": "56c4f41821eacad0c78f73a9e86cfa80b9b7caa7574ad6398038f7f88c886f5d",
+    "binary_sha256": "d330ebf654c9a5a37d313b49bfe11c936934ad06db42a783b7ba989343cb1e2a",
+    "source_sha256": {
+      "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+      "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+      "crates/matea-render/src/lib.rs": "ea4f60a3ef4323060b9b293db78ed0856a1b3d75d54988ea12b47e66ed0b5136",
+      "tools/perf-probe/src/main.rs": "17ca2ba583f0d2e46d25e1311f1e30d04bf5b20d98a9c22e1f551d30ee6b49b1"
+    },
+    "scope": "Rust-only scene construction/clone, paired with full build/render and clone/render. Plain snapshots checked outside timing; style correctness has separate tests. No upstream or real terminal parity."
+  },
+  "baseline_context_sha256": "2ab9b2795929428d9f05789f8acc457d4144634a72929c70d91a1b21abf2379c",
+  "initial_exploration": {
+    "context": "views-first-before-context.json",
+    "context_sha256": "6bd0bd38fe6fb7901370d177be10133c1f5d019a8d397a32ec004b1a07a2acf3",
+    "raw_sha256": "588936d25225cd7042cd2efb22aa074dac1a78e701b588acabc93a51c2f3b100"
+  },
+  "intermediate": {
+    "git_head_before_uncommitted_changes": "79b538e9586aec12e82aaa54bf295da5fc939a63",
+    "source_sha256": {
+      "crates/matea-render/src/lib.rs": "b48c613f5aeda4ff6f3e6b546ce723e5a0581c776867842d18d9cc6053079620",
+      "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+      "crates/matea-widgets/src/clocks.rs": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+      "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+      "tools/perf-probe/src/main.rs": "00a6d81276f58e7be8fe270b9edf8487cc2ca55a6798eced0301ab309926a34f"
+    },
+    "binary_sha256": "ea548d352132d1f62c25518d3af3223755c3a50ae21443b1e9b75ef28011e00e",
+    "raw_sha256": "7ea902d33271d7ec8a524a36ed725f81b363a7428ff0e16e90ce6517ef60f45b",
+    "scope": "Normalized inline Text before UTF-8 control scan optimization; character-by-character safe check."
+  },
+  "intermediate_patch_sha256": "c10d6006c388849541cd3163f9661e1bbcd365d99da8a38763b14e1dc01448d2",
+  "after_git_head_before_uncommitted_changes": "79b538e9586aec12e82aaa54bf295da5fc939a63",
+  "source_sha256": {
+    "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+    "Cargo.lock": "2cd452998d446961dad6e19eb381aa9bb0fdd5931eba3414e752555680109cc7",
+    "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+    "tools/perf-probe/src/main.rs": "00a6d81276f58e7be8fe270b9edf8487cc2ca55a6798eced0301ab309926a34f",
+    "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+    "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+    "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+    "crates/matea-widgets/src/clocks.rs": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+    "scripts/report_view_performance.py": "7e5a7eb43c27f43d9f0a583604e2ba1b0127a636b4c5136eef835e9bbaff3c07"
+  },
+  "binary_sha256": "569673f2bce051f627270905503f28bba264d726194550ec8f9f75e932d71245",
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "raw_sha256": {
+    "views-before.jsonl": "56c4f41821eacad0c78f73a9e86cfa80b9b7caa7574ad6398038f7f88c886f5d",
+    "views-normalized-stage.jsonl": "7ea902d33271d7ec8a524a36ed725f81b363a7428ff0e16e90ce6517ef60f45b",
+    "views-after.jsonl": "fe5d26a061bb5f38ac2028581a17bf2f908378db3053f5e5676a7030f631ff0f"
+  },
+  "cases": [
+    {
+      "case": "views/new_short_ascii",
+      "semantics": "construct and drop one owned text scene from borrowed UTF-8; no cell render or terminal I/O",
+      "output": "Matea tea\n\n\n",
+      "before": {
+        "p50_ns": 39.05415,
+        "p95_ns": 44.7958,
+        "allocations": 1,
+        "allocated_bytes": 9
+      },
+      "normalized_stage": {
+        "p50_ns": 11.3792,
+        "p95_ns": 376.0854,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 16.00835,
+        "p95_ns": 16.475,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/clone_short_ascii",
+      "semantics": "clone and drop one owned text scene; no cell render or terminal I/O",
+      "output": "Matea tea\n\n\n",
+      "before": {
+        "p50_ns": 32.44795,
+        "p95_ns": 36.95,
+        "allocations": 1,
+        "allocated_bytes": 9
+      },
+      "normalized_stage": {
+        "p50_ns": 4.5604,
+        "p95_ns": 5.98125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 7.0625,
+        "p95_ns": 7.82915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/new_render_short_ascii",
+      "semantics": "construct, normalize and render fresh owned scene to 72x4 cells; no terminal I/O",
+      "output": "Matea tea\n\n\n",
+      "before": {
+        "p50_ns": 1113.5979,
+        "p95_ns": 1152.34165,
+        "allocations": 2,
+        "allocated_bytes": 11529
+      },
+      "normalized_stage": {
+        "p50_ns": 1096.8083,
+        "p95_ns": 1119.83125,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1093.68335,
+        "p95_ns": 1183.31045,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/clone_render_short_ascii",
+      "semantics": "clone existing scene and render fresh 72x4 cell surface; no terminal I/O",
+      "output": "Matea tea\n\n\n",
+      "before": {
+        "p50_ns": 1119.2083,
+        "p95_ns": 1169.6771,
+        "allocations": 2,
+        "allocated_bytes": 11529
+      },
+      "normalized_stage": {
+        "p50_ns": 1092.6896,
+        "p95_ns": 1113.93335,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1089.9875,
+        "p95_ns": 1110.99165,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/new_short_unicode",
+      "semantics": "construct and drop one owned text scene from borrowed UTF-8; no cell render or terminal I/O",
+      "output": "抹茶 é\n\n\n",
+      "before": {
+        "p50_ns": 23.98545,
+        "p95_ns": 24.68125,
+        "allocations": 1,
+        "allocated_bytes": 10
+      },
+      "normalized_stage": {
+        "p50_ns": 14.07295,
+        "p95_ns": 14.87915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 12.18125,
+        "p95_ns": 12.6229,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/clone_short_unicode",
+      "semantics": "clone and drop one owned text scene; no cell render or terminal I/O",
+      "output": "抹茶 é\n\n\n",
+      "before": {
+        "p50_ns": 25.83335,
+        "p95_ns": 27.4354,
+        "allocations": 1,
+        "allocated_bytes": 10
+      },
+      "normalized_stage": {
+        "p50_ns": 4.30625,
+        "p95_ns": 4.31665,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.9167,
+        "p95_ns": 5.42085,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/new_render_short_unicode",
+      "semantics": "construct, normalize and render fresh owned scene to 72x4 cells; no terminal I/O",
+      "output": "抹茶 é\n\n\n",
+      "before": {
+        "p50_ns": 1170.52085,
+        "p95_ns": 1180.0625,
+        "allocations": 2,
+        "allocated_bytes": 11530
+      },
+      "normalized_stage": {
+        "p50_ns": 1146.3875,
+        "p95_ns": 1154.2396,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1148.9375,
+        "p95_ns": 1170.4708,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/clone_render_short_unicode",
+      "semantics": "clone existing scene and render fresh 72x4 cell surface; no terminal I/O",
+      "output": "抹茶 é\n\n\n",
+      "before": {
+        "p50_ns": 1171.21045,
+        "p95_ns": 1183.71665,
+        "allocations": 2,
+        "allocated_bytes": 11530
+      },
+      "normalized_stage": {
+        "p50_ns": 1135.05835,
+        "p95_ns": 1150.3979,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1139.95415,
+        "p95_ns": 1222.7667,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/new_long_ascii",
+      "semantics": "construct and drop one owned text scene from borrowed UTF-8; no cell render or terminal I/O",
+      "output": "Matea owns this longer line of terminal-neutral text without retaining a\n\n\n",
+      "before": {
+        "p50_ns": 28.0167,
+        "p95_ns": 29.40205,
+        "allocations": 1,
+        "allocated_bytes": 87
+      },
+      "normalized_stage": {
+        "p50_ns": 109.74585,
+        "p95_ns": 116.3729,
+        "allocations": 1,
+        "allocated_bytes": 87
+      },
+      "after": {
+        "p50_ns": 86.0146,
+        "p95_ns": 90.90415,
+        "allocations": 1,
+        "allocated_bytes": 87
+      }
+    },
+    {
+      "case": "views/clone_long_ascii",
+      "semantics": "clone and drop one owned text scene; no cell render or terminal I/O",
+      "output": "Matea owns this longer line of terminal-neutral text without retaining a\n\n\n",
+      "before": {
+        "p50_ns": 30.29375,
+        "p95_ns": 31.35625,
+        "allocations": 1,
+        "allocated_bytes": 87
+      },
+      "normalized_stage": {
+        "p50_ns": 32.6375,
+        "p95_ns": 34.40835,
+        "allocations": 1,
+        "allocated_bytes": 87
+      },
+      "after": {
+        "p50_ns": 40.35205,
+        "p95_ns": 41.4625,
+        "allocations": 1,
+        "allocated_bytes": 87
+      }
+    },
+    {
+      "case": "views/new_render_long_ascii",
+      "semantics": "construct, normalize and render fresh owned scene to 72x4 cells; no terminal I/O",
+      "output": "Matea owns this longer line of terminal-neutral text without retaining a\n\n\n",
+      "before": {
+        "p50_ns": 1734.89585,
+        "p95_ns": 1810.72705,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      },
+      "normalized_stage": {
+        "p50_ns": 1724.59375,
+        "p95_ns": 1792.15205,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      },
+      "after": {
+        "p50_ns": 1691.9146,
+        "p95_ns": 2763.0646,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      }
+    },
+    {
+      "case": "views/clone_render_long_ascii",
+      "semantics": "clone existing scene and render fresh 72x4 cell surface; no terminal I/O",
+      "output": "Matea owns this longer line of terminal-neutral text without retaining a\n\n\n",
+      "before": {
+        "p50_ns": 1729.2167,
+        "p95_ns": 1744.27085,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      },
+      "normalized_stage": {
+        "p50_ns": 1652.3104,
+        "p95_ns": 1672.0229,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      },
+      "after": {
+        "p50_ns": 1648.62085,
+        "p95_ns": 1656.59585,
+        "allocations": 2,
+        "allocated_bytes": 11607
+      }
+    },
+    {
+      "case": "views/new_controls",
+      "semantics": "construct and drop one owned text scene from borrowed UTF-8; no cell render or terminal I/O",
+      "output": "tea    �[31m\n抹茶\n\n",
+      "before": {
+        "p50_ns": 24.375,
+        "p95_ns": 25.45415,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "normalized_stage": {
+        "p50_ns": 98.025,
+        "p95_ns": 101.2604,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 101.4896,
+        "p95_ns": 105.6125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/clone_controls",
+      "semantics": "clone and drop one owned text scene; no cell render or terminal I/O",
+      "output": "tea    �[31m\n抹茶\n\n",
+      "before": {
+        "p50_ns": 26.32085,
+        "p95_ns": 28.78125,
+        "allocations": 1,
+        "allocated_bytes": 16
+      },
+      "normalized_stage": {
+        "p50_ns": 4.3875,
+        "p95_ns": 4.44165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 4.775,
+        "p95_ns": 5.23955,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/new_render_controls",
+      "semantics": "construct, normalize and render fresh owned scene to 72x4 cells; no terminal I/O",
+      "output": "tea    �[31m\n抹茶\n\n",
+      "before": {
+        "p50_ns": 1493.775,
+        "p95_ns": 1505.96665,
+        "allocations": 4,
+        "allocated_bytes": 11584
+      },
+      "normalized_stage": {
+        "p50_ns": 1487.1875,
+        "p95_ns": 1511.5958,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1488.01455,
+        "p95_ns": 1498.71875,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/clone_render_controls",
+      "semantics": "clone existing scene and render fresh 72x4 cell surface; no terminal I/O",
+      "output": "tea    �[31m\n抹茶\n\n",
+      "before": {
+        "p50_ns": 1501.04585,
+        "p95_ns": 1515.73125,
+        "allocations": 4,
+        "allocated_bytes": 11584
+      },
+      "normalized_stage": {
+        "p50_ns": 1392.08955,
+        "p95_ns": 1409.2417,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1392.21875,
+        "p95_ns": 1403.51665,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/formatted_counter",
+      "semantics": "format one numeric counter into an owned styled text scene; no cell render or terminal I/O",
+      "output": "Count: 42\n\n\n",
+      "before": {
+        "p50_ns": 37.7333,
+        "p95_ns": 41.48545,
+        "allocations": 1,
+        "allocated_bytes": 14
+      },
+      "normalized_stage": {
+        "p50_ns": 31.99585,
+        "p95_ns": 34.5979,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 30.54165,
+        "p95_ns": 31.6833,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "views/formatted_counter_render",
+      "semantics": "format numeric counter and render owned styled scene to fresh 72x4 cells; no terminal I/O",
+      "output": "Count: 42\n\n\n",
+      "before": {
+        "p50_ns": 1132.70625,
+        "p95_ns": 1146.4583,
+        "allocations": 2,
+        "allocated_bytes": 11534
+      },
+      "normalized_stage": {
+        "p50_ns": 1117.39165,
+        "p95_ns": 1153.9521,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      },
+      "after": {
+        "p50_ns": 1120.31875,
+        "p95_ns": 1136.05835,
+        "allocations": 1,
+        "allocated_bytes": 11520
+      }
+    },
+    {
+      "case": "views/short_panel",
+      "semantics": "construct and drop owned panel with short text/title and existing theme; no cell render or terminal I/O",
+      "output": "╭─Tea──────────────────────────────────────────────────────────────────╮\n│                                                                      │\n│ 抹茶                                                                 │\n│                                                                      │\n│                                                                      │\n╰──────────────────────────────────────────────────────────────────────╯",
+      "before": {
+        "p50_ns": 102.8042,
+        "p95_ns": 108.94585,
+        "allocations": 4,
+        "allocated_bytes": 149
+      },
+      "normalized_stage": {
+        "p50_ns": 62.79165,
+        "p95_ns": 65.28335,
+        "allocations": 2,
+        "allocated_bytes": 140
+      },
+      "after": {
+        "p50_ns": 63.29375,
+        "p95_ns": 66.35625,
+        "allocations": 2,
+        "allocated_bytes": 140
+      }
+    },
+    {
+      "case": "views/short_panel_render",
+      "semantics": "construct and render owned panel with short text/title to fresh 72x6 cells; no terminal I/O",
+      "output": "╭─Tea──────────────────────────────────────────────────────────────────╮\n│                                                                      │\n│ 抹茶                                                                 │\n│                                                                      │\n│                                                                      │\n╰──────────────────────────────────────────────────────────────────────╯",
+      "before": {
+        "p50_ns": 12294.625,
+        "p95_ns": 12462.8896,
+        "allocations": 5,
+        "allocated_bytes": 17429
+      },
+      "normalized_stage": {
+        "p50_ns": 12310.3875,
+        "p95_ns": 12388.70625,
+        "allocations": 3,
+        "allocated_bytes": 17420
+      },
+      "after": {
+        "p50_ns": 12253.7396,
+        "p95_ns": 12442.4021,
+        "allocations": 3,
+        "allocated_bytes": 17420
+      }
+    }
+  ],
+  "upstream_parity": false,
+  "limits": [
+    "One macOS arm64 host, sequential release binaries, 31 samples, 20,000 iterations/batch; no affinity/frequency control or removed outliers.",
+    "Rust-only comparison. Constructor/clone cases exclude rendering; complete cases include scene construction or clone and fresh surface rendering. No terminal I/O.",
+    "Normalization moves from rendering to construction. Long/control constructors and some clone paths regress; full-pipeline results and intermediate samples remain visible.",
+    "Formatted counter intentionally changes format! to format_args! through the new Text conversion; the output and operation purpose match, not the caller expression.",
+    "Rendered plain output fixtures match; separate tests compare complete cells/styles, ownership, all Unicode scalar control policies and Display errors.",
+    "Short inline allocation is an implementation detail. Large strings, surfaces, panels and arbitrary user formatting can still allocate; no whole-module parity claim."
+  ]
+}

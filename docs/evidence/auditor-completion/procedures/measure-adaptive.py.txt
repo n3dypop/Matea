@@ -1,0 +1,152 @@
+"""Archived procedure: run from Matea with Python3, pass preflight or a stage.
+Build root and isolated 2948000 baseline with the SAME pinned dependencies and
+unchanged audit_paths/measurement callers first. No builds/other probes overlap.
+macOS /usr/bin/time -l requires permission to read process accounting.
+"""
+import gzip,hashlib,json,os,platform,re,statistics,subprocess,sys,time
+if not __debug__: raise RuntimeError("archived procedure requires assertions enabled; refuse -O")
+from pathlib import Path
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from optimization_evidence import records
+BASE=ROOT/'docs/evidence/auditor-completion'
+FIX=Path('/private/tmp/matea-audit-stream-fixtures');FIX.mkdir(exist_ok=True)
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def save(path,value):path.write_text(json.dumps(value,indent=2)+'\n')
+def git(*args,cwd=ROOT):return subprocess.check_output(['git',*args],cwd=cwd,text=True).strip()
+def executable(artifacts):
+ rows=[json.loads(s) for s in Path(artifacts).read_text().splitlines()]
+ return Path(next(r['executable'] for r in rows if r.get('executable') and r.get('target',{}).get('name')=='audit_paths'))
+BIN={'baseline':Path('/private/tmp/matea-stream-before-adaptive/matea-api-audit'),'streaming':ROOT/'target/release/matea-api-audit'}
+BENCH={'baseline':Path('/private/tmp/matea-stream-before-adaptive/audit_paths'),'streaming':executable('/private/tmp/matea-adaptive-artifacts.jsonl')}
+EXCLUDE={'.git','target','examples','tests','benches','testdata','xtask','.github'}
+def paths(folder):
+ result=[]
+ def walk(path):
+  if path.is_symlink():return
+  if path.is_dir():
+   for p in sorted(path.iterdir()):
+    if p.name not in EXCLUDE:walk(p)
+  elif path.suffix=='.rs' and 'tests.rs' not in path.relative_to(folder).parts:result.append(path)
+ walk(folder);return result
+pins={p['name']:p['sha'] for p in json.load(open(ROOT/'docs/upstream-lock.json'))}
+corpus={};cases={};expected={}
+for count in [1000,10000,100000]:
+ for nested in [False,True]:
+  name=('nested' if nested else 'flat')+'_'+str(count);folder=FIX/name;folder.mkdir(exist_ok=True)
+  text=('#[cfg(feature="parent")] pub mod nested {\n' if nested else '')+''.join(f'#[cfg(unix)] pub const ITEM_{i}: usize = {i};\n' for i in range(count))+('}\n' if nested else '')
+  (folder/'fixture.rs').write_text(text);cases[name]=folder
+  # Literal NDJSON generator independent of Rust parser/serializer.
+  cfg=' # [cfg (feature = "parent")]' if nested else ''
+  rows=([{'file':'fixture.rs','line':1,'kind':'module','symbol':'nested','cfg':cfg}] if nested else [])
+  rows.extend({'file':'fixture.rs','line':i+1+int(nested),'kind':'const','symbol':('nested::' if nested else '')+f'ITEM_{i}','cfg':cfg+' # [cfg (unix)]'} for i in range(count))
+  expected[name]=b''.join((json.dumps(r,ensure_ascii=False,separators=(',',':'))+'\n').encode() for r in rows)
+for name in ['crossterm','ratatui']:
+ folder=ROOT.parent/'references'/name
+ assert git('rev-parse','HEAD',cwd=folder)==pins[name] and not git('status','--porcelain',cwd=folder),name
+ sources=paths(folder)
+ (FIX/(name+'.tsv')).write_text(''.join(p.relative_to(folder).as_posix()+'\t'+str(p)+'\n' for p in sources))
+ corpus[name]={p.relative_to(folder).as_posix():sha(p.read_bytes()) for p in sources}
+ cases[name]=folder;expected[name]=gzip.decompress((BASE/'before'/(name+'-expected.jsonl.gz')).read_bytes())
+for name in ['empty','malformed']:
+ folder=FIX/name;folder.mkdir(exist_ok=True);cases[name]=folder;expected[name]=b''
+ if name=='malformed':(folder/'fixture.rs').write_text('pub const GOOD:u8=0; pub struct')
+ else:
+  ignored=folder/'tests';ignored.mkdir(exist_ok=True);(ignored/'broken.rs').write_text('invalid Rust ignored by tree contract')
+# Directory traversal scale and fixed-tree exclusions, separately from AST scale.
+for name in ['wide_1000','deep_64','linked']:
+ folder=FIX/name;folder.mkdir(exist_ok=True);cases[name]=folder;rows=[]
+ if name=='wide_1000':
+  for i in range(1000):
+   path=folder/f'file{i:04}.rs';path.write_text(f'pub const ITEM_{i}:usize={i};\n')
+   rows.append({'file':path.name,'line':1,'kind':'const','symbol':f'ITEM_{i}','cfg':''})
+ elif name=='deep_64':
+  leaf=folder.joinpath(*(['d']*64));leaf.mkdir(parents=True,exist_ok=True)
+  (leaf/'fixture.rs').write_text('pub const DEEP:usize=0;\n')
+  rows=[{'file':'d/'*64+'fixture.rs','line':1,'kind':'const','symbol':'DEEP','cfg':''}]
+ else:
+  (folder/'fixture.rs').write_text('pub const LOCAL:usize=0;\n')
+  outside=FIX/'outside';outside.mkdir(exist_ok=True);(outside/'outside.rs').write_text('invalid Rust outside the fixed tree')
+  for target,destination in [(outside,folder/'escape'),(folder,folder/'cycle')]:
+   if not destination.is_symlink():destination.symlink_to(target,target_is_directory=True)
+  rows=[{'file':'fixture.rs','line':1,'kind':'const','symbol':'LOCAL','cfg':''}]
+ expected[name]=b''.join((json.dumps(r,separators=(',',':'))+'\n').encode() for r in rows)
+for length in [8191,8192,8193]:
+ name=f'boundary_{length}';folder=FIX/name;folder.mkdir(exist_ok=True);cases[name]=folder
+ text=''.join(f'pub const ITEM_{i}:usize={i};\n' for i in range(160));assert len(text)<length
+ (folder/'fixture.rs').write_text(text+' '*(length-len(text)))
+ rows=[{'file':'fixture.rs','line':i+1,'kind':'const','symbol':f'ITEM_{i}','cfg':''} for i in range(160)]
+ expected[name]=b''.join((json.dumps(r,separators=(',',':'))+'\n').encode() for r in rows)
+def fnv(data):
+ h=0xcbf29ce484222325
+ for b in data:h=((h^b)*0x100000001b3)&((1<<64)-1)
+ return h
+summaries={f'audit-parser/{n}':f'rows={v.count(bytes([10]))};bytes={len(v)};fnv64={fnv(v):016x}' for n,v in expected.items() if n in ['flat_1000','nested_1000','flat_10000','nested_10000','flat_100000','nested_100000','crossterm','ratatui']}
+for name,data in expected.items():
+ if f'audit-parser/{name}' in summaries:assert data==gzip.decompress((BASE/'before'/(name+'-expected.jsonl.gz')).read_bytes()),name
+ENV=dict(os.environ,MATEA_AUDIT_MANIFEST_DIR=str(FIX),MATEA_PERF_ITERATIONS='1',MATEA_PERF_MIN_SAMPLE_NS='20000000')
+def check(result,name):
+ assert result.returncode==(1 if name=='malformed' else 0),(name,result.stderr)
+ assert result.stdout==expected[name],name
+ if name!='malformed':assert result.stderr==b'',(name,result.stderr)
+def snapshot():return {p:sha((ROOT/p).read_bytes()) for p in sorted(execution_inputs(ROOT))}
+def preflight():
+ for kind,binary in BIN.items():
+  for name,folder in cases.items():check(subprocess.run([str(binary),str(folder)],capture_output=True,timeout=30),name)
+  p=subprocess.run([str(BENCH[kind]),'--audit-paths'],env=dict(ENV,MATEA_PROBE_OUTPUT_ONLY='1'),capture_output=True,check=True,timeout=60)
+  rows=[json.loads(s) for s in p.stdout.splitlines()];assert len(rows)==8
+  for row in rows:assert row['output']==summaries[row['case']]
+  (BASE/(kind+'-adaptive-preflight.jsonl')).write_bytes(p.stdout)
+  name='nested_100000';p=subprocess.run(['/usr/bin/time','-l',str(binary),str(cases[name])],capture_output=True,timeout=30)
+  assert p.returncode==0 and p.stdout==expected[name]
+  (BASE/(kind+'-adaptive-preflight-rss.txt')).write_bytes(p.stderr)
+  print(kind, re.search(rb'(\d+)\s+maximum resident set size',p.stderr).group(1).decode(),flush=True)
+def collect(stage):
+ kind='baseline' if stage.startswith('stream-control') else 'streaming';directory=BASE/stage;directory.mkdir()
+ before=snapshot();binary=BIN[kind];bench=BENCH[kind]
+ input_files={n:{p.relative_to(folder).as_posix():sha(p.read_bytes()) for p in paths(folder)} for n,folder in cases.items()}
+ ctx={'schema':1,'status':'running','stage':stage,'platform':platform.platform(),'source_sha256':before,'binary_sha256':sha(binary.read_bytes()),'bench_sha256':sha(bench.read_bytes()),'procedure_sha256':sha(Path(__file__).read_bytes()),'corpus':corpus,'case_files_sha256':input_files,'input_sha256':{n:sha((p/'fixture.rs').read_bytes()) for n,p in cases.items() if (p/'fixture.rs').exists()},'expected_sha256':{n:sha(v) for n,v in expected.items()},'baseline_source_head':git('rev-parse','222a2f9'),'baseline_lib_sha256':sha(Path('/private/tmp/matea-stream-before-adaptive/lib.rs').read_bytes())}
+ save(directory/'context.json',ctx)
+ try:
+  pre=subprocess.run([str(bench),'--audit-paths'],env=dict(ENV,MATEA_PROBE_OUTPUT_ONLY='1'),capture_output=True,check=True,timeout=60)
+  (directory/'phase-outputs.jsonl').write_bytes(pre.stdout)
+  for row in [json.loads(s) for s in pre.stdout.splitlines()]:assert row['output']==summaries[row['case']]
+  print(stage,'phase timing',flush=True)
+  with (directory/'phase-timing.jsonl').open('wb') as output:
+   subprocess.run([str(bench),'--audit-paths'],env=ENV,stdout=output,check=True,timeout=600)
+  phase=records((directory/'phase-timing.jsonl').read_text());assert len(phase)==8
+  for n,row in phase.items():assert row['output']==summaries[n]
+  print(stage,'CLI timing',flush=True)
+  with (directory/'cli-timing.jsonl').open('w') as output:
+   for name,folder in cases.items():
+    samples=[];errors=set()
+    for index in range(32):
+     start=time.perf_counter_ns();result=subprocess.run([str(binary),str(folder)],capture_output=True,timeout=30);elapsed=time.perf_counter_ns()-start
+     check(result,name);assert elapsed>0;errors.add(sha(result.stderr))
+     if index:samples.append(elapsed)
+     else:cold=elapsed
+    output.write(json.dumps({'case':name,'samples_ns':samples,'cold_ns':cold,'exit_code':result.returncode,'stdout_sha256':sha(result.stdout),'stderr_sha256':sorted(errors),'stdout_bytes':len(result.stdout)})+'\n');output.flush()
+  print(stage,'separate RSS',flush=True)
+  with (directory/'rss.jsonl').open('w') as output:
+   for name,folder in cases.items():
+    values=[]
+    for index in range(31):
+     r=subprocess.run(['/usr/bin/time','-l',str(binary),str(folder)],capture_output=True,timeout=30)
+     assert r.returncode==(1 if name=='malformed' else 0) and r.stdout==expected[name],name
+     (directory/f'rss-{name}-{index}.txt').write_bytes(r.stderr)
+     m=re.search(rb'(\d+)\s+maximum resident set size',r.stderr);assert m and int(m.group(1))>0
+     values.append(int(m.group(1)))
+    output.write(json.dumps({'case':name,'peak_rss_bytes':values,'semantics':'31 distinct child processes; native time -l; profiling times excluded from latency'})+'\n');output.flush()
+  assert before==snapshot(),'source changed during measurement'
+  assert input_files=={n:{p.relative_to(folder).as_posix():sha(p.read_bytes()) for p in paths(folder)} for n,folder in cases.items()},'input changed during measurement'
+  assert sha(binary.read_bytes())==ctx['binary_sha256'] and sha(bench.read_bytes())==ctx['bench_sha256']
+  for name,files in corpus.items():
+   folder=cases[name];assert git('rev-parse','HEAD',cwd=folder)==pins[name] and not git('status','--porcelain',cwd=folder)
+   assert files=={p.relative_to(folder).as_posix():sha(p.read_bytes()) for p in paths(folder)}
+  ctx.update(status='complete',raw_sha256={p.name:sha(p.read_bytes()) for p in directory.iterdir() if p.name!='context.json'})
+ except BaseException as error:
+  ctx.update(status='failed',error=repr(error));raise
+ finally:save(directory/'context.json',ctx)
+ print(stage,'complete',flush=True)
+if sys.argv[1]=='preflight':preflight()
+else:collect(sys.argv[1])

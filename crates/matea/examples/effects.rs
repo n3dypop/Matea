@@ -82,7 +82,7 @@ fn main() -> Result<(), matea::terminal::Error> {
     support::launch(App {
         status: "Loading tea...".into(),
         pending: true,
-        spinner: Spinner::default(),
+        spinner: Spinner::default().with_label("Working"),
         motion: !matea::terminal::Capabilities::detect().reduced_motion,
     })
 }

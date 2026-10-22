@@ -1,0 +1,44 @@
+"""Independently validate all frozen comparative timing and RSS observations."""
+import hashlib,json,statistics,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verifier refuses -O')
+root=Path.cwd();base=root/'docs/evidence/kitty-controls/performance';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+c=json.loads((base/'context.json').read_bytes());assert c['status']=='complete' and c['completed_cases']==105
+assert sha((base/c['raw']).read_bytes())==c['raw_sha256']
+assert sha((base/'measure.py.txt').read_bytes())==c['procedure_sha256']
+for n,h in c['archive_sha256'].items():assert sha((base/n).read_bytes())==h,n
+raw=read_records((base/c['raw']).read_text());assert len(raw)==105
+oracle={n:read_probe_outputs((base/(n+'-outputs.jsonl')).read_text()) for n in ['rust','source']}
+excluded='kitty-controls/packet_empty'
+shared=set(oracle['source'])-{excluded};assert len(shared)==14
+for n in shared:assert oracle['rust'][n]==oracle['source'][n],n
+rows=[]
+for cohort,order in enumerate(c['orders'],1):
+ for variant in order:
+  p=base/c['attempt']/f'cohort-{cohort}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes()
+  records=read_records(p.read_text());assert set(records)==set(oracle[variant])
+  for n,r in records.items():
+   for k in ['output','first_return_value','semantics']:assert r[k]==oracle[variant][n][k],(cohort,variant,n,k)
+   key=f'cohort-{cohort}/{variant}/{n}'
+   assert raw[key]=={**r,'case':key,'source_case':n,'cohort':cohort,'variant':variant}
+   assert len(r['samples_ns'])==31 and all(v>0 for v in r['samples_ns'])
+   rows.append({'cohort':cohort,'variant':variant,'case':n,**summary(r)})
+assert rows==c['summary'] and sum(len(v['samples_ns']) for v in raw.values())==3255
+assert len(c['rss'])==62
+for r in c['rss']:
+ p=base/c['attempt']/f"rss-{r['variant']}-{r['index']}.jsonl"
+ assert sha(p.read_bytes())==r['stdout_sha256'] and sha(p.with_suffix('.stderr').read_bytes())==r['stderr_sha256']
+ assert read_probe_outputs(p.read_text())==oracle[r['variant']]
+ values=[int(s.split()[0]) for s in p.with_suffix('.stderr').read_text().splitlines() if s.strip().endswith('maximum resident set size')]
+ assert values==[r['maximum_resident_set_bytes']] and values[0]>0
+ratios=[]
+for cohort in range(1,4):
+ for n in sorted(shared):
+  rs=next(r for r in rows if r['cohort']==cohort and r['variant']=='rust' and r['case']==n)
+  go=next(r for r in rows if r['cohort']==cohort and r['variant']=='source' and r['case']==n)
+  ratios.append({'cohort':cohort,'case':n,'rust_p50_ns':rs['p50_ns'],'source_p50_ns':go['p50_ns'],'rust_over_source_p50':rs['p50_ns']/go['p50_ns'],'rust_over_source_p95':rs['p95_ns']/go['p95_ns']})
+result={'schema':1,'status':'complete','source_head':c['source_head'],'timing_records':105,'retained_intervals':3255,'rss_children':62,'exact_output_source_cases':14,'excluded_from_source_ratios':[excluded],'rust_only_cases':sorted(set(oracle['rust'])-set(oracle['source'])),'ratios':ratios,'adverse_p50':[r for r in ratios if r['rust_over_source_p50']>1],'adverse_p95':[r for r in ratios if r['rust_over_source_p95']>1],'rss_whole_process':{v:{'median':statistics.median(r['maximum_resident_set_bytes'] for r in c['rss'] if r['variant']==v),'maximum':max(r['maximum_resident_set_bytes'] for r in c['rss'] if r['variant']==v)} for v in ['rust','source']},'procedure_sha256':sha(Path(__file__).read_bytes()),'context_sha256':sha((base/'context.json').read_bytes()),'limits':['Only fourteen exact-output fixtures qualify comparisons. Packet results compare source public primitives composed by the caller; they are not upstream full-writer performance.','All 105 records and adverse p50/p95 retained. Whole protocol scope remains partial.']}
+(base/'verification.json').write_text(json.dumps(result,indent=2)+'\n')
+print(f"Verified 105 records / 3255 samples / 62 RSS children; adverse p50 {len(result['adverse_p50'])}, p95 {len(result['adverse_p95'])}")

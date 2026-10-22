@@ -1,0 +1,161 @@
+[1m[92m    Updating[0m crates.io index
+[1m[92m Downloading[0m crates ...
+[1m[92m  Downloaded[0m cfg-if v1.0.4
+[1m[92m  Downloaded[0m errno v0.3.14
+[1m[92m  Downloaded[0m scopeguard v1.2.0
+[1m[92m  Downloaded[0m lock_api v0.4.14
+[1m[92m  Downloaded[0m parking_lot v0.12.5
+[1m[92m  Downloaded[0m smallvec v1.15.2
+[1m[92m  Downloaded[0m parking_lot_core v0.9.12
+[1m[92m  Downloaded[0m bitflags v2.13.1
+[1m[92m  Downloaded[0m rustix v1.1.4
+[1m[92m  Downloaded[0m libc v0.2.189
+[1m[92m  Downloaded[0m linux-raw-sys v0.12.1
+[1m[92m   Compiling[0m libc v0.2.189
+[1m[92m   Compiling[0m parking_lot_core v0.9.12
+[1m[92m    Checking[0m cfg-if v1.0.4
+[1m[92m    Checking[0m scopeguard v1.2.0
+[1m[92m   Compiling[0m rustix v1.1.4
+[1m[92m    Checking[0m smallvec v1.15.2
+[1m[92m    Checking[0m lock_api v0.4.14
+[1m[92m    Checking[0m bitflags v2.13.1
+[1m[92m    Checking[0m linux-raw-sys v0.12.1
+[1m[92m    Checking[0m parking_lot v0.12.5
+[1m[92m Documenting[0m crossterm v0.29.0 (${AUDIT_TEMP}/source/crossterm)
+[1m[33mwarning[0m[1m: unresolved link to `terminal::enable_raw_mode`[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mnote[0m: the link appears in this line:
+          
+          Raw mode can be enabled/disabled with the [enable_raw_mode](terminal::enable_raw_mode) and
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  [1m[94m= [0m[1mnote[0m: no item named `terminal` in scope
+  [1m[94m= [0m[1mnote[0m: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
+
+[1m[33mwarning[0m[1m: unresolved link to `terminal::disable_raw_mode`[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mnote[0m: the link appears in this line:
+          
+          [disable_raw_mode](terminal::disable_raw_mode) functions.
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [1m[94m= [0m[1mnote[0m: no item named `terminal` in scope
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+  [1m[94m--> [0msrc/lib.rs:39:25
+   [1m[94m|[0m
+[1m[94m39[0m [1m[94m|[0m //! - Module [`cursor`](cursor/index.html)
+   [1m[94m|[0m               [1m[94m--------[0m  [1m[33m^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+   [1m[94m|[0m               [1m[94m|[0m
+   [1m[94m|[0m               [1m[94mbecause label contains path that resolves to same destination[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+   [1m[94m= [0m[1mnote[0m: `#[warn(rustdoc::redundant_explicit_links)]` on by default
+[1m[96mhelp[0m: remove explicit link target
+   [1m[94m|[0m
+[1m[94m39[0m [91m- [0m//! - Module [91m[`cursor`](cursor/index.html)[0m
+[1m[94m39[0m [92m+ [0m//! - Module [92m[`cursor`][0m
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+  [1m[94m--> [0msrc/lib.rs:58:24
+   [1m[94m|[0m
+[1m[94m58[0m [1m[94m|[0m //! - Module [`style`](style/index.html)
+   [1m[94m|[0m               [1m[94m-------[0m  [1m[33m^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+   [1m[94m|[0m               [1m[94m|[0m
+   [1m[94m|[0m               [1m[94mbecause label contains path that resolves to same destination[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+   [1m[94m|[0m
+[1m[94m58[0m [91m- [0m//! - Module [91m[`style`](style/index.html)[0m
+[1m[94m58[0m [92m+ [0m//! - Module [92m[`style`][0m
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+  [1m[94m--> [0msrc/lib.rs:67:27
+   [1m[94m|[0m
+[1m[94m67[0m [1m[94m|[0m //! - Module [`terminal`](terminal/index.html)
+   [1m[94m|[0m               [1m[94m----------[0m  [1m[33m^^^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+   [1m[94m|[0m               [1m[94m|[0m
+   [1m[94m|[0m               [1m[94mbecause label contains path that resolves to same destination[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+           the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+   [1m[94m|[0m
+[1m[94m67[0m [91m- [0m//! - Module [91m[`terminal`](terminal/index.html)[0m
+[1m[94m67[0m [92m+ [0m//! - Module [92m[`terminal`][0m
+   [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+  [1m[94m|[0m
+  [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+          the label is used to resolve intra-doc links
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+   [1m[94m--> [0msrc/style.rs:206:19
+    [1m[94m|[0m
+[1m[94m206[0m [1m[94m|[0m /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    [1m[94m|[0m      [1m[94m-----------[0m  [1m[33m^^^^^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+    [1m[94m|[0m      [1m[94m|[0m
+    [1m[94m|[0m      [1m[94mbecause label contains path that resolves to same destination[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+    [1m[94m|[0m
+[1m[94m206[0m [91m- [0m/// [91m[`SetColors`](struct.SetColors.html)[0m can also be used to set both the foreground and background
+[1m[94m206[0m [92m+ [0m/// [92m[`SetColors`][0m can also be used to set both the foreground and background
+    [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+   [1m[94m--> [0msrc/style.rs:233:19
+    [1m[94m|[0m
+[1m[94m233[0m [1m[94m|[0m /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    [1m[94m|[0m      [1m[94m-----------[0m  [1m[33m^^^^^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+    [1m[94m|[0m      [1m[94m|[0m
+    [1m[94m|[0m      [1m[94mbecause label contains path that resolves to same destination[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+    [1m[94m|[0m
+[1m[94m233[0m [91m- [0m/// [91m[`SetColors`](struct.SetColors.html)[0m can also be used to set both the foreground and background
+[1m[94m233[0m [92m+ [0m/// [92m[`SetColors`][0m can also be used to set both the foreground and background
+    [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+   [1m[94m--> [0msrc/style.rs:260:19
+    [1m[94m|[0m
+[1m[94m260[0m [1m[94m|[0m /// [`SetColors`](struct.SetColors.html) can also be used to set both the foreground and background
+    [1m[94m|[0m      [1m[94m-----------[0m  [1m[33m^^^^^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+    [1m[94m|[0m      [1m[94m|[0m
+    [1m[94m|[0m      [1m[94mbecause label contains path that resolves to same destination[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+    [1m[94m|[0m
+[1m[94m260[0m [91m- [0m/// [91m[`SetColors`](struct.SetColors.html)[0m can also be used to set both the foreground and background
+[1m[94m260[0m [92m+ [0m/// [92m[`SetColors`][0m can also be used to set both the foreground and background
+    [1m[94m|[0m
+
+[1m[33mwarning[0m[1m: redundant explicit link target[0m
+   [1m[94m--> [0msrc/terminal.rs:434:27
+    [1m[94m|[0m
+[1m[94m434[0m [1m[94m|[0m /// See the [`ClearType`](enum.ClearType.html) enum.
+    [1m[94m|[0m              [1m[94m-----------[0m  [1m[33m^^^^^^^^^^^^^^^^^^^[0m [1m[33mexplicit target is redundant[0m
+    [1m[94m|[0m              [1m[94m|[0m
+    [1m[94m|[0m              [1m[94mbecause label contains path that resolves to same destination[0m
+    [1m[94m|[0m
+    [1m[94m= [0m[1mnote[0m: when a link's destination is not specified,
+            the label is used to resolve intra-doc links
+[1m[96mhelp[0m: remove explicit link target
+    [1m[94m|[0m
+[1m[94m434[0m [91m- [0m/// See the [91m[`ClearType`](enum.ClearType.html)[0m enum.
+[1m[94m434[0m [92m+ [0m/// See the [92m[`ClearType`][0m enum.
+    [1m[94m|[0m
+
+[1m[33mwarning[0m: `crossterm` (lib doc) generated 10 warnings
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 2.34s

@@ -1,0 +1,1649 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_source_auditor_measurements",
+  "source_head": "3df20028ce1c1ebddb4813b203398a23b5fab5af",
+  "order": [
+    "parser-current",
+    "before-1",
+    "after-1",
+    "after-2",
+    "before-2"
+  ],
+  "contexts_sha256": {
+    "parser-current": "ddaa330fe3e78dcc56c8cab32fc6d15f1b401dd4ce04bbcee165d3e43517b526",
+    "before-1": "9be049d3f67eb39756f312dc54a9978064a0e2016af1e32bbb4fd5a88696b17f",
+    "after-1": "ce075ea8515b7b9a743cc37a65188c1b8d39237ad064b3ae672506054af5b147",
+    "after-2": "6d6d911233bff21ba082bda886b41be743f25ed246e7674c888792a2884a4bae",
+    "before-2": "bc446aef2e136968a4aed828c3c04af4c7e22d665d00f5c6a38f0c1208d52ea9"
+  },
+  "parser_cases": 15,
+  "cli_records": 84,
+  "rss_observations": 2604,
+  "data": {
+    "parser": {
+      "flat_1000": {
+        "latency_ns": {
+          "p50": 1000282.53125,
+          "p95": 1039791.65625,
+          "min": 967058.59375,
+          "max": 1044143.21875
+        },
+        "cold_ns": 1431000,
+        "allocations": 13049,
+        "allocated_bytes": 844496,
+        "output": "rows=1000;bytes=87786;fnv64=566b77e8bffae739"
+      },
+      "struct_1000": {
+        "latency_ns": {
+          "p50": 1352846.375,
+          "p95": 1394205.75,
+          "min": 1289940.125,
+          "max": 1398427.0625
+        },
+        "cold_ns": 1110125,
+        "allocations": 19086,
+        "allocated_bytes": 1197784,
+        "output": "rows=1001;bytes=108871;fnv64=e0ec878cd29525e5"
+      },
+      "flat_10000": {
+        "latency_ns": {
+          "p50": 11447020.5,
+          "p95": 12969646,
+          "min": 9262500,
+          "max": 14373875
+        },
+        "cold_ns": 11505542,
+        "allocations": 130123,
+        "allocated_bytes": 8711216,
+        "output": "rows=10000;bytes=897788;fnv64=23d865f8c6320d9b"
+      },
+      "struct_10000": {
+        "latency_ns": {
+          "p50": 14688521,
+          "p95": 16655000,
+          "min": 12620937.5,
+          "max": 16700375
+        },
+        "cold_ns": 17230875,
+        "allocations": 190169,
+        "allocated_bytes": 12111864,
+        "output": "rows=10001;bytes=1107874;fnv64=8b514ca233f47a09"
+      },
+      "flat_100000": {
+        "latency_ns": {
+          "p50": 117018583,
+          "p95": 134948667,
+          "min": 99293667,
+          "max": 135755291
+        },
+        "cold_ns": 128530583,
+        "allocations": 1300596,
+        "allocated_bytes": 88390832,
+        "output": "rows=100000;bytes=9177790;fnv64=88c6bd9cb1233a9b"
+      },
+      "struct_100000": {
+        "latency_ns": {
+          "p50": 154133417,
+          "p95": 162581834,
+          "min": 145216334,
+          "max": 167856959
+        },
+        "cold_ns": 160763958,
+        "allocations": 1900655,
+        "allocated_bytes": 123310328,
+        "output": "rows=100001;bytes=11277877;fnv64=ed78166c0f18659d"
+      },
+      "bubbletea": {
+        "latency_ns": {
+          "p50": 3668765.625,
+          "p95": 3820260.5,
+          "min": 3388031.25,
+          "max": 4214713.5
+        },
+        "cold_ns": 33233500,
+        "allocations": 54948,
+        "allocated_bytes": 2206150.4,
+        "output": "rows=405;bytes=40022;fnv64=021f55212b0b09bc"
+      },
+      "lipgloss": {
+        "latency_ns": {
+          "p50": 7457104.25,
+          "p95": 7690468.75,
+          "min": 7042531.25,
+          "max": 7773927
+        },
+        "cold_ns": 7294334,
+        "allocations": 117412,
+        "allocated_bytes": 4702897.6,
+        "output": "rows=518;bytes=65937;fnv64=421f76795a06c769"
+      },
+      "bubbles": {
+        "latency_ns": {
+          "p50": 10027198,
+          "p95": 10605833.5,
+          "min": 9515198,
+          "max": 10772031.25
+        },
+        "cold_ns": 9871916,
+        "allocations": 154914,
+        "allocated_bytes": 6085088,
+        "output": "rows=873;bytes=112152;fnv64=5109f4bc7b93a905"
+      },
+      "huh": {
+        "latency_ns": {
+          "p50": 6306250,
+          "p95": 6617708.5,
+          "min": 5666135.25,
+          "max": 6684041.75
+        },
+        "cold_ns": 7607875,
+        "allocations": 99476,
+        "allocated_bytes": 3816576,
+        "output": "rows=572;bytes=74135;fnv64=161e47241546fd30"
+      },
+      "glamour": {
+        "latency_ns": {
+          "p50": 2921349,
+          "p95": 3121817.625,
+          "min": 2673098.875,
+          "max": 3507734.375
+        },
+        "cold_ns": 3089792,
+        "allocations": 46313,
+        "allocated_bytes": 1801696,
+        "output": "rows=275;bytes=34830;fnv64=c90efc406914e6cd"
+      },
+      "harmonica": {
+        "latency_ns": {
+          "p50": 221100.9140625,
+          "p95": 226445.3125,
+          "min": 212152.34375,
+          "max": 226497.390625
+        },
+        "cold_ns": 210541,
+        "allocations": 3417,
+        "allocated_bytes": 139689.6,
+        "output": "rows=20;bytes=2457;fnv64=d1a6302276c9a863"
+      },
+      "ultraviolet": {
+        "latency_ns": {
+          "p50": 19092791.5,
+          "p95": 19741000,
+          "min": 17672750,
+          "max": 19783021
+        },
+        "cold_ns": 19605125,
+        "allocations": 294157,
+        "allocated_bytes": 11428894.4,
+        "output": "rows=968;bytes=112194;fnv64=5bf09f8f6cab2c74"
+      },
+      "charm-x-ansi": {
+        "latency_ns": {
+          "p50": 10583198,
+          "p95": 10844395.75,
+          "min": 10130708.5,
+          "max": 10869823
+        },
+        "cold_ns": 9813666,
+        "allocations": 155354,
+        "allocated_bytes": 6435704,
+        "output": "rows=1238;bytes=134174;fnv64=1134102bd96ec494"
+      },
+      "charm-x-term": {
+        "latency_ns": {
+          "p50": 321595.703125,
+          "p95": 353251.953125,
+          "min": 298263.671875,
+          "max": 361837.25
+        },
+        "cold_ns": 299000,
+        "allocations": 5868,
+        "allocated_bytes": 218832,
+        "output": "rows=13;bytes=1710;fnv64=c22d28e5b65c1da5"
+      }
+    },
+    "before-1": {
+      "flat_1000": {
+        "latency_ns": {
+          "p50": 5521542,
+          "p95": 5902708,
+          "min": 5316041,
+          "max": 5929792
+        },
+        "cold_ns": 8248500,
+        "peak_rss_bytes": {
+          "p50": 6602752,
+          "p95": 6766592,
+          "min": 6406144,
+          "max": 6782976
+        },
+        "output_sha256": "fb1b06e18c4fe1d2ebd3d68423b78749fe78f10d2b4d799d45193dac01b296a2",
+        "exit_code": 0
+      },
+      "struct_1000": {
+        "latency_ns": {
+          "p50": 5760250,
+          "p95": 5875125,
+          "min": 5582459,
+          "max": 5877084
+        },
+        "cold_ns": 5641667,
+        "peak_rss_bytes": {
+          "p50": 6914048,
+          "p95": 6979584,
+          "min": 6651904,
+          "max": 7045120
+        },
+        "output_sha256": "7d37cd4e087035720fded6075c8243445f7d8dd725be1e23af570a1689e5f7f9",
+        "exit_code": 0
+      },
+      "flat_10000": {
+        "latency_ns": {
+          "p50": 13715625,
+          "p95": 17628208,
+          "min": 13517500,
+          "max": 30225125
+        },
+        "cold_ns": 14379750,
+        "peak_rss_bytes": {
+          "p50": 14073856,
+          "p95": 14237696,
+          "min": 13631488,
+          "max": 14368768
+        },
+        "output_sha256": "76c9e8e59d4549db09fc4111d1d4bc8a0a874224a13dcd646300fb45a70c6c32",
+        "exit_code": 0
+      },
+      "struct_10000": {
+        "latency_ns": {
+          "p50": 16798333,
+          "p95": 17032167,
+          "min": 16152584,
+          "max": 17096375
+        },
+        "cold_ns": 16758084,
+        "peak_rss_bytes": {
+          "p50": 13680640,
+          "p95": 14123008,
+          "min": 13139968,
+          "max": 14188544
+        },
+        "output_sha256": "801937655b4d87f5331da9aeb7616ecfbbe33214ac98dd0b2d9bce37dbd15e04",
+        "exit_code": 0
+      },
+      "flat_100000": {
+        "latency_ns": {
+          "p50": 95378459,
+          "p95": 99358792,
+          "min": 93671250,
+          "max": 99687500
+        },
+        "cold_ns": 95945625,
+        "peak_rss_bytes": {
+          "p50": 71090176,
+          "p95": 76562432,
+          "min": 68960256,
+          "max": 79020032
+        },
+        "output_sha256": "93d8658b576770e8c9369a9b9beb1372409eb28411af582d820278f77cbdc9e6",
+        "exit_code": 0
+      },
+      "struct_100000": {
+        "latency_ns": {
+          "p50": 122941292,
+          "p95": 124766750,
+          "min": 121261917,
+          "max": 125444166
+        },
+        "cold_ns": 121383292,
+        "peak_rss_bytes": {
+          "p50": 58802176,
+          "p95": 60047360,
+          "min": 57868288,
+          "max": 60162048
+        },
+        "output_sha256": "3d8930f40ba8a2aefad4c1414e430fe9be4424f380c41b78cbaadc7a2d161f92",
+        "exit_code": 0
+      },
+      "bubbletea": {
+        "latency_ns": {
+          "p50": 8383292,
+          "p95": 8572167,
+          "min": 8261542,
+          "max": 8575250
+        },
+        "cold_ns": 9891208,
+        "peak_rss_bytes": {
+          "p50": 8699904,
+          "p95": 8765440,
+          "min": 8470528,
+          "max": 8781824
+        },
+        "output_sha256": "fa28573a064ed43503209a3e2a0278e643e86b8d8f185d9ddfd4f94f54c21a3f",
+        "exit_code": 0
+      },
+      "lipgloss": {
+        "latency_ns": {
+          "p50": 12402125,
+          "p95": 12528417,
+          "min": 12135791,
+          "max": 12597166
+        },
+        "cold_ns": 13034417,
+        "peak_rss_bytes": {
+          "p50": 10682368,
+          "p95": 10944512,
+          "min": 10207232,
+          "max": 11091968
+        },
+        "output_sha256": "d632de3c5c8d290339068c31b5d2f6ca1d4d595b38301ef2f69741b038bfaa05",
+        "exit_code": 0
+      },
+      "bubbles": {
+        "latency_ns": {
+          "p50": 14660416,
+          "p95": 15008208,
+          "min": 14439458,
+          "max": 15622667
+        },
+        "cold_ns": 15065750,
+        "peak_rss_bytes": {
+          "p50": 11042816,
+          "p95": 11436032,
+          "min": 10731520,
+          "max": 11485184
+        },
+        "output_sha256": "4e8eba7d99d2850a89c545a3e021228741f6f951876c5cede13eaa690946de67",
+        "exit_code": 0
+      },
+      "huh": {
+        "latency_ns": {
+          "p50": 10769209,
+          "p95": 11075584,
+          "min": 10419833,
+          "max": 11845125
+        },
+        "cold_ns": 11157750,
+        "peak_rss_bytes": {
+          "p50": 10682368,
+          "p95": 11042816,
+          "min": 10240000,
+          "max": 11075584
+        },
+        "output_sha256": "3ec7fccb23ffd033ff5f16b0ede843f5f38f406ed5be8bac9e53ff7d1b4520f1",
+        "exit_code": 0
+      },
+      "glamour": {
+        "latency_ns": {
+          "p50": 7630833,
+          "p95": 7760125,
+          "min": 7483625,
+          "max": 7827292
+        },
+        "cold_ns": 8356208,
+        "peak_rss_bytes": {
+          "p50": 8110080,
+          "p95": 8257536,
+          "min": 7864320,
+          "max": 8273920
+        },
+        "output_sha256": "d72b87ae94538bc5f0853660f22172505282a0137ef46d48dacf6751f6a81b28",
+        "exit_code": 0
+      },
+      "harmonica": {
+        "latency_ns": {
+          "p50": 4346500,
+          "p95": 4454334,
+          "min": 4237250,
+          "max": 4456542
+        },
+        "cold_ns": 4588916,
+        "peak_rss_bytes": {
+          "p50": 5816320,
+          "p95": 5914624,
+          "min": 5685248,
+          "max": 5931008
+        },
+        "output_sha256": "6e567bfb759eabcf7cee5671cfe73523096eb9c16f36ed6e0ee6e2090199be1c",
+        "exit_code": 0
+      },
+      "ultraviolet": {
+        "latency_ns": {
+          "p50": 22999375,
+          "p95": 23347083,
+          "min": 22587292,
+          "max": 23364000
+        },
+        "cold_ns": 23420750,
+        "peak_rss_bytes": {
+          "p50": 11829248,
+          "p95": 12386304,
+          "min": 11190272,
+          "max": 12451840
+        },
+        "output_sha256": "54738f8924e8524c0d75609da4a81575d6af32706039e817c447454d8d41cb33",
+        "exit_code": 0
+      },
+      "charm-x-ansi": {
+        "latency_ns": {
+          "p50": 15964292,
+          "p95": 16285625,
+          "min": 15657666,
+          "max": 16317625
+        },
+        "cold_ns": 16817208,
+        "peak_rss_bytes": {
+          "p50": 11304960,
+          "p95": 11730944,
+          "min": 10928128,
+          "max": 11747328
+        },
+        "output_sha256": "17c5085e1d89df035b258a8211862a2e596fca5a9f35f47ef8544ed6ad13ed06",
+        "exit_code": 0
+      },
+      "charm-x-term": {
+        "latency_ns": {
+          "p50": 4471667,
+          "p95": 4643583,
+          "min": 4374584,
+          "max": 4808459
+        },
+        "cold_ns": 4952917,
+        "peak_rss_bytes": {
+          "p50": 5914624,
+          "p95": 6078464,
+          "min": 5767168,
+          "max": 6127616
+        },
+        "output_sha256": "45f0971bd9df7ffa01793586922752cbf9ebb57e301561748452ddec4494e32f",
+        "exit_code": 0
+      },
+      "empty": {
+        "latency_ns": {
+          "p50": 3753750,
+          "p95": 3813833,
+          "min": 3665375,
+          "max": 4070125
+        },
+        "cold_ns": 3821958,
+        "peak_rss_bytes": {
+          "p50": 4718592,
+          "p95": 4849664,
+          "min": 4571136,
+          "max": 4849664
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0
+      },
+      "malformed": {
+        "latency_ns": {
+          "p50": 3797417,
+          "p95": 3854459,
+          "min": 3730416,
+          "max": 3856416
+        },
+        "cold_ns": 3858875,
+        "peak_rss_bytes": {
+          "p50": 5128192,
+          "p95": 5292032,
+          "min": 4997120,
+          "max": 5308416
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      },
+      "wide_1000": {
+        "latency_ns": {
+          "p50": 21112958,
+          "p95": 21721625,
+          "min": 20771250,
+          "max": 22062125
+        },
+        "cold_ns": 28936125,
+        "peak_rss_bytes": {
+          "p50": 8863744,
+          "p95": 8929280,
+          "min": 8699904,
+          "max": 8962048
+        },
+        "output_sha256": "bab10e885426cf4734ba614d744ceee382d40526c38a45c716f064cca370a21e",
+        "exit_code": 0
+      },
+      "deep_64": {
+        "latency_ns": {
+          "p50": 5543000,
+          "p95": 5763875,
+          "min": 5444750,
+          "max": 5800834
+        },
+        "cold_ns": 6682250,
+        "peak_rss_bytes": {
+          "p50": 5652480,
+          "p95": 5767168,
+          "min": 5505024,
+          "max": 5865472
+        },
+        "output_sha256": "aa186d81c546702e49b0956db2651181deccc514f7e5accec20e281f5ca3e96f",
+        "exit_code": 0
+      },
+      "linked_dirs": {
+        "latency_ns": {
+          "p50": 3974125,
+          "p95": 5054750,
+          "min": 3834209,
+          "max": 5859750
+        },
+        "cold_ns": 3990208,
+        "peak_rss_bytes": {
+          "p50": 5521408,
+          "p95": 5668864,
+          "min": 5406720,
+          "max": 5685248
+        },
+        "output_sha256": "6844df737654c27084dbdce2c500352d1fd0d9bf9ed59552ea211b89e74450ee",
+        "exit_code": 0
+      },
+      "missing": {
+        "latency_ns": {
+          "p50": 3719958,
+          "p95": 3816500,
+          "min": 3562958,
+          "max": 3818000
+        },
+        "cold_ns": 3827750,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4816896,
+          "min": 4620288,
+          "max": 4816896
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      }
+    },
+    "after-1": {
+      "flat_1000": {
+        "latency_ns": {
+          "p50": 4752209,
+          "p95": 5018583,
+          "min": 4583500,
+          "max": 5137667
+        },
+        "cold_ns": 6753208,
+        "peak_rss_bytes": {
+          "p50": 6684672,
+          "p95": 6799360,
+          "min": 6455296,
+          "max": 6815744
+        },
+        "output_sha256": "fb1b06e18c4fe1d2ebd3d68423b78749fe78f10d2b4d799d45193dac01b296a2",
+        "exit_code": 0
+      },
+      "struct_1000": {
+        "latency_ns": {
+          "p50": 5017708,
+          "p95": 5301833,
+          "min": 4860041,
+          "max": 5353875
+        },
+        "cold_ns": 5088250,
+        "peak_rss_bytes": {
+          "p50": 6963200,
+          "p95": 7061504,
+          "min": 6766592,
+          "max": 7077888
+        },
+        "output_sha256": "7d37cd4e087035720fded6075c8243445f7d8dd725be1e23af570a1689e5f7f9",
+        "exit_code": 0
+      },
+      "flat_10000": {
+        "latency_ns": {
+          "p50": 14397000,
+          "p95": 15469042,
+          "min": 13512750,
+          "max": 31502625
+        },
+        "cold_ns": 13840292,
+        "peak_rss_bytes": {
+          "p50": 14139392,
+          "p95": 14286848,
+          "min": 13565952,
+          "max": 14336000
+        },
+        "output_sha256": "76c9e8e59d4549db09fc4111d1d4bc8a0a874224a13dcd646300fb45a70c6c32",
+        "exit_code": 0
+      },
+      "struct_10000": {
+        "latency_ns": {
+          "p50": 16954584,
+          "p95": 17232875,
+          "min": 16414625,
+          "max": 17326792
+        },
+        "cold_ns": 16864708,
+        "peak_rss_bytes": {
+          "p50": 13877248,
+          "p95": 14270464,
+          "min": 13467648,
+          "max": 14336000
+        },
+        "output_sha256": "801937655b4d87f5331da9aeb7616ecfbbe33214ac98dd0b2d9bce37dbd15e04",
+        "exit_code": 0
+      },
+      "flat_100000": {
+        "latency_ns": {
+          "p50": 96187667,
+          "p95": 100094333,
+          "min": 94898542,
+          "max": 101979625
+        },
+        "cold_ns": 96206583,
+        "peak_rss_bytes": {
+          "p50": 70844416,
+          "p95": 72941568,
+          "min": 68845568,
+          "max": 73596928
+        },
+        "output_sha256": "93d8658b576770e8c9369a9b9beb1372409eb28411af582d820278f77cbdc9e6",
+        "exit_code": 0
+      },
+      "struct_100000": {
+        "latency_ns": {
+          "p50": 122475750,
+          "p95": 125326458,
+          "min": 120094125,
+          "max": 127142416
+        },
+        "cold_ns": 124343084,
+        "peak_rss_bytes": {
+          "p50": 59195392,
+          "p95": 60112896,
+          "min": 58441728,
+          "max": 60899328
+        },
+        "output_sha256": "3d8930f40ba8a2aefad4c1414e430fe9be4424f380c41b78cbaadc7a2d161f92",
+        "exit_code": 0
+      },
+      "bubbletea": {
+        "latency_ns": {
+          "p50": 8559167,
+          "p95": 8673250,
+          "min": 8378125,
+          "max": 8713584
+        },
+        "cold_ns": 9861416,
+        "peak_rss_bytes": {
+          "p50": 8634368,
+          "p95": 8699904,
+          "min": 8421376,
+          "max": 8749056
+        },
+        "output_sha256": "fa28573a064ed43503209a3e2a0278e643e86b8d8f185d9ddfd4f94f54c21a3f",
+        "exit_code": 0
+      },
+      "lipgloss": {
+        "latency_ns": {
+          "p50": 12577792,
+          "p95": 12712333,
+          "min": 12350500,
+          "max": 12763792
+        },
+        "cold_ns": 12698833,
+        "peak_rss_bytes": {
+          "p50": 10682368,
+          "p95": 11026432,
+          "min": 10108928,
+          "max": 11206656
+        },
+        "output_sha256": "d632de3c5c8d290339068c31b5d2f6ca1d4d595b38301ef2f69741b038bfaa05",
+        "exit_code": 0
+      },
+      "bubbles": {
+        "latency_ns": {
+          "p50": 14866792,
+          "p95": 15097541,
+          "min": 14721292,
+          "max": 15208833
+        },
+        "cold_ns": 14950625,
+        "peak_rss_bytes": {
+          "p50": 11108352,
+          "p95": 11370496,
+          "min": 10829824,
+          "max": 11550720
+        },
+        "output_sha256": "4e8eba7d99d2850a89c545a3e021228741f6f951876c5cede13eaa690946de67",
+        "exit_code": 0
+      },
+      "huh": {
+        "latency_ns": {
+          "p50": 11037167,
+          "p95": 11253458,
+          "min": 10832292,
+          "max": 11298875
+        },
+        "cold_ns": 11308250,
+        "peak_rss_bytes": {
+          "p50": 10764288,
+          "p95": 11042816,
+          "min": 10354688,
+          "max": 11042816
+        },
+        "output_sha256": "3ec7fccb23ffd033ff5f16b0ede843f5f38f406ed5be8bac9e53ff7d1b4520f1",
+        "exit_code": 0
+      },
+      "glamour": {
+        "latency_ns": {
+          "p50": 7808750,
+          "p95": 7984250,
+          "min": 7698041,
+          "max": 7989500
+        },
+        "cold_ns": 8135208,
+        "peak_rss_bytes": {
+          "p50": 8142848,
+          "p95": 8224768,
+          "min": 7946240,
+          "max": 8306688
+        },
+        "output_sha256": "d72b87ae94538bc5f0853660f22172505282a0137ef46d48dacf6751f6a81b28",
+        "exit_code": 0
+      },
+      "harmonica": {
+        "latency_ns": {
+          "p50": 4495041,
+          "p95": 4682584,
+          "min": 4245375,
+          "max": 4858750
+        },
+        "cold_ns": 4677292,
+        "peak_rss_bytes": {
+          "p50": 5816320,
+          "p95": 5963776,
+          "min": 5619712,
+          "max": 6078464
+        },
+        "output_sha256": "6e567bfb759eabcf7cee5671cfe73523096eb9c16f36ed6e0ee6e2090199be1c",
+        "exit_code": 0
+      },
+      "ultraviolet": {
+        "latency_ns": {
+          "p50": 23291083,
+          "p95": 23593208,
+          "min": 22917708,
+          "max": 23659917
+        },
+        "cold_ns": 22913833,
+        "peak_rss_bytes": {
+          "p50": 11894784,
+          "p95": 12271616,
+          "min": 11354112,
+          "max": 12304384
+        },
+        "output_sha256": "54738f8924e8524c0d75609da4a81575d6af32706039e817c447454d8d41cb33",
+        "exit_code": 0
+      },
+      "charm-x-ansi": {
+        "latency_ns": {
+          "p50": 16241333,
+          "p95": 16409584,
+          "min": 16102084,
+          "max": 16473458
+        },
+        "cold_ns": 16493208,
+        "peak_rss_bytes": {
+          "p50": 11272192,
+          "p95": 11583488,
+          "min": 10698752,
+          "max": 11632640
+        },
+        "output_sha256": "17c5085e1d89df035b258a8211862a2e596fca5a9f35f47ef8544ed6ad13ed06",
+        "exit_code": 0
+      },
+      "charm-x-term": {
+        "latency_ns": {
+          "p50": 4617291,
+          "p95": 4781042,
+          "min": 4410667,
+          "max": 5086583
+        },
+        "cold_ns": 5344084,
+        "peak_rss_bytes": {
+          "p50": 5980160,
+          "p95": 6144000,
+          "min": 5799936,
+          "max": 6144000
+        },
+        "output_sha256": "45f0971bd9df7ffa01793586922752cbf9ebb57e301561748452ddec4494e32f",
+        "exit_code": 0
+      },
+      "empty": {
+        "latency_ns": {
+          "p50": 3934500,
+          "p95": 4128500,
+          "min": 3742459,
+          "max": 4176333
+        },
+        "cold_ns": 4022459,
+        "peak_rss_bytes": {
+          "p50": 4767744,
+          "p95": 4898816,
+          "min": 4603904,
+          "max": 4964352
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0
+      },
+      "malformed": {
+        "latency_ns": {
+          "p50": 3935500,
+          "p95": 4122167,
+          "min": 3718250,
+          "max": 4174125
+        },
+        "cold_ns": 4151250,
+        "peak_rss_bytes": {
+          "p50": 5226496,
+          "p95": 5341184,
+          "min": 5046272,
+          "max": 5341184
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      },
+      "wide_1000": {
+        "latency_ns": {
+          "p50": 21582583,
+          "p95": 21833791,
+          "min": 21353708,
+          "max": 21841292
+        },
+        "cold_ns": 21633416,
+        "peak_rss_bytes": {
+          "p50": 8880128,
+          "p95": 8962048,
+          "min": 8699904,
+          "max": 8994816
+        },
+        "output_sha256": "bab10e885426cf4734ba614d744ceee382d40526c38a45c716f064cca370a21e",
+        "exit_code": 0
+      },
+      "deep_64": {
+        "latency_ns": {
+          "p50": 5678917,
+          "p95": 5783125,
+          "min": 5547250,
+          "max": 5816542
+        },
+        "cold_ns": 6190084,
+        "peak_rss_bytes": {
+          "p50": 5701632,
+          "p95": 5865472,
+          "min": 5505024,
+          "max": 5947392
+        },
+        "output_sha256": "aa186d81c546702e49b0956db2651181deccc514f7e5accec20e281f5ca3e96f",
+        "exit_code": 0
+      },
+      "linked_dirs": {
+        "latency_ns": {
+          "p50": 4007041,
+          "p95": 4100250,
+          "min": 3815250,
+          "max": 4273042
+        },
+        "cold_ns": 3929459,
+        "peak_rss_bytes": {
+          "p50": 5586944,
+          "p95": 5734400,
+          "min": 5439488,
+          "max": 5832704
+        },
+        "output_sha256": "6844df737654c27084dbdce2c500352d1fd0d9bf9ed59552ea211b89e74450ee",
+        "exit_code": 0
+      },
+      "missing": {
+        "latency_ns": {
+          "p50": 3807791,
+          "p95": 4002583,
+          "min": 3686166,
+          "max": 4063375
+        },
+        "cold_ns": 4057416,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4931584,
+          "min": 4620288,
+          "max": 4931584
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      }
+    },
+    "after-2": {
+      "flat_1000": {
+        "latency_ns": {
+          "p50": 4713917,
+          "p95": 4854750,
+          "min": 4536292,
+          "max": 4979708
+        },
+        "cold_ns": 5523959,
+        "peak_rss_bytes": {
+          "p50": 6684672,
+          "p95": 6799360,
+          "min": 6504448,
+          "max": 6815744
+        },
+        "output_sha256": "fb1b06e18c4fe1d2ebd3d68423b78749fe78f10d2b4d799d45193dac01b296a2",
+        "exit_code": 0
+      },
+      "struct_1000": {
+        "latency_ns": {
+          "p50": 5133000,
+          "p95": 5816875,
+          "min": 4932208,
+          "max": 5914416
+        },
+        "cold_ns": 5278583,
+        "peak_rss_bytes": {
+          "p50": 6946816,
+          "p95": 7045120,
+          "min": 6701056,
+          "max": 7094272
+        },
+        "output_sha256": "7d37cd4e087035720fded6075c8243445f7d8dd725be1e23af570a1689e5f7f9",
+        "exit_code": 0
+      },
+      "flat_10000": {
+        "latency_ns": {
+          "p50": 13937791,
+          "p95": 15027708,
+          "min": 13547083,
+          "max": 18793042
+        },
+        "cold_ns": 13427750,
+        "peak_rss_bytes": {
+          "p50": 14172160,
+          "p95": 14237696,
+          "min": 13697024,
+          "max": 14319616
+        },
+        "output_sha256": "76c9e8e59d4549db09fc4111d1d4bc8a0a874224a13dcd646300fb45a70c6c32",
+        "exit_code": 0
+      },
+      "struct_10000": {
+        "latency_ns": {
+          "p50": 17102458,
+          "p95": 17342291,
+          "min": 16425500,
+          "max": 33388250
+        },
+        "cold_ns": 17142792,
+        "peak_rss_bytes": {
+          "p50": 13811712,
+          "p95": 14188544,
+          "min": 13254656,
+          "max": 14254080
+        },
+        "output_sha256": "801937655b4d87f5331da9aeb7616ecfbbe33214ac98dd0b2d9bce37dbd15e04",
+        "exit_code": 0
+      },
+      "flat_100000": {
+        "latency_ns": {
+          "p50": 95729000,
+          "p95": 97273417,
+          "min": 93879500,
+          "max": 97750958
+        },
+        "cold_ns": 94988416,
+        "peak_rss_bytes": {
+          "p50": 71663616,
+          "p95": 74137600,
+          "min": 69353472,
+          "max": 75628544
+        },
+        "output_sha256": "93d8658b576770e8c9369a9b9beb1372409eb28411af582d820278f77cbdc9e6",
+        "exit_code": 0
+      },
+      "struct_100000": {
+        "latency_ns": {
+          "p50": 122688041,
+          "p95": 124202459,
+          "min": 120749292,
+          "max": 125585959
+        },
+        "cold_ns": 124024542,
+        "peak_rss_bytes": {
+          "p50": 59228160,
+          "p95": 60293120,
+          "min": 58294272,
+          "max": 62357504
+        },
+        "output_sha256": "3d8930f40ba8a2aefad4c1414e430fe9be4424f380c41b78cbaadc7a2d161f92",
+        "exit_code": 0
+      },
+      "bubbletea": {
+        "latency_ns": {
+          "p50": 8553042,
+          "p95": 8728708,
+          "min": 8338166,
+          "max": 8789083
+        },
+        "cold_ns": 9936708,
+        "peak_rss_bytes": {
+          "p50": 8667136,
+          "p95": 8732672,
+          "min": 8437760,
+          "max": 8749056
+        },
+        "output_sha256": "fa28573a064ed43503209a3e2a0278e643e86b8d8f185d9ddfd4f94f54c21a3f",
+        "exit_code": 0
+      },
+      "lipgloss": {
+        "latency_ns": {
+          "p50": 12609209,
+          "p95": 12728792,
+          "min": 12411625,
+          "max": 12775250
+        },
+        "cold_ns": 12811875,
+        "peak_rss_bytes": {
+          "p50": 10698752,
+          "p95": 11091968,
+          "min": 10207232,
+          "max": 11223040
+        },
+        "output_sha256": "d632de3c5c8d290339068c31b5d2f6ca1d4d595b38301ef2f69741b038bfaa05",
+        "exit_code": 0
+      },
+      "bubbles": {
+        "latency_ns": {
+          "p50": 14950041,
+          "p95": 18383042,
+          "min": 14693833,
+          "max": 20830709
+        },
+        "cold_ns": 15107333,
+        "peak_rss_bytes": {
+          "p50": 11091968,
+          "p95": 11550720,
+          "min": 10616832,
+          "max": 11632640
+        },
+        "output_sha256": "4e8eba7d99d2850a89c545a3e021228741f6f951876c5cede13eaa690946de67",
+        "exit_code": 0
+      },
+      "huh": {
+        "latency_ns": {
+          "p50": 11012750,
+          "p95": 11227500,
+          "min": 10813458,
+          "max": 11310584
+        },
+        "cold_ns": 11154292,
+        "peak_rss_bytes": {
+          "p50": 10698752,
+          "p95": 11026432,
+          "min": 9945088,
+          "max": 11042816
+        },
+        "output_sha256": "3ec7fccb23ffd033ff5f16b0ede843f5f38f406ed5be8bac9e53ff7d1b4520f1",
+        "exit_code": 0
+      },
+      "glamour": {
+        "latency_ns": {
+          "p50": 7808542,
+          "p95": 7913333,
+          "min": 7684041,
+          "max": 7968792
+        },
+        "cold_ns": 7938542,
+        "peak_rss_bytes": {
+          "p50": 8126464,
+          "p95": 8224768,
+          "min": 7880704,
+          "max": 8306688
+        },
+        "output_sha256": "d72b87ae94538bc5f0853660f22172505282a0137ef46d48dacf6751f6a81b28",
+        "exit_code": 0
+      },
+      "harmonica": {
+        "latency_ns": {
+          "p50": 4418250,
+          "p95": 4823875,
+          "min": 4262459,
+          "max": 4984584
+        },
+        "cold_ns": 4796917,
+        "peak_rss_bytes": {
+          "p50": 5816320,
+          "p95": 5963776,
+          "min": 5652480,
+          "max": 5963776
+        },
+        "output_sha256": "6e567bfb759eabcf7cee5671cfe73523096eb9c16f36ed6e0ee6e2090199be1c",
+        "exit_code": 0
+      },
+      "ultraviolet": {
+        "latency_ns": {
+          "p50": 23241541,
+          "p95": 23587458,
+          "min": 22980208,
+          "max": 23614250
+        },
+        "cold_ns": 23581334,
+        "peak_rss_bytes": {
+          "p50": 11894784,
+          "p95": 12271616,
+          "min": 11337728,
+          "max": 12582912
+        },
+        "output_sha256": "54738f8924e8524c0d75609da4a81575d6af32706039e817c447454d8d41cb33",
+        "exit_code": 0
+      },
+      "charm-x-ansi": {
+        "latency_ns": {
+          "p50": 16226375,
+          "p95": 16703000,
+          "min": 15983542,
+          "max": 17796541
+        },
+        "cold_ns": 16985000,
+        "peak_rss_bytes": {
+          "p50": 11337728,
+          "p95": 11714560,
+          "min": 10862592,
+          "max": 11812864
+        },
+        "output_sha256": "17c5085e1d89df035b258a8211862a2e596fca5a9f35f47ef8544ed6ad13ed06",
+        "exit_code": 0
+      },
+      "charm-x-term": {
+        "latency_ns": {
+          "p50": 5396000,
+          "p95": 5577333,
+          "min": 5269458,
+          "max": 5657708
+        },
+        "cold_ns": 5798000,
+        "peak_rss_bytes": {
+          "p50": 5980160,
+          "p95": 6127616,
+          "min": 5799936,
+          "max": 6193152
+        },
+        "output_sha256": "45f0971bd9df7ffa01793586922752cbf9ebb57e301561748452ddec4494e32f",
+        "exit_code": 0
+      },
+      "empty": {
+        "latency_ns": {
+          "p50": 4570250,
+          "p95": 4777625,
+          "min": 4367291,
+          "max": 4780000
+        },
+        "cold_ns": 4713583,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4833280,
+          "min": 4603904,
+          "max": 4882432
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0
+      },
+      "malformed": {
+        "latency_ns": {
+          "p50": 3911208,
+          "p95": 8758791,
+          "min": 3750042,
+          "max": 14436458
+        },
+        "cold_ns": 4519417,
+        "peak_rss_bytes": {
+          "p50": 5193728,
+          "p95": 5308416,
+          "min": 5029888,
+          "max": 5373952
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      },
+      "wide_1000": {
+        "latency_ns": {
+          "p50": 21584333,
+          "p95": 21810292,
+          "min": 21400875,
+          "max": 21812500
+        },
+        "cold_ns": 29355875,
+        "peak_rss_bytes": {
+          "p50": 8896512,
+          "p95": 8962048,
+          "min": 8699904,
+          "max": 8978432
+        },
+        "output_sha256": "bab10e885426cf4734ba614d744ceee382d40526c38a45c716f064cca370a21e",
+        "exit_code": 0
+      },
+      "deep_64": {
+        "latency_ns": {
+          "p50": 5665875,
+          "p95": 5779625,
+          "min": 5455458,
+          "max": 5867375
+        },
+        "cold_ns": 6662250,
+        "peak_rss_bytes": {
+          "p50": 5685248,
+          "p95": 5799936,
+          "min": 5521408,
+          "max": 5799936
+        },
+        "output_sha256": "aa186d81c546702e49b0956db2651181deccc514f7e5accec20e281f5ca3e96f",
+        "exit_code": 0
+      },
+      "linked_dirs": {
+        "latency_ns": {
+          "p50": 3938667,
+          "p95": 4062916,
+          "min": 3834541,
+          "max": 4169625
+        },
+        "cold_ns": 3954375,
+        "peak_rss_bytes": {
+          "p50": 5554176,
+          "p95": 5685248,
+          "min": 5455872,
+          "max": 5701632
+        },
+        "output_sha256": "6844df737654c27084dbdce2c500352d1fd0d9bf9ed59552ea211b89e74450ee",
+        "exit_code": 0
+      },
+      "missing": {
+        "latency_ns": {
+          "p50": 3782250,
+          "p95": 3908167,
+          "min": 3644291,
+          "max": 3983250
+        },
+        "cold_ns": 3883084,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4898816,
+          "min": 4603904,
+          "max": 4915200
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      }
+    },
+    "before-2": {
+      "flat_1000": {
+        "latency_ns": {
+          "p50": 4732500,
+          "p95": 4876666,
+          "min": 4536958,
+          "max": 4900458
+        },
+        "cold_ns": 5260750,
+        "peak_rss_bytes": {
+          "p50": 6635520,
+          "p95": 6782976,
+          "min": 6438912,
+          "max": 6815744
+        },
+        "output_sha256": "fb1b06e18c4fe1d2ebd3d68423b78749fe78f10d2b4d799d45193dac01b296a2",
+        "exit_code": 0
+      },
+      "struct_1000": {
+        "latency_ns": {
+          "p50": 4993458,
+          "p95": 5191417,
+          "min": 4829084,
+          "max": 5209667
+        },
+        "cold_ns": 5154333,
+        "peak_rss_bytes": {
+          "p50": 6848512,
+          "p95": 7012352,
+          "min": 6651904,
+          "max": 7012352
+        },
+        "output_sha256": "7d37cd4e087035720fded6075c8243445f7d8dd725be1e23af570a1689e5f7f9",
+        "exit_code": 0
+      },
+      "flat_10000": {
+        "latency_ns": {
+          "p50": 13595875,
+          "p95": 13792083,
+          "min": 13329375,
+          "max": 13819875
+        },
+        "cold_ns": 12963750,
+        "peak_rss_bytes": {
+          "p50": 14139392,
+          "p95": 14254080,
+          "min": 13762560,
+          "max": 14303232
+        },
+        "output_sha256": "76c9e8e59d4549db09fc4111d1d4bc8a0a874224a13dcd646300fb45a70c6c32",
+        "exit_code": 0
+      },
+      "struct_10000": {
+        "latency_ns": {
+          "p50": 16646958,
+          "p95": 16925709,
+          "min": 16086083,
+          "max": 17162500
+        },
+        "cold_ns": 16732416,
+        "peak_rss_bytes": {
+          "p50": 13778944,
+          "p95": 14041088,
+          "min": 13336576,
+          "max": 14106624
+        },
+        "output_sha256": "801937655b4d87f5331da9aeb7616ecfbbe33214ac98dd0b2d9bce37dbd15e04",
+        "exit_code": 0
+      },
+      "flat_100000": {
+        "latency_ns": {
+          "p50": 95880375,
+          "p95": 97064209,
+          "min": 94476833,
+          "max": 97277833
+        },
+        "cold_ns": 96364083,
+        "peak_rss_bytes": {
+          "p50": 71303168,
+          "p95": 73842688,
+          "min": 69124096,
+          "max": 75710464
+        },
+        "output_sha256": "93d8658b576770e8c9369a9b9beb1372409eb28411af582d820278f77cbdc9e6",
+        "exit_code": 0
+      },
+      "struct_100000": {
+        "latency_ns": {
+          "p50": 124013791,
+          "p95": 126921584,
+          "min": 121231959,
+          "max": 127590666
+        },
+        "cold_ns": 125436083,
+        "peak_rss_bytes": {
+          "p50": 59129856,
+          "p95": 60391424,
+          "min": 58097664,
+          "max": 60702720
+        },
+        "output_sha256": "3d8930f40ba8a2aefad4c1414e430fe9be4424f380c41b78cbaadc7a2d161f92",
+        "exit_code": 0
+      },
+      "bubbletea": {
+        "latency_ns": {
+          "p50": 8577958,
+          "p95": 8816875,
+          "min": 8344708,
+          "max": 8831084
+        },
+        "cold_ns": 10350958,
+        "peak_rss_bytes": {
+          "p50": 8667136,
+          "p95": 8716288,
+          "min": 8437760,
+          "max": 8732672
+        },
+        "output_sha256": "fa28573a064ed43503209a3e2a0278e643e86b8d8f185d9ddfd4f94f54c21a3f",
+        "exit_code": 0
+      },
+      "lipgloss": {
+        "latency_ns": {
+          "p50": 12550125,
+          "p95": 12722750,
+          "min": 12332375,
+          "max": 12819125
+        },
+        "cold_ns": 12512542,
+        "peak_rss_bytes": {
+          "p50": 10829824,
+          "p95": 11223040,
+          "min": 10174464,
+          "max": 11386880
+        },
+        "output_sha256": "d632de3c5c8d290339068c31b5d2f6ca1d4d595b38301ef2f69741b038bfaa05",
+        "exit_code": 0
+      },
+      "bubbles": {
+        "latency_ns": {
+          "p50": 14854416,
+          "p95": 14990750,
+          "min": 14686250,
+          "max": 15145834
+        },
+        "cold_ns": 14909542,
+        "peak_rss_bytes": {
+          "p50": 11091968,
+          "p95": 11452416,
+          "min": 10715136,
+          "max": 11468800
+        },
+        "output_sha256": "4e8eba7d99d2850a89c545a3e021228741f6f951876c5cede13eaa690946de67",
+        "exit_code": 0
+      },
+      "huh": {
+        "latency_ns": {
+          "p50": 11003542,
+          "p95": 11171667,
+          "min": 10805292,
+          "max": 11198625
+        },
+        "cold_ns": 11124291,
+        "peak_rss_bytes": {
+          "p50": 10682368,
+          "p95": 10993664,
+          "min": 10256384,
+          "max": 11091968
+        },
+        "output_sha256": "3ec7fccb23ffd033ff5f16b0ede843f5f38f406ed5be8bac9e53ff7d1b4520f1",
+        "exit_code": 0
+      },
+      "glamour": {
+        "latency_ns": {
+          "p50": 7761417,
+          "p95": 7886458,
+          "min": 7617541,
+          "max": 8014166
+        },
+        "cold_ns": 8077792,
+        "peak_rss_bytes": {
+          "p50": 8110080,
+          "p95": 8175616,
+          "min": 7815168,
+          "max": 8224768
+        },
+        "output_sha256": "d72b87ae94538bc5f0853660f22172505282a0137ef46d48dacf6751f6a81b28",
+        "exit_code": 0
+      },
+      "harmonica": {
+        "latency_ns": {
+          "p50": 4377833,
+          "p95": 4481666,
+          "min": 4243250,
+          "max": 4488959
+        },
+        "cold_ns": 4739709,
+        "peak_rss_bytes": {
+          "p50": 5799936,
+          "p95": 5963776,
+          "min": 5603328,
+          "max": 5996544
+        },
+        "output_sha256": "6e567bfb759eabcf7cee5671cfe73523096eb9c16f36ed6e0ee6e2090199be1c",
+        "exit_code": 0
+      },
+      "ultraviolet": {
+        "latency_ns": {
+          "p50": 23173250,
+          "p95": 23512666,
+          "min": 22809084,
+          "max": 23686708
+        },
+        "cold_ns": 22904667,
+        "peak_rss_bytes": {
+          "p50": 12058624,
+          "p95": 12976128,
+          "min": 11403264,
+          "max": 13139968
+        },
+        "output_sha256": "54738f8924e8524c0d75609da4a81575d6af32706039e817c447454d8d41cb33",
+        "exit_code": 0
+      },
+      "charm-x-ansi": {
+        "latency_ns": {
+          "p50": 16188500,
+          "p95": 16448833,
+          "min": 15940083,
+          "max": 16448916
+        },
+        "cold_ns": 16194500,
+        "peak_rss_bytes": {
+          "p50": 11288576,
+          "p95": 11616256,
+          "min": 10780672,
+          "max": 11927552
+        },
+        "output_sha256": "17c5085e1d89df035b258a8211862a2e596fca5a9f35f47ef8544ed6ad13ed06",
+        "exit_code": 0
+      },
+      "charm-x-term": {
+        "latency_ns": {
+          "p50": 4557875,
+          "p95": 4894291,
+          "min": 4400333,
+          "max": 4929833
+        },
+        "cold_ns": 5040667,
+        "peak_rss_bytes": {
+          "p50": 5931008,
+          "p95": 6062080,
+          "min": 5750784,
+          "max": 6160384
+        },
+        "output_sha256": "45f0971bd9df7ffa01793586922752cbf9ebb57e301561748452ddec4494e32f",
+        "exit_code": 0
+      },
+      "empty": {
+        "latency_ns": {
+          "p50": 3896000,
+          "p95": 4092292,
+          "min": 3710084,
+          "max": 4098708
+        },
+        "cold_ns": 3942917,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4898816,
+          "min": 4571136,
+          "max": 4997120
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0
+      },
+      "malformed": {
+        "latency_ns": {
+          "p50": 3902916,
+          "p95": 4086917,
+          "min": 3760625,
+          "max": 4125667
+        },
+        "cold_ns": 3986083,
+        "peak_rss_bytes": {
+          "p50": 5160960,
+          "p95": 5259264,
+          "min": 5013504,
+          "max": 5308416
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      },
+      "wide_1000": {
+        "latency_ns": {
+          "p50": 21387750,
+          "p95": 21682042,
+          "min": 21129000,
+          "max": 21688167
+        },
+        "cold_ns": 21443708,
+        "peak_rss_bytes": {
+          "p50": 8880128,
+          "p95": 8929280,
+          "min": 8716288,
+          "max": 8945664
+        },
+        "output_sha256": "bab10e885426cf4734ba614d744ceee382d40526c38a45c716f064cca370a21e",
+        "exit_code": 0
+      },
+      "deep_64": {
+        "latency_ns": {
+          "p50": 5644625,
+          "p95": 5772125,
+          "min": 5485750,
+          "max": 5783459
+        },
+        "cold_ns": 6258750,
+        "peak_rss_bytes": {
+          "p50": 5668864,
+          "p95": 5783552,
+          "min": 5505024,
+          "max": 5783552
+        },
+        "output_sha256": "aa186d81c546702e49b0956db2651181deccc514f7e5accec20e281f5ca3e96f",
+        "exit_code": 0
+      },
+      "linked_dirs": {
+        "latency_ns": {
+          "p50": 3957917,
+          "p95": 4066125,
+          "min": 3821000,
+          "max": 4138125
+        },
+        "cold_ns": 4090167,
+        "peak_rss_bytes": {
+          "p50": 5570560,
+          "p95": 5718016,
+          "min": 5423104,
+          "max": 5799936
+        },
+        "output_sha256": "6844df737654c27084dbdce2c500352d1fd0d9bf9ed59552ea211b89e74450ee",
+        "exit_code": 0
+      },
+      "missing": {
+        "latency_ns": {
+          "p50": 3794167,
+          "p95": 3893833,
+          "min": 3615208,
+          "max": 3912000
+        },
+        "cold_ns": 3843125,
+        "peak_rss_bytes": {
+          "p50": 4734976,
+          "p95": 4866048,
+          "min": 4603904,
+          "max": 4882432
+        },
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 1
+      }
+    }
+  },
+  "reporter_sha256": "513f8c263bb92d4e7f218d26d83cddd75c482efeac3bcc6b3710cc2f26b39a58",
+  "limits": [
+    "One native macOS host; not a Rust/Go framework speed ratio or universal optimum.",
+    "Parser bytes/AST/NDJSON/FNV includes owned output allocation; ordinary CLI includes file traversal, reads, spawn, pipe and exit.",
+    "Allocator/requested-byte passes are separate from timings and actual per-child RSS; no cumulative parent RSS.",
+    "All raw p95/cold/failure and incompatible corrected outcomes remain explicit. Private source extraction does not resolve compiler exports."
+  ]
+}

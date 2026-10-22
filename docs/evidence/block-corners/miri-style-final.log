@@ -1,0 +1,68 @@
+warning: unused workspace dependency `bitflags`
+  --> Cargo.toml:17:1
+   |
+17 | bitflags = "=2.13.2"
+   | ^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_dependencies` is set to `warn` by default
+help: consider removing the workspace dependency `bitflags`
+warning: unused workspace dependency `crossterm`
+  --> Cargo.toml:13:1
+   |
+13 | crossterm = "=0.29.0"
+   | ^^^^^^^^^
+   |
+help: consider removing the workspace dependency `crossterm`
+warning: unused workspace dependency `matea`
+  --> Cargo.toml:24:1
+   |
+24 | matea = { path = "crates/matea" }
+   | ^^^^^
+   |
+help: consider removing the workspace dependency `matea`
+warning: unused workspace dependency `matea-core`
+  --> Cargo.toml:20:1
+   |
+20 | matea-core = { path = "crates/matea-core" }
+   | ^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-core`
+warning: unused workspace dependency `matea-motion`
+  --> Cargo.toml:23:1
+   |
+23 | matea-motion = { path = "crates/matea-motion" }
+   | ^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-motion`
+warning: unused workspace dependency `matea-render`
+  --> Cargo.toml:19:1
+   |
+19 | matea-render = { path = "crates/matea-render" }
+   | ^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-render`
+warning: unused workspace dependency `matea-terminal`
+  --> Cargo.toml:22:1
+   |
+22 | matea-terminal = { path = "crates/matea-terminal" }
+   | ^^^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-terminal`
+warning: unused workspace dependency `matea-widgets`
+  --> Cargo.toml:21:1
+   |
+21 | matea-widgets = { path = "crates/matea-widgets" }
+   | ^^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-widgets`
+warning: workspace (manifest) generated 8 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/matea-style/e4680c3851074ebf/out/matea_style-e4680c3851074ebf)
+
+running 3 tests
+test decoration::full_corner_tests::full_corner_width_limit_is_checked_before_publication ... ignored, 65535/65536-cell corner corpus runs natively; small clusters/mode ownership run under Miri
+test decoration::full_corner_tests::full_patterns_cache_extents_and_share_validated_storage ... ok
+test decoration::full_corner_tests::named_parts_are_owned_and_match_the_array_contract ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 9 filtered out; finished in 1.27s
+

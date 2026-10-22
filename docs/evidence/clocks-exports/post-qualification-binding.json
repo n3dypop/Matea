@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "tested_committed_inputs": "5d266d767e87a9f06570683d08138c7f4e45bb36",
+  "ci_source_head": "04e81bcc563e2bf8b647c0247dba2a19ddd7b499",
+  "execution_inputs": 198,
+  "programs": 156,
+  "review_units": 44,
+  "current_inputs_match_native_and_llvm": true,
+  "ci_different_inputs": [
+    "docs/quality-plan.json"
+  ],
+  "promoted_assessments": [
+    [
+      "matea-terminal/lib",
+      "portability"
+    ],
+    [
+      "matea-widgets/clocks",
+      "reference"
+    ],
+    [
+      "matea/lib",
+      "portability"
+    ],
+    [
+      "matea-terminal/integration-tests",
+      "portability"
+    ],
+    [
+      "scripts/coverage-and-issues",
+      "portability"
+    ],
+    [
+      "scripts/test-and-acceptance-drivers",
+      "portability"
+    ],
+    [
+      "matea-terminal/device",
+      "behavior"
+    ],
+    [
+      "matea-terminal/device",
+      "portability"
+    ]
+  ],
+  "clock_surface_verification_sha256": "16ed01696ae373f379aa8123bbb3af9c2a5c8c42613be3f1bc7b6f491679f9a4",
+  "reviewed_metadata_changes": "Six portability assessments plus device behavior qualified against exact-source native/instrumented CI. Clock reference assessment separately reviewed against 43 raw/compiler members on three profiles and existing exact-source native/source-fixture CI. Same files, units, scope and threshold; no performance promotion.",
+  "gate": {
+    "below_high_axes": 49,
+    "pending_issue_reports": 822,
+    "go_target_export_closure_reviewed": false,
+    "stage_a": "ongoing",
+    "stage_b": "not_started",
+    "f5": "closed"
+  },
+  "report_sha256": {
+    "docs/evidence/local-validation.json": "186897dbe717070f8e051bb8f90e70059e6b8ec5f6e55bbee44c5b35d28036b3",
+    "docs/evidence/quality/rust-execution-coverage.json": "5d62f496e0155284a01fd073f5a5e8c85ccb167c2ed9a41d1dfd736ba5ee03db",
+    "docs/evidence/quality/report.json": "9022699e5a6824afc06d938fed169e1eea40b3d28286f553928d995cd6570090",
+    "docs/evidence/quality/final-gate-status.json": "e440553adc6a36a5248f2e5580f49ee3fa1d8faed4e81a59c28f076035692208"
+  },
+  "procedure_sha256": "7a9d08aa87c7ff325151ca74c47a76f24a6011c1d946778823f9c78fd7059be9",
+  "limits": [
+    "CI and compiler probes remain bound to their actual inputs/revisions; later separately reviewed assessment metadata does not relabel executions.",
+    "Clock functional correspondence includes the explicit ADR 0019 improvements. Active timer end-to-end performance, full external API/dependency/target closure and universal/exhaustive correctness remain pending."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "status": "disproved_assumption_corrected",
+  "incorrect_assumption": "Cell::set_style gives addition priority for overlapping raw add/sub modifiers.",
+  "observed_source": "Both has_modifier and Cell::set_style give removal priority at the pinned source.",
+  "pinned_source": "ratatui d1ef782b48ddf0cb825c111d4d8b9adef572c0e1, ratatui-core/src/buffer/cell.rs:193",
+  "failed_check": "assertion failed: cell.modifier.contains(flag) at src/patches.rs:205",
+  "action": "Correct the control expectation from the inspected source and native observation; withdraw upstream-defect claim. The 579933 matched non-overlapping observations are unchanged."
+}

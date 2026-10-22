@@ -1,0 +1,71 @@
+"""Historical collector: pure prepared-byte Kitty controls, no image pipeline."""
+import hashlib,json,os,platform,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('collector refuses -O')
+root=Path.cwd();base=root/'docs/evidence/kitty-controls/performance';work=Path('/private/tmp/matea-kitty-controls-perf')
+sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_records,read_probe_outputs,summary
+from measurement_run import MeasurementRun
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+assert (work/'reference-helper.go').read_text()==(root/'tools/perf-upstream/main.go').read_text().replace('func main() {','func historicalMain() {',1)
+outputs={n:read_probe_outputs((base/(n+'-outputs.jsonl')).read_text()) for n in ['rust','source']}
+assert len(outputs['rust'])==20 and len(outputs['source'])==15
+excluded='kitty-controls/packet_empty'
+for n,r in outputs['source'].items():
+ if n!=excluded:assert outputs['rust'][n]==r,n
+r=outputs['rust'][excluded];s=outputs['source'][excluded]
+assert r['output']==s['output'][:-2]+';'+s['output'][-2:]
+assert r['first_return_value']==s['first_return_value']+1
+boundary={'schema':1,'status':'complete','shared_equal_output_cases':14,'excluded_from_ratios':{excluded:{'rust':r,'source':s,'reason':'Empty data includes a semicolon in Rust; the source framing function omits it. Raw outputs differ; no speed ratio is qualified.'}},'initial_preflight':'Initial exact-output assertion rejected the empty case before any timing; retained here rather than silently normalizing packet bytes.'}
+(base/'output-boundary.json').write_text(json.dumps(boundary,indent=2)+'\n')
+private={str(p.relative_to(work)):sha(p.read_bytes()) for p in work.rglob('*') if p.is_file() and p.suffix in ['.rs','.go','.toml','.lock','.mod','.sum']}
+for n in private:
+ p=base/'caller'/n;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(work/n,str(p)+'.txt')
+for n in ['rust-build.log','go-build.log']:shutil.copy2(work/n,base/n)
+binaries={'rust':Path('/private/tmp/matea-kitty-controls-perf-target/release/matea-kitty-controls-perf'),'source':work/'source-probe'}
+binary_hash={n:sha(p.read_bytes()) for n,p in binaries.items()}
+pin='faa4adf95555331dfb439b716cc83767ecdadeb4';reference=root.parent/'references/charm-x'
+prior=json.loads((root/'docs/evidence/kitty-controls/source-cursor-policy/context.json').read_bytes())
+reference_hash=dict(prior['reference_source_sha256'])
+reference_hash['ansi/graphics.go']=sha(subprocess.check_output(['git','show',pin+':ansi/graphics.go'],cwd=reference))
+cache=Path.home()/'go/pkg/mod/github.com/charmbracelet/x/ansi@v0.11.9'
+for n,h in reference_hash.items():
+ assert sha((cache/n.removeprefix('ansi/')).read_bytes())==h,n
+ assert sha(subprocess.check_output(['git','show',pin+':'+n],cwd=reference))==h,n
+for n,cmd in [('rustc',['rustc','-vV']),('go',['go','version']),('source-build-info',['go','version','-m',str(binaries['source'])])]:
+ (base/(n+'.txt')).write_bytes(subprocess.check_output(cmd))
+archives={str(p.relative_to(base)):sha(p.read_bytes()) for p in base.rglob('*') if p.is_file() and 'attempts' not in p.parts and p.name not in ['context.json','current.jsonl']}
+environment={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+orders=[['rust','source'],['source','rust'],['rust','source']];rows=[];rss=[]
+with MeasurementRun(base,root=root) as run:
+ run.update(source_head=head,root_input_sha256=inputs,private_input_sha256=private,binary_sha256=binary_hash,archive_sha256=archives,reference_sha=pin,reference_source_sha256=reference_hash,orders=orders,procedure_sha256=sha(Path(__file__).read_bytes()),platform=platform.platform(),architecture=platform.machine(),scope='Twenty Rust operations and fifteen source operations; fourteen exact-output shared cases. Source packets compose public Options/ansi.KittyGraphics and standard base64, not the upstream whole image writer.',limits=['No build/test/Miri/coverage/download overlaps ordinary timing. All positive calibrated samples and adverse results retained.','One native host; no affinity/frequency/ASLR controls or universal optimum. Prepared bytes only: no image conversion, codec, compression algorithm, terminal IO or actual media lifecycle.','Strict Rust validation includes checks absent in permissive source parsing. Parse fixtures use valid shared values and normalized default scalars; C and m=0 behavior are separately tested, not forced into equal-output comparisons.','Allocator request counters and Go MemStats differ. RSS is whole-fixture process high-water memory, not per-operation resident change. Empty-payload outputs differ and receive no ratio.'])
+ for cohort,order in enumerate(orders,1):
+  for variant in order:
+   result=subprocess.run([str(binaries[variant])],env=environment,capture_output=True,timeout=240)
+   p=base/run.attempt/f'cohort-{cohort}-{variant}.jsonl';p.write_bytes(result.stdout);p.with_suffix('.stderr').write_bytes(result.stderr)
+   assert result.returncode==0 and not result.stderr,(variant,result.returncode,result.stderr)
+   records=read_records(result.stdout.decode());assert set(records)==set(outputs[variant])
+   for name,r in records.items():
+    assert len(r['samples_ns'])==31
+    for k in ['output','semantics','first_return_value']:assert r[k]==outputs[variant][name][k],(name,k)
+    run.record({**r,'case':f'cohort-{cohort}/{variant}/{name}','source_case':name,'cohort':cohort,'variant':variant})
+    rows.append({'cohort':cohort,'variant':variant,'case':name,**summary(r)})
+   print(f'Completed cohort {cohort} {variant}: {len(records)} cases',flush=True)
+ assert len(rows)==105
+ for variant in ['rust','source']:
+  for index in range(31):
+   result=subprocess.run(['/usr/bin/time','-l',str(binaries[variant])],env={**environment,'MATEA_PROBE_OUTPUT_ONLY':'1'},capture_output=True,timeout=30)
+   p=base/run.attempt/f'rss-{variant}-{index}.jsonl';p.write_bytes(result.stdout);p.with_suffix('.stderr').write_bytes(result.stderr)
+   assert result.returncode==0 and read_probe_outputs(result.stdout.decode())==outputs[variant]
+   values=[int(line.split()[0]) for line in result.stderr.decode().splitlines() if line.strip().endswith('maximum resident set size')];assert len(values)==1 and values[0]>0
+   rss.append({'variant':variant,'index':index,'maximum_resident_set_bytes':values[0],'stdout_sha256':sha(result.stdout),'stderr_sha256':sha(result.stderr)})
+ assert {n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}==inputs
+ for n,h in private.items():assert sha((work/n).read_bytes())==h,n
+ assert {n:sha(p.read_bytes()) for n,p in binaries.items()}==binary_hash
+ for n,h in reference_hash.items():assert sha((cache/n.removeprefix('ansi/')).read_bytes())==h,n
+ run.complete(timing_records=105,retained_intervals=3255,summary=rows,rss=rss)
+print('Complete: 105 records, 3255 intervals, 62 RSS children',flush=True)

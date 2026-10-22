@@ -1,0 +1,364 @@
+diff --git a/crates/matea-render/src/lib.rs b/crates/matea-render/src/lib.rs
+index d453ffc..bd46bda 100644
+--- a/crates/matea-render/src/lib.rs
++++ b/crates/matea-render/src/lib.rs
+@@ -2,7 +2,9 @@
+ //! Structured views, grapheme-safe cell composition, and deterministic row diffs.
+ use compact_str::CompactString;
+ use matea_style::{Border, Length, Style, Theme, distribute};
+-use std::borrow::Cow;
++use std::{borrow::Cow, fmt};
++mod text;
++pub use text::Text;
+ use unicode_segmentation::UnicodeSegmentation;
+ use unicode_width::UnicodeWidthStr;
+ 
+@@ -230,7 +232,13 @@ impl Canvas<'_> {
+     }
+     pub fn text(&mut self, x: u16, y: u16, text: &str, style: Style) {
+         let safe = sanitized(text);
+-        for (dy, line) in safe.split('\n').enumerate() {
++        self.draw_text(x, y, &safe, style);
++    }
++    fn text_owned(&mut self, x: u16, y: u16, text: &Text, style: Style) {
++        self.draw_text(x, y, text.as_str(), style);
++    }
++    fn draw_text(&mut self, x: u16, y: u16, text: &str, style: Style) {
++        for (dy, line) in text.split('\n').enumerate() {
+             let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
+                 break;
+             };
+@@ -297,33 +305,40 @@ impl Canvas<'_> {
+ pub fn sanitize(s: &str) -> String {
+     sanitized(s).into_owned()
+ }
+-/// Borrow safe input; allocate once only when control replacement is necessary.
++/// Borrow safe input; allocate only when control replacement is necessary.
+ pub fn sanitized(s: &str) -> Cow<'_, str> {
+-    if s.chars().all(|c| c == '\n' || !c.is_control()) {
++    if is_safe_text(s) {
+         return Cow::Borrowed(s);
+     }
+     let mut out = String::with_capacity(s.len());
++    write_sanitized(s, &mut out).expect("writing normalized String cannot fail");
++    Cow::Owned(out)
++}
++fn is_safe_text(s: &str) -> bool {
++    s.chars().all(|c| c == '\n' || !c.is_control())
++}
++fn write_sanitized(s: &str, out: &mut impl fmt::Write) -> fmt::Result {
+     for c in s.chars() {
+         match c {
+-            '\n' => out.push('\n'),
+-            '\t' => out.push_str("    "),
+-            c if c.is_control() => out.push('�'),
+-            c => out.push(c),
++            '\n' => out.write_char('\n')?,
++            '\t' => out.write_str("    ")?,
++            c if c.is_control() => out.write_char('�')?,
++            c => out.write_char(c)?,
+         }
+     }
+-    Cow::Owned(out)
++    Ok(())
+ }
+ 
+ #[derive(Clone, Debug)]
+ enum Node {
+-    Text(String, Style),
++    Text(Text, Style),
+     Stack {
+         horizontal: bool,
+         children: Vec<View>,
+         gap: u16,
+     },
+     Panel {
+-        title: String,
++        title: Text,
+         child: Box<View>,
+         theme: Box<Theme>,
+     },
+@@ -348,10 +363,10 @@ impl View {
+             height: None,
+         }
+     }
+-    pub fn text(text: impl Into<String>) -> Self {
++    pub fn text(text: impl Into<Text>) -> Self {
+         Self::new(Node::Text(text.into(), Style::default()))
+     }
+-    pub fn styled(text: impl Into<String>, style: Style) -> Self {
++    pub fn styled(text: impl Into<Text>, style: Style) -> Self {
+         Self::new(Node::Text(text.into(), style))
+     }
+     pub fn column(children: impl IntoIterator<Item = View>) -> Self {
+@@ -384,7 +399,7 @@ impl View {
+             height,
+         }
+     }
+-    pub fn panel(self, title: impl Into<String>, theme: &Theme) -> Self {
++    pub fn panel(self, title: impl Into<Text>, theme: &Theme) -> Self {
+         Self::new(Node::Panel {
+             title: title.into(),
+             child: Box::new(self),
+@@ -457,7 +472,7 @@ impl View {
+             return;
+         }
+         match &self.node {
+-            Node::Text(text, style) => s.canvas(clip).text(area.x, area.y, text, *style),
++            Node::Text(text, style) => s.canvas(clip).text_owned(area.x, area.y, text, *style),
+             Node::Stack {
+                 horizontal,
+                 children,
+diff --git a/crates/matea-widgets/src/clocks.rs b/crates/matea-widgets/src/clocks.rs
+index 7881041..cd18862 100644
+--- a/crates/matea-widgets/src/clocks.rs
++++ b/crates/matea-widgets/src/clocks.rs
+@@ -343,7 +343,7 @@ macro_rules! controls {
+                 ClockText(self.0.value)
+             }
+             pub fn view(&self, theme: &Theme) -> View {
+-                View::styled(self.text().into_string(), theme.text)
++                View::styled(format_args!("{}", self.text()), theme.text)
+             }
+         }
+     };
+diff --git a/crates/matea/examples/counter.rs b/crates/matea/examples/counter.rs
+index 0be4d8f..1f79e52 100644
+--- a/crates/matea/examples/counter.rs
++++ b/crates/matea/examples/counter.rs
+@@ -20,7 +20,7 @@ impl Model for Counter {
+     }
+     fn view(&self, c: ViewContext<'_>) -> View {
+         View::column([
+-            View::styled(format!("Count: {}", self.0), c.theme.accent),
++            View::styled(format_args!("Count: {}", self.0), c.theme.accent),
+             View::styled("+/- or arrows: change | q: quit", c.theme.muted),
+         ])
+         .gap(c.theme.gap)
+diff --git a/crates/matea/examples/lifecycle.rs b/crates/matea/examples/lifecycle.rs
+index 0c1e695..89510fe 100644
+--- a/crates/matea/examples/lifecycle.rs
++++ b/crates/matea/examples/lifecycle.rs
+@@ -10,6 +10,7 @@ use std::{
+ struct App {
+     cancelled: Arc<AtomicBool>,
+     panic_view: bool,
++    panic_format: bool,
+     recovered: bool,
+ }
+ impl Model for App {
+@@ -41,6 +42,15 @@ impl Model for App {
+     }
+     fn view(&self, c: ViewContext<'_>) -> View {
+         assert!(!self.panic_view, "lifecycle fixture view panic");
++        if self.panic_format {
++            struct Bad;
++            impl std::fmt::Display for Bad {
++                fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++                    Err(std::fmt::Error)
++                }
++            }
++            return View::text(format_args!("{Bad}"));
++        }
+         View::text(format!(
+             "READY {}x{} | q exit | p panic{}",
+             c.size.width,
+@@ -54,6 +64,7 @@ fn main() -> Result<(), matea::terminal::Error> {
+     matea::run(App {
+         cancelled: cancelled.clone(),
+         panic_view: std::env::args().any(|s| s == "--panic-view"),
++        panic_format: std::env::args().any(|s| s == "--panic-format"),
+         recovered: false,
+     })?;
+     let deadline = std::time::Instant::now() + Duration::from_secs(2);
+diff --git a/crates/matea/src/lib.rs b/crates/matea/src/lib.rs
+index d698ebd..f4a2684 100644
+--- a/crates/matea/src/lib.rs
++++ b/crates/matea/src/lib.rs
+@@ -14,7 +14,7 @@
+ //!         Effect::none()
+ //!     }
+ //!     fn view(&self, context: ViewContext<'_>) -> View {
+-//!         View::styled(format!("Count: {}", self.0), context.theme.accent)
++//!         View::styled(format_args!("Count: {}", self.0), context.theme.accent)
+ //!     }
+ //! }
+ //! fn main() -> Result<(), matea::terminal::Error> { matea::run(Counter(0)) }
+@@ -32,7 +32,7 @@ pub mod prelude {
+         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
+         ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
+     };
+-    pub use matea_render::{Cursor, Rect, Size, Surface, View};
++    pub use matea_render::{Cursor, Rect, Size, Surface, Text, View};
+     pub use matea_style::{Border, Color, ColorLevel, Style, Theme};
+     pub use matea_widgets::key::{Binding, NavigationKeys};
+     pub use matea_widgets::{
+diff --git a/examples/external-widget/src/main.rs b/examples/external-widget/src/main.rs
+index 32fe49c..6b11bb5 100644
+--- a/examples/external-widget/src/main.rs
++++ b/examples/external-widget/src/main.rs
+@@ -15,7 +15,7 @@ impl Component for Badge {
+     }
+     fn view(&self, theme: &Theme, focused: bool) -> View {
+         View::styled(
+-            format!(
++            format_args!(
+                 "[{}] Third-party badge",
+                 if self.enabled { "x" } else { " " }
+             ),
+diff --git a/tools/perf-probe/src/main.rs b/tools/perf-probe/src/main.rs
+index 49e0eda..8dcecff 100644
+--- a/tools/perf-probe/src/main.rs
++++ b/tools/perf-probe/src/main.rs
+@@ -351,7 +351,7 @@ fn view_construction_costs(iterations: usize) {
+         );
+     }
+     let value = black_box(42u64);
+-    let make_counter = || View::styled(format!("Count: {}", black_box(value)), theme.accent);
++    let make_counter = || View::styled(format_args!("Count: {}", black_box(value)), theme.accent);
+     let output = make_counter().render(size).unwrap().plain();
+     measure(
+         "views/formatted_counter",
+diff --git a/crates/matea-render/src/text.rs b/crates/matea-render/src/text.rs
+new file mode 100644
+index 0000000..82df162
+--- /dev/null
++++ b/crates/matea-render/src/text.rs
+@@ -0,0 +1,137 @@
++use crate::{is_safe_text, write_sanitized};
++use compact_str::CompactString;
++use std::{
++    borrow::{Borrow, Cow},
++    fmt::{self, Write},
++    ops::Deref,
++};
++
++/// Owned, immutable display text. Tabs become four spaces and C0/C1 controls
++/// become U+FFFD; newlines remain structural. Short values can be stored inline.
++/// Formatting Arguments are consumed immediately, retaining no caller borrow.
++/// As with format!, a failing user Display implementation panics.
++///
++/// ```compile_fail
++/// let mut text = matea_render::Text::from("tea");
++/// text.push_str("\u{1b}"); // normalized content has no mutable string accessor
++/// ```
++#[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
++pub struct Text(CompactString);
++impl Text {
++    pub fn as_str(&self) -> &str {
++        &self.0
++    }
++    pub fn into_string(self) -> String {
++        self.0.into()
++    }
++    fn normalized(raw: &str) -> Self {
++        let mut text = CompactString::default();
++        write_sanitized(raw, &mut text).expect("writing normalized text cannot fail");
++        Self(text)
++    }
++}
++impl Deref for Text {
++    type Target = str;
++    fn deref(&self) -> &str {
++        self.as_str()
++    }
++}
++impl AsRef<str> for Text {
++    fn as_ref(&self) -> &str {
++        self.as_str()
++    }
++}
++impl Borrow<str> for Text {
++    fn borrow(&self) -> &str {
++        self.as_str()
++    }
++}
++impl fmt::Display for Text {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        fmt::Display::fmt(self.as_str(), f)
++    }
++}
++impl From<&str> for Text {
++    fn from(raw: &str) -> Self {
++        if is_safe_text(raw) {
++            Self(CompactString::from(raw))
++        } else {
++            Self::normalized(raw)
++        }
++    }
++}
++impl From<String> for Text {
++    fn from(raw: String) -> Self {
++        if is_safe_text(&raw) {
++            Self(CompactString::from(raw))
++        } else {
++            Self::normalized(&raw)
++        }
++    }
++}
++impl From<CompactString> for Text {
++    fn from(raw: CompactString) -> Self {
++        if is_safe_text(&raw) {
++            Self(raw)
++        } else {
++            Self::normalized(&raw)
++        }
++    }
++}
++impl From<fmt::Arguments<'_>> for Text {
++    fn from(args: fmt::Arguments<'_>) -> Self {
++        let mut raw = CompactString::default();
++        raw.write_fmt(args).expect("formatting Text failed");
++        Self::from(raw)
++    }
++}
++impl From<char> for Text {
++    fn from(value: char) -> Self {
++        let mut raw = CompactString::default();
++        raw.push(value);
++        Self::from(raw)
++    }
++}
++impl From<&String> for Text {
++    fn from(raw: &String) -> Self {
++        Self::from(raw.as_str())
++    }
++}
++impl From<&mut String> for Text {
++    fn from(raw: &mut String) -> Self {
++        Self::from(raw.as_str())
++    }
++}
++impl From<&mut str> for Text {
++    fn from(raw: &mut str) -> Self {
++        Self::from(&*raw)
++    }
++}
++impl From<&CompactString> for Text {
++    fn from(raw: &CompactString) -> Self {
++        Self::from(raw.as_str())
++    }
++}
++impl From<&Text> for Text {
++    fn from(text: &Text) -> Self {
++        text.clone()
++    }
++}
++impl From<Box<str>> for Text {
++    fn from(raw: Box<str>) -> Self {
++        Self::from(raw.into_string())
++    }
++}
++impl From<Cow<'_, str>> for Text {
++    fn from(raw: Cow<'_, str>) -> Self {
++        match raw {
++            Cow::Borrowed(s) => Self::from(s),
++            Cow::Owned(s) => Self::from(s),
++        }
++    }
++}
++impl From<Text> for String {
++    fn from(text: Text) -> Self {
++        text.into_string()
++    }
++}

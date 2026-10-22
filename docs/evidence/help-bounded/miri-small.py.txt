@@ -1,0 +1,20 @@
+"""Interpret all actual Help regressions including stack-prefix drop/growth paths."""
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded/miri-small';base.mkdir(exist_ok=True)
+sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest()
+names=sorted(n for n in execution_inputs(root) if n.startswith('crates/') or n in ['Cargo.toml','Cargo.lock']);sources={n:sha((root/n).read_bytes()) for n in names}
+command=['cargo','+nightly','miri','test','--locked','--offline','-p','matea-widgets','--lib','help::tests']
+ctx={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_sha256':sources,'seed':229,'command':command,'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['Four actual pure Help regressions, including Unicode, styled cells, every width 0..60, early/late column rejection and 1024 visible rows. No native terminal FFI or whole-dependency soundness proof.', 'No ordinary timings overlap Miri.']}
+def save():(base/'context.json').write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+try:
+ with open(base/'help.log','wb') as output:r=subprocess.run(command,env={**os.environ,'MIRIFLAGS':'-Zmiri-seed=229'},stdout=output,stderr=subprocess.STDOUT,timeout=1800)
+ ctx.update(exit_code=r.returncode,log_sha256=sha((base/'help.log').read_bytes()));save()
+ assert r.returncode==0 and b'test result: ok. 4 passed;' in (base/'help.log').read_bytes()
+ assert {n:sha((root/n).read_bytes()) for n in names}==sources
+ for n,h in sources.items():assert sha(subprocess.check_output(['git','show',ctx['source_head']+':'+n]))==h
+ ctx['status']='complete';save();print('Miri seed 229: all four Help tests pass',flush=True)
+except BaseException as e:ctx.update(status='failed',error=str(e));save();raise

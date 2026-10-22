@@ -1,0 +1,86 @@
+"""Prepare immutable Go parser/CLI fixtures, all nine pinned source ledgers.
+Run before timing; this writes only temporary fixtures and audit evidence.
+"""
+import gzip,hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+ROOT=Path.cwd();OUT=ROOT/'docs/evidence/go-auditor-phases';FIX=Path('/private/tmp/matea-go-phase-fixtures');FIX.mkdir(exist_ok=True)
+sys.path.insert(0,str(ROOT/'scripts'));from audit_references import materialize_module,verify_checkout
+sha=lambda b:hashlib.sha256(b).hexdigest();cases=[];manifest=[]
+EXCLUDED={'.git','vendor','node_modules','examples','tutorials','testdata'}
+def paths(folder):
+ result=[]
+ def walk(path):
+  if path.is_symlink():return
+  if path.is_dir():
+   for p in sorted(path.iterdir()):
+    if p.is_dir() and p.name in EXCLUDED:continue
+    walk(p)
+  elif path.is_file() and path.suffix=='.go':result.append(path)
+ walk(folder);return result
+fields=['file','line','package','kind','symbol','signature','build']
+def add(name,folder,expected,code=0,phase=True):
+ data=b''.join((json.dumps(r,ensure_ascii=False,separators=(',',':'))+'\n').encode() for r in expected)
+ # Independent semantic oracle; original Go encoder's HTML escaping is checked
+ # by parsing first, then complete before/after bytes must remain identical.
+ outputs=[]
+ for binary in ['/private/tmp/matea-go-auditor-before','/private/tmp/matea-go-auditor-phase']:
+  r=subprocess.run([binary,str(folder)],capture_output=True,timeout=30);assert r.returncode==code,(name,r.stderr)
+  assert [json.loads(line) for line in r.stdout.splitlines()]==expected,name
+  if code==0:assert not r.stderr
+  outputs.append(r.stdout)
+ assert outputs[0]==outputs[1],name
+ data=outputs[0];(OUT/(name+'-expected.jsonl.gz')).write_bytes(gzip.compress(data,mtime=0))
+ files={p.relative_to(folder).as_posix():sha(p.read_bytes()) for p in paths(folder)}
+ cases.append({'name':name,'folder':str(folder),'rows':len(expected),'bytes':len(data),'exit_code':code,'expected_sha256':sha(data),'files_sha256':files,'phase':phase})
+ if phase:manifest.append({'Name':'go-audit-parser/'+name,'Inputs':[{'file':p.relative_to(folder).as_posix(),'path':str(p)} for p in paths(folder)]})
+for count in [1000,10000,100000]:
+ for structured in [False,True]:
+  name=('struct' if structured else 'flat')+'_'+str(count);folder=FIX/name;folder.mkdir(exist_ok=True)
+  text='package fixture\n'+('type Group struct {\n' if structured else '')
+  text+=''.join(f'F_{i} int\n' if structured else f'const ITEM_{i} = {i}\n' for i in range(count))+('}\n' if structured else '')
+  (folder/'fixture.go').write_text(text)
+  rows=([{'file':'fixture.go','line':2,'package':'fixture','kind':'type','symbol':'Group'}] if structured else [])
+  for i in range(count):
+   row={'file':'fixture.go','line':i+(3 if structured else 2),'package':'fixture','kind':'field' if structured else 'const','symbol':f'Group.F_{i}' if structured else f'ITEM_{i}'}
+   if structured:row['signature']='int'
+   rows.append(row)
+  add(name,folder,rows)
+# The Go harness generates six synthetic cases itself; external manifest is nine
+# corpora only, with source bytes read before any measured operation.
+manifest=[]
+for pin in json.load(open(ROOT/'docs/upstream-lock.json')):
+ ledger=ROOT/'docs/coverage'/(pin['name']+'.json');record=json.loads(ledger.read_text())
+ if record.get('language')!='go':continue
+ name=pin['name'];prefix=''
+ if name.startswith('charm-x-'):
+  folder=FIX/name;folder.mkdir(exist_ok=True);prefix=materialize_module(ROOT.parent/'references',pin,folder)
+ else:folder=ROOT.parent/'references'/name;verify_checkout(folder,pin)
+ rows=[{k:(r[k][len(prefix):] if k=='file' else r[k]) for k in fields if k in r} for r in record['declarations']]
+ add(name,folder,rows)
+ cases[-1].update(pin=pin['sha'],ledger_sha256=sha(ledger.read_bytes()),materialized_module=bool(prefix))
+ if not prefix:verify_checkout(folder,pin)
+for name in ['empty','malformed','wide_1000','deep_64','linked_dirs','missing']:
+ folder=FIX/name
+ if name!='missing':folder.mkdir(exist_ok=True)
+ rows=[];code=0
+ if name=='empty':
+  (folder/'examples').mkdir(exist_ok=True);(folder/'examples/bad.go').write_text('invalid ignored Go')
+ elif name=='malformed':(folder/'fixture.go').write_text('package fixture\nconst Good=1\nfunc Bad(');code=1
+ elif name=='wide_1000':
+  for i in range(1000):
+   file=f'file{i:04}.go';(folder/file).write_text(f'package fixture\nconst ITEM_{i}={i}\n');rows.append({'file':file,'line':2,'package':'fixture','kind':'const','symbol':f'ITEM_{i}'})
+ elif name=='deep_64':
+  leaf=folder.joinpath(*(['d']*64));leaf.mkdir(parents=True,exist_ok=True);(leaf/'fixture.go').write_text('package fixture\nconst DEEP=1\n');rows=[{'file':'d/'*64+'fixture.go','line':2,'package':'fixture','kind':'const','symbol':'DEEP'}]
+ elif name=='linked_dirs':
+  (folder/'fixture.go').write_text('package fixture\nconst LOCAL=1\n');outside=FIX/'outside';outside.mkdir(exist_ok=True);(outside/'bad.go').write_text('invalid outside Go')
+  for target,link in [(outside,folder/'external'),(folder,folder/'cycle')]:
+   if not link.is_symlink():link.symlink_to(target,target_is_directory=True)
+  rows=[{'file':'fixture.go','line':2,'package':'fixture','kind':'const','symbol':'LOCAL'}]
+ else:code=1
+ add(name,folder,rows,code,False)
+(FIX/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+(FIX/'cases.json').write_text(json.dumps(cases,indent=2)+'\n')
+public_cases=[dict(c,folder=c['folder'].replace(str(ROOT.parent/'references'),'${REFERENCES}').replace(str(FIX),'${TEMP_FIXTURES}')) for c in cases]
+(OUT/'fixtures.json').write_text(json.dumps({'schema':1,'cases':public_cases,'manifest_sha256':sha((FIX/'manifest.json').read_bytes()),'limits':['Generated complete JSON rows and all nine retained pinned ledgers are independent semantic checks; original/current full bytes also agree.','Invalid root/link/FIFO/UTF8 outcomes that intentionally change are separate correctness regressions, not matched speed ratios.']},indent=2)+'\n')
+print('Validated',len(cases),'CLI fixtures and',len(manifest)+6,'parser cases',flush=True)

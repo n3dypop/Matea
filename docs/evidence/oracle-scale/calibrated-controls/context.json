@@ -1,0 +1,32 @@
+{
+  "schema": 2,
+  "status": "complete",
+  "attempt": "attempts/context/131ccb4d842149b29ddc90883b95c9cb",
+  "started_at_utc": "2026-10-21T22:50:32.922820+00:00",
+  "completed_cases": 18,
+  "validity": "Only status=complete with matching raw_sha256 qualifies this invocation; older public files may remain.",
+  "input_sha256": {
+    "docs/evidence/oracle-scale/calibrated-controls.py.txt": "4b67a071e6dc5beba58e75eb809e92444e01b55ca352319d904e010f897912d0",
+    "scripts/check_terminal_trace.py": "2be1ee10939fcce1c22a64fddad98612a514e200a005b727fdef8fc0c13689c0",
+    "scripts/check_color_trace.py": "784a6d265b98893f011886b2c1a6d547a11ae5e6e5ad93322fce9edcc706a6a2",
+    "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+    "docs/evidence/oracle-scale/check_terminal_trace.py.before.txt": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+    "docs/evidence/oracle-scale/check_terminal_trace.candidate-1.txt": "79f5a1de3b1887f7cde7130675e1fa5c79394d41860bdb82d17258e1659635d3",
+    "docs/evidence/oracle-scale/check_color_trace.py.before.txt": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+    "docs/evidence/oracle-scale/check_color_trace.candidate-1.txt": "b41753529f84ad5c3313212eb80f0398b5bcb2184f0c1058d3014e93951ed4ae"
+  },
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "target_ns": 20000000,
+  "semantics": "same fixed complete outputs and serialization as prior control-series; retained intervals are batch means, never individual-operation tail latency",
+  "exclusions": [
+    "Previous single-operation samples and adverse cohort remain; no quiet-window selection or zero retries",
+    "No new memory/allocation claim; separately retained RSS/heap belongs to the complete operation fixtures"
+  ],
+  "partial_raw_sha256": "f6003207f5c9ff0be8c6317f805ce707ae9e7632e49981ea14d0676e30612f52",
+  "records": 18,
+  "positive_intervals": 558,
+  "raw": "current.jsonl",
+  "raw_sha256": "f6003207f5c9ff0be8c6317f805ce707ae9e7632e49981ea14d0676e30612f52",
+  "finished_at_utc": "2026-10-21T22:50:53.054254+00:00"
+}

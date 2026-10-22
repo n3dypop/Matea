@@ -1,0 +1,5 @@
+{"record_kind":"probe-output","case":"device/is_terminal","semantics":"exact borrowed terminal handle query; one native state syscall, no terminal mutation","first_return_value":1,"output":"true"}
+{"record_kind":"probe-output","case":"device/state","semantics":"capture current opaque owned native state and drop it; no terminal mutation","first_return_value":1,"output":"captured"}
+{"record_kind":"probe-output","case":"device/size","semantics":"visible native terminal dimensions; one ioctl and checked platform projection","first_return_value":8650794,"output":"132x42"}
+{"record_kind":"probe-output","case":"device/raw_restore","semantics":"capture current state, set raw, restore captured state; three native calls; Rust lease already owned outside samples","first_return_value":1,"output":"restored"}
+{"record_kind":"probe-output","case":"device/owned_raw_cycle","semantics":"Rust control: fresh exclusive lease and original capture, raw transition, explicit original restoration and guard/lease drop; four native calls","first_return_value":1,"output":"restored"}

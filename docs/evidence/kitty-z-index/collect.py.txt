@@ -1,0 +1,44 @@
+"""Original finite control-encoder comparison; no image data, timing or terminal IO."""
+import gzip,hashlib,json,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('collection refuses -O')
+root=Path.cwd();out=root/'docs/evidence/kitty-z-index';work=Path('/private/tmp/matea-kitty-z-comparison')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+reference='faa4adf95555331dfb439b716cc83767ecdadeb4'
+git=root.parent/'references/charm-x'
+cache=Path('/Users/misosoup/go/pkg/mod/github.com/charmbracelet/x/ansi@v0.11.9/kitty')
+files={}
+for p in sorted(cache.glob('*.go')):
+ if p.name.endswith('_test.go'):continue
+ source=subprocess.check_output(['git','-C',str(git),'show',reference+':ansi/kitty/'+p.name])
+ assert source==p.read_bytes(),p.name
+ files['ansi/kitty/'+p.name]=sha(source)
+assert 'ansi/kitty/options.go' in files
+for original,target in [('source.go','source-caller.go.txt'),('caller.rs','matea-caller.rs.txt'),('go.mod','go.mod.txt'),('go.sum','go.sum.txt'),('Cargo.toml','Cargo.toml.txt'),('Cargo.lock','Cargo.lock.txt')]:
+ shutil.copy2(work/original,out/target)
+shutil.copy2('/private/tmp/matea-x-issue-926.json',out/'issue-926.json')
+shutil.copy2('/private/tmp/matea-kitty-z-build.log',out/'matea-build.log')
+for name,command in [('source-build-info',['go','version','-m',str(work/'source-probe')]),('rustc',['rustc','-vV'])]:
+ (out/(name+'.txt')).write_bytes(subprocess.check_output(command))
+for name in ['source','matea']:
+ raw=(work/(name+'.tsv')).read_bytes()
+ (out/(name+'.tsv.gz')).write_bytes(gzip.compress(raw,mtime=0))
+metadata={}
+for name in ['root','private']:
+ value=json.loads(Path('/private/tmp/matea-kitty-z-'+name+'-metadata.json').read_bytes())
+ metadata[name]=sorted([[p['name'],p['version'],p.get('source')] for p in value['packages']])
+assert set(map(tuple,metadata['private']))-set(map(tuple,metadata['root']))=={('matea-kitty-z-comparison','0.0.0',None)}
+metadata['limits']='Filtered native macOS dependency identities; original caller is the only extra package. Default dependency paths, no image processing or display execution.'
+(out/'dependencies.json').write_text(json.dumps(metadata,indent=2)+'\n')
+sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs
+context={'schema':1,'status':'collected','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+ 'reference':'charm-x-ansi','reference_sha':reference,'reference_source_sha256':files,
+ 'specification_url':'https://sw.kovidgoyal.net/kitty/graphics-protocol/#controlling-displayed-image-layout',
+ 'specification_checked_date':'2026-10-21','specification_summary':'Placement z uses signed 32-bit control values. Negative values select layering below text, with an additional threshold at -1073741824.',
+ 'root_input_sha256':{n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))},
+ 'binary_sha256':{'source':sha((work/'source-probe').read_bytes()),'matea':sha(Path('/private/tmp/matea-kitty-z-target/debug/matea-kitty-z-comparison').read_bytes())},
+ 'files_sha256':{p.name:sha(p.read_bytes()) for p in sorted(out.iterdir()) if p.is_file() and p.name not in ['context.json','verification.json']},
+ 'limits':['Original finite callers and compressed raw hex outputs are historical reproductions, not additional maintained application programs.',
+ 'Control serialization only. No image engine, image payload, terminal support, physical layering or performance claim. All i16 values and explicit signed-i32 boundaries are tested, not the entire i32 domain.']}
+(out/'context.json').write_text(json.dumps(context,indent=2)+'\n')
+print('Collected pinned encoder controls and native package identities')

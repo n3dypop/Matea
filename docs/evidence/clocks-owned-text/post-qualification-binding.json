@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "tested_committed_inputs": "81525726ac77950963984b38313845d56c723de3",
+  "ci_source_head": "6ffc1eae6cadb7204c4ac45cee14579d198de8e7",
+  "execution_inputs": 198,
+  "programs": 156,
+  "review_units": 44,
+  "current_inputs_match_native_and_llvm": true,
+  "ci_different_inputs": [
+    "docs/quality-plan.json"
+  ],
+  "promoted_assessments": [
+    [
+      "matea-widgets/clocks",
+      "portability"
+    ],
+    [
+      "matea-widgets/lib",
+      "portability"
+    ],
+    [
+      "matea/lib",
+      "portability"
+    ],
+    [
+      "matea-widgets/integration-tests",
+      "portability"
+    ]
+  ],
+  "performance_verification_sha256": "bf88a1c255961baa5c79fba5d95d44d5396a629a4b309172c6d5e3030b1d579c",
+  "miri_context_sha256": "7dfc189330b087e58998d1756f9f5e85a9ac5f314564eba64b64296b554bc3c6",
+  "issue_revalidation_sha256": "5135d801ec7d611eb68f6b99072cb2ce033f61df297a247388bd0e51d4708256",
+  "reviewed_metadata_changes": "Four affected portability assessments return to 75 after seven exact-source CI jobs. Clock reference/design/memory reasons updated without score changes. Five pre-existing issue reviews are separately revalidated with original scopes preserved. Same program/unit inventory, threshold and pending performance scores.",
+  "gate": {
+    "below_high_axes": 49,
+    "pending_issue_reports": 822,
+    "go_target_export_closure_reviewed": false,
+    "stage_a": "ongoing",
+    "stage_b": "not_started",
+    "f5": "closed"
+  },
+  "report_sha256": {
+    "docs/evidence/local-validation.json": "0c3e5c6af39950e4d38303e49474895af27121df5b4a1a2f5bfb35fb091c81d0",
+    "docs/evidence/quality/rust-execution-coverage.json": "e6c105258772e809242b4c1f8d48b7888de9e265be36819a2082b1cb2f87c70f",
+    "docs/evidence/quality/report.json": "c18ca5e1f38ccf1d7da4af21129193db73ce4759255b61596adebf0276e284d2",
+    "docs/evidence/quality/final-gate-status.json": "c520c9b25b080d6ca55d31772f48ac9ebb7f7519108847281f565593f50843c6"
+  },
+  "procedure_sha256": "0238bd464ef072822ff2a2083c5af75f581fe39cec7c1b5d3db301d51d3e657b",
+  "limits": [
+    "Earlier CI/compiler/prototype observations retain their actual inputs and revisions. Current source differs from CI only in reviewed assessment metadata.",
+    "Finite text creation improves all eighteen measured medians; one adverse p95, four slower-than-source inputs, active scheduling and retained-memory gaps remain. No whole-module maximum, exhaustive soundness or Foundation completion claim."
+  ]
+}

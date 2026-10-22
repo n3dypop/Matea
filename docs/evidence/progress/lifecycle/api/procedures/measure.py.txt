@@ -1,0 +1,28 @@
+"""Five remaining Progress API controls; no upstream timing ratio."""
+import hashlib,json,os,platform,re,statistics,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('measurement refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/progress/lifecycle/api';sys.path.insert(0,str(ROOT/'scripts'))
+from measure_reader_performance import source_snapshot
+from performance_records import read_records,read_probe_outputs,summary
+from fetch_upstream_issues import atomic_json
+sha=lambda b:hashlib.sha256(b).hexdigest();head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip();sources=source_snapshot(head);binary=ROOT/'target/release/matea-perf-probe';bh=sha(binary.read_bytes())
+production={n:d for n,d in sources.items() if n in ['Cargo.toml','Cargo.lock'] or n.startswith('crates/') and ('/src/' in n or n.endswith('/Cargo.toml'))}
+for n,d in production.items():assert sha(subprocess.check_output(['git','show','34b1ac3a7b50a738787064606e3a7bd5355b0688:'+n]))==d,n
+expected={'configure_formatters_glyph_errors':5,'clocked_fraction_controls':6,'subscription_construction_reduction':1,'component_live_frame':13470074180807873566,'borrowed_iterator_boundaries':12};expected={'progress/api_'+k:v for k,v in expected.items()}
+ctx={'schema':1,'status':'running','source_head':head,'source_sha256':sources,'binary_sha256':bh,'production_identity_with_prior_27_case_head':'34b1ac3a7b50a738787064606e3a7bd5355b0688','production_sha256':production,'procedure_sha256':sha(Path(__file__).read_bytes()),'platform':platform.platform(),'runs':[],'limits':['Five additional current-binary Rust API controls; construction/drop, clock reads, formatter ownership, subscriptions, input response/live frame and iterator boundary work are included explicitly.','No upstream timing ratio, whole-runtime/TTY performance or universal optimum follows.','All production library/manifests/lock inputs are byte-identical to prior 27-case String candidate; existing distributions retain that exact historical caller/binary and are not relabeled current whole-binary timing.','20ms confirmed calibration, all 31 positive samples, separate allocator pass, two unfiltered cohorts, no local build/test/LLVM/Miri/download overlap.','RSS is 31 distinct whole-output-group child processes after timing; not per-operation residency.']}
+atomic_json(BASE/'context.json',ctx)
+env={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};env.pop('MATEA_PROBE_OUTPUT_ONLY',None);output_env={**env,'MATEA_PROBE_OUTPUT_ONLY':'1'}
+try:
+ output=subprocess.check_output([str(binary),'--progress-api-controls'],env=output_env,timeout=30);(BASE/'outputs.jsonl').write_bytes(output);oracle=read_probe_outputs(output.decode());assert oracle.keys()==expected.keys()
+ for n,r in oracle.items():assert r['first_return_value']==expected[n] and r['output']==str(expected[n]),n
+ for run in [1,2]:
+  result=subprocess.run([str(binary),'--progress-api-controls'],env=env,capture_output=True,timeout=120);name=f'run-{run}.jsonl';(BASE/name).write_bytes(result.stdout);(BASE/f'run-{run}.stderr').write_bytes(result.stderr);assert result.returncode==0,result.stderr.decode();records=read_records(result.stdout.decode());assert records.keys()==oracle.keys()
+  for n,r in records.items():assert all(r[k]==oracle[n][k] for k in ['semantics','output','first_return_value']) and len(r['samples_ns'])==31 and r['calibration']['target_ns']==20000000 and all(len(b['confirmations_ns'])==2 for b in r['calibration']['batches']),n
+  ctx['runs'].append({'run':run,'raw':name,'raw_sha256':sha(result.stdout),'summaries':{n:summary(r) for n,r in records.items()}});atomic_json(BASE/'context.json',ctx);print('API cohort',run,5,flush=True)
+ rss=[];raws={}
+ for i in range(31):
+  result=subprocess.run(['/usr/bin/time','-l',str(binary),'--progress-api-controls'],env=output_env,capture_output=True,timeout=30);name=f'rss-{i}.txt';(BASE/name).write_bytes(result.stderr);assert result.returncode==0 and result.stdout==output;rss.append(int(re.search(rb'(\d+)\s+maximum resident set size',result.stderr).group(1)));raws[name]=sha(result.stderr)
+ ctx.update(rss_bytes=rss,rss_raw_sha256=raws,outputs_sha256=sha(output));assert sources==source_snapshot(head) and sha(binary.read_bytes())==bh;ctx['status']='complete';atomic_json(BASE/'context.json',ctx);print('31 RSS child processes verified',flush=True)
+except BaseException as e:
+ ctx.update(status='failed',error=str(e));atomic_json(BASE/'context.json',ctx);raise

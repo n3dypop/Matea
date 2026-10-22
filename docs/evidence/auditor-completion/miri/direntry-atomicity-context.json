@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source_head": "85a070e9630f4f107eee2ccb4f744aa7b3fee8f2",
+  "command": "MIRIFLAGS=-Zmiri-seed=347 cargo +nightly miri test --offline --locked -p matea-api-audit --lib later_syntax_errors_never_publish_partial_file_declarations",
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4",
+    "tools/api-audit/Cargo.toml": "d8a5774e46788c7f8b8dfd4f16280a30d9f6760cb7cffb7151802e81ce6337c6",
+    "tools/api-audit/src/lib.rs": "67ca3bb43fac917819dee6c81a2dc1c3027f478e0dd5418f9dbf081131b35e5a"
+  },
+  "log_sha256": "91acfad55cccb626f524e00219d19542bc833bf9ec666545efd39246a6bfcc10",
+  "tests_passed": 1,
+  "limits": [
+    "Finite parser test only; filesystem walk is not exercised by this Miri selector.",
+    "Later path identity changes do not refresh this historical whole-file hash. Scoped parser source identity is recorded separately."
+  ]
+}

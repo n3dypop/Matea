@@ -1,0 +1,48 @@
+"""Independent hashes/row counts/samples/RSS verification, after all cohorts."""
+import gzip,hashlib,json,re,statistics,subprocess,sys,tarfile
+from functools import lru_cache
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/go-auditor-phases';sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import validate
+sha=lambda b:hashlib.sha256(b).hexdigest()
+@lru_cache(maxsize=None)
+def archive(folder):
+ with tarfile.open(folder/'rss-raw.tar.gz','r:gz') as tar:return {m.name:tar.extractfile(m).read() for m in tar.getmembers() if m.isfile() and Path(m.name).name==m.name}
+def raw(folder,name):return (folder/name).read_bytes() if (folder/name).is_file() else archive(folder)[name]
+def stats(samples):
+ assert len(samples)==31 and all(v>0 for v in samples)
+ return {'p50':statistics.median(samples),'p95':sorted(samples)[29],'min':min(samples),'max':max(samples)}
+fixtures=json.load(open(BASE/'fixtures.json'));cases={r['name']:r for r in fixtures['cases']};stages=['parser-current','before-1','after-1','after-2','before-2'];contexts={};result={}
+for stage in stages:
+ folder=BASE/stage;ctx=json.load(open(folder/'context.json'));assert ctx['status']=='complete';assert ctx['fixtures_sha256']==sha((BASE/'fixtures.json').read_bytes());assert ctx['procedure_sha256']==sha((BASE/'procedures/measure.py.txt').read_bytes())
+ for name,digest in ctx['raw_sha256'].items():assert sha(raw(folder,name))==digest,(stage,name)
+ contexts[stage]=ctx
+ if stage=='parser-current':
+  phase=[validate(json.loads(s)) for s in raw(folder,'timing.jsonl').splitlines()];assert len(phase)==15
+  outputs=[json.loads(s) for s in raw(folder,'outputs.log').splitlines() if s.startswith(b'{')];assert {r['case']:r['output'] for r in phase}=={r['case']:r['output'] for r in outputs}
+  summaries={}
+  for r in phase:
+   case=r['case'].removeprefix('go-audit-parser/');c=cases[case];data=gzip.decompress((BASE/(case+'-expected.jsonl.gz')).read_bytes());assert sha(data)==c['expected_sha256'];h=0xcbf29ce484222325
+   for b in data:h=((h^b)*0x100000001b3)&((1<<64)-1)
+   assert r['output']==f'rows={c["rows"]};bytes={len(data)};fnv64={h:016x}' and r['first_return_value']==h
+   assert r['calibration']['target_ns']==20000000 and all(len(b['confirmations_ns'])==2 for b in r['calibration']['batches'])
+   summaries[case]={'latency_ns':stats(r['samples_ns']),'cold_ns':r['cold_ns'],'allocations':r['allocations'],'allocated_bytes':r['allocated_bytes'],'output':r['output']}
+  result['parser']=summaries
+ else:
+  cli={r['case']:r for r in map(json.loads,raw(folder,'cli.jsonl').splitlines())};rss={r['case']:r for r in map(json.loads,raw(folder,'rss.jsonl').splitlines())};assert cli.keys()==rss.keys()==cases.keys()
+  summaries={}
+  for name,r in cli.items():
+   c=cases[name];assert r['output_sha256']==c['expected_sha256'] and r['rows']==c['rows'] and r['bytes']==c['bytes'] and r['exit_code']==c['exit_code']
+   values=[int(re.search(rb'(\d+)\s+maximum resident set size',raw(folder,f'rss-{name}-{i}.txt')).group(1)) for i in range(31)];assert values==rss[name]['peak_rss_bytes']
+   summaries[name]={'latency_ns':stats(r['samples_ns']),'cold_ns':r['cold_ns'],'peak_rss_bytes':stats(values),'output_sha256':r['output_sha256'],'exit_code':r['exit_code']}
+  result[stage]=summaries
+first=contexts[stages[0]]
+for stage,c in contexts.items():
+ for key in ['source_head','source_sha256','binary_sha256','fixtures_sha256','manifest_sha256','procedure_sha256']:assert c[key]==first[key],(stage,key)
+for name,digest in first['source_sha256'].items():assert sha(subprocess.check_output(['git','show',first['source_head']+':'+name]))==digest,name
+report={'schema':1,'status':'complete_bounded_source_auditor_measurements','source_head':first['source_head'],'order':stages,'contexts_sha256':{s:sha((BASE/s/'context.json').read_bytes()) for s in stages},'parser_cases':15,'cli_records':84,'rss_observations':2604,'data':result,'reporter_sha256':sha(Path(__file__).read_bytes()),'limits':['One native macOS host; not a Rust/Go framework speed ratio or universal optimum.','Parser bytes/AST/NDJSON/FNV includes owned output allocation; ordinary CLI includes file traversal, reads, spawn, pipe and exit.','Allocator/requested-byte passes are separate from timings and actual per-child RSS; no cumulative parent RSS.','All raw p95/cold/failure and incompatible corrected outcomes remain explicit. Private source extraction does not resolve compiler exports.']}
+(BASE/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+for name,r in result['parser'].items():print('parser',name,round(r['latency_ns']['p50']/1e6,3),'ms',r['allocations'],'allocations',flush=True)
+for name in cases:
+ print('cli',name,'p50_ms',[round(result[s][name]['latency_ns']['p50']/1e6,3) for s in stages[1:]],'rss_MB',[round(result[s][name]['peak_rss_bytes']['p50']/1e6,2) for s in stages[1:]],flush=True)

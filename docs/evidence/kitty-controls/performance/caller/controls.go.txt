@@ -1,0 +1,33 @@
+package main
+import("bytes";"encoding/base64";"fmt";"os";"strconv";"strings";graphics "github.com/charmbracelet/x/ansi/kitty";"github.com/charmbracelet/x/ansi")
+func controlChecksum(c graphics.Options)uint64{
+ a:=c.Action;if a==0{a=graphics.Transmit};f:=c.Format;if f==0{f=graphics.RGBA};t:=c.Transmission;if t==0{t=graphics.Direct};d:=c.Delete;if d==0{d=graphics.DeleteAll}
+ boolean:=func(v bool)uint64{if v{return 1};return 0};values:=[]uint64{uint64(a),uint64(c.Quiet),uint64(f),uint64(t),uint64(c.ID),uint64(c.PlacementID),uint64(c.Number),uint64(c.ImageWidth),uint64(c.ImageHeight),uint64(c.Size),uint64(c.Offset),boolean(c.Compression==graphics.Zlib),uint64(c.X),uint64(c.Y),uint64(uint32(c.Z)),uint64(c.Width),uint64(c.Height),uint64(c.OffsetX),uint64(c.OffsetY),uint64(c.Columns),uint64(c.Rows),boolean(c.VirtualPlacement),boolean(c.DoNotMoveCursor),uint64(c.ParentID),uint64(c.ParentPlacementID),uint64(d),boolean(c.DeleteResources),boolean(c.Chunk)}
+ h:=uint64(14695981039346656037);for _,v:=range values{h=(h^v)*1099511628211};return h
+}
+// Original protocol composition, not a copied source writer or image pipeline.
+// Source Options builds canonical metadata and source ansi.KittyGraphics frames
+// each standard-library base64 payload. Packet boundaries follow the shared spec.
+func packetSequence(o graphics.Options,raw []byte)string{
+ count:=(len(raw)+3071)/3072;if count==0{count=1};var out strings.Builder
+ for index:=0;index<count;index++{start:=index*3072;end:=start+3072;if end>len(raw){end=len(raw)};var opts []string
+  if index==0{opts=o.Options()}else{if o.Quiet!=0{opts=append(opts,fmt.Sprintf("q=%d",o.Quiet))};if o.Action==graphics.Frame{opts=append(opts,"a=f")}}
+  if count>1{m:=0;if index+1<count{m=1};opts=append(opts,fmt.Sprintf("m=%d",m))}
+  out.WriteString(ansi.KittyGraphics([]byte(base64.StdEncoding.EncodeToString(raw[start:end])),opts...))
+ };return out.String()
+}
+func main(){n:=1;if v,e:=strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS"));e==nil&&v>0{n=v}
+ headers:=[]struct{name string;value graphics.Options}{
+ {"default",graphics.Options{}},{"rgb",graphics.Options{Format:graphics.RGB,Quiet:2,ID:7,ImageWidth:1024,ImageHeight:1,Action:graphics.TransmitAndPut}},
+ {"placement",graphics.Options{Quiet:2,ID:7,PlacementID:3,DoNotMoveCursor:true,X:2,Y:3,Z:12,Columns:40,Rows:12,Action:graphics.Put}},
+ {"full",graphics.Options{Format:graphics.PNG,Quiet:2,ID:7,PlacementID:3,Number:4,ImageWidth:5,ImageHeight:6,Transmission:graphics.SharedMemory,Size:7,Offset:8,Compression:graphics.Zlib,VirtualPlacement:true,DoNotMoveCursor:true,ParentID:9,ParentPlacementID:10,X:11,Y:12,Z:13,Width:14,Height:15,OffsetX:16,OffsetY:17,Columns:18,Rows:19,Delete:graphics.DeleteID,DeleteResources:true,Action:graphics.TransmitAndPut}},
+ {"delete",graphics.Options{Quiet:2,ID:7,Delete:graphics.DeleteID,DeleteResources:true,Action:graphics.Delete}}}
+ for _,f:=range headers{o:=f.value;measure("kitty-controls/header_"+f.name,n,func()uint64{clockTextSink=o.String();return uint64(len(clockTextSink))},o.String(),"fresh canonical Kitty controls from existing immutable values; consume byte length; no payload, terminal IO or construction")}
+ parses:=[]struct{name,input string}{{"default",""},{"rgb","f=24,q=2,i=7,s=1024,v=1,a=T"},{"placement","q=2,i=7,p=3,x=2,y=3,z=12,c=40,r=12,a=p"},{"full","f=100,q=2,i=7,p=3,I=4,s=5,v=6,t=s,S=7,O=8,o=z,U=1,P=9,Q=10,x=11,y=12,z=13,w=14,h=15,X=16,Y=17,c=18,r=19,d=I,a=T"},{"frame_m1","q=2,i=7,s=4,v=5,a=f,m=1"}}
+ for _,f:=range parses{input:=[]byte(f.input);var expected graphics.Options;if e:=expected.UnmarshalText(input);e!=nil{panic(e)};output:=strconv.FormatUint(controlChecksum(expected),10)
+  measure("kitty-controls/parse_"+f.name,n,func()uint64{var o graphics.Options;if e:=o.UnmarshalText(input);e!=nil{panic(e)};return controlChecksum(o)},output,"parse valid shared Kitty header into fresh state; consume normalized shared-field checksum; no output formatting, payload or terminal IO")}
+ packets:=[]struct{name string;action byte;format,width,length int}{{"empty",graphics.Delete,graphics.RGBA,0,0},{"small_rgb",graphics.TransmitAndPut,graphics.RGB,1,3},{"exact_rgb",graphics.Transmit,graphics.RGB,1024,3072},{"rgba_two",graphics.TransmitAndPut,graphics.RGBA,1024,4096},{"frame_two_exact",graphics.Frame,graphics.RGBA,1536,6144}}
+ for _,f:=range packets{data:=make([]byte,f.length);for i:=range data{data[i]=byte(i*17+3)};height:=0;if f.width!=0{height=1};o:=graphics.Options{Action:f.action,Format:f.format,ImageWidth:f.width,ImageHeight:height,ID:7,Quiet:2}
+  output:=packetSequence(o,data);if bytes.IndexByte([]byte(output),0)>=0{panic("raw control payload")}
+  measure("kitty-controls/packet_"+f.name,n,func()uint64{clockTextSink=packetSequence(o,data);return uint64(len(clockTextSink))},output,"fresh complete Kitty packet sequence from existing controls/prepared bytes; include headers/base64/ownership; consume byte length; no image conversion or terminal IO; source comparator uses public Options and ansi.KittyGraphics composition")}
+}

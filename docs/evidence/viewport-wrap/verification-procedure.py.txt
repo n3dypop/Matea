@@ -1,0 +1,31 @@
+import hashlib,json,math,statistics,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs
+P=ROOT/'docs/evidence/viewport-wrap';expected={}
+def digest(text,x,y):
+ v=14695981039346656037
+ for b in text.encode()+x.to_bytes(8,'little')+y.to_bytes(8,'little'):v=((v^b)*1099511628211)&((1<<64)-1)
+ return v
+for kind,line,frame in [('ascii','abcdefgh','efgh\nabcd\nefgh'),('unicode','抹茶抹茶','抹茶\n抹茶\n抹茶')]:
+ text='\n'.join([line]*100)
+ for op,value,output in [('construct',digest(text,200,0),'total=200;y=0;text='+text),('count',200,'total=200'),('scroll',digest('',0,7),'x=0;y=7'),('view',digest(frame,0,7),frame),('borrowed',digest(frame,0,7),frame),('resize',digest('',100,200),'wide=100;narrow=200')]:expected['viewport-wrap/'+op+'_'+kind]={'first_return_value':value,'output':output}
+report={'schema':1,'status':'complete','matched_cases':10,'separate_iterator_controls':2,'cohorts':{},'cases':{},'limits':['Two finite repeated-line corpora on one native host, not all module/public API/terminal performance.','All before/after/order/cold/tail observations retained; no statistical causality or universal maximum-speed claim.','Only initialized reflow allocations are counted here; not OS synchronization first-use, resident memory or model stack size.','Go TotalAlloc averaged across operations and one Rust System allocation pass have different scopes.']}
+for cohort in ['baseline','optimized']:
+ folder=P/cohort;c=json.loads((folder/'context.json').read_text());require(c['status']=='complete' and c['source_changed']==[])
+ report['cohorts'][cohort]={'git_head':c['git_head'],'context_sha256':hashlib.sha256((folder/'context.json').read_bytes()).hexdigest(),'inputs':len(c['source_sha256'])}
+ for label in ['matea','upstream']:
+  values=read_probe_outputs((folder/(label+'-outputs.jsonl')).read_text());keys=set(expected)-({'viewport-wrap/borrowed_ascii','viewport-wrap/borrowed_unicode'} if label=='upstream' else set());require(set(values)==keys)
+  for k,v in values.items():require({f:v[f] for f in expected[k]}==expected[k], 'independent output '+k)
+ for run in c['runs']:
+  path=folder/(run['name']+'.jsonl');require(hashlib.sha256(path.read_bytes()).hexdigest()==run['raw_sha256']);values=read_records(path.read_text());require(len(values)==(12 if run['label']=='matea' else 10))
+  for k,v in values.items():
+   require({f:v[f] for f in expected[k]}==expected[k],'measured output '+k);require(v['calibration']['target_ns']==20000000)
+   samples=v['samples_ns'];row={f:v[f] for f in ['cold_ns','allocations','allocated_bytes','iterations_per_sample']};row.update(run=run['name'],p50_ns=statistics.median(samples),p95_ns=sorted(samples)[math.ceil(.95*len(samples))-1],min_ns=min(samples),max_ns=max(samples),samples=len(samples))
+   report['cases'].setdefault(k,{}).setdefault(cohort,{}).setdefault(run['label'],[]).append(row)
+a=json.loads((P/'baseline/context.json').read_text());b=json.loads((P/'optimized/context.json').read_text())
+for p in ['tools/perf-probe/src/main.rs','tools/perf-probe/src/viewport_wrap.rs','tools/perf-probe/src/measurement.rs','tools/perf-upstream/main.go','tools/perf-upstream/go.sum']:
+ require(a['source_sha256'][p]==b['source_sha256'][p],'instrumentation changed '+p)
+require(a['binary_sha256']['upstream']==b['binary_sha256']['upstream'],'reference binary changed')
+(P/'performance-comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('88 timing / 44 output-only records match independently constructed full documents, frames and FNV state digests')

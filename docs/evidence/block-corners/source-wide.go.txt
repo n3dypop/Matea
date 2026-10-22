@@ -1,0 +1,10 @@
+// Frozen issue114 observation: empty body and requested width at pinned source.
+package main
+import("fmt";"charm.land/lipgloss/v2")
+func main(){
+ b:=lipgloss.NormalBorder();b.TopRight="⏩";b.BottomRight="⏩"
+ for _,c:=range []struct{text string;width int}{{"",0},{"ab\nc",5}}{
+  s:=lipgloss.NewStyle().Border(b).Width(c.width);raw:=s.Render(c.text);w,h:=lipgloss.Size(raw)
+  fmt.Printf("%x\t%d\t%d\t%d\t%d\t%x\n",c.text,c.width,s.GetHorizontalBorderSize(),w,h,raw)
+ }
+}

@@ -1,0 +1,57 @@
+"""Freeze the one active axis, unchanged scores, exact color source/fixture evidence."""
+from collections import Counter
+from datetime import datetime, timezone
+import hashlib, json, os, subprocess, sys
+from pathlib import Path
+root=Path.cwd(); base=root/'docs/evidence/style-reference-color'; scratch=Path('/private/tmp/matea-style-reference-color-go')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(path,obj): path.write_text(json.dumps(obj,indent=2,ensure_ascii=False)+'\n')
+# Re-execute complete fixed-source observations before binding fixture bytes.
+for binary,name in [('fixtures-observe','color-inputs.tsv'),('contracts-observe','color-contracts.tsv')]:
+ raw=subprocess.check_output([str(scratch/binary)],timeout=30)
+ assert raw==(root/'crates/matea-style/tests/fixtures'/name).read_bytes(),name
+pins=json.loads((root/'docs/upstream-lock.json').read_bytes())
+for pin in pins:
+ if pin['name'] in {'lipgloss','bubbles','bubbletea','ultraviolet','harmonica'}:
+  folder=root.parent/'references'/pin['name']
+  assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=folder,text=True).strip()==pin['sha']
+  assert not subprocess.check_output(['git','status','--porcelain'],cwd=folder)
+source=root.parent/'references/lipgloss/color.go'
+(base/'reference-module.mod.txt').write_bytes((scratch/'go.mod').read_bytes())
+(base/'reference-module.sum.txt').write_bytes((scratch/'go.sum').read_bytes())
+# Source table is not another executable input or another evaluation unit.
+inv=json.loads((root/'docs/coverage/lipgloss.json').read_bytes())
+rows=[d for d in inv['declarations'] if d['file']=='color.go']; assert len(rows)==33
+mapped=[]
+for d in rows:
+ symbol=d['symbol']; note='Typed Color enum and named/indexed composition; canonical xterm palette.'; verdict='bounded_native_tested'
+ if symbol in ['NoColor','NoColor.RGBA']:note='Unknown Default returns None, intentional absence rather than opaque black.'
+ elif symbol=='Color':note='FromStr with explicit invalid/overflow error and caller-selected default fallback.'
+ elif symbol.startswith('RGBColor'):note='Rgb fields and rgba16 canonical 8-to-16 expansion; shift-only source output retained.'
+ elif symbol in ['LightDark','LightDarkFunc']:note='AdaptiveColor::resolve; explicit known background state.'
+ elif symbol in ['Complete','CompleteFunc']:note='ProfileColors::resolve with four typed Rust capability levels.'
+ elif symbol=='Alpha':
+  note='Straight Rgba16::with_alpha and validated premultiplication correct invalid source channels; custom/high-depth source transformation compositions remain open.'; verdict='partial'
+ elif symbol in ['Complementary','Darken','Lighten']:
+  note='Color RGB8/indexed adjustment helpers; unknown/nonfinite errors. General precise/custom source color transforms pending.'; verdict='partial'
+ mapped.append({**{k:d[k] for k in ['id','symbol','kind','line','source_url']},'verdict':verdict,'implementation':'crates/matea-style/src/color_input.rs','test':'crates/matea-style/tests/color_input.rs','review':note})
+write(base/'declarations.json',{'schema':1,'reference':inv['name'],'reference_sha':inv['sha'],'source_file':'color.go','source_sha256':sha(source.read_bytes()),'scope':'All 33 raw color.go declarations; bounded RGB8/selection/input evidence, not whole-style/public export closure.','declarations':mapped})
+context={'schema':1,'recorded_at_utc':datetime.now(timezone.utc).isoformat(),'source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_pin':inv['sha'],'source_color_go_sha256':sha(source.read_bytes()),'ordinary_timing_performed':False,'native_observations':30180,'operation_counts':dict(Counter(line.split('\t')[0] for name in ['color-inputs.tsv','color-contracts.tsv'] for line in (root/'crates/matea-style/tests/fixtures'/name).read_text().splitlines())),'source_binary_sha256':{n:sha((scratch/n).read_bytes()) for n in ['fixtures-observe','contracts-observe']},'producer_sha256':{n:sha((base/n).read_bytes()) for n in ['fixtures.go.txt','contracts.go.txt']},'fixture_sha256':{str(p.relative_to(root)):sha(p.read_bytes()) for p in [root/'crates/matea-style/tests/fixtures/color-inputs.tsv',root/'crates/matea-style/tests/fixtures/color-contracts.tsv']},'miri':{'seed':239,'passed':5,'ignored':1,'scope':'Five boundary tests, nine scalar/opacity samples and 282 source type/selection rows. 29898-row source case native only.'},'miri_input_sha256':{str(p.relative_to(root)):sha(p.read_bytes()) for p in [root/'crates/matea-style/src/color_input.rs',root/'crates/matea-style/src/lib.rs',root/'crates/matea-style/tests/color_input.rs',root/'crates/matea-style/Cargo.toml',root/'Cargo.toml',root/'Cargo.lock']},'limits':['No speed ratio, performance promotion, image engine or CUDA.','Color reference axis remains50; geometry/custom precise transforms/export conditions remain open.','Source alpha and RGBColor depth differences are deliberately corrected, not matched outputs.']}
+write(base/'fixture-verification.json',context)
+# These are scope bookkeeping changes, not score changes.
+plan_path=root/'docs/quality-plan.json'; before=json.loads(plan_path.read_bytes())
+if not (base/'quality-plan-before.json.txt').exists():(base/'quality-plan-before.json.txt').write_bytes(plan_path.read_bytes())
+for u in before['units']:
+ if u['id']=='matea-style/lib':
+  if 'crates/matea-style/src/color_input.rs' not in u['files']:u['files'].append('crates/matea-style/src/color_input.rs')
+  for path in ['docs/style-color-input-audit.md','docs/evidence/style-reference-color/fixture-verification.json','docs/sequential-axis-plan.md']:
+   if path not in u['evidence']:u['evidence'].append(path)
+  u['remaining']=['Active reference axis: first color-input subtask implemented; shared decoration/geometry, rich whitespace/hyperlink/transform, precise/custom transformations, full source/feature/target closure remain pending. No score promotion before the full axis qualifies.']
+ if u['id']=='matea-style/integration-tests' and 'crates/matea-style/tests/color_input.rs' not in u['files']:u['files'].append('crates/matea-style/tests/color_input.rs')
+write(plan_path,before)
+original=json.loads((base/'quality-plan-before.json.txt').read_bytes())
+assert [(u['id'],u['criteria']) for u in original['units']]==[(u['id'],u['criteria']) for u in before['units']]
+write(base/'assessment-review.json',{'schema':1,'active_axis':{'unit':'matea-style/lib','dimension':'reference','score':50},'parallel_axis_work':False,'score_changes':[],'threshold_changed':False,'review_units_removed':False,'new_programs':['crates/matea-style/src/color_input.rs','crates/matea-style/tests/color_input.rs'],'qualification':'in_progress','remaining_axes':47})
+# Keep raw source observation bytes only once in the actual executed fixtures.
+if (base/'source.tsv').exists():(base/'source.tsv').unlink()
+print('One reference axis active; zero score changes;30180 source observations;33 declaration reviews')

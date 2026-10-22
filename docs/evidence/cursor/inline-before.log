@@ -1,0 +1,24 @@
+
+running 1 test
+test cursor_text_is_inline_before_grapheme_clipping ... FAILED
+
+failures:
+
+---- cursor_text_is_inline_before_grapheme_clipping stdout ----
+
+thread 'cursor_text_is_inline_before_grapheme_clipping' (3316984) panicked at crates/matea-widgets/tests/cursor.rs:26:9:
+assertion `left == right` failed
+  left: "a\nb"
+ right: "ab"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    cursor_text_is_inline_before_grapheme_clipping
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+   Compiling matea-widgets v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-widgets)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
+     Running tests/cursor.rs (target/debug/deps/cursor-596d8465f8cddfd7)
+error: test failed, to rerun pass `-p matea-widgets --test cursor`

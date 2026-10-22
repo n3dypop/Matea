@@ -1,0 +1,180 @@
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.60s
+     Running unittests src/lib.rs (target/debug/deps/matea_render-d09641a814fc5c6c)
+
+running 12 tests
+test rich_text::tests::every_scalar_context_matches_per_grapheme_width ... ignored, exhaustive scalar contexts, explicitly executed by native acceptance
+test tests::cursor_metadata_does_not_damage_cells_and_invalid_positions_hide ... ok
+test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
+test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+test tests::extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes ... ok
+test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
+test tests::cursor_composes_through_layout_panel_and_layers ... ok
+test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
+test tests::unicode_clipping_and_controls ... ok
+test tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout ... ok
+test tests::zero_and_oversized_geometry ... ok
+test rich_text::tests::fast_width_preserves_cross_grapheme_script_and_emoji_policies ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/blocks.rs (target/debug/deps/blocks-e88ba50b38fd2a77)
+
+running 7 tests
+test rich_styles_survive_inline_cluster_merging_and_block_overrides ... ok
+test construction_normalizes_after_one_capturing_transform ... ok
+test validation_and_user_panic_never_publish_partial_blocks ... ok
+test clipping_and_view_composition_preserve_whole_graphemes_and_damage ... ok
+test pinned_border_gradient_perimeter_and_offsets ... ok
+test pinned_block_projection ... ok
+test generated_wraps_preserve_non_whitespace_and_bound_every_row ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+     Running tests/invariants.rs (target/debug/deps/invariants-9f80e3ed840f1df1)
+
+running 2 tests
+test extreme_empty_clips_never_write_or_wrap_coordinates ... ok
+test bounded_paint_sequences_preserve_glyph_ownership_and_determinism ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/rich_text.rs (target/debug/deps/rich_text-44a901c9742442e6)
+
+running 10 tests
+test chunks_normalize_once_and_ranges_follow_normalized_utf8 ... ok
+test clipped_rows_skip_offscreen_styles_without_losing_byte_positions ... ok
+test rich_layers_clear_complete_old_wide_glyphs_and_keep_layout_height ... ok
+test caller_iterator_failure_keeps_the_preexisting_document ... ok
+test ownership_sharing_threads_and_old_view_snapshots_are_explicit ... ok
+test pinned_public_span_cells_have_four_matches_and_four_literal_cluster_deviations ... ok
+test every_scalar_split_of_complex_sequences_preserves_complete_cell_output ... ok
+test whole_graphemes_cross_style_boundaries_and_use_the_leading_style ... ok
+test single_style_matches_existing_text_for_controls_multiline_and_clipping ... ok
+test untrusted_hints_and_irregular_chunks_preserve_canonical_content ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/surface_snapshot.rs (target/debug/deps/surface_snapshot-fc959e39210a7ad8)
+
+running 7 tests
+test natural_height_layout_panels_and_clipped_glyphs_have_literal_results ... ok
+test consuming_unique_roots_transfers_cells_while_shared_and_constrained_scenes_remain_independent ... ok
+test extreme_and_empty_geometry_never_wraps_or_publishes_orphan_continuations ... ok
+test long_heap_graphemes_and_nondefault_blank_cells_are_owned_exactly ... ok
+test snapshots_share_owned_immutable_cells_and_keep_the_scene_budget ... ok
+test copying_cells_invalidates_old_cursors_and_snapshot_metadata_maps_like_view_cursors ... ok
+test row_clone_matches_independent_per_glyph_paint_for_clips_offsets_and_damage ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/text.rs (target/debug/deps/text-be9bd5f51224f64b)
+
+running 6 tests
+test arguments_format_once_and_the_scene_retains_no_ui_borrow ... ok
+test standard_inputs_normalize_identically_and_own_their_snapshot ... ok
+test failed_display_panics_instead_of_returning_partial_text ... ok
+test typed_views_and_raw_canvas_preserve_cells_styles_and_clipping_at_every_size ... ok
+test c2_candidates_in_mixed_utf8_keep_controls_and_valid_latin_distinct ... ok
+test byte_scan_preserves_standard_control_policy_for_every_unicode_scalar ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests src/lib.rs (target/debug/deps/matea_style-8a9bc24f6d4fa9e0)
+
+running 9 tests
+test tests::default_rgb_tokens_have_readable_contrast ... ok
+test decoration::tests::sides_presence_frame_arithmetic_and_unsetting ... ok
+test gradient::layout_tests::precise_inputs_keep_stop_and_terminal_color_storage_bounded ... ok
+test decoration::tests::presets_cover_all_thirteen_parts_and_legacy_border_conversion ... ok
+test decoration::tests::explicit_zero_false_and_reset_inherit_without_padding_or_margin ... ok
+test tests::fallback_is_bounded_and_no_color_keeps_focus ... ok
+test decoration::tests::custom_borders_validate_all_parts_and_share_whole_graphemes ... ok
+test tests::layout_does_not_overflow_at_small_sizes ... ok
+test attributes::tests::all_typed_states_preserve_independent_choices_and_clear_back_to_default ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/color_input.rs (target/debug/deps/color_input-84923631b0c64cb6)
+
+running 6 tests
+test invalid_formats_numeric_boundaries_and_unknown_colors_are_explicit ... ok
+test profile_selection_and_rgb_depth_do_not_guess_or_quantize ... ok
+test pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth ... ok
+test alpha_composition_uses_known_colors_and_independent_rational_model ... ok
+test pinned_public_color_operations_and_standard_premultiplication ... ok
+test every_channel_and_boundary_alpha_preserves_premultiplied_invariants ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/colors.rs (target/debug/deps/colors-905f4fa6be5955b4)
+
+running 4 tests
+test every_rgb_triple_matches_full_palette_search ... ignored, Run explicitly in release: exhaustive 16,777,216 RGB triples against full search
+test profiles_preserve_indices_attributes_and_first_index_ties ... ok
+test rgb16_quantization_is_monotonic_and_every_rgb8_bucket_has_256_inputs ... ok
+test palette_and_midpoint_boundaries_match_independent_search ... ok
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/gradients.rs (target/debug/deps/gradients-2330093aec5ec835)
+
+running 7 tests
+test configuration_owns_stops_and_rejects_invalid_angle_or_empty_input ... ok
+test precise_stop_ownership_validation_prefix_and_opaque_interpolation_are_explicit ... ok
+test precise_single_stop_stays_constant_for_large_ranges_and_rotated_grids ... ok
+test premultiplied_rgba16_matches_canonical_pinned_source_color_projections ... ok
+test all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback ... ok
+test pinned_lip_gloss_rgb8_samples_match_complete_fixture_outputs ... ok
+test indexed_and_mixed_ended_iterators_preserve_exact_remaining_ranges ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/layout.rs (target/debug/deps/layout-d4e9815903881e6e)
+
+running 1 test
+test weighted_layout_preserves_budget_zero_weights_and_fixed_priority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/patches.rs (target/debug/deps/patches-7bb175b62f4f38a9)
+
+running 7 tests
+test every_boolean_base_and_ternary_patch_matches_a_branching_value_model ... ignored, finite full flag domain, explicitly executed by native acceptance
+test reset_and_complete_override_preserve_no_implicit_inheritance ... ok
+test inheritance_false_and_terminal_default_are_distinct_intents ... ok
+test each_boolean_composes_all_inherit_set_clear_sequences ... ok
+test enum_groups_never_leak_into_other_attributes_or_each_other ... ok
+test compact_copy_values_work_in_const_contexts_and_across_threads ... ok
+test composition_is_associative_and_equivalent_to_sequential_resolution ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests matea_render
+
+running 3 tests
+test crates/matea-render/src/rich_text.rs - rich_text::RichText (line 27) ... ok
+test crates/matea-render/src/snapshot.rs - snapshot::View::surface (line 12) ... ok
+test crates/matea-render/src/block.rs - block::StyledBlock (line 37) ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 1 test
+test crates/matea-render/src/text.rs - text::Text (line 14) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+all doctests ran in 1.68s; merged doctests compilation took 1.23s
+   Doc-tests matea_style
+
+running 5 tests
+test crates/matea-style/src/gradient.rs - gradient::Gradient::from_premultiplied_rgba16 (line 69) ... ok
+test crates/matea-style/src/color_input.rs - color_input::Rgba16 (line 150) ... ok
+test crates/matea-style/src/lib.rs - Color::rgb16 (line 30) ... ok
+test crates/matea-style/src/decoration.rs - decoration::BlockStyle (line 315) ... ok
+test crates/matea-style/src/attributes/patch.rs - attributes::patch::StylePatch (line 17) ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 0.79s; merged doctests compilation took 0.57s

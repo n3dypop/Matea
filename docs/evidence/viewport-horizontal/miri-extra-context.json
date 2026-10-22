@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "seed": 239,
+  "source_sha256": {
+    "crates/matea-widgets/src/lib.rs": "854d381e3a0f0032cb24f58eb4dad3d8473ae43e735466e620cdd4bb918b41a3",
+    "crates/matea-widgets/tests/viewport.rs": "0572840b95e4c7492c53fbfa1a3a65b998355a5ac0622347c4b74b8b01bbc96d",
+    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097"
+  },
+  "commands": [
+    [
+      "cargo",
+      "+nightly",
+      "miri",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "matea-widgets",
+      "--test",
+      "viewport",
+      "source_resize_replace_overflow_edges_have_explicit_bounded_rust_outcomes"
+    ],
+    [
+      "cargo",
+      "+nightly",
+      "miri",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "matea-widgets",
+      "--lib",
+      "viewport_vertical_work_does_not_initialize_width_cache"
+    ]
+  ],
+  "prior_23_test_source_preserved": true,
+  "runs": [
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "miri",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-widgets",
+        "--test",
+        "viewport",
+        "source_resize_replace_overflow_edges_have_explicit_bounded_rust_outcomes"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "miri",
+        "test",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-widgets",
+        "--lib",
+        "viewport_vertical_work_does_not_initialize_width_cache"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_changed": [],
+  "log_sha256": "422988878991b45305d9929a7bcf94e9ce7a31cb5cd8bae8eac33d0b4b081733"
+}

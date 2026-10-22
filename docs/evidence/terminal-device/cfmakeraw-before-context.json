@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "status": "failed",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "attempt": "attempts/65d8fd61cb4b49f99df8a08d80485c0a",
+  "cases": [
+    {
+      "case": "state",
+      "before": [
+        11010,
+        3,
+        19200,
+        1483,
+        9600,
+        9600,
+        [
+          "04",
+          "ff",
+          "ff",
+          "7f",
+          "17",
+          "15",
+          "12",
+          "ff",
+          "03",
+          "1c",
+          "1a",
+          "19",
+          "11",
+          "13",
+          "16",
+          "0f",
+          "01",
+          "00",
+          "14",
+          "ff"
+        ]
+      ],
+      "first": [
+        "raw",
+        "132",
+        "42"
+      ],
+      "raw": [
+        2049,
+        2,
+        19200,
+        65,
+        9600,
+        9600,
+        [
+          "04",
+          "ff",
+          "ff",
+          "7f",
+          "17",
+          "15",
+          "12",
+          "ff",
+          "03",
+          "1c",
+          "1a",
+          "19",
+          "11",
+          "13",
+          "16",
+          "0f",
+          1,
+          0,
+          "14",
+          "ff"
+        ]
+      ],
+      "expected_raw": [
+        10240,
+        2,
+        19200,
+        67,
+        9600,
+        9600,
+        [
+          "04",
+          "ff",
+          "ff",
+          "7f",
+          "17",
+          "15",
+          "12",
+          "ff",
+          "03",
+          "1c",
+          "1a",
+          "19",
+          "11",
+          "13",
+          "16",
+          "0f",
+          1,
+          0,
+          "14",
+          "ff"
+        ]
+      ]
+    }
+  ],
+  "binary_sha256": "33bb5f6f8f4e1984629da0f6097bae2784e5435892632aea7faf1690f1db1e6a",
+  "limits": [
+    "Only a disposable native PTY/new console; no user device or real password data.",
+    "Native behavior and cleanup only; no timing or physical-font/IME guarantee."
+  ],
+  "error": "AssertionError: raw flags differ from pinned x/term",
+  "pre_fix_source_sha256": {
+    "crates/matea-terminal/src/device.rs": "1c5e289c9074327f361c06da00b0561adf05c2d55a7e6ca8c4c7396ec29f41a3",
+    "crates/matea-terminal/src/device/unix.rs": "8666a04b7d3dd773be3f7df1c149c569fcc2623bac32bfdc16a3104ea335c8e0",
+    "crates/matea-terminal/src/session.rs": "cc122b0b43681cd142cde584623775eeaad503dfaef54cacc93dea62fc00371d",
+    "crates/matea-terminal/examples/device_probe.rs": "00320c437f3b398a21b07b6565518f59e4143b72ea7f3c15705d198a74d2d9fd",
+    "scripts/test_terminal_device.py": "b960556483b6cc22a643258728625d887f114564099f802a318d0a33ca2b2fe8",
+    "Cargo.lock": "9871c349ef056b48d1d763540963b052004e0407462e2de3b70ccf0eb8a90760"
+  }
+}

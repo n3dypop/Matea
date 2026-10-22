@@ -1,0 +1,17 @@
+{
+  "command": "MIRIFLAGS=-Zmiri-seed=197 cargo +nightly miri test --locked --offline -p matea-style --test gradients",
+  "source_sha256": {
+    "crates/matea-style/src/gradient.rs": "9e02b8424659ba29cbdd21ce3189580e10437f9ec9b770717cbd8df47e936935",
+    "crates/matea-style/tests/gradients.rs": "edaa604d1848bd1c53e60dbcf154c68f09701664e99b792124260e514d0a6388"
+  },
+  "fixture_sha256": "2e30647a2de1e5ac078b68ca5ca0780e604f3189cb12279c23989c1b088d59ff",
+  "tests_passed": 3,
+  "reference_cases_in_miri": 19,
+  "reference_cases_native": 548,
+  "log_sha256": "679a003e5e405be3b7070a4a19406d38e0a59981d84756c1c0941da0b7586452",
+  "limits": [
+    "Miri uses 19 evenly selected reference fixtures and skips native maximum-grid materialization. All 548 and the maximum grid execute natively.",
+    "One seed; no universal floating, allocator, all-schedules or terminal safety proof."
+  ],
+  "native_maximum_grid_scope": "Construct the 65,535-entry diagonal palette, verify the 65,535 squared logical length and sample the last cell; do not traverse or materialize the whole logical grid."
+}

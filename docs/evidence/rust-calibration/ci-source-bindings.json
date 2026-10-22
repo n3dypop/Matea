@@ -1,0 +1,661 @@
+{
+  "schema": 1,
+  "run": "https://github.com/n3dypop/Matea/actions/runs/39106571669",
+  "source_head": "e54118dda5a733dd8a85a32f42fdc5fe4d96e5c2",
+  "all_7_required_jobs_passed": true,
+  "program_sha256": {
+    "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+    "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+    "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+    "crates/matea-render/src/lib.rs": "9f72f151e6bce83f8c03b31c1aada67e7d1246d7d080b99dbe845b94e4eedda1",
+    "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+    "crates/matea-style/src/lib.rs": "3586efae1c508469e1a7b04c7bf6026a4720b0e2f65126bd4b1812bd4b8c246e",
+    "crates/matea-style/src/attributes.rs": "fd17850e753de9b242cb14eb902a42bee329c74427ec650a0dabd176d39b8d4a",
+    "crates/matea-terminal/src/ansi.rs": "3ab8e4670c3f43cd2c707fe362d005b0e386f90751c994248d34a54334a1bf82",
+    "crates/matea-terminal/src/frame.rs": "ddc1318acaaf710cd61cc9521da39b9441ccd9821fd65fb7a1fcb46444066269",
+    "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+    "crates/matea-terminal/src/lib.rs": "4991f9ef67ba0ad9bb7b65c105248f44539335cd4f952f931088dd8393c2d847",
+    "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+    "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+    "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+    "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+    "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+    "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+    "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+    "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+    "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+    "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+    "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+    "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+    "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+    "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+    "crates/matea/src/lib.rs": "5cce6d4217b437dcdc21704a639e5c41c6a7fb0820c76f305c89d73dc3a07da6",
+    "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+    "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+    "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+    "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+    "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+    "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+    "crates/matea-style/tests/colors.rs": "85d67a5bb8dbdd6e82822693b2b1a2c7291b8765adea4c3045c6e4160a0edb17",
+    "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+    "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+    "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+    "crates/matea-widgets/tests/cursor.rs": "7c2a2180f3b21fa40265f51337b53ee9d7a2c4c1579d69ed4631e1c2435dafa5",
+    "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+    "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+    "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+    "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+    "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+    "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+    "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+    "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+    "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+    "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+    "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+    "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+    "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+    "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+    "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+    "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+    "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+    "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+    "crates/matea/examples/attributes.rs": "08e4aca6c72bb27822491fe666dd7f848ed499d43e33f40e30c3e6f18fc9d884",
+    "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+    "tools/perf-probe/src/main.rs": "d575d7d0ab6f31548e69f580622630c17397443e3d6ad004a33c1636fa20f852",
+    "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+    "tools/perf-probe/src/measurement.rs": "7989695d112c46ae07ab87482c9077dc7909947b949f6d03ebd2cdad4bb7ece3",
+    "crates/matea-terminal/benches/terminal_primitives.rs": "2dbcae24c0f54838cd4da3b217fc9e00082cc4cead6e00d6f933af5cc7567857",
+    "crates/matea/benches/foundation_paths.rs": "455c5a0c5eb43d90bd15b2c157977b06e2ed3895bfcb96f5e7ad531ef95d7077",
+    "tools/perf-probe/src/attributes.rs": "cce2cd3a6056220b9f6383c0c01d5149fad05a770b36edd8cf344961be7358fa",
+    "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+    "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+    "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+    "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee",
+    "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+    "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+    "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+    "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+    "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+    "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+    "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+    "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+    "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+    "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+    "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+    "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+    "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+    "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+    "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+    "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+    "scripts/optimization_evidence.py": "820f7093815c234dc405c99fc68f14a75294e4daf66d03bbe0ec0a4441738711",
+    "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
+    "scripts/measure_remaining_performance.py": "5f02bba67f9bb4dcb58216f1af68024a894f6e38a519a2473e20208d853e1e83",
+    "scripts/report_attribute_performance.py": "694e3f15ed49cabd4b13040a2cd5a7e3682fc70d226711f9978a72de8362514d",
+    "scripts/measure_reader_performance.py": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
+    "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+    "scripts/example_smoke.py": "8cec07b1216a5985cd37db1cecd17e535b40c2a027bdea230de02d95d0f9267e",
+    "scripts/measure_rust_coverage.py": "297485c0af5258b028ec970dea096e8773ed67030847f4b6cfdedee68958fd72",
+    "scripts/pty_smoke.py": "fb7205b7393a3fccb0bd4596ab6fd14ab2079cbe051deea3b759cfb32c4c91ab",
+    "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+    "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+    "scripts/check_reference_paths.py": "152e60cfab87443df306953cc1cccd4003192ca9d2c3420512c825c61a008ff0",
+    "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+    "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+    "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+    "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+    "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+    "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+    "scripts/test_optimization_evidence.py": "e0f064424bc042dddeb61bc743933074c7064deb6dd294c4b9587d83afbdb138",
+    "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+    "scripts/test_performance_records.py": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
+    "scripts/test_reference_paths.py": "d55e954c10dd8709362b1f0aea054d9ab7807e51ae12f30048e2cffc9e1db2fc",
+    "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+    "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+    "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+    "scripts/test_measurement_drivers.py": "d9b2ca20c810291916c8c35075322c76a010a11bf43ef84ead5b2624e855b157",
+    "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+    ".github/workflows/foundation.yml": "ee373b225fa86e5b484e495920eba8781b5952e1a15528ef3df86fa2c912ac54"
+  },
+  "execution_input_sha256": {
+    ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+    ".github/workflows/foundation.yml": "ee373b225fa86e5b484e495920eba8781b5952e1a15528ef3df86fa2c912ac54",
+    "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+    "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+    "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+    "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+    "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+    "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+    "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+    "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+    "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+    "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+    "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+    "crates/matea-render/src/lib.rs": "9f72f151e6bce83f8c03b31c1aada67e7d1246d7d080b99dbe845b94e4eedda1",
+    "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+    "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+    "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+    "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+    "crates/matea-style/src/attributes.rs": "fd17850e753de9b242cb14eb902a42bee329c74427ec650a0dabd176d39b8d4a",
+    "crates/matea-style/src/lib.rs": "3586efae1c508469e1a7b04c7bf6026a4720b0e2f65126bd4b1812bd4b8c246e",
+    "crates/matea-style/tests/colors.rs": "85d67a5bb8dbdd6e82822693b2b1a2c7291b8765adea4c3045c6e4160a0edb17",
+    "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+    "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+    "crates/matea-terminal/benches/terminal_primitives.rs": "2dbcae24c0f54838cd4da3b217fc9e00082cc4cead6e00d6f933af5cc7567857",
+    "crates/matea-terminal/src/ansi.rs": "3ab8e4670c3f43cd2c707fe362d005b0e386f90751c994248d34a54334a1bf82",
+    "crates/matea-terminal/src/frame.rs": "ddc1318acaaf710cd61cc9521da39b9441ccd9821fd65fb7a1fcb46444066269",
+    "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+    "crates/matea-terminal/src/lib.rs": "4991f9ef67ba0ad9bb7b65c105248f44539335cd4f952f931088dd8393c2d847",
+    "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+    "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+    "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+    "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+    "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+    "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+    "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+    "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+    "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+    "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+    "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+    "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+    "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+    "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+    "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+    "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+    "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+    "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+    "crates/matea-widgets/tests/cursor.rs": "7c2a2180f3b21fa40265f51337b53ee9d7a2c4c1579d69ed4631e1c2435dafa5",
+    "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+    "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+    "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+    "crates/matea/benches/foundation_paths.rs": "455c5a0c5eb43d90bd15b2c157977b06e2ed3895bfcb96f5e7ad531ef95d7077",
+    "crates/matea/examples/attributes.rs": "08e4aca6c72bb27822491fe666dd7f848ed499d43e33f40e30c3e6f18fc9d884",
+    "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+    "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+    "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+    "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+    "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+    "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+    "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+    "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+    "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+    "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+    "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+    "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+    "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+    "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+    "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+    "crates/matea/src/lib.rs": "5cce6d4217b437dcdc21704a639e5c41c6a7fb0820c76f305c89d73dc3a07da6",
+    "docs/quality-plan.json": "c67dd059c7f5d657680fbf6013effe90acb3e09b17d599fe77b0bc27d6d841fc",
+    "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+    "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+    "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+    "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+    "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+    "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+    "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+    "scripts/check_reference_paths.py": "152e60cfab87443df306953cc1cccd4003192ca9d2c3420512c825c61a008ff0",
+    "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+    "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+    "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+    "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+    "scripts/example_smoke.py": "8cec07b1216a5985cd37db1cecd17e535b40c2a027bdea230de02d95d0f9267e",
+    "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+    "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+    "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+    "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+    "scripts/measure_reader_performance.py": "5aab7591eecbd85e25db2b8eda36dc5c9388be4c67c132018911472b95f13418",
+    "scripts/measure_remaining_performance.py": "5f02bba67f9bb4dcb58216f1af68024a894f6e38a519a2473e20208d853e1e83",
+    "scripts/measure_rust_coverage.py": "297485c0af5258b028ec970dea096e8773ed67030847f4b6cfdedee68958fd72",
+    "scripts/optimization_evidence.py": "820f7093815c234dc405c99fc68f14a75294e4daf66d03bbe0ec0a4441738711",
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
+    "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+    "scripts/pty_smoke.py": "fb7205b7393a3fccb0bd4596ab6fd14ab2079cbe051deea3b759cfb32c4c91ab",
+    "scripts/report_attribute_performance.py": "694e3f15ed49cabd4b13040a2cd5a7e3682fc70d226711f9978a72de8362514d",
+    "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+    "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+    "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+    "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+    "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+    "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+    "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+    "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+    "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+    "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+    "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+    "scripts/test_measurement_drivers.py": "d9b2ca20c810291916c8c35075322c76a010a11bf43ef84ead5b2624e855b157",
+    "scripts/test_optimization_evidence.py": "e0f064424bc042dddeb61bc743933074c7064deb6dd294c4b9587d83afbdb138",
+    "scripts/test_performance_records.py": "abbbb2553a44375bb8da37e91f3c72ab7e729c6532ff95e6d20e5aa63aad2dcf",
+    "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+    "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+    "scripts/test_reference_paths.py": "d55e954c10dd8709362b1f0aea054d9ab7807e51ae12f30048e2cffc9e1db2fc",
+    "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+    "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+    "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+    "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+    "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+    "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+    "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+    "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+    "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+    "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+    "tools/perf-probe/src/attributes.rs": "cce2cd3a6056220b9f6383c0c01d5149fad05a770b36edd8cf344961be7358fa",
+    "tools/perf-probe/src/main.rs": "d575d7d0ab6f31548e69f580622630c17397443e3d6ad004a33c1636fa20f852",
+    "tools/perf-probe/src/measurement.rs": "7989695d112c46ae07ab87482c9077dc7909947b949f6d03ebd2cdad4bb7ece3",
+    "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+    "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+    "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+    "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+  },
+  "hosts": {
+    "ubuntu": {
+      "acceptance_checks": 33,
+      "uploaded_logs_hash_checked": 17,
+      "llvm_source_files": 62,
+      "llvm_compiler_instances": 67,
+      "all_program_build_check_inputs_match": true,
+      "exact_attribute_outputs_verified": 14,
+      "representation": {
+        "style_bytes": 14,
+        "style_alignment": 2,
+        "cell_bytes": 40,
+        "cell_alignment": 8,
+        "view_bytes": 48,
+        "view_alignment": 8,
+        "theme_bytes": 104
+      },
+      "matched_reference_cases": 84,
+      "matched_virtual_cursor_cases": 7,
+      "positive_go_timing_mode_cases": 91,
+      "positive_rust_timing_mode_cases": 91,
+      "invalid_rust_configurations_rejected": 5
+    },
+    "windows": {
+      "acceptance_checks": 32,
+      "uploaded_logs_hash_checked": 17,
+      "llvm_source_files": 61,
+      "llvm_compiler_instances": 65,
+      "all_program_build_check_inputs_match": true,
+      "exact_attribute_outputs_verified": 14,
+      "representation": {
+        "style_bytes": 14,
+        "style_alignment": 2,
+        "cell_bytes": 40,
+        "cell_alignment": 8,
+        "view_bytes": 48,
+        "view_alignment": 8,
+        "theme_bytes": 104
+      },
+      "matched_reference_cases": 84,
+      "matched_virtual_cursor_cases": 7,
+      "positive_go_timing_mode_cases": 91,
+      "positive_rust_timing_mode_cases": 91,
+      "invalid_rust_configurations_rejected": 5
+    },
+    "macos": {
+      "acceptance_checks": 33,
+      "uploaded_logs_hash_checked": 17,
+      "llvm_source_files": 62,
+      "llvm_compiler_instances": 67,
+      "all_program_build_check_inputs_match": true,
+      "exact_attribute_outputs_verified": 14,
+      "representation": {
+        "style_bytes": 14,
+        "style_alignment": 2,
+        "cell_bytes": 40,
+        "cell_alignment": 8,
+        "view_bytes": 48,
+        "view_alignment": 8,
+        "theme_bytes": 104
+      },
+      "matched_reference_cases": 84,
+      "matched_virtual_cursor_cases": 7,
+      "positive_go_timing_mode_cases": 91,
+      "positive_rust_timing_mode_cases": 91,
+      "invalid_rust_configurations_rejected": 5
+    }
+  },
+  "retained_artifact_sha256": {
+    "ci/ubuntu/acceptance-driver-tests.log": {
+      "downloaded_sha256": "91efc2c69d40aa6d9563891f9eec29e840189433031770167f01ac38a9a704db",
+      "retained_lf_sha256": "91efc2c69d40aa6d9563891f9eec29e840189433031770167f01ac38a9a704db"
+    },
+    "ci/ubuntu/performance-record-tests.log": {
+      "downloaded_sha256": "cac5b565578e1b31f6787112c1d12a0e79d4751c7f652d4b10f39d4362432419",
+      "retained_lf_sha256": "cac5b565578e1b31f6787112c1d12a0e79d4751c7f652d4b10f39d4362432419"
+    },
+    "ci/ubuntu/rustdoc-audit-tests.log": {
+      "downloaded_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad",
+      "retained_lf_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad"
+    },
+    "ci/ubuntu/attributes-outputs.jsonl": {
+      "downloaded_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315",
+      "retained_lf_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315"
+    },
+    "ci/ubuntu/rustdoc-import-tests.log": {
+      "downloaded_sha256": "533131dad8973c589ae697ab1dd346cc55caa134cd1e536cedf26f1b057c0f1f",
+      "retained_lf_sha256": "533131dad8973c589ae697ab1dd346cc55caa134cd1e536cedf26f1b057c0f1f"
+    },
+    "ci/ubuntu/issue-refresh-tests.log": {
+      "downloaded_sha256": "637ad693971420b70a01476cd5d51065ecc3c7af270c41cfe91899ec8c2db4bd",
+      "retained_lf_sha256": "637ad693971420b70a01476cd5d51065ecc3c7af270c41cfe91899ec8c2db4bd"
+    },
+    "ci/ubuntu/color-oracle-tests.log": {
+      "downloaded_sha256": "d1aaab86fa02d87997171aeb3220b40f5e28046ec4d1674848f9ec5f589f297c",
+      "retained_lf_sha256": "d1aaab86fa02d87997171aeb3220b40f5e28046ec4d1674848f9ec5f589f297c"
+    },
+    "ci/ubuntu/optimized-python-tests.log": {
+      "downloaded_sha256": "3f3310ddbac9839c8589567efae77b535907f2d63b8f0c4aca2f1268f52a9b2e",
+      "retained_lf_sha256": "3f3310ddbac9839c8589567efae77b535907f2d63b8f0c4aca2f1268f52a9b2e"
+    },
+    "ci/ubuntu/measurement-driver-tests.log": {
+      "downloaded_sha256": "46f05af99b22dfedb182a4b733f5ca22359ca7d4b617917975c84ed5c88d83ee",
+      "retained_lf_sha256": "46f05af99b22dfedb182a4b733f5ca22359ca7d4b617917975c84ed5c88d83ee"
+    },
+    "ci/ubuntu/evidence-guard-tests.log": {
+      "downloaded_sha256": "d858b8362d9e32b7d3be2b2fcf6b9e5b40ecbfca9965f268d5b2c78fcbaa6864",
+      "retained_lf_sha256": "d858b8362d9e32b7d3be2b2fcf6b9e5b40ecbfca9965f268d5b2c78fcbaa6864"
+    },
+    "ci/ubuntu/representations.json": {
+      "downloaded_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373",
+      "retained_lf_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373"
+    },
+    "ci/ubuntu/local-validation.json": {
+      "downloaded_sha256": "ecfc001832dcfb84d67a40f0845760e21c67ce52d0903b20a6aa8fabfb1686ad",
+      "retained_lf_sha256": "ecfc001832dcfb84d67a40f0845760e21c67ce52d0903b20a6aa8fabfb1686ad"
+    },
+    "ci/ubuntu/reference-audit-tests.log": {
+      "downloaded_sha256": "fdc0e9c9920ecbb0835572ec9f8a77d47bd2c7ee420a3a06fd3348a745064a12",
+      "retained_lf_sha256": "fdc0e9c9920ecbb0835572ec9f8a77d47bd2c7ee420a3a06fd3348a745064a12"
+    },
+    "ci/ubuntu/source-auditor-tests.log": {
+      "downloaded_sha256": "15af9a1e77391e49122e2e6b7f75b85e79696254aee76365dec077295c3f84ee",
+      "retained_lf_sha256": "15af9a1e77391e49122e2e6b7f75b85e79696254aee76365dec077295c3f84ee"
+    },
+    "ci/ubuntu/release-tests.log": {
+      "downloaded_sha256": "ceda090859116718924c93e5995de883af408462c537f24e6c2f234c11837c78",
+      "retained_lf_sha256": "ceda090859116718924c93e5995de883af408462c537f24e6c2f234c11837c78"
+    },
+    "ci/ubuntu/reference-path-tests.log": {
+      "downloaded_sha256": "372ee57a30b8a8b17bb056a0814266786a922da7dcf4139f4f9a2457745d6424",
+      "retained_lf_sha256": "372ee57a30b8a8b17bb056a0814266786a922da7dcf4139f4f9a2457745d6424"
+    },
+    "ci/ubuntu/source-snapshot-tests.log": {
+      "downloaded_sha256": "9a4780e5aa7fcdc595a715590e22910dc7b51beb1698e078a325a4e77f46f2ed",
+      "retained_lf_sha256": "9a4780e5aa7fcdc595a715590e22910dc7b51beb1698e078a325a4e77f46f2ed"
+    },
+    "ci/ubuntu/optimization-evidence-tests.log": {
+      "downloaded_sha256": "7a752e59d34655e0ec24f7f70f78a38b33ec7af0615d1c6f20460a19d455a8c6",
+      "retained_lf_sha256": "7a752e59d34655e0ec24f7f70f78a38b33ec7af0615d1c6f20460a19d455a8c6"
+    },
+    "ci/ubuntu/coverage-guard-tests.log": {
+      "downloaded_sha256": "258709a34716f4b4117fa7fc8eb19d044917b3a4120d6fc2949e79fe7e77cc7c",
+      "retained_lf_sha256": "258709a34716f4b4117fa7fc8eb19d044917b3a4120d6fc2949e79fe7e77cc7c"
+    },
+    "ci/ubuntu/quality-gate-tests.log": {
+      "downloaded_sha256": "90f3a22dfff29921510e2812514c1882d6ef915d4e25dde97793f2acdca94d45",
+      "retained_lf_sha256": "90f3a22dfff29921510e2812514c1882d6ef915d4e25dde97793f2acdca94d45"
+    },
+    "ci/ubuntu/quality/rust-execution-coverage.json": {
+      "downloaded_sha256": "925836495e0062cc9f30941a28c8f8e582b38064f9c1dc1bd1f6daa336215bae",
+      "retained_lf_sha256": "925836495e0062cc9f30941a28c8f8e582b38064f9c1dc1bd1f6daa336215bae"
+    },
+    "ci/ubuntu/upstream-cursor-outputs.jsonl": {
+      "downloaded_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1",
+      "retained_lf_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1"
+    },
+    "ci/ubuntu/path-checks.json": {
+      "downloaded_sha256": "444f5642afbe18feb6e8898235e0f3ae1c89ec46a077035f103ba235f6e5b801",
+      "retained_lf_sha256": "444f5642afbe18feb6e8898235e0f3ae1c89ec46a077035f103ba235f6e5b801"
+    },
+    "ci/ubuntu/cursor-source-edges.txt": {
+      "downloaded_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b",
+      "retained_lf_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b"
+    },
+    "ci/ubuntu/trajectory-errors.json": {
+      "downloaded_sha256": "d72976667f4ad43fa3f28d00bc9187591091f2074a7d393a062d48b579ee390d",
+      "retained_lf_sha256": "d72976667f4ad43fa3f28d00bc9187591091f2074a7d393a062d48b579ee390d"
+    },
+    "ci/ubuntu/rust-timing-mode-checks.json": {
+      "downloaded_sha256": "3d2b1929318c99d317682c0fb0555d2b3a6fc17badcc0a6baddfa22858dbb5ef",
+      "retained_lf_sha256": "3d2b1929318c99d317682c0fb0555d2b3a6fc17badcc0a6baddfa22858dbb5ef"
+    },
+    "ci/ubuntu/matea-cursor-outputs.jsonl": {
+      "downloaded_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7",
+      "retained_lf_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7"
+    },
+    "ci/ubuntu/timing-mode-checks.json": {
+      "downloaded_sha256": "d1987f761a4a9a4fbd8b5f27f329b4b1edd8d8cf8fa2bcb15a7d093a65262f08",
+      "retained_lf_sha256": "d1987f761a4a9a4fbd8b5f27f329b4b1edd8d8cf8fa2bcb15a7d093a65262f08"
+    },
+    "ci/windows/acceptance-driver-tests.log": {
+      "downloaded_sha256": "db21dc673de57f9cd624f789848d29ba07cdf2a303cb04e7967012a232c5e728",
+      "retained_lf_sha256": "db21dc673de57f9cd624f789848d29ba07cdf2a303cb04e7967012a232c5e728"
+    },
+    "ci/windows/performance-record-tests.log": {
+      "downloaded_sha256": "8a59b606868acbad76259a0c1bdbaae21475951c09be73fe19f18573e16270b3",
+      "retained_lf_sha256": "8a59b606868acbad76259a0c1bdbaae21475951c09be73fe19f18573e16270b3"
+    },
+    "ci/windows/rustdoc-audit-tests.log": {
+      "downloaded_sha256": "9f169aa04896ef0203477ff61d8d57406ec0dab00b71ec15cf38cdae22509147",
+      "retained_lf_sha256": "9f169aa04896ef0203477ff61d8d57406ec0dab00b71ec15cf38cdae22509147"
+    },
+    "ci/windows/attributes-outputs.jsonl": {
+      "downloaded_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315",
+      "retained_lf_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315"
+    },
+    "ci/windows/rustdoc-import-tests.log": {
+      "downloaded_sha256": "b0dd04239029a366af42e7a16c28cfbd2a9f7d5319e0614ad07a350ecb2ef585",
+      "retained_lf_sha256": "b0dd04239029a366af42e7a16c28cfbd2a9f7d5319e0614ad07a350ecb2ef585"
+    },
+    "ci/windows/issue-refresh-tests.log": {
+      "downloaded_sha256": "489d8fec4214192d21ef621f802a943fb57007a29204410d590ff3ceb58c5003",
+      "retained_lf_sha256": "489d8fec4214192d21ef621f802a943fb57007a29204410d590ff3ceb58c5003"
+    },
+    "ci/windows/color-oracle-tests.log": {
+      "downloaded_sha256": "dae97527feaa5f4404b7cf8a367c36b5834935509ab9babacf648b1bb8476a3b",
+      "retained_lf_sha256": "dae97527feaa5f4404b7cf8a367c36b5834935509ab9babacf648b1bb8476a3b"
+    },
+    "ci/windows/optimized-python-tests.log": {
+      "downloaded_sha256": "4e8eb7740c88b2aae624834a9cdb721509d69d6790387a304e1dae8a69ef9732",
+      "retained_lf_sha256": "4e8eb7740c88b2aae624834a9cdb721509d69d6790387a304e1dae8a69ef9732"
+    },
+    "ci/windows/measurement-driver-tests.log": {
+      "downloaded_sha256": "3e91a912d1cae54ab3d4e42a03804d3c7e79038d3da545c50286a0c54e015b6c",
+      "retained_lf_sha256": "3e91a912d1cae54ab3d4e42a03804d3c7e79038d3da545c50286a0c54e015b6c"
+    },
+    "ci/windows/evidence-guard-tests.log": {
+      "downloaded_sha256": "dc21871ed86f3d97dbb235364894332a0047967e75172d13ef6cf4df8b3fb67b",
+      "retained_lf_sha256": "dc21871ed86f3d97dbb235364894332a0047967e75172d13ef6cf4df8b3fb67b"
+    },
+    "ci/windows/representations.json": {
+      "downloaded_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373",
+      "retained_lf_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373"
+    },
+    "ci/windows/local-validation.json": {
+      "downloaded_sha256": "671151781afc3cfe5f29b587950c1ff158581cd456b0981b23f7238424869037",
+      "retained_lf_sha256": "3262590b0f799b19289b82792be89ed34bbe4c7c776c9db41548c0e1017098d4"
+    },
+    "ci/windows/reference-audit-tests.log": {
+      "downloaded_sha256": "7256b77eeaf514160e9e171ec5b28dfd15ac5708a31050f47071f3162c9481e7",
+      "retained_lf_sha256": "7256b77eeaf514160e9e171ec5b28dfd15ac5708a31050f47071f3162c9481e7"
+    },
+    "ci/windows/source-auditor-tests.log": {
+      "downloaded_sha256": "eb001aeb054a8b2561e2aa406919ff2c9142eb56c52d87c9356d40880875fadd",
+      "retained_lf_sha256": "eb001aeb054a8b2561e2aa406919ff2c9142eb56c52d87c9356d40880875fadd"
+    },
+    "ci/windows/release-tests.log": {
+      "downloaded_sha256": "3b3e17087b36800abb317ff332373e2c0337c055fc0924cfd43e0ccc1d5b9afe",
+      "retained_lf_sha256": "3b3e17087b36800abb317ff332373e2c0337c055fc0924cfd43e0ccc1d5b9afe"
+    },
+    "ci/windows/reference-path-tests.log": {
+      "downloaded_sha256": "7ba600c131d14938fa296eb6eb208c575bf239a15b65439f37d0578df0fff9bf",
+      "retained_lf_sha256": "7ba600c131d14938fa296eb6eb208c575bf239a15b65439f37d0578df0fff9bf"
+    },
+    "ci/windows/source-snapshot-tests.log": {
+      "downloaded_sha256": "fb82e00ebb9b94625853ea4ddf0303335a1ee1b9ef55822cad06c765700b39cf",
+      "retained_lf_sha256": "fb82e00ebb9b94625853ea4ddf0303335a1ee1b9ef55822cad06c765700b39cf"
+    },
+    "ci/windows/optimization-evidence-tests.log": {
+      "downloaded_sha256": "f7cd536c94fbb5f4b9842e6a59f04227828db484a84dbcd72f558f49de34f858",
+      "retained_lf_sha256": "f7cd536c94fbb5f4b9842e6a59f04227828db484a84dbcd72f558f49de34f858"
+    },
+    "ci/windows/coverage-guard-tests.log": {
+      "downloaded_sha256": "60ee24fc66127b5b10b38f1623ec5a9d9e8500d3b90adf98760d7203ce50fc00",
+      "retained_lf_sha256": "60ee24fc66127b5b10b38f1623ec5a9d9e8500d3b90adf98760d7203ce50fc00"
+    },
+    "ci/windows/quality-gate-tests.log": {
+      "downloaded_sha256": "04cd768a4eec5b374adb516b4436e80aad630e7d2073f3eeb53d063772cd5f8b",
+      "retained_lf_sha256": "04cd768a4eec5b374adb516b4436e80aad630e7d2073f3eeb53d063772cd5f8b"
+    },
+    "ci/windows/quality/rust-execution-coverage.json": {
+      "downloaded_sha256": "217a482a83203557eab9feda383ba5d290d4e0f5fb39b7cea1f794a769bb9868",
+      "retained_lf_sha256": "a51ed505240e79c68fab969c1e8e698e8561d75a3630f3c0d1d46ce482a59e91"
+    },
+    "ci/windows/upstream-cursor-outputs.jsonl": {
+      "downloaded_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1",
+      "retained_lf_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1"
+    },
+    "ci/windows/path-checks.json": {
+      "downloaded_sha256": "3ee2fa528afb10ddd573b1c814553e4b89fb626d9e71037598199ac359e51c80",
+      "retained_lf_sha256": "444f5642afbe18feb6e8898235e0f3ae1c89ec46a077035f103ba235f6e5b801"
+    },
+    "ci/windows/cursor-source-edges.txt": {
+      "downloaded_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b",
+      "retained_lf_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b"
+    },
+    "ci/windows/trajectory-errors.json": {
+      "downloaded_sha256": "a21ff5c1a1313551bac8b6b822fc605d18fdc6d3febe69be1c3e5d311fa1dbf5",
+      "retained_lf_sha256": "d72976667f4ad43fa3f28d00bc9187591091f2074a7d393a062d48b579ee390d"
+    },
+    "ci/windows/rust-timing-mode-checks.json": {
+      "downloaded_sha256": "a06a56afa8992d1a434cb6a19f7cdff2c5acb3d73f5bfcfd0782c6a6c20a59bd",
+      "retained_lf_sha256": "a6d4c3d7c6bcfc133235aa33277ac3577ddfa95852b2fbe76c7dfd1bb9498100"
+    },
+    "ci/windows/matea-cursor-outputs.jsonl": {
+      "downloaded_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7",
+      "retained_lf_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7"
+    },
+    "ci/windows/timing-mode-checks.json": {
+      "downloaded_sha256": "c1bfe6e21d53f6971319bf60530da11bdad63a786f34947673b733575a31fd73",
+      "retained_lf_sha256": "86f0d30f6be840331adf8a21dd251dd0a4e436cd16536b759cbc7272721005ff"
+    },
+    "ci/macos/acceptance-driver-tests.log": {
+      "downloaded_sha256": "71a8d32147e2447cc8496c6bd1464c4c3e75dff27b72ac79b4d5acd66e885e69",
+      "retained_lf_sha256": "71a8d32147e2447cc8496c6bd1464c4c3e75dff27b72ac79b4d5acd66e885e69"
+    },
+    "ci/macos/performance-record-tests.log": {
+      "downloaded_sha256": "d034ab39354c2f034fa02526bcbb2b25197c79369aa9fb04ff68ee72fc6a232f",
+      "retained_lf_sha256": "d034ab39354c2f034fa02526bcbb2b25197c79369aa9fb04ff68ee72fc6a232f"
+    },
+    "ci/macos/rustdoc-audit-tests.log": {
+      "downloaded_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad",
+      "retained_lf_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad"
+    },
+    "ci/macos/attributes-outputs.jsonl": {
+      "downloaded_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315",
+      "retained_lf_sha256": "f1de76a108b756ff294b89ad1f386af444e3276d33901b9fbf76a514dabdc315"
+    },
+    "ci/macos/rustdoc-import-tests.log": {
+      "downloaded_sha256": "38bf320bde0206302c1e57a1b42621b895232f0c74ebfec8c7b81ec6681fa5a0",
+      "retained_lf_sha256": "38bf320bde0206302c1e57a1b42621b895232f0c74ebfec8c7b81ec6681fa5a0"
+    },
+    "ci/macos/issue-refresh-tests.log": {
+      "downloaded_sha256": "fc23540c8545d4075fe2f0420accd022e74e5566176c3bd4c597964ff02c2e14",
+      "retained_lf_sha256": "fc23540c8545d4075fe2f0420accd022e74e5566176c3bd4c597964ff02c2e14"
+    },
+    "ci/macos/color-oracle-tests.log": {
+      "downloaded_sha256": "cb4b0893c1ad095466f5a4fff264cb5c39aa41cb3196ed219c998fc981e85d18",
+      "retained_lf_sha256": "cb4b0893c1ad095466f5a4fff264cb5c39aa41cb3196ed219c998fc981e85d18"
+    },
+    "ci/macos/optimized-python-tests.log": {
+      "downloaded_sha256": "698b4e2000471c962e60b68880e69b2d53fbdf08bcd5149f0047fac92f3c2755",
+      "retained_lf_sha256": "698b4e2000471c962e60b68880e69b2d53fbdf08bcd5149f0047fac92f3c2755"
+    },
+    "ci/macos/measurement-driver-tests.log": {
+      "downloaded_sha256": "b749d513bc324bc88fc0e4ab779c239934d5c3dea7564e20c059db7e820198d0",
+      "retained_lf_sha256": "b749d513bc324bc88fc0e4ab779c239934d5c3dea7564e20c059db7e820198d0"
+    },
+    "ci/macos/evidence-guard-tests.log": {
+      "downloaded_sha256": "e3451a4c556707963c809626533457d8c79b1c76db0be31e03270e85bd01b45f",
+      "retained_lf_sha256": "e3451a4c556707963c809626533457d8c79b1c76db0be31e03270e85bd01b45f"
+    },
+    "ci/macos/representations.json": {
+      "downloaded_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373",
+      "retained_lf_sha256": "25df3d6c25a944c48585b3537c2ba77b3cb518cf68c4168c9243d9999d8d3373"
+    },
+    "ci/macos/local-validation.json": {
+      "downloaded_sha256": "58115c41cd5dffa3b2ebdd5cf58201936ef97debbcbfbaa340627ae2b354cccb",
+      "retained_lf_sha256": "58115c41cd5dffa3b2ebdd5cf58201936ef97debbcbfbaa340627ae2b354cccb"
+    },
+    "ci/macos/reference-audit-tests.log": {
+      "downloaded_sha256": "6504d46cbaa5b122961d2e919d54d3d0093d92d1ace3cd34d00dded77506e26c",
+      "retained_lf_sha256": "6504d46cbaa5b122961d2e919d54d3d0093d92d1ace3cd34d00dded77506e26c"
+    },
+    "ci/macos/source-auditor-tests.log": {
+      "downloaded_sha256": "d93f09191fba5ee1d060151243d13b383a508eb4d19de8730291e0750ab30430",
+      "retained_lf_sha256": "d93f09191fba5ee1d060151243d13b383a508eb4d19de8730291e0750ab30430"
+    },
+    "ci/macos/release-tests.log": {
+      "downloaded_sha256": "79ddb958780683283b58db60564c98379e6e6317f0148be93c595936ec54a37d",
+      "retained_lf_sha256": "79ddb958780683283b58db60564c98379e6e6317f0148be93c595936ec54a37d"
+    },
+    "ci/macos/reference-path-tests.log": {
+      "downloaded_sha256": "372ee57a30b8a8b17bb056a0814266786a922da7dcf4139f4f9a2457745d6424",
+      "retained_lf_sha256": "372ee57a30b8a8b17bb056a0814266786a922da7dcf4139f4f9a2457745d6424"
+    },
+    "ci/macos/source-snapshot-tests.log": {
+      "downloaded_sha256": "2c0ae84422b327ab0a73195a8651f055bfea9adb147ebae26121b7242c261114",
+      "retained_lf_sha256": "2c0ae84422b327ab0a73195a8651f055bfea9adb147ebae26121b7242c261114"
+    },
+    "ci/macos/optimization-evidence-tests.log": {
+      "downloaded_sha256": "02f20a57872203f704653ae9c79023fc7322b1dd4d765100af9f5943fb0adfc0",
+      "retained_lf_sha256": "02f20a57872203f704653ae9c79023fc7322b1dd4d765100af9f5943fb0adfc0"
+    },
+    "ci/macos/coverage-guard-tests.log": {
+      "downloaded_sha256": "cf426b554ed9b8531bacc41d7e4eccdb18906f33320148ec0f6de5ed2d27195e",
+      "retained_lf_sha256": "cf426b554ed9b8531bacc41d7e4eccdb18906f33320148ec0f6de5ed2d27195e"
+    },
+    "ci/macos/quality-gate-tests.log": {
+      "downloaded_sha256": "9bd4153f903a1b5634858a282bc1dbf19a51367e03bedfd365c5645e8fbf05b2",
+      "retained_lf_sha256": "9bd4153f903a1b5634858a282bc1dbf19a51367e03bedfd365c5645e8fbf05b2"
+    },
+    "ci/macos/quality/rust-execution-coverage.json": {
+      "downloaded_sha256": "5ae819fe8fdf4010d44ecfecf4b77eb09a2725b13ee44fda1abf464b2b278216",
+      "retained_lf_sha256": "5ae819fe8fdf4010d44ecfecf4b77eb09a2725b13ee44fda1abf464b2b278216"
+    },
+    "ci/macos/upstream-cursor-outputs.jsonl": {
+      "downloaded_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1",
+      "retained_lf_sha256": "7eda2ee8be924f0b2496b40ecae0a2976bdcaa22b7e56de4f5dad9e11d8578e1"
+    },
+    "ci/macos/path-checks.json": {
+      "downloaded_sha256": "95bc59379c4e93be325e46a5829480650fc1a3069340512499f712c7f30054c0",
+      "retained_lf_sha256": "95bc59379c4e93be325e46a5829480650fc1a3069340512499f712c7f30054c0"
+    },
+    "ci/macos/cursor-source-edges.txt": {
+      "downloaded_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b",
+      "retained_lf_sha256": "8fdc32830914024470a2f660cc0c72ed884bdde44ddbe20a73ea7fd2a712ff9b"
+    },
+    "ci/macos/trajectory-errors.json": {
+      "downloaded_sha256": "73c32dba3c2448d014af4e968d2343196c14a0e28a72d16d7c626262adba8081",
+      "retained_lf_sha256": "73c32dba3c2448d014af4e968d2343196c14a0e28a72d16d7c626262adba8081"
+    },
+    "ci/macos/rust-timing-mode-checks.json": {
+      "downloaded_sha256": "4f5d804c06a46248c9dc893cee2da2c07628288ef22838d68c6f7aa8f0ea440c",
+      "retained_lf_sha256": "4f5d804c06a46248c9dc893cee2da2c07628288ef22838d68c6f7aa8f0ea440c"
+    },
+    "ci/macos/matea-cursor-outputs.jsonl": {
+      "downloaded_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7",
+      "retained_lf_sha256": "d9f1c1c016b0cfb42bb8376382dcfdf8f6703e51ffbdd52d22d02da087bca4e7"
+    },
+    "ci/macos/timing-mode-checks.json": {
+      "downloaded_sha256": "7ba554d9e1126e8c91fa2069d240d7b2655d3c2d2e9fadec2ad4af0fc47e3f48",
+      "retained_lf_sha256": "7ba554d9e1126e8c91fa2069d240d7b2655d3c2d2e9fadec2ad4af0fc47e3f48"
+    }
+  },
+  "limits": [
+    "Native CI and source/log binding only; shared-runner timings are not comparative performance evidence.",
+    "Windows PTY and physical emulators remain unverified.",
+    "The historical compiler reference profiles were not recompiled; their unchanged collector hashes remain separate evidence."
+  ]
+}

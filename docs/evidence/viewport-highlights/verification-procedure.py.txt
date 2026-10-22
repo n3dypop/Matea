@@ -1,0 +1,40 @@
+import hashlib,json,math,statistics,struct,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs
+base=ROOT/'docs/evidence/viewport-highlights'
+def canonical(kind):
+ rows=[]
+ for y in range(3):
+  text=('prefix tea tail' if kind=='ascii' else '抹茶 tea 茶')+f' #{y}'
+  first=text.index('tea');cells=[]
+  for i,c in enumerate(text):
+   width=2 if c in '抹茶' else 1;matched=first<=i<first+3
+   cells.append(f'{width},{c.encode().hex()},{str(matched).lower()},{int(matched)},{str(matched and y==0).lower()};')
+   if width==2:cells.append('0,,0,0,0;')
+  require(len(cells)<=24)
+  cells+=['1,20,false,0,false;']*(24-len(cells));rows.extend(cells)
+ return ''.join(rows)
+def digest(cells):
+ value=14695981039346656037
+ for byte in cells.encode()+struct.pack('<QQ',0,0):value=((value^byte)*1099511628211)&((1<<64)-1)
+ return value
+expected={f'viewport-highlights/{op}_{kind}':{'output':'x=0;y=0;cells='+canonical(kind),'first_return_value':digest(canonical(kind))} for kind in ['ascii','unicode'] for op in ['install','view','cycle']}
+report={'schema':1,'status':'complete_bounded_native_measurement','matched_cases':6,'cohorts':{},'cases':{},'limits':['Six matched numbered 100-line flat install/view/cycle workloads only. No ratios for the intentionally different fixture contracts.','All 24x3 projected cells and x/y are independently reconstructed. Symbol/width/bold/underline/reverse are the only varying properties; default colors, canonical wide placeholders.','Both owned frame/interpretation and canonical formatting are measured. No isolated search-algorithm, full module, RSS, physical emulator, all-profile or statistical-causality claim.','All raw orders/cold/tail observations and tracked allocation differences retained.']}
+for cohort in sys.argv[1:] or ['baseline']:
+ folder=base/cohort;context=json.loads((folder/'context.json').read_text());require(context['status']=='complete' and context['source_changed']==[])
+ report['cohorts'][cohort]={'git_head':context['git_head'],'inputs':len(context['source_sha256']),'context_sha256':hashlib.sha256((folder/'context.json').read_bytes()).hexdigest()}
+ for label in ['matea','upstream']:
+  outputs=read_probe_outputs((folder/(label+'-outputs.jsonl')).read_text());require(set(outputs)==set(expected))
+  for key,value in outputs.items():require(all(value[k]==expected[key][k] for k in expected[key]),'independent output '+key)
+ for run in context['runs']:
+  raw=(folder/(run['name']+'.jsonl')).read_bytes();require(hashlib.sha256(raw).hexdigest()==run['raw_sha256']);records=read_records(raw.decode());require(set(records)==set(expected))
+  for key,value in records.items():
+   require(all(value[k]==expected[key][k] for k in expected[key]),'independent timed state '+key);require(value['calibration']['target_ns']==20000000)
+   samples=value['samples_ns'];row={k:value[k] for k in ['cold_ns','allocations','allocated_bytes','iterations_per_sample']};row.update(run=run['name'],p50_ns=statistics.median(samples),p95_ns=sorted(samples)[math.ceil(.95*len(samples))-1],min_ns=min(samples),max_ns=max(samples),samples=len(samples));report['cases'].setdefault(key,{}).setdefault(cohort,{}).setdefault(run['label'],[]).append(row)
+if len(report['cohorts'])>1:
+ contexts=[json.loads((base/c/'context.json').read_text()) for c in report['cohorts']]
+ for path in ['tools/perf-probe/src/viewport_highlights.rs','tools/perf-probe/src/measurement.rs','tools/perf-upstream/main.go']:
+  require(len({c['source_sha256'][path] for c in contexts})==1,'instrumentation changed '+path)
+(base/'performance-report.json').write_text(json.dumps(report,indent=2)+'\n');print('verified all independent 72-cell projections and FNV for every output/timing record')

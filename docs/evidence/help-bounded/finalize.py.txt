@@ -1,0 +1,52 @@
+"""Publish the final source-bound native, LLVM and gate assessment checkpoint."""
+import hashlib,json,re,shutil,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded';out=base/'final-native';out.mkdir(exist_ok=True);sys.path.insert(0,str(root/'scripts'))
+from check_quality import validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root);assert len(native['checks'])==47 and native['retry_provenance']['successful_checks_reused']==46
+coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes());validate_coverage(coverage,root)
+assert coverage['input_sha256']==native['source_sha256']
+subprocess.run(['python3',str(out/'llvm-diagnostic-procedure.py.txt')],check=True)
+subprocess.run(['python3','scripts/check_quality.py','--report'],check=True)
+subprocess.run(['python3','docs/evidence/precise-color-inputs/native/gate-snapshot.py.txt'],check=True)
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes());assert gate['below_high_axes']==48 and gate['below_high_dimensions']=={'reference':21,'performance':27}
+assert gate['pending_issue_reports']==822 and gate['stage_b']=='not_started' and gate['f5']=='closed'
+regular=sum(map(int,re.findall(r'test result: ok\. (\d+) passed;', (root/'docs/evidence/all-targets.log').read_text())))
+alltests=sum(map(int,re.findall(r'test result: ok\. (\d+) passed;', (root/'docs/evidence/test.log').read_text())))
+py=(root/'docs/evidence/optimized-python-tests.log').read_text();assert 'Ran 146 tests' in py and 'OK (skipped=2)' in py
+assert regular==278 and alltests-regular==12
+metrics={'schema':1,'native_commands':47,'successful_commands_reused_before_pty_retry':46,'retried_commands':['pty-smoke'],'rust_regular_passed':regular,'rust_doctests_passed':alltests-regular,'python_tests':146,'python_conditional_skips':2,'miri_current_help_tests':4,'miri_seed':229,
+ 'llvm_source_paths':len(coverage['files']),'llvm_instances':sum(len(f['instances']) for f in coverage['files']),
+ 'pty_checks':len(re.findall(r'^PASS ',(root/'docs/evidence/pty-smoke.log').read_text(),re.M)),
+ 'derivation':'Actual native all-target result sum; workspace sum minus all-target gives doctests; optimized full Python discovery. Forty-six unchanged-source successes plus the independently source/tool/log-bound successful PTY retry qualify 47 named commands. Original timeout remains retained. Archived comparative callers are separate historical reproductions.'}
+assert metrics['llvm_source_paths']==95 and metrics['llvm_instances']==102
+(out/'metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
+for n in ['local-validation.json','all-targets.log','test.log','optimized-python-tests.log','pty-smoke.log']:
+ shutil.copy2(root/'docs/evidence'/n,out/n)
+for n in ['report.json','rust-execution-coverage.json','final-gate-status.json']:shutil.copy2(root/'docs/evidence/quality'/n,out/n)
+negative=base/'ci-intermediate';negative.mkdir(exist_ok=True)
+for name in ['8284','9aa']:
+ p=Path('/private/tmp/matea-help-ci-'+name+'-cancelled.json');data=json.loads(p.read_bytes());assert data['status']=='completed' and data['conclusion']=='cancelled';shutil.copy2(p,negative/(name+'-cancelled.json'))
+gate_path=root/'docs/foundation-gate-report.md';text=gate_path.read_text();assert text.startswith('# Matea Foundation gate report\n\n')
+new='''現在の検証済み実装63ef696は156 program／44評価単位、未達48軸（参照元一致21・性能27）です。
+ヘルプの表示範囲に応じた準備処理を実装し、実装済み範囲の性能1軸を50→75へ更新しました。
+3方式と選定試験の538計測・16,678標本・279 RSS子プロセスを照合し、途中の確保増加と通常サイズの退行を修正しました。
+4,096件を持つ狭い表示は短縮10.5–10.6µs→194–197ns、全表示189–193µs→206–208ns。
+通常の全表示は381–387ns→379–383ns、1,024可視行の確保3回／72,863bytesも維持しています。
+不利なp50／p95、RSS最大値、測定記録スクリプトの失敗と復旧を保持し、普遍的な最大性能とは主張しません。
+[採用ソースの必須7 CIジョブ](https://github.com/n3dypop/Matea/actions/runs/39535958267)と198入力・ログを照合しました。
+各OSの47検証、Miri seed 229の4試験、独立モデルによる幅102条件の再試験が成功。
+最終評価入力のローカル47検証は、成功46項目を保持し、無出力でtimeoutしたPTY項目だけを別の実行環境で再試験して確定しました。
+Rust278＋12 doctest、Python146（条件付きskip 2）、LLVM95 source／102 instanceが成功しています。
+依存profilingの3警告と最初のPTY失敗も保持し、その原因や全分岐の安全性を証明したとは扱いません。
+[実装済みヘルプの限定評価と全記録](help-preparation-performance-audit.md)。#1038の既存判定を再検証し、#571は部分対応のままです。
+未評価報告822件、未対応付け6,683宣言、部分／未測定21能力、91 module verdict、未解決Rust export graph 2等が残ります。
+Rich decorator等の参照元一致は50で、Stage Aを継続し、Stage B／F5は閉じています。画像エンジン／CUDAには着手していません。
+
+以下は直前までの検証履歴です。
+
+'''
+gate_path.write_text(text[:len('# Matea Foundation gate report\n\n')]+new+text[len('# Matea Foundation gate report\n\n'):])
+manifest={'schema':1,'status':'complete','metrics':metrics,'source_input_sha256':native['source_sha256'],'procedure_sha256':sha(Path(__file__).read_bytes()),'archive_sha256':{p.name:sha(p.read_bytes()) for p in out.iterdir() if p.is_file() and p.name!='archive.json'}}
+(out/'archive.json').write_text(json.dumps(manifest,indent=2)+'\n');print('Final: 48 unmet axes, 822 pending reports; 47 native checks, 278+12 Rust, Python 146/skip2, Miri4, LLVM95/102')

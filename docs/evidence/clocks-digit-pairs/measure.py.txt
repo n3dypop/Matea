@@ -1,0 +1,47 @@
+"""Compare an isolated digit-pair candidate; no maintained Rust is changed."""
+import hashlib,json,os,platform,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('collector refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';work=Path('/private/tmp/matea-clocks-digit-pairs');sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+from measurement_run import MeasurementRun
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip();inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+for n,h in inputs.items():assert h==sha(subprocess.check_output(['git','show',head+':'+n])),n
+private={str(p.relative_to(work)):sha(p.read_bytes()) for p in work.rglob('*') if p.is_file() and p.suffix in ['.rs','.toml','.lock']}
+sourcework=Path('/private/tmp/matea-clock-owned-text');binaries={'rust':Path('/private/tmp/matea-kitty-controls-perf-target/release/matea-clocks-digit-pairs'),'source':sourcework/'source-probe'}
+old=json.loads((root/'docs/evidence/clocks-owned-text/library/context.json').read_bytes());assert sha(binaries['source'].read_bytes())==old['binary_sha256']['source']
+original=(root/'crates/matea-widgets/src/clocks.rs').read_text();segment=original[original.index('struct DurationText {'):original.index('\nimpl fmt::Display for ClockText')];assert segment in (work/'baseline.rs').read_text()
+prior=root/'docs/evidence/clocks-owned-text/library';sourcefiles=['clock-text.go','reference-helper.go','go.mod','go.sum']
+for n in sourcefiles:assert (sourcework/n).read_bytes()==(prior/(n+'.txt')).read_bytes(),n
+for n in private:shutil.copy2(work/n,base/(n+'.txt'))
+shutil.copy2(work/'build.log',base/'build.log');shutil.copy2(work/'preparation.json',base/'preparation.json')
+for n in sourcefiles:shutil.copy2(sourcework/n,base/(n+'.txt'))
+binary_hash={n:sha(p.read_bytes()) for n,p in binaries.items()};outputs={}
+for variant in ['baseline','candidate','library','source']:
+ cmd=[str(binaries['source'])] if variant=='source' else [str(binaries['rust']),variant]
+ r=subprocess.run(cmd,env={**os.environ,'MATEA_PROBE_OUTPUT_ONLY':'1'},capture_output=True,timeout=30);assert r.returncode==0 and not r.stderr
+ (base/(variant+'-outputs.jsonl')).write_bytes(r.stdout);outputs[variant]=read_probe_outputs(r.stdout.decode());assert len(outputs[variant])==6
+assert all(v==outputs['source'] for v in outputs.values())
+archives={p.name:sha(p.read_bytes()) for p in base.iterdir() if p.is_file() and p.name not in ['context.json','current.jsonl']}
+environment={**os.environ,'MATEA_PERF_ITERATIONS':'300','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+orders=[['baseline','source','candidate','library'],['library','candidate','source','baseline'],['source','library','baseline','candidate']];rows=[]
+with MeasurementRun(base,root=root) as run:
+ run.update(source_head=head,root_input_sha256=inputs,private_input_sha256=private,binary_sha256=binary_hash,archive_sha256=archives,orders=orders,platform=platform.platform(),procedure_sha256=sha(Path(__file__).read_bytes()),scope='Isolated digit-pair formatter prototype; unchanged actual ClockText API, a private unchanged formatter boundary control, candidate and pinned Bubbles Timer.View. No maintained source or assessment promotion.',source_binary_prior_context_sha256=sha((prior/'context.json').read_bytes()),limits=['All six outputs and all 31 positive calibrated samples retained in three orders; no selective rerun, affinity/frequency/ASLR controls or universal optimum.','Rust paths first check 269 pinned strings, Duration::MAX and 10000 deterministic wide durations. Preflight is outside operation timings; no end-to-end process or RSS comparison is claimed.','No builds, tests, Miri, coverage or downloads overlap ordinary timings.','Private candidate results alone do not qualify a production API. Actual-library adoption would need independent source-bound tests, benchmarks and native/CI review.'])
+ for cohort,order in enumerate(orders,1):
+  for variant in order:
+   cmd=[str(binaries['source'])] if variant=='source' else [str(binaries['rust']),variant]
+   r=subprocess.run(cmd,env=environment,capture_output=True,timeout=120);p=base/run.attempt/f'cohort-{cohort}-{variant}.jsonl';p.write_bytes(r.stdout);p.with_suffix('.stderr').write_bytes(r.stderr);assert r.returncode==0 and not r.stderr
+   records=read_records(r.stdout.decode());assert set(records)==set(outputs['source'])
+   for n,v in records.items():
+    assert len(v['samples_ns'])==31
+    for k in ['output','semantics','first_return_value']:assert v[k]==outputs[variant][n][k],(n,k)
+    run.record({**v,'case':f'cohort-{cohort}/{variant}/{n}','source_case':n,'cohort':cohort,'variant':variant});rows.append({'cohort':cohort,'variant':variant,'case':n,**summary(v)})
+   print(f'Completed cohort {cohort} {variant}: six cases',flush=True)
+ assert len(rows)==72
+ assert {n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}==inputs
+ for n,h in private.items():assert sha((work/n).read_bytes())==h,n
+ assert {n:sha(p.read_bytes()) for n,p in binaries.items()}==binary_hash
+ run.complete(timing_records=72,retained_intervals=2232,summary=rows)
+print('Prototype complete: 72 records / 2232 intervals; production unchanged',flush=True)

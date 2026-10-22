@@ -1,0 +1,23 @@
+"""Verify exact current execution inputs and byte-preserved native CI Git blobs."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/style-reference-color'
+sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs,programs
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+def blob(name):return subprocess.check_output(['git','show',head+':'+name],timeout=30)
+a=json.loads((base/'final-native/archive.json').read_bytes());ci=json.loads((base/'ci-bindings.json').read_bytes())
+assert a['status']==ci['status']=='qualified'
+assert len(programs(root))==160 and set(a['source_sha256'])==execution_inputs(root)
+for name,expected in a['source_sha256'].items():
+ assert sha((root/name).read_bytes())==expected==sha(blob(name)),name
+for name,expected in ci['raw_files'].items():
+ assert sha((root/name).read_bytes())==expected==sha(blob(name)),name
+for name,expected in a['files'].items():
+ relative=str((base/'final-native'/name).relative_to(root))
+ assert sha((base/'final-native'/name).read_bytes())==expected==sha(blob(relative)),name
+before=json.loads((base/'quality-plan-before.json.txt').read_bytes());after=json.loads((root/'docs/quality-plan.json').read_bytes())
+assert [(u['id'],d,v['score']) for u in before['units'] for d,v in u['criteria'].items()]==[(u['id'],d,v['score']) for u in after['units'] for d,v in u['criteria'].items()]
+result={'schema':1,'status':'verified','source_publication_commit':head,'maintained_programs':160,'execution_input_git_blobs':len(a['source_sha256']),'raw_ci_git_blobs':len(ci['raw_files']),'qualified_ci_commit':ci['source_commit'],'qualified_ci_run':ci['run'],'assessment_only_delta_from_ci':a['assessment_only_delta_from_ci'],'score_changes':[],'active_reference_axis_complete':False,'below_high_axes':47,'limits':['This verifies exact Git bytes and current native/CI bindings; it adds no unexecuted tests or benchmark ratios.','CI code and fixtures exactly match current inputs; only assessment metadata differs and its native/LLVM checks were re-executed.','The publication proof is a subsequent evidence-only commit. No other axis or F5 advancement is inferred.'],'source_sha256':a['source_sha256'],'raw_ci_sha256':ci['raw_files'],'archive_sha256':sha((base/'final-native/archive.json').read_bytes()),'producer_sha256':sha(Path(__file__).read_bytes())}
+(base/'publication.json').write_text(json.dumps(result,indent=2)+'\n')
+print(str(len(a['source_sha256']))+' execution inputs and '+str(len(ci['raw_files']))+' raw CI Git blobs verified')

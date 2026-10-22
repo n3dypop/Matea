@@ -12,3 +12,5 @@ The choice is reversible behind a backend contract. Reevaluate a Ratatui adapter
 
 ## Ownership
 Render owns Unicode width, clipping, layout/composition and diff descriptions; style owns portable visual values; terminal owns actual commands, batching and resource cleanup. Application code never writes escape strings. Graphics resource lifetime is design-only (extension contract), with no image node/encoder implemented.
+
+Owner revision 2026-10-16: pure protocol encoders are now authorized in Foundation (ADR 0009). Runtime graphics-resource ownership remains pending; no image engine or CUDA implementation is authorized. ADR 0008 updates cell storage and transport optimization.

@@ -1,0 +1,19 @@
+#[path="/Users/misosoup/Developer/Codex/Project Matea/Matea/tools/perf-probe/src/measurement.rs"]mod measurement;
+mod baseline;mod candidate;
+use std::{hint::black_box,time::Duration};use matea_widgets::ClockText;
+fn main(){
+ for line in include_str!("/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-widgets/tests/fixtures/durations.tsv").lines(){let(n,expected)=line.split_once('\t').unwrap();let value=Duration::from_nanos(n.parse().unwrap());assert_eq!(baseline::owned(value).as_str(),expected);assert_eq!(candidate::owned(value).as_str(),expected);assert_eq!(ClockText(value).into_text().as_str(),expected);}
+ let mut seed=0x247ac15de0837u64;
+ for _ in 0..10000{seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let secs=seed;seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let value=Duration::new(secs,(seed%1_000_000_000)as u32);assert_eq!(candidate::owned(value),ClockText(value).into_text());assert_eq!(baseline::owned(value),ClockText(value).into_text());}
+ assert_eq!(candidate::owned(Duration::MAX),ClockText(Duration::MAX).into_text());
+ let variant=std::env::args().nth(1).expect("baseline/candidate/library");let n=measurement::iterations(1);
+ for(name,nanos)in[("zero",0),("nanoseconds",42),("microseconds",1500),("seconds",1234567890),("hours",3723400000000),("maximum_go",9223372036854775807)]{
+  let value=Duration::from_nanos(nanos);let id=format!("clock-text/owned_{name}");let output=ClockText(value).into_string();let semantics="fresh owned immutable duration text; default formatting; consume byte length; no scheduling, rendering or terminal IO";
+  match variant.as_str(){
+   "baseline"=>measurement::measure(&id,n,||black_box(baseline::owned(black_box(value))).len()as u64,&output,semantics),
+   "candidate"=>measurement::measure(&id,n,||black_box(candidate::owned(black_box(value))).len()as u64,&output,semantics),
+   "library"=>measurement::measure(&id,n,||black_box(ClockText(black_box(value)).into_text()).len()as u64,&output,semantics),
+   _=>panic!("unknown variant")
+  }
+ }
+}

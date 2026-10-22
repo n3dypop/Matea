@@ -1,0 +1,89 @@
+"""Prepare an isolated formatter candidate; never changes maintained Rust."""
+import hashlib,json
+from pathlib import Path
+root=Path.cwd();work=Path('/private/tmp/matea-clocks-digit-pairs');work.mkdir(exist_ok=True)
+source=(root/'crates/matea-widgets/src/clocks.rs').read_text()
+segment=source[source.index('struct DurationText {'):source.index('\nimpl fmt::Display for ClockText')]
+prefix='use std::time::Duration;\nuse matea_render::Text;\npub struct ClockText(pub Duration);\n'
+(work/'baseline.rs').write_text(prefix+segment+'\npub fn owned(value:Duration)->Text{ClockText(value).into_text()}\n')
+old_integer='''    fn integer(&mut self, mut value: u64) {
+        loop {
+            self.digit((value % 10) as u8);
+            value /= 10;
+            if value == 0 {
+                break;
+            }
+        }
+    }'''
+new_integer='''    fn integer(&mut self, mut value: u64) {
+        const PAIRS: &[u8;200] = b"00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899";
+        while value >= 100 {
+            let pair = (value % 100) as usize * 2;
+            self.prepend(&PAIRS[pair..pair+2]);
+            value /= 100;
+        }
+        if value < 10 {
+            self.digit(value as u8);
+        } else {
+            let pair = value as usize * 2;
+            self.prepend(&PAIRS[pair..pair+2]);
+        }
+    }'''
+old_fraction='''    fn fraction(&mut self, mut value: u32, width: usize) {
+        if value == 0 {
+            return;
+        }
+        let mut significant = false;
+        for _ in 0..width {
+            let digit = (value % 10) as u8;
+            value /= 10;
+            significant |= digit != 0;
+            if significant {
+                self.digit(digit);
+            }
+        }
+        self.prepend(b".");
+    }'''
+new_fraction='''    fn fraction(&mut self, mut value: u32, mut width: usize) {
+        if value == 0 {
+            return;
+        }
+        while value % 10 == 0 {
+            value /= 10;
+            width -= 1;
+        }
+        let target = self.start - width;
+        self.integer(u64::from(value));
+        while self.start > target {
+            self.digit(0);
+        }
+        self.prepend(b".");
+    }'''
+assert segment.count(old_integer)==segment.count(old_fraction)==1
+candidate=segment.replace(old_integer,new_integer,1).replace(old_fraction,new_fraction,1)
+(work/'candidate.rs').write_text(prefix+candidate+'\npub fn owned(value:Duration)->Text{ClockText(value).into_text()}\n')
+(work/'Cargo.toml').write_text('[package]\nname="matea-clocks-digit-pairs"\nversion="0.0.0"\nedition="2024"\n[workspace]\n[dependencies]\nmatea-render={path='+json.dumps(str(root/'crates/matea-render'))+'}\nmatea-widgets={path='+json.dumps(str(root/'crates/matea-widgets'))+'}\n[[bin]]\nname="matea-clocks-digit-pairs"\npath="caller.rs"\n')
+caller='''#[path="MEASUREMENT"]mod measurement;
+mod baseline;mod candidate;
+use std::{hint::black_box,time::Duration};use matea_widgets::ClockText;
+fn main(){
+ for line in include_str!("FIXTURES").lines(){let(n,expected)=line.split_once('\\t').unwrap();let value=Duration::from_nanos(n.parse().unwrap());assert_eq!(baseline::owned(value).as_str(),expected);assert_eq!(candidate::owned(value).as_str(),expected);assert_eq!(ClockText(value).into_text().as_str(),expected);}
+ let mut seed=0x247ac15de0837u64;
+ for _ in 0..10000{seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let secs=seed;seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let value=Duration::new(secs,(seed%1_000_000_000)as u32);assert_eq!(candidate::owned(value),ClockText(value).into_text());assert_eq!(baseline::owned(value),ClockText(value).into_text());}
+ assert_eq!(candidate::owned(Duration::MAX),ClockText(Duration::MAX).into_text());
+ let variant=std::env::args().nth(1).expect("baseline/candidate/library");let n=measurement::iterations(1);
+ for(name,nanos)in[("zero",0),("nanoseconds",42),("microseconds",1500),("seconds",1234567890),("hours",3723400000000),("maximum_go",9223372036854775807)]{
+  let value=Duration::from_nanos(nanos);let id=format!("clock-text/owned_{name}");let output=ClockText(value).into_string();let semantics="fresh owned immutable duration text; default formatting; consume byte length; no scheduling, rendering or terminal IO";
+  match variant.as_str(){
+   "baseline"=>measurement::measure(&id,n,||black_box(baseline::owned(black_box(value))).len()as u64,&output,semantics),
+   "candidate"=>measurement::measure(&id,n,||black_box(candidate::owned(black_box(value))).len()as u64,&output,semantics),
+   "library"=>measurement::measure(&id,n,||black_box(ClockText(black_box(value)).into_text()).len()as u64,&output,semantics),
+   _=>panic!("unknown variant")
+  }
+ }
+}
+'''.replace('MEASUREMENT',str(root/'tools/perf-probe/src/measurement.rs')).replace('FIXTURES',str(root/'crates/matea-widgets/tests/fixtures/durations.tsv'))
+(work/'caller.rs').write_text(caller)
+context={'schema':1,'status':'prepared_unexecuted','clock_source_sha256':hashlib.sha256(source.encode()).hexdigest(),'baseline_segment_sha256':hashlib.sha256(segment.encode()).hexdigest(),'procedure_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'candidate':'Two decimal digits per integer step, trim fractional trailing zeros then preserve fixed leading zeros. Checked UTF-8 and safe Text construction are retained. Production is unchanged.','next':'Build and check all 269 pinned fixtures, Duration::MAX and 10000 deterministic wide durations before any comparison. Ordinary timing must wait until current native/LLVM validation finishes.'}
+(work/'preparation.json').write_text(json.dumps(context,indent=2)+'\n')
+print('Prepared isolated baseline, candidate and actual-library caller; no production change or timing.')

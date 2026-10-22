@@ -1,0 +1,17 @@
+"""One-factor inlining experiment after observing the outlined integer helper."""
+import hashlib,json,shutil,subprocess
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';prior=base/'small-decimals';out=base/'forced-integer';work=Path('/private/tmp/matea-clocks-digit-pairs-forced');work.mkdir(exist_ok=True)
+candidate=(prior/'candidate.rs.txt').read_text();needle='    #[inline]\n    fn integer('
+assert candidate.count(needle)==1
+(work/'candidate.rs').write_text(candidate.replace(needle,'    #[inline(always)]\n    fn integer(',1))
+for n in ['baseline.rs','caller.rs']:shutil.copy2(prior/(n+'.txt'),work/n)
+(work/'Cargo.toml').write_text((prior/'Cargo.toml.txt').read_text().replace('matea-clocks-small-decimals','matea-clocks-forced-integer'))
+symbols={}
+for n in ['matea-clocks-digit-pairs','matea-clocks-small-decimals']:
+ binary=Path('/private/tmp/matea-kitty-controls-perf-target/release')/n
+ raw=subprocess.check_output(['nm','-nm',str(binary)]);(out/(n+'-symbols.txt')).write_bytes(raw)
+ symbols[n]={'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'symbols_sha256':hashlib.sha256(raw).hexdigest(),'candidate_helpers':[s for s in raw.decode().splitlines() if 'candidate' in s and any(w in s for w in ['integer','fraction','owned'])]}
+context={'schema':1,'status':'prepared_unexecuted','procedure_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'preceding_verification_sha256':hashlib.sha256((prior/'verification.json').read_bytes()).hexdigest(),'symbols':symbols,'candidate':'Only change versus small-decimal candidate is inline(always) on private integer helper. Public production, safety checks, numeric operations and fraction policy are unchanged. Presence of an outlined symbol motivates the experiment; it does not prove its runtime cost.'}
+(work/'preparation.json').write_text(json.dumps(context,indent=2)+'\n')
+print('Prepared one-attribute inlining experiment; earlier complete cohorts retained.')

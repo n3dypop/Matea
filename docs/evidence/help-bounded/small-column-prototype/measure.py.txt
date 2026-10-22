@@ -1,0 +1,27 @@
+"""Compare actual 9aa25df against a private small-column reservation candidate."""
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/help-bounded/small-column-prototype';work=Path('/private/tmp/matea-help-small-prefix');sys.path.insert(0,str(root/'scripts'))
+from measurement_run import MeasurementRun
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest();binary=Path('/private/tmp/matea-help-bounded-target/release/matea-help-small-prefix')
+inputs={n:sha((work/n).read_bytes()) for n in ['caller.rs','fast/lib.rs','fast/Cargo.toml','Cargo.toml','Cargo.lock']};digest=sha(binary.read_bytes());oracle=None;rows=[]
+env={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};env.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+for v in ['baseline','current']:
+ r=subprocess.run([str(binary),v],env={**env,'MATEA_PROBE_OUTPUT_ONLY':'1'},capture_output=True,check=True);assert not r.stderr
+ (base/(v+'-outputs.jsonl')).write_bytes(r.stdout);value=read_probe_outputs(r.stdout.decode());assert len(value)==4
+ assert oracle is None or oracle==value;oracle=value
+with MeasurementRun(base,root=root) as run:
+ run.update(source_head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),production_help_sha256=sha((root/'crates/matea-widgets/src/help.rs').read_bytes()),
+  private_input_sha256=inputs,binary_sha256=digest,procedure_sha256=sha(Path(__file__).read_bytes()),orders=['baseline','current','current','baseline'],
+  scope='Four full plain-output cases, actual 9aa25df library versus private import-adjusted candidate; selection experiment only, no current-public-API qualification or fresh upstream ratio.')
+ for index,variant in enumerate(['baseline','current','current','baseline'],1):
+  r=subprocess.run([str(binary),variant],env=env,capture_output=True,timeout=120,check=False);p=base/run.attempt/f'{index}-{variant}.jsonl';p.write_bytes(r.stdout);p.with_suffix('.stderr').write_bytes(r.stderr);assert r.returncode==0 and not r.stderr
+  values=read_records(r.stdout.decode());assert set(values)==set(oracle)
+  for name,v in values.items():
+   assert len(v['samples_ns'])==31
+   for key in ['output','semantics','first_return_value']:assert v[key]==oracle[name][key]
+   run.record({**v,'case':f'{index}/{variant}/{name}','source_case':name,'variant':variant,'cohort':index});rows.append({'variant':variant,'cohort':index,'case':name,**summary(v)})
+  print(index,variant,{k:round(summary(v)['p50_ns'],2) for k,v in values.items()},flush=True)
+ assert inputs=={n:sha((work/n).read_bytes()) for n in inputs} and digest==sha(binary.read_bytes())
+ run.complete(timing_records=16,retained_intervals=496,summary=rows)

@@ -1,0 +1,21 @@
+"""Interpret actual clock Text, themed view and Runtime regressions under Miri."""
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/clocks-owned-text/miri';sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest()
+names=sorted(n for n in execution_inputs(root) if n.startswith('crates/') or n in ['Cargo.toml','Cargo.lock']);sources={n:sha((root/n).read_bytes()) for n in names}
+targets=['compact_duration_display_matches_fixed_reference_fixtures','clock_views_keep_compact_unicode_units_and_theme_style','runtime_reconciles_short_final_deadlines_and_coalesces_without_losing_elapsed_time']
+ctx={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_sha256':sources,'seed':223,'commands':[],
+ 'limits':['Three targeted pure clock/render/Runtime tests, including all 269 fixed strings, Duration::MAX and themed Unicode output. This does not interpret native terminal FFI or prove transitive-dependency soundness.', 'No ordinary timing overlaps Miri; assessment metadata is excluded from the compile/test snapshot.']}
+def save():(base/'context.json').write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+try:
+ for index,name in enumerate(targets,1):
+  command=['cargo','+nightly','miri','test','--locked','--offline','-p','matea-widgets','--test','clocks',name];log=str(index)+'.log'
+  with open(base/log,'wb') as output:r=subprocess.run(command,env={**os.environ,'MIRIFLAGS':'-Zmiri-seed=223'},stdout=output,stderr=subprocess.STDOUT,timeout=1800)
+  ctx['commands'].append({'command':command,'exit_code':r.returncode,'log':log,'log_sha256':sha((base/log).read_bytes())});save();print(name,r.returncode,flush=True)
+  if r.returncode:raise RuntimeError('Miri target failed: '+name)
+  assert b'test result: ok. 1 passed;' in (base/log).read_bytes()
+ assert sources=={n:sha((root/n).read_bytes()) for n in names},'compile-input drift'
+ ctx['status']='complete';save()
+except BaseException as e:ctx.update(status='failed',error=str(e));save();raise

@@ -1,0 +1,26 @@
+// Frozen additional public-type/selection observations at the same source pin.
+package main
+import (
+    "fmt"
+    "image/color"
+    "charm.land/lipgloss/v2"
+    "github.com/charmbracelet/colorprofile"
+)
+func emit(op string, n int, c color.Color) {
+    r,g,b,a := c.RGBA()
+    fmt.Printf("%s\t%d\t%d\t%d\t%d\t%d\n",op,n,r,g,b,a)
+}
+func main() {
+    for n:=0; n<256; n++ { emit("rgbcolor",n,lipgloss.RGBColor{R:uint8(n),G:uint8(255-n),B:uint8(n)}) }
+    emit("none",0,lipgloss.NoColor{})
+    for _, dark := range []bool{false,true} {
+        n:=0; if dark {n=1}
+        emit("adaptive",n,lipgloss.LightDark(dark)(lipgloss.Color("#12ab34"),lipgloss.Color("#cd56ef")))
+    }
+    for n:=-1; n<=5; n++ {
+        emit("profile",n,lipgloss.Complete(colorprofile.Profile(n))(lipgloss.Color("#12ab34"),lipgloss.Color("#cd56ef"),lipgloss.Color("#a1b2c3")))
+    }
+    for n,c := range []color.Color{lipgloss.Black,lipgloss.Red,lipgloss.Green,lipgloss.Yellow,lipgloss.Blue,lipgloss.Magenta,lipgloss.Cyan,lipgloss.White,lipgloss.BrightBlack,lipgloss.BrightRed,lipgloss.BrightGreen,lipgloss.BrightYellow,lipgloss.BrightBlue,lipgloss.BrightMagenta,lipgloss.BrightCyan,lipgloss.BrightWhite} {
+        emit("constant",n,c)
+    }
+}

@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["crates/*", "examples/external-widget"]
+members = ["crates/*", "examples/external-widget", "tools/api-audit", "tools/perf-probe"]
+exclude = ["tools/reference-text"]
 
 [workspace.package]
 version = "0.1.0"
@@ -12,9 +13,12 @@ publish = false
 crossterm = "=0.29.0"
 unicode-segmentation = "=1.13.3"
 unicode-width = "=0.2.2"
+compact_str = "=0.9.0"
+bitflags = "=2.13.2"
 matea-style = { path = "crates/matea-style" }
 matea-render = { path = "crates/matea-render" }
 matea-core = { path = "crates/matea-core" }
 matea-widgets = { path = "crates/matea-widgets" }
 matea-terminal = { path = "crates/matea-terminal" }
+matea-motion = { path = "crates/matea-motion" }
 matea = { path = "crates/matea" }

@@ -1,0 +1,30 @@
+{
+  "schema": 2,
+  "status": "complete",
+  "attempt": "attempts/context/56ac5f059fe64bcaae5811f2b73eebd7",
+  "started_at_utc": "2026-10-21T22:49:42.008462+00:00",
+  "completed_cases": 9,
+  "validity": "Only status=complete with matching raw_sha256 qualifies this invocation; older public files may remain.",
+  "input_sha256": {
+    "docs/evidence/oracle-scale/failures.py.txt": "f90cd70e6e88ca516e0ed5afecd634ec95a7727384407eebfd85c22303e4ac57",
+    "scripts/check_ratatui_bridge.py": "160581b26fac7bef190516351b53107c88808692bdce848782b25c17e0fbfb2e",
+    "scripts/performance_records.py": "0d96f6d16bfc8cc30995c1b26c09326171bbee23be5ae0811b1ffe7b573590bc",
+    "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+    "scripts/measurement_run.py": "4983fc477a512b068d253a15f4e37664f2d0b1fefc6f846993ed7180d77f064d"
+  },
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "semantics": "complete check failure including temp/helper creation, child exec, malformed/missing/failing probe, failed journal publication/read/parse/normalization, cleanup",
+  "exclusions": [
+    "Synthetic local probe, no actual network failure",
+    "Whole-fixture RSS; no allocation/retained-only claim",
+    "Only the unique temp path prefix in errors is normalized; exception and full failed journal are preserved"
+  ],
+  "partial_raw_sha256": "657e7fccdcfca9a59d82f936ceaa5d45d582ad672ce6bac0a4fda0a05a53ffea",
+  "records": 9,
+  "positive_intervals": 279,
+  "whole_fixture_rss_children": 27,
+  "raw": "current.jsonl",
+  "raw_sha256": "657e7fccdcfca9a59d82f936ceaa5d45d582ad672ce6bac0a4fda0a05a53ffea",
+  "finished_at_utc": "2026-10-21T22:49:54.939715+00:00"
+}

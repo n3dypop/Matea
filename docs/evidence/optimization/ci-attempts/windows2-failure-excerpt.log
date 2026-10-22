@@ -1,0 +1,18 @@
+2026-10-17T19:46:21.5584448Z go: downloading github.com/clipperhouse/uax29/v2 v2.7.0
+2026-10-17T19:46:21.7687357Z go: downloading golang.org/x/exp v0.0.0-20231006140011-7918f672742d
+2026-10-17T19:46:37.9531481Z Traceback (most recent call last):
+2026-10-17T19:46:37.9531874Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 161, in <module>
+2026-10-17T19:46:37.9533893Z     main()
+2026-10-17T19:46:37.9584661Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 141, in main
+2026-10-17T19:46:37.9586795Z     fixtures=check_probes(destination,go_binary,rust_binary,environment)
+2026-10-17T19:46:37.9587651Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-17T19:46:37.9588118Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 57, in check_probes
+2026-10-17T19:46:37.9590706Z   File "D:\a\Matea\Matea\scripts\performance_records.py", line 34, in validate
+2026-10-17T19:46:37.9591342Z     raise ValueError("at least 31 positive finite timing samples required")
+2026-10-17T19:46:37.9591948Z ValueError: at least 31 positive finite timing samples required
+2026-10-17T19:46:38.0340804Z ##[error]Process completed with exit code 1.
+2026-10-17T19:46:38.0488417Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-17T19:46:38.0488678Z with:
+2026-10-17T19:46:38.0488806Z   name: reference-paths-windows-latest
+2026-10-17T19:46:38.0488999Z   path: D:\a\_temp/matea-reference-paths/path-checks.json
+2026-10-17T19:46:38.0489182Z   if-no-files-found: warn

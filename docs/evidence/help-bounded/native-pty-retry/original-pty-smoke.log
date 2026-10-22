@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/pty_smoke.py", line 277, in <module>
+    case("quit")
+  File "${REPOSITORY}/scripts/pty_smoke.py", line 90, in case
+    read_until(lambda: ready in plain())
+  File "${REPOSITORY}/scripts/pty_smoke.py", line 83, in read_until
+    require(predicate(), lambda: (name, "timed out", bytes(output[-1500:])))
+  File "${REPOSITORY}/scripts/evidence_checks.py", line 8, in require
+    raise AssertionError(message() if callable(message) else message)
+AssertionError: ('quit', 'timed out', b'')

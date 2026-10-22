@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "${REPOSITORY}/docs/evidence/auditor-completion/procedures/measure-streaming.py.txt", line 145, in <module>
+    if sys.argv[1]=='preflight':preflight()
+  File "${REPOSITORY}/docs/evidence/auditor-completion/procedures/measure-streaming.py.txt", line 89, in preflight
+    for name,folder in cases.items():check(subprocess.run([str(binary),str(folder)],capture_output=True,timeout=30),name)
+  File "${REPOSITORY}/docs/evidence/auditor-completion/procedures/measure-streaming.py.txt", line 84, in check
+    assert result.stdout==expected[name],name
+AssertionError: wide_1000

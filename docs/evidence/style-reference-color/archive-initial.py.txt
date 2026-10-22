@@ -1,0 +1,13 @@
+"""Preserve the successful initial assessment-input execution before reason updates."""
+import hashlib,json,shutil,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/style-reference-color';out=base/'initial-native';out.mkdir(exist_ok=True)
+sys.path.insert(0,str(root/'scripts'));from check_quality import validate_native
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());validate_native(native,root)
+assert len(native['checks'])==47 and len(native['source_sha256'])==204
+for c in native['checks']:shutil.copyfile(root/'docs/evidence'/c['log'],out/c['log'])
+shutil.copyfile(root/'docs/evidence/local-validation.json',out/'local-validation.json')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+facts={'schema':1,'status':'complete','purpose':'Initial successful native execution at the first color-input assessment metadata. Preserved before current-source portability-reason updates. Not relabeled as the final plan execution.','source_sha256':native['source_sha256'],'files':{p.name:sha(p.read_bytes()) for p in out.iterdir() if p.is_file()},'producer_sha256':sha(Path(__file__).read_bytes())}
+(out/'archive.json').write_text(json.dumps(facts,indent=2)+'\n')
+print('Preserved initial 47 successful checks,204 inputs; no failures discarded')

@@ -1,0 +1,24 @@
+package main
+import("encoding/json";"fmt";"image/color";"math";"os";progress "charm.land/bubbles/v2/progress";lip "charm.land/lipgloss/v2")
+func channels(c color.Color)[]uint32{r,g,b,a:=c.RGBA();return []uint32{r,g,b,a}}
+func hex(c color.Color)string{r,g,b,_:=c.RGBA();return fmt.Sprintf("%02x%02x%02x",r>>8,g>>8,b>>8)}
+func main(){
+ inputs:=[]struct{name string;c color.Color}{
+ {"rgba8-half",color.RGBA{128,32,64,128}},{"nrgba8-half",color.NRGBA{255,64,128,128}},
+ {"rgba64-half",color.RGBA64{32768,8192,16384,32768}},{"nrgba64-half",color.NRGBA64{65535,16384,32768,32768}},
+ {"rgba8-lost-alpha",color.RGBA{128,32,64,0}},{"nrgba8-zero-alpha",color.NRGBA{128,32,64,0}},
+ {"rgba64-lost-alpha",color.RGBA64{32768,8192,16384,0}},{"nrgba64-zero-alpha",color.NRGBA64{32768,8192,16384,0}},
+ {"rgba64-low-alpha",color.RGBA64{1,1,1,1}},{"nrgba64-low-alpha",color.NRGBA64{65535,32768,16384,1}},
+ {"rgb-interface",lip.RGBColor{128,32,64}},{"rgba8-opaque",color.RGBA{128,32,64,255}},
+ }
+ enc:=json.NewEncoder(os.Stdout);white:=color.RGBA{255,255,255,255}
+ for _,in:=range inputs{
+  for _,count:=range []int{0,1,2,3,6,17}{for _,single:=range []bool{false,true}{stops:=[]color.Color{in.c,white};if single{stops=stops[:1]};out:=lip.Blend1D(count,stops...);rgba:=make([][]uint32,0,len(out));for _,c:=range out{rgba=append(rgba,channels(c))};_ =enc.Encode(map[string]any{"kind":"gradient","name":in.name,"input":channels(in.c),"single":single,"count":count,"output_rgba16":rgba})}}
+  for _,width:=range []int{1,2,3,9}{for _,fraction:=range []float64{0,0.625,1}{for _,half:=range []bool{false,true}{for _,scaled:=range []bool{false,true}{
+   glyph:='█';multiplier:=1;if half{glyph='▌';multiplier=2};filled:=int(math.Round(float64(width)*fraction));n:=width;if scaled{n=filled};palette:=lip.Blend1D(n*multiplier,in.c,white);cells:=make([]string,0,width)
+   for i:=0;i<width;i++{if i>=filled{cells=append(cells,"░:606060:default");continue};bg:="default";if half{bg=hex(palette[i*2+1])};cells=append(cells,fmt.Sprintf("%c:%s:%s",glyph,hex(palette[i*multiplier]),bg))}
+   p:=progress.New(progress.WithWidth(width),progress.WithoutPercentage(),progress.WithFillCharacters(glyph,'░'),progress.WithColors(in.c,white),progress.WithScaled(scaled))
+   _=enc.Encode(map[string]any{"kind":"progress","name":in.name,"input":channels(in.c),"width":width,"fraction":fraction,"half":half,"scaled":scaled,"canonical_cells":cells,"actual_source_raw":p.ViewAs(fraction)})
+  }}}}
+ }
+}

@@ -1,0 +1,523 @@
+{
+  "schema": 1,
+  "order": "before/after/after/before",
+  "runs": [
+    {
+      "stage": "before",
+      "raw": "repeat-1-before.jsonl",
+      "raw_sha256": "ee8c94431db84b22560c14fdbf8cd0c2c5aa31e02c063fdb723ce221f55c0058",
+      "binary_sha256": "09b939b529db0f76cdb0f8738de98046c5c33770b0736f7209e3203fd7022ea0",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.542,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1123.9165,
+          "p95_ns": 1346.3335,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1115.104,
+          "p95_ns": 1187.25,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.458,
+          "p95_ns": 12.521,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1136.2915,
+          "p95_ns": 1159.542,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1126.542,
+          "p95_ns": 1142.333,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.771,
+          "p95_ns": 83.5,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.625,
+          "p95_ns": 35.4585,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1714.25,
+          "p95_ns": 1744.375,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1663.7915,
+          "p95_ns": 1686.75,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.9375,
+          "p95_ns": 102.7915,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.5,
+          "p95_ns": 4.521,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1482.6875,
+          "p95_ns": 1507.5,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1390.604,
+          "p95_ns": 1422.021,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 30.0835,
+          "p95_ns": 30.1665,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1110.6455,
+          "p95_ns": 1134.9585,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 59.5835,
+          "p95_ns": 60.3335,
+          "allocations": 2,
+          "allocated_bytes": 160
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12270.0835,
+          "p95_ns": 12300.6045,
+          "allocations": 3,
+          "allocated_bytes": 17440
+        }
+      }
+    },
+    {
+      "stage": "after",
+      "raw": "repeat-2-after.jsonl",
+      "raw_sha256": "690dec8217cbbf565babb685a49a554075014a2de22979f3f41e1488490d4715",
+      "binary_sha256": "a8ec64036959b05aa02342991675e844a698c7dbf8aa021fde7d2ada4c4cad70",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.7295,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1089.6875,
+          "p95_ns": 1114.8125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1084.6455,
+          "p95_ns": 1106.0625,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 22.125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.5835,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1138.1875,
+          "p95_ns": 1252.833,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1125.0415,
+          "p95_ns": 1205.4585,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.7705,
+          "p95_ns": 82.2295,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 27.4165,
+          "p95_ns": 27.458,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1706.125,
+          "p95_ns": 1811.021,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1664.5,
+          "p95_ns": 1720.0415,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.8125,
+          "p95_ns": 129.8125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.708,
+          "p95_ns": 4.979,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1495.2915,
+          "p95_ns": 1545.4375,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1389.1875,
+          "p95_ns": 1448.958,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 29.979,
+          "p95_ns": 31.271,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1110.833,
+          "p95_ns": 1182.854,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.854,
+          "p95_ns": 61.9585,
+          "allocations": 2,
+          "allocated_bytes": 102
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12327.9165,
+          "p95_ns": 12467.917,
+          "allocations": 3,
+          "allocated_bytes": 17382
+        }
+      }
+    },
+    {
+      "stage": "after",
+      "raw": "repeat-3-after.jsonl",
+      "raw_sha256": "2ee5fdd82508c713d3072789404f3711718bb0afbe4beca9f8a2f2ae29cc06e5",
+      "binary_sha256": "a8ec64036959b05aa02342991675e844a698c7dbf8aa021fde7d2ada4c4cad70",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 8.75,
+          "p95_ns": 8.771,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.542,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1091.2915,
+          "p95_ns": 1149.3335,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1085.3335,
+          "p95_ns": 1131.125,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.4585,
+          "p95_ns": 12.5205,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.583,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1138.9165,
+          "p95_ns": 1186.896,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1124.854,
+          "p95_ns": 1204.375,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.854,
+          "p95_ns": 85.8125,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.646,
+          "p95_ns": 33.521,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1710.7915,
+          "p95_ns": 1775.458,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1662.125,
+          "p95_ns": 1753.5,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.7915,
+          "p95_ns": 103.146,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.542,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1486.8125,
+          "p95_ns": 1575.2705,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1390.2085,
+          "p95_ns": 1444.7915,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 30,
+          "p95_ns": 30.125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1113.7915,
+          "p95_ns": 1168.167,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.9165,
+          "p95_ns": 64.9165,
+          "allocations": 2,
+          "allocated_bytes": 102
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12292.271,
+          "p95_ns": 12407.6455,
+          "allocations": 3,
+          "allocated_bytes": 17382
+        }
+      }
+    },
+    {
+      "stage": "before",
+      "raw": "repeat-4-before.jsonl",
+      "raw_sha256": "d620a942f7a5995664fb6af27e7e30748132133e7f04a0e3d6115f5c6f5fbc53",
+      "binary_sha256": "09b939b529db0f76cdb0f8738de98046c5c33770b0736f7209e3203fd7022ea0",
+      "cases": {
+        "views/new_short_ascii": {
+          "p50_ns": 9.0415,
+          "p95_ns": 9.2295,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_ascii": {
+          "p50_ns": 4.521,
+          "p95_ns": 4.625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_ascii": {
+          "p50_ns": 1088.2085,
+          "p95_ns": 1125.6455,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_ascii": {
+          "p50_ns": 1081.4585,
+          "p95_ns": 1107.271,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_short_unicode": {
+          "p50_ns": 12.479,
+          "p95_ns": 12.5205,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_short_unicode": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.5625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_short_unicode": {
+          "p50_ns": 1138.75,
+          "p95_ns": 1171.021,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_short_unicode": {
+          "p50_ns": 1128.896,
+          "p95_ns": 1176.354,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/new_long_ascii": {
+          "p50_ns": 81.7915,
+          "p95_ns": 84.854,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/clone_long_ascii": {
+          "p50_ns": 32.604,
+          "p95_ns": 32.729,
+          "allocations": 1,
+          "allocated_bytes": 87
+        },
+        "views/new_render_long_ascii": {
+          "p50_ns": 1707.583,
+          "p95_ns": 1751.9165,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/clone_render_long_ascii": {
+          "p50_ns": 1657.875,
+          "p95_ns": 1704.1665,
+          "allocations": 2,
+          "allocated_bytes": 11607
+        },
+        "views/new_controls": {
+          "p50_ns": 101.7705,
+          "p95_ns": 103.146,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/clone_controls": {
+          "p50_ns": 4.5205,
+          "p95_ns": 4.521,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/new_render_controls": {
+          "p50_ns": 1487.875,
+          "p95_ns": 1509.458,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/clone_render_controls": {
+          "p50_ns": 1390.5625,
+          "p95_ns": 1424.521,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/formatted_counter": {
+          "p50_ns": 30.083,
+          "p95_ns": 31.4585,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "views/formatted_counter_render": {
+          "p50_ns": 1110.4585,
+          "p95_ns": 1148.958,
+          "allocations": 1,
+          "allocated_bytes": 11520
+        },
+        "views/short_panel": {
+          "p50_ns": 61.75,
+          "p95_ns": 67.6875,
+          "allocations": 2,
+          "allocated_bytes": 160
+        },
+        "views/short_panel_render": {
+          "p50_ns": 12279.5415,
+          "p95_ns": 12495.3335,
+          "allocations": 3,
+          "allocated_bytes": 17440
+        }
+      }
+    }
+  ],
+  "limits": [
+    "20 exact existing scene workloads, 31 retained samples; separate requested allocation pass.",
+    "No other owned local build/test/Miri/coverage/download during timing. Baseline 4d1a397 reuses completed records; all adverse results retained.",
+    "Native macOS arm64 only; no affinity/frequency control, resident-memory or full reference parity claim."
+  ]
+}

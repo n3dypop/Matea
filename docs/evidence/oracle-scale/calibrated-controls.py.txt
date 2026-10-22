@@ -1,0 +1,102 @@
+"""Resolve short-operation noise with >=20ms/three-confirmation batches.
+
+Earlier single-operation distributions, including the adverse cohort, remain.
+"""
+import hashlib
+import importlib.machinery
+import importlib.util
+import json
+from pathlib import Path
+import platform
+import statistics
+import sys
+import time
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+sys.path.insert(0, str(ROOT / "scripts"))
+from measurement_run import MeasurementRun
+
+
+def module(name, path):
+    loader = importlib.machinery.SourceFileLoader(name, str(path))
+    spec = importlib.util.spec_from_loader(name, loader)
+    value = importlib.util.module_from_spec(spec)
+    loader.exec_module(value)
+    return value
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def operation(case, variant):
+    name = "check_terminal_trace" if case == "ascii" else "check_color_trace"
+    path = {"before": BASE / (name + ".py.before.txt"), "candidate-1": BASE / (name + ".candidate-1.txt"),
+            "candidate-2": ROOT / "scripts" / (name + ".py")}[variant]
+    oracle = module(name + "_" + variant, path)
+    if case == "ascii":
+        trace = {"width": 8, "height": 3,
+                 "sequences": ["ab\x1b7\x1b[2B\x1b[2C!\x1b8Z\x1b[1D\x1b[1A\x1b[0m\x1b[?25h"]}
+        def run():
+            return json.dumps(oracle.replay(trace, include_cursor=True), sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+    else:
+        trace = {"width": 8, "height": 3, "scroll_region": [1, 2],
+                 "sequences": ["\x1b[38;5;255;48;2;1;2;3;1;2;3;4;5;7;8;9mX\x1b[3b\x1b[0m\x1b[3;1Hq\n\x1b[?25l"]}
+        def run():
+            return json.dumps(oracle.replay(trace), sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+    return run
+
+
+def batch(function, count):
+    start = time.perf_counter_ns()
+    for _ in range(count):
+        value = function()
+    elapsed = time.perf_counter_ns() - start
+    if elapsed <= 0:
+        raise ValueError("nonpositive batch")
+    return elapsed, value
+
+
+paths = [Path(__file__).resolve()] + [ROOT / "scripts" / (n + ".py") for n in ["check_terminal_trace", "check_color_trace", "evidence_checks"]]
+paths += [BASE / (n + ending) for n in ["check_terminal_trace", "check_color_trace"] for ending in [".py.before.txt", ".candidate-1.txt"]]
+hashes = {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}
+with MeasurementRun(BASE / "calibrated-controls", root=ROOT) as journal:
+    journal.update(input_sha256=hashes, platform=platform.platform(), python=sys.version, target_ns=20_000_000,
+                   semantics="same fixed complete outputs and serialization as prior control-series; retained intervals are batch means, never individual-operation tail latency",
+                   exclusions=["Previous single-operation samples and adverse cohort remain; no quiet-window selection or zero retries",
+                               "No new memory/allocation claim; separately retained RSS/heap belongs to the complete operation fixtures"])
+    expected = {}
+    for cohort, order in enumerate([("before", "candidate-1", "candidate-2"), ("candidate-2", "candidate-1", "before"),
+                                   ("candidate-1", "before", "candidate-2")], 1):
+        for variant in order:
+            for case in ["ascii", "color"]:
+                function = operation(case, variant)
+                output = function()
+                if case in expected and output != expected[case]:
+                    raise ValueError("complete output mismatch")
+                expected[case] = output
+                count, history = 1, []
+                while True:
+                    observations = [batch(function, count)[0] for _ in range(3)]
+                    history.append({"iterations": count, "observations_ns": observations})
+                    if all(n >= 20_000_000 for n in observations):
+                        break
+                    if count >= 1 << 20:
+                        raise ValueError("calibration cap reached")
+                    count *= 2
+                samples = []
+                for _ in range(31):
+                    elapsed, observed = batch(function, count)
+                    if observed != output:
+                        raise ValueError("changed batch output")
+                    samples.append(elapsed)
+                journal.record({"case": f"cohort-{cohort}/{variant}/{case}", "workload": case, "variant": variant,
+                                "cohort": cohort, "iterations_per_sample": count, "calibration": history,
+                                "samples_total_ns": samples, "samples_ns": [n / count for n in samples],
+                                "p50_ns": statistics.median(samples) / count, "p95_ns": sorted(samples)[29] / count,
+                                "output_sha256": sha(output), "output_bytes": len(output)})
+    if hashes != {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in paths}:
+        raise ValueError("input drift")
+    journal.complete(records=18, positive_intervals=558)
+print("18 calibrated records / 558 retained batch intervals; earlier measurements unchanged")

@@ -1,0 +1,27 @@
+"""Bind the committed qualification metadata to independently executed inputs."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('binding refuses -O')
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes())
+validate_native(native,root);validate_coverage(coverage,root)
+actual={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))};assert actual==native['source_sha256']==coverage['input_sha256'] and len(actual)==198
+for name,h in actual.items():assert sha(subprocess.check_output(['git','show',head+':'+name]))==h,name
+ci=json.loads((root/'docs/evidence/terminal-device/ci-5bcdeb6/source-bindings.json').read_bytes())
+changed=sorted(n for n in actual if actual[n]!=ci['input_sha256'][n]);assert changed==['docs/quality-plan.json']
+old=json.loads(subprocess.check_output(['git','show',ci['source_head']+':docs/quality-plan.json']));new=json.loads((root/'docs/quality-plan.json').read_bytes())
+assert old['high_threshold']==new['high_threshold']==75 and old['scope']==new['scope'] and len(old['units'])==len(new['units'])==44
+allowed=set(ci['qualified_units'])
+for a,b in zip(old['units'],new['units']):
+ assert a['id']==b['id'] and a['files']==b['files']
+ for dimension,value in b['criteria'].items():
+  previous=a['criteria'][dimension]
+  if value['score']!=previous['score']:
+   assert a['id'] in allowed and previous['score']==50 and value['score']==75
+   assert dimension=='portability' or (a['id']=='matea-terminal/device' and dimension in ['rust_design','memory_safety','behavior'])
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes());assert gate['below_high_axes']==50 and gate['pending_issue_reports']==823 and gate['f5']=='closed'
+value={'status':'complete','tested_committed_inputs':head,'ci_source_head':ci['source_head'],'execution_inputs':len(actual),'current_inputs_match_native_and_llvm':True,'ci_different_inputs':changed,'reviewed_metadata_changes':'Six portability assessments plus three device design/memory/behavior assessments; evidence/reasons/remaining text updated. Same 156 program files, 44 units and threshold 75. Reference/performance scores stay partial.','gate':{'below_high_axes':50,'pending_issue_reports':823,'stage_a':'ongoing','stage_b':'not_started','f5':'closed'},'report_sha256':{n:sha((root/n).read_bytes()) for n in ['docs/evidence/local-validation.json','docs/evidence/quality/rust-execution-coverage.json','docs/evidence/quality/report.json','docs/evidence/quality/final-gate-status.json']},'limits':['CI is retained at its real source commit; only separately reviewed assessment metadata differs. No previous execution is relabeled as a new run.','Native observations and distributions do not establish full source capability closure, universal performance or exhaustive memory safety.']}
+(root/'docs/evidence/terminal-device/post-qualification-binding.json').write_text(json.dumps(value,indent=2)+'\n');print('Bound',head,'198 inputs; gate remains closed with 50 unmet axes')

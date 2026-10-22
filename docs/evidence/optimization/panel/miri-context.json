@@ -1,0 +1,12 @@
+{
+  "source_head": "db865c656b18d169fe27a577e1af415407a5b612",
+  "source_sha256": {
+    "crates/matea-render/src/lib.rs": "8cb1cdc0ad7b68d0728b5e8391f0785a64de80ea4b5579d7cbe58f20178e5a09"
+  },
+  "command": "MIRIFLAGS=-Zmiri-seed=167 cargo +nightly miri test --locked --offline -p matea-render --lib panel_retains",
+  "log_sha256": "92baa8eabd6946eabbe1eca3282b03a2bab11137ad18095807b54d6ef36276f3",
+  "tests_passed": 1,
+  "limits": [
+    "One selected ownership/layout/style test with six border/padding combinations; no all-schedules safety proof or native-terminal execution."
+  ]
+}

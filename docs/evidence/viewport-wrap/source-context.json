@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "status": "bounded_native_source_observation",
+  "reference": "bubbles",
+  "reference_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+  "caller_sha256": "dc5793ca8792d6628e8450430d1acf993fef0878c0c6c59c3487093e87bbcc6f",
+  "go_version": "go version go1.27.2 darwin/arm64",
+  "reference_pins": {
+    "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+    "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+    "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+    "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+    "harness": "tools/perf-upstream/main.go"
+  },
+  "reference_module_sha256": "16277d43ddaa9f0e3a25b3bc6f44506eed60b239189b8d756be5f6237ebe2beb",
+  "source_fixture_sha256": "9a24a20c3827d0689c646db70512ae555a330c88f2028b96bb6bc18cd309fc78",
+  "cases": 1008,
+  "canonical_matches": 586,
+  "literal_deviations": 422,
+  "source_panics_observed": 0,
+  "zero_width_total_values": [
+    "-1",
+    "-9223372036854775808",
+    "0",
+    "2",
+    "9223372036854775807"
+  ],
+  "zero_width_numeric_limitations": "Go out-of-range float-to-int conversion and signed addition may depend on target; raw values are retained, not normalized into a match.",
+  "source_paths": [
+    "viewport/viewport.go:calculateLine",
+    "viewport/viewport.go:softWrap",
+    "viewport/viewport.go:EnsureVisible"
+  ],
+  "limits": [
+    "Original caller for pinned Bubbles with frozen Go dependencies; not full transitive source/API closure.",
+    "Only valid plain UTF-8 text; ANSI styles/gutters/highlights remain separate.",
+    "Buffer observations do not establish physical terminal shaping."
+  ]
+}

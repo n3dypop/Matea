@@ -1,6 +1,15 @@
 #![forbid(unsafe_code)]
 //! Structured views, grapheme-safe cell composition, and deterministic row diffs.
+use compact_str::CompactString;
 use matea_style::{Border, Length, Style, Theme, distribute};
+use std::{borrow::Cow, fmt};
+mod text;
+pub use text::Text;
+mod rich_text;
+pub use rich_text::{RichText, StyledGrapheme};
+mod block;
+pub use block::{BlockError, StyledBlock};
+mod snapshot;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
 
@@ -8,6 +17,17 @@ use unicode_width::UnicodeWidthStr;
 pub struct Size {
     pub width: u16,
     pub height: u16,
+}
+/// Zero-based cell position. Layout translates local hints into frame coordinates.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Cursor {
+    pub x: u16,
+    pub y: u16,
+}
+impl Cursor {
+    pub const fn new(x: u16, y: u16) -> Self {
+        Self { x, y }
+    }
 }
 impl Size {
     pub const fn new(width: u16, height: u16) -> Self {
@@ -60,7 +80,7 @@ impl Rect {
 /// A leading grapheme or a reserved continuation cell. Mutated only through Canvas.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cell {
-    symbol: String,
+    symbol: CompactString,
     style: Style,
     width: u16,
 }
@@ -92,6 +112,7 @@ impl Cell {
 pub struct Surface {
     size: Size,
     cells: Vec<Cell>,
+    cursor: Option<Cursor>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct GeometryError;
@@ -110,6 +131,7 @@ impl Surface {
         Ok(Self {
             size,
             cells: vec![Cell::default(); count],
+            cursor: None,
         })
     }
     pub fn size(&self) -> Size {
@@ -117,6 +139,22 @@ impl Surface {
     }
     pub fn area(&self) -> Rect {
         Rect::new(0, 0, self.size.width, self.size.height)
+    }
+    pub fn cursor(&self) -> Option<Cursor> {
+        self.cursor
+    }
+    /// Invalid positions hide the cursor. Continuation cells normalize to the
+    /// grapheme lead, rather than allowing a caret inside a wide glyph.
+    pub fn set_cursor(&mut self, cursor: Option<Cursor>) {
+        self.cursor = cursor.and_then(|mut c| {
+            if c.x >= self.size.width || c.y >= self.size.height {
+                return None;
+            }
+            while c.x > 0 && self.cells[self.index(c.x, c.y)].is_continuation() {
+                c.x -= 1;
+            }
+            Some(c)
+        });
     }
     pub fn row(&self, y: u16) -> &[Cell] {
         if y >= self.size.height {
@@ -134,23 +172,37 @@ impl Surface {
     }
     /// Plain snapshot, preserving rows and trimming trailing spaces.
     pub fn plain(&self) -> String {
-        (0..self.size.height)
-            .map(|y| {
-                self.row(y)
-                    .iter()
-                    .map(Cell::symbol)
-                    .collect::<String>()
-                    .trim_end()
-                    .to_owned()
-            })
-            .collect::<Vec<_>>()
-            .join("\n")
+        let mut text = String::with_capacity(self.cells.len());
+        for y in 0..self.size.height {
+            let start = text.len();
+            for cell in self.row(y) {
+                text.push_str(cell.symbol());
+            }
+            let end = start + text[start..].trim_end().len();
+            text.truncate(end);
+            if y + 1 < self.size.height {
+                text.push('\n');
+            }
+        }
+        text
     }
     /// Changed rows in top-to-bottom order. Resize forces a complete redraw.
     pub fn diff(&self, previous: Option<&Self>) -> Vec<u16> {
-        (0..self.size.height)
-            .filter(|&y| previous.is_none_or(|p| p.size != self.size || p.row(y) != self.row(y)))
-            .collect()
+        self.changed_rows(previous).collect()
+    }
+    /// Borrowed damage iterator; reusing the same immutable surface is O(1).
+    pub fn changed_rows<'a>(
+        &'a self,
+        previous: Option<&'a Self>,
+    ) -> impl Iterator<Item = u16> + 'a {
+        let height = if previous.is_some_and(|p| std::ptr::eq(self, p)) {
+            0
+        } else {
+            self.size.height
+        };
+        (0..height).filter(move |&y| {
+            previous.is_none_or(|p| p.size != self.size || p.row(y) != self.row(y))
+        })
     }
     fn index(&self, x: u16, y: u16) -> usize {
         usize::from(y) * usize::from(self.size.width) + usize::from(x)
@@ -161,6 +213,12 @@ impl Surface {
             left -= 1;
         }
         let width = self.cells[self.index(left, y)].width.max(1);
+        if self
+            .cursor
+            .is_some_and(|c| c.y == y && c.x >= left && c.x < left.saturating_add(width))
+        {
+            self.cursor = None;
+        }
         for col in left..left.saturating_add(width).min(self.size.width) {
             let i = self.index(col, y);
             self.cells[i] = Cell::default();
@@ -178,8 +236,75 @@ impl Canvas<'_> {
         self.clip
     }
     pub fn text(&mut self, x: u16, y: u16, text: &str, style: Style) {
-        let safe = sanitize(text);
-        for (dy, line) in safe.split('\n').enumerate() {
+        let safe = sanitized(text);
+        self.draw_text(x, y, &safe, style);
+    }
+    fn text_owned(&mut self, x: u16, y: u16, text: &Text, style: Style) {
+        self.draw_text(x, y, text.as_str(), style);
+    }
+    /// Draw normalized rich text without splitting a grapheme at a style
+    /// transition. A grapheme uses the style at its leading byte.
+    pub fn rich_text(&mut self, x: u16, y: u16, text: &RichText) {
+        if let Some(style) = text.uniform_style() {
+            self.draw_text(x, y, text.as_str(), style);
+            return;
+        }
+        let mut byte_offset = 0;
+        for (dy, line) in text.as_str().split('\n').enumerate() {
+            let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
+                break;
+            };
+            if row >= self.clip.bottom() {
+                break;
+            }
+            if row < self.clip.y {
+                byte_offset += line.len() + 1;
+                continue;
+            }
+            let mut styles = text.style_cursor(byte_offset);
+            let mut col = u32::from(x);
+            if line.is_ascii() {
+                for index in 0..line.len() {
+                    if col >= u32::from(self.clip.right()) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) {
+                        self.put(
+                            col as u16,
+                            row,
+                            &line[index..index + 1],
+                            styles.at(byte_offset + index),
+                            1,
+                        );
+                    }
+                    col += 1;
+                }
+            } else {
+                for (index, grapheme) in line.grapheme_indices(true) {
+                    let width = grapheme.width();
+                    if width == 0 {
+                        continue;
+                    }
+                    if width > usize::from(self.clip.right()).saturating_sub(col as usize) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) {
+                        self.put(
+                            col as u16,
+                            row,
+                            grapheme,
+                            styles.at(byte_offset + index),
+                            width as u16,
+                        );
+                    }
+                    col += width as u32;
+                }
+            }
+            byte_offset += line.len() + 1;
+        }
+    }
+    fn draw_text(&mut self, x: u16, y: u16, text: &str, style: Style) {
+        for (dy, line) in text.split('\n').enumerate() {
             let Some(row) = y.checked_add(u16::try_from(dy).unwrap_or(u16::MAX)) else {
                 break;
             };
@@ -187,18 +312,30 @@ impl Canvas<'_> {
                 break;
             }
             let mut col = u32::from(x);
+            if line.is_ascii() {
+                for (offset, _) in line.bytes().enumerate() {
+                    if col >= u32::from(self.clip.right()) {
+                        break;
+                    }
+                    if col >= u32::from(self.clip.x) && row >= self.clip.y {
+                        self.put(col as u16, row, &line[offset..offset + 1], style, 1);
+                    }
+                    col += 1;
+                }
+                continue;
+            }
             for g in line.graphemes(true) {
-                let w = g.width() as u32;
+                let w = g.width();
                 if w == 0 {
                     continue;
                 }
-                if col + w > u32::from(self.clip.right()) {
+                if w > usize::from(self.clip.right()).saturating_sub(col as usize) {
                     break;
                 }
                 if col >= u32::from(self.clip.x) && row >= self.clip.y {
                     self.put(col as u16, row, g, style, w as u16);
                 }
-                col += w;
+                col += w as u32;
             }
         }
     }
@@ -215,7 +352,7 @@ impl Canvas<'_> {
         for col in x + 1..x + width {
             let i = self.surface.index(col, y);
             self.surface.cells[i] = Cell {
-                symbol: String::new(),
+                symbol: CompactString::default(),
                 style,
                 width: 0,
             };
@@ -232,30 +369,94 @@ impl Canvas<'_> {
 
 /// Newlines are structural; tabs use four spaces. Escape/C0/C1 controls become U+FFFD.
 pub fn sanitize(s: &str) -> String {
-    s.chars()
-        .map(|c| match c {
-            '\n' => "\n".into(),
-            '\t' => "    ".into(),
-            c if c.is_control() => "�".into(),
-            c => c.to_string(),
-        })
-        .collect()
+    sanitized(s).into_owned()
+}
+/// Borrow safe input; allocate only when control replacement is necessary.
+pub fn sanitized(s: &str) -> Cow<'_, str> {
+    if is_safe_text(s) {
+        return Cow::Borrowed(s);
+    }
+    let mut out = String::with_capacity(s.len());
+    write_sanitized(s, &mut out).expect("writing normalized String cannot fail");
+    Cow::Owned(out)
+}
+fn is_safe_text(s: &str) -> bool {
+    // str already guarantees valid UTF-8. C0/DEL bytes cannot occur inside a
+    // multibyte scalar; C1 controls are exactly the pairs C2 80..9F.
+    // Fold ASCII-control/high-bit flags together so clean ASCII can vectorize.
+    let mut flags = 0u8;
+    for byte in s.bytes() {
+        let invalid = ((byte < 0x20) & (byte != b'\n')) | (byte == 0x7f);
+        flags |= u8::from(invalid) | (byte & 0x80);
+    }
+    if flags & 1 != 0 {
+        return false;
+    }
+    flags & 0x80 == 0
+        || !s
+            .as_bytes()
+            .windows(2)
+            .any(|pair| pair[0] == 0xc2 && pair[1] < 0xa0)
+}
+fn write_sanitized(s: &str, out: &mut impl fmt::Write) -> fmt::Result {
+    for c in s.chars() {
+        match c {
+            '\n' => out.write_char('\n')?,
+            '\t' => out.write_str("    ")?,
+            c if c.is_control() => out.write_char('�')?,
+            c => out.write_char(c)?,
+        }
+    }
+    Ok(())
+}
+
+/// The owned panel needs three tokens, not the complete application Theme.
+/// Keep this inside the boxed panel payload, outside every View/stack element.
+#[derive(Clone, Debug)]
+struct PanelTheme {
+    surface: Style,
+    border: Style,
+    accent: Style,
+    padding: u16,
+    border_kind: Border,
+}
+impl From<&Theme> for PanelTheme {
+    fn from(theme: &Theme) -> Self {
+        Self {
+            surface: theme.surface,
+            border: theme.border,
+            accent: theme.accent,
+            padding: theme.padding,
+            border_kind: theme.border_kind,
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+struct PanelContent {
+    child: View,
+    theme: PanelTheme,
 }
 
 #[derive(Clone, Debug)]
 enum Node {
-    Text(String, Style),
+    Text(Text, Style),
     Stack {
         horizontal: bool,
         children: Vec<View>,
         gap: u16,
     },
     Panel {
-        title: String,
-        child: Box<View>,
-        theme: Box<Theme>,
+        title: Text,
+        content: Box<PanelContent>,
     },
     Layers(Vec<(Rect, View)>),
+    Cursor {
+        child: Box<View>,
+        cursor: Cursor,
+    },
+    RichText(RichText),
+    Snapshot(std::sync::Arc<Surface>),
 }
 /// An owned immutable scene. Views never contain terminal escape sequences.
 #[derive(Clone, Debug)]
@@ -272,11 +473,14 @@ impl View {
             height: None,
         }
     }
-    pub fn text(text: impl Into<String>) -> Self {
+    pub fn text(text: impl Into<Text>) -> Self {
         Self::new(Node::Text(text.into(), Style::default()))
     }
-    pub fn styled(text: impl Into<String>, style: Style) -> Self {
+    pub fn styled(text: impl Into<Text>, style: Style) -> Self {
         Self::new(Node::Text(text.into(), style))
+    }
+    pub fn rich_text(text: RichText) -> Self {
+        Self::new(Node::RichText(text))
     }
     pub fn column(children: impl IntoIterator<Item = View>) -> Self {
         Self::new(Node::Stack {
@@ -295,11 +499,26 @@ impl View {
     pub fn layers(children: Vec<(Rect, View)>) -> Self {
         Self::new(Node::Layers(children))
     }
-    pub fn panel(self, title: impl Into<String>, theme: &Theme) -> Self {
+    /// Declare a local cursor; clipping, offsets and later paint are composed by
+    /// the renderer. Only the transport controls terminal visibility/position.
+    pub fn with_cursor(self, cursor: Cursor) -> Self {
+        let (width, height) = (self.width, self.height);
+        Self {
+            node: Node::Cursor {
+                child: Box::new(self),
+                cursor,
+            },
+            width,
+            height,
+        }
+    }
+    pub fn panel(self, title: impl Into<Text>, theme: &Theme) -> Self {
         Self::new(Node::Panel {
             title: title.into(),
-            child: Box::new(self),
-            theme: Box::new(theme.clone()),
+            content: Box::new(PanelContent {
+                child: self,
+                theme: PanelTheme::from(theme),
+            }),
         })
     }
     pub fn gap(mut self, gap: u16) -> Self {
@@ -342,14 +561,25 @@ impl View {
                         ))
                 }
             }
-            Node::Panel { child, theme, .. } => child
+            Node::Panel { content, .. } => content
+                .child
                 .natural_height()
                 .saturating_add(2)
-                .saturating_add(theme.padding.saturating_mul(2)),
+                .saturating_add(content.theme.padding.saturating_mul(2)),
             Node::Layers(c) => c.iter().map(|(r, _)| r.bottom()).max().unwrap_or(0),
+            Node::Cursor { child, .. } => child.natural_height(),
+            Node::RichText(text) => text.line_count().min(usize::from(u16::MAX)) as u16,
+            Node::Snapshot(surface) => surface.size.height,
         }
     }
     pub fn render(&self, size: Size) -> Result<Surface, GeometryError> {
+        if self.width.is_none()
+            && self.height.is_none()
+            && let Node::Snapshot(surface) = &self.node
+            && surface.size() == size
+        {
+            return Ok(surface.as_ref().clone());
+        }
         let mut s = Surface::new(size)?;
         let area = s.area();
         self.paint(&mut s, area, area);
@@ -367,7 +597,14 @@ impl View {
             return;
         }
         match &self.node {
-            Node::Text(text, style) => s.canvas(clip).text(area.x, area.y, text, *style),
+            Node::Text(text, style) => s.canvas(clip).text_owned(area.x, area.y, text, *style),
+            Node::RichText(text) => s.canvas(clip).rich_text(area.x, area.y, text),
+            Node::Snapshot(surface) => {
+                s.canvas(clip).surface(area.x, area.y, surface);
+                if let Some(cursor) = surface.cursor() {
+                    snapshot::paint_cursor(s, area, clip, cursor);
+                }
+            }
             Node::Stack {
                 horizontal,
                 children,
@@ -399,11 +636,8 @@ impl View {
                     offset = offset.saturating_add(n).saturating_add(*gap);
                 }
             }
-            Node::Panel {
-                title,
-                child,
-                theme,
-            } => {
+            Node::Panel { title, content } => {
+                let PanelContent { child, theme } = content.as_ref();
                 s.canvas(clip).fill(theme.surface);
                 let (tl, tr, bl, br, h, v) = match theme.border_kind {
                     Border::Rounded => ("╭", "╮", "╰", "╯", "─", "│"),
@@ -450,6 +684,10 @@ impl View {
                     v.paint(s, r, clip);
                 }
             }
+            Node::Cursor { child, cursor } => {
+                child.paint(s, area, clip);
+                snapshot::paint_cursor(s, area, clip, *cursor);
+            }
         }
     }
 }
@@ -457,6 +695,205 @@ impl View {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout() {
+        use matea_style::{Color, TextFrame, UnderlineStyle};
+        if cfg!(target_pointer_width = "64") {
+            assert!(
+                std::mem::size_of::<View>() <= 56,
+                "panel ownership must not grow every scene node"
+            );
+        }
+        let border_style = Style::default()
+            .italic()
+            .fg(Color::Indexed(9))
+            .underline_style(UnderlineStyle::Curly)
+            .underline_color(Color::Rgb(13, 41, 227));
+        let title_style = Style::default().overline().text_frame(TextFrame::Framed);
+        let surface_style = Style::default().bg(Color::Indexed(4)).dim();
+        for (kind, top, bottom) in [
+            (Border::Ascii, "+-Tea茶-+", "+-------+"),
+            (Border::Plain, "┌─Tea茶─┐", "└───────┘"),
+            (Border::Rounded, "╭─Tea茶─╮", "╰───────╯"),
+        ] {
+            for padding in [0, 1] {
+                let panel = {
+                    let mut theme = Theme {
+                        border: border_style,
+                        accent: title_style,
+                        surface: surface_style,
+                        padding,
+                        border_kind: kind,
+                        ..Theme::default()
+                    };
+                    let panel = View::text("X").panel("Tea茶", &theme);
+                    // Both consumed and unrelated tokens can change or disappear
+                    // without changing an already-owned scene's contents.
+                    theme.border = Style::default();
+                    theme.accent = Style::default();
+                    theme.surface = Style::default();
+                    theme.padding = u16::MAX;
+                    theme.border_kind = Border::Ascii;
+                    theme.text = Style::default().hidden();
+                    theme.focus = Style::default().reverse();
+                    theme.gap = u16::MAX;
+                    assert_eq!(theme.padding, u16::MAX);
+                    panel
+                };
+                let frame = panel.render(Size::new(9, 5)).unwrap();
+                let rows = if padding == 0 {
+                    [top, "|X      |", "|       |", "|       |", bottom]
+                } else {
+                    [top, "|       |", "| X     |", "|       |", bottom]
+                };
+                // Unicode borders use their own vertical glyph.
+                let expected = rows.join("\n").replace(
+                    '|',
+                    if matches!(kind, Border::Ascii) {
+                        "|"
+                    } else {
+                        "│"
+                    },
+                );
+                assert_eq!(frame.plain(), expected);
+                assert_eq!(frame.row(0)[0].style(), border_style);
+                for cell in &frame.row(0)[2..7] {
+                    assert_eq!(cell.style(), title_style);
+                }
+                assert_eq!(frame.row(1)[7].style(), surface_style);
+                assert_eq!(
+                    frame.row(padding + 1)[usize::from(padding) + 1].style(),
+                    Style::default()
+                );
+                assert_eq!(panel.clone().render(Size::new(9, 5)).unwrap(), frame);
+                let column = View::column([panel.clone(), View::text("next")])
+                    .render(Size::new(9, 8))
+                    .unwrap();
+                let next_row = if padding == 0 { 3 } else { 5 };
+                assert_eq!(column.row(next_row)[0].symbol(), "n");
+                assert_eq!(column.row(next_row)[3].symbol(), "t");
+            }
+        }
+    }
+    #[test]
+    fn extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes() {
+        use matea_style::{BlinkStyle, TextFrame, UnderlineStyle};
+        if cfg!(target_pointer_width = "64") {
+            assert_eq!(
+                std::mem::size_of::<Cell>(),
+                40,
+                "resolved styling must not grow every cell"
+            );
+        }
+        let style = Style::default()
+            .italic()
+            .dim()
+            .strikethrough()
+            .overline()
+            .blink(BlinkStyle::Slow)
+            .text_frame(TextFrame::Encircled)
+            .underline_style(UnderlineStyle::Dashed)
+            .underline_color(matea_style::Color::Indexed(15));
+        let view = View::styled("茶e\u{301}🙂", style);
+        let frame = view.render(Size::new(6, 1)).unwrap();
+        assert_eq!(frame.row(0)[0].symbol(), "茶");
+        assert!(frame.row(0)[1].is_continuation());
+        assert_eq!(frame.row(0)[2].symbol(), "e\u{301}");
+        assert_eq!(frame.row(0)[3].symbol(), "🙂");
+        assert!(frame.row(0)[4].is_continuation());
+        for cell in &frame.row(0)[..5] {
+            assert_eq!(cell.style(), style);
+        }
+        assert_eq!(frame.row(0)[5].style(), Style::default());
+        let clipped = view.render(Size::new(4, 1)).unwrap();
+        assert_eq!(clipped.plain(), "茶e\u{301}");
+        assert_eq!(clipped.row(0)[3].style(), Style::default());
+        assert_eq!(view.render(Size::new(0, 0)).unwrap().plain(), "");
+    }
+    #[test]
+    fn cursor_composes_through_layout_panel_and_layers() {
+        let theme = Theme::default();
+        let child = View::column([
+            View::text("label"),
+            View::row([
+                View::text("prefix").width(3),
+                View::text("tea").with_cursor(Cursor::new(2, 0)),
+            ])
+            .gap(1),
+        ])
+        .gap(1)
+        .panel("input", &theme);
+        let frame = View::layers(vec![(Rect::new(5, 3, 30, 12), child)])
+            .render(Size::new(40, 20))
+            .unwrap();
+        let inset = 1 + theme.padding;
+        assert_eq!(
+            frame.cursor(),
+            Some(Cursor::new(5 + inset + 6, 3 + inset + 2))
+        );
+    }
+    #[test]
+    fn cursor_clips_normalizes_wide_cells_and_obeys_paint_order() {
+        let wide = || View::text("茶x").with_cursor(Cursor::new(1, 0));
+        assert_eq!(
+            wide().render(Size::new(3, 1)).unwrap().cursor(),
+            Some(Cursor::new(0, 0))
+        );
+        assert_eq!(
+            View::text("a")
+                .with_cursor(Cursor::new(3, 0))
+                .render(Size::new(3, 1))
+                .unwrap()
+                .cursor(),
+            None
+        );
+        assert_eq!(wide().render(Size::new(0, 0)).unwrap().cursor(), None);
+        for overlay in [View::text("X"), View::text("").panel("", &Theme::default())] {
+            let frame = View::layers(vec![
+                (Rect::new(0, 0, 3, 1), wide()),
+                (Rect::new(1, 0, 1, 1), overlay),
+            ])
+            .render(Size::new(3, 1))
+            .unwrap();
+            assert_eq!(frame.cursor(), None);
+        }
+        let frame = View::layers(vec![
+            (Rect::new(0, 0, 3, 1), wide()),
+            (
+                Rect::new(2, 0, 1, 1),
+                View::text("z").with_cursor(Cursor::new(0, 0)),
+            ),
+        ])
+        .render(Size::new(3, 1))
+        .unwrap();
+        assert_eq!(frame.cursor(), Some(Cursor::new(2, 0)));
+    }
+    #[test]
+    fn cursor_metadata_does_not_damage_cells_and_invalid_positions_hide() {
+        let a = View::text("tea").render(Size::new(4, 1)).unwrap();
+        let mut b = a.clone();
+        b.set_cursor(Some(Cursor::new(2, 0)));
+        assert!(b.diff(Some(&a)).is_empty());
+        assert_ne!(a, b);
+        for cursor in [
+            Cursor::new(4, 0),
+            Cursor::new(0, 1),
+            Cursor::new(u16::MAX, u16::MAX),
+        ] {
+            b.set_cursor(Some(cursor));
+            assert_eq!(b.cursor(), None);
+        }
+    }
+    #[test]
+    fn sanitization_borrows_safe_input_and_handles_all_controls() {
+        assert!(matches!(sanitized("ASCII 茶\ne\u{301}"), Cow::Borrowed(_)));
+        assert_eq!(sanitized("\t\x00\x1b\u{85}\r"), "    ����");
+        let long = format!("e{}", "\u{301}".repeat(40));
+        let s = View::text(&long).render(Size::new(2, 1)).unwrap();
+        assert_eq!(s.row(0)[0].symbol(), long);
+        assert_eq!(s.clone(), s);
+        assert_eq!(s.plain(), long);
+    }
     #[test]
     fn unicode_clipping_and_controls() {
         let s = View::text("e\u{301}茶👩‍💻Z\n\x1b[31m")

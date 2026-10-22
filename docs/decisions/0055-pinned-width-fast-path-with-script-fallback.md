@@ -1,0 +1,52 @@
+# ADR 0055: Pinned width fast path with script fallback
+
+Status: accepted for RichText; measurements in progress.
+
+The first matched Unicode owned-construction/read workload takes 4.49–4.65 us
+versus the reference's 1.43 us. Retain these adverse raw observations. Most of
+Matea's work is normalizing/joining text and eagerly traversing all graphemes to
+cache its per-grapheme width; cloning and repeated width reads have lower costs.
+
+Avoid rescanning the joined, already sanitized buffer with a second normalization
+check. A crate-private Text constructor accepts only the shared sanitizer's
+output and checks that display invariant in debug builds. No unsafe conversion
+or unchecked UTF-8 is introduced. Use iterator length hints for bounded initial
+capacity only (64 chunks, 64 KiB text speculation); allocate transition capacity
+only on the first actual style change. Unknown hints retain ordinary growth.
+Empty/uniform documents do not allocate an unused transition array.
+
+For normalized lines, unicode-width 0.2.2's optimized whole-string width equals
+the sum of EGC widths outside its script-specific ligatures. Audit the pinned
+crate's lib.rs width rules and tables.rs state machine: Arabic, Hebrew, Khmer,
+Buginese, Tifinagh, Lisu, Old Turkic and Kirat Rai. Conservatively use the existing
+per-EGC path for their entire blocks. ASCII uses byte length. Other text uses the
+dependency's whole-string path. CR is already normalized and LF is structural.
+The source also joins keycap/flag/modifier ZWJ combinations that may cross EGCs;
+query GraphemeCursor at every boundary after ZWJ and fall back if any is a break
+(or cannot be resolved). Ordinary pictographic ZWJ chains retain the fast path.
+
+This is an internal implementation of the existing compositor width policy,
+not an opt-in shaping policy or a generic Unicode-width replacement. Dependency
+upgrades require reviewing the rule list. Add literal script/emoji regressions,
+all Tifinagh consonant pairs with both joiners, and an explicitly executed native
+release test of every non-control Unicode scalar in three mixed/ZWJ contexts. These
+finite tests do not prove every possible Unicode sequence or future dependency.
+Rerun the same complete-output/reference distributions before claiming a gain.
+
+The first optimized cohort reduces Unicode construct/read to 2.10–2.11 us but
+still trails the 1.42–1.43 us reference. Inspect the remaining shared sanitizer:
+its fast scan marks every non-ASCII byte and then scans all adjacent bytes even
+when no C2 exists. Valid UTF-8 C1 controls can only start with C2, so mark that
+lead byte instead of every high bit. Preserve the same fallback predicate for
+C2 80..9F. This changes no UTF-8 validity or normalization policy and introduces
+no unchecked reads. Existing exhaustive scalar normalization plus a mixed
+C2-control/valid-Latin matrix test cover both paths. Retain the earlier adverse
+cohort and measure the same original ten workloads again before accepting a gain.
+
+The C2-only trial at 495d934 does not meet the acceptance goal: ASCII
+construct/read increases from 560–562 ns to 583–584 ns (about 4%), while Unicode
+changes from 2.10–2.11 us to 2.07–2.08 us (about 1%). Restore the earlier shared
+scanner; retain all four trial runs, independent outputs and the useful mixed
+normalization regression test. Do not present this trial as an accepted gain.
+The remaining constructor gap stays open. Continue capability completion rather
+than keeping a regression for a marginal improvement in one corpus.

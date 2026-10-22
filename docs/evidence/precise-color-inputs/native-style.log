@@ -1,0 +1,63 @@
+   Compiling matea-style v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-style)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.28s
+     Running unittests src/lib.rs (target/debug/deps/matea_style-6bcc153808130e52)
+
+running 5 tests
+test gradient::layout_tests::precise_inputs_keep_stop_and_terminal_color_storage_bounded ... ok
+test tests::default_rgb_tokens_have_readable_contrast ... ok
+test tests::layout_does_not_overflow_at_small_sizes ... ok
+test tests::fallback_is_bounded_and_no_color_keeps_focus ... ok
+test attributes::tests::all_typed_states_preserve_independent_choices_and_clear_back_to_default ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/colors.rs (target/debug/deps/colors-72b7e7205936542b)
+
+running 4 tests
+test every_rgb_triple_matches_full_palette_search ... ignored, Run explicitly in release: exhaustive 16,777,216 RGB triples against full search
+test profiles_preserve_indices_attributes_and_first_index_ties ... ok
+test rgb16_quantization_is_monotonic_and_every_rgb8_bucket_has_256_inputs ... ok
+test palette_and_midpoint_boundaries_match_independent_search ... ok
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/gradients.rs (target/debug/deps/gradients-ffa54a9e37a40e49)
+
+running 6 tests
+test precise_stop_ownership_validation_prefix_and_opaque_interpolation_are_explicit ... ok
+test configuration_owns_stops_and_rejects_invalid_angle_or_empty_input ... ok
+test premultiplied_rgba16_matches_canonical_pinned_source_color_projections ... ok
+test all_indexed_gradient_stops_resolve_without_hex_parsing_or_black_fallback ... ok
+test pinned_lip_gloss_rgb8_samples_match_complete_fixture_outputs ... ok
+test indexed_and_mixed_ended_iterators_preserve_exact_remaining_ranges ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/layout.rs (target/debug/deps/layout-16a148716cbe5334)
+
+running 1 test
+test weighted_layout_preserves_budget_zero_weights_and_fixed_priority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/patches.rs (target/debug/deps/patches-faf9b993e733c480)
+
+running 7 tests
+test every_boolean_base_and_ternary_patch_matches_a_branching_value_model ... ignored, finite full flag domain, explicitly executed by native acceptance
+test reset_and_complete_override_preserve_no_implicit_inheritance ... ok
+test inheritance_false_and_terminal_default_are_distinct_intents ... ok
+test each_boolean_composes_all_inherit_set_clear_sequences ... ok
+test enum_groups_never_leak_into_other_attributes_or_each_other ... ok
+test compact_copy_values_work_in_const_contexts_and_across_threads ... ok
+test composition_is_associative_and_equivalent_to_sequential_resolution ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests matea_style
+
+running 1 test
+test crates/matea-style/src/attributes/patch.rs - attributes::patch::StylePatch (line 17) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 1.58s; merged doctests compilation took 1.34s

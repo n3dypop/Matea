@@ -1,0 +1,1753 @@
+{
+  "conclusion": "success",
+  "headSha": "63ef696740261c134b5c3ba2834738f7bd1ee315",
+  "jobs": [
+    {
+      "completedAt": "2026-10-21T03:21:15Z",
+      "conclusion": "success",
+      "databaseId": 119012694580,
+      "name": "foundation (windows-latest)",
+      "startedAt": "2026-10-21T02:58:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:53Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:04Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:35Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:59:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:42Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml",
+          "number": 4,
+          "startedAt": "2026-10-21T02:59:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:56Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:59Z",
+          "conclusion": "success",
+          "name": "Run cargo fmt --check",
+          "number": 6,
+          "startedAt": "2026-10-21T02:59:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:24Z",
+          "conclusion": "success",
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "number": 7,
+          "startedAt": "2026-10-21T02:59:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:21Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace",
+          "number": 8,
+          "startedAt": "2026-10-21T03:00:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:28Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace --all-targets",
+          "number": 9,
+          "startedAt": "2026-10-21T03:01:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:03:27Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --release --workspace",
+          "number": 10,
+          "startedAt": "2026-10-21T03:01:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:03:27Z",
+          "conclusion": "skipped",
+          "name": "Run cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored",
+          "number": 11,
+          "startedAt": "2026-10-21T03:03:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:03:30Z",
+          "conclusion": "success",
+          "name": "Run cargo doc --locked --workspace --no-deps",
+          "number": 12,
+          "startedAt": "2026-10-21T03:03:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:03:53Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked --workspace --examples",
+          "number": 13,
+          "startedAt": "2026-10-21T03:03:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:03:57Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_coverage.py",
+          "number": 14,
+          "startedAt": "2026-10-21T03:03:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:00Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_coverage.py",
+          "number": 15,
+          "startedAt": "2026-10-21T03:03:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:14Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_audit.py",
+          "number": 16,
+          "startedAt": "2026-10-21T03:04:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_exports.py",
+          "number": 17,
+          "startedAt": "2026-10-21T03:04:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_import.py",
+          "number": 18,
+          "startedAt": "2026-10-21T03:04:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:23Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_snapshot.py",
+          "number": 19,
+          "startedAt": "2026-10-21T03:04:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:24Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_issue_refresh.py",
+          "number": 20,
+          "startedAt": "2026-10-21T03:04:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:24Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_color_trace.py",
+          "number": 21,
+          "startedAt": "2026-10-21T03:04:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:25Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked -p matea-api-audit",
+          "number": 22,
+          "startedAt": "2026-10-21T03:04:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:46Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 23,
+          "startedAt": "2026-10-21T03:04:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:04Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_auditors.py",
+          "number": 24,
+          "startedAt": "2026-10-21T03:04:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:06Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_quality.py",
+          "number": 25,
+          "startedAt": "2026-10-21T03:05:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:07Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_evidence_checks.py",
+          "number": 26,
+          "startedAt": "2026-10-21T03:05:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:09Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_optimization_evidence.py",
+          "number": 27,
+          "startedAt": "2026-10-21T03:05:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_performance_records.py",
+          "number": 28,
+          "startedAt": "2026-10-21T03:05:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_paths.py",
+          "number": 29,
+          "startedAt": "2026-10-21T03:05:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:12Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_measurement_drivers.py",
+          "number": 30,
+          "startedAt": "2026-10-21T03:05:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:18Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_acceptance_driver.py",
+          "number": 31,
+          "startedAt": "2026-10-21T03:05:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:04Z",
+          "conclusion": "success",
+          "name": "Run python -O -m unittest discover -s scripts -p 'test_*.py'",
+          "number": 32,
+          "startedAt": "2026-10-21T03:05:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:04Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_quality.py",
+          "number": 33,
+          "startedAt": "2026-10-21T03:06:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:05Z",
+          "conclusion": "success",
+          "name": "Run python -m compileall -q scripts",
+          "number": 34,
+          "startedAt": "2026-10-21T03:06:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:05Z",
+          "conclusion": "success",
+          "name": "Run python -c \"from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)\"",
+          "number": 35,
+          "startedAt": "2026-10-21T03:06:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:18Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json",
+          "number": 36,
+          "startedAt": "2026-10-21T03:06:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:18Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-trace.json",
+          "number": 37,
+          "startedAt": "2026-10-21T03:06:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:19Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json",
+          "number": 38,
+          "startedAt": "2026-10-21T03:06:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:19Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json",
+          "number": 39,
+          "startedAt": "2026-10-21T03:06:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:19Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json",
+          "number": 40,
+          "startedAt": "2026-10-21T03:06:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:20Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json",
+          "number": 41,
+          "startedAt": "2026-10-21T03:06:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:20Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json",
+          "number": 42,
+          "startedAt": "2026-10-21T03:06:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:21Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py artifacts/matea-fallback-trace.json",
+          "number": 43,
+          "startedAt": "2026-10-21T03:06:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:15Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl",
+          "number": 44,
+          "startedAt": "2026-10-21T03:06:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:35Z",
+          "conclusion": "success",
+          "name": "Run python scripts/example_smoke.py",
+          "number": 45,
+          "startedAt": "2026-10-21T03:09:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:36Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl",
+          "number": 46,
+          "startedAt": "2026-10-21T03:09:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:46Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json",
+          "number": 47,
+          "startedAt": "2026-10-21T03:09:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:46Z",
+          "conclusion": "skipped",
+          "name": "Run python scripts/pty_smoke.py",
+          "number": 48,
+          "startedAt": "2026-10-21T03:09:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:47Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet -p matea --example render_probe --release",
+          "number": 49,
+          "startedAt": "2026-10-21T03:09:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:09:48Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl",
+          "number": 50,
+          "startedAt": "2026-10-21T03:09:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:13:51Z",
+          "conclusion": "success",
+          "name": "Run python scripts/verify_foundation.py --offline",
+          "number": 51,
+          "startedAt": "2026-10-21T03:09:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:21:00Z",
+          "conclusion": "success",
+          "name": "Run python scripts/measure_rust_coverage.py",
+          "number": 52,
+          "startedAt": "2026-10-21T03:13:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:21:08Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 53,
+          "startedAt": "2026-10-21T03:21:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:21:08Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 105,
+          "startedAt": "2026-10-21T03:21:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:21:11Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 106,
+          "startedAt": "2026-10-21T03:21:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:21:11Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 107,
+          "startedAt": "2026-10-21T03:21:11Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694580"
+    },
+    {
+      "completedAt": "2026-10-21T03:12:36Z",
+      "conclusion": "success",
+      "databaseId": 119012694738,
+      "name": "foundation (ubuntu-latest)",
+      "startedAt": "2026-10-21T02:58:49Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:51Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:54Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:57Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:58:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:59Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml",
+          "number": 4,
+          "startedAt": "2026-10-21T02:58:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:01Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked",
+          "number": 5,
+          "startedAt": "2026-10-21T02:58:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:02Z",
+          "conclusion": "success",
+          "name": "Run cargo fmt --check",
+          "number": 6,
+          "startedAt": "2026-10-21T02:59:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:16Z",
+          "conclusion": "success",
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "number": 7,
+          "startedAt": "2026-10-21T02:59:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:43Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace",
+          "number": 8,
+          "startedAt": "2026-10-21T02:59:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:47Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace --all-targets",
+          "number": 9,
+          "startedAt": "2026-10-21T02:59:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:48Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --release --workspace",
+          "number": 10,
+          "startedAt": "2026-10-21T02:59:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:56Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored",
+          "number": 11,
+          "startedAt": "2026-10-21T03:00:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:58Z",
+          "conclusion": "success",
+          "name": "Run cargo doc --locked --workspace --no-deps",
+          "number": 12,
+          "startedAt": "2026-10-21T03:00:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:10Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked --workspace --examples",
+          "number": 13,
+          "startedAt": "2026-10-21T03:00:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:11Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_coverage.py",
+          "number": 14,
+          "startedAt": "2026-10-21T03:01:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:14Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_coverage.py",
+          "number": 15,
+          "startedAt": "2026-10-21T03:01:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_audit.py",
+          "number": 16,
+          "startedAt": "2026-10-21T03:01:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_exports.py",
+          "number": 17,
+          "startedAt": "2026-10-21T03:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_import.py",
+          "number": 18,
+          "startedAt": "2026-10-21T03:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:16Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_snapshot.py",
+          "number": 19,
+          "startedAt": "2026-10-21T03:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:16Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_issue_refresh.py",
+          "number": 20,
+          "startedAt": "2026-10-21T03:01:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:16Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_color_trace.py",
+          "number": 21,
+          "startedAt": "2026-10-21T03:01:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:16Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked -p matea-api-audit",
+          "number": 22,
+          "startedAt": "2026-10-21T03:01:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:24Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 23,
+          "startedAt": "2026-10-21T03:01:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:38Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_auditors.py",
+          "number": 24,
+          "startedAt": "2026-10-21T03:01:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:38Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_quality.py",
+          "number": 25,
+          "startedAt": "2026-10-21T03:01:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:39Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_evidence_checks.py",
+          "number": 26,
+          "startedAt": "2026-10-21T03:01:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:43Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_optimization_evidence.py",
+          "number": 27,
+          "startedAt": "2026-10-21T03:01:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:43Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_performance_records.py",
+          "number": 28,
+          "startedAt": "2026-10-21T03:01:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:43Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_paths.py",
+          "number": 29,
+          "startedAt": "2026-10-21T03:01:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:43Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_measurement_drivers.py",
+          "number": 30,
+          "startedAt": "2026-10-21T03:01:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:44Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_acceptance_driver.py",
+          "number": 31,
+          "startedAt": "2026-10-21T03:01:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:59Z",
+          "conclusion": "success",
+          "name": "Run python -O -m unittest discover -s scripts -p 'test_*.py'",
+          "number": 32,
+          "startedAt": "2026-10-21T03:01:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:59Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_quality.py",
+          "number": 33,
+          "startedAt": "2026-10-21T03:01:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:59Z",
+          "conclusion": "success",
+          "name": "Run python -m compileall -q scripts",
+          "number": 34,
+          "startedAt": "2026-10-21T03:01:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:59Z",
+          "conclusion": "success",
+          "name": "Run python -c \"from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)\"",
+          "number": 35,
+          "startedAt": "2026-10-21T03:01:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json",
+          "number": 36,
+          "startedAt": "2026-10-21T03:01:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-trace.json",
+          "number": 37,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json",
+          "number": 38,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json",
+          "number": 39,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json",
+          "number": 40,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json",
+          "number": 41,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json",
+          "number": 42,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:02:06Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py artifacts/matea-fallback-trace.json",
+          "number": 43,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:59Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl",
+          "number": 44,
+          "startedAt": "2026-10-21T03:02:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:07Z",
+          "conclusion": "success",
+          "name": "Run python scripts/example_smoke.py",
+          "number": 45,
+          "startedAt": "2026-10-21T03:04:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:07Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl",
+          "number": 46,
+          "startedAt": "2026-10-21T03:05:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:09Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json",
+          "number": 47,
+          "startedAt": "2026-10-21T03:05:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:15Z",
+          "conclusion": "success",
+          "name": "Run python scripts/pty_smoke.py",
+          "number": 48,
+          "startedAt": "2026-10-21T03:05:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:15Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet -p matea --example render_probe --release",
+          "number": 49,
+          "startedAt": "2026-10-21T03:05:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:15Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl",
+          "number": 50,
+          "startedAt": "2026-10-21T03:05:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:51Z",
+          "conclusion": "success",
+          "name": "Run python scripts/verify_foundation.py --offline",
+          "number": 51,
+          "startedAt": "2026-10-21T03:05:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:12:30Z",
+          "conclusion": "success",
+          "name": "Run python scripts/measure_rust_coverage.py",
+          "number": 52,
+          "startedAt": "2026-10-21T03:06:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:12:34Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 53,
+          "startedAt": "2026-10-21T03:12:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:12:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 105,
+          "startedAt": "2026-10-21T03:12:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:12:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 106,
+          "startedAt": "2026-10-21T03:12:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:12:34Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 107,
+          "startedAt": "2026-10-21T03:12:34Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694738"
+    },
+    {
+      "completedAt": "2026-10-21T03:00:11Z",
+      "conclusion": "success",
+      "databaseId": 119012694751,
+      "name": "msrv",
+      "startedAt": "2026-10-21T02:58:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:51Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:54Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:02Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:58:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:38Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace",
+          "number": 4,
+          "startedAt": "2026-10-21T02:59:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:45Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked -p matea-ratatui --no-default-features",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:56Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked -p matea-ratatui --all-features",
+          "number": 6,
+          "startedAt": "2026-10-21T02:59:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:01Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked -p matea --all-targets --features ratatui",
+          "number": 7,
+          "startedAt": "2026-10-21T02:59:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:08Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check",
+          "number": 8,
+          "startedAt": "2026-10-21T03:00:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:09Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets",
+          "number": 9,
+          "startedAt": "2026-10-21T03:00:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:09Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 18,
+          "startedAt": "2026-10-21T03:00:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:09Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-21T03:00:09Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694751"
+    },
+    {
+      "completedAt": "2026-10-21T03:10:50Z",
+      "conclusion": "success",
+      "databaseId": 119012694758,
+      "name": "foundation (macos-latest)",
+      "startedAt": "2026-10-21T02:58:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:52Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:58Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:07Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:58:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:09Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml",
+          "number": 4,
+          "startedAt": "2026-10-21T02:59:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:12Z",
+          "conclusion": "success",
+          "name": "Run cargo fetch --locked",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:12Z",
+          "conclusion": "success",
+          "name": "Run cargo fmt --check",
+          "number": 6,
+          "startedAt": "2026-10-21T02:59:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:24Z",
+          "conclusion": "success",
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "number": 7,
+          "startedAt": "2026-10-21T02:59:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:44Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace",
+          "number": 8,
+          "startedAt": "2026-10-21T02:59:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:47Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --workspace --all-targets",
+          "number": 9,
+          "startedAt": "2026-10-21T02:59:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:39Z",
+          "conclusion": "success",
+          "name": "Run cargo test --locked --release --workspace",
+          "number": 10,
+          "startedAt": "2026-10-21T02:59:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:39Z",
+          "conclusion": "skipped",
+          "name": "Run cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored",
+          "number": 11,
+          "startedAt": "2026-10-21T03:00:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:41Z",
+          "conclusion": "success",
+          "name": "Run cargo doc --locked --workspace --no-deps",
+          "number": 12,
+          "startedAt": "2026-10-21T03:00:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:50Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked --workspace --examples",
+          "number": 13,
+          "startedAt": "2026-10-21T03:00:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:50Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_coverage.py",
+          "number": 14,
+          "startedAt": "2026-10-21T03:00:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:52Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_coverage.py",
+          "number": 15,
+          "startedAt": "2026-10-21T03:00:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:54Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_audit.py",
+          "number": 16,
+          "startedAt": "2026-10-21T03:00:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:54Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_exports.py",
+          "number": 17,
+          "startedAt": "2026-10-21T03:00:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:54Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_rustdoc_import.py",
+          "number": 18,
+          "startedAt": "2026-10-21T03:00:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:56Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_snapshot.py",
+          "number": 19,
+          "startedAt": "2026-10-21T03:00:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:56Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_issue_refresh.py",
+          "number": 20,
+          "startedAt": "2026-10-21T03:00:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:56Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_color_trace.py",
+          "number": 21,
+          "startedAt": "2026-10-21T03:00:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:00:56Z",
+          "conclusion": "success",
+          "name": "Run cargo build --locked -p matea-api-audit",
+          "number": 22,
+          "startedAt": "2026-10-21T03:00:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:10Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 23,
+          "startedAt": "2026-10-21T03:00:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:20Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_source_auditors.py",
+          "number": 24,
+          "startedAt": "2026-10-21T03:01:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:20Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_quality.py",
+          "number": 25,
+          "startedAt": "2026-10-21T03:01:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:20Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_evidence_checks.py",
+          "number": 26,
+          "startedAt": "2026-10-21T03:01:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:21Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_optimization_evidence.py",
+          "number": 27,
+          "startedAt": "2026-10-21T03:01:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:21Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_performance_records.py",
+          "number": 28,
+          "startedAt": "2026-10-21T03:01:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:22Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_reference_paths.py",
+          "number": 29,
+          "startedAt": "2026-10-21T03:01:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:23Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_measurement_drivers.py",
+          "number": 30,
+          "startedAt": "2026-10-21T03:01:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:24Z",
+          "conclusion": "success",
+          "name": "Run python scripts/test_acceptance_driver.py",
+          "number": 31,
+          "startedAt": "2026-10-21T03:01:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:34Z",
+          "conclusion": "success",
+          "name": "Run python -O -m unittest discover -s scripts -p 'test_*.py'",
+          "number": 32,
+          "startedAt": "2026-10-21T03:01:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:34Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_quality.py",
+          "number": 33,
+          "startedAt": "2026-10-21T03:01:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:35Z",
+          "conclusion": "success",
+          "name": "Run python -m compileall -q scripts",
+          "number": 34,
+          "startedAt": "2026-10-21T03:01:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:35Z",
+          "conclusion": "success",
+          "name": "Run python -c \"from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)\"",
+          "number": 35,
+          "startedAt": "2026-10-21T03:01:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json",
+          "number": 36,
+          "startedAt": "2026-10-21T03:01:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-trace.json",
+          "number": 37,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json",
+          "number": 38,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json",
+          "number": 39,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json",
+          "number": 40,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json",
+          "number": 41,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json",
+          "number": 42,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:01:40Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_color_trace.py artifacts/matea-fallback-trace.json",
+          "number": 43,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:38Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl",
+          "number": 44,
+          "startedAt": "2026-10-21T03:01:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:46Z",
+          "conclusion": "success",
+          "name": "Run python scripts/example_smoke.py",
+          "number": 45,
+          "startedAt": "2026-10-21T03:04:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:46Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl",
+          "number": 46,
+          "startedAt": "2026-10-21T03:04:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:47Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json",
+          "number": 47,
+          "startedAt": "2026-10-21T03:04:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:57Z",
+          "conclusion": "success",
+          "name": "Run python scripts/pty_smoke.py",
+          "number": 48,
+          "startedAt": "2026-10-21T03:04:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:58Z",
+          "conclusion": "success",
+          "name": "Run cargo run --locked --quiet -p matea --example render_probe --release",
+          "number": 49,
+          "startedAt": "2026-10-21T03:04:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:04:59Z",
+          "conclusion": "success",
+          "name": "Run cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl",
+          "number": 50,
+          "startedAt": "2026-10-21T03:04:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:24Z",
+          "conclusion": "success",
+          "name": "Run python scripts/verify_foundation.py --offline",
+          "number": 51,
+          "startedAt": "2026-10-21T03:04:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:10:42Z",
+          "conclusion": "success",
+          "name": "Run python scripts/measure_rust_coverage.py",
+          "number": 52,
+          "startedAt": "2026-10-21T03:06:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:10:46Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 53,
+          "startedAt": "2026-10-21T03:10:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:10:46Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 105,
+          "startedAt": "2026-10-21T03:10:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:10:46Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 106,
+          "startedAt": "2026-10-21T03:10:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:10:47Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 107,
+          "startedAt": "2026-10-21T03:10:46Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694758"
+    },
+    {
+      "completedAt": "2026-10-21T03:07:11Z",
+      "conclusion": "success",
+      "databaseId": 119012694806,
+      "name": "reference-probes (macos-latest)",
+      "startedAt": "2026-10-21T02:58:51Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:54Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:00Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:11Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:59:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:27Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 4,
+          "startedAt": "2026-10-21T02:59:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:07:00Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_reference_paths.py --destination \"/Users/runner/work/_temp/matea-reference-paths\"",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:07:02Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 6,
+          "startedAt": "2026-10-21T03:07:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:07:02Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 11,
+          "startedAt": "2026-10-21T03:07:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:07:03Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 12,
+          "startedAt": "2026-10-21T03:07:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:07:07Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-21T03:07:03Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694806"
+    },
+    {
+      "completedAt": "2026-10-21T03:05:12Z",
+      "conclusion": "success",
+      "databaseId": 119012694808,
+      "name": "reference-probes (ubuntu-latest)",
+      "startedAt": "2026-10-21T02:58:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:52Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:53Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:58:54Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:58:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:01Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 4,
+          "startedAt": "2026-10-21T02:58:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:09Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_reference_paths.py --destination \"/home/runner/work/_temp/matea-reference-paths\"",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 6,
+          "startedAt": "2026-10-21T03:05:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 11,
+          "startedAt": "2026-10-21T03:05:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 12,
+          "startedAt": "2026-10-21T03:05:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:05:10Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-21T03:05:10Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694808"
+    },
+    {
+      "completedAt": "2026-10-21T03:06:44Z",
+      "conclusion": "success",
+      "databaseId": 119012694843,
+      "name": "reference-probes (windows-latest)",
+      "startedAt": "2026-10-21T02:58:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T02:58:51Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T02:58:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:01Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-21T02:58:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:20Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de",
+          "number": 3,
+          "startedAt": "2026-10-21T02:59:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T02:59:34Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 4,
+          "startedAt": "2026-10-21T02:59:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:39Z",
+          "conclusion": "success",
+          "name": "Run python scripts/check_reference_paths.py --destination \"D:\\a\\_temp/matea-reference-paths\"",
+          "number": 5,
+          "startedAt": "2026-10-21T02:59:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:40Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 6,
+          "startedAt": "2026-10-21T03:06:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:40Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+          "number": 11,
+          "startedAt": "2026-10-21T03:06:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:42Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 12,
+          "startedAt": "2026-10-21T03:06:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:06:42Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-21T03:06:42Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012694843"
+    },
+    {
+      "completedAt": "2026-10-21T02:58:48Z",
+      "conclusion": "skipped",
+      "databaseId": 119012695649,
+      "name": "measurement-drivers",
+      "startedAt": "2026-10-21T02:58:48Z",
+      "status": "completed",
+      "steps": [],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012695649"
+    },
+    {
+      "completedAt": "2026-10-21T02:58:48Z",
+      "conclusion": "skipped",
+      "databaseId": 119012695787,
+      "name": "reference-api",
+      "startedAt": "2026-10-21T02:58:48Z",
+      "status": "completed",
+      "steps": [],
+      "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267/job/119012695787"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/n3dypop/Matea/actions/runs/39535958267"
+}

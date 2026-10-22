@@ -1,0 +1,15 @@
+[package]
+name = "matea-api-audit"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+syn = { version = "=2.0.119", features = ["full", "visit"] }
+quote = "=1.0.47"
+proc-macro2 = { version = "=1.0.107", features = ["span-locations"] }
+
+[[bench]]
+name = "audit_paths"
+harness = false

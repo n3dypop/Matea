@@ -1,0 +1,8 @@
+// Frozen observation of issue522 at the pinned source; no upstream mutation.
+package main
+import("fmt";"charm.land/lipgloss/v2")
+func main(){
+ implicit:=lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder())
+ explicit:=lipgloss.NewStyle().Border(lipgloss.NormalBorder(),true,true,true,true)
+ for i,s:=range []lipgloss.Style{implicit,explicit}{fw,fh:=s.GetFrameSize();w,h:=lipgloss.Size(s.Render("a"));fmt.Printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%x\n",i,s.GetHorizontalBorderSize(),s.GetVerticalBorderSize(),fw,fh,w,h,s.Render("a"))}
+}

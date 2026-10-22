@@ -1,0 +1,43 @@
+package main
+
+import (
+    "encoding/json"
+    "math"
+    "os"
+    "strconv"
+    "charm.land/bubbles/v2/progress"
+    "github.com/charmbracelet/x/ansi"
+)
+
+func main() {
+    p := progress.New(progress.WithSpringOptions(18, 0.1))
+    p.SetWidth(0)
+    p.PercentFormat = "%.9f"
+    read := func() float64 {
+        value, err := strconv.ParseFloat(ansi.Strip(p.View()),64)
+        if err != nil { panic(err) }
+        return value/100
+    }
+    command := p.SetPercent(0.5)
+    current, previous := read(), 0.0
+    frames := 0
+    for p.IsAnimating() && frames < 1000 {
+        if command == nil { panic("missing animation command") }
+        previous = current
+        message := command()
+        p, command = p.Update(message)
+        current = read()
+        frames++
+    }
+    stepSeconds := 0.016666666
+    speed := (current-previous)/stepSeconds
+    if frames != 142 || p.IsAnimating() || math.Abs(current-0.5)>=0.001 || speed>=-0.01 {
+        panic("expected premature negative-velocity rest was not reproduced")
+    }
+    if err:=json.NewEncoder(os.Stdout).Encode(map[string]any{
+        "frames":frames,"target":p.Percent(),"shown":current,"previous_shown":previous,
+        "is_animating":p.IsAnimating(),"finite_difference_velocity":speed,
+        "observation":"animation reports rest near target while the observed backward step remains large",
+        "limits":"Public commands and View only; finite difference is not direct access to the private velocity field. Private condition uses signed velocity <0.01 instead of magnitude.",
+    }); err!=nil { panic(err) }
+}

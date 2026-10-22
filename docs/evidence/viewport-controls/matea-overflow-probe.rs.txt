@@ -1,0 +1,13 @@
+use matea_widgets::Viewport;
+fn main() {
+    let mut viewport = Viewport::new("a\nb\nc\nd");
+    viewport.set_height(1);
+    viewport.set_offset(1);
+    let count = isize::MAX as usize;
+    viewport.scroll_down(count);
+    assert_eq!(viewport.offset(), 3);
+    viewport.set_offset(1);
+    viewport.scroll_down(usize::MAX);
+    assert_eq!(viewport.offset(), 3);
+    println!("{{\"positive_scroll_count\":{count},\"matea_offset_after\":{},\"usize_max_offset_after\":{}}}", viewport.offset(),viewport.offset());
+}

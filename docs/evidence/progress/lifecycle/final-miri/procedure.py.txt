@@ -1,0 +1,13 @@
+import hashlib,json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/progress/lifecycle/final-miri';sys.path.insert(0,str(root/'scripts'));from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest();names=sorted(n for n in execution_inputs(root) if n.startswith('crates/') or n in ['Cargo.toml','Cargo.lock']);sources={n:sha((root/n).read_bytes()) for n in names};ctx={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'seed':211,'source_sha256':sources,'commands':[],'limits':['Only named widgets/facade progress tests execute; all dependency source/fixture/manifest bytes are bound and checked for drift. No exhaustive memory-safety or other-crate test claim.','Assessment metadata and unrelated tooling are excluded from this Miri compile/test scope.']};path=base/'context.json'
+def save():path.write_text(json.dumps(ctx,indent=2)+'\n')
+save()
+for package in ['matea-widgets','matea']:
+ command=['cargo','+nightly','miri','test','--locked','--offline','-p',package,'--test','progress'];name=package+'.log'
+ with open(base/name,'wb') as output:
+  result=subprocess.run(command,env={**os.environ,'MIRIFLAGS':'-Zmiri-seed=211'},stdout=output,stderr=subprocess.STDOUT,timeout=900)
+ ctx['commands'].append({'command':command,'exit_code':result.returncode,'log':name,'log_sha256':sha((base/name).read_bytes())});save();print(package,result.returncode,flush=True)
+ if result.returncode:break
+ctx['source_changed_during_run']=[n for n,d in sources.items() if sha((root/n).read_bytes())!=d];ctx['status']='complete' if len(ctx['commands'])==2 and all(c['exit_code']==0 for c in ctx['commands']) and not ctx['source_changed_during_run'] else 'failed';save()

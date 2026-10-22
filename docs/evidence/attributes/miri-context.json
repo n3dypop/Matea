@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "source_head": "4d1a3970debc2c51a8636c42b75de284dd3bca92",
+  "rustc": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "runs": [
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=137 cargo +nightly miri test --locked --offline -p matea-style --lib all_typed_states",
+      "tests_passed": 1,
+      "log": "miri-style.log",
+      "log_sha256": "44499d20e845b9b87f36e44e2adc0857991678ce406a772a3a28e1760ac0d339"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=139 cargo +nightly miri test --locked --offline -p matea-terminal --lib all_resolved_attribute",
+      "tests_passed": 1,
+      "log": "miri-sgr.log",
+      "log_sha256": "d7f02a9175c485874e7b94c7bddfedb3da097fde6b0779d0a33c71f0faed07dd"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=149 cargo +nightly miri test --locked --offline -p matea-render --lib extended_attributes",
+      "tests_passed": 1,
+      "log": "miri-render.log",
+      "log_sha256": "b5678caeb5760f03c4c2fcfb160b5ddb211cb81427e14edab252cbca3f366dbd"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=151 cargo +nightly miri test --locked --offline -p matea-terminal --lib underline_reset",
+      "tests_passed": 1,
+      "log": "miri-io.log",
+      "log_sha256": "d4ff78499429f4ff0353c6d67a376a62a57ce71cd8f1815c7bd068e61d3107ad"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=157 cargo +nightly miri test --locked --offline -p matea-terminal --lib reduced_motion_suppresses",
+      "tests_passed": 1,
+      "log": "miri-motion.log",
+      "log_sha256": "847862cc932b6260f3540eb53537b8e4c39ec8c807014859b7e2a5250768917a"
+    },
+    {
+      "command": "MIRIFLAGS=-Zmiri-seed=163 cargo +nightly miri test --locked --offline -p matea-terminal --lib palette_reuse",
+      "tests_passed": 1,
+      "log": "miri-palette.log",
+      "log_sha256": "ceda6b0b036d8e85840f40298d60aac2dcdee76101808a6fc71c96dcc002c9ec"
+    }
+  ],
+  "source_sha256": {
+    "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+    "crates/matea-style/src/attributes.rs": "fd17850e753de9b242cb14eb902a42bee329c74427ec650a0dabd176d39b8d4a",
+    "crates/matea-style/src/lib.rs": "3586efae1c508469e1a7b04c7bf6026a4720b0e2f65126bd4b1812bd4b8c246e",
+    "crates/matea-terminal/src/ansi.rs": "3ab8e4670c3f43cd2c707fe362d005b0e386f90751c994248d34a54334a1bf82",
+    "crates/matea-terminal/src/lib.rs": "4991f9ef67ba0ad9bb7b65c105248f44539335cd4f952f931088dd8393c2d847",
+    "crates/matea-terminal/src/frame.rs": "ddc1318acaaf710cd61cc9521da39b9441ccd9821fd65fb7a1fcb46444066269",
+    "crates/matea-render/src/lib.rs": "293d14647ca621681f5424914f8e61cf4a55ae9ec2e8a473d3937432b0029ef1"
+  },
+  "limits": [
+    "Six selected tests on macOS arm64 with distinct seeds; not whole-workspace/all-schedules memory-safety proof.",
+    "Typed-state Miri subset: 270 states; SGR subset: 24 states; palette subset retains eviction/level changes. Native tests cover the larger recorded domains.",
+    "Mock cells/writers, no native console/FFI/emulator execution."
+  ]
+}

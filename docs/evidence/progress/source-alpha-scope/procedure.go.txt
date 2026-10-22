@@ -1,0 +1,16 @@
+package main
+import("encoding/json";"fmt";"image/color";"os";lip "charm.land/lipgloss/v2";"github.com/charmbracelet/x/ansi")
+func describe(c color.Color)map[string]any{if c==nil{return map[string]any{"nil":true,"sgr":ansi.NewStyle().ForegroundColor(nil).String()}};r,g,b,a:=c.RGBA();return map[string]any{"type":fmt.Sprintf("%T",c),"rgba16":[]uint32{r,g,b,a},"sgr":ansi.NewStyle().ForegroundColor(c).String()}}
+func main(){
+ cases:=[]struct{name string;c color.Color}{
+ {"rgba8-half",color.RGBA{128,32,64,128}},{"nrgba8-half",color.NRGBA{255,64,128,128}},
+ {"rgba64-half",color.RGBA64{32768,8192,16384,32768}},{"nrgba64-half",color.NRGBA64{65535,16384,32768,32768}},
+ {"rgba8-lost-alpha",color.RGBA{128,32,64,0}},{"nrgba8-zero-alpha",color.NRGBA{128,32,64,0}},
+ {"rgba64-lost-alpha",color.RGBA64{32768,8192,16384,0}},{"nrgba64-zero-alpha",color.NRGBA64{32768,8192,16384,0}},
+ {"rgba64-low-alpha",color.RGBA64{1,1,1,1}},{"nrgba64-low-alpha",color.NRGBA64{65535,32768,16384,1}},
+ {"rgb-interface",lip.RGBColor{128,32,64}},{"rgba8-opaque",color.RGBA{128,32,64,255}},{"no-color",lip.NoColor{}},{"nil",nil},
+ }
+ for _,c:=range cases{for _,n:=range []int{0,1,2,3,6}{stops:=[]color.Color{c.c,color.RGBA{255,255,255,255}};out:=lip.Blend1D(n,stops...);colors:=make([]map[string]any,0,len(out));for _,v:=range out{colors=append(colors,describe(v))};_ =json.NewEncoder(os.Stdout).Encode(map[string]any{"case":fmt.Sprintf("%s/%d",c.name,n),"input":describe(c.c),"colors":colors})}}
+ stops:=[]color.Color{color.RGBA{255,0,0,255},nil,color.RGBA{0,0,255,255}};before:=make([]map[string]any,3);for i,c:=range stops{before[i]=describe(c)};_=lip.Blend1D(5,stops...);after:=make([]map[string]any,3);for i,c:=range stops{after[i]=describe(c)}
+ _=json.NewEncoder(os.Stdout).Encode(map[string]any{"case":"caller-slice-alias","before":before,"after":after})
+}

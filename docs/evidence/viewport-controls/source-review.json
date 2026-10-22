@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_native_Miri_CI_pending",
+  "reference": {
+    "name": "bubbles",
+    "sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "source_sha256": {
+      "viewport/viewport.go": "6d5d15d15d175464237df578efd2f9f3022e89874649454ee69c30b1a250dec7",
+      "viewport/keymap.go": "0e01274491b38e97c69bee33ad77750538577f354816cfbf80202bb645edbf93",
+      "viewport/highlight.go": "62ca7d97843e993c18aa25f67252f5401544a03b196c41b82abd2536bc820af6",
+      "LICENSE": "373b3931e66627aadcfebd7771df93f3439203147e587a924508c63e20184d7f"
+    }
+  },
+  "production_sha256": "30ed379dd29c73e4401983fa11d3e2907ee133030fde390366f32a456ac2fcf5",
+  "test_sha256": "b091f9ff71b9931256054eee40c830b511d24794c8e193270e8d9f6ca3c8e6a8",
+  "fixture_sha256": "e298390343d8c7cfe93a13782fcbd9f4d46b47011980a8341d85c3dd5dac3063",
+  "fixture_cases": 220,
+  "exact_reference_rows": 180,
+  "explicit_CRLF_content_deviations": 40,
+  "linked_declarations": 27,
+  "go_probe": "tools/perf-upstream/main.go --viewport-content-fixtures",
+  "go_probe_sha256": "78bf2659dd935fd1b7feb3d3ac2d7dc124e849c00dd711828ab2d0588c8be20e",
+  "go_version": "go version go1.27.2 darwin/arm64",
+  "miri": {
+    "seed": 229,
+    "initial_methods_passed": 10,
+    "initial_test_source": "uncommitted earlier test file before the subsequently added reference fixture test; no exact historical test-file hash captured",
+    "same_production_source": true,
+    "additional_reference_method": "reference-miri.log; exact current test source above",
+    "additional_reference_method_passed": true
+  },
+  "limits": [
+    "No full-module correctness/performance/portability promotion. New content/control measurements are pending.",
+    "Source SetContent retains CR because it splits LF before per-line CRLF replacement. Source SetContentLines normalizes embedded CRLF; all raw fixture rows are retained, never normalized to hide differences.",
+    "Direct rows assignment retains lazy observed clamping; explicit Rust set_height commits clamping, unlike the source raw setter.",
+    "Safe Rust type bounds reject negative sizes/movement; zero-height and saturating usize movement are explicit.",
+    "No borrowed mutable content or caller slice aliasing. Physical terminal, ANSI parsing and all viewport feature conditions are not established."
+  ],
+  "positive_scroll_overflow": "overflow-context.json: exact positive Go MaxInt from offset 1 returns source offset 0; native Matea caller returns saturated bottom 3 for the same count and usize::MAX.",
+  "native_checks": 33,
+  "execution_inputs": 148,
+  "native_evidence": "native/local-validation.json",
+  "llvm_evidence": "native/quality/rust-execution-coverage.json",
+  "rust_native_passed": 185,
+  "doctests": 2,
+  "python_native_passed": 126,
+  "llvm_source_files": 71,
+  "llvm_compiler_instances": 76
+}

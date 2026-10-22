@@ -1,0 +1,77 @@
+warning: unused workspace dependency `bitflags`
+  --> Cargo.toml:17:1
+   |
+17 | bitflags = "=2.13.2"
+   | ^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_dependencies` is set to `warn` by default
+help: consider removing the workspace dependency `bitflags`
+warning: unused workspace dependency `crossterm`
+  --> Cargo.toml:13:1
+   |
+13 | crossterm = "=0.29.0"
+   | ^^^^^^^^^
+   |
+help: consider removing the workspace dependency `crossterm`
+warning: unused workspace dependency `matea`
+  --> Cargo.toml:24:1
+   |
+24 | matea = { path = "crates/matea" }
+   | ^^^^^
+   |
+help: consider removing the workspace dependency `matea`
+warning: unused workspace dependency `matea-core`
+  --> Cargo.toml:20:1
+   |
+20 | matea-core = { path = "crates/matea-core" }
+   | ^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-core`
+warning: unused workspace dependency `matea-motion`
+  --> Cargo.toml:23:1
+   |
+23 | matea-motion = { path = "crates/matea-motion" }
+   | ^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-motion`
+warning: unused workspace dependency `matea-render`
+  --> Cargo.toml:19:1
+   |
+19 | matea-render = { path = "crates/matea-render" }
+   | ^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-render`
+warning: unused workspace dependency `matea-terminal`
+  --> Cargo.toml:22:1
+   |
+22 | matea-terminal = { path = "crates/matea-terminal" }
+   | ^^^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-terminal`
+warning: unused workspace dependency `matea-widgets`
+  --> Cargo.toml:21:1
+   |
+21 | matea-widgets = { path = "crates/matea-widgets" }
+   | ^^^^^^^^^^^^^
+   |
+help: consider removing the workspace dependency `matea-widgets`
+warning: workspace (manifest) generated 8 warnings
+   Compiling rustversion v1.0.23
+   Compiling static_assertions v1.1.0
+   Compiling ryu v1.0.23
+   Compiling itoa v1.0.18
+   Compiling cfg-if v1.0.5
+   Compiling matea-style v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-style)
+   Compiling castaway v0.2.4
+   Compiling compact_str v0.9.0
+   Compiling matea-render v0.1.0 (/private/tmp/matea-corner-pattern-prototype/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.77s
+     Running tests/blocks.rs (target/miri/aarch64-apple-darwin/debug/build/matea-render/58e7403a3fe5f1bc/out/blocks-58e7403a3fe5f1bc)
+
+running 3 tests
+test full_corner_gradients_use_each_cached_cluster_and_signed_offset ... ok
+test full_corner_patterns_and_wide_right_corners_reserve_a_rectangle ... ok
+test full_corners_clip_whole_clusters_at_each_viewport_edge ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 31.91s
+

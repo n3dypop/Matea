@@ -1,0 +1,13 @@
+{
+  "source_head": "29ffeea6dfb3c24430db239ea4b33b35a910de59",
+  "source_sha256": {
+    "crates/matea-render/src/lib.rs": "9f72f151e6bce83f8c03b31c1aada67e7d1246d7d080b99dbe845b94e4eedda1"
+  },
+  "command": "MIRIFLAGS=-Zmiri-seed=181 cargo +nightly miri test --locked --offline -p matea-render --lib panel_retains",
+  "log_sha256": "2b40094258074ffc115dc47d50d78c704af6d7c4618529877ab0de830517beb6",
+  "tests_passed": 1,
+  "limits": [
+    "One selected ownership/layout/style test with six border/padding combinations; no all-schedules safety proof or native-terminal execution.",
+    "Initial test incorrectly required View size equal to 56; actual 48 was smaller. Corrected to the intended no-growth budget <=56; failing log retained without counting it as a production regression."
+  ]
+}

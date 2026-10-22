@@ -1,0 +1,86 @@
+// Original bounded compiler-export audit for two nongeneric clock packages.
+package main
+
+import (
+ "bytes"
+ "encoding/json"
+ "fmt"
+ "go/importer"
+ "go/token"
+ "go/types"
+ "io"
+ "os"
+ "os/exec"
+ "sort"
+)
+
+type listed struct { ImportPath, Export, Dir string; GoFiles []string; Error *struct{Err string} }
+type member struct { Symbol, Kind, Type, Position string; Receivers []string; Index []int }
+type profile struct { Package, Directory string; SourceFiles []string; Members []member; HiddenNamedExposures, GenericTypes, ExternalBoundaries, NonexportedInterfaceMethods []string }
+
+func main() {
+ paths:=[]string{"charm.land/bubbles/v2/stopwatch","charm.land/bubbles/v2/timer"}
+ command:=exec.Command("go",append([]string{"list","-mod=readonly","-export","-deps","-json"},paths...)...)
+ command.Dir="/private/tmp/matea-device-comparison"
+ raw,err:=command.Output();if err!=nil { panic(err) }
+ packages:=map[string]listed{};decoder:=json.NewDecoder(bytes.NewReader(raw))
+ for {var p listed;err:=decoder.Decode(&p);if err==io.EOF {break};if err!=nil {panic(err)};if p.Error!=nil {panic(p.Error.Err)};packages[p.ImportPath]=p}
+ fset:=token.NewFileSet();load:=importer.ForCompiler(fset,"gc",func(path string)(io.ReadCloser,error){p,ok:=packages[path];if !ok||p.Export=="" {return nil,fmt.Errorf("missing export: %s",path)};return os.Open(p.Export)})
+ profiles:=[]profile{}
+ for _,path:=range paths {
+  pkg,err:=load.Import(path);if err!=nil {panic(err)}
+  result:=profile{Package:path,Directory:packages[path].Dir,SourceFiles:packages[path].GoFiles,Members:[]member{},HiddenNamedExposures:[]string{},GenericTypes:[]string{},ExternalBoundaries:[]string{},NonexportedInterfaceMethods:[]string{}}
+  visited:=map[types.Type]bool{};external:=map[string]bool{};hidden:=map[string]bool{};generics:=map[string]bool{};sealed:=map[string]bool{}
+  var walk func(types.Type)
+  walk=func(t types.Type) {
+   if a,ok:=t.(*types.Alias);ok && a.Obj().Pkg()!=nil && a.Obj().Pkg().Path()!=path {external["alias "+types.TypeString(a,nil)]=true}
+   t=types.Unalias(t);if visited[t] {return};visited[t]=true
+   switch t:=t.(type) {
+   case *types.Named:
+    name:=types.TypeString(t,nil)
+    if t.Obj().Pkg()!=nil && t.Obj().Pkg().Path()!=path {external[name]=true} else if !t.Obj().Exported() {hidden[name]=true}
+    if t.TypeParams().Len()!=0 {generics[name]=true;return}
+    walk(t.Underlying())
+   case *types.Pointer:walk(t.Elem())
+   case *types.Slice:walk(t.Elem())
+   case *types.Array:walk(t.Elem())
+   case *types.Map:walk(t.Key());walk(t.Elem())
+   case *types.Chan:walk(t.Elem())
+   case *types.Struct:
+    for i:=0;i<t.NumFields();i++ {f:=t.Field(i);if f.Exported()||f.Embedded() {walk(f.Type())}}
+   case *types.Signature:
+    if t.TypeParams().Len()!=0 {generics[types.TypeString(t,nil)]=true;return}
+    walk(t.Params());walk(t.Results())
+   case *types.Tuple:for i:=0;i<t.Len();i++ {walk(t.At(i).Type())}
+   case *types.Interface:
+    t.Complete();for i:=0;i<t.NumMethods();i++ {m:=t.Method(i);if !m.Exported() {sealed[m.FullName()]=true};walk(m.Type())}
+    for i:=0;i<t.NumEmbeddeds();i++ {walk(t.EmbeddedType(i))}
+   case *types.TypeParam,*types.Union:generics[types.TypeString(t,nil)]=true
+   }
+  }
+  for _,name:=range pkg.Scope().Names() {
+   object:=pkg.Scope().Lookup(name);if !object.Exported() {continue}
+   kind:="";switch object.(type) {case *types.TypeName:kind="type";case *types.Func:kind="function";case *types.Const:kind="const";case *types.Var:kind="var";default:panic("unexpected root")}
+   result.Members=append(result.Members,member{Symbol:name,Kind:kind,Type:types.TypeString(object.Type(),nil),Position:fset.Position(object.Pos()).String()})
+   walk(object.Type())
+   if _,ok:=object.(*types.TypeName);!ok {continue}
+   typ:=object.Type();names:=map[string]bool{};seenFields:=map[types.Type]bool{}
+   var fields func(types.Type)
+   fields=func(t types.Type){t=types.Unalias(t);if p,ok:=t.(*types.Pointer);ok {t=p.Elem()};if seenFields[t] {return};seenFields[t]=true
+    if st,ok:=t.Underlying().(*types.Struct);ok {for i:=0;i<st.NumFields();i++ {f:=st.Field(i);if f.Exported(){names[f.Name()]=true};if f.Embedded(){fields(f.Type())}}}}
+   fields(typ);ordered:=[]string{};for n:=range names {ordered=append(ordered,n)};sort.Strings(ordered)
+   for _,n:=range ordered {obj,index,_:=types.LookupFieldOrMethod(typ,true,nil,n);if obj==nil||!obj.Exported(){continue};result.Members=append(result.Members,member{Symbol:name+"."+n,Kind:"field",Type:types.TypeString(obj.Type(),nil),Position:fset.Position(obj.Pos()).String(),Index:index})}
+   methods:=map[string]*member{}
+   for i,t:=range []types.Type{typ,types.NewPointer(typ)} {
+    set:=types.NewMethodSet(t);for j:=0;j<set.Len();j++ {selection:=set.At(j);obj:=selection.Obj();if !obj.Exported(){continue};walk(obj.Type());m,ok:=methods[obj.Name()];if !ok {m=&member{Symbol:name+"."+obj.Name(),Kind:"method",Type:types.TypeString(obj.Type(),nil),Position:fset.Position(obj.Pos()).String(),Index:selection.Index()};methods[obj.Name()]=m};m.Receivers=append(m.Receivers,[]string{"value","pointer"}[i])}
+   }
+   ordered=nil;for n:=range methods {ordered=append(ordered,n)};sort.Strings(ordered);for _,n:=range ordered {result.Members=append(result.Members,*methods[n])}
+  }
+  for name:=range external {result.ExternalBoundaries=append(result.ExternalBoundaries,name)};sort.Strings(result.ExternalBoundaries)
+  for name:=range hidden {result.HiddenNamedExposures=append(result.HiddenNamedExposures,name)};sort.Strings(result.HiddenNamedExposures)
+  for name:=range generics {result.GenericTypes=append(result.GenericTypes,name)};sort.Strings(result.GenericTypes)
+  for name:=range sealed {result.NonexportedInterfaceMethods=append(result.NonexportedInterfaceMethods,name)};sort.Strings(result.NonexportedInterfaceMethods)
+  sort.Slice(result.Members,func(i,j int)bool{return result.Members[i].Symbol<result.Members[j].Symbol});profiles=append(profiles,result)
+ }
+ json.NewEncoder(os.Stdout).Encode(map[string]any{"kind":"bounded-clock-compiler-export-audit","goos":os.Getenv("GOOS"),"goarch":os.Getenv("GOARCH"),"profiles":profiles,"limits":[]string{"Two nongeneric source packages only. Own-package roots, promoted fields and both value/pointer method sets are enumerated; reachable signature types are inspected for hidden named exposure, generics and private interface constraints.","External named types are recorded as signature boundaries and their shapes are inspected; the full external method API is not enumerated. No project-wide Go dependency/export closure or native target execution is claimed."}})
+}

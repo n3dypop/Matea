@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "command": "MIRIFLAGS=-Zmiri-seed=347 cargo +nightly miri test --offline --locked -p matea-api-audit --lib later_syntax_errors_never_publish_partial_file_declarations",
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4",
+    "tools/api-audit/Cargo.toml": "d8a5774e46788c7f8b8dfd4f16280a30d9f6760cb7cffb7151802e81ce6337c6",
+    "tools/api-audit/src/lib.rs": "cdd1b95bda6bd8225a298e55530736e54f8787d911f8c1e59efcf50f26c4ff66"
+  },
+  "log_sha256": "ecd3f1c841b4db848466381bc93ed0eb8a1410148e39eb0782e1626165e785c4",
+  "rustc": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "tests_passed": 1,
+  "limits": [
+    "One seed and one finite parse-failure atomicity test. No full-workspace Miri or soundness proof.",
+    "Older interrupted byte-matrix and borrowed-JSON runs retain their original source context."
+  ]
+}

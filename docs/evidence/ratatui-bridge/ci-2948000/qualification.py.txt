@@ -1,0 +1,44 @@
+import hashlib,json,shutil,subprocess
+from pathlib import Path
+root=Path.cwd();source=Path('/private/tmp/matea-ci-2948000');out=root/'docs/evidence/ratatui-bridge/ci-2948000';out.mkdir(exist_ok=True)
+hash_bytes=lambda b:hashlib.sha256(b).hexdigest()
+run=json.load(open('/private/tmp/matea-fixed-ci-run.json'))
+assert run['status']=='completed' and run['conclusion']=='success'
+required={f'{kind} ({os}-latest)' for kind in ['foundation','reference-probes'] for os in ['ubuntu','macos','windows']}|{'msrv'}
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+(out/'run.json').write_text(json.dumps(run,indent=2)+'\n')
+shutil.copy('/private/tmp/matea-msrv-2948000.log',out/'msrv.log')
+assert 'cargo test --locked --workspace' in (out/'msrv.log').read_text() and '1.88.0' in (out/'msrv.log').read_text()
+binding=None;native={}
+for os in ['ubuntu','macos','windows']:
+ folder=source/f'native-drivers-{os}-latest';dest=out/os;dest.mkdir(exist_ok=True)
+ report=json.loads((folder/'local-validation.json').read_text())
+ assert report['status']=='complete' and report['all_local_checks_passed'] and report['source_changed_during_run']==[]
+ assert len(report['checks'])==44 and all(c['exit_code']==0 for c in report['checks'])
+ hashes=report['source_sha256'];assert binding is None or hashes==binding;binding=hashes
+ verified=[]
+ for c in report['checks']:
+  path=folder/c['log']
+  if path.is_file():
+   assert hash_bytes(path.read_bytes())==c['log_sha256'];verified.append(c['name'])
+   if c['name'].startswith(('ratatui','facade','source-auditor')):shutil.copy(path,dest/path.name)
+ shutil.copy(folder/'local-validation.json',dest/'local-validation.json')
+ coverage=next(folder.rglob('rust-execution-coverage.json'));data=json.loads(coverage.read_text())
+ assert data['status']=='complete' and data['input_sha256']==hashes
+ shutil.copy(coverage,dest/'rust-execution-coverage.json')
+ probe=source/f'reference-paths-{os}-latest'/'path-checks.json';shutil.copy(probe,dest/'path-checks.json')
+ native[os]={'native_checks':44,'downloaded_logs_hash_checked':verified,'rust_paths':len(data['files']),'rust_instances':sum(len(f['instances']) for f in data['files'])}
+for name,digest in binding.items():
+ blob=subprocess.check_output(['git','show',run['headSha']+':'+name]);assert hash_bytes(blob)==digest,name
+plan_path=root/'docs/quality-plan.json';plan=json.loads(plan_path.read_text());qualified=[];deferred={}
+for u in plan['units']:
+ if u['criteria']['portability']['score']!=50:continue
+ changed=[p for p in u['files'] if hash_bytes((root/p).read_bytes())!=binding.get(p)]
+ if changed:deferred[u['id']]=changed;continue
+ qualified.append(u['id'])
+ u['criteria']['portability']={'score':75,'reason':'Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded.'}
+ evidence='docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json'
+ if evidence not in u['evidence']:u['evidence'].append(evidence)
+assert len(qualified)==8,(qualified,deferred)
+result={'schema':1,'source_head':run['headSha'],'run_url':run['url'],'required_successful_jobs':sorted(required),'native':native,'program_and_input_sha256':binding,'qualified_units':qualified,'deferred_changed_units':deferred,'limits':['Scoped source binding; not current-tree all-green CI. Auditor library and source-auditor regression suite changed after this run and remain pending.','CI timings are not performance evidence. Windows native console fixtures run; no physical emulator or Windows PTY parity is inferred.','Compiler export collection and full upstream capabilities remain incomplete.']}
+(out/'source-bindings.json').write_text(json.dumps(result,indent=2)+'\n');plan_path.write_text(json.dumps(plan,indent=2)+'\n');print('Qualified',len(qualified),'portability axes; deferred',deferred)

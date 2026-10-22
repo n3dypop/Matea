@@ -1,0 +1,1961 @@
+{
+  "schema": 1,
+  "stage": "individual_runtime_driver",
+  "new_distinct_cases": 4,
+  "existing_control_cases": 15,
+  "contexts": {
+    "before": {
+      "schema": 1,
+      "stage": "individual_runtime_driver",
+      "git_head": "a66afa1ce79ce188bcb9dc7a3e9d619d42a6ab9a",
+      "source_sha256": {
+        ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+        ".github/workflows/foundation.yml": "6813263663759857bc6a8bae87fd9c215b14b6cfcf2dc89239462948ad15fbbc",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/lib.rs": "540a2655a4b8831d09f5dd1028534f12611ebac21404419a01a2231aecf3651f",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+        "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/tests/cursor.rs": "f66daab4e2e11ece03532f84ccf20d17418621be45d9486b1f340744f0a47b39",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "crates/matea/benches/foundation_paths.rs": "ea2fd175f05a5b28248e789da2945e2a048801008d0f916d89028d7e86b6be78",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/src/lib.rs": "1a35f1fb3c4707539a9a92908b4f211af13504cf72ad9a6a675de81368a56f68",
+        "docs/quality-plan.json": "6b84cebdb2c057827c6e10436566963f7af9b048ae4f86f4f7a3783634daa286",
+        "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+        "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+        "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+        "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+        "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+        "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+        "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+        "scripts/check_reference_paths.py": "ed4d28d89aa83e14d8ef56454c2e82cee509d7d03841063644b59c9efd505ae4",
+        "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+        "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+        "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+        "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+        "scripts/example_smoke.py": "20024a27f95981d73e0ba960ee33a3727325d558306a789c8dd452889e39cfcd",
+        "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+        "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+        "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+        "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+        "scripts/measure_remaining_performance.py": "2565ce3d706332d2d09eac5852197bf99b7d417a14ca47fe62e5d3f4868f95c2",
+        "scripts/measure_rust_coverage.py": "45bc9dd4c29cbfa692177fcd1d7af83c8ecec1b2764a57974e4e5cd66f154e23",
+        "scripts/optimization_evidence.py": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+        "scripts/performance_records.py": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+        "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+        "scripts/pty_smoke.py": "dcf5e5ee434b253075b34c55dcd49432e1cab378709886e29044e8ef69309f63",
+        "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+        "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+        "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+        "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+        "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+        "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+        "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+        "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+        "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+        "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+        "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+        "scripts/test_measurement_drivers.py": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
+        "scripts/test_optimization_evidence.py": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+        "scripts/test_performance_records.py": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+        "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+        "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+        "scripts/test_reference_paths.py": "23f7faf55fcf8e52f41cdc05a008a4d704b5e555510578061b95c24e5ce66c31",
+        "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+        "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+        "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+        "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+        "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+        "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+        "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+        "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+        "tools/perf-probe/src/main.rs": "701dd5491f943181f03e051faddd87183724d617e7a5205d5ca1b6d350f08d26",
+        "tools/perf-probe/src/measurement.rs": "b4cef5e22a51b1b425ae4a494eff1b402e557ab11d3d6218383a2a8141278933",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+        "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+        "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+      },
+      "binary_sha256": "e30e768b2688f3b062a73b0973e93746c9ce543a573f2e3773dd7abc6012911f",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "architecture": "arm64",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "build_command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        "matea",
+        "--bench",
+        "foundation_paths"
+      ],
+      "measurement_command": [
+        "${TEMP}/matea-deadline-before",
+        "--deadlines"
+      ],
+      "limits": [
+        "One macOS arm64 host; sequential release process with four cases, 31 single-invocation samples each and separate allocation pass.",
+        "Real sleep honors the requested poll timeout; OS overshoot and setup/dispatch/restoration are included. No native terminal I/O, affinity or frequency control.",
+        "Rust-only before/after runtime-driver work; not whole-framework Stage B or matched upstream timer coverage.",
+        "Exploratory initial baseline: a short metadata/summary reader ran before the last case finished; preserve it and repeat the unchanged binary in a quiet balanced sequence."
+      ],
+      "raw_sha256": "f5d0275f18cd290581887e90eb8d1ac623186d715efbd4960213d961af501d93"
+    },
+    "after": {
+      "schema": 1,
+      "stage": "individual_runtime_driver",
+      "git_head": "e8ce73536a578c12cace9749b994c5b7cdbdeff0",
+      "source_sha256": {
+        ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+        ".github/workflows/foundation.yml": "4d40f6d1b8849c27e9a13ef5da178fe20e2dedc9bac2c5c32c16d0c9f9dde135",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/lib.rs": "eac3f64b08f07e407d68bf69e9f9029fbd3058724f04a789eef7b444bb1cef0f",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+        "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/tests/cursor.rs": "f66daab4e2e11ece03532f84ccf20d17418621be45d9486b1f340744f0a47b39",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "crates/matea/benches/foundation_paths.rs": "ea2fd175f05a5b28248e789da2945e2a048801008d0f916d89028d7e86b6be78",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/src/lib.rs": "1a35f1fb3c4707539a9a92908b4f211af13504cf72ad9a6a675de81368a56f68",
+        "docs/quality-plan.json": "6b84cebdb2c057827c6e10436566963f7af9b048ae4f86f4f7a3783634daa286",
+        "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+        "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+        "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+        "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+        "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+        "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+        "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+        "scripts/check_reference_paths.py": "ed4d28d89aa83e14d8ef56454c2e82cee509d7d03841063644b59c9efd505ae4",
+        "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+        "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+        "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+        "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+        "scripts/example_smoke.py": "20024a27f95981d73e0ba960ee33a3727325d558306a789c8dd452889e39cfcd",
+        "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+        "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+        "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+        "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+        "scripts/measure_remaining_performance.py": "2565ce3d706332d2d09eac5852197bf99b7d417a14ca47fe62e5d3f4868f95c2",
+        "scripts/measure_rust_coverage.py": "3787bc8501d80b0d269984a70b79392dfc56c99c57400bf4bba35e59d98775b4",
+        "scripts/optimization_evidence.py": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+        "scripts/performance_records.py": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+        "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+        "scripts/pty_smoke.py": "dcf5e5ee434b253075b34c55dcd49432e1cab378709886e29044e8ef69309f63",
+        "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+        "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+        "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+        "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+        "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+        "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+        "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+        "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+        "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+        "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+        "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+        "scripts/test_measurement_drivers.py": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
+        "scripts/test_optimization_evidence.py": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+        "scripts/test_performance_records.py": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+        "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+        "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+        "scripts/test_reference_paths.py": "23f7faf55fcf8e52f41cdc05a008a4d704b5e555510578061b95c24e5ce66c31",
+        "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+        "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+        "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+        "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+        "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+        "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+        "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+        "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+        "tools/perf-probe/src/main.rs": "701dd5491f943181f03e051faddd87183724d617e7a5205d5ca1b6d350f08d26",
+        "tools/perf-probe/src/measurement.rs": "b4cef5e22a51b1b425ae4a494eff1b402e557ab11d3d6218383a2a8141278933",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+        "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+        "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+      },
+      "binary_sha256": "f88814a4123ab41d22e3e1fb2465d38698f8de18c870501e8e8358a9cad71b35",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "architecture": "arm64",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "build_command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        "matea",
+        "--bench",
+        "foundation_paths"
+      ],
+      "baseline_head": "a66afa1ce79ce188bcb9dc7a3e9d619d42a6ab9a",
+      "baseline_binary_sha256": "e30e768b2688f3b062a73b0973e93746c9ce543a573f2e3773dd7abc6012911f",
+      "limits": [
+        "One macOS arm64 host; sequential release process with four cases, 31 single-invocation samples each and separate allocation pass.",
+        "Real sleep honors the requested poll timeout; OS overshoot and setup/dispatch/restoration are included. No native terminal I/O, affinity or frequency control.",
+        "Rust-only before/after runtime-driver work; not whole-framework Stage B or matched upstream timer coverage."
+      ]
+    },
+    "final": {
+      "schema": 1,
+      "stage": "individual_runtime_driver",
+      "git_head": "dd75b6d6707566903b3d7546b459b55ff93daf47",
+      "source_sha256": {
+        ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+        ".github/workflows/foundation.yml": "d024fcaafa5f1d522a600c963cdee6a5c448207dfa83cd04dcd917c157cb049c",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/lib.rs": "ec9f665e30171167ed5de382bfd0247c116ebdd17f7136513206f66c69f10abb",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+        "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/tests/cursor.rs": "f66daab4e2e11ece03532f84ccf20d17418621be45d9486b1f340744f0a47b39",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "crates/matea/benches/foundation_paths.rs": "ea2fd175f05a5b28248e789da2945e2a048801008d0f916d89028d7e86b6be78",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/src/lib.rs": "1a35f1fb3c4707539a9a92908b4f211af13504cf72ad9a6a675de81368a56f68",
+        "docs/quality-plan.json": "6b84cebdb2c057827c6e10436566963f7af9b048ae4f86f4f7a3783634daa286",
+        "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+        "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+        "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+        "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+        "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+        "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+        "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+        "scripts/check_reference_paths.py": "ed4d28d89aa83e14d8ef56454c2e82cee509d7d03841063644b59c9efd505ae4",
+        "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+        "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+        "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+        "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+        "scripts/example_smoke.py": "20024a27f95981d73e0ba960ee33a3727325d558306a789c8dd452889e39cfcd",
+        "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+        "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+        "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+        "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+        "scripts/measure_remaining_performance.py": "2565ce3d706332d2d09eac5852197bf99b7d417a14ca47fe62e5d3f4868f95c2",
+        "scripts/measure_rust_coverage.py": "3787bc8501d80b0d269984a70b79392dfc56c99c57400bf4bba35e59d98775b4",
+        "scripts/optimization_evidence.py": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+        "scripts/performance_records.py": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+        "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+        "scripts/pty_smoke.py": "dcf5e5ee434b253075b34c55dcd49432e1cab378709886e29044e8ef69309f63",
+        "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+        "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+        "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+        "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+        "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+        "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+        "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+        "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+        "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+        "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+        "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+        "scripts/test_measurement_drivers.py": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
+        "scripts/test_optimization_evidence.py": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+        "scripts/test_performance_records.py": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+        "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+        "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+        "scripts/test_reference_paths.py": "23f7faf55fcf8e52f41cdc05a008a4d704b5e555510578061b95c24e5ce66c31",
+        "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+        "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+        "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+        "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+        "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+        "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+        "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+        "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+        "tools/perf-probe/src/main.rs": "701dd5491f943181f03e051faddd87183724d617e7a5205d5ca1b6d350f08d26",
+        "tools/perf-probe/src/measurement.rs": "b4cef5e22a51b1b425ae4a494eff1b402e557ab11d3d6218383a2a8141278933",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+        "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+        "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+      },
+      "binary_sha256": "584ee78928bb6337a6577a337e01b4a93784439908a630081708b8732907d0e7",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "architecture": "arm64",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "build_command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        "matea",
+        "--bench",
+        "foundation_paths"
+      ],
+      "baseline_head": "a66afa1ce79ce188bcb9dc7a3e9d619d42a6ab9a",
+      "baseline_binary_sha256": "e30e768b2688f3b062a73b0973e93746c9ce543a573f2e3773dd7abc6012911f",
+      "limits": [
+        "One macOS arm64 host; sequential release process with four cases, 31 single-invocation samples each and separate allocation pass.",
+        "Real sleep honors the requested poll timeout; OS overshoot and setup/dispatch/restoration are included. No native terminal I/O, affinity or frequency control.",
+        "Rust-only before/after runtime-driver work; not whole-framework Stage B or matched upstream timer coverage."
+      ]
+    },
+    "aligned": {
+      "schema": 1,
+      "stage": "individual_runtime_driver",
+      "git_head": "141c354648c8a087ba857e474d8893326992278d",
+      "source_sha256": {
+        ".gitattributes": "debf97e6856e5b24db696db46992f747f917997b2c618827009d87a705102cdb",
+        ".github/workflows/foundation.yml": "d024fcaafa5f1d522a600c963cdee6a5c448207dfa83cd04dcd917c157cb049c",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-core/src/lib.rs": "aa8125c7aea2216b2bce77896934eb310264e2cb694fb84580c7032adf1d18eb",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/lib.rs": "6625a1787797cd0a55b87e205417368cccff7138f0232fdb00e7b8efe865631e",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-widgets/src/clocks.rs": "feacc5b618ccab5d26279d26749c14d858ef9f0c00390f4a75da56170955bdf1",
+        "crates/matea-widgets/src/cursor.rs": "859499c467f7ba8c6e391a490202956cce2c6220f688f6df2be9545979fedce7",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "4cfd37f338cd8a7608fe687289414c8bf0e1b8476cba1954d68e88cdc4120f0b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/tests/cursor.rs": "f66daab4e2e11ece03532f84ccf20d17418621be45d9486b1f340744f0a47b39",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "crates/matea/benches/foundation_paths.rs": "ea2fd175f05a5b28248e789da2945e2a048801008d0f916d89028d7e86b6be78",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/cursor.rs": "5c7e007bcd4abba945df0c20bf92b167beb0d19f5b213bb21110733615125109",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/src/lib.rs": "1a35f1fb3c4707539a9a92908b4f211af13504cf72ad9a6a675de81368a56f68",
+        "docs/quality-plan.json": "6b84cebdb2c057827c6e10436566963f7af9b048ae4f86f4f7a3783634daa286",
+        "docs/upstream-lock.json": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+        "examples/external-widget/Cargo.toml": "e72cab8a1e2fd7a5947f0296ccca6b782336a91886ec3989184646b65f452bd6",
+        "examples/external-widget/src/main.rs": "b0389bd03b1b295af726433b24ba1163ecc589042fce8d62d76c083a202a23a8",
+        "scripts/audit_references.py": "9742302a08d40bde8697cf2942ea514ec997186c311a4651eac5c440af10de86",
+        "scripts/check_color_trace.py": "6200956a299827e362e9e0b0cbb92327c2c336d3e6a74268a41838b67caf1d59",
+        "scripts/check_coverage.py": "d4ca2be8acb080d0f3e2a6f800e43059b658d2a4a0ca4fd7345f59ee53e48956",
+        "scripts/check_quality.py": "a3817c3280a174c55fb23d4e43be3aa13c7b2fff786bce8774785affd61905d5",
+        "scripts/check_reference_paths.py": "ed4d28d89aa83e14d8ef56454c2e82cee509d7d03841063644b59c9efd505ae4",
+        "scripts/check_terminal_trace.py": "ea7ace5b95954599fabab465a11aacd461d36ae5bd2898e351189d61860953d6",
+        "scripts/collect_rustdoc.py": "00864344ac19c4c901bf880c3cc18ca8fb1223936df7a9c14fdc2b5357ab1fbe",
+        "scripts/collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+        "scripts/evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+        "scripts/example_smoke.py": "20024a27f95981d73e0ba960ee33a3727325d558306a789c8dd452889e39cfcd",
+        "scripts/fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963",
+        "scripts/fetch_upstream_issues.py": "95e9f754014dad7f5b32fa0c34a6ab84324d957dabc3b4aa25373b61d191d9b0",
+        "scripts/import_rustdoc.py": "cdc0052cff955fb1993f767dc6375322274c9ff73be4ae75dfdb0f29b6049724",
+        "scripts/measure_auditor_performance.py": "d26bc2a4c7c32f80fd3ac0426114453375ee665821b836a9ef82584614881ea8",
+        "scripts/measure_remaining_performance.py": "2565ce3d706332d2d09eac5852197bf99b7d417a14ca47fe62e5d3f4868f95c2",
+        "scripts/measure_rust_coverage.py": "3787bc8501d80b0d269984a70b79392dfc56c99c57400bf4bba35e59d98775b4",
+        "scripts/optimization_evidence.py": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da",
+        "scripts/performance_records.py": "3856a5c6a8c4703146c5582ce019cadc8bac10b9935c6b2f8a39a708a4aa4d16",
+        "scripts/prepare_upstream_bench.py": "966d51d140fe69e7108a694df8124ed40793cea2aa1413491f3166a2ba8535d6",
+        "scripts/pty_smoke.py": "dcf5e5ee434b253075b34c55dcd49432e1cab378709886e29044e8ef69309f63",
+        "scripts/report_clock_format_performance.py": "01b0d47e1df2317db86bd134c3d631bd57f605edbe930ab3685246017c57011f",
+        "scripts/report_performance.py": "7224da2e0423e93f1e858aff094127285121e8a2f96b4f98b95d86c1a62215d4",
+        "scripts/report_subscription_performance.py": "6b1b3c3cc6ac44148e186be7eb7dd9eee179a4d14f5a0acf3a55a0ce9a436088",
+        "scripts/report_view_performance.py": "abe8f518bba2280105c1e9d4adec758674692c2365322a78e92cf5525bdc685a",
+        "scripts/report_viewport_performance.py": "4e86568691bd439aa21be90aef6d07d1433eb66f0fb9cc8d742348bb96d00e31",
+        "scripts/rustdoc_exports.py": "73e1105098a19dd88c06afd94af4d4c5ff507b4ca1da29c34cc0cc708e1c9658",
+        "scripts/test_acceptance_driver.py": "750117a23e9783b7244d0e40e7931cb3816b188c903ff6092b4a21cfdd2a531a",
+        "scripts/test_color_trace.py": "c8915d81fd08ade186c3ed6d3fa4364adf159643d8225415307f3c8c34c30941",
+        "scripts/test_coverage.py": "5273996b0cf68830ec7ee1ab7d14b273d5117dd65f28efa9ef4a60b99febeb00",
+        "scripts/test_evidence_checks.py": "3caffb71f8840728276e6a2b9b3136ad1a9ec8bcc3697fabde6c6e12bfb7b338",
+        "scripts/test_issue_refresh.py": "0a6fcc3ca8b15704a0cf2d19ec770529471bc521664cd9e5a9615a60dc1ead9e",
+        "scripts/test_measurement_drivers.py": "c56bdc1f6227509252a9c7b88c13b1858521d0897b80750ed7c2f9240bec5c2a",
+        "scripts/test_optimization_evidence.py": "e7b8c3d539af97ebc8b971d6f56ae714f5b0b33e55f1a06a2e4a1c3724b9949c",
+        "scripts/test_performance_records.py": "5a25a7e5e1a50b696077057b31cf7095b532030ee44735e179f52764467c538e",
+        "scripts/test_quality.py": "a72128815511088a2c3557aada7c5da67c23ae3e78bd45fd511ff89ce3949345",
+        "scripts/test_reference_audit.py": "8054e5e361e3e1f2ab1f4381d50572366f1ab770682a073848f094f52fa51d9d",
+        "scripts/test_reference_paths.py": "23f7faf55fcf8e52f41cdc05a008a4d704b5e555510578061b95c24e5ce66c31",
+        "scripts/test_rustdoc_exports.py": "a6de7cec341cce97318d501c6451d9766775b3063b980a312685771a61859a41",
+        "scripts/test_rustdoc_import.py": "c7a49b07bc6bbf85197b9eb0285f3941b5edc5a8ec71b90863e6868797627b70",
+        "scripts/test_source_auditors.py": "0d0d7e2c818ce76bc76ca1558588f13dc1e62ef6b48d6a86487f5faed07e4978",
+        "scripts/test_source_snapshot.py": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+        "scripts/verify_foundation.py": "f64fb151d11adb99db12702579d41d92527d2e79fcef1ef1b9fd9ecccd8bd918",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+        "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+        "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65",
+        "tools/perf-probe/Cargo.toml": "726280547e77a0de21566f6e17e0c5c149de78a87fd497166181e26febeea899",
+        "tools/perf-probe/src/main.rs": "701dd5491f943181f03e051faddd87183724d617e7a5205d5ca1b6d350f08d26",
+        "tools/perf-probe/src/measurement.rs": "b4cef5e22a51b1b425ae4a494eff1b402e557ab11d3d6218383a2a8141278933",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-upstream/go.sum": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d",
+        "tools/perf-upstream/main.go": "de25b8e0d7e4b98ddc7fe0d415815e97ba84d283b80ed42989b73649f41f915d",
+        "tools/perf-upstream/main_test.go": "70d227a6f6c72012b73ea2e941842e6d5c01a2d2392b1f6c68fa545c24a850ee"
+      },
+      "binary_sha256": "2945bd930f2d492133246d631af4111f25fb10f1ca7c78a9b402d185a4674e44",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "architecture": "arm64",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "build_command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        "matea",
+        "--bench",
+        "foundation_paths"
+      ],
+      "limits": [
+        "One native host, 31 retained samples per case and separate allocator pass.",
+        "Input-start regression additionally validated natively and with Miri; these four timer cases contain no input-start operation.",
+        "Aligned final comparison runs new/old/old/new, using unchanged hash-checked baseline binary; no other owned jobs during timings."
+      ]
+    }
+  },
+  "raw_sha256": {
+    "before.jsonl": "f5d0275f18cd290581887e90eb8d1ac623186d715efbd4960213d961af501d93",
+    "initial-after.jsonl": "9a527b481596021dbaf8e8fb26cafa8741f121669372767736494699a22676bb",
+    "initial-before-controls.jsonl": "083ba29c97d96e70a84b12871ea259b7722429b9cb91501838e34fce5854db6f",
+    "initial-after-controls.jsonl": "9b7b2523a880ba1cde1d7f08ae1fb54e0e2bf5d86e6eff3001f3a33abc3ce88c",
+    "balanced-0-before.jsonl": "d5fc9614b36fa64ca6ef2f1d9724f8b55d5863177a0d93fa25b797d4a0bf0140",
+    "balanced-0-before-controls.jsonl": "cd78be91e3f1698e85cd3f95cfd6139c5219abcd6dff46956763dfbd36fcb9c0",
+    "balanced-1-after.jsonl": "89f1ed45dbd58d699040307a2d5e027718f9a1f12ba050f65c6e0ef10cbaa5cf",
+    "balanced-1-after-controls.jsonl": "166d9d7b044b0ae978ca056a9e14878b5bef86847a3c8806117f0c007bcc5746",
+    "balanced-2-after.jsonl": "2208d939a437d50469df2e3dd5983f2b412bd7acd73b3e7fc4ccd9a08360d105",
+    "balanced-2-after-controls.jsonl": "3d1d35da50d063f323c2aa062e1dc96da722f335a67912bb26a8d632f1961a5a",
+    "balanced-3-before.jsonl": "2232f3804215454743af161a426c94b2d3d491627463512c053b24953703b5b1",
+    "balanced-3-before-controls.jsonl": "447039b61cfb3bf2eb7f6a62ae982296a34ff12ca8d9db1e4370825afbc30b6f",
+    "aligned-0-after.jsonl": "dd25f094ff9848bb163b6b0a2dd1139df42c05d3b947b1183dd59cb021bfa4d3",
+    "aligned-0-after-controls.jsonl": "6ca51e0a56a4928c19b56d889e58daf89c4fa7048c2f702e076455b7d051602b",
+    "aligned-1-before.jsonl": "0bd84212080c80db4bd6e0ee28574de37091ae71509fc0164ad1e18bd45aae9d",
+    "aligned-1-before-controls.jsonl": "d7f514a78b848709a9937d946e7846f4b44c5b4296a845421496608cb40e86fd",
+    "aligned-2-before.jsonl": "30b87c464d481ff3f83fbe641db73a01eb4bffdf74cdff870a89035d65a422ac",
+    "aligned-2-before-controls.jsonl": "47265e919f4b9c4fb0be1a1f9f6d4f4f80b128c2c253bc99524f7afcce777c34",
+    "aligned-3-after.jsonl": "72e10b488418aaf5997a8655a9e9effa435fe9a62fbf7e3e24991e01934570fc",
+    "aligned-3-after-controls.jsonl": "4437c6001b79e7b255a641eb8fcec216182e2b3c57cac019efc77bf694a647ec"
+  },
+  "cases": [
+    {
+      "case": "terminal/first_notification_1ms",
+      "semantics": "fresh headless TEA runtime and 8x2 initial frame; one periodic subscription message quits; backend honors requested poll timeout using real sleep; includes setup, wait, dispatch and restoration; no native terminal I/O",
+      "output": "notifications=1; initial_frames=1; restorations=1",
+      "iterations_per_sample": 1,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "before": {
+          "p50_ns": 23363167,
+          "p95_ns": 24099167,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "initial-after": {
+          "p50_ns": 1546833,
+          "p95_ns": 1661917,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-0-before": {
+          "p50_ns": 19062250,
+          "p95_ns": 24098208,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-1-after": {
+          "p50_ns": 1516375,
+          "p95_ns": 1524334,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-2-after": {
+          "p50_ns": 1516375,
+          "p95_ns": 1526166,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-3-before": {
+          "p50_ns": 24023875,
+          "p95_ns": 24076417,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-0-after": {
+          "p50_ns": 1524833,
+          "p95_ns": 1553000,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-1-before": {
+          "p50_ns": 24020625,
+          "p95_ns": 24088084,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-2-before": {
+          "p50_ns": 21575334,
+          "p95_ns": 24081250,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-3-after": {
+          "p50_ns": 1511500,
+          "p95_ns": 1518750,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        }
+      }
+    },
+    {
+      "case": "terminal/first_notification_5ms",
+      "semantics": "fresh headless TEA runtime and 8x2 initial frame; one periodic subscription message quits; backend honors requested poll timeout using real sleep; includes setup, wait, dispatch and restoration; no native terminal I/O",
+      "output": "notifications=1; initial_frames=1; restorations=1",
+      "iterations_per_sample": 1,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "before": {
+          "p50_ns": 21598041,
+          "p95_ns": 24116208,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "initial-after": {
+          "p50_ns": 6420667,
+          "p95_ns": 7746125,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-0-before": {
+          "p50_ns": 21763750,
+          "p95_ns": 24113583,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-1-after": {
+          "p50_ns": 7537375,
+          "p95_ns": 7567333,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-2-after": {
+          "p50_ns": 7113166,
+          "p95_ns": 7561167,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-3-before": {
+          "p50_ns": 21844584,
+          "p95_ns": 24088459,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-0-after": {
+          "p50_ns": 7532292,
+          "p95_ns": 7571791,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-1-before": {
+          "p50_ns": 20556250,
+          "p95_ns": 24093667,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-2-before": {
+          "p50_ns": 22412833,
+          "p95_ns": 24077375,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-3-after": {
+          "p50_ns": 7550333,
+          "p95_ns": 7606791,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        }
+      }
+    },
+    {
+      "case": "terminal/first_notification_16ms",
+      "semantics": "fresh headless TEA runtime and 8x2 initial frame; one periodic subscription message quits; backend honors requested poll timeout using real sleep; includes setup, wait, dispatch and restoration; no native terminal I/O",
+      "output": "notifications=1; initial_frames=1; restorations=1",
+      "iterations_per_sample": 1,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "before": {
+          "p50_ns": 19112125,
+          "p95_ns": 24108541,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "initial-after": {
+          "p50_ns": 21981750,
+          "p95_ns": 24071333,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-0-before": {
+          "p50_ns": 22372875,
+          "p95_ns": 24090250,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-1-after": {
+          "p50_ns": 21317292,
+          "p95_ns": 24081791,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-2-after": {
+          "p50_ns": 22851750,
+          "p95_ns": 24104583,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-3-before": {
+          "p50_ns": 22558459,
+          "p95_ns": 24091291,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-0-after": {
+          "p50_ns": 21350750,
+          "p95_ns": 24083208,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-1-before": {
+          "p50_ns": 22852584,
+          "p95_ns": 24217000,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-2-before": {
+          "p50_ns": 20409208,
+          "p95_ns": 24113500,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-3-after": {
+          "p50_ns": 21617500,
+          "p95_ns": 24070500,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        }
+      }
+    },
+    {
+      "case": "terminal/first_notification_50ms",
+      "semantics": "fresh headless TEA runtime and 8x2 initial frame; one periodic subscription message quits; backend honors requested poll timeout using real sleep; includes setup, wait, dispatch and restoration; no native terminal I/O",
+      "output": "notifications=1; initial_frames=1; restorations=1",
+      "iterations_per_sample": 1,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "before": {
+          "p50_ns": 65142083,
+          "p95_ns": 69954375,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "initial-after": {
+          "p50_ns": 51677625,
+          "p95_ns": 55313541,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-0-before": {
+          "p50_ns": 63501709,
+          "p95_ns": 72143833,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-1-after": {
+          "p50_ns": 52697375,
+          "p95_ns": 57356750,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-2-after": {
+          "p50_ns": 51892333,
+          "p95_ns": 54831458,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "balanced-3-before": {
+          "p50_ns": 64797667,
+          "p95_ns": 71579542,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-0-after": {
+          "p50_ns": 52600625,
+          "p95_ns": 56734958,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-1-before": {
+          "p50_ns": 63637167,
+          "p95_ns": 70221583,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-2-before": {
+          "p50_ns": 65103083,
+          "p95_ns": 71041042,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        },
+        "aligned-3-after": {
+          "p50_ns": 52845959,
+          "p95_ns": 57254750,
+          "allocations": 11,
+          "allocated_bytes": 6108
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_InitQuit",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 0, draw: 0, updates: 0, checksum: 0 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 584.583,
+          "p95_ns": 717.291,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "initial-after-controls": {
+          "p50_ns": 299.291,
+          "p95_ns": 336.375,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 571.084,
+          "p95_ns": 690.75,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 597.542,
+          "p95_ns": 735,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 572.417,
+          "p95_ns": 709.958,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 579.208,
+          "p95_ns": 709.084,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 580.667,
+          "p95_ns": 731.708,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 590.416,
+          "p95_ns": 728.125,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 582.25,
+          "p95_ns": 714.125,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 608.875,
+          "p95_ns": 753.042,
+          "allocations": 4,
+          "allocated_bytes": 3800
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Interrupt",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 1, draw: 1, updates: 1, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 802.25,
+          "p95_ns": 924.292,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "initial-after-controls": {
+          "p50_ns": 512.833,
+          "p95_ns": 545.333,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 780.416,
+          "p95_ns": 913.584,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 805.709,
+          "p95_ns": 936.083,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 767.208,
+          "p95_ns": 887.167,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 792.75,
+          "p95_ns": 930.167,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 784.5,
+          "p95_ns": 946.792,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 798.083,
+          "p95_ns": 920.75,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 797.208,
+          "p95_ns": 922.459,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 801.041,
+          "p95_ns": 920.209,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Keys(0)",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 1, draw: 1, updates: 2, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 643.875,
+          "p95_ns": 783.5,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "initial-after-controls": {
+          "p50_ns": 521.416,
+          "p95_ns": 540.625,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 679.292,
+          "p95_ns": 762.25,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 654.667,
+          "p95_ns": 792.125,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 663.958,
+          "p95_ns": 770.958,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 648.375,
+          "p95_ns": 777.834,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 694.416,
+          "p95_ns": 786.209,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 673.333,
+          "p95_ns": 745.833,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 693.417,
+          "p95_ns": 775.458,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 705.958,
+          "p95_ns": 803.792,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Keys(1)",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 2, draw: 2, updates: 3, checksum: 32 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 804.541,
+          "p95_ns": 859.5,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "initial-after-controls": {
+          "p50_ns": 787.709,
+          "p95_ns": 2958.5,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 790.458,
+          "p95_ns": 853.208,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 808.125,
+          "p95_ns": 864.25,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 779.292,
+          "p95_ns": 936.667,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 793.334,
+          "p95_ns": 849,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 794,
+          "p95_ns": 868.042,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 800.541,
+          "p95_ns": 872.209,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 806,
+          "p95_ns": 875.125,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 810.833,
+          "p95_ns": 874.875,
+          "allocations": 6,
+          "allocated_bytes": 5080
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Keys(64)",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 65, draw: 65, updates: 66, checksum: 1040 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 13371.084,
+          "p95_ns": 13480,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "initial-after-controls": {
+          "p50_ns": 15202.125,
+          "p95_ns": 15346.958,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 13312.458,
+          "p95_ns": 13541.75,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 13604.333,
+          "p95_ns": 13709.75,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 13651.166,
+          "p95_ns": 14072.792,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 13433.542,
+          "p95_ns": 13589.25,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 14082.958,
+          "p95_ns": 14435.083,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 13370.792,
+          "p95_ns": 14039.542,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 13367.041,
+          "p95_ns": 13506.667,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 14058.333,
+          "p95_ns": 14201.459,
+          "allocations": 69,
+          "allocated_bytes": 45400
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Idle(4)",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 5, draw: 1, updates: 1, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 590.834,
+          "p95_ns": 602.292,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "initial-after-controls": {
+          "p50_ns": 719.125,
+          "p95_ns": 737.083,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 578.583,
+          "p95_ns": 597.125,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 593.458,
+          "p95_ns": 616.208,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 614.459,
+          "p95_ns": 640.292,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 588.875,
+          "p95_ns": 621.25,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 587.084,
+          "p95_ns": 619.167,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 590.875,
+          "p95_ns": 618.291,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 591.792,
+          "p95_ns": 641.333,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 593.125,
+          "p95_ns": 612.334,
+          "allocations": 5,
+          "allocated_bytes": 4440
+        }
+      }
+    },
+    {
+      "case": "terminal/event_loop_Resize(4)",
+      "semantics": "complete headless terminal event loop, fresh runtime/model/theme/backend, deterministic input/idle/resize/quit; no sleeps, effects, native I/O or signal delivery",
+      "output": "Stats { enter: 1, restore: 1, poll: 5, draw: 5, updates: 5, checksum: 176 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 1537.708,
+          "p95_ns": 1699.917,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "initial-after-controls": {
+          "p50_ns": 1689.792,
+          "p95_ns": 1855.333,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 1517.292,
+          "p95_ns": 1574.834,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 1555,
+          "p95_ns": 1635.875,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 1587.917,
+          "p95_ns": 1628.625,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 1537.125,
+          "p95_ns": 1631.375,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 1570.041,
+          "p95_ns": 1677.75,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 1541.208,
+          "p95_ns": 1585.792,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 1537.625,
+          "p95_ns": 1632.542,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 1586.917,
+          "p95_ns": 1638.625,
+          "allocations": 9,
+          "allocated_bytes": 10840
+        }
+      }
+    },
+    {
+      "case": "terminal/fault_Enter",
+      "semantics": "complete headless loop with BrokenPipe at one backend boundary; check error kind and explicit/Drop restoration attempts; no terminal I/O",
+      "output": "Stats { enter: 1, restore: 1, poll: 0, draw: 0, updates: 0, checksum: 0 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 99.458,
+          "p95_ns": 100.042,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "initial-after-controls": {
+          "p50_ns": 108.709,
+          "p95_ns": 109.25,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 99.333,
+          "p95_ns": 99.667,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 107.958,
+          "p95_ns": 108.417,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 108,
+          "p95_ns": 108.5,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 99.5,
+          "p95_ns": 101.125,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 103.833,
+          "p95_ns": 103.917,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 108.042,
+          "p95_ns": 109.291,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 99.416,
+          "p95_ns": 101.125,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 108.125,
+          "p95_ns": 119,
+          "allocations": 4,
+          "allocated_bytes": 101
+        }
+      }
+    },
+    {
+      "case": "terminal/fault_Size",
+      "semantics": "complete headless loop with BrokenPipe at one backend boundary; check error kind and explicit/Drop restoration attempts; no terminal I/O",
+      "output": "Stats { enter: 1, restore: 1, poll: 0, draw: 0, updates: 0, checksum: 0 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 101.792,
+          "p95_ns": 102.833,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "initial-after-controls": {
+          "p50_ns": 107.208,
+          "p95_ns": 109.25,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 102.084,
+          "p95_ns": 108.25,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 108.041,
+          "p95_ns": 129.417,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 119.334,
+          "p95_ns": 126.166,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 101.584,
+          "p95_ns": 111.875,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 110.958,
+          "p95_ns": 116.708,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 106.916,
+          "p95_ns": 133.708,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 102.041,
+          "p95_ns": 108.209,
+          "allocations": 4,
+          "allocated_bytes": 101
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 114.458,
+          "p95_ns": 114.75,
+          "allocations": 4,
+          "allocated_bytes": 101
+        }
+      }
+    },
+    {
+      "case": "terminal/fault_Poll",
+      "semantics": "complete headless loop with BrokenPipe at one backend boundary; check error kind and explicit/Drop restoration attempts; no terminal I/O",
+      "output": "Stats { enter: 1, restore: 1, poll: 1, draw: 1, updates: 1, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 536.083,
+          "p95_ns": 551.834,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "initial-after-controls": {
+          "p50_ns": 571.083,
+          "p95_ns": 608.625,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 541.5,
+          "p95_ns": 560.875,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 552.791,
+          "p95_ns": 571.625,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 584.292,
+          "p95_ns": 597.417,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 531.625,
+          "p95_ns": 566.583,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 530.375,
+          "p95_ns": 584.75,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 549.375,
+          "p95_ns": 559.708,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 534.709,
+          "p95_ns": 554.208,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 539.209,
+          "p95_ns": 546.459,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        }
+      }
+    },
+    {
+      "case": "terminal/fault_Draw",
+      "semantics": "complete headless loop with BrokenPipe at one backend boundary; check error kind and explicit/Drop restoration attempts; no terminal I/O",
+      "output": "Stats { enter: 1, restore: 1, poll: 0, draw: 1, updates: 1, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 531.75,
+          "p95_ns": 555.709,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "initial-after-controls": {
+          "p50_ns": 554.125,
+          "p95_ns": 639.583,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 526.541,
+          "p95_ns": 532.958,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 551.125,
+          "p95_ns": 585.834,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 581.959,
+          "p95_ns": 596.875,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 543.708,
+          "p95_ns": 580.208,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 547.708,
+          "p95_ns": 570.083,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 549.5,
+          "p95_ns": 561.417,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 535.625,
+          "p95_ns": 549.708,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 528.75,
+          "p95_ns": 552.375,
+          "allocations": 9,
+          "allocated_bytes": 4541
+        }
+      }
+    },
+    {
+      "case": "terminal/fault_Restore",
+      "semantics": "complete headless loop with BrokenPipe at one backend boundary; check error kind and explicit/Drop restoration attempts; no terminal I/O",
+      "output": "Stats { enter: 1, restore: 2, poll: 1, draw: 1, updates: 1, checksum: 16 }",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 598.709,
+          "p95_ns": 637.833,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "initial-after-controls": {
+          "p50_ns": 621.083,
+          "p95_ns": 680.542,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 594.292,
+          "p95_ns": 613.041,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 603.875,
+          "p95_ns": 627.625,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 638.416,
+          "p95_ns": 666.333,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 600.333,
+          "p95_ns": 649.125,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 626.5,
+          "p95_ns": 650.334,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 598.458,
+          "p95_ns": 614.5,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 595.5,
+          "p95_ns": 611.708,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 602.584,
+          "p95_ns": 656.5,
+          "allocations": 12,
+          "allocated_bytes": 4634
+        }
+      }
+    },
+    {
+      "case": "facade/text_direct",
+      "semantics": "same borrowed text construction through direct crate, facade module or prelude; rendering and identity checks outside timing",
+      "output": "tea",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.208,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "initial-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 8.417,
+          "p95_ns": 8.459,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 8.167,
+          "p95_ns": 8.25,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "facade/text_facade",
+      "semantics": "same borrowed text construction through direct crate, facade module or prelude; rendering and identity checks outside timing",
+      "output": "tea",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "initial-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.208,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 8.416,
+          "p95_ns": 8.458,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.667,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.209,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "facade/text_prelude",
+      "semantics": "same borrowed text construction through direct crate, facade module or prelude; rendering and identity checks outside timing",
+      "output": "tea",
+      "iterations_per_sample": 1000,
+      "output_equivalent_for_this_fixture": true,
+      "measurements": {
+        "initial-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.208,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "initial-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-0-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.208,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-1-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.166,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-2-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-3-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.167,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-0-after-controls": {
+          "p50_ns": 8.416,
+          "p95_ns": 8.417,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-1-before-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.166,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-2-before-controls": {
+          "p50_ns": 8.708,
+          "p95_ns": 10.625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "aligned-3-after-controls": {
+          "p50_ns": 8.125,
+          "p95_ns": 8.209,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    }
+  ],
+  "limits": [
+    "All 31 timing samples and separate allocator counters retained per case/run; no averaging or removed outliers.",
+    "Balanced before/after/after/before binaries have verified hashes; no owned build/test/Miri/coverage/download ran during those timings.",
+    "The exploratory first baseline had a brief metadata reader before completion and is explicitly retained separately.",
+    "Real backend sleep and OS overshoot are included; this is a Rust-only headless runtime/driver defect comparison, not native terminal, upstream timer or Stage B evidence.",
+    "Polling worker completions still has the idle cap. Timer table inspection is bounded at 64 entries; arbitrary scheduling/load, memory residency and every timer count remain unmeasured."
+  ],
+  "current_source_head": "141c354648c8a087ba857e474d8893326992278d"
+}

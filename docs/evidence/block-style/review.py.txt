@@ -1,0 +1,75 @@
+"""Frozen per-increment source/fixture verification and unchanged-axis bookkeeping."""
+from collections import Counter
+from datetime import datetime, timezone
+import hashlib,json,os,subprocess
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/block-style';scratch=Path('/private/tmp/matea-block-style-go')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+env=dict(os.environ,GOCACHE='/private/tmp/matea-quality-go-cache',GOPROXY='off',GOSUMDB='off')
+pins=json.loads((root/'docs/upstream-lock.json').read_bytes())
+for pin in pins:
+ if pin['name'] in {'lipgloss','bubbles','bubbletea','ultraviolet','harmonica'}:
+  folder=root.parent/'references'/pin['name']
+  assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=folder,text=True).strip()==pin['sha']
+  assert not subprocess.check_output(['git','status','--porcelain'],cwd=folder)
+fixtures={'fixtures':'blocks.tsv','gradients':'block-gradients.tsv','custom':'block-custom.tsv','inherit':'block-inherit.tsv'}
+binaries={};counts={};build=[]
+for producer,fixture in fixtures.items():
+ code=(base/(producer+'.go.txt')).read_bytes();target=scratch/('blocks.go' if producer=='fixtures' else producer+'.go')
+ assert code==target.read_bytes()
+ binary=scratch/(producer+'-observe')
+ subprocess.run(['go','build','-mod=mod','-o',str(binary),str(target)],cwd=scratch,env=env,check=True)
+ raw=subprocess.check_output([str(binary)],timeout=30)
+ p=root/'crates/matea-render/tests/fixtures'/fixture
+ assert raw==p.read_bytes(),fixture
+ counts[fixture]=len(raw.splitlines());binaries[producer]=sha(binary.read_bytes())
+ build.append(subprocess.check_output(['go','version','-m',str(binary)],text=True))
+(base/'source-build-info.txt').write_text('\n'.join(build).replace(str(root.parent),'${WORKSPACE}').replace(str(scratch),'${SCRATCH}'))
+(base/'reference-module.mod.txt').write_bytes((scratch/'go.mod').read_bytes())
+(base/'reference-module.sum.txt').write_bytes((scratch/'go.sum').read_bytes())
+# Per-row explicit models, independently specified in the maintained Rust test.
+corrections=[]
+for line in (root/'crates/matea-render/tests/fixtures/blocks.tsv').read_text().splitlines():
+ f=line.split('\t');text=bytes.fromhex(f[1]).decode();c=list(map(int,f[2].split(',')));target=max(0,c[8]-c[1]-c[3]);reason=None
+ if c[16]:reason='hidden-border extents do not subtract from inline explicit minima'
+ elif c[18]==ord('茶') and c[19]==ord('茶'):reason='padding/margin cell units; wide fill short remainder becomes space'
+ elif target==1 and text=='茶e\u0301 👩‍💻':reason='whole graphemes; no spurious leading blank for wide glyph'
+ elif target==1 and text=='one-two-long':reason='bounded pending hyphen word; preserve all non-whitespace'
+ elif target in [1,2] and text=='  a b  ':reason='drop overflow boundary whitespace rather than oversize row/blank line'
+ if reason:corrections.append({'id':f[0],'reason':reason,'source_width':int(f[3]),'source_height':int(f[4]),'source_row_sha256':sha(line.encode()),'oracle':'crates/matea-render/tests/blocks.rs::corrected_model'})
+assert len(corrections)==42
+write(base/'corrections.json',{'schema':1,'count':42,'source_fixture_modified':False,'rows':corrections})
+source=root.parent/'references/lipgloss'
+files=['style.go','set.go','get.go','unset.go','borders.go','align.go','position.go','LICENSE','go.mod','go.sum']
+context={'schema':1,'recorded_at_utc':datetime.now(timezone.utc).isoformat(),'base_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'reference_pin':'19f011f1cc573e5d2bf9d7a9c4f14d429647759e','source_sha256':{name:sha((source/name).read_bytes()) for name in files},'source_binary_sha256':binaries,'producer_sha256':{name:sha((base/(name+'.go.txt')).read_bytes()) for name in [*fixtures,'negative']},'fixture_sha256':{str((root/'crates/matea-render/tests/fixtures'/name).relative_to(root)):sha((root/'crates/matea-render/tests/fixtures'/name).read_bytes()) for name in fixtures.values()},'observations':counts,'total_observations':sum(counts.values()),'exact_source_cells':3243,'independent_corrections':42,'ordinary_timing_performed':False,'qualification':'targeted native only; full native/Miri/LLVM/CI pending'}
+assert context['total_observations']==3285
+write(base/'fixture-verification.json',context)
+if (base/'source.tsv').exists():
+ assert (base/'source.tsv').read_bytes()==(root/'crates/matea-render/tests/fixtures/blocks.tsv').read_bytes()
+ (base/'source.tsv').unlink()
+# Separate field-based Rust intent replaces redundant setters/getters/unsetters.
+# Only the reviewed declaration subset is linked; all contracts remain partial.
+inv=json.loads((root/'docs/coverage/lipgloss.json').read_bytes())
+roots={'Width','Height','Align','AlignHorizontal','AlignVertical','Padding','PaddingTop','PaddingRight','PaddingBottom','PaddingLeft','PaddingChar','ColorWhitespace','Margin','Margins','MarginTop','MarginRight','MarginBottom','MarginLeft','MarginChar','MarginBackground','Border','BorderStyle','BorderTop','BorderRight','BorderBottom','BorderLeft','BorderForeground','BorderTopForeground','BorderRightForeground','BorderBottomForeground','BorderLeftForeground','BorderForegroundBlend','BorderForegroundBlendOffset','BorderBackground','BorderTopBackground','BorderRightBackground','BorderBottomBackground','BorderLeftBackground','BorderTopBackgroundColor','Inline','MaxWidth','MaxHeight','TabWidth','UnderlineSpaces','StrikethroughSpaces','Transform','HorizontalPadding','VerticalPadding','HorizontalMargins','VerticalMargins','BorderTopWidth','BorderTopSize','BorderRightSize','BorderBottomSize','BorderLeftSize','HorizontalBorderSize','VerticalBorderSize','FrameSize','HorizontalFrameSize','VerticalFrameSize'}
+rows=[]
+for d in inv['declarations']:
+ symbol=d['symbol'];part=symbol.removeprefix('Style.');part=part.removeprefix('Get').removeprefix('Unset')
+ if d['file']=='borders.go' or (d['file'] in ['set.go','get.go','unset.go'] and part in roots) or symbol in ['NewStyle','Style','Style.Copy','Style.Inherit','Style.Render']:
+  rows.append({**{k:d[k] for k in ['id','file','line','symbol','kind','source_url']},'verdict':'bounded_native_tested_full_contract_pending','implementation':['crates/matea-style/src/decoration.rs','crates/matea-render/src/block.rs'],'test':'crates/matea-render/tests/blocks.rs','limits':'Cell geometry/intent composition. Arbitrary source ANSI/conditional exports/performance not closed. Border controls/zero-width/whole-cluster/wide-fill/inline corrections explicitly documented.'})
+write(base/'declarations.json',{'schema':1,'reference':'lipgloss','reference_sha':inv['sha'],'scope':'Reviewed decorator declaration subset, not full style/public-export closure','count':len(rows),'declarations':rows})
+cap_path=root/'docs/coverage/capabilities.json';caps=json.loads(cap_path.read_bytes());assert not any(c['id']=='style/structured-block-decoration' for c in caps['capabilities'])
+caps['capabilities'].append({'id':'style/structured-block-decoration','status':'partial','reference_ids':[r['id'] for r in rows],'implementation':['crates/matea-style/src/decoration.rs','crates/matea-render/src/block.rs'],'tests':['crates/matea-style/src/decoration.rs','crates/matea-render/tests/blocks.rs'],'performance':'pending','notes':'Active style reference axis only.3285 source observations:3243 exact cell projections and42 explicit independently modeled corrections. Optional intent,inherit/unset,11 presets,13 parts,custom patterns,layout,wrapping,clipping,transforms and border gradients. Full style/hyperlink/precise/conditional-export closure and matched module performance remain pending; no axis promotion.'})
+write(cap_path,caps)
+plan_path=root/'docs/quality-plan.json';before=json.loads(plan_path.read_bytes())
+assert not (base/'quality-plan-before.json.txt').exists()
+(base/'quality-plan-before.json.txt').write_bytes(plan_path.read_bytes())
+new={'matea-style/lib':['crates/matea-style/src/decoration.rs'],'matea-render/lib':['crates/matea-render/src/block.rs'],'matea-render/integration-tests':['crates/matea-render/tests/blocks.rs']}
+for u in before['units']:
+ if u['id'] in new:
+  u['files'].extend(new[u['id']]);u['evidence'].extend(['docs/style-block-decoration-audit.md','docs/evidence/block-style/fixture-verification.json'])
+ if u['id']=='matea-style/lib':u['remaining']=['Active reference axis: common block intent and structured decoration increment tested; rich hyperlinks,precise/custom color transforms,full raw/compiler feature/target contracts and matched module performance remain open. No score promotion until this axis qualifies.']
+write(plan_path,before)
+original=json.loads((base/'quality-plan-before.json.txt').read_bytes());assert [(u['id'],u['criteria']) for u in original['units']]==[(u['id'],u['criteria']) for u in before['units']]
+write(base/'assessment-review.json',{'schema':1,'active_axis':{'unit':'matea-style/lib','dimension':'reference','score':50},'parallel_axis_work':False,'score_changes':[],'threshold_changed':False,'review_units_removed':False,'new_programs':[p for values in new.values() for p in values],'remaining_axes':47,'qualification':'in_progress','reference_axis_complete':False})
+print('3285 observations;3243 exact,42 independent corrections;',len(rows),'partial declaration links;unchanged47 low axes')

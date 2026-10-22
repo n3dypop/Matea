@@ -1,0 +1,35 @@
+"""Rebuild archived auditor controls from Matea history; run in Matea.
+No upstream source is copied into the repository. Use exact release dependencies.
+"""
+import json,subprocess
+from pathlib import Path
+ROOT=Path.cwd()
+def build(revision,directory,artifacts):
+ directory.mkdir(exist_ok=True);(directory/'src').mkdir(exist_ok=True);(directory/'benches').mkdir(exist_ok=True)
+ (directory/'Cargo.toml').write_text('''[package]
+name="matea-api-audit"
+version="0.1.0"
+edition="2024"
+rust-version="1.88"
+publish=false
+[dependencies]
+syn={version="=2.0.119",features=["full","visit"]}
+quote="=1.0.47"
+proc-macro2={version="=1.0.107",features=["span-locations"]}
+[[bench]]
+name="audit_paths"
+harness=false
+''')
+ for name in ['lib.rs','main.rs']:(directory/'src'/name).write_bytes(subprocess.check_output(['git','show',revision+':tools/api-audit/src/'+name]))
+ bench=(ROOT/'tools/api-audit/benches/audit_paths.rs').read_text().replace('../../perf-probe/src/measurement.rs',str(ROOT/'tools/perf-probe/src/measurement.rs'))
+ (directory/'benches/audit_paths.rs').write_text(bench)
+ # Pin the transitive identifier table to the measured root graph as well.
+ subprocess.run(['cargo','generate-lockfile','--offline','--manifest-path',str(directory/'Cargo.toml')],check=True)
+ subprocess.run(['cargo','update','--offline','--manifest-path',str(directory/'Cargo.toml'),'-p','unicode-ident','--precise','1.0.27'],check=True)
+ with artifacts.open('w') as output:subprocess.run(['cargo','bench','--offline','--locked','--manifest-path',str(directory/'Cargo.toml'),'--bench','audit_paths','--no-run','--message-format=json'],stdout=output,check=True)
+ subprocess.run(['cargo','build','--offline','--locked','--release','--manifest-path',str(directory/'Cargo.toml')],check=True)
+build('2948000',Path('/private/tmp/matea-audit-full-ast-baseline'),Path('/private/tmp/matea-audit-baseline-artifacts.jsonl'))
+# For the adaptive comparison the saved 222a2f9 release executables can also be
+# rebuilt in an isolated package; copy these two resulting executables to the
+# locations named by measure-adaptive.py.txt before starting any timed cohort.
+build('222a2f9',Path('/private/tmp/matea-audit-incremental-baseline'),Path('/private/tmp/matea-audit-incremental-artifacts.jsonl'))

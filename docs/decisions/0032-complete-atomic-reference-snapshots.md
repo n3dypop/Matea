@@ -1,0 +1,17 @@
+# ADR 0032: Validate complete source snapshots before compiler reuse
+
+Status: accepted for Foundation evidence tooling.
+
+The compiler collector hashed only Rust/TOML/Cargo.lock inputs. A tracked JSON asset could change inside its cached snapshot without invalidating provenance. The same named regression fails on the old collector: the mocked compiler is reached a second time despite the modified asset. The mock deliberately returns compile failure; this is a provenance guard regression, not a real compiler execution claim.
+
+Bind snapshot schema 2 to every tracked input's content and mode in the clean pinned reference, including non-Rust build assets. Stream SHA256 reads in bounded 1 MiB chunks. Reject missing/extra files and directories, symlinks added to a snapshot, reserved/escaping paths, different source identities and unknown schema versions. Internal reference symlinks are checked and dereferenced; external targets are rejected. Source roots are never output destinations.
+
+Create a new snapshot in a sibling temporary directory, preserve copied file modes, verify it completely, then rename it into the new destination. A normal copy failure leaves no partially published snapshot, and retry succeeds. Existing unmarked destinations remain untouched. One collector owns a destination at a time; this is not a distributed lock or a crash-proof multi-directory transaction.
+
+Legacy manifests may be upgraded only after all actual snapshot inputs and modes match the clean pinned reference. This never trusts the old Rust-only hash subset. Replace just the verified marker atomically; reject edited assets before running Cargo. Reference checkouts remain unchanged and outside Matea.
+
+Independent fixtures cover the known-negative non-Rust asset, complete/idempotent reuse, failed second copy and retry, owned existing destinations, reference-nested output, additional/missing inputs and directories, invalid manifest paths, verified legacy migration, and internal/external symlinks. Physical symlinks run where the OS permits creation; a Windows privilege denial is reported as a test skip, while portable manifest guards still run. Native compiler/profile collection on all three OSes remains required after this change. Public API/feature closure is a separate pending review.
+
+Compiler failure evidence is also explicit. A missing/unreadable/malformed or unsupported export, including excessive JSON/extractor recursion, must replace a successful compiler exit with an unsuccessful collector exit. Dependency-tree failure leaves the graph unresolved. Each Cargo command has a 300-second bound; timeout preserves partial output with replacement decoding, returns 124, and records the timeout. A launch failure returns 127 and persists the error. This bounds the direct Cargo subprocess, not every descendant process or an interrupted host. Fixtures simulate these failures without executing a compiler; actual native profiles are validated separately in CI.
+
+Five additional driver fixtures preserve every requested batch result after one failure, forward offline mode, keep the Windows backend exclusion unresolved, refuse existing/in-repository destinations before Git, propagate a fetch failure without resetting a partial checkout on retry, and reject a successful Git exit with the wrong SHA. Compiler/network execution is mocked in these fault fixtures; the separate real 20-profile CI collection remains required.

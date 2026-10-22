@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "source": "GitHub connector fetch_issue",
+  "issue": {
+    "issue_number": 731,
+    "url": "https://github.com/charmbracelet/lipgloss/issues/731",
+    "title": "Bool props above bit 31 are silently dropped on 32-bit platforms (BorderLeft, Inline)",
+    "body": "### Summary\n\nOn 32-bit platforms (`GOARCH=386`, `arm`, …), `BorderLeft(true)` and `Inline(true)` are silently ignored. Left borders vanish, and the corner-trimming pass in the border renderer then drops the corners of the remaining edges too. The library's own test suite already catches it: `TestStyleUnset` fails on current `main` under `GOARCH=386`.\n\n### Repro\n\n```go\npackage main\n\nimport (\n\t\"fmt\"\n\n\tlipgloss \"charm.land/lipgloss/v2\"\n)\n\nfunc main() {\n\ts := lipgloss.NewStyle().\n\t\tBorderStyle(lipgloss.RoundedBorder()).\n\t\tBorderTop(true).BorderRight(true).BorderBottom(true).BorderLeft(true).\n\t\tPadding(0, 1)\n\tfmt.Println(\"GetBorderLeft:\", s.GetBorderLeft())\n\tfmt.Println(s.Render(\"hello\"))\n}\n```\n\nOn `amd64`/`arm64`:\n\n```\nGetBorderLeft: true\n╭───────╮\n│ hello │\n╰───────╯\n```\n\nOn `386` (`docker run --platform linux/386 golang:1.25 …`):\n\n```\nGetBorderLeft: false\n───────╮\n hello │\n───────╯\n```\n\n### Cause\n\n`type propKey int64` with keys built from `1 << iota` puts `borderLeftKey` at bit 32 and `inlineKey` at bit 43. But bool prop *values* are folded into `attrs int` (`style.go`), and every set/get goes through an `int(k)` conversion (`get.go`, `set.go`). On a 32-bit platform `int(borderLeftKey)` truncates to `0`, so both the set and the get are no-ops. The prop-*presence* bitfield (`props`) is already `int64`, which is why `isSet` still answers true while the value reads false.\n\nBit-by-bit on 32-bit `int`:\n\n- bits 0–30 (`boldKey` … `borderRightKey`): fine\n- bit 31 (`borderBottomKey`): survives by accident, wrapping into the sign bit\n- bit 32 (`borderLeftKey`) and bit 43 (`inlineKey`): truncated to zero, silently dropped\n\n### Fix\n\nMaking `attrs` an `int64` (plus the matching casts in `get.go`/`set.go`) fixes it; the full test suite then passes under both `amd64` and `386`. PR incoming.\n\n### Context\n\nFound while building the repost CLI for `linux/386` to run it inside a browser-embedded x86 VM — every bubbletea panel lost its left border, which took a while to trace down to the style layer.\n",
+    "state": "open",
+    "created_at": "2026-08-18T14:04:22Z",
+    "updated_at": "2026-09-06T11:40:23Z"
+  }
+}

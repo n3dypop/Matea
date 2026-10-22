@@ -1,0 +1,22 @@
+   Compiling matea-terminal v0.1.0 (${REPOSITORY}/crates/matea-terminal)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.38s
+     Running unittests src/lib.rs (target/debug/deps/matea_terminal-8ef2ba856b962199)
+
+running 1 test
+test tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait ... FAILED
+
+failures:
+
+---- tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait stdout ----
+
+thread 'tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait' (3559608) panicked at crates/matea-terminal/src/lib.rs:642:9:
+new 2ms subscription fired using the 10ms wait before it existed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::subscription_started_by_input_does_not_inherit_the_previous_input_wait
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 34 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p matea-terminal --lib`

@@ -1,0 +1,43 @@
+{
+  "reference": "crossterm",
+  "sha": "9a397df6dc4f5bd3ff900bb6308b728186cb914c",
+  "dependency_version": "0.29.0",
+  "checks": [
+    {
+      "file": "src/style/types/attribute.rs",
+      "pinned_sha256": "65ec6a50426c99bf4a5a841507c63076a09f03c0036cd406e623a00453414e53",
+      "registry_sha256": "0ed8fe99f63167c2103a856f81cbf4164b3e092196387969fb160bad1c191727",
+      "normalized_file_equal": true
+    },
+    {
+      "file": "src/style.rs",
+      "pinned_sha256": "2605355e5d96d95398e35f66a11e1c6d2902b6213d19d01faf98e4ef2f695f13",
+      "registry_sha256": "0abc11eb6f593dfce73f15516419e25fbbc99b8856ac7e28c73cd8a412ae2a2e",
+      "normalized_file_equal": false
+    },
+    {
+      "file": "src/style/attributes.rs",
+      "pinned_sha256": "fd66d3220460d1edd1ee5143927a1c737ebfd646da6815b4614323e3f5a7961c",
+      "registry_sha256": "627da6384421a713b91c2a818de7ac60061f912439da3ef7723a509f94b3f7e4",
+      "normalized_file_equal": false
+    },
+    {
+      "command": "SetAttribute",
+      "normalized_write_ansi_equal": true,
+      "normalized_body_sha256": "309e6a3f97458f112dffd10804aaf4b432c2d41e4111aafb1d3ee242b30a805d"
+    },
+    {
+      "command": "SetAttributes",
+      "normalized_write_ansi_equal": true,
+      "normalized_body_sha256": "280e9a2472bf7c3096f1c9866b0dd1e364b5fb05d3053d32dbee1aab0a0dd4d3"
+    },
+    {
+      "file": "src/style/attributes.rs",
+      "normalized_difference": "Pinned adds derived Hash; all method bodies, including set/has used by workloads, are equal."
+    }
+  ],
+  "limits": [
+    "Whole repositories are not identical; pinned style.rs also adds hyperlink exports and changes color policy. Only the recorded attribute enum/bitset/command bodies are used as the reference oracle.",
+    "Source line ending normalization affects comparisons only; raw SHA256 values are retained."
+  ]
+}

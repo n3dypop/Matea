@@ -1,0 +1,34 @@
+import hashlib,json,re,subprocess
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/precise-color-inputs';rows=[json.loads(s) for s in (base/'source-fixtures.jsonl').read_text().splitlines()];assert len(rows)==720
+
+def replay(raw):
+ cells=[];fg=bg='default';index=0
+ while index<len(raw):
+  if raw[index]=='\x1b':
+   token=re.match(r'\x1b\[([0-9;]*)m',raw[index:]);assert token is not None
+   p=[int(n) if n else 0 for n in token[1].split(';')];j=0
+   while j<len(p):
+    if p[j]==0:fg=bg='default';j+=1
+    elif p[j] in [38,48]:
+     role=p[j];assert p[j+1]==2 and len(p)>=j+5;rgb=p[j+2:j+5];assert all(0<=c<=255 for c in rgb);value=''.join(f'{c:02x}' for c in rgb)
+     if role==38:fg=value
+     else:bg=value
+     j+=5
+    elif p[j]==39:fg='default';j+=1
+    elif p[j]==49:bg='default';j+=1
+    else:raise ValueError(('unsupported SGR',p))
+   index+=len(token[0])
+  else:
+   symbol=raw[index];assert symbol in ['█','▌','░'];cells.append(f'{symbol}:{fg}:{bg}');index+=1
+ return cells
+same=changed=0;differences=[]
+for r in rows:
+ assert all(type(c)is int and 0<=c<=65535 for c in r['input'])
+ if r['kind']=='gradient':
+  for color in r['output_rgba16']:assert len(color)==4 and all(type(c)is int and 0<=c<=65535 for c in color)
+ else:
+  actual=replay(r['actual_source_raw']);assert len(actual)==r['width']==len(r['canonical_cells'])
+  if actual==r['canonical_cells']:same+=1
+  else:changed+=1;differences.append({'name':r['name'],'width':r['width'],'fraction':r['fraction'],'half':r['half'],'scaled':r['scaled'],'actual_source_cells':actual,'canonical_cells':r['canonical_cells']})
+paths=['crates/matea-style/tests/fixtures/rgba16-gradients.tsv','crates/matea-widgets/tests/fixtures/rgba16-progress.tsv'];sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest();result={'schema':1,'status':'verified_canonical_source_fixtures','gradient_cases':144,'progress_cases':576,'source_frames_already_canonical':same,'frames_with_explicit_depth_fix':changed,'differences':differences,'files_sha256':{p:sha(root/p) for p in paths},'source_raw_sha256':sha(base/'source-fixtures.jsonl'),'procedure_sha256':sha(__file__),'source_module_setup':'../progress/source-color-scope/context.json','limits':['Canonical expected RGB8 uses source public RGBA16 channels divided by 256, not the flawed ANSI depth-guessing helper. Actual source bytes and decoded differences remain retained.','Only selected source input families/counts/geometry execute; no full style/alpha/module parity or performance claim.']};(base/'fixture-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(same,'actual source frames already match;',changed,'explicit canonical depth fixes')

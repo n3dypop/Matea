@@ -1,0 +1,69 @@
+import hashlib,json,os,platform,subprocess,sys
+from pathlib import Path
+ROOT=Path.cwd()
+sys.path.insert(0,str(ROOT/'scripts'))
+from measure_reader_performance import source_snapshot
+from performance_records import read_records,read_probe_outputs,summary
+from fetch_upstream_issues import atomic_json
+
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+destination=ROOT/'docs/evidence/gradients/performance'
+destination.mkdir(parents=True,exist_ok=True)
+context={'schema':1,'status':'running','runs':[],'scope':'six matched fresh RGB8 workloads and six distinct Rust streaming controls'}
+target=destination/'context.json';atomic_json(target,context)
+try:
+    head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+    sources=source_snapshot(head)
+    for filename,key in [('docs/evidence/local-validation.json','source_sha256'),('docs/evidence/quality/rust-execution-coverage.json','input_sha256')]:
+        native=json.loads((ROOT/filename).read_text())
+        if native['status']!='complete' or native[key]!=sources:raise ValueError('complete matching native/LLVM before measurement')
+    binaries={'matea':ROOT/'target/release/matea-perf-probe','upstream':Path('/private/tmp/matea-gradient-go/probe')}
+    hashes={key:digest(binary.read_bytes()) for key,binary in binaries.items()}
+    if (Path('/private/tmp/matea-gradient-go/main.go').read_bytes()!= (ROOT/'tools/perf-upstream/main.go').read_bytes() or
+        Path('/private/tmp/matea-gradient-go/go.sum').read_bytes()!=(ROOT/'tools/perf-upstream/go.sum').read_bytes()):raise ValueError('Go source/checksum cohort changed')
+    oracles={label:read_probe_outputs((ROOT/f'docs/evidence/gradients/{label}-outputs.jsonl').read_text()) for label in binaries}
+    environment={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'}
+    environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+    context.update(source_head=head,source_sha256=sources,binary_sha256=hashes,procedure_sha256=digest(Path(__file__).read_bytes()),
+        platform=platform.platform(),environment={key:environment[key] for key in ['MATEA_PERF_ITERATIONS','MATEA_PERF_MIN_SAMPLE_NS']},
+        limits=['No owned local compilation, tests, Miri, LLVM or downloads overlap timing. Remote CI is independent.',
+                'Reference/Matea/Matea/reference; all 31 intervals and calibration observations retained; no filtering/retrying/clamping.',
+                'Six fresh workloads match all RGB8 outputs, first returns and semantics. Reused controls are not fresh-workload speed ratios.',
+                'Calibrated per-operation values may use different actual counts; historical fixed-count comparator is unchanged.',
+                'One macOS arm64 host, no affinity/frequency control or RSS. Requested allocator counters are separate executions.',
+                'RGB8 input/output domain only; arbitrary high-depth/alpha/custom color semantics and whole-module parity remain pending.'])
+    atomic_json(target,context)
+    collected=[]
+    for number,label in enumerate(['upstream','matea','matea','upstream'],1):
+        result=subprocess.run([str(binaries[label]),'--gradients'],env=environment,capture_output=True,timeout=300)
+        name=f'run-{number}-{label}.jsonl';(destination/name).write_bytes(result.stdout)
+        (destination/f'run-{number}-{label}.stderr').write_bytes(result.stderr)
+        if result.returncode:raise ValueError('probe failed '+label+'; partial raw/stderr retained')
+        records=read_records(result.stdout.decode())
+        if records.keys()!=oracles[label].keys():raise ValueError('changed case set '+label)
+        for key,item in records.items():
+            if any(item[field]!=oracles[label][key][field] for field in ['semantics','output','first_return_value']):raise ValueError('changed complete output '+key)
+            cal=item.get('calibration',{})
+            if len(item['samples_ns'])!=31 or cal.get('target_ns')!=20_000_000 or not all(len(b.get('confirmations_ns',[]))==2 for b in cal.get('batches',[])):raise ValueError('unconfirmed workload '+key)
+        context['runs'].append({'probe':label,'raw':name,'raw_sha256':digest(result.stdout),'case_count':len(records)})
+        atomic_json(target,context);collected.append(records)
+        print(f'{number}: {label}, {len(records)} complete confirmed records',flush=True)
+    comparisons=[]
+    for before,after in [(0,1),(3,2)]:
+        rows=[]
+        for name,reference in collected[before].items():
+            matea=collected[after][name]
+            if any(reference[field]!=matea[field] for field in ['semantics','output','first_return_value']):raise ValueError('incomparable fresh workload '+name)
+            a,b=summary(reference),summary(matea)
+            rows.append({'case':name,'semantics':reference['semantics'],'output':reference['output'],'reference':a,'matea':b,
+                         'matea_over_reference_p50':b['p50_ns']/a['p50_ns'],'matea_over_reference_p95':b['p95_ns']/a['p95_ns']})
+        comparisons.append({'reference_run':before+1,'matea_run':after+1,'cases':rows})
+    controls=[{'run':index+1,'cases':[{'case':name,**summary(item)} for name,item in records.items() if name.startswith('gradients/reused_')]} for index,records in enumerate(collected) if index in [1,2]]
+    if source_snapshot(head)!=sources or {key:digest(binary.read_bytes()) for key,binary in binaries.items()}!=hashes:raise ValueError('source/binary changed during timing')
+    report={'schema':1,'stage':'individual_components','comparisons':comparisons,'separate_rust_controls':controls,'limits':context['limits']}
+    atomic_json(destination/'report.json',report)
+    context.update(status='complete',report_sha256=digest((destination/'report.json').read_bytes()))
+    atomic_json(target,context)
+except Exception as error:
+    context.update(status='failed',error=str(error).replace(str(ROOT),'${REPOSITORY}').replace(str(Path.home()),'${HOME}'))
+    atomic_json(target,context);print(context['error'],file=sys.stderr);raise SystemExit(1)

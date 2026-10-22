@@ -1,0 +1,51 @@
+"""Prepare fixed controls plus 256-value distributions before further selection."""
+import hashlib,json,shutil
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';out=base/'distributions';work=Path('/private/tmp/matea-clocks-distributions');work.mkdir(exist_ok=True)
+for target,source in [('baseline',base),('pairs',base),('small',base/'small-decimals'),('forced',base/'forced-integer')]:
+ shutil.copy2(source/(('baseline' if target=='baseline' else 'candidate')+'.rs.txt'),work/(target+'.rs'))
+forced=(work/'forced.rs').read_text();start=forced.index('    fn integer(');end=forced.index('    #[inline]',start)
+pairs=next(s for s in forced[start:end].splitlines() if 'const PAIRS:' in s)
+integer='''    fn integer(&mut self, mut value: u64) {
+PAIRS
+        if value < 100 {
+            if value < 10 { self.digit(value as u8); }
+            else { let pair=value as usize*2; self.prepend(&PAIRS[pair..pair+2]); }
+            return;
+        }
+        loop {
+            let pair=(value%100)as usize*2; self.prepend(&PAIRS[pair..pair+2]); value/=100;
+            if value < 100 { break; }
+        }
+        if value < 10 { self.digit(value as u8); }
+        else { let pair=value as usize*2; self.prepend(&PAIRS[pair..pair+2]); }
+    }
+'''.replace('PAIRS\n',pairs+'\n',1)
+(work/'short.rs').write_text(forced[:start]+integer+forced[end:])
+manifest=(base/'Cargo.toml.txt').read_text().replace('matea-clocks-digit-pairs','matea-clocks-distributions');(work/'Cargo.toml').write_text(manifest)
+rust=r'''#[path="MEASUREMENT"]mod measurement;
+mod baseline;mod pairs;mod small;mod forced;mod short;
+use std::{hint::black_box,time::Duration};use matea_render::Text;use matea_widgets::ClockText;
+fn library(d:Duration)->Text{ClockText(d).into_text()}
+fn data(group:usize)->Vec<Duration>{let mut seed=0x13579abcdef_u64^(group as u64);(0..256).map(|_|{seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let n=match group{0=>seed%1000,1=>1000+seed%999000,2=>1000000+seed%999000000,3=>1000000000+seed%59000000000,4=>3600000000000+seed%3600000000000000,_=>seed&0x7fffffffffffffff};Duration::from_nanos(n)}).collect()}
+fn batch<F:Fn(Duration)->Text>(values:&[Duration],operation:&F)->u64{let mut h=14695981039346656037u64;for &d in values{let value=black_box(operation(black_box(d)));h=(h^(value.len()as u64)).wrapping_mul(1099511628211);}h}
+fn run<F:Fn(Duration)->Text>(name:&str,values:&[Duration],operation:F){let output=values.iter().map(|&d|ClockText(d).into_string()).collect::<Vec<_>>().join("\n");let n=measurement::iterations(1);measurement::measure(name,n,||batch(black_box(values),&operation),&output,"fresh owned immutable duration text for each existing input; consume rolling hash of byte lengths; construction and output-oracle join outside timing; no scheduling, rendering or terminal IO");}
+fn check(d:Duration){let expected=ClockText(d).into_text();assert_eq!(baseline::owned(d),expected);assert_eq!(pairs::owned(d),expected);assert_eq!(small::owned(d),expected);assert_eq!(forced::owned(d),expected);assert_eq!(short::owned(d),expected);}
+fn main(){for line in include_str!("FIXTURES").lines(){let(n,expected)=line.split_once('\t').unwrap();let d=Duration::from_nanos(n.parse().unwrap());assert_eq!(ClockText(d).into_text().as_str(),expected);check(d);}check(Duration::MAX);let mut seed=0x247ac15de0837u64;for _ in 0..10000{seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);let secs=seed;seed=seed.wrapping_mul(6364136223846793005).wrapping_add(1);check(Duration::new(secs,(seed%1000000000)as u32));}
+ let variant=std::env::args().nth(1).expect("baseline/pairs/small/forced/short/library");
+ let mut cases:Vec<(String,Vec<Duration>)>=[("zero",0),("nanoseconds",42),("microseconds",1500),("seconds",1234567890),("hours",3723400000000),("maximum_go",9223372036854775807)].into_iter().map(|(n,v)|(format!("clock-distribution/fixed_{n}"),vec![Duration::from_nanos(v)])).collect();for(group,name)in["nanos","micros","millis","seconds","hours","mixed_u63"].into_iter().enumerate(){cases.push((format!("clock-distribution/varied_{name}"),data(group)));}
+ for(name,values)in cases{for &d in &values{check(d);}match variant.as_str(){"baseline"=>run(&name,&values,baseline::owned),"pairs"=>run(&name,&values,pairs::owned),"small"=>run(&name,&values,small::owned),"forced"=>run(&name,&values,forced::owned),"short"=>run(&name,&values,short::owned),"library"=>run(&name,&values,library),_=>panic!("unknown variant")}}
+}
+'''.replace('MEASUREMENT',str(root/'tools/perf-probe/src/measurement.rs')).replace('FIXTURES',str(root/'crates/matea-widgets/tests/fixtures/durations.tsv'))
+(work/'caller.rs').write_text(rust)
+go=r'''package main
+import("os";"strconv";"strings";"time";"charm.land/bubbles/v2/timer")
+func values(group int)[]time.Duration{seed:=uint64(0x13579abcdef)^uint64(group);out:=make([]time.Duration,256);for i:=range out{seed=seed*6364136223846793005+1;var n uint64;switch group{case 0:n=seed%1000;case 1:n=1000+seed%999000;case 2:n=1000000+seed%999000000;case 3:n=1000000000+seed%59000000000;case 4:n=3600000000000+seed%3600000000000000;default:n=seed&0x7fffffffffffffff};out[i]=time.Duration(n)};return out}
+func main(){n:=1;if v,e:=strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS"));e==nil&&v>0{n=v};type fixture struct{name string;values []time.Duration};cases:=[]fixture{};for _,f:=range []struct{name string;ns int64}{{"zero",0},{"nanoseconds",42},{"microseconds",1500},{"seconds",1234567890},{"hours",3723400000000},{"maximum_go",9223372036854775807}}{cases=append(cases,fixture{"clock-distribution/fixed_"+f.name,[]time.Duration{time.Duration(f.ns)}})};for i,name:=range []string{"nanos","micros","millis","seconds","hours","mixed_u63"}{cases=append(cases,fixture{"clock-distribution/varied_"+name,values(i)})};for _,f:=range cases{models:=make([]timer.Model,len(f.values));outputs:=make([]string,len(models));for i,d:=range f.values{models[i]=timer.New(d);outputs[i]=models[i].View()};measure(f.name,n,func()uint64{h:=uint64(14695981039346656037);for _,m:=range models{clockTextSink=m.View();h=(h^uint64(len(clockTextSink)))*1099511628211};return h},strings.Join(outputs,"\n"),"fresh owned immutable duration text for each existing input; consume rolling hash of byte lengths; construction and output-oracle join outside timing; no scheduling, rendering or terminal IO")}}
+'''
+(work/'distribution.go').write_text(go)
+shutil.copy2(base/'reference-helper.go.txt',work/'reference-helper.go')
+for name in ['go.mod','go.sum']:shutil.copy2(base/(name+'.txt'),work/name)
+context={'schema':1,'status':'prepared_unexecuted','procedure_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'candidate':'Same five isolated formatter bodies, plus actual library and actual pinned Timer.View. Short candidate only revises the small-integer branches of forced candidate. Fixed controls plus six 256-value numeric distributions are declared before timing.','limits':['No production code or assessment changes. Outputs and length hashes must match in all twelve cases before timing. Prototype code-size/inlining and actual-library boundaries remain separate controls.']}
+(work/'preparation.json').write_text(json.dumps(context,indent=2)+'\n')
+print('Prepared twelve fixed/varied fixtures, five private formatter bodies and actual Rust/Go API controls.')

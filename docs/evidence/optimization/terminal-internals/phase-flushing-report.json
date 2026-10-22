@@ -1,0 +1,613 @@
+{
+  "schema": 1,
+  "stage": "individual_modules",
+  "case_count": 33,
+  "contexts": {
+    "before": {
+      "git_head": "214263d3af13b346b2b60d39ed2f21715af8b508",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "0f6786065959903e52e63a6e01154858088e07f2eb1eff98ee090a57e3ce64ee",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/modes.rs": "2d5f9d09118ffd7e74185c82883969e3170767bbbeb3ea9cae372fc8aba56b35",
+        "crates/matea-terminal/src/signals_unix.rs": "d0368019942ac1514f1adbe5fba6ff9439983c2740bda3e446539020dc77cc6f"
+      },
+      "binary_sha256": "e787c7c19d2c9bbb689685ce78c22bcbc64f4759b101737de064316c3cafbee6",
+      "raw_sha256": "2ed1e0637cc324f38dfbecaa476ed697b992a2969aeeb49dba1d12eaf89b4791",
+      "stats_sha256": "1fce8f3a006654e52268d6e78cab7f7b24d36d7f6236549d16042d52f5b8b913",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "scope": "33 native-host private terminal cases; modes use memory sink; signal cycle includes actual sigaction syscalls; standalone process, no TTY, encoder engine or CUDA"
+    },
+    "after": {
+      "git_head": "45ac6e208a7c82d76a042a48501d90e27b143dd8",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/modes.rs": "80efb2abbbe138f7e7271d425e64c5e57657b48ee8ffa775b297221272fbbd42",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f"
+      },
+      "binary_sha256": "f894cc8969ea106a5a4503bdcc422b859711b86267e4852ca8306b55b36ab6d5",
+      "raw_sha256": "5e0c0ff65d5a8b9b50671e2180a34bda11d474830f15101347138934b91fae34",
+      "stats_sha256": "679e2ff6c64e34c954ae6a01a2f5550a1a2aa356ce452dc0a8c7df73cdd906da",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "scope": "33 native-host private terminal cases; modes use memory sink; signal cycle includes actual sigaction syscalls; standalone process, no TTY, encoder engine or CUDA"
+    }
+  },
+  "cases": [
+    {
+      "case": "ansi/color_Default_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[39m",
+      "before": {
+        "p50_ns": 46.88335,
+        "p95_ns": 65.44375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 36.5271,
+        "p95_ns": 42.3896,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Default_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[49m",
+      "before": {
+        "p50_ns": 34.73125,
+        "p95_ns": 40.0542,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 28.5271,
+        "p95_ns": 31.58545,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(0)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[30m",
+      "before": {
+        "p50_ns": 27.01875,
+        "p95_ns": 31.1625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 23.2792,
+        "p95_ns": 25.4083,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(0)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[40m",
+      "before": {
+        "p50_ns": 22.7667,
+        "p95_ns": 26.18335,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 21.6917,
+        "p95_ns": 21.90415,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(7)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[37m",
+      "before": {
+        "p50_ns": 20.0146,
+        "p95_ns": 21.95625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 20.15625,
+        "p95_ns": 20.3125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(7)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[47m",
+      "before": {
+        "p50_ns": 19.5021,
+        "p95_ns": 20.0333,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 19.33545,
+        "p95_ns": 20.30625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(8)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[90m",
+      "before": {
+        "p50_ns": 18.8917,
+        "p95_ns": 20.81875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 18.9104,
+        "p95_ns": 20.59375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(8)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[100m",
+      "before": {
+        "p50_ns": 20.11455,
+        "p95_ns": 21.4458,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 20.3333,
+        "p95_ns": 21.37085,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(15)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[97m",
+      "before": {
+        "p50_ns": 18.41875,
+        "p95_ns": 19.48125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 18.85625,
+        "p95_ns": 19.69165,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(15)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[107m",
+      "before": {
+        "p50_ns": 19.98125,
+        "p95_ns": 21.7896,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 20.4729,
+        "p95_ns": 22.04585,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(16)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[38;5;16m",
+      "before": {
+        "p50_ns": 31.6,
+        "p95_ns": 34.46045,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 31.30625,
+        "p95_ns": 32.76875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(16)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[48;5;16m",
+      "before": {
+        "p50_ns": 31.3875,
+        "p95_ns": 33.13545,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 31.31455,
+        "p95_ns": 32.7167,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(255)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[38;5;255m",
+      "before": {
+        "p50_ns": 32.5146,
+        "p95_ns": 33.6229,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 32.84375,
+        "p95_ns": 35.11875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Indexed(255)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[48;5;255m",
+      "before": {
+        "p50_ns": 32.69165,
+        "p95_ns": 35.9646,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 33.0021,
+        "p95_ns": 34.56665,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Rgb(255, 128, 42)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[38;2;255;128;42m",
+      "before": {
+        "p50_ns": 55.75835,
+        "p95_ns": 61.86875,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 55.4208,
+        "p95_ns": 60.6479,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Rgb(255, 128, 42)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[48;2;255;128;42m",
+      "before": {
+        "p50_ns": 55.77085,
+        "p95_ns": 57.8708,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 55.40415,
+        "p95_ns": 57.80625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Rgb(0, 0, 0)_bg_false",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[38;2;0;0;0m",
+      "before": {
+        "p50_ns": 48.7229,
+        "p95_ns": 51.4125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 48.6729,
+        "p95_ns": 50.89375,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/color_Rgb(0, 0, 0)_bg_true",
+      "semantics": "explicit color to preallocated ANSI bytes; input already adapted, no environment lookup, allocation, flush or terminal I/O",
+      "output": "\u001b[48;2;0;0;0m",
+      "before": {
+        "p50_ns": 48.525,
+        "p95_ns": 51.1229,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 48.7042,
+        "p95_ns": 50.9854,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/command_origin",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[1;1H",
+      "before": {
+        "p50_ns": 25.69375,
+        "p95_ns": 26.7771,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 25.3896,
+        "p95_ns": 26.63125,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/command_position",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[24;80H",
+      "before": {
+        "p50_ns": 26.68125,
+        "p95_ns": 28.3667,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 26.5354,
+        "p95_ns": 27.6729,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/command_hide",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[?25l",
+      "before": {
+        "p50_ns": 3.8896,
+        "p95_ns": 4.49585,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 2.5375,
+        "p95_ns": 3.00625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/command_show",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[?25h",
+      "before": {
+        "p50_ns": 3.9875,
+        "p95_ns": 4.1104,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 3.99795,
+        "p95_ns": 4.0625,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "ansi/command_reset",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[0m",
+      "before": {
+        "p50_ns": 36.2417,
+        "p95_ns": 37.6479,
+        "allocations": 1,
+        "allocated_bytes": 5
+      },
+      "after": {
+        "p50_ns": 37.92085,
+        "p95_ns": 40.25205,
+        "allocations": 1,
+        "allocated_bytes": 5
+      }
+    },
+    {
+      "case": "ansi/command_bold",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[1m",
+      "before": {
+        "p50_ns": 36.2104,
+        "p95_ns": 37.6292,
+        "allocations": 1,
+        "allocated_bytes": 5
+      },
+      "after": {
+        "p50_ns": 38.0604,
+        "p95_ns": 39.79795,
+        "allocations": 1,
+        "allocated_bytes": 5
+      }
+    },
+    {
+      "case": "ansi/command_underline",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[4m",
+      "before": {
+        "p50_ns": 36.14375,
+        "p95_ns": 39.10625,
+        "allocations": 1,
+        "allocated_bytes": 5
+      },
+      "after": {
+        "p50_ns": 37.78125,
+        "p95_ns": 39.7979,
+        "allocations": 1,
+        "allocated_bytes": 5
+      }
+    },
+    {
+      "case": "ansi/command_reverse",
+      "semantics": "pure Command::write_ansi bridge into preallocated byte sink; no console dispatch, flush or I/O; include checked write adapter",
+      "output": "\u001b[7m",
+      "before": {
+        "p50_ns": 36.2479,
+        "p95_ns": 38.9875,
+        "allocations": 1,
+        "allocated_bytes": 5
+      },
+      "after": {
+        "p50_ns": 37.92915,
+        "p95_ns": 39.0125,
+        "allocations": 1,
+        "allocated_bytes": 5
+      }
+    },
+    {
+      "case": "modes/native_cycle_default",
+      "semantics": "Unix native mode commands with acquisition and restoration phase flushes into preallocated counting sink; fresh leases, no actual terminal or kernel write",
+      "output": "\u001b[?1049h\u001b[?25l\u001b[0m\u001b[0m\u001b[?2004h\u001b[?1004h\u001b[?1004l\u001b[?2004l\u001b[0m\u001b[0m\u001b[?25h\u001b[?1049l",
+      "before": {
+        "p50_ns": 100.99795,
+        "p95_ns": 107.9646,
+        "allocations": 2,
+        "allocated_bytes": 10
+      },
+      "after": {
+        "p50_ns": 105.1354,
+        "p95_ns": 109.33125,
+        "allocations": 2,
+        "allocated_bytes": 10
+      }
+    },
+    {
+      "case": "modes/lease_cycle_default",
+      "semantics": "fresh mode lease acquisition and successful rollback with counting callback; no native commands, syscalls or terminal I/O",
+      "output": "10",
+      "before": {
+        "p50_ns": 6.4667,
+        "p95_ns": 6.97915,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 7.5604,
+        "p95_ns": 7.92295,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "modes/native_cycle_minimal",
+      "semantics": "Unix native mode commands with acquisition and restoration phase flushes into preallocated counting sink; fresh leases, no actual terminal or kernel write",
+      "output": "\u001b[?1049h\u001b[?25l\u001b[0m\u001b[0m\u001b[0m\u001b[0m\u001b[?25h\u001b[?1049l",
+      "before": {
+        "p50_ns": 90.93545,
+        "p95_ns": 95.8333,
+        "allocations": 2,
+        "allocated_bytes": 10
+      },
+      "after": {
+        "p50_ns": 94.51045,
+        "p95_ns": 98.77915,
+        "allocations": 2,
+        "allocated_bytes": 10
+      }
+    },
+    {
+      "case": "modes/lease_cycle_minimal",
+      "semantics": "fresh mode lease acquisition and successful rollback with counting callback; no native commands, syscalls or terminal I/O",
+      "output": "6",
+      "before": {
+        "p50_ns": 4.6083,
+        "p95_ns": 5.3479,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 5.53545,
+        "p95_ns": 6.22705,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "modes/native_cycle_full",
+      "semantics": "Unix native mode commands with acquisition and restoration phase flushes into preallocated counting sink; fresh leases, no actual terminal or kernel write",
+      "output": "\u001b[?1049h\u001b[?25l\u001b[0m\u001b[0m\u001b[?2004h\u001b[?1004h\u001b[?1000h\u001b[?1002h\u001b[?1003h\u001b[?1015h\u001b[?1006h\u001b[>1u\u001b[<1u\u001b[?1006l\u001b[?1015l\u001b[?1003l\u001b[?1002l\u001b[?1000l\u001b[?1004l\u001b[?2004l\u001b[0m\u001b[0m\u001b[?25h\u001b[?1049l",
+      "before": {
+        "p50_ns": 132.4479,
+        "p95_ns": 142.2104,
+        "allocations": 2,
+        "allocated_bytes": 10
+      },
+      "after": {
+        "p50_ns": 146.1,
+        "p95_ns": 151.69165,
+        "allocations": 2,
+        "allocated_bytes": 10
+      }
+    },
+    {
+      "case": "modes/lease_cycle_full",
+      "semantics": "fresh mode lease acquisition and successful rollback with counting callback; no native commands, syscalls or terminal I/O",
+      "output": "14",
+      "before": {
+        "p50_ns": 8.4042,
+        "p95_ns": 9.04585,
+        "allocations": 0,
+        "allocated_bytes": 0
+      },
+      "after": {
+        "p50_ns": 8.4042,
+        "p95_ns": 8.67295,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    },
+    {
+      "case": "signals/install_restore",
+      "semantics": "install and explicitly restore two previous sigactions, then drop empty guard; includes native syscalls; isolated standalone process, no signal delivery or terminal I/O",
+      "output": "SIGINT/SIGTERM previous actions restored",
+      "before": {
+        "p50_ns": 682.067932067932,
+        "p95_ns": 712.1208791208791,
+        "allocations": 1,
+        "allocated_bytes": 96
+      },
+      "after": {
+        "p50_ns": 636.8221778221779,
+        "p95_ns": 711.5384615384615,
+        "allocations": 0,
+        "allocated_bytes": 0
+      }
+    }
+  ],
+  "limits": [
+    "Rust-only matched before/after fixtures; no upstream speed ratio or full-framework-stage claim.",
+    "One macOS arm64 host, sequential release probes, 31 samples. No affinity/frequency control; retain p95 and unchanged-path regressions.",
+    "Requested System allocation counters are separate from timing and are not resident-memory measurements.",
+    "Successful measurements do not automatically raise a quality score or establish universal optimality."
+  ],
+  "reporter_sha256": "a251832b7ef1c391cdd5584613b2451189958779f40298a0951d3942eabc97da"
+}

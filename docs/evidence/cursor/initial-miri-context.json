@@ -1,0 +1,31 @@
+{
+  "source_revision": "ee553303467b3933bed6666bf3581cacb7e07cc9",
+  "source_sha256": {
+    "crates/matea-widgets/src/cursor.rs": "d5186b9bc2de8b1838f15362a06aad3f07b64dfbc5fc6ed7fc1aecb30ac494ec",
+    "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36",
+    "crates/matea-widgets/src/textinput.rs": "f9003d59ab9e51cd490611eba5eb389986dcc545403f5f7e01b21c022905cd33",
+    "crates/matea-widgets/tests/cursor.rs": "e0401162d661859307616ec82643d1a810f8ef8812b90177863f909002950ce8"
+  },
+  "command": [
+    "cargo",
+    "+nightly",
+    "miri",
+    "test",
+    "--offline",
+    "-p",
+    "matea-widgets",
+    "--test",
+    "cursor"
+  ],
+  "environment_overrides": {
+    "MIRIFLAGS": "-Zmiri-seed=0"
+  },
+  "rustc": "rustc 1.101.0-nightly (6f5da406b 2026-10-10)\nbinary: rustc\ncommit-hash: 6f5da406b56c2db6607202b63daee73aa8c61297\ncommit-date: 2026-10-10\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "miri": "miri 0.1.0 (6f5da406b5 2026-10-10)",
+  "passed_tests": 5,
+  "log_sha256": "b04bc0c82fe4232afbde779002b818aff7fc6cf054ef4ab3e9cbf80896889913",
+  "limits": [
+    "Five deterministic virtual cursor integration fixtures on one native host; no arbitrary scheduling, real kernel input or emulator proof.",
+    "First attempt used an uninstalled dated toolchain and failed before tests; separate attempt log preserved."
+  ]
+}

@@ -1,0 +1,75 @@
+"""Verify actual adopted library cohorts and the separate small-column selection."""
+import hashlib,json,statistics,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+root=Path.cwd();base=root/'docs/evidence/help-bounded';sys.path.insert(0,str(root/'scripts'))
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+prior=json.loads((base/'verification.json').read_bytes());assert prior['status']=='complete' and prior['timing_records']==348 and prior['retained_intervals']==10788 and prior['rss_children']==186
+assert prior['procedure_sha256']==sha((base/'verify.py.txt').read_bytes())
+folder=base/'adopted-small-reservation';ctx=json.loads((folder/'context.json').read_bytes());assert ctx['status']=='complete' and ctx['timing_records']==174 and ctx['retained_intervals']==5394
+attempt=folder/ctx['attempt'];assert json.loads((attempt/'context.json').read_bytes())==ctx
+assert sha((folder/ctx['raw']).read_bytes())==ctx['raw_sha256'];assert (folder/ctx['raw']).read_bytes()==(attempt/'cases.jsonl').read_bytes()
+assert ctx['procedure_sha256']==sha((folder/'measure.py.txt').read_bytes())
+for n,h in ctx['archive_sha256'].items():assert sha((folder/n).read_bytes())==h,n
+for n,h in ctx['root_input_sha256'].items():assert sha(subprocess.check_output(['git','show',ctx['source_head']+':'+n]))==h,n
+assert all(Path(n).suffix in ['.rs','.go','.toml','.lock','.mod','.sum'] for n in ctx['private_input_sha256'])
+old=subprocess.check_output(['git','show',ctx['baseline_head']+':crates/matea-widgets/src/help.rs'],text=True)
+assert (folder/'baseline/lib.rs.txt').read_text()==old.replace('use crate::key::Binding;','use matea_widgets::key::Binding;',1)
+oracle=read_probe_outputs((folder/'baseline-outputs.jsonl').read_text());source=read_probe_outputs((folder/'source-outputs.jsonl').read_text());assert len(oracle)==25 and len(source)==8
+assert read_probe_outputs((folder/'current-outputs.jsonl').read_text())==oracle
+assert all(v==oracle[k] for k,v in source.items())
+rebuilt={};rows=[];comparisons=[];raw_hashes={}
+for cohort,order in enumerate(ctx['orders'],1):
+ assert set(order)=={'baseline','source','current'} and len(order)==3
+ for variant in order:
+  p=attempt/f'cohort-{cohort}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes();raw_hashes[str(p.relative_to(folder))]=sha(p.read_bytes())
+  records=read_records(p.read_text());expected=source if variant=='source' else oracle;assert set(records)==set(expected)
+  for case,r in records.items():
+   assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20_000_000
+   for k in ['output','semantics','first_return_value']:assert r[k]==expected[case][k]
+   key=f'cohort-{cohort}/{variant}/{case}';rebuilt[key]={**r,'case':key,'source_case':case,'cohort':cohort,'variant':variant};rows.append({'cohort':cohort,'variant':variant,'case':case,**summary(r)})
+ for case in oracle:
+  before,after=[summary(rebuilt[f'cohort-{cohort}/{v}/{case}']) for v in ['baseline','current']];upstream=summary(rebuilt[f'cohort-{cohort}/source/{case}']) if case in source else None
+  comparisons.append({'cohort':cohort,'case':case,'baseline':before,'current':after,'source':upstream,'p50_worse_than_baseline':after['p50_ns']>before['p50_ns'],'p95_worse_than_baseline':after['p95_ns']>before['p95_ns'],'p50_worse_than_source':after['p50_ns']>upstream['p50_ns'] if upstream else None})
+assert rebuilt==read_records((folder/ctx['raw']).read_text()) and rows==ctx['summary'] and len(rebuilt)==174
+assert sum(len(r['samples_ns']) for r in rebuilt.values())==5394
+rss=[]
+for item in ctx['rss']:
+ variant,index=item['variant'],item['index'];p=attempt/f'rss-{variant}-{index}.jsonl';err=p.with_suffix('.stderr')
+ assert sha(p.read_bytes())==item['stdout_sha256'] and sha(err.read_bytes())==item['stderr_sha256']
+ assert read_probe_outputs(p.read_text())==(source if variant=='source' else oracle)
+ values=[int(line.split()[0]) for line in err.read_text().splitlines() if line.strip().endswith('maximum resident set size')];assert values==[item['maximum_resident_set_bytes']] and values[0]>0
+ rss.append(item)
+assert {(r['variant'],r['index']) for r in rss}=={(v,i) for v in ['baseline','current','source'] for i in range(31)}
+prototype=base/'small-column-prototype';pctx=json.loads((prototype/'context.json').read_bytes());assert pctx['status']=='complete' and pctx['timing_records']==16 and pctx['retained_intervals']==496
+pa=prototype/pctx['attempt'];assert json.loads((pa/'context.json').read_bytes())==pctx
+assert sha((prototype/pctx['raw']).read_bytes())==pctx['raw_sha256'] and (prototype/pctx['raw']).read_bytes()==(pa/'cases.jsonl').read_bytes()
+assert pctx['procedure_sha256']==sha((prototype/'measure.py.txt').read_bytes())
+for name,h in pctx['private_input_sha256'].items():assert sha((prototype/(name+'.txt')).read_bytes())==h,name
+assert pctx['production_help_sha256']==sha(subprocess.check_output(['git','show',pctx['source_head']+':crates/matea-widgets/src/help.rs']))
+original=subprocess.check_output(['git','show',pctx['source_head']+':crates/matea-widgets/src/help.rs'],text=True).replace('use crate::key::Binding;','use matea_widgets::key::Binding;',1)
+expected=original.replace('let mut items: Option<Vec<_>> = None;','let mut items: Option<Vec<_>> = (group.len() <= 4)\n                .then(|| Vec::with_capacity(group.iter().filter(|item| item.enabled).count()));',1).replace('            let width = keys\n','            if items.is_empty() {\n                continue;\n            }\n            let width = keys\n',1)
+assert (prototype/'fast/lib.rs.txt').read_text()==expected
+actual=subprocess.check_output(['git','show',ctx['source_head']+':crates/matea-widgets/src/help.rs'],text=True).replace('use crate::key::Binding;','use matea_widgets::key::Binding;',1)
+fmt=lambda value:subprocess.run(['rustfmt','--edition','2024','--emit','stdout'],input=value,text=True,capture_output=True,check=True).stdout
+assert fmt(actual)==fmt(expected),'actual adopted implementation differs from selection candidate'
+poracle=read_probe_outputs((prototype/'baseline-outputs.jsonl').read_text());assert len(poracle)==4 and read_probe_outputs((prototype/'current-outputs.jsonl').read_text())==poracle
+pr={};prows=[]
+for index,variant in enumerate(pctx['orders'],1):
+ p=pa/f'{index}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes();records=read_records(p.read_text());assert set(records)==set(poracle)
+ for case,r in records.items():
+  assert len(r['samples_ns'])==31
+  for k in ['output','semantics','first_return_value']:assert r[k]==poracle[case][k]
+  key=f'{index}/{variant}/{case}';pr[key]={**r,'case':key,'source_case':case,'variant':variant,'cohort':index};prows.append({'variant':variant,'cohort':index,'case':case,**summary(r)})
+assert pr==read_records((prototype/pctx['raw']).read_text()) and prows==pctx['summary'] and len(pr)==16
+assert ctx['binary_sha256']['source']==prior['experiments']['initial']['binary_sha256']['source']==prior['experiments']['exact_capacity']['binary_sha256']['source']
+groups={v:[r['maximum_resident_set_bytes'] for r in rss if r['variant']==v] for v in ['baseline','current','source']}
+result={'schema':1,'status':'complete','source_head':ctx['source_head'],'prior_verification_sha256':sha((base/'verification.json').read_bytes()),'adopted_context_sha256':sha((folder/'context.json').read_bytes()),
+ 'selection_context_sha256':sha((prototype/'context.json').read_bytes()),'selection_summary':prows,'adopted_summary':rows,'adopted_comparisons':comparisons,'raw_process_sha256':raw_hashes,
+ 'timing_records':538,'retained_intervals':16678,'rss_children':279,'adopted_timing_records':174,'selection_timing_records':16,
+ 'rss_summary':{v:{'min':min(a),'median':statistics.median(a),'max':max(a)} for v,a in groups.items()},'procedure_sha256':sha(Path(__file__).read_bytes()),
+ 'limits':['Three actual-source candidates and a separate private selection experiment; 25 implemented Help controls and eight matched pinned source paths, not 538 capabilities.',
+ 'The final collector snapshots compile inputs only; earlier sandbox/RSS and stdout-log classification failures stay independently recovered and unchanged. No measurement is discarded or repeated to repair a collection error.',
+ 'Native macOS arm64, default release, no affinity/frequency/ASLR control. RSS is whole-fixture process high-water memory. Other-host timing, rich Lip Gloss decorators and terminal transport remain outside this bounded qualification.']}
+(base/'final-verification.json').write_text(json.dumps(result,indent=2)+'\n');print('Verified 538 records / 16678 intervals, 279 RSS children; actual adopted source equals the selected candidate')

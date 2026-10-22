@@ -1,0 +1,19 @@
+2026-10-17T19:45:40.2514287Z go: downloading github.com/aymanbagabas/go-udiff v0.4.1
+2026-10-17T19:45:40.3240768Z go: downloading golang.org/x/exp v0.0.0-20231006140011-7918f672742d
+2026-10-17T19:45:54.2099355Z Traceback (most recent call last):
+2026-10-17T19:45:54.2099983Z   File "/home/runner/work/Matea/Matea/scripts/check_reference_paths.py", line 161, in <module>
+2026-10-17T19:45:54.2100625Z     main()
+2026-10-17T19:45:54.2101104Z   File "/home/runner/work/Matea/Matea/scripts/check_reference_paths.py", line 141, in main
+2026-10-17T19:45:54.2101712Z     fixtures=check_probes(destination,go_binary,rust_binary,environment)
+2026-10-17T19:45:54.2102652Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-17T19:45:54.2103183Z   File "/home/runner/work/Matea/Matea/scripts/check_reference_paths.py", line 89, in check_probes
+2026-10-17T19:45:54.2103883Z     require(equivalent(actual,expected_rows), "motion trajectories changed: "+flag)
+2026-10-17T19:45:54.2104317Z   File "/home/runner/work/Matea/Matea/scripts/evidence_checks.py", line 8, in require
+2026-10-17T19:45:54.2104653Z     raise AssertionError(message() if callable(message) else message)
+2026-10-17T19:45:54.2104932Z AssertionError: motion trajectories changed: --motion-fixtures
+2026-10-17T19:45:54.2246206Z ##[error]Process completed with exit code 1.
+2026-10-17T19:45:54.2294986Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-17T19:45:54.2295215Z with:
+2026-10-17T19:45:54.2295351Z   name: reference-paths-ubuntu-latest
+2026-10-17T19:45:54.2295558Z   path: /home/runner/work/_temp/matea-reference-paths/path-checks.json
+2026-10-17T19:45:54.2295771Z   if-no-files-found: warn

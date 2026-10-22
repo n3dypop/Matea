@@ -1,0 +1,42 @@
+from pathlib import Path
+import hashlib,json,math,statistics,sys
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import read_records,read_probe_outputs
+from check_ratatui_bridge import validate
+base=ROOT/'docs/evidence/ratatui-bridge';cohorts=['baseline','cached-style-ascii','batched-ascii'];data={};allout=None
+for c in cohorts:
+ ctx=json.loads((base/c/'context.json').read_text());assert ctx['status']=='complete' and ctx['source_changed_during_run']==[]
+ raw={}
+ for filename,expected in ctx['raw'].items():
+  path=base/c/filename;assert hashlib.sha256(path.read_bytes()).hexdigest()==expected
+  values=read_probe_outputs(path.read_text()) if 'outputs' in filename else read_records(path.read_text())
+  validate(values)
+  outputs={case:(v['semantics'],v['first_return_value'],v['output']) for case,v in values.items()}
+  if allout is None:allout=outputs
+  assert outputs==allout
+  raw[filename]=values
+ data[c]=(ctx,raw)
+for c in cohorts[1:]:
+ for f in ['tools/perf-probe/src/ratatui_bridge.rs','tools/perf-probe/src/measurement.rs','tools/perf-probe/src/main.rs','scripts/check_ratatui_bridge.py','scripts/performance_records.py']:
+  assert data[c][0]['execution_inputs_sha256'][f]==data['baseline'][0]['execution_inputs_sha256'][f]
+report={'schema':1,'status':'complete_bounded_comparison','cohorts':cohorts,'timing_records':144,'output_only_records':72,'case_pairs':12,'caller_unchanged':True,'rows':[],'limits':['Native aarch64-apple-darwin only; no three-OS speed comparison.','Includes complete binary projection and FNV64 serialization. These numbers do not isolate source Widget render or buffer conversion cost.','All raw cold/31-sample distributions and requested allocator bytes retained. Allocation counts include widget builders and output projection.','Source package is exact pinned Git code under the production graph; the separate frozen text reference graph remains unchanged.','Not full module/public-API parity, residency, true physical terminal/font output or maximum-performance proof.']}
+for case in allout:
+ row={'case':case,'cohorts':{}}
+ for c in cohorts:
+  row['cohorts'][c]={}
+  for mode,filenames in [('source',['1-source.jsonl','4-source.jsonl']),('matea',['2-matea.jsonl','3-matea.jsonl'])]:
+   arr=[]
+   for f in filenames:
+    r=data[c][1][f][case];s=sorted(r['samples_ns']);arr.append({'raw':c+'/'+f,'p50_ns':statistics.median(s),'p95_ns':s[math.ceil(.95*len(s))-1],'min_ns':s[0],'max_ns':s[-1],'cold_ns':r['cold_ns'],'allocations':r['allocations'],'allocated_bytes':r['allocated_bytes']})
+   row['cohorts'][c][mode]=arr
+ report['rows'].append(row)
+report['timing_records']=sum(len(v) for c in cohorts for f,v in data[c][1].items() if 'outputs' not in f)
+report['output_only_records']=sum(len(v) for c in cohorts for f,v in data[c][1].items() if 'outputs' in f)
+(base/'comparison.json').write_text(json.dumps(report,indent=2)+'\n')
+print('verified',report['timing_records'],'timing /',report['output_only_records'],'output-only records')
+for r in report['rows']:
+ def rng(c,m,k='p50_ns'):
+  vals=[v[k] for v in r['cohorts'][c][m]];return f'{min(vals)/1000:.2f}–{max(vals)/1000:.2f}'
+ old=rng('baseline','matea');new=rng('batched-ascii','matea');source=rng('batched-ascii','source')
+ b=r['cohorts']['baseline']['matea'][0];n=r['cohorts']['batched-ascii']['matea'][0];s=r['cohorts']['batched-ascii']['source'][0]
+ print(r['case'].split('/')[1],old,new,source,'alloc',b['allocations'],n['allocations'],s['allocations'])

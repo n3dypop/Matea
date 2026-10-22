@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "code_delta_verified",
+  "prior_source_head": "782f7d6d824978288ce78345f7374ca46ecf5318",
+  "current_source_head": "6ffc1eae6cadb7204c4ac45cee14579d198de8e7",
+  "only_production_changes": [
+    "Import existing Text type",
+    "Add bounded direct owned Text conversion",
+    "Use that conversion in default clock views"
+  ],
+  "existing_state_and_formatting_implementation_unchanged": true,
+  "existing_test_assertions_unchanged": true,
+  "added_test_coverage": [
+    "269 fixed strings via into_text",
+    "Rust Duration::MAX via into_text"
+  ],
+  "files": {
+    "crates/matea-widgets/src/clocks.rs": {
+      "before_sha256": "1c495f5427d3638012ce7c1f773d273a2db6dfea34f34c60fbfb1b4ccb499f68",
+      "after_sha256": "8b4e8e51a79075a6c2d6a09a3ddc3c7bc9a9209e4b945145cf5af7b3547e8c1f"
+    },
+    "crates/matea-widgets/tests/clocks.rs": {
+      "before_sha256": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+      "after_sha256": "d709b2c30e11bcaeaaf5cbdad8a89d429581d6418fcc7ba9dd936acbae4b01f1"
+    }
+  },
+  "added_api_section_sha256": "0563eaa4ca2b8d0cc69d0e9de9b43db6a411bbcb645b81af35db60624df476e9",
+  "limits": [
+    "Structural proof of unchanged clock state/legacy formatter code; current runtime, Miri and three-OS CI evidence remain separate. No issue assessment is promoted by this proof alone."
+  ]
+}

@@ -1,0 +1,31 @@
+import hashlib,json,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea')
+sys.path.insert(0,str(ROOT/'scripts'))
+from test_windows_console import validate_trace,validate_result
+from performance_records import parse_json
+RAW=Path('/private/tmp/matea-native-console-ci-artifacts/isolated-native-console')
+OUT=ROOT/'docs/evidence/windows-console-design'
+def sha(data):return hashlib.sha256(data).hexdigest()
+def check(value,message):
+ if not value:raise ValueError(message)
+run=parse_json(Path('/private/tmp/matea-native-console-ci-run.json').read_bytes());head=run['headSha']
+check(run['status']=='completed' and run['conclusion']=='success' and len(run['jobs'])==1 and run['jobs'][0]['conclusion']=='success','native job not complete')
+context=parse_json((RAW/'context.json').read_bytes());attempt=RAW/context['attempt']
+check(context==parse_json((attempt/'context.json').read_bytes()) and context['status']=='complete' and context['child_exit_code']==0,'attempt/context mismatch')
+stream=(attempt/'input.json').read_bytes();observed=(attempt/'observed.json').read_bytes()
+check(sha(stream)==context['input_sha256'] and sha(observed)==context['observed_sha256'],'native facts hash mismatch')
+trace=validate_trace(parse_json(stream));result=parse_json(observed);validate_result(result,trace)
+check(stream==subprocess.check_output(['git','show',head+':docs/evidence/windows-console-design/native-input.json'],cwd=ROOT),'native input differs from independently generated macOS fixture')
+check(context['source_sha256']['oracle']==sha(subprocess.check_output(['git','show',head+':scripts/windows_console_oracle.ps1'],cwd=ROOT)),'native oracle source mismatch')
+prior=parse_json((ROOT/'docs/evidence/viewport-controls/buffer-optimization/ci-source-bindings.json').read_bytes())
+runtime={name:digest for name,digest in prior['execution_input_sha256'].items() if name.startswith('crates/') or name in ['Cargo.toml','Cargo.lock','tools/perf-probe/Cargo.toml','.gitattributes']}
+for name,want in runtime.items():check(sha(subprocess.check_output(['git','show',head+':'+name],cwd=ROOT))==want,'runtime changed since full three-host verification: '+name)
+retained={};raw_hashes={}
+for path in sorted(RAW.rglob('*')):
+ if not path.is_file():continue
+ relative=path.relative_to(RAW);data=path.read_bytes();target=OUT/'ci'/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data.replace(b'\r\n',b'\n'))
+ raw_hashes[relative.as_posix()]=sha(data);retained[relative.as_posix()]=sha(target.read_bytes())
+report={'schema':1,'status':'complete_bounded_native_console_verification','run':run['url'],'source_head':head,'runtime_sources_unchanged_from_3_OS_CI':prior['source_head'],'runtime_source_sha256':runtime,'exact_observed_cases':36,'cells_per_case':60,'total_observed_cells':2160,'same_macOS_generated_input_bytes':True,'native_source_sha256':context['source_sha256'],'platform':context['platform'],'window_width':result['window_width'],'mode_before':result['mode_before'],'mode_after':result['mode_after'],'code_page_before':result['code_page_before'],'code_page_after':result['code_page_after'],'restored':result['restored'],'raw_artifact_sha256':raw_hashes,'retained_LF_artifact_sha256':retained,'limits':['Actual isolated Windows console VT interpretation and readback, including ASCII/BMP block glyphs and model-size growth/shrink.','The native executable hash is retained; CI checks out the recorded source and builds the release probe. This artifact does not upload the executable itself.','All production runtime source files match the independently bound c198c86 three-OS cohort. Added test/orchestration program validation is reported separately.','No modern Windows Terminal/ConPTY, SSH, IME, supplementary glyph, actual OS window resize, font appearance or historical 2022 Go environment equivalence claim.','Raw Windows artifacts are verified before explicit LF normalization for retention. No speed/latency values qualify from this test.']}
+OUT.mkdir(parents=True,exist_ok=True);(OUT/'ci-source-bindings.json').write_text(json.dumps(report,indent=2)+'\n');(OUT/'ci-run.json').write_bytes(Path('/private/tmp/matea-native-console-ci-run.json').read_bytes())
+print('36 real native rows / 2160 cells, exact independent input, oracle source and all production runtime source hashes verified; mode/cursor/attributes/code page restored.')

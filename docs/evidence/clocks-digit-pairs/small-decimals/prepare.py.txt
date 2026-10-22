@@ -1,0 +1,43 @@
+"""Retain the first failed prototype; prepare a separate small-decimal candidate."""
+import ast,hashlib,json,shutil
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs';work=Path('/private/tmp/matea-clocks-digit-pairs-small');work.mkdir(exist_ok=True)
+tree=ast.parse((base/'prepare.py.txt').read_text());names={'old_integer','new_integer','old_fraction','new_fraction'}
+nodes=[n for n in tree.body if isinstance(n,ast.Assign) and len(n.targets)==1 and isinstance(n.targets[0],ast.Name) and n.targets[0].id in names]
+assert len(nodes)==4;namespace={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'<retained-literal-replacements>','exec'),namespace)
+baseline=(base/'baseline.rs.txt').read_text();assert namespace['old_integer'] in baseline and namespace['old_fraction'] in baseline
+integer=namespace['new_integer'].replace('        while value >= 100 {','        if value < 10 {\n            self.digit(value as u8);\n            return;\n        }\n        while value >= 100 {',1)
+small=namespace['old_fraction'].removeprefix('    fn fraction(&mut self, mut value: u32, width: usize) {\n').removesuffix('\n    }')
+fraction='''    fn fraction(&mut self, mut value: u32, mut width: usize) {
+        if width <= 3 {
+SMALL
+            return;
+        }
+        if value == 0 {
+            return;
+        }
+        // One significant tenth of a second avoids eight dynamic trim steps.
+        if width == 9 && value % 100_000_000 == 0 {
+            self.digit((value / 100_000_000) as u8);
+            self.prepend(b".");
+            return;
+        }
+        while value % 10 == 0 {
+            value /= 10;
+            width -= 1;
+        }
+        let target = self.start - width;
+        self.integer(u64::from(value));
+        while self.start > target {
+            self.digit(0);
+        }
+        self.prepend(b".");
+    }'''.replace('SMALL','\n'.join('    '+s for s in small.splitlines()))
+candidate=baseline.replace(namespace['old_integer'],integer,1).replace(namespace['old_fraction'],fraction,1)
+(work/'baseline.rs').write_text(baseline);(work/'candidate.rs').write_text(candidate)
+shutil.copy2(base/'caller.rs.txt',work/'caller.rs')
+manifest=(base/'Cargo.toml.txt').read_text().replace('matea-clocks-digit-pairs','matea-clocks-small-decimals')
+(work/'Cargo.toml').write_text(manifest)
+context={'schema':1,'status':'prepared_unexecuted','procedure_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'baseline_clock_source_sha256':json.loads((base/'preparation.json').read_bytes())['clock_source_sha256'],'preceding_verification_sha256':hashlib.sha256((base/'verification.json').read_bytes()).hexdigest(),'candidate':'Keep the original bounded three-digit fractional loop, fast-path single-digit integers, retain pair integer writes for larger values, and directly encode a single significant tenth. No source, test, UTF-8 check or Text normalization changes in production.'}
+(work/'preparation.json').write_text(json.dumps(context,indent=2)+'\n')
+print('Prepared small-decimal revision; first prototype and all adverse observations retained.')

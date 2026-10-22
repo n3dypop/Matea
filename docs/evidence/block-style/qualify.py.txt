@@ -1,0 +1,26 @@
+"""Qualify the decorator increment with exact212-input native/CI provenance."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-style';sha=lambda p:hashlib.sha256((r/p).read_bytes()).hexdigest()
+def read(p):return json.loads(p.read_bytes())
+def write(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+sys.path.insert(0,str(r/'scripts'));from check_quality import validate_native,validate_coverage
+n=read(r/'docs/evidence/local-validation.json');cov=read(r/'docs/evidence/quality/rust-execution-coverage.json');validate_native(n,r);validate_coverage(cov,r)
+ci=read(b/'ci-bindings.json');assert ci['status']=='qualified' and ci['source_commit']=='f9c34b7f15391f2a1af0e53406b34423c6288780'
+assert n['source_sha256']==ci['ci_execution_input_sha256'] and len(n['source_sha256'])==212
+for name,digest in ci['raw_files'].items():assert sha(name)==digest,name
+methods=['custom_borders_validate_all_parts_and_share_whole_graphemes','explicit_zero_false_and_reset_inherit_without_padding_or_margin','presets_cover_all_thirteen_parts_and_legacy_border_conversion','sides_presence_frame_arithmetic_and_unsetting']
+raw=r/'docs/evidence/terminal-device/ci-f9c34b7-block-style'
+for host in ['ubuntu','windows','macos']:
+ log=(raw/host/'release-tests.log').read_text()
+ assert all('test decoration::tests::'+method+' ... ok' in log for method in methods),host
+f=read(b/'fixture-verification.json');f['qualification']='qualified_for_decorator_increment_only';f['ci']={'source_commit':ci['source_commit'],'run':ci['run'],'required_jobs':ci['required_jobs'],'execution_inputs':212,'source_observations_per_os':3573,'new_render_test_methods_per_os':11,'new_style_test_methods_per_os':4,'skipped_jobs':ci['skipped_jobs']};write(b/'fixture-verification.json',f)
+# Context changed,so refresh issue proofs rather than retaining stale hashes.
+subprocess.run([sys.executable,str(b/'issues-review.py.txt')],check=True)
+subprocess.run([sys.executable,'scripts/check_quality.py','--report'],check=True)
+subprocess.run([sys.executable,'docs/evidence/precise-color-inputs/native/gate-snapshot.py.txt'],check=True)
+gate=read(r/'docs/evidence/quality/final-gate-status.json');assert gate['below_high_axes']==47 and gate['pending_issue_reports']==821
+q={'schema':1,'status':'qualified_for_decorator_increment_only','active_axis':{'unit':'matea-style/lib','dimension':'reference','score':50},'reference_axis_complete':False,'below_high_axes':47,'score_changes':[],'ci_commit':ci['source_commit'],'ci_run':ci['run'],'ci_execution_input_sha256':ci['ci_execution_input_sha256'],'current_native_exactly_matches_ci':True,'assessment_only_delta_from_ci':[],'native_archive_sha256':sha('docs/evidence/block-style/native/archive.json'),'ci_bindings_sha256':sha('docs/evidence/block-style/ci-bindings.json'),'style_test_methods_verified_per_os':methods,'new_native_test_methods_per_os':15,'source_observations_per_os':3573,'miri_passed':15,'miri_seed':241,'miri_scope':'49 selected source rows,150 generated renderings and direct boundary tests;42 source-correction rows native-only','llvm_source_paths':102,'llvm_instances':109,'profiling_warnings':'three transitive hashbrown zero-hash records,diagnosed and retained','pending_issue_reports':821,'pending_style_candidates':499,'ordinary_timing_performed':False,'limits':['Partial declaration links are not full reference/export closure.','Four ordinary Foundation/MSRV jobs;reference/measurement-driver recollection skipped.','Isolated corner enhancement prototype is not included in this CI commit or qualification.','No other axis,StageB,F5,image engine,codec or CUDA advancement.'],'procedure_sha256':sha('docs/evidence/block-style/qualify.py.txt')}
+write(b/'qualification.json',q)
+a=read(b/'assessment-review.json');a.update(status='qualified',qualification='complete_for_decorator_increment_only',ci_commit=ci['source_commit'],ci_run=ci['run'],native_archive_sha256=q['native_archive_sha256'],ci_bindings_sha256=q['ci_bindings_sha256'],reference_axis_complete=False,score_changes=[]);write(b/'assessment-review.json',a)
+print('Decorator increment qualified,all212 inputs equal CI;axis remains50;47 low axes;821 pending reports')

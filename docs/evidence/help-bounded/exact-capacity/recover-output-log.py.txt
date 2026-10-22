@@ -1,0 +1,49 @@
+"""Verify completed timings/RSS after a collector misclassified its own stdout log."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('recovery refuses -O')
+root=Path.cwd();base=root/'docs/evidence/help-bounded/exact-capacity';work=Path('/private/tmp/matea-help-bounded')
+sys.path.insert(0,str(root/'scripts'))
+from measurement_run import MeasurementRun
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+prior=json.loads((base/'context.json').read_bytes());attempt=base/prior['attempt']
+assert prior['status']=='failed' and prior['completed_cases']==174 and prior['error']=='exact-measurement.log'
+drift=[n for n,h in prior['private_input_sha256'].items() if sha((work/n).read_bytes())!=h]
+assert drift==['exact-measurement.log'] and prior['private_input_sha256'][drift[0]]==sha(b'')
+assert 'Completed cohort 3, current: 25 cases' in (work/drift[0]).read_text()
+for n,h in prior['root_input_sha256'].items():assert sha((root/n).read_bytes())==h==sha(subprocess.check_output(['git','show',prior['source_head']+':'+n]))
+for n,h in prior['archive_sha256'].items():assert sha((base/n).read_bytes())==h
+compiled={n:h for n,h in prior['private_input_sha256'].items() if Path(n).suffix in ['.rs','.go','.toml','.lock','.mod','.sum']}
+assert compiled and all(sha((work/n).read_bytes())==h for n,h in compiled.items())
+binaries={'rust':Path('/private/tmp/matea-help-bounded-target/release/matea-help-bounded'),'source':work/'source-probe'}
+assert {n:sha(p.read_bytes()) for n,p in binaries.items()}==prior['binary_sha256']
+oracle=read_probe_outputs((base/'baseline-outputs.jsonl').read_text());source=read_probe_outputs((base/'source-outputs.jsonl').read_text())
+rows=[];rebuilt={}
+for cohort,order in enumerate(prior['orders'],1):
+ for variant in order:
+  p=attempt/f'cohort-{cohort}-{variant}.jsonl';assert not p.with_suffix('.stderr').read_bytes()
+  records=read_records(p.read_text());expected=source if variant=='source' else oracle;assert set(records)==set(expected)
+  for case,r in records.items():
+   assert len(r['samples_ns'])==31 and r['calibration']['target_ns']==20_000_000
+   for k in ['output','semantics','first_return_value']:assert r[k]==expected[case][k]
+   key=f'cohort-{cohort}/{variant}/{case}';rebuilt[key]={**r,'case':key,'source_case':case,'cohort':cohort,'variant':variant};rows.append({'cohort':cohort,'variant':variant,'case':case,**summary(r)})
+assert rebuilt==read_records((attempt/'cases.jsonl').read_text()) and len(rebuilt)==174
+assert sha((attempt/'cases.jsonl').read_bytes())==prior['partial_raw_sha256']
+rss=[]
+for variant in ['baseline','current','source']:
+ for index in range(31):
+  p=attempt/f'rss-{variant}-{index}.jsonl';err=p.with_suffix('.stderr');assert read_probe_outputs(p.read_text())==(source if variant=='source' else oracle)
+  values=[int(line.split()[0]) for line in err.read_text().splitlines() if line.strip().endswith('maximum resident set size')]
+  assert len(values)==1 and values[0]>0 and 'Operation not permitted' not in err.read_text()
+  rss.append({'variant':variant,'index':index,'maximum_resident_set_bytes':values[0],'stdout_sha256':sha(p.read_bytes()),'stderr_sha256':sha(err.read_bytes())})
+(base/'collector-progress.log').write_bytes((work/drift[0]).read_bytes())
+out=base/'output-log-recovery';out.mkdir(exist_ok=True)
+with MeasurementRun(out,root=root) as run:
+ run.update(source_head=prior['source_head'],root_input_sha256=prior['root_input_sha256'],binary_sha256=prior['binary_sha256'],
+  producer_context_sha256=sha((base/'context.json').read_bytes()),procedure_sha256=sha(Path(__file__).read_bytes()),summary=rows,
+  corrected_private_compile_input_sha256=compiled,misclassified_output_log=drift[0],output_log_sha256=sha((base/'collector-progress.log').read_bytes()),
+  scope='All original timing/RSS outputs independently reconstructed; no timing or RSS child rerun. The only private drift is the producer stdout log, incorrectly classified as an execution input. All actual private compile inputs, 198 root execution inputs and both binaries are unchanged. Original failure retained.')
+ for r in rebuilt.values():run.record(r)
+ run.complete(timing_records=174,retained_intervals=5394,rss=rss,rss_raw_directory='../'+prior['attempt'])
+print('Verified original 174 timing records and 93 RSS children; only collector-output misclassification corrected')

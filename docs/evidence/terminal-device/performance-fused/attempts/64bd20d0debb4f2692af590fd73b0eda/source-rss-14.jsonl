@@ -1,0 +1,4 @@
+{"case":"device/is_terminal","first_return_value":1,"output":"true","record_kind":"probe-output","semantics":"exact borrowed terminal handle query; one native state syscall, no terminal mutation"}
+{"case":"device/state","first_return_value":1,"output":"captured","record_kind":"probe-output","semantics":"capture current opaque owned native state and drop it; no terminal mutation"}
+{"case":"device/size","first_return_value":8650794,"output":"132x42","record_kind":"probe-output","semantics":"visible native terminal dimensions; one ioctl and checked platform projection"}
+{"case":"device/raw_restore","first_return_value":1,"output":"restored","record_kind":"probe-output","semantics":"capture current state, set raw, restore captured state; three native calls; Rust lease already owned outside samples"}

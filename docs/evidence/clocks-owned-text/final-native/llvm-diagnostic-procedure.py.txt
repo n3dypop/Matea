@@ -1,0 +1,14 @@
+if not __debug__:raise RuntimeError('diagnosis refuses -O')
+import hashlib,json,subprocess
+from pathlib import Path
+root=Path.cwd();base=root/'docs/evidence/clocks-owned-text/final-native';folder=root/'artifacts/quality-coverage';objects=set()
+for name in ['coverage-test.jsonl','coverage-ratatui-features.jsonl','coverage-ratatui-minimal.jsonl','coverage-build.jsonl','coverage-reference-text-build.jsonl','coverage-reference-text-test.jsonl']:
+ for line in (folder/name).read_text().splitlines():
+  try:r=json.loads(line)
+  except ValueError:continue
+  if r.get('reason')=='compiler-artifact' and r.get('executable'):objects.add(r['executable'])
+sysroot=Path(subprocess.check_output(['rustc','--print','sysroot'],text=True).strip());host=next(line.split(': ',1)[1] for line in subprocess.check_output(['rustc','-vV'],text=True).splitlines() if line.startswith('host: '));command=[str(sysroot/'lib/rustlib'/host/'bin/llvm-cov'),'export','--summary-only','--dump','--instr-profile='+str(folder/'merged.profdata')]
+for obj in sorted(objects):command+=['-object',obj]
+with open(base/'llvm-diagnostic.log','wb') as out:r=subprocess.run(command,stdout=subprocess.DEVNULL,stderr=out)
+assert r.returncode==0;lines=(base/'llvm-diagnostic.log').read_text().splitlines();m=[s for s in lines if s.startswith('hash-mismatch:')];assert len(m)==3 and all('hashbrown' in s and 'DefaultHasher' in s and 'with hash = 0x0' in s for s in m)
+result={'schema':1,'status':'diagnosed','llvm_cov_exit_code':r.returncode,'mismatch_lines':m,'log_sha256':hashlib.sha256((base/'llvm-diagnostic.log').read_bytes()).hexdigest(),'limits':['Three missing zero-hash transitive hashbrown DefaultHasher write-method profile records; no suppression or exact branch/safety/full-source claim.','All raw coverage objects/profiles remain local in artifacts/quality-coverage; canonical workspace instances stay separate.']};(base/'llvm-diagnostic.json').write_text(json.dumps(result,indent=2)+'\n');print('Three transitive hashbrown zero-hash method warnings diagnosed')

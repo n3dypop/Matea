@@ -1,0 +1,37 @@
+"""Freeze additional actual-source attribute/combining-space regression; unchanged axes."""
+from datetime import datetime,timezone
+import hashlib,json,os,subprocess
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-style';t=Path('/private/tmp/matea-block-style-go')
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+def write(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+p=b/'fixture-verification.json';c=json.loads(p.read_bytes());assert c['total_observations']==3285
+(b/'fixture-verification-before-space-regression.json.txt').write_bytes(p.read_bytes())
+env=dict(os.environ,GOCACHE='/private/tmp/matea-quality-go-cache',GOPROXY='off',GOSUMDB='off')
+assert (b/'attributes.go.txt').read_bytes()==(t/'attributes.go').read_bytes()
+subprocess.run(['go','build','-mod=mod','-o',str(t/'attributes-observe'),'attributes.go'],cwd=t,env=env,check=True)
+raw=subprocess.check_output([str(t/'attributes-observe')]);fixture=r/'crates/matea-render/tests/fixtures/block-attributes.tsv'
+assert raw==fixture.read_bytes() and len(raw.splitlines())==288
+c['observations']['block-attributes.tsv']=288;c['total_observations']=3573;c['exact_source_cells']=3531
+c['fixture_sha256'][str(fixture.relative_to(r))]=sha(raw);c['producer_sha256']['attributes']=sha((b/'attributes.go.txt').read_bytes());c['source_binary_sha256']['attributes']=sha((t/'attributes-observe').read_bytes())
+c['module_verification_sha256']=sha((b/'go-module-verification.log').read_bytes());c['qualification']='targeted native passed; final full native/Miri/LLVM/CI pending'
+c['miri']={'seed':241,'status':'final render rerun pending','style_tests':4,'render_tests':11,'source_observations_selected':49,'generated_renderings_selected':150,'ignored':0,'scope':'Style4 tests already passed at unchanged style source. New combining-space body classifier requires final11-test render rerun.49 selected of3573 source records;42 source-deviation rows native-only; direct/generated cluster/negative models run under Miri.'}
+write(p,c)
+with (b/'source-build-info.txt').open('a') as out:out.write(subprocess.check_output(['go','version','-m',str(t/'attributes-observe')],text=True).replace(str(r.parent),'${WORKSPACE}').replace(str(t),'${SCRATCH}'))
+cp=r/'docs/coverage/capabilities.json';caps=json.loads(cp.read_bytes());cap=next(x for x in caps['capabilities'] if x['id']=='style/structured-block-decoration')
+cap['notes']=cap['notes'].replace('3285','3573').replace('3243','3531')+' Additional288 source observations cover all6 underline groups,blink/faint,whitespace controls and combining-space leading style;144 initial mismatches corrected,none waived.'
+write(cp,caps)
+# Sources changed, so prior explicit-revision wording is no longer an accurate
+# current portability claim. The status-bearing evidence is separate from code.
+placeholder={'schema':1,'status':'in_progress','scope':'Pending current-source Foundation3OS+MSRV run; older color CI not current qualification.'}
+write(b/'ci-bindings.json',placeholder)
+pp=r/'docs/quality-plan.json';plan=json.loads(pp.read_bytes());changed=[]
+for unit in plan['units']:
+ if unit['id'] in ['matea-style/lib','matea-render/lib','matea/lib','matea-style/integration-tests','matea-render/integration-tests']:
+  unit['criteria']['portability']['reason']='Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification.'
+  path='docs/evidence/block-style/ci-bindings.json'
+  if path not in unit['evidence']:unit['evidence'].append(path)
+  changed.append([unit['id'],'portability'])
+write(pp,plan)
+a=json.loads((b/'assessment-review.json').read_bytes());a['reason_corrections']=changed;a['qualification']='in_progress_after_combining_space_regression';write(b/'assessment-review.json',a)
+print('3573 source observations;3531 exact,42 independent corrections;unchanged47 low axes')

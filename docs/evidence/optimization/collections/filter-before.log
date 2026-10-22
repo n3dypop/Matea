@@ -1,0 +1,31 @@
+   Compiling matea-widgets v0.1.0 (${REPOSITORY}/crates/matea-widgets)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.43s
+     Running tests/collections.rs (target/debug/deps/collections-e85ad8f9ffc2258a)
+
+running 1 test
+
+thread 'caught_filter_panics_leave_a_valid_visible_prefix_and_selection' (3040082) panicked at crates/matea-widgets/tests/collections.rs:20:17:
+assertion `left != right` failed: predicate fixture
+  left: 0
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'caught_filter_panics_leave_a_valid_visible_prefix_and_selection' (3040082) panicked at crates/matea-widgets/tests/collections.rs:20:17:
+assertion `left != right` failed: predicate fixture
+  left: 1
+ right: 1
+
+thread 'caught_filter_panics_leave_a_valid_visible_prefix_and_selection' (3040082) panicked at crates/matea-widgets/tests/collections.rs:25:9:
+assertion `left == right` failed
+  left: None
+ right: Some(0)
+test caught_filter_panics_leave_a_valid_visible_prefix_and_selection ... FAILED
+
+failures:
+
+failures:
+    caught_filter_panics_leave_a_valid_visible_prefix_and_selection
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p matea-widgets --test collections`

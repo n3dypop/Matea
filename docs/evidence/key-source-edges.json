@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "command": "upstream probe --key-source-edges",
+  "source_pins": {
+    "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+    "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+    "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+    "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+    "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+    "harness": "tools/perf-upstream/main.go"
+  },
+  "harness_sha256": "5ba360979283c93f8a1b7ee0dc696efdaa8037c3a4ba2e256e3d3f63cf59b0c9",
+  "upstream_observed": {
+    "empty_non_nil_keys_enabled": true,
+    "empty_non_nil_keys_help": {
+      "Key": "x",
+      "Desc": "execute"
+    },
+    "empty_non_nil_keys_matches": false,
+    "no_keys_enabled": false
+  },
+  "notes": "Pinned non-nil empty slice advertises enabled/help with no matching token. Matea disables empty retained vectors. Source issue #262 is formatter-dependent: generic existing-string tokens need no allocation, unlike the measured enhanced keyboard formatter."
+}

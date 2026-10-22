@@ -1,0 +1,679 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_local_and_CI",
+  "declarations": [
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 22,
+        "package": "progress",
+        "kind": "type",
+        "symbol": "ColorFunc",
+        "id": "709049bce9048591d3e0",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L22",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::ColorFn",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 37,
+        "package": "progress",
+        "kind": "const",
+        "symbol": "DefaultFullCharHalfBlock",
+        "id": "0c63eca5e90ae9746e11",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L37",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "PROGRESS_HALF_BLOCK",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 42,
+        "package": "progress",
+        "kind": "const",
+        "symbol": "DefaultFullCharFullBlock",
+        "id": "1b5eb056f289c13b616f",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L42",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "PROGRESS_FULL_BLOCK",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 46,
+        "package": "progress",
+        "kind": "const",
+        "symbol": "DefaultEmptyCharBlock",
+        "id": "751bd64c1a33bc77bb88",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L46",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "PROGRESS_EMPTY_BLOCK",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 70,
+        "package": "progress",
+        "kind": "type",
+        "symbol": "Option",
+        "id": "83f44bfd618ad0aa3acc",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L70",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "owned Progress configuration and setters",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 74,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithDefaultBlend",
+        "signature": "func() Option",
+        "id": "c209ed77fcb88c281681",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L74",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::Gradient with Gradient::new RGB8 stops",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 88,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithColors",
+        "signature": "func(colors ...color.Color) Option",
+        "id": "f94c0bae83a709c55886",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L88",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::Theme/Solid/Gradient replacement",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 125,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithColorFunc",
+        "signature": "func(fn ColorFunc) Option",
+        "id": "a6247d6a1a1bd0bb1bf9",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L125",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::ColorFn replacement",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 134,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithFillCharacters",
+        "signature": "func(full rune, empty rune) Option",
+        "id": "ad764c47a06996b911e8",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L134",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_glyphs",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 142,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithoutPercentage",
+        "signature": "func() Option",
+        "id": "9c8142d673d87310b1ba",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L142",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::show_percentage=false",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 151,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithWidth",
+        "signature": "func(w int) Option",
+        "id": "660d3664c83cd658c07e",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L151",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_width",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 162,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithSpringOptions",
+        "signature": "func(frequency, damping float64) Option",
+        "id": "b0db4af44e0795bee357",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L162",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_spring",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 174,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "WithScaled",
+        "signature": "func(enabled bool) Option",
+        "id": "1a8f8489360a626fe21d",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L174",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::Gradient::scaled",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 181,
+        "package": "progress",
+        "kind": "type",
+        "symbol": "FrameMsg",
+        "id": "35a2692e27096b439722",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L181",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ClockTick and ClockSchedule",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 187,
+        "package": "progress",
+        "kind": "type",
+        "symbol": "Model",
+        "id": "6d12ea95087f79c9dae8",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L187",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 199,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.Full",
+        "signature": "rune",
+        "id": "dfae268f65fe86308fb7",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L199",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::glyphs/set_glyphs",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 200,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.FullColor",
+        "signature": "color.Color",
+        "id": "eec682dde765647ef779",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L200",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressFill::Solid and ProgressStyles::full",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 203,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.Empty",
+        "signature": "rune",
+        "id": "08836c1ea682414b1afe",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L203",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::glyphs/set_glyphs",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 204,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.EmptyColor",
+        "signature": "color.Color",
+        "id": "8d158ad9fb63dfb2186f",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L204",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressStyles::empty",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 207,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.ShowPercentage",
+        "signature": "bool",
+        "id": "f85dc0beab16369c784c",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L207",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::show_percentage",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 208,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.PercentFormat",
+        "signature": "string",
+        "id": "68d577786612425b3b3c",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L208",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_percentage_formatter/reset_percentage_formatter",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 209,
+        "package": "progress",
+        "kind": "field",
+        "symbol": "Model.PercentageStyle",
+        "signature": "lipgloss.Style",
+        "id": "dfb27ab4bf975a844845",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L209",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "ProgressStyles::percentage",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 232,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "New",
+        "signature": "func(opts ...Option) Model",
+        "id": "61442aa90575b21cbdd1",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L232",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::new/new_at/Default",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 256,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.Init",
+        "signature": "func() tea.Cmd",
+        "id": "e0d1169ae7b01df499a1",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L256",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "composed Component with no init effect",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 264,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.Update",
+        "signature": "func(msg tea.Msg) (Model, tea.Cmd)",
+        "id": "d7ea1843db54c4064759",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L264",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::update and schedule/subscription",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 288,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.SetSpringOptions",
+        "signature": "func(frequency, damping float64)",
+        "id": "32b78b4401bbe31ee640",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L288",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_spring",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 296,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.Percent",
+        "signature": "func() float64",
+        "id": "1ac97ae5303d07b767f8",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L296",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::target (reference returns target), separate motion getter",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 304,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.SetPercent",
+        "signature": "func(p float64) tea.Cmd",
+        "id": "c0eb5b7510fbd21836fe",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L304",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_percent/set_percent_at",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 314,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.IncrPercent",
+        "signature": "func(v float64) tea.Cmd",
+        "id": "cbcd7b349e852c4a5972",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L314",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::increment",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 322,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.DecrPercent",
+        "signature": "func(v float64) tea.Cmd",
+        "id": "c79a6c59e688c494653a",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L322",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::decrement",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 328,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.View",
+        "signature": "func() string",
+        "id": "2d292bb4ad3277eb154a",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L328",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::view/frame",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 333,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.ViewAs",
+        "signature": "func(percent float64) string",
+        "id": "e2156101136014a1bb62",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L333",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::view_as/frame_as",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 342,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.SetWidth",
+        "signature": "func(w int)",
+        "id": "7bdc62d14ce49959e373",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L342",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::set_width",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 347,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "Model.Width",
+        "signature": "func() int",
+        "id": "1ab1e20216e15d33a3ee",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L347",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::width",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    },
+    {
+      "reference": {
+        "file": "progress/progress.go",
+        "line": 435,
+        "package": "progress",
+        "kind": "function",
+        "symbol": "*Model.IsAnimating",
+        "signature": "func() bool",
+        "id": "2806a7f42fd931df768d",
+        "source_url": "https://github.com/charmbracelet/bubbles/blob/c3bde0d166c2ca607d9864493453fd77bdcae7e4/progress/progress.go#L435",
+        "coverage": "unmapped"
+      },
+      "rust_contract": "Progress::is_animating with absolute-velocity rest and exact snap",
+      "correctness": "crates/matea-widgets/tests/progress.rs",
+      "performance": "performance-inline/report.json: six matched complete frames and six distinct Rust cell controls; constructor/error/scheduling and broader configuration costs pending",
+      "conditions": "no source build tags; all live controls are UI-thread owned; nonfinite/invalid geometry rejected per ADR 0046",
+      "verdict": "partial: bounded equivalents; broader color/style/lifecycle performance pending"
+    }
+  ],
+  "reference_source_sha256": {
+    "bubbles/progress/progress.go": "6f6d66605552fb9c6658b395c2f671f8019c2e8dde7d133e1f1184fd7ecf5b3c",
+    "bubbles/LICENSE": "373b3931e66627aadcfebd7771df93f3439203147e587a924508c63e20184d7f"
+  },
+  "fixtures_sha256": "255c1e220d1efc6a2be0d249c11f71a9151630b0b4a0beb90f2fdc083a9c3d56",
+  "initial_failure": {
+    "test": "all_public_reference_view_fixtures_match_cells_and_rgb8_styles",
+    "cause": "Row children used default equal-fill widths; width 8 zero-percent label lost trailing percent sign. Fixed explicit widths for solid/empty runs, gradient cells and label.",
+    "observed_left": "\u2591:606060:default,\u2591:606060:default,\u2591:606060:default, :default:default, :default:default, :default:default, :default:default,0:default:default",
+    "observed_right": "\u2591:606060:default,\u2591:606060:default,\u2591:606060:default, :default:default, :default:default, :default:default,0:default:default,%:default:default"
+  },
+  "indexed_fixture_sha256": "3c38463be1461fd5c910465efc4df5232fb9355c3cdf30959e87c6f9f44fbdff",
+  "issue_body_reads": [
+    {
+      "number": 278,
+      "url": "https://github.com/charmbracelet/bubbles/issues/278",
+      "title": "Progress bar shrinks its width on Windows",
+      "updated_at": "2022-10-20T03:41:30Z",
+      "response_sha256": "3f5a7bed5c40c41f374f1a00b0335d34789b094e496187617588fe3b2a744191",
+      "read_at_utc": "2026-10-18T10:00:52.883440+00:00",
+      "current_state": "open"
+    },
+    {
+      "number": 143,
+      "url": "https://github.com/charmbracelet/bubbles/issues/143",
+      "title": "Non-24bit color support for charmbracelet/bubbles/progress",
+      "updated_at": "2022-06-02T01:13:22Z",
+      "response_sha256": "7a714ebb64ac5f62ccaf0c65019b6bd43a7613cf28982bab20df97efa886c4e8",
+      "read_at_utc": "2026-10-18T10:00:52.883654+00:00",
+      "current_state": "open"
+    },
+    {
+      "number": 395,
+      "url": "https://github.com/charmbracelet/bubbles/issues/395",
+      "title": "Feature: Partial block characters for progress bar",
+      "updated_at": "2023-07-24T20:31:03Z",
+      "response_sha256": "b216d648532ae626bd2a9bcf912a9054b40346ac090f65fd3660e85bee79bb10",
+      "read_at_utc": "2026-10-18T10:00:52.884078+00:00",
+      "current_state": "open"
+    }
+  ],
+  "final_source_head": "019979373555e088d609533ee33a1ddc3d6db478",
+  "final_local_evidence": [
+    "native/local-validation.json",
+    "native/quality/rust-execution-coverage.json",
+    "final-miri/context.json",
+    "performance-inline/context.json"
+  ],
+  "limits": "All 35 declarations link to bounded Rust equivalents; broader color/style/lifecycle conditions, constructor/error/scheduling timing and native Windows behavior remain pending. No module parity or score promotion.",
+  "ci_evidence": "ci-source-bindings.json"
+}

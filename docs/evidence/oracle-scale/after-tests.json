@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "checks": [
+    {
+      "name": "after-tests",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "scripts/test_color_trace.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "dcf57e3d66f00c8be7204cbcf07a32e09de1065248649a87b23688e2d5c29c6f"
+    },
+    {
+      "name": "after-optimized-tests",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-O",
+        "scripts/test_color_trace.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ee63c8f8bdfcfd18efc72c1bed7f018f7e82671cd8993e26714692ac2f75c4ec"
+    }
+  ],
+  "source_sha256": {
+    "scripts/check_color_trace.py": "784a6d265b98893f011886b2c1a6d547a11ae5e6e5ad93322fce9edcc706a6a2",
+    "scripts/check_terminal_trace.py": "2be1ee10939fcce1c22a64fddad98612a514e200a005b727fdef8fc0c13689c0",
+    "scripts/test_color_trace.py": "eb312d7fa24178b0708f840b97b5898350f34f4d2b244cd239855dcf8a1366fd"
+  }
+}

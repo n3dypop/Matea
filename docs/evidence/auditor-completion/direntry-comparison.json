@@ -1,0 +1,1561 @@
+{
+  "schema": 1,
+  "reporter_sha256": "40b1b05abfbb915292716c5c1377b3cbce60fa195fb3af196941597b9c38ded3",
+  "status": "complete_bounded_balanced_comparison",
+  "source_head": "88781a7f013e5616adcd7918114b2daae96d9b71",
+  "order": [
+    "dir-control-1",
+    "direntry-1",
+    "direntry-2",
+    "dir-control-2"
+  ],
+  "contexts_sha256": {
+    "dir-control-1": "c696c19af5252e88d7999da6f5f6c166d1d60fcf6c6780ce0e4c8f1039df1d34",
+    "direntry-1": "113311526f6e84541964b3646198cf6b8e37d0a53d7496d6ce8d5648b2808752",
+    "direntry-2": "05cbdee97f2ecccff4a10a0fe3e966314616eaac9aaa469fffbe36b8bd412eb3",
+    "dir-control-2": "171e702af64f4caeb65744676a61fdacb4de87b08d07227a8ef991a9a18576b0"
+  },
+  "cohorts": {
+    "dir-control-1": {
+      "parser_outputs": {
+        "audit-parser/flat_1000": {
+          "output": "rows=1000;bytes=91783;fnv64=0bedc5d5e3232cfe",
+          "first_return_value": 859560626327071998,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_1000": {
+          "output": "rows=1001;bytes=130891;fnv64=89efb37d1689548c",
+          "first_return_value": 9939360252460356748,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_10000": {
+          "output": "rows=10000;bytes=937784;fnv64=c0ee733a224ac03e",
+          "first_return_value": 13902175793259921470,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_10000": {
+          "output": "rows=10001;bytes=1327893;fnv64=b5ee6b1d8ca8a8b6",
+          "first_return_value": 13109533339980179638,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_100000": {
+          "output": "rows=100000;bytes=9577785;fnv64=2a448d9bc3f3b3cc",
+          "first_return_value": 3045714948156273612,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_100000": {
+          "output": "rows=100001;bytes=13477895;fnv64=df39d54ba6b87562",
+          "first_return_value": 16085122065026807138,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/crossterm": {
+          "output": "rows=613;bytes=77888;fnv64=99fa2c4ec44102f9",
+          "first_return_value": 11095229348792304377,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/ratatui": {
+          "output": "rows=1960;bytes=294313;fnv64=9c4aa17cf18eaa43",
+          "first_return_value": 11261991376194021955,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        }
+      },
+      "cli": {
+        "flat_1000": {
+          "latency_ns": {
+            "p50": 7776875,
+            "p95": 8444500,
+            "min": 7690250,
+            "max": 8772209
+          },
+          "cold_ns": 8953084,
+          "exit_code": 0,
+          "stdout_sha256": "184e67912f4f128182d4ec3640c0d888b5a7962187ce303eca601d3acfd02063",
+          "stdout_bytes": 91783,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 4898816,
+            "p95": 4915200,
+            "min": 4866048,
+            "max": 4915200
+          }
+        },
+        "nested_1000": {
+          "latency_ns": {
+            "p50": 8155000,
+            "p95": 8396917,
+            "min": 8050875,
+            "max": 8464667
+          },
+          "cold_ns": 8329417,
+          "exit_code": 0,
+          "stdout_sha256": "7033a69cf1a2a6e8647f472f0985faa1f249e582850fc513cc7bbf2b0cf5dbed",
+          "stdout_bytes": 130891,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 5406720,
+            "p95": 5423104,
+            "min": 5390336,
+            "max": 5423104
+          }
+        },
+        "flat_10000": {
+          "latency_ns": {
+            "p50": 49287250,
+            "p95": 50744791,
+            "min": 48698209,
+            "max": 51494041
+          },
+          "cold_ns": 48543500,
+          "exit_code": 0,
+          "stdout_sha256": "c1f80abccb4043cdf5966ddcc7de31d6082868ffd12a23e8e8a2f9656119a577",
+          "stdout_bytes": 937784,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 21364736,
+            "p95": 21381120,
+            "min": 21331968,
+            "max": 21397504
+          }
+        },
+        "nested_10000": {
+          "latency_ns": {
+            "p50": 52704125,
+            "p95": 53688708,
+            "min": 52141875,
+            "max": 53980750
+          },
+          "cold_ns": 52622125,
+          "exit_code": 0,
+          "stdout_sha256": "4caddf1a0220201b46be5f90d6f5e85ccead7fa2ea593628377290dce0901cd5",
+          "stdout_bytes": 1327893,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 26279936,
+            "p95": 26296320,
+            "min": 26247168,
+            "max": 26296320
+          }
+        },
+        "flat_100000": {
+          "latency_ns": {
+            "p50": 470624292,
+            "p95": 476713375,
+            "min": 464930709,
+            "max": 498348459
+          },
+          "cold_ns": 473557041,
+          "exit_code": 0,
+          "stdout_sha256": "e5d6349b230a11f33644112620c60e0b8e9ea46ecbf6392d11a79332545c509c",
+          "stdout_bytes": 9577785,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 182206464,
+            "p95": 182222848,
+            "min": 182173696,
+            "max": 182222848
+          }
+        },
+        "nested_100000": {
+          "latency_ns": {
+            "p50": 512565166,
+            "p95": 530594417,
+            "min": 508481041,
+            "max": 533656000
+          },
+          "cold_ns": 511282791,
+          "exit_code": 0,
+          "stdout_sha256": "90f37bdff51e771d1f19cfa7d4cd5b941fdc4d82cff55224a20b8fa24c33657f",
+          "stdout_bytes": 13477895,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 234176512,
+            "p95": 234209280,
+            "min": 234160128,
+            "max": 234209280
+          }
+        },
+        "crossterm": {
+          "latency_ns": {
+            "p50": 32321875,
+            "p95": 33178708,
+            "min": 32106166,
+            "max": 33527000
+          },
+          "cold_ns": 33307292,
+          "exit_code": 0,
+          "stdout_sha256": "e2b3f5149a871edb4aed0b470468b5ebb5435104cfd9c730435b8ae657aed9f3",
+          "stdout_bytes": 77888,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 7471104,
+            "p95": 7553024,
+            "min": 7405568,
+            "max": 7618560
+          }
+        },
+        "ratatui": {
+          "latency_ns": {
+            "p50": 160422250,
+            "p95": 161193416,
+            "min": 159868500,
+            "max": 161484500
+          },
+          "cold_ns": 160136708,
+          "exit_code": 0,
+          "stdout_sha256": "2a9bb843d01a209111c0d6c58ae6f350c5db19ac5d757e69094e86eb71d43bf8",
+          "stdout_bytes": 294313,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 28442624,
+            "p95": 28573696,
+            "min": 28262400,
+            "max": 28590080
+          }
+        },
+        "empty": {
+          "latency_ns": {
+            "p50": 3186209,
+            "p95": 3279000,
+            "min": 3114208,
+            "max": 3289208
+          },
+          "cold_ns": 4172250,
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 1933312,
+            "p95": 1949696,
+            "min": 1916928,
+            "max": 1949696
+          }
+        },
+        "malformed": {
+          "latency_ns": {
+            "p50": 3288667,
+            "p95": 3354541,
+            "min": 3228625,
+            "max": 3572041
+          },
+          "cold_ns": 3427291,
+          "exit_code": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "5bc15a03a5bae4799c6974ca58c4abc21a08371cb92d52679e50934377fd7c8e"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2637824,
+            "max": 2654208
+          }
+        },
+        "wide_1000": {
+          "latency_ns": {
+            "p50": 23220875,
+            "p95": 23391917,
+            "min": 22931959,
+            "max": 23662125
+          },
+          "cold_ns": 31845625,
+          "exit_code": 0,
+          "stdout_sha256": "74fe3acebf0599816b8851c1a46d7500c1df6e8c4f3b516ac9f5c5077a957927",
+          "stdout_bytes": 75890,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3473408,
+            "p95": 3506176,
+            "min": 3424256,
+            "max": 3506176
+          }
+        },
+        "deep_64": {
+          "latency_ns": {
+            "p50": 4864042,
+            "p95": 4928625,
+            "min": 4783542,
+            "max": 4972000
+          },
+          "cold_ns": 5713208,
+          "exit_code": 0,
+          "stdout_sha256": "3f4dd72a17e2bd4b77766a464e06a977e5a969c01cd3af83a7ead0db38d15e33",
+          "stdout_bytes": 199,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2801664,
+            "p95": 2818048,
+            "min": 2768896,
+            "max": 2818048
+          }
+        },
+        "linked": {
+          "latency_ns": {
+            "p50": 3304375,
+            "p95": 3365584,
+            "min": 3229708,
+            "max": 3412375
+          },
+          "cold_ns": 3355416,
+          "exit_code": 0,
+          "stdout_sha256": "9408fbc3bf74b4c840b02645ace1a3780d29c265af6b2c3a71c3d48c3934252c",
+          "stdout_bytes": 72,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2637824,
+            "max": 2654208
+          }
+        },
+        "boundary_8191": {
+          "latency_ns": {
+            "p50": 3915791,
+            "p95": 3972208,
+            "min": 3827417,
+            "max": 4013458
+          },
+          "cold_ns": 3970542,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3244032,
+            "min": 3178496,
+            "max": 3244032
+          }
+        },
+        "boundary_8192": {
+          "latency_ns": {
+            "p50": 3924417,
+            "p95": 4010875,
+            "min": 3875333,
+            "max": 4030167
+          },
+          "cold_ns": 3986917,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3227648,
+            "min": 3178496,
+            "max": 3227648
+          }
+        },
+        "boundary_8193": {
+          "latency_ns": {
+            "p50": 3918500,
+            "p95": 3979959,
+            "min": 3857458,
+            "max": 3995542
+          },
+          "cold_ns": 3895208,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3244032,
+            "min": 3194880,
+            "max": 3244032
+          }
+        }
+      }
+    },
+    "direntry-1": {
+      "parser_outputs": {
+        "audit-parser/flat_1000": {
+          "output": "rows=1000;bytes=91783;fnv64=0bedc5d5e3232cfe",
+          "first_return_value": 859560626327071998,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_1000": {
+          "output": "rows=1001;bytes=130891;fnv64=89efb37d1689548c",
+          "first_return_value": 9939360252460356748,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_10000": {
+          "output": "rows=10000;bytes=937784;fnv64=c0ee733a224ac03e",
+          "first_return_value": 13902175793259921470,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_10000": {
+          "output": "rows=10001;bytes=1327893;fnv64=b5ee6b1d8ca8a8b6",
+          "first_return_value": 13109533339980179638,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_100000": {
+          "output": "rows=100000;bytes=9577785;fnv64=2a448d9bc3f3b3cc",
+          "first_return_value": 3045714948156273612,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_100000": {
+          "output": "rows=100001;bytes=13477895;fnv64=df39d54ba6b87562",
+          "first_return_value": 16085122065026807138,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/crossterm": {
+          "output": "rows=613;bytes=77888;fnv64=99fa2c4ec44102f9",
+          "first_return_value": 11095229348792304377,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/ratatui": {
+          "output": "rows=1960;bytes=294313;fnv64=9c4aa17cf18eaa43",
+          "first_return_value": 11261991376194021955,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        }
+      },
+      "cli": {
+        "flat_1000": {
+          "latency_ns": {
+            "p50": 8113708,
+            "p95": 8539541,
+            "min": 7906416,
+            "max": 8882792
+          },
+          "cold_ns": 9167083,
+          "exit_code": 0,
+          "stdout_sha256": "184e67912f4f128182d4ec3640c0d888b5a7962187ce303eca601d3acfd02063",
+          "stdout_bytes": 91783,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 4849664,
+            "p95": 4882432,
+            "min": 4800512,
+            "max": 4882432
+          }
+        },
+        "nested_1000": {
+          "latency_ns": {
+            "p50": 8507167,
+            "p95": 8693708,
+            "min": 8335667,
+            "max": 8769958
+          },
+          "cold_ns": 8270417,
+          "exit_code": 0,
+          "stdout_sha256": "7033a69cf1a2a6e8647f472f0985faa1f249e582850fc513cc7bbf2b0cf5dbed",
+          "stdout_bytes": 130891,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 5357568,
+            "p95": 5390336,
+            "min": 5308416,
+            "max": 5390336
+          }
+        },
+        "flat_10000": {
+          "latency_ns": {
+            "p50": 50106792,
+            "p95": 50852042,
+            "min": 49635000,
+            "max": 50894000
+          },
+          "cold_ns": 50099500,
+          "exit_code": 0,
+          "stdout_sha256": "c1f80abccb4043cdf5966ddcc7de31d6082868ffd12a23e8e8a2f9656119a577",
+          "stdout_bytes": 937784,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 21282816,
+            "p95": 21315584,
+            "min": 21250048,
+            "max": 21331968
+          }
+        },
+        "nested_10000": {
+          "latency_ns": {
+            "p50": 54242084,
+            "p95": 56207333,
+            "min": 53922875,
+            "max": 57269750
+          },
+          "cold_ns": 54026291,
+          "exit_code": 0,
+          "stdout_sha256": "4caddf1a0220201b46be5f90d6f5e85ccead7fa2ea593628377290dce0901cd5",
+          "stdout_bytes": 1327893,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 26165248,
+            "p95": 26214400,
+            "min": 26148864,
+            "max": 26230784
+          }
+        },
+        "flat_100000": {
+          "latency_ns": {
+            "p50": 475348417,
+            "p95": 480758667,
+            "min": 471681875,
+            "max": 482790375
+          },
+          "cold_ns": 476164917,
+          "exit_code": 0,
+          "stdout_sha256": "e5d6349b230a11f33644112620c60e0b8e9ea46ecbf6392d11a79332545c509c",
+          "stdout_bytes": 9577785,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 182108160,
+            "p95": 182140928,
+            "min": 182075392,
+            "max": 182173696
+          }
+        },
+        "nested_100000": {
+          "latency_ns": {
+            "p50": 515647833,
+            "p95": 518657625,
+            "min": 510605250,
+            "max": 519542500
+          },
+          "cold_ns": 511131916,
+          "exit_code": 0,
+          "stdout_sha256": "90f37bdff51e771d1f19cfa7d4cd5b941fdc4d82cff55224a20b8fa24c33657f",
+          "stdout_bytes": 13477895,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 234094592,
+            "p95": 234127360,
+            "min": 234078208,
+            "max": 234143744
+          }
+        },
+        "crossterm": {
+          "latency_ns": {
+            "p50": 32339334,
+            "p95": 34677333,
+            "min": 32154416,
+            "max": 35792958
+          },
+          "cold_ns": 34153834,
+          "exit_code": 0,
+          "stdout_sha256": "e2b3f5149a871edb4aed0b470468b5ebb5435104cfd9c730435b8ae657aed9f3",
+          "stdout_bytes": 77888,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 7290880,
+            "p95": 7487488,
+            "min": 7159808,
+            "max": 7585792
+          }
+        },
+        "ratatui": {
+          "latency_ns": {
+            "p50": 159453000,
+            "p95": 170328167,
+            "min": 159149083,
+            "max": 180807250
+          },
+          "cold_ns": 166340083,
+          "exit_code": 0,
+          "stdout_sha256": "2a9bb843d01a209111c0d6c58ae6f350c5db19ac5d757e69094e86eb71d43bf8",
+          "stdout_bytes": 294313,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 28016640,
+            "p95": 28442624,
+            "min": 27820032,
+            "max": 28459008
+          }
+        },
+        "empty": {
+          "latency_ns": {
+            "p50": 3354333,
+            "p95": 3483125,
+            "min": 3230291,
+            "max": 3617833
+          },
+          "cold_ns": 4252291,
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 1933312,
+            "p95": 1949696,
+            "min": 1933312,
+            "max": 1949696
+          }
+        },
+        "malformed": {
+          "latency_ns": {
+            "p50": 3433833,
+            "p95": 3520750,
+            "min": 3292333,
+            "max": 3545000
+          },
+          "cold_ns": 3477000,
+          "exit_code": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "5bc15a03a5bae4799c6974ca58c4abc21a08371cb92d52679e50934377fd7c8e"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2654208,
+            "p95": 2670592,
+            "min": 2654208,
+            "max": 2670592
+          }
+        },
+        "wide_1000": {
+          "latency_ns": {
+            "p50": 22850083,
+            "p95": 23209417,
+            "min": 22618541,
+            "max": 23759459
+          },
+          "cold_ns": 30872750,
+          "exit_code": 0,
+          "stdout_sha256": "74fe3acebf0599816b8851c1a46d7500c1df6e8c4f3b516ac9f5c5077a957927",
+          "stdout_bytes": 75890,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3407872,
+            "p95": 3424256,
+            "min": 3358720,
+            "max": 3440640
+          }
+        },
+        "deep_64": {
+          "latency_ns": {
+            "p50": 4947542,
+            "p95": 5035167,
+            "min": 4829542,
+            "max": 5037292
+          },
+          "cold_ns": 5983333,
+          "exit_code": 0,
+          "stdout_sha256": "3f4dd72a17e2bd4b77766a464e06a977e5a969c01cd3af83a7ead0db38d15e33",
+          "stdout_bytes": 199,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2785280,
+            "p95": 2801664,
+            "min": 2768896,
+            "max": 2801664
+          }
+        },
+        "linked": {
+          "latency_ns": {
+            "p50": 3415458,
+            "p95": 3513833,
+            "min": 3275250,
+            "max": 3560500
+          },
+          "cold_ns": 3477459,
+          "exit_code": 0,
+          "stdout_sha256": "9408fbc3bf74b4c840b02645ace1a3780d29c265af6b2c3a71c3d48c3934252c",
+          "stdout_bytes": 72,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2621440,
+            "max": 2654208
+          }
+        },
+        "boundary_8191": {
+          "latency_ns": {
+            "p50": 4039167,
+            "p95": 4170833,
+            "min": 3891833,
+            "max": 4179583
+          },
+          "cold_ns": 4140416,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3194880,
+            "p95": 3227648,
+            "min": 3178496,
+            "max": 3227648
+          }
+        },
+        "boundary_8192": {
+          "latency_ns": {
+            "p50": 4081084,
+            "p95": 4189417,
+            "min": 3948083,
+            "max": 4226583
+          },
+          "cold_ns": 4171500,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3194880,
+            "p95": 3227648,
+            "min": 3162112,
+            "max": 3227648
+          }
+        },
+        "boundary_8193": {
+          "latency_ns": {
+            "p50": 4076875,
+            "p95": 4154083,
+            "min": 3955625,
+            "max": 4185667
+          },
+          "cold_ns": 4154875,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3244032,
+            "min": 3178496,
+            "max": 3244032
+          }
+        }
+      }
+    },
+    "direntry-2": {
+      "parser_outputs": {
+        "audit-parser/flat_1000": {
+          "output": "rows=1000;bytes=91783;fnv64=0bedc5d5e3232cfe",
+          "first_return_value": 859560626327071998,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_1000": {
+          "output": "rows=1001;bytes=130891;fnv64=89efb37d1689548c",
+          "first_return_value": 9939360252460356748,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_10000": {
+          "output": "rows=10000;bytes=937784;fnv64=c0ee733a224ac03e",
+          "first_return_value": 13902175793259921470,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_10000": {
+          "output": "rows=10001;bytes=1327893;fnv64=b5ee6b1d8ca8a8b6",
+          "first_return_value": 13109533339980179638,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_100000": {
+          "output": "rows=100000;bytes=9577785;fnv64=2a448d9bc3f3b3cc",
+          "first_return_value": 3045714948156273612,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_100000": {
+          "output": "rows=100001;bytes=13477895;fnv64=df39d54ba6b87562",
+          "first_return_value": 16085122065026807138,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/crossterm": {
+          "output": "rows=613;bytes=77888;fnv64=99fa2c4ec44102f9",
+          "first_return_value": 11095229348792304377,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/ratatui": {
+          "output": "rows=1960;bytes=294313;fnv64=9c4aa17cf18eaa43",
+          "first_return_value": 11261991376194021955,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        }
+      },
+      "cli": {
+        "flat_1000": {
+          "latency_ns": {
+            "p50": 8183083,
+            "p95": 8850375,
+            "min": 7941208,
+            "max": 9210000
+          },
+          "cold_ns": 8959000,
+          "exit_code": 0,
+          "stdout_sha256": "184e67912f4f128182d4ec3640c0d888b5a7962187ce303eca601d3acfd02063",
+          "stdout_bytes": 91783,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 4849664,
+            "p95": 4882432,
+            "min": 4800512,
+            "max": 4882432
+          }
+        },
+        "nested_1000": {
+          "latency_ns": {
+            "p50": 8536917,
+            "p95": 8715125,
+            "min": 8437042,
+            "max": 8763041
+          },
+          "cold_ns": 8774791,
+          "exit_code": 0,
+          "stdout_sha256": "7033a69cf1a2a6e8647f472f0985faa1f249e582850fc513cc7bbf2b0cf5dbed",
+          "stdout_bytes": 130891,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 5357568,
+            "p95": 5390336,
+            "min": 5308416,
+            "max": 5390336
+          }
+        },
+        "flat_10000": {
+          "latency_ns": {
+            "p50": 50586375,
+            "p95": 51613542,
+            "min": 49996167,
+            "max": 51662542
+          },
+          "cold_ns": 50078583,
+          "exit_code": 0,
+          "stdout_sha256": "c1f80abccb4043cdf5966ddcc7de31d6082868ffd12a23e8e8a2f9656119a577",
+          "stdout_bytes": 937784,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 21282816,
+            "p95": 21331968,
+            "min": 21250048,
+            "max": 21331968
+          }
+        },
+        "nested_10000": {
+          "latency_ns": {
+            "p50": 53873542,
+            "p95": 54889916,
+            "min": 53407791,
+            "max": 55062042
+          },
+          "cold_ns": 54546208,
+          "exit_code": 0,
+          "stdout_sha256": "4caddf1a0220201b46be5f90d6f5e85ccead7fa2ea593628377290dce0901cd5",
+          "stdout_bytes": 1327893,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 26165248,
+            "p95": 26214400,
+            "min": 26148864,
+            "max": 26214400
+          }
+        },
+        "flat_100000": {
+          "latency_ns": {
+            "p50": 474735250,
+            "p95": 482208458,
+            "min": 471342000,
+            "max": 496623708
+          },
+          "cold_ns": 475994875,
+          "exit_code": 0,
+          "stdout_sha256": "e5d6349b230a11f33644112620c60e0b8e9ea46ecbf6392d11a79332545c509c",
+          "stdout_bytes": 9577785,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 182108160,
+            "p95": 182157312,
+            "min": 182075392,
+            "max": 182157312
+          }
+        },
+        "nested_100000": {
+          "latency_ns": {
+            "p50": 515252041,
+            "p95": 519086875,
+            "min": 509824875,
+            "max": 520015667
+          },
+          "cold_ns": 512667167,
+          "exit_code": 0,
+          "stdout_sha256": "90f37bdff51e771d1f19cfa7d4cd5b941fdc4d82cff55224a20b8fa24c33657f",
+          "stdout_bytes": 13477895,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 234094592,
+            "p95": 234127360,
+            "min": 234061824,
+            "max": 234127360
+          }
+        },
+        "crossterm": {
+          "latency_ns": {
+            "p50": 32312208,
+            "p95": 32555042,
+            "min": 32193209,
+            "max": 32693041
+          },
+          "cold_ns": 34462791,
+          "exit_code": 0,
+          "stdout_sha256": "e2b3f5149a871edb4aed0b470468b5ebb5435104cfd9c730435b8ae657aed9f3",
+          "stdout_bytes": 77888,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 7323648,
+            "p95": 7438336,
+            "min": 7176192,
+            "max": 7438336
+          }
+        },
+        "ratatui": {
+          "latency_ns": {
+            "p50": 159482459,
+            "p95": 161526042,
+            "min": 159043583,
+            "max": 170494500
+          },
+          "cold_ns": 160628833,
+          "exit_code": 0,
+          "stdout_sha256": "2a9bb843d01a209111c0d6c58ae6f350c5db19ac5d757e69094e86eb71d43bf8",
+          "stdout_bytes": 294313,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 28082176,
+            "p95": 28475392,
+            "min": 27803648,
+            "max": 28475392
+          }
+        },
+        "empty": {
+          "latency_ns": {
+            "p50": 3372667,
+            "p95": 3508542,
+            "min": 3189000,
+            "max": 3536167
+          },
+          "cold_ns": 4285375,
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 1933312,
+            "p95": 1949696,
+            "min": 1933312,
+            "max": 1949696
+          }
+        },
+        "malformed": {
+          "latency_ns": {
+            "p50": 3431166,
+            "p95": 3897333,
+            "min": 3316917,
+            "max": 4019583
+          },
+          "cold_ns": 3359541,
+          "exit_code": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "5bc15a03a5bae4799c6974ca58c4abc21a08371cb92d52679e50934377fd7c8e"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2654208,
+            "p95": 2670592,
+            "min": 2654208,
+            "max": 2670592
+          }
+        },
+        "wide_1000": {
+          "latency_ns": {
+            "p50": 22978875,
+            "p95": 23235167,
+            "min": 22709833,
+            "max": 23307583
+          },
+          "cold_ns": 30801625,
+          "exit_code": 0,
+          "stdout_sha256": "74fe3acebf0599816b8851c1a46d7500c1df6e8c4f3b516ac9f5c5077a957927",
+          "stdout_bytes": 75890,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3407872,
+            "p95": 3424256,
+            "min": 3358720,
+            "max": 3424256
+          }
+        },
+        "deep_64": {
+          "latency_ns": {
+            "p50": 4936250,
+            "p95": 5047333,
+            "min": 4826833,
+            "max": 5072291
+          },
+          "cold_ns": 5910042,
+          "exit_code": 0,
+          "stdout_sha256": "3f4dd72a17e2bd4b77766a464e06a977e5a969c01cd3af83a7ead0db38d15e33",
+          "stdout_bytes": 199,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2785280,
+            "p95": 2801664,
+            "min": 2768896,
+            "max": 2801664
+          }
+        },
+        "linked": {
+          "latency_ns": {
+            "p50": 3424583,
+            "p95": 3502125,
+            "min": 3307000,
+            "max": 3543583
+          },
+          "cold_ns": 3506042,
+          "exit_code": 0,
+          "stdout_sha256": "9408fbc3bf74b4c840b02645ace1a3780d29c265af6b2c3a71c3d48c3934252c",
+          "stdout_bytes": 72,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2637824,
+            "max": 2654208
+          }
+        },
+        "boundary_8191": {
+          "latency_ns": {
+            "p50": 4068417,
+            "p95": 4272625,
+            "min": 3906625,
+            "max": 4438334
+          },
+          "cold_ns": 4156958,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3194880,
+            "p95": 3227648,
+            "min": 3162112,
+            "max": 3227648
+          }
+        },
+        "boundary_8192": {
+          "latency_ns": {
+            "p50": 4074083,
+            "p95": 4172625,
+            "min": 3917666,
+            "max": 4201666
+          },
+          "cold_ns": 4093042,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3194880,
+            "p95": 3227648,
+            "min": 3162112,
+            "max": 3227648
+          }
+        },
+        "boundary_8193": {
+          "latency_ns": {
+            "p50": 4069833,
+            "p95": 4200583,
+            "min": 3939375,
+            "max": 4208792
+          },
+          "cold_ns": 4119459,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3227648,
+            "p95": 3244032,
+            "min": 3178496,
+            "max": 3244032
+          }
+        }
+      }
+    },
+    "dir-control-2": {
+      "parser_outputs": {
+        "audit-parser/flat_1000": {
+          "output": "rows=1000;bytes=91783;fnv64=0bedc5d5e3232cfe",
+          "first_return_value": 859560626327071998,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_1000": {
+          "output": "rows=1001;bytes=130891;fnv64=89efb37d1689548c",
+          "first_return_value": 9939360252460356748,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_10000": {
+          "output": "rows=10000;bytes=937784;fnv64=c0ee733a224ac03e",
+          "first_return_value": 13902175793259921470,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_10000": {
+          "output": "rows=10001;bytes=1327893;fnv64=b5ee6b1d8ca8a8b6",
+          "first_return_value": 13109533339980179638,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/flat_100000": {
+          "output": "rows=100000;bytes=9577785;fnv64=2a448d9bc3f3b3cc",
+          "first_return_value": 3045714948156273612,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/nested_100000": {
+          "output": "rows=100001;bytes=13477895;fnv64=df39d54ba6b87562",
+          "first_return_value": 16085122065026807138,
+          "semantics": "existing fixed UTF8 string -> syn AST -> lexical declaration walk -> complete owned NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/crossterm": {
+          "output": "rows=613;bytes=77888;fnv64=99fa2c4ec44102f9",
+          "first_return_value": 11095229348792304377,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        },
+        "audit-parser/ratatui": {
+          "output": "rows=1960;bytes=294313;fnv64=9c4aa17cf18eaa43",
+          "first_return_value": 11261991376194021955,
+          "semantics": "existing pinned source strings in sorted manifest order -> AST -> complete lexical declaration NDJSON -> FNV64; output allocation included; excludes source traversal, file I/O and process spawn; no compiler/cfg/macro resolution"
+        }
+      },
+      "cli": {
+        "flat_1000": {
+          "latency_ns": {
+            "p50": 8148334,
+            "p95": 8567542,
+            "min": 7929958,
+            "max": 9032250
+          },
+          "cold_ns": 9888209,
+          "exit_code": 0,
+          "stdout_sha256": "184e67912f4f128182d4ec3640c0d888b5a7962187ce303eca601d3acfd02063",
+          "stdout_bytes": 91783,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 4898816,
+            "p95": 4915200,
+            "min": 4866048,
+            "max": 4915200
+          }
+        },
+        "nested_1000": {
+          "latency_ns": {
+            "p50": 8611292,
+            "p95": 8734167,
+            "min": 8417583,
+            "max": 8775083
+          },
+          "cold_ns": 8565208,
+          "exit_code": 0,
+          "stdout_sha256": "7033a69cf1a2a6e8647f472f0985faa1f249e582850fc513cc7bbf2b0cf5dbed",
+          "stdout_bytes": 130891,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 5423104,
+            "p95": 5439488,
+            "min": 5390336,
+            "max": 5439488
+          }
+        },
+        "flat_10000": {
+          "latency_ns": {
+            "p50": 50520209,
+            "p95": 51379417,
+            "min": 49643708,
+            "max": 51481375
+          },
+          "cold_ns": 50629750,
+          "exit_code": 0,
+          "stdout_sha256": "c1f80abccb4043cdf5966ddcc7de31d6082868ffd12a23e8e8a2f9656119a577",
+          "stdout_bytes": 937784,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 21364736,
+            "p95": 21397504,
+            "min": 21315584,
+            "max": 21397504
+          }
+        },
+        "nested_10000": {
+          "latency_ns": {
+            "p50": 54011083,
+            "p95": 54627917,
+            "min": 53427333,
+            "max": 54756375
+          },
+          "cold_ns": 53649625,
+          "exit_code": 0,
+          "stdout_sha256": "4caddf1a0220201b46be5f90d6f5e85ccead7fa2ea593628377290dce0901cd5",
+          "stdout_bytes": 1327893,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 26263552,
+            "p95": 26296320,
+            "min": 26230784,
+            "max": 26296320
+          }
+        },
+        "flat_100000": {
+          "latency_ns": {
+            "p50": 478381334,
+            "p95": 480705333,
+            "min": 474953167,
+            "max": 482208708
+          },
+          "cold_ns": 477646709,
+          "exit_code": 0,
+          "stdout_sha256": "e5d6349b230a11f33644112620c60e0b8e9ea46ecbf6392d11a79332545c509c",
+          "stdout_bytes": 9577785,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 182206464,
+            "p95": 182222848,
+            "min": 182173696,
+            "max": 182239232
+          }
+        },
+        "nested_100000": {
+          "latency_ns": {
+            "p50": 517526208,
+            "p95": 521160959,
+            "min": 514359042,
+            "max": 521587625
+          },
+          "cold_ns": 515753667,
+          "exit_code": 0,
+          "stdout_sha256": "90f37bdff51e771d1f19cfa7d4cd5b941fdc4d82cff55224a20b8fa24c33657f",
+          "stdout_bytes": 13477895,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 234176512,
+            "p95": 234209280,
+            "min": 234160128,
+            "max": 234209280
+          }
+        },
+        "crossterm": {
+          "latency_ns": {
+            "p50": 32515916,
+            "p95": 32751417,
+            "min": 32404333,
+            "max": 33031458
+          },
+          "cold_ns": 34030834,
+          "exit_code": 0,
+          "stdout_sha256": "e2b3f5149a871edb4aed0b470468b5ebb5435104cfd9c730435b8ae657aed9f3",
+          "stdout_bytes": 77888,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 7471104,
+            "p95": 7618560,
+            "min": 7421952,
+            "max": 7618560
+          }
+        },
+        "ratatui": {
+          "latency_ns": {
+            "p50": 160442458,
+            "p95": 162139375,
+            "min": 159706959,
+            "max": 162176417
+          },
+          "cold_ns": 160353042,
+          "exit_code": 0,
+          "stdout_sha256": "2a9bb843d01a209111c0d6c58ae6f350c5db19ac5d757e69094e86eb71d43bf8",
+          "stdout_bytes": 294313,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 28442624,
+            "p95": 28557312,
+            "min": 28278784,
+            "max": 28557312
+          }
+        },
+        "empty": {
+          "latency_ns": {
+            "p50": 3327750,
+            "p95": 3519083,
+            "min": 3196625,
+            "max": 3574708
+          },
+          "cold_ns": 4296541,
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 1933312,
+            "p95": 1949696,
+            "min": 1916928,
+            "max": 1949696
+          }
+        },
+        "malformed": {
+          "latency_ns": {
+            "p50": 3435375,
+            "p95": 3539917,
+            "min": 3275833,
+            "max": 3588958
+          },
+          "cold_ns": 3358792,
+          "exit_code": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_bytes": 0,
+          "stderr_sha256": [
+            "5bc15a03a5bae4799c6974ca58c4abc21a08371cb92d52679e50934377fd7c8e"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2637824,
+            "max": 2654208
+          }
+        },
+        "wide_1000": {
+          "latency_ns": {
+            "p50": 24153958,
+            "p95": 25913542,
+            "min": 23686083,
+            "max": 26798583
+          },
+          "cold_ns": 31658458,
+          "exit_code": 0,
+          "stdout_sha256": "74fe3acebf0599816b8851c1a46d7500c1df6e8c4f3b516ac9f5c5077a957927",
+          "stdout_bytes": 75890,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3473408,
+            "p95": 3506176,
+            "min": 3424256,
+            "max": 3522560
+          }
+        },
+        "deep_64": {
+          "latency_ns": {
+            "p50": 5203208,
+            "p95": 8605125,
+            "min": 4995917,
+            "max": 21726375
+          },
+          "cold_ns": 6494417,
+          "exit_code": 0,
+          "stdout_sha256": "3f4dd72a17e2bd4b77766a464e06a977e5a969c01cd3af83a7ead0db38d15e33",
+          "stdout_bytes": 199,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2818048,
+            "p95": 2818048,
+            "min": 2768896,
+            "max": 2818048
+          }
+        },
+        "linked": {
+          "latency_ns": {
+            "p50": 3394416,
+            "p95": 3491375,
+            "min": 3303250,
+            "max": 3558084
+          },
+          "cold_ns": 3568583,
+          "exit_code": 0,
+          "stdout_sha256": "9408fbc3bf74b4c840b02645ace1a3780d29c265af6b2c3a71c3d48c3934252c",
+          "stdout_bytes": 72,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 2637824,
+            "p95": 2654208,
+            "min": 2621440,
+            "max": 2654208
+          }
+        },
+        "boundary_8191": {
+          "latency_ns": {
+            "p50": 4019083,
+            "p95": 4186750,
+            "min": 3913667,
+            "max": 4282833
+          },
+          "cold_ns": 4204958,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3227648,
+            "min": 3194880,
+            "max": 3244032
+          }
+        },
+        "boundary_8192": {
+          "latency_ns": {
+            "p50": 4040833,
+            "p95": 4188000,
+            "min": 3822917,
+            "max": 4189000
+          },
+          "cold_ns": 4008250,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3244032,
+            "min": 3178496,
+            "max": 3244032
+          }
+        },
+        "boundary_8193": {
+          "latency_ns": {
+            "p50": 4042584,
+            "p95": 4126833,
+            "min": 3908209,
+            "max": 4169458
+          },
+          "cold_ns": 4058125,
+          "exit_code": 0,
+          "stdout_sha256": "a45d00a0efe09fb4df93ec82936c2f33b084453f9b56b90b77ef00d903814f2a",
+          "stdout_bytes": 12102,
+          "stderr_sha256": [
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          ],
+          "peak_rss_bytes": {
+            "p50": 3211264,
+            "p95": 3244032,
+            "min": 3178496,
+            "max": 3244032
+          }
+        }
+      }
+    }
+  },
+  "parser_timing_records": 0,
+  "retained_parser_timing_source": "streaming-comparison.json (byte-identical parser/serializer prefix)",
+  "output_records": 32,
+  "complete_cli_records": 64,
+  "rss_child_observations": 1984,
+  "limits": [
+    "One macOS arm64 host; no affinity/frequency control or universal optimum. Retain each cohort and every adverse p95.",
+    "Parser includes the shared measurement allocator forwarding wrapper and complete owned output/FNV. CLI uses the ordinary allocator and includes spawn, traversal, reads, pipe transport and exit.",
+    "cold_ns is the first retained call, after correctness setup; it is not a cold filesystem or uninitialized parser claim.",
+    "Requested allocation counts/bytes are separate instrumented passes, not live or peak bytes. Distinct-child time -l observations measure actual macOS peak RSS; their timings are excluded.",
+    "Finite lexical source inventory only. Macro/cfg/compiler exports, arbitrary hostile syntax depth and concurrently mutated trees are not established.",
+    "Earlier before/after attribute-only and failed attempts remain retained; they are not substituted for these balanced matched-input cohorts."
+  ]
+}

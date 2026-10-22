@@ -1,0 +1,37 @@
+"""Archive current successful native/Miri/LLVM input scope without completing the axis."""
+import hashlib,json,re,shutil,sys
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-style';o=b/'native';o.mkdir(exist_ok=True)
+sys.path.insert(0,str(r/'scripts'));from check_quality import validate_native,validate_coverage,assess,programs
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+def read(p):return json.loads(p.read_bytes())
+def write(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+n=read(r/'docs/evidence/local-validation.json');c=read(r/'docs/evidence/quality/rust-execution-coverage.json');validate_native(n,r);validate_coverage(c,r)
+assert len(n['checks'])==47 and len(n['source_sha256'])==212 and c['input_sha256']==n['source_sha256']
+p=read(r/'docs/quality-plan.json');a=assess(p,programs(r));old=read(b/'quality-plan-before.json.txt')
+assert old['high_threshold']==p['high_threshold']==75 and old['scope']==p['scope'];assert [u['id'] for u in old['units']]==[u['id'] for u in p['units']]
+reason=[];added=[]
+for x,y in zip(old['units'],p['units']):
+ assert set(x['files'])<=set(y['files']);added+=sorted(set(y['files'])-set(x['files']))
+ for d,v in x['criteria'].items():
+  assert v['score']==y['criteria'][d]['score'],(y['id'],d)
+  if v['reason']!=y['criteria'][d]['reason']:reason.append([y['id'],d])
+assert set(added)=={'crates/matea-style/src/decoration.rs','crates/matea-render/src/block.rs','crates/matea-render/tests/blocks.rs'}
+assert len(reason)==5 and all(d=='portability' for _,d in reason)
+assert a['programs']==163 and a['review_units']==44 and len(a['below_high'])==47
+passed=lambda s:sum(map(int,re.findall(r'test result: ok\. (\d+) passed',s)))
+regular=passed((r/'docs/evidence/all-targets.log').read_text());docs=passed((r/'docs/evidence/test.log').read_text())-regular
+assert (regular,docs)==(306,17)
+py=(r/'docs/evidence/optimized-python-tests.log').read_text();assert re.search(r'Ran 151 tests',py) and 'OK (skipped=2)' in py
+assert '4 passed; 0 failed; 0 ignored' in (b/'miri-style.log').read_text();assert '11 passed; 0 failed; 0 ignored' in (b/'miri-blocks-final.log').read_text()
+f=read(b/'fixture-verification.json');assert (f['total_observations'],f['exact_source_cells'],f['independent_corrections'])==(3573,3531,42)
+for name,h in f['fixture_sha256'].items():assert sha((r/name).read_bytes())==h
+for name,h in f['miri']['input_sha256'].items():assert sha((r/name).read_bytes())==h
+for name,h in f['miri']['log_sha256'].items():assert sha((b/name).read_bytes())==h
+for check in n['checks']:shutil.copyfile(r/'docs/evidence'/check['log'],o/check['log'])
+for name,target in [('docs/evidence/local-validation.json','local-validation.json'),('docs/evidence/quality/rust-execution-coverage.json','rust-execution-coverage.json'),('docs/evidence/quality/report.json','report.json'),('docs/evidence/quality/final-gate-status.json','final-gate-status.json')]:shutil.copyfile(r/name,o/target)
+metrics={'schema':1,'native_checks':47,'execution_inputs':212,'programs':163,'review_units':44,'below_high_axes':47,'rust_tests':regular,'rust_doctests':docs,'python_tests':151,'python_conditional_skips':2,'source_observations':3573,'exact_source_observations':3531,'independent_source_corrections':42,'generated_wrap_renderings':18750,'miri_tests':15,'miri_seed':241,'miri_ignored':0,'miri_source_rows_selected':49,'miri_generated_renderings':150,'llvm_paths':len(c['files']),'llvm_instances':sum(len(f['instances']) for f in c['files']),'score_changes':[],'reference_axis_complete':False,'ordinary_timing_performed':False,'ci':'pending separate source-bound qualification'}
+assert (metrics['llvm_paths'],metrics['llvm_instances'])==(102,109)
+write(o/'metrics.json',metrics)
+write(o/'archive.json',{'schema':1,'status':'complete_native_only','source_sha256':n['source_sha256'],'new_programs':added,'score_changes':[],'reason_corrections':reason,'scope_shrunk':False,'metrics':metrics,'files':{p.name:sha(p.read_bytes()) for p in o.iterdir() if p.is_file() and p.name!='archive.json'},'procedure_sha256':sha(Path(__file__).read_bytes())})
+print(json.dumps(metrics))

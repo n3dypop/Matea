@@ -1,0 +1,50 @@
+{
+  "scope": "Matea integration defect: explicit frame color capability was overridden by Crossterm global color policy",
+  "no_color": "1",
+  "source_hashes": {
+    "crates/matea-terminal/src/lib.rs": "d6a465d9a900cb322ac3f66fe4d85a04806be12f5961ef855a3c220ce13696a0",
+    "crates/matea-terminal/src/frame.rs": "4840bb4da7a65b4dfdf0a02d34403024e87a7d5528fdf314457432ecb1f54c88"
+  },
+  "crossterm": {
+    "git": {
+      "sha1": "36d95b26a26e64b0f8c12edfe11f410a6d56a812"
+    },
+    "path_in_vcs": ""
+  },
+  "observed_sgr": {
+    "matea": {
+      "ansi16": [
+        "\u001b[0m",
+        "\u001b[0m",
+        "\u001b[m",
+        "\u001b[m"
+      ],
+      "ansi256": [
+        "\u001b[0m",
+        "\u001b[0m",
+        "\u001b[m",
+        "\u001b[m"
+      ]
+    },
+    "ultraviolet": {
+      "ansi16": [
+        "\u001b[97;40m",
+        "\u001b[m",
+        "\u001b[97;40m",
+        "\u001b[m",
+        "\u001b[97;40m",
+        "\u001b[m",
+        "\u001b[97;40m"
+      ],
+      "ansi256": [
+        "\u001b[38;5;67;48;5;132m",
+        "\u001b[m",
+        "\u001b[38;5;67;48;5;132m",
+        "\u001b[m",
+        "\u001b[38;5;67;48;5;132m",
+        "\u001b[m",
+        "\u001b[38;5;67;48;5;132m"
+      ]
+    }
+  }
+}

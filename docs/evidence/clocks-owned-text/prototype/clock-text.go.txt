@@ -1,0 +1,10 @@
+// Original caller for the actual pinned timer View and reviewed measurement helper.
+package main
+import("fmt";"os";"strconv";"strings";"time";bubbletimer "charm.land/bubbles/v2/timer")
+func main(){
+ raw,err:=os.ReadFile("/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-widgets/tests/fixtures/durations.tsv");if err!=nil{panic(err)}
+ for _,line:=range strings.Split(strings.TrimSpace(string(raw)),"\n"){parts:=strings.SplitN(line,"\t",2);n,err:=strconv.ParseInt(parts[0],10,64);if err!=nil{panic(err)};m:=bubbletimer.Model{Timeout:time.Duration(n)};if m.View()!=parts[1]{panic("source fixture changed")}}
+ n:=300;if value,err:=strconv.Atoi(os.Getenv("MATEA_PERF_ITERATIONS"));err==nil && value>0{n=value}
+ cases:=[]struct{name string;nanos int64}{{"zero",0},{"nanoseconds",42},{"microseconds",1500},{"seconds",1234567890},{"hours",3723400000000},{"maximum_go",9223372036854775807}}
+ for _,item:=range cases {m:=bubbletimer.Model{Timeout:time.Duration(item.nanos)};output:=m.View();measure("clock-text/owned_"+item.name,n,func()uint64{clockTextSink=m.View();return uint64(len(clockTextSink))},output,"fresh owned immutable duration text; default formatting; consume byte length; no scheduling, rendering or terminal IO");};fmt.Fprint(os.Stderr,"")
+}

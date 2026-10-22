@@ -1,0 +1,42 @@
+"""Bind committed owned-Text qualification; preserve every historical execution."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('binding refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-owned-text';sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs,programs,validate_native,validate_coverage
+sha=lambda b:hashlib.sha256(b).hexdigest();head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+native=json.loads((root/'docs/evidence/local-validation.json').read_bytes());coverage=json.loads((root/'docs/evidence/quality/rust-execution-coverage.json').read_bytes())
+validate_native(native,root);validate_coverage(coverage,root)
+actual={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+assert actual==native['source_sha256']==coverage['input_sha256'] and len(actual)==198 and len(programs(root))==156
+for name,h in actual.items():assert sha(subprocess.check_output(['git','show',head+':'+name]))==h,name
+ci=json.loads((base/'ci-6ffc1ea/source-bindings.json').read_bytes());assert ci['source_head']=='6ffc1eae6cadb7204c4ac45cee14579d198de8e7'
+changed=sorted(n for n in actual if actual[n]!=ci['input_sha256'][n]);assert changed==['docs/quality-plan.json']
+old=json.loads(subprocess.check_output(['git','show',ci['source_head']+':docs/quality-plan.json']));new=json.loads((root/'docs/quality-plan.json').read_bytes())
+assert old['high_threshold']==new['high_threshold']==75 and old['scope']==new['scope'] and len(old['units'])==len(new['units'])==44
+promoted=[];allowed=set(ci['qualified_units'])
+for a,b in zip(old['units'],new['units']):
+ assert a['id']==b['id'] and a['files']==b['files']
+ for dimension,value in b['criteria'].items():
+  prior=a['criteria'][dimension]
+  if prior['score']==value['score']:continue
+  assert a['id'] in allowed and dimension=='portability' and prior['score']==50 and value['score']==75
+  promoted.append([a['id'],dimension])
+assert len(promoted)==4
+performance=json.loads((base/'verification.json').read_bytes());assert performance['status']=='complete' and performance['total_timing_records']==162 and performance['total_retained_intervals']==5022
+assert performance['experiments']['library']['source_head']==ci['source_head']
+library=json.loads((base/'library/context.json').read_bytes());assert library['root_input_sha256']==ci['input_sha256']
+miri=json.loads((base/'miri/context.json').read_bytes());assert miri['status']=='complete' and len(miri['commands'])==3
+for name,h in miri['source_sha256'].items():assert actual[name]==h
+issues=json.loads((base/'issue-revalidation.json').read_bytes());assert issues['status']=='complete' and issues['reviewed_issues']==[128,237,862,867,1007]
+for name,h in issues['current_code_sha256'].items():assert actual[name]==h
+assert json.loads((root/'docs/coverage/dependency-frontier.json').read_bytes())['go_target_export_closure_reviewed'] is False
+gate=json.loads((root/'docs/evidence/quality/final-gate-status.json').read_bytes());assert gate['below_high_axes']==49 and gate['pending_issue_reports']==822 and gate['f5']=='closed'
+result={'schema':1,'status':'complete','tested_committed_inputs':head,'ci_source_head':ci['source_head'],'execution_inputs':198,'programs':156,'review_units':44,
+ 'current_inputs_match_native_and_llvm':True,'ci_different_inputs':changed,'promoted_assessments':promoted,
+ 'performance_verification_sha256':sha((base/'verification.json').read_bytes()),'miri_context_sha256':sha((base/'miri/context.json').read_bytes()),'issue_revalidation_sha256':sha((base/'issue-revalidation.json').read_bytes()),
+ 'reviewed_metadata_changes':'Four affected portability assessments return to 75 after seven exact-source CI jobs. Clock reference/design/memory reasons updated without score changes. Five pre-existing issue reviews are separately revalidated with original scopes preserved. Same program/unit inventory, threshold and pending performance scores.',
+ 'gate':{'below_high_axes':49,'pending_issue_reports':822,'go_target_export_closure_reviewed':False,'stage_a':'ongoing','stage_b':'not_started','f5':'closed'},
+ 'report_sha256':{n:sha((root/n).read_bytes()) for n in ['docs/evidence/local-validation.json','docs/evidence/quality/rust-execution-coverage.json','docs/evidence/quality/report.json','docs/evidence/quality/final-gate-status.json']},
+ 'procedure_sha256':sha(Path(__file__).read_bytes()),'limits':['Earlier CI/compiler/prototype observations retain their actual inputs and revisions. Current source differs from CI only in reviewed assessment metadata.','Finite text creation improves all eighteen measured medians; one adverse p95, four slower-than-source inputs, active scheduling and retained-memory gaps remain. No whole-module maximum, exhaustive soundness or Foundation completion claim.']}
+(base/'post-qualification-binding.json').write_text(json.dumps(result,indent=2)+'\n');print('Bound',head,'198 inputs; owned Text qualified; 49 axes remain')

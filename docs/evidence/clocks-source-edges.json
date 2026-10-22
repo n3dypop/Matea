@@ -1,0 +1,27 @@
+{
+  "reference": "bubbles",
+  "sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+  "scope": "executed public clock commands/update; no private tag mutation; reflection dispatches the sequence returned by Start; no timing superiority claim",
+  "harness_sha256": "0913905949291d8990de2d21ab39d53478e7eff58b9e2db7c03206d76dbb8b43",
+  "observations": {
+    "stopwatch_default_interval_ns": 0,
+    "stopwatch_duplicate_initial_tick": {
+      "once_ns": 1000000,
+      "twice_ns": 2000000
+    },
+    "timer_overshoot": {
+      "followup_command": true,
+      "remaining_ns": -1000000,
+      "view": "-1ms"
+    },
+    "timer_tick_from_before_pause_resume_remaining_ns": 9000000,
+    "timer_two_starts": {
+      "remaining_ns": 3000000,
+      "scheduled_ticks": 2
+    }
+  },
+  "duration_fixture": "crates/matea-widgets/tests/fixtures/durations.tsv",
+  "duration_fixture_sha256": "bbe4f99b2d21709377fd35cf2b6a8d5c0b294a0fd94988ae96c2954fe15c30c1",
+  "duration_fixture_count": 269,
+  "go": "go version go1.27.2 darwin/arm64"
+}

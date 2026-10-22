@@ -1,0 +1,49 @@
+import hashlib,json,shutil,subprocess
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+root=Path.cwd();source=Path('/private/tmp/matea-ci-941623d');out=root/'docs/evidence/precise-color-inputs/ci-941623d';out.mkdir(exist_ok=True)
+sha=lambda b:hashlib.sha256(b).hexdigest();run=json.load(open('/private/tmp/matea-precise-ci.json'))
+required={f'{kind} ({os}-latest)' for kind in ['foundation','reference-probes'] for os in ['ubuntu','macos','windows']}|{'msrv'}
+assert run['status']=='completed' and run['conclusion']=='success'
+assert {j['name'] for j in run['jobs'] if j['conclusion']=='success'}==required
+(out/'.gitattributes').write_text('** -text\n');(out/'run.json').write_text(json.dumps(run,indent=2)+'\n');shutil.copy('/private/tmp/matea-msrv-941623d.log',out/'msrv.log')
+assert 'cargo test --locked --workspace' in (out/'msrv.log').read_text() and '1.88.0' in (out/'msrv.log').read_text()
+binding=None;native={}
+for os in ['ubuntu','macos','windows']:
+ folder=source/f'native-drivers-{os}-latest';dest=out/os;dest.mkdir(exist_ok=True)
+ report=json.loads((folder/'local-validation.json').read_bytes());assert report['status']=='complete' and report['all_local_checks_passed'] is True and report['source_changed_during_run']==[]
+ assert len(report['checks'])==46 and all(c['exit_code']==0 for c in report['checks'])
+ hashes=report['source_sha256'];assert binding is None or hashes==binding;binding=hashes
+ verified=[];not_uploaded=[]
+ for c in report['checks']:
+  path=folder/c['log']
+  if path.is_file():
+   assert sha(path.read_bytes())==c['log_sha256'],(os,c['name']);verified.append(c['name']);shutil.copy(path,dest/path.name)
+  else:not_uploaded.append(c['name'])
+ shutil.copy(folder/'local-validation.json',dest/'local-validation.json')
+ coverage=next(folder.rglob('rust-execution-coverage.json'));data=json.loads(coverage.read_bytes());assert data['status']=='complete' and data['input_sha256']==hashes;shutil.copy(coverage,dest/'rust-execution-coverage.json')
+ probes=source/f'reference-paths-{os}-latest';probe=json.loads((probes/'path-checks.json').read_bytes());assert probe['source_inventories']==11 and probe['matched_cases']==84 and probe['progress_fixture_cases']==120 and probe['progress_matched_cases']==6;shutil.copy(probes/'path-checks.json',dest/'path-checks.json')
+ 
+ from sys import path as syspath
+ syspath.insert(0,str(root/'scripts'))
+ from performance_records import read_probe_outputs
+ output=read_probe_outputs((dest/'progress-api-tests.log').read_text())
+ expected={'configure_formatters_glyph_errors':5,'clocked_fraction_controls':6,'subscription_construction_reduction':1,'component_live_frame':13470074180807873566,'borrowed_iterator_boundaries':12}
+ assert set(output)=={'progress/api_'+n for n in expected}
+ for n,value in expected.items():assert output['progress/api_'+n]['first_return_value']==value and output['progress/api_'+n]['output']==str(value)
+ precise=read_probe_outputs((dest/'precise-color-tests.log').read_text())
+ oracle=read_probe_outputs((root/'docs/evidence/precise-color-inputs/performance/optimized/after-precise-outputs.jsonl').read_text())
+ assert precise==oracle and len(precise)==10
+ literals={'ctor_half':12561013804634252943,'ctor_lost_alpha':6340143887728155171,'ctor_single':14091479019096348767,'ctor_opaque':6340143887728155171,'invalid_alpha':1,'convert_13':1545}
+ for n,value in literals.items():assert precise['precise/'+n]['first_return_value']==value
+ native[os]={'precise_color_outputs_verified':10,'progress_api_outputs_verified':5,'native_checks':46,'uploaded_log_sha256_verified':verified,'logs_not_uploaded':not_uploaded,'rust_paths':len(data['files']),'rust_instances':sum(len(f['instances']) for f in data['files'])}
+for name,digest in binding.items():assert sha(subprocess.check_output(['git','show',run['headSha']+':'+name]))==digest,name
+p=root/'docs/quality-plan.json';plan=json.loads(p.read_text());qualified=[]
+for u in plan['units']:
+ if u['id'] not in ['matea-style/lib','matea-style/integration-tests','matea-widgets/progress','matea-widgets/integration-tests','tools/perf-probe','scripts/test-and-acceptance-drivers']:continue
+ assert all(sha((root/f).read_bytes())==binding.get(f) for f in u['files']),u['id']
+ u['criteria']['portability']={'score':75,'reason':'Exact current unit sources match successful 941623d Linux/Windows/macOS native, Rust 1.88 MSRV and pinned-reference CI: all seven required jobs and 46 acceptance checks per OS pass. Every native input and uploaded log is source/hash checked. Ten precise-color operations match retained complete outputs and six independent literal control oracles on all three hosts; native tests include 144 canonical gradient, 576 Progress frame and 65536 scalar quantization conditions. Miri seed 223 passes 26 tests over five targets. Shared-runner timing and physical emulator/font/IME/SSH behavior remain unqualified.'}
+ u['evidence'].append('docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json');qualified.append(u['id'])
+assert len(qualified)==6
+result={'schema':1,'source_head':run['headSha'],'run_url':run['url'],'required_successful_jobs':sorted(required),'procedure_sha256':sha(Path(__file__).read_bytes()),'input_sha256':binding,'native':native,'qualified_units':qualified,'limits':['Exact six changed-unit source qualification at 941623d; all 192 execution inputs are bound to that commit. Assessment metadata updates follow qualification and are not relabeled old CI inputs.','Uploaded raw log hashes are verified; missing artifact logs remain explicitly listed rather than claimed downloaded.','Shared-runner timing is not performance evidence; no physical-terminal, compiler-export or all-capability parity is inferred.']}
+(out/'source-bindings.json').write_text(json.dumps(result,indent=2)+'\n');p.write_text(json.dumps(plan,indent=2)+'\n');print('Qualified',qualified,'inputs',len(binding),'native hosts',list(native))

@@ -1,0 +1,83 @@
+import hashlib,json,os,platform,statistics,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea')
+sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_probe_outputs,read_records
+from measurement_run import MeasurementRun,atomic_bytes,json_bytes
+OUT=ROOT/'docs/evidence/viewport-horizontal'/sys.argv[1]
+FLAG=sys.argv[2] if len(sys.argv)>2 else '--viewport-geometry'
+GO=Path('/private/tmp/matea-horizontal-go')
+BIN={'matea':ROOT/'target/release/matea-perf-probe','upstream':GO/'upstream'}
+def require(value,message):
+    if not value:raise ValueError(message)
+def digest(data):return hashlib.sha256(data).hexdigest()
+def snapshot():
+    head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    known={name:digest((ROOT/name).read_bytes()) for name in sorted(execution_inputs(ROOT))}
+    for name,sha in known.items():require(digest(subprocess.check_output(['git','show',head+':'+name],cwd=ROOT))==sha,'uncommitted input '+name)
+    return head,known
+def fnv(text,x=None,y=None):
+    value=14695981039346656037
+    raw=text.encode('utf-8')
+    if x is not None:raw+=x.to_bytes(8,'little')+y.to_bytes(8,'little')
+    for byte in raw:value=((value^byte)*1099511628211)&((1<<64)-1)
+    return value
+def check_output(data):
+    for name,row in data.items():
+        if '/borrowed_' in name:expected=fnv(row['output'])
+        else:
+            x,y,text=row['output'].split(';',2)
+            require(x.startswith('x=') and y.startswith('y=') and text.startswith('text='),'output encoding')
+            expected=fnv(text[5:],int(x[2:]),int(y[2:]))
+        require(row['first_return_value']==expected,'independent complete consumption mismatch '+name)
+def summary(row):
+    samples=row['samples_ns']
+    return {'cold_ns':row['cold_ns'],'p50_ns':statistics.median(samples),'p95_ns':sorted(samples)[29],'allocations':row['allocations'],'allocated_bytes':row['allocated_bytes'],'iterations_per_sample':row['iterations_per_sample']}
+with MeasurementRun(OUT,raw_name='run-manifest.jsonl',root=ROOT) as run:
+    head,known=snapshot();native=json.loads((ROOT/'docs/evidence/viewport-horizontal/native-initial/local-validation.json').read_bytes())
+    require(native['status']=='complete' and native['all_local_checks_passed'] and native['source_changed_during_run']==[] and set(native['source_sha256'])==set(known),'native qualification state')
+    changed=[name for name,sha in known.items() if native['source_sha256'][name]!=sha]
+    require(set(changed)<={'tools/perf-probe/src/main.rs','tools/perf-upstream/main.go','scripts/measure_rust_coverage.py'},'unqualified production/input changes '+str(changed))
+    run.update(qualification={'native_33_check_inputs_unchanged_except':changed,'production_sources_match_0ba8b1a_native_cohort':not any(name.startswith('crates/') for name in changed),'harness_variants':'Both flags: 14 exact Go/Rust outputs/states plus four distinct controls. All-target Clippy, eight Rust harness tests and Go test succeeded.','qualification_log_sha256':digest((ROOT/'docs/evidence/viewport-horizontal/harness-variety/qualification.log').read_bytes())})
+    pins=json.loads((ROOT/'docs/upstream-lock.json').read_bytes());reference={}
+    for pin in pins:
+        if pin['name'] not in ['bubbles','bubbletea','lipgloss','ultraviolet','harmonica']:continue
+        directory=ROOT.parent/'references'/pin['name']
+        require(subprocess.check_output(['git','rev-parse','HEAD'],cwd=directory,text=True).strip()==pin['sha'],'reference pin')
+        require(not subprocess.check_output(['git','status','--porcelain'],cwd=directory),'dirty reference')
+        reference[pin['name']]=pin['sha']
+    external={}
+    for filename in ['main.go','main_test.go','go.mod','go.sum','source-pin.json']:
+        raw=(GO/filename).read_bytes();external[filename]=digest(raw);atomic_bytes(OUT/run.attempt/filename.replace('.go','.go.txt').replace('.mod','.mod.txt').replace('.sum','.sum.txt'),raw)
+    require(external['main.go']==known['tools/perf-upstream/main.go'] and external['main_test.go']==known['tools/perf-upstream/main_test.go'] and external['go.sum']==known['tools/perf-upstream/go.sum'],'external Go caller/source checksum mismatch')
+    binary={name:digest(path.read_bytes()) for name,path in BIN.items()}
+    run.update(source_head=head,source_sha256=known,reference_sha=reference,external_input_sha256=external,binary_sha256=binary,platform=platform.platform(),rustc=subprocess.check_output(['rustc','-Vv'],text=True),go=subprocess.check_output(['go','version'],text=True),parameters={'mode':FLAG,'starting_iterations':300,'target_ns':20_000_000,'confirmations':3,'positive_samples':31},limits=['Native macOS arm64 only, sequential reference/Matea/Matea/reference. No owned build/test/Miri/LLVM/download overlap. No affinity/frequency control or RSS instrumentation.','14 matched bounded construction/replacement/control/view/input workloads; 4 distinct Rust lazy-iterator controls have no upstream ratio. Full output bytes and independent FNV/text/x/y consumption are checked.','Go complete default constructor metadata and still-missing Matea wrap/style/gutter/highlight features differ; no full object/module parity or maximum-speed claim.','Go View/plain adapter and Rust View/Surface/plain conversion both produce the stated complete text result, but have different internal representations.','Rust System requested layout bytes and Go TotalAlloc/GC accounting are distinct; neither is peak resident memory. All samples/cold/allocation passes and adverse controls are retained.','source-pin.json is retained preparation metadata, whose generated-file digests precede manual harness updates/tidy; actual post-update main/module/sum hashes are independently captured and checked.'])
+    environment={**os.environ,'MATEA_PERF_ITERATIONS':'300','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+    qualified={}
+    for name,binary_path in BIN.items():
+        result=subprocess.run([str(binary_path),FLAG],env={**environment,'MATEA_PROBE_OUTPUT_ONLY':'1'},capture_output=True,timeout=30)
+        atomic_bytes(OUT/run.attempt/(name+'-outputs.jsonl'),result.stdout);atomic_bytes(OUT/run.attempt/(name+'-outputs.stderr'),result.stderr);result.check_returncode()
+        qualified[name]=read_probe_outputs(result.stdout.decode('utf-8'));check_output(qualified[name])
+        require(len(qualified[name])==(18 if name=='matea' else 14),'incomplete correctness cases')
+    require(set(qualified['matea'])==set(qualified['upstream'])|{'viewport-geometry/borrowed_'+edge+'_'+text for edge in ['aligned','partial'] for text in ['ascii','unicode']},'control set mismatch')
+    for name,row in qualified['upstream'].items():require(all(row[key]==qualified['matea'][name][key] for key in ['semantics','output','first_return_value']),'cross-language complete output mismatch '+name)
+    cohorts=[]
+    for index,language in enumerate(['upstream','matea','matea','upstream'],1):
+        name=f'run-{index}-{language}.jsonl';result=subprocess.run([str(BIN[language]),FLAG],env=environment,capture_output=True,timeout=300)
+        atomic_bytes(OUT/run.attempt/name,result.stdout);atomic_bytes(OUT/run.attempt/(name+'.stderr'),result.stderr);result.check_returncode()
+        records=read_records(result.stdout.decode('utf-8'));require(records.keys()==qualified[language].keys(),'measurement case set changed');check_output(records)
+        for case,row in records.items():
+            require(all(row[key]==qualified[language][case][key] for key in ['semantics','output','first_return_value']),'measurement output changed '+case)
+            require(len(row['samples_ns'])==31 and row['calibration']['target_ns']==20_000_000 and all(len(batch['confirmations_ns'])==2 for batch in row['calibration']['batches']),'unqualified intervals '+case)
+        metadata={'case':f'run-{index}-{language}','language':language,'raw':(run.attempt/name).as_posix(),'sha256':digest(result.stdout),'cases':len(records)}
+        run.record(metadata);cohorts.append(records);print(name,'complete',len(records),flush=True)
+    require(snapshot()==(head,known),'source changed during measurement')
+    require({name:digest(path.read_bytes()) for name,path in BIN.items()}==binary,'binary changed during measurement')
+    require(all(digest((GO/name).read_bytes())==sha for name,sha in external.items()),'Go build inputs changed during measurement')
+    rows=[]
+    for name in qualified['upstream']:
+        rows.append({'case':name,'output_sha256':digest(qualified['upstream'][name]['output'].encode()),'first_return_value':qualified['upstream'][name]['first_return_value'],'forward':{'upstream':summary(cohorts[0][name]),'matea':summary(cohorts[1][name])},'reverse':{'upstream':summary(cohorts[3][name]),'matea':summary(cohorts[2][name])}})
+    controls={name:[summary(cohort[name]) for cohort in cohorts[1:3]] for name in qualified['matea'] if name not in qualified['upstream']}
+    report={'schema':1,'matched_cases':rows,'rust_controls':controls,'limits':run.context['limits']};raw=json_bytes(report);atomic_bytes(OUT/'report.json',raw)
+    run.complete(report_sha256=digest(raw),matched_cases=14,rust_controls=4)

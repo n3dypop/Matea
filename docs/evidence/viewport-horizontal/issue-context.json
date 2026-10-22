@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "issue_bodies_read": [
+    {
+      "number": 288,
+      "title": "Viewport ScrollPercent() sometimes returns `NaN` ",
+      "url": "https://github.com/charmbracelet/bubbles/issues/288",
+      "created_at": "2022-11-08T03:34:40Z",
+      "updated_at": "2023-02-22T08:17:01Z",
+      "state": "open",
+      "body_sha256": "69818c615288faadbbd70db93a93efe403958a2f3ca4f0fe264a62235aa04ec0"
+    },
+    {
+      "number": 879,
+      "title": "viewport: panic with slice bounds out of range when height is negative or zero",
+      "url": "https://github.com/charmbracelet/bubbles/issues/879",
+      "created_at": "2026-01-25T22:08:17Z",
+      "updated_at": "2026-01-25T22:08:17Z",
+      "state": "open",
+      "body_sha256": "be24a24a1187b1c45ea97850074077c8b3e9eeea59a4d320f76b7e1e9eeacfc7"
+    },
+    {
+      "number": 541,
+      "title": "bug(ansi): Truncate, TruncateLeft etc do not obey length in many cases",
+      "url": "https://github.com/charmbracelet/x/issues/541",
+      "created_at": "2025-08-30T09:26:00Z",
+      "updated_at": "2025-08-30T17:04:42Z",
+      "state": "open",
+      "body_sha256": "c31683e2367181c89f0bfc955913de5bd72943f84020ee3e21213f6ed97cd2ad"
+    }
+  ],
+  "status": "analysis_recorded_no_completed_ledger_disposition_yet",
+  "notes": [
+    "879 older signed/zero-height panic absent in ten current-pin source sequences; Matea negative sizes cannot enter u16 API, five nonnegative height cases match.",
+    "288 older near-fit NaN absent in current pin with the inspected denominator and retained finite near-fit height/control cases.",
+    "541 proposed TruncateLeft fuzz condition uses an output cap although that API removes a prefix; malformed-byte/ANSI truncation remains pending and is not claimed fixed from valid-text cell-window tests."
+  ],
+  "evidence": [
+    "crates/matea-widgets/tests/fixtures/viewport-geometry-edges.tsv",
+    "crates/matea-widgets/tests/viewport.rs",
+    "docs/viewport-cell-geometry.md"
+  ]
+}

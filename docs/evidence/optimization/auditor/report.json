@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "stage": "individual_modules",
+  "cases": [
+    {
+      "case": "crossterm",
+      "semantics": "complete release source-auditor process; pipe output; JSON validation outside timing; warm filesystem; no compiler export resolution",
+      "input": {
+        "upstream_sha": "9a397df6dc4f5bd3ff900bb6308b728186cb914c",
+        "expected_ledger_sha256": "81d49c0afec205c1b9d0bd87daf83435814fad36e995976f7736e244b2f22e94"
+      },
+      "output_sha256": "e2b3f5149a871edb4aed0b470468b5ebb5435104cfd9c730435b8ae657aed9f3",
+      "output_bytes": 77888,
+      "declarations": 613,
+      "before": {
+        "p50_ns": 34335458,
+        "p95_ns": 36579584,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "buffered-after": {
+        "p50_ns": 33857125,
+        "p95_ns": 34753666,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "after": {
+        "p50_ns": 33568417,
+        "p95_ns": 34629209,
+        "allocations": null,
+        "resident_memory": null
+      }
+    },
+    {
+      "case": "ratatui",
+      "semantics": "complete release source-auditor process; pipe output; JSON validation outside timing; warm filesystem; no compiler export resolution",
+      "input": {
+        "upstream_sha": "d1ef782b48ddf0cb825c111d4d8b9adef572c0e1",
+        "expected_ledger_sha256": "7dd7fbf770de6b674263b591bfdae47add92397d6da882ccd1034a1ce30352e2"
+      },
+      "output_sha256": "2a9bb843d01a209111c0d6c58ae6f350c5db19ac5d757e69094e86eb71d43bf8",
+      "output_bytes": 294313,
+      "declarations": 1960,
+      "before": {
+        "p50_ns": 171671083,
+        "p95_ns": 173877917,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "buffered-after": {
+        "p50_ns": 170062250,
+        "p95_ns": 171390250,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "after": {
+        "p50_ns": 169136667,
+        "p95_ns": 173308375,
+        "allocations": null,
+        "resident_memory": null
+      }
+    },
+    {
+      "case": "synthetic_10000",
+      "semantics": "complete release source-auditor process; pipe output; JSON validation outside timing; warm filesystem; no compiler export resolution",
+      "input": {
+        "generated_lib_sha256": "6355287a50d6ddc08e613ad9fbc21b6717ae7fecd9e506ca2daa10e189bbbfa7"
+      },
+      "output_sha256": "aed292de87966d8dd76a3b5c8d69ea4f4d76be26544fe5373922880d058feb6a",
+      "output_bytes": 897784,
+      "declarations": 10000,
+      "before": {
+        "p50_ns": 67123541,
+        "p95_ns": 68189708,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "buffered-after": {
+        "p50_ns": 60740167,
+        "p95_ns": 61974833,
+        "allocations": null,
+        "resident_memory": null
+      },
+      "after": {
+        "p50_ns": 58194208,
+        "p95_ns": 58857792,
+        "allocations": null,
+        "resident_memory": null
+      }
+    }
+  ],
+  "contexts": {
+    "before": {
+      "git_head": "6da5e509b69cb7994f67a52a9af477567a15fbb0",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "34cf0545a3e110fa3f930cd391fcaeae7b298e1e8903031d695d1545767c3059",
+        "scripts/measure_auditor_performance.py": "ff8cb045d4ffc9188d8650a51eb8bd88fda4bef120c622a31fd3f92edde79fd7"
+      },
+      "binary_sha256": "4d86a2fa2c02c566950cb966ed27ca9dbbc59e35142b7832837c1c99c81ff925",
+      "raw_sha256": "04b139e6341af844790c3c93ad6c90b5ea1230fda9a33aaf19deb0d6261c987c",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "limits": [
+        "One native host, 31 sequential warm process samples, no affinity/frequency control.",
+        "Includes subprocess and pipe overhead; no allocation/RSS instrumentation or in-process AST-only timing.",
+        "Retained source ledgers are output regression checks, not resolved public API or upstream parity proofs."
+      ]
+    },
+    "buffered-after": {
+      "git_head": "d9abd069dedb29077158ca083258f0e5e5b39535",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "682cd1c68fe6ec130e4aa8463e6d6e2d734f3e638fbc5f4c23f3f6b069cb35e9",
+        "scripts/measure_auditor_performance.py": "adcefaa11229db65f79c2c62fb874d9a9de46e19cae7f4296a4a1c534d0008ea"
+      },
+      "build_command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-api-audit"
+      ],
+      "binary_sha256": "3dd36a5dbb33318f6381c500ea5ac3d08b47a24ad3d3ae460f71e5e3416fa504",
+      "raw_sha256": "2499c8eeabc3b8a2f0576f1e1db80c610b200971affbf29d311bd077ecfb322a",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "limits": [
+        "One native host, 31 sequential warm process samples, no affinity/frequency control.",
+        "Includes subprocess and pipe overhead; no allocation/RSS instrumentation or in-process AST-only timing.",
+        "Retained source ledgers are output regression checks, not resolved public API or upstream parity proofs."
+      ]
+    },
+    "after": {
+      "git_head": "a7b3cbcc0bda4e927bed61abd761f04ddfdd114a",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "tools/api-audit/Cargo.toml": "fbdcad29836dc04b39505f71522d03e48a2d8671356cbb6607c1e8ac5239f13c",
+        "tools/api-audit/src/main.rs": "5cc65b777ffa4fcddffe5a7d9b30a4fc4a7a4dab477b725220b48bae511e7725",
+        "scripts/measure_auditor_performance.py": "adcefaa11229db65f79c2c62fb874d9a9de46e19cae7f4296a4a1c534d0008ea"
+      },
+      "build_command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline",
+        "-p",
+        "matea-api-audit"
+      ],
+      "binary_sha256": "461e7f312208e9fc7021ce0a11bfb6cf0e72ac11970ad3f58671de3bf26860af",
+      "raw_sha256": "28470609053ecedd477ff55c82338d73a8c8043ee82f8779bb8ad97206ee14f9",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "limits": [
+        "One native host, 31 sequential warm process samples, no affinity/frequency control.",
+        "Includes subprocess and pipe overhead; no allocation/RSS instrumentation or in-process AST-only timing.",
+        "Retained source ledgers are output regression checks, not resolved public API or upstream parity proofs."
+      ]
+    }
+  },
+  "all_output_bytes_match": true,
+  "discarded_run": {
+    "context": "discarded-stale-binary-control-context.json",
+    "adopted_as_improvement_evidence": false,
+    "committed_source_mismatches": [
+      "tools/api-audit/src/main.rs"
+    ],
+    "reason": "a failed test prevented rebuilding; executable did not match dirty source metadata"
+  },
+  "reproduce": "python scripts/measure_auditor_performance.py --references ../references --binary target/release/matea-api-audit --directory <fresh-directory> --stage before (repeat with after only after committing changed source)",
+  "limits": [
+    "One native host, 31 sequential warm process samples, no affinity/frequency control.",
+    "Includes subprocess and pipe overhead; no allocation/RSS instrumentation or in-process AST-only timing.",
+    "Retained source ledgers are output regression checks, not resolved public API or upstream parity proofs."
+  ]
+}

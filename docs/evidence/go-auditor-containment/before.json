@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "source_head": "88781a7f013e5616adcd7918114b2daae96d9b71",
+  "source_sha256": {
+    "tools/audit-go/main.go": "1993d9b3a9a6985e6c8b6e62b2cf8dea5184c615af3df424835a5a9637e8678e",
+    "tools/audit-go/main_test.go": "e2550e66910ec55faefbec8bd14df53a655c18be3999ae64cf5f4fe829f60d65"
+  },
+  "binary_sha256": "8cbd3b54ebee6d02e936d9cf6258e65b57c240be8af877b507ab708eda2dcafe",
+  "records": [
+    {
+      "case": "external_file_link",
+      "exit_code": 0,
+      "observed": [
+        {
+          "file": "escape.go",
+          "line": 2,
+          "package": "fixture",
+          "kind": "const",
+          "symbol": "OUTSIDE"
+        },
+        {
+          "file": "local.go",
+          "line": 2,
+          "package": "fixture",
+          "kind": "const",
+          "symbol": "LOCAL"
+        }
+      ],
+      "expected_symbols": [
+        "LOCAL"
+      ]
+    },
+    {
+      "case": "linked_root",
+      "exit_code": 0,
+      "stdout_bytes": 0,
+      "expected": "nonzero root-validation failure"
+    },
+    {
+      "case": "fifo_go",
+      "outcome": "timeout",
+      "timeout_seconds": 2,
+      "expected": "non-regular entry skipped without opening"
+    }
+  ],
+  "limits": [
+    "Local POSIX execution; invalid-byte names cannot be created on this APFS filesystem. Future Linux/Windows tests remain required."
+  ]
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 191, in <module>
+    main()
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 181, in main
+    verify_fallback(document)
+  File "${REPOSITORY}/scripts/check_color_trace.py", line 153, in verify_fallback
+    require(cells == expected, lambda: (trace["profile"], stage, cells, expected))
+  File "${REPOSITORY}/scripts/evidence_checks.py", line 8, in require
+    raise AssertionError(message() if callable(message) else message)
+AssertionError: ('none', 0, [[('?', None, None, 130), (' ', None, None, 0), ('x', None, None, 130), ('?', None, None, 130), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0)], [(' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0)]], [[('?', None, None, 130), (' ', None, None, 130), ('x', None, None, 130), ('?', None, None, 130), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0)], [(' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0), (' ', None, None, 0)]])

@@ -3,8 +3,26 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      reference_api:
+        description: Compile reference APIs and execute pinned source/probe paths
+        type: boolean
+        default: false
+      reference_probes_only:
+        description: Reuse completed compiler profiles; rerun source/probe checks only
+        type: boolean
+        default: false
+      measurement_drivers:
+        description: Qualify complete measurement drivers and two native extraction paths
+        type: boolean
+        default: false
 permissions:
   contents: read
+concurrency:
+  # Push and PR validate the same branch; keep explicit reference collection in
+  # a separate group so routine pushes do not cancel that longer audit.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}-${{ github.event_name == 'workflow_dispatch' && 'reference' || 'standard' }}
+  cancel-in-progress: true
 jobs:
   foundation:
     strategy:
@@ -12,27 +30,144 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
     steps:
       # Revisions taken from the audited Crossterm CI checkout; no moving action tags.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
         with:
           toolchain: stable
-          components: rustfmt, clippy
+          components: rustfmt, clippy, llvm-tools-preview
+      - run: cargo fetch --locked --manifest-path tools/reference-text/Cargo.toml
+      # Offline acceptance also exercises every optional adapter feature. The
+      # isolated reference lock and default root build do not fetch that graph.
+      - run: cargo fetch --locked
       - run: cargo fmt --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
       - run: cargo test --locked --workspace --all-targets
+      - run: cargo test --locked --release --workspace
+      - if: runner.os == 'Linux'
+        run: cargo test --locked --release -p matea-style --test colors every_rgb_triple_matches_full_palette_search -- --ignored
       - run: cargo doc --locked --workspace --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
       - run: cargo build --locked --workspace --examples
+      - run: python scripts/check_coverage.py
+      - run: python scripts/test_coverage.py
+      - run: python scripts/test_reference_audit.py
+      - run: python scripts/test_rustdoc_exports.py
+      - run: python scripts/test_rustdoc_import.py
+      - run: python scripts/test_source_snapshot.py
+      - run: python scripts/test_issue_refresh.py
+      - run: python scripts/test_color_trace.py
+      - run: cargo build --locked -p matea-api-audit
+      # Official actions/setup-go v6 resolved on 2026-10-17. Go is required by
+      # the standalone source-auditor fixture, including on macOS runners.
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.26.0"
+          cache: false
+      - run: python scripts/test_source_auditors.py
+        env:
+          PYTHONUTF8: "1"
+      - run: python scripts/test_quality.py
+      - run: python scripts/test_evidence_checks.py
+      - run: python scripts/test_optimization_evidence.py
+      - run: python scripts/test_performance_records.py
+      - run: python scripts/test_reference_paths.py
+      - run: python scripts/test_measurement_drivers.py
+      - run: python scripts/test_acceptance_driver.py
+      - run: python -O -m unittest discover -s scripts -p 'test_*.py'
+        env:
+          PYTHONUTF8: "1"
+      - run: python scripts/check_quality.py
+      - run: python -m compileall -q scripts
+      - run: python -c "from pathlib import Path; Path('artifacts').mkdir(exist_ok=True)"
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --trace > artifacts/matea-trace.json
+        shell: bash
+      - run: python scripts/check_terminal_trace.py artifacts/matea-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --cursor-trace > artifacts/matea-cursor-trace.json
+        shell: bash
+      - run: python scripts/check_terminal_trace.py artifacts/matea-cursor-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --color-trace > artifacts/matea-color-trace.json
+        shell: bash
+        env:
+          NO_COLOR: "1"
+      - run: python scripts/check_color_trace.py --nondefault-margins artifacts/matea-color-trace.json
+      - run: cargo run --locked --quiet --release -p matea-perf-probe -- --fallback-trace > artifacts/matea-fallback-trace.json
+        shell: bash
+      - run: python scripts/check_color_trace.py artifacts/matea-fallback-trace.json
+      # CLI/serialization checks only; shared CI runner timings are not benchmark evidence.
+      - run: |
+          cargo run --locked --quiet --release -p matea-perf-probe -- --style > artifacts/style.jsonl
+          python scripts/optimization_evidence.py artifacts/style.jsonl --validate-current --expected 46 --target-ns 20000000
+          cargo run --locked --quiet --release -p matea-perf-probe -- --input > artifacts/input.jsonl
+          python scripts/optimization_evidence.py artifacts/input.jsonl --validate-current --expected 37 --target-ns 20000000
+          cargo run --locked --quiet --release -p matea-perf-probe -- --protocol > artifacts/protocol.jsonl
+          python scripts/optimization_evidence.py artifacts/protocol.jsonl --validate-current --expected 41 --target-ns 20000000
+          cargo run --locked --quiet --release -p matea-perf-probe -- --gradients > artifacts/gradients.jsonl
+          python scripts/optimization_evidence.py artifacts/gradients.jsonl --validate-current --expected 12 --target-ns 20000000
+          cargo run --locked --quiet --release -p matea-perf-probe -- --progress > artifacts/progress.jsonl
+          python scripts/optimization_evidence.py artifacts/progress.jsonl --validate-current --expected 12 --target-ns 20000000
+        shell: bash
+        env:
+          MATEA_PERF_ITERATIONS: "20000"
+          MATEA_PERF_MIN_SAMPLE_NS: "20000000"
       - run: python scripts/example_smoke.py
         env:
           PYTHONUTF8: "1"
+      - run: |
+          cargo run --locked --quiet --release -p matea-perf-probe -- --virtual-cursor > artifacts/virtual-cursor-outputs.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/virtual-cursor-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==7)"
+          cargo run --locked --quiet --release -p matea-perf-probe -- --attributes > artifacts/attributes-outputs.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/attributes-outputs.jsonl').read_text(encoding='utf-8')); require(len(records)==14)"
+          python -c "from pathlib import Path; Path('docs/evidence/attributes-outputs.jsonl').write_bytes(Path('artifacts/attributes-outputs.jsonl').read_bytes())"
+        shell: bash
+        env:
+          MATEA_PROBE_OUTPUT_ONLY: "1"
+          MATEA_PERF_ITERATIONS: "invalid"
+          MATEA_PERF_MIN_SAMPLE_NS: "invalid"
+      - run: cargo bench --locked -p matea --bench foundation_paths -- --representations > docs/evidence/representations.json
+        shell: bash
       - if: runner.os != 'Windows'
         run: python scripts/pty_smoke.py
       - run: cargo run --locked --quiet -p matea --example render_probe --release
+      - run: |
+          cargo bench --locked -p matea --bench foundation_paths -- --deadlines > artifacts/deadlines.jsonl
+          python -c "from pathlib import Path; import sys; sys.path.insert(0, 'scripts'); from performance_records import read_probe_outputs; from evidence_checks import require; records=read_probe_outputs(Path('artifacts/deadlines.jsonl').read_text(encoding='utf-8')); require(set(records)=={f'terminal/first_notification_{ms}ms' for ms in [1,5,16,50]})"
+        shell: bash
+        env:
+          MATEA_PROBE_OUTPUT_ONLY: "1"
+      # Exercise the complete drivers, including failure journals and profiling,
+      # on the actual host. Instrumented numbers are never timing evidence.
+      - run: python scripts/verify_foundation.py --offline
+      - run: python scripts/measure_rust_coverage.py
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-drivers-${{ matrix.os }}
+          path: |
+            docs/evidence/local-validation.json
+            docs/evidence/quality/rust-execution-coverage.json
+            docs/evidence/*-tests.log
+            docs/evidence/reference-text*.log
+            docs/evidence/ratatui-*.log
+            docs/evidence/ratatui-bridge/outputs
+            docs/evidence/facade-feature-tests.log
+            docs/evidence/text-width-exhaustive.log
+            docs/evidence/style-patch-exhaustive.log
+            docs/evidence/representations.json
+            docs/evidence/attributes-outputs.jsonl
+            docs/evidence/windows-console.log
+            docs/evidence/windows-console
+            docs/evidence/terminal-device.log
+            docs/evidence/terminal-device
+            artifacts/quality-coverage/coverage-terminal-device.log
+            artifacts/quality-coverage/terminal-device
+          if-no-files-found: warn
+          retention-days: 14
   msrv:
     runs-on: ubuntu-latest
     steps:
@@ -41,3 +176,144 @@ jobs:
         with:
           toolchain: "1.88"
       - run: cargo test --locked --workspace
+      - run: cargo test --locked -p matea-ratatui --no-default-features
+      - run: cargo test --locked -p matea-ratatui --all-features
+      - run: cargo test --locked -p matea --all-targets --features ratatui
+      - run: cargo run --locked --manifest-path tools/reference-text/Cargo.toml -- --check
+      - run: cargo test --locked --manifest-path tools/reference-text/Cargo.toml --all-targets
+  reference-api:
+    if: github.event_name == 'workflow_dispatch' && inputs.reference_api && !inputs.reference_probes_only
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        reference: [crossterm, ratatui]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: nightly-2026-10-11
+      - run: python scripts/test_rustdoc_exports.py
+      - run: python scripts/fetch_rust_references.py --reference ${{ matrix.reference }} --destination "${{ runner.temp }}/matea-api-inputs"
+      - run: python scripts/collect_rustdoc_batch.py --reference ${{ matrix.reference }} --references "${{ runner.temp }}/matea-api-inputs" --destination "${{ runner.temp }}/matea-rustdoc" --toolchain nightly-2026-10-11
+      - run: python scripts/import_rustdoc.py --reports "${{ runner.temp }}/matea-rustdoc/reports" --destination "${{ runner.temp }}/matea-rustdoc/imported"
+      # Official actions/upload-artifact v4 tag resolved via GitHub on 2026-10-16.
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reference-api-${{ matrix.os }}-${{ matrix.reference }}
+          path: ${{ runner.temp }}/matea-rustdoc/reports
+          if-no-files-found: warn
+          retention-days: 14
+  reference-probes:
+    if: github.event_name == 'workflow_dispatch' && inputs.reference_api
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: stable
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.27.2"
+          cache: false
+      - run: python scripts/check_reference_paths.py --destination "${{ runner.temp }}/matea-reference-paths"
+      # Source checkouts, raw issue bodies and shared-runner timing records are
+      # deliberately not uploaded as performance/compatibility evidence.
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reference-paths-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/matea-reference-paths/path-checks.json
+            ${{ runner.temp }}/matea-reference-paths/trajectory-errors.json
+            ${{ runner.temp }}/matea-reference-paths/matea-cursor-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-cursor-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/cursor-source-edges.txt
+            ${{ runner.temp }}/matea-reference-paths/timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/rust-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-gradient-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/upstream-gradient-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-gradient-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-gradient-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/gradient-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/matea-progress-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/upstream-progress-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-progress-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-progress-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/progress-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/indexed-gradient-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-content-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-horizontal-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-cut-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-input-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-geometry-edges.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-wrap-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-highlight-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-highlight-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-highlights-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-highlights-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-highlights-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-highlights-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-highlight-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/viewport-wrap-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-wrap-fixtures.txt
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-wrap-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-wrap-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-wrap-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-wrap-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-geometry-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-geometry-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-geometry-varied-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-geometry-varied-outputs.jsonl
+            ${{ runner.temp }}/matea-reference-paths/matea-viewport-geometry-timing-mode-checks.json
+            ${{ runner.temp }}/matea-reference-paths/upstream-viewport-geometry-timing-mode-checks.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  measurement-drivers:
+    if: github.event_name == 'workflow_dispatch' && inputs.measurement_drivers
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: stable
+      - run: rustup toolchain install nightly-2026-10-11 --profile minimal
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: "1.27.2"
+          cache: false
+      - run: python scripts/qualify_measurement_drivers.py --destination "${{ runner.temp }}/matea-measurement-drivers"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: measurement-drivers-${{ matrix.os }}
+          path: ${{ runner.temp }}/matea-measurement-drivers/results
+          if-no-files-found: warn
+          retention-days: 14

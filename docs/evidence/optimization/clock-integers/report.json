@@ -1,0 +1,2506 @@
+{
+  "schema": 1,
+  "scope": "16 existing clock fixtures; no new capabilities, active scheduler or full-framework-stage claim",
+  "contexts": {
+    "before": {
+      "git_head": "b6626ca0c85e6723e16813f5d09a6c06a98668e8",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": {
+        "matea": "a6a59704621f0d36e89812121b132635136d91ec91c40994697ae40e2e4dcab0",
+        "upstream": "9972249132d85431fce1bbc4a657518f73d4c5ca2fb003cfde53e7cc59b00ebc"
+      },
+      "raw_sha256": {
+        "before-matea.jsonl": "92c0f5b4e3adf742b886f3b5504c862492e4f118e2b477812581309383fe9bd2",
+        "before-upstream.jsonl": "c472be139e792767044f6abe6fa691c0fc73ba13bc35f20713ad4918669a57a7"
+      },
+      "commands": {
+        "matea": [
+          "target/release/matea-perf-probe",
+          "--clocks"
+        ],
+        "upstream": [
+          "<pinned-go-probe>",
+          "--clocks"
+        ]
+      },
+      "MATEA_PERF_ITERATIONS": 200000,
+      "run_order": "Rust then Go; sequential; release; no compilation/tests/coverage/Miri running on native host",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "go": "go version go1.27.2 darwin/arm64\n",
+      "upstream_pins": {
+        "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+        "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+        "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+        "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+        "harness": "tools/perf-upstream/main.go"
+      },
+      "scope": "six exact owned strings, six caller buffer formatting paths and four rejected clock ticks; these overlap prior 16/84 fixtures; no new capability or active scheduling parity claim"
+    },
+    "isolated-integers": {
+      "git_head": "fb8a6da3d555e9532cc99d51a0afdc3649f985c7",
+      "source_sha256": {
+        "Cargo.toml": "195fe06e872c58761480650e74322568523fe2c804fed74b2c0c7026557da632",
+        "Cargo.lock": "807b799b84e73ea45041b6b0be0a02c851ca28144e4d29dd58e5392cdea29eff",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "78aefe06cda8325fd0d85e3e7ee0f391b7b4cabb26228edbd141ac65a16696bd",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "7b29ffdd6ec14b1f10f1545ba7e389d2635a662b6e68e72f27b30c0c6f07507b",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": {
+        "matea": "88df2948759641707854a3de2a09a6a6855a164931e494ba10c16ffc4a22424a",
+        "upstream": "9972249132d85431fce1bbc4a657518f73d4c5ca2fb003cfde53e7cc59b00ebc"
+      },
+      "raw_sha256": {
+        "isolated-integers-matea.jsonl": "95d532d7dd94fa348e267c8ef30a0d486fc5ea657965d8871a0117fc9c6df921",
+        "isolated-integers-upstream.jsonl": "8466c2e427fccee4e0d65d3c91551e6ff67d1cd48bf43f33d41fcca312d6c41c"
+      },
+      "commands": {
+        "matea": [
+          "target/release/matea-perf-probe",
+          "--clocks"
+        ],
+        "upstream": [
+          "<pinned-go-probe>",
+          "--clocks"
+        ]
+      },
+      "MATEA_PERF_ITERATIONS": 200000,
+      "run_order": "Rust then Go; sequential; release; no compilation/tests/coverage/Miri running on native host",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "go": "go version go1.27.2 darwin/arm64\n",
+      "upstream_pins": {
+        "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+        "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+        "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+        "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+        "harness": "tools/perf-upstream/main.go"
+      },
+      "scope": "six exact owned strings, six caller buffer formatting paths and four rejected clock ticks; these overlap prior 16/84 fixtures; no new capability or active scheduling parity claim"
+    },
+    "pairs": {
+      "git_head": "0a0b05f9ead347ec57d4e755d10fffdb68beeb78",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "d0c2b784a7e12cd2592fb54b7060332f69aa7839e7b1eef99dbcb128e23856c0",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": {
+        "matea": "87e7373c1c060df25fd5b0a654db05b71b796c90e5d00b9ab08cabfcce2f87f7",
+        "upstream": "9972249132d85431fce1bbc4a657518f73d4c5ca2fb003cfde53e7cc59b00ebc"
+      },
+      "raw_sha256": {
+        "pairs-matea.jsonl": "63d494e125d4caafc51237bfbca91ac0e3516993880bf1ec2dce0aca366e5755",
+        "pairs-upstream.jsonl": "05af6c00b0a5183b139e85cb3f968b574d30bcb5f77e9abca42cc6816f852b92"
+      },
+      "commands": {
+        "matea": [
+          "target/release/matea-perf-probe",
+          "--clocks"
+        ],
+        "upstream": [
+          "<pinned-go-probe>",
+          "--clocks"
+        ]
+      },
+      "MATEA_PERF_ITERATIONS": 200000,
+      "run_order": "Rust then Go; sequential; release; no compilation/tests/coverage/Miri running on native host",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "go": "go version go1.27.2 darwin/arm64\n",
+      "upstream_pins": {
+        "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+        "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+        "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+        "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+        "harness": "tools/perf-upstream/main.go"
+      },
+      "scope": "six exact owned strings, six caller buffer formatting paths and four rejected clock ticks; these overlap prior 16/84 fixtures; no new capability or active scheduling parity claim"
+    },
+    "inlining": {
+      "git_head": "e436ebd3e4595c378d53a2abec3017c19531db0b",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "99bd000846f576c448bcf7b1ee317df15f9a53363c9109411382628495b028a4",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": {
+        "matea": "a4af3c5cc243927b9694e8a98cd3c477d3b731d43913bd12137fac4f4d2900fa",
+        "upstream": "9972249132d85431fce1bbc4a657518f73d4c5ca2fb003cfde53e7cc59b00ebc"
+      },
+      "raw_sha256": {
+        "inlining-matea.jsonl": "0c7bc8f33993ed16e05aa732c2599bcb5af84b149d317e9a90e66de53f2ac36f",
+        "inlining-upstream.jsonl": "7bf0ab1a2306c6683d4f3bf1161cfa6efea24b8c6ca86aee64f47f820af9c177"
+      },
+      "commands": {
+        "matea": [
+          "target/release/matea-perf-probe",
+          "--clocks"
+        ],
+        "upstream": [
+          "<pinned-go-probe>",
+          "--clocks"
+        ]
+      },
+      "MATEA_PERF_ITERATIONS": 200000,
+      "run_order": "Rust then Go; sequential; release; no compilation/tests/coverage/Miri running on native host",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "go": "go version go1.27.2 darwin/arm64\n",
+      "upstream_pins": {
+        "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+        "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+        "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+        "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+        "harness": "tools/perf-upstream/main.go"
+      },
+      "scope": "six exact owned strings, six caller buffer formatting paths and four rejected clock ticks; these overlap prior 16/84 fixtures; no new capability or active scheduling parity claim"
+    },
+    "full-inlining": {
+      "git_head": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": {
+        "matea": "6766209f81acdca96c791fa7693adb83eda353c09bf76fd0d635ad7afd54fc83",
+        "upstream": "9972249132d85431fce1bbc4a657518f73d4c5ca2fb003cfde53e7cc59b00ebc"
+      },
+      "raw_sha256": {
+        "full-inlining-matea.jsonl": "a669910ed1afa78b516febe7d30944794461357b2303a31a29079eaf52a30cbe",
+        "full-inlining-upstream.jsonl": "f7e8cfb08f778e6c47183d6c0bdb552a1829d4851c43f5a3866d9b58ad389fb7"
+      },
+      "commands": {
+        "matea": [
+          "target/release/matea-perf-probe",
+          "--clocks"
+        ],
+        "upstream": [
+          "<pinned-go-probe>",
+          "--clocks"
+        ]
+      },
+      "MATEA_PERF_ITERATIONS": 200000,
+      "run_order": "Rust then Go; sequential; release; no compilation/tests/coverage/Miri running on native host",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "go": "go version go1.27.2 darwin/arm64\n",
+      "upstream_pins": {
+        "ultraviolet_sha": "6b8d4baf91b4c933e6613b0eefc8f180f6eda002",
+        "harmonica_sha": "0ff76e405449b47bd60f1df4820d880081692d3c",
+        "bubbles_sha": "c3bde0d166c2ca607d9864493453fd77bdcae7e4",
+        "bubbletea_sha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+        "harness": "tools/perf-upstream/main.go"
+      },
+      "scope": "six exact owned strings, six caller buffer formatting paths and four rejected clock ticks; these overlap prior 16/84 fixtures; no new capability or active scheduling parity claim"
+    }
+  },
+  "balanced_contexts": {
+    "balanced-old-a": {
+      "actual_checkout_head": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "build_source_revision": "b6626ca",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": "a6a59704621f0d36e89812121b132635136d91ec91c40994697ae40e2e4dcab0",
+      "raw_sha256": "f89fe2022b8d3ea89ae431c28f116a398b6196a84bcfdf04bb32b2e68a9cdbaa",
+      "command": [
+        "matea-clock-rebuilt-baseline-probe",
+        "--clocks"
+      ],
+      "iterations": 200000,
+      "order": "old-a,new-a,new-b,old-b; 31 samples each; no compilation/tests/Miri/coverage/downloads during measurement; actual source restored before timing",
+      "baseline_rebuild_matches_original_binary": true
+    },
+    "balanced-new-a": {
+      "actual_checkout_head": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "build_source_revision": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": "6766209f81acdca96c791fa7693adb83eda353c09bf76fd0d635ad7afd54fc83",
+      "raw_sha256": "068c170d56e0f7e22db6439d27fd6b88c911cf77d4791ef252581d81e02984ad",
+      "command": [
+        "matea-clock-full-inlining-probe",
+        "--clocks"
+      ],
+      "iterations": 200000,
+      "order": "old-a,new-a,new-b,old-b; 31 samples each; no compilation/tests/Miri/coverage/downloads during measurement; actual source restored before timing",
+      "baseline_rebuild_matches_original_binary": true
+    },
+    "balanced-new-b": {
+      "actual_checkout_head": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "build_source_revision": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "58b32176f7585345451eacd28e674ce7cb180df935e50fb23cdde611629cdd36",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": "6766209f81acdca96c791fa7693adb83eda353c09bf76fd0d635ad7afd54fc83",
+      "raw_sha256": "0aa418b5b35d5d69fb20f397961fbc0c5305efa4ac5eb5b409a73dbe358aa6ad",
+      "command": [
+        "matea-clock-full-inlining-probe",
+        "--clocks"
+      ],
+      "iterations": 200000,
+      "order": "old-a,new-a,new-b,old-b; 31 samples each; no compilation/tests/Miri/coverage/downloads during measurement; actual source restored before timing",
+      "baseline_rebuild_matches_original_binary": true
+    },
+    "balanced-old-b": {
+      "actual_checkout_head": "50d071a1a94de7c6ecf412bb89ea5501dae80d67",
+      "build_source_revision": "b6626ca",
+      "source_sha256": {
+        "Cargo.toml": "a06a3f2c4b8ef2e3c889c1f9f898dbbf31dc030bfc49b8240c253187ac996e61",
+        "Cargo.lock": "d8f51d1bbf44ae89ecb0566367fda8b2a4856d9e741b96f70aa02ee0a77a9318",
+        "crates/matea-terminal/tests/graphics_encoding.rs": "3e6764e9f9d0a349aabfa0e45bfbb9305f55bf555c7b3dd2660e9d60bd2ad87b",
+        "crates/matea-terminal/tests/input.rs": "f5752d99136e826fd693fa73ff834b558550a257f9e1b02b7f461cce784d72b9",
+        "crates/matea-terminal/benches/terminal_primitives.rs": "839bdd01ade11f81ebbc610d04f6e860b2b8274e121a3659016fbefddc5d962a",
+        "crates/matea-terminal/src/session.rs": "0612ce3516ed48dc82e3701b83b12195377beae43a8b4f8ef065bddadb4fcd40",
+        "crates/matea-terminal/src/modes.rs": "ac0e834458ffe0150887a62367349a5a479701353d89d7b2b89e2577faf8be3c",
+        "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25",
+        "crates/matea-terminal/src/lib.rs": "42a0e1299fd6894338c432a593436285a79986a2d678c061aaedaee6df76a6ff",
+        "crates/matea-terminal/src/ansi.rs": "a5f762c0e039d3041a176919e666fea9c9437386aaa351e114f6760088167d8d",
+        "crates/matea-terminal/src/frame.rs": "75d3e86273eb5ac52254e4f6aa498c39fa77772cd13baae5830c60ce87cf6aa3",
+        "crates/matea-terminal/src/input.rs": "2a9651a18a55c1afe7fded82673ad253eebe2bde8508d932779f95f8dcea5021",
+        "crates/matea-terminal/src/signals_unix.rs": "76ed5822c50439ddcdd8dd9b651e7a3da4e5babaae8ee36eb35846220ccabd5f",
+        "crates/matea-widgets/tests/clocks.rs": "57c33e5c0e6395cc51e27f862b5a815d3174ecc7696c4666a23a695245629575",
+        "crates/matea-widgets/tests/spinner.rs": "9034d901a5be727ba1941df8ca9a203d79bd6c87a8235a8c45105fcc345f8aea",
+        "crates/matea-widgets/tests/viewport.rs": "73ebc8463dd27e375995726e37bc2453b9b798921266697a569f870386f2a2fa",
+        "crates/matea-widgets/tests/collections.rs": "9ccff7557ae8b7a6ba25c8b926d39f8e11ca5a18d6f3e407a114ae8d15dd5336",
+        "crates/matea-widgets/src/textinput.rs": "937e4e8513c8b03a9d8c0e79f4c6dff78daa531308728b177e24ac944036d093",
+        "crates/matea-widgets/src/key.rs": "e9a74a0f13142b8b1fe12ecc9703b804322e7b7a6b45aa90674aa713b01b6887",
+        "crates/matea-widgets/src/lib.rs": "3fd4ee232895ffa5c4164ca6bf0ba98337223f1bd4048842835b4ccb305e2de0",
+        "crates/matea-widgets/src/clocks.rs": "528ebe86d61c09e97485608da93b71773b80ff1705efebdbd7769bcc3df4e59b",
+        "crates/matea-widgets/src/pagination.rs": "ad00280eb3d8bccbd8082c2b2f2ccdadfc8cde743908f0db1aca39208acdfa64",
+        "crates/matea-widgets/src/help.rs": "f1a511a9ced3a05e42dc1055dd4b79fa9cc184722bc593a102382945539d52d3",
+        "crates/matea-widgets/src/spinner.rs": "cb1f7da981e75716bd5e077ed410aa04c6702aa104d66d87642354d78a90b57b",
+        "crates/matea-widgets/src/paginator.rs": "0e33c71435745877f9070114526683b0fb61e6d3a2cadab0577887add6e2c6b1",
+        "crates/matea-core/tests/subscription_atomicity.rs": "2538600a857b6dcd19656d1bc03bc948731468b83fd07f3ddf91c91f809d88a8",
+        "crates/matea-core/tests/subscription_identity.rs": "71fcf267dc325aed20b88bd34a925851125d1ec682f9db182ba62f5fdd3b42a4",
+        "crates/matea-core/src/lib.rs": "458d93a38ead00d56d3631b74c2734b7cf15561440038f9e2e8d726abe512637",
+        "crates/matea-core/src/input.rs": "06976e15a48485b6004460a83aa65f83aedc9ef9c265994948dcebbfb5209f5f",
+        "crates/matea-motion/tests/reference.rs": "7163955388dddea881e65f28e9fa0d407a18eac9e1192413d7388541b910f899",
+        "crates/matea-motion/src/lib.rs": "2d10120e19032e59106c89ef8ef4817182ab48430d2d00dc16cb813b992ab9ac",
+        "crates/matea-render/tests/invariants.rs": "5cf07013d02f13af5c0651a51c157bfad88f23c3add56a366f26d89999f04a34",
+        "crates/matea-render/tests/text.rs": "93dc091245da3a80b2e5915bef5e39a413c6063332f4195b29a69df5d88a4828",
+        "crates/matea-render/src/lib.rs": "2f9d767c4cddcb07884877239154f8cae44c7b4f374e9f72f9f740c4447c60fc",
+        "crates/matea-render/src/text.rs": "7866c517a9ee0a1709ce3130e9aa9ac830966dfedbe2ddf2664c1d9e8045faeb",
+        "crates/matea-style/tests/layout.rs": "186fb87f8747e22a96caada0bf922ad75c2c5c7b4e530799981d918f38b2dbdb",
+        "crates/matea-style/tests/colors.rs": "e05718873d41c109f716a11fb29e427f85f9f7a968b2ad823110fd45ef57091a",
+        "crates/matea-style/src/lib.rs": "03c6a6e84786640c2c637873223ab72940cf71233b25d82f8f3d75cc3582c5fd",
+        "crates/matea/examples/list.rs": "c19f3db25873332853804548831384e0261a594fd70841e5bbdf11b0aa97e635",
+        "crates/matea/examples/effects.rs": "9ddb3156108710d16bb9ed095a86a3d41a3da5cd245f848e230f310ce7df53d1",
+        "crates/matea/examples/counter.rs": "527cf1cdb0a653f72ac9470cdaeef2292f080e7d026d80fda3ce441facbd034f",
+        "crates/matea/examples/clocks.rs": "358bf55faf5867514cd1b255b00134bfbff7134b09ae611e6bf40df2b1e185ca",
+        "crates/matea/examples/pagination.rs": "8175f2a626c5eaf592b8676f0bbc8ccf1d1a64f2ed21b2849df147135fc8f77f",
+        "crates/matea/examples/help.rs": "0c2fbc60374a7d6d1677592ca20e750a83ee091899ef8ed1a341f933dd5465f8",
+        "crates/matea/examples/input.rs": "e173ecd383d16ea708d26c3ef2724d0daf4b1c2ecc1d13cf5925cc36b074e27f",
+        "crates/matea/examples/lifecycle.rs": "abb2cbbe3602d19318451715f99891eb0ad04583f84b23a8ecd2874871e4aaf2",
+        "crates/matea/examples/dashboard.rs": "4a288c3d5a1e6c346c1d81012bfd84dc33e4abb0d4e7eada5e396d977f8536e5",
+        "crates/matea/examples/render_probe.rs": "5381b3a9187a03c20eea11cfc56ec0ae44a14c03485386712c1131bc47bde93d",
+        "crates/matea/examples/form.rs": "a49f55cb88a861b2807050ff4efdd9a8c2d581cb3e99f587218bb492170ac458",
+        "crates/matea/examples/spinners.rs": "1c6ee4ed5e5a7ae40d9c5a983deaa523ac28900e6a9abceeaf50ab4060ad585d",
+        "crates/matea/examples/motion.rs": "a0cd5203da828345e6b91041e4af2759cad23dd183b209872950d3a0ae9b8f43",
+        "crates/matea/examples/support/mod.rs": "6f025e214f9d18e29a02a927dca1fadc052507240190759b859edba972b51f0a",
+        "crates/matea/benches/foundation_paths.rs": "219729e3f75c65a50ade61e9bf812f992e2bcf0b01cf7b7f21b25cd5ba012f16",
+        "crates/matea/src/lib.rs": "be839dfa978bc582a28e5ff4bbf5dfe45c1d6f43c1d6ed02fcc9abcf1c75d8bb",
+        "crates/matea-terminal/Cargo.toml": "e2e31c038fb8eea8b0aacc0e6811849b777c43a47f5f48e8e345216328a36000",
+        "crates/matea-widgets/Cargo.toml": "5e76e907c53f3e825e35fdfb5ec9aa49a1c1997f8e1cbce77f202e1c869341a7",
+        "crates/matea-core/Cargo.toml": "6445e50dfe148377d836facbcaf4cd47975aef92bae24b250dd00887afcd4adb",
+        "crates/matea-motion/Cargo.toml": "9e65d4a0fbbb982eb60b1443cc25fcd7285112e2954519f35391901975be2471",
+        "crates/matea-render/Cargo.toml": "14ecf0de9f169c20b206261014af7936e593a81b5458069ecbf8886541956472",
+        "crates/matea-style/Cargo.toml": "de4cf0c5b7895a1670d68aa0725c7d4f46872a17f5c4f431f5833152f0f94375",
+        "crates/matea/Cargo.toml": "8e448b75422c5e1cce6021e24306512d50c243d54e9598de39a360f9ccc2443b",
+        "tools/perf-probe/src/measurement.rs": "460b20f3a1246e5ab510898aeea01d1d0b5691db003c3eee42c33605afdda615",
+        "tools/perf-probe/src/protocol.rs": "52cb2ce37c8f94eb01d6f924e497b9ab6989ae36288345fecfea43d05ea977f9",
+        "tools/perf-probe/src/main.rs": "63c7dea367162fa73289f0e119f44d436e841f0a8ff2da40f9d5c4b645b5ab42",
+        "tools/perf-upstream/main.go": "94b9b2769b56add21399270cdf7841ebcc4bca5375897144b0b710d878a748fb"
+      },
+      "binary_sha256": "a6a59704621f0d36e89812121b132635136d91ec91c40994697ae40e2e4dcab0",
+      "raw_sha256": "d134d3c89de5a9369217d17462e923dbda51ecefe3243b28d742a74c8b395253",
+      "command": [
+        "matea-clock-rebuilt-baseline-probe",
+        "--clocks"
+      ],
+      "iterations": 200000,
+      "order": "old-a,new-a,new-b,old-b; 31 samples each; no compilation/tests/Miri/coverage/downloads during measurement; actual source restored before timing",
+      "baseline_rebuild_matches_original_binary": true
+    }
+  },
+  "cases": [
+    {
+      "case": "clocks/format_zero",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "0s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 23.381455,
+            "p95_ns": 36.839375,
+            "allocations": 1,
+            "allocated_bytes": 2
+          },
+          "upstream": {
+            "p50_ns": 10.524375,
+            "p95_ns": 15.04479,
+            "allocations": 1,
+            "allocated_bytes": 3.2
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 22.79792,
+            "p95_ns": 23.35854,
+            "allocations": 1,
+            "allocated_bytes": 2
+          },
+          "upstream": {
+            "p50_ns": 10.643125,
+            "p95_ns": 15.343125,
+            "allocations": 1,
+            "allocated_bytes": 3.2
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 24.52021,
+            "p95_ns": 56.207085,
+            "allocations": 1,
+            "allocated_bytes": 2
+          },
+          "upstream": {
+            "p50_ns": 10.549375,
+            "p95_ns": 15.04771,
+            "allocations": 1,
+            "allocated_bytes": 3.2
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 24.845415,
+            "p95_ns": 57.81833,
+            "allocations": 1,
+            "allocated_bytes": 2
+          },
+          "upstream": {
+            "p50_ns": 10.55,
+            "p95_ns": 15.000625,
+            "allocations": 1,
+            "allocated_bytes": 3.2
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 24.455,
+            "p95_ns": 55.817295,
+            "allocations": 1,
+            "allocated_bytes": 2
+          },
+          "upstream": {
+            "p50_ns": 10.56,
+            "p95_ns": 15.315625,
+            "allocations": 1,
+            "allocated_bytes": 3.2
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 23.685625,
+          "p95_ns": 54.36625,
+          "allocations": 1,
+          "allocated_bytes": 2
+        },
+        "balanced-new-a": {
+          "p50_ns": 25.52375,
+          "p95_ns": 266.66896,
+          "allocations": 1,
+          "allocated_bytes": 2
+        },
+        "balanced-new-b": {
+          "p50_ns": 23.479375,
+          "p95_ns": 24.36021,
+          "allocations": 1,
+          "allocated_bytes": 2
+        },
+        "balanced-old-b": {
+          "p50_ns": 23.054375,
+          "p95_ns": 23.678335,
+          "allocations": 1,
+          "allocated_bytes": 2
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_zero",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "0s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 6.881875,
+            "p95_ns": 7.34854,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 7.196665,
+            "p95_ns": 7.61354,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 6.931455,
+            "p95_ns": 7.52042,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 7.4425,
+            "p95_ns": 8.769375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 6.982085,
+            "p95_ns": 7.52271,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 7.204585,
+            "p95_ns": 7.46104,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 6.929375,
+            "p95_ns": 7.43229,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 7.20375,
+            "p95_ns": 7.56833,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 6.9775,
+            "p95_ns": 7.31479,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 7.19271,
+            "p95_ns": 7.449375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 6.922915,
+          "p95_ns": 7.36271,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 6.909165,
+          "p95_ns": 7.29104,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 6.81,
+          "p95_ns": 7.24,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 7.02646,
+          "p95_ns": 7.357915,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/format_nanoseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "42ns",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 31.235835,
+            "p95_ns": 38.400835,
+            "allocations": 1,
+            "allocated_bytes": 4
+          },
+          "upstream": {
+            "p50_ns": 16.39271,
+            "p95_ns": 18.305,
+            "allocations": 1,
+            "allocated_bytes": 4.8
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 28.45021,
+            "p95_ns": 29.47333,
+            "allocations": 1,
+            "allocated_bytes": 4
+          },
+          "upstream": {
+            "p50_ns": 15.92625,
+            "p95_ns": 19.10271,
+            "allocations": 1,
+            "allocated_bytes": 4.8
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 27.81271,
+            "p95_ns": 28.60458,
+            "allocations": 1,
+            "allocated_bytes": 4
+          },
+          "upstream": {
+            "p50_ns": 15.757085,
+            "p95_ns": 18.369375,
+            "allocations": 1,
+            "allocated_bytes": 4.8
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 38.343125,
+            "p95_ns": 39.56271,
+            "allocations": 1,
+            "allocated_bytes": 4
+          },
+          "upstream": {
+            "p50_ns": 15.66167,
+            "p95_ns": 19.05104,
+            "allocations": 1,
+            "allocated_bytes": 4.8
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 31.3775,
+            "p95_ns": 38.62354,
+            "allocations": 1,
+            "allocated_bytes": 4
+          },
+          "upstream": {
+            "p50_ns": 15.64771,
+            "p95_ns": 18.503125,
+            "allocations": 1,
+            "allocated_bytes": 4.8
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 32.14104,
+          "p95_ns": 34.81979,
+          "allocations": 1,
+          "allocated_bytes": 4
+        },
+        "balanced-new-a": {
+          "p50_ns": 31.191455,
+          "p95_ns": 35.005,
+          "allocations": 1,
+          "allocated_bytes": 4
+        },
+        "balanced-new-b": {
+          "p50_ns": 31.683125,
+          "p95_ns": 36.63854,
+          "allocations": 1,
+          "allocated_bytes": 4
+        },
+        "balanced-old-b": {
+          "p50_ns": 31.4075,
+          "p95_ns": 32.008125,
+          "allocations": 1,
+          "allocated_bytes": 4
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_nanoseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "42ns",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 13.55875,
+            "p95_ns": 14.54979,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 10.359795,
+            "p95_ns": 10.77833,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 15.747085,
+            "p95_ns": 16.75146,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 10.3525,
+            "p95_ns": 10.91458,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 14.65792,
+            "p95_ns": 15.337915,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 10.37479,
+            "p95_ns": 11.01896,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 12.866875,
+            "p95_ns": 13.26042,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 10.366875,
+            "p95_ns": 10.732295,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 12.87646,
+            "p95_ns": 13.43021,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 10.3625,
+            "p95_ns": 10.851665,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 13.885625,
+          "p95_ns": 14.375625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 12.889375,
+          "p95_ns": 13.374375,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 12.987705,
+          "p95_ns": 13.6775,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 13.66083,
+          "p95_ns": 14.28125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/format_microseconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1.5µs",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 31.13104,
+            "p95_ns": 31.84604,
+            "allocations": 1,
+            "allocated_bytes": 6
+          },
+          "upstream": {
+            "p50_ns": 17.494795,
+            "p95_ns": 19.911045,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 32.255625,
+            "p95_ns": 33.98396,
+            "allocations": 1,
+            "allocated_bytes": 6
+          },
+          "upstream": {
+            "p50_ns": 17.588335,
+            "p95_ns": 19.580625,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 31.25479,
+            "p95_ns": 31.731875,
+            "allocations": 1,
+            "allocated_bytes": 6
+          },
+          "upstream": {
+            "p50_ns": 16.99104,
+            "p95_ns": 19.90542,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 38.160835,
+            "p95_ns": 38.898335,
+            "allocations": 1,
+            "allocated_bytes": 6
+          },
+          "upstream": {
+            "p50_ns": 17.134375,
+            "p95_ns": 19.74854,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 31.57979,
+            "p95_ns": 32.365625,
+            "allocations": 1,
+            "allocated_bytes": 6
+          },
+          "upstream": {
+            "p50_ns": 17.492915,
+            "p95_ns": 19.34875,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 36.43375,
+          "p95_ns": 37.24375,
+          "allocations": 1,
+          "allocated_bytes": 6
+        },
+        "balanced-new-a": {
+          "p50_ns": 39.951875,
+          "p95_ns": 40.834165,
+          "allocations": 1,
+          "allocated_bytes": 6
+        },
+        "balanced-new-b": {
+          "p50_ns": 32.075205,
+          "p95_ns": 32.779375,
+          "allocations": 1,
+          "allocated_bytes": 6
+        },
+        "balanced-old-b": {
+          "p50_ns": 35.732295,
+          "p95_ns": 36.265415,
+          "allocations": 1,
+          "allocated_bytes": 6
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_microseconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1.5µs",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 16.809585,
+            "p95_ns": 17.696045,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 12.563955,
+            "p95_ns": 13.130415,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 20.270205,
+            "p95_ns": 21.23875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 12.52854,
+            "p95_ns": 13.53875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 18.356875,
+            "p95_ns": 19.097295,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 12.556045,
+            "p95_ns": 13.138125,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 16.20875,
+            "p95_ns": 16.993545,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 12.57729,
+            "p95_ns": 13.285625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 16.1475,
+            "p95_ns": 16.876875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 12.513335,
+            "p95_ns": 13.265415,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 16.84875,
+          "p95_ns": 18.009375,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 16.2425,
+          "p95_ns": 17.135625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 16.38479,
+          "p95_ns": 17.29875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 16.693125,
+          "p95_ns": 18.01646,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/format_seconds",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1.23456789s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 37.22625,
+            "p95_ns": 37.749585,
+            "allocations": 1,
+            "allocated_bytes": 11
+          },
+          "upstream": {
+            "p50_ns": 25.650625,
+            "p95_ns": 26.77021,
+            "allocations": 1,
+            "allocated_bytes": 16
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 38.641455,
+            "p95_ns": 39.89271,
+            "allocations": 1,
+            "allocated_bytes": 11
+          },
+          "upstream": {
+            "p50_ns": 26.024585,
+            "p95_ns": 27.759795,
+            "allocations": 1,
+            "allocated_bytes": 16
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 38.849795,
+            "p95_ns": 40.676875,
+            "allocations": 1,
+            "allocated_bytes": 11
+          },
+          "upstream": {
+            "p50_ns": 25.74833,
+            "p95_ns": 27.401045,
+            "allocations": 1,
+            "allocated_bytes": 16
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 47.00396,
+            "p95_ns": 47.69083,
+            "allocations": 1,
+            "allocated_bytes": 11
+          },
+          "upstream": {
+            "p50_ns": 25.686875,
+            "p95_ns": 27.429165,
+            "allocations": 1,
+            "allocated_bytes": 16
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 38.36625,
+            "p95_ns": 39.224165,
+            "allocations": 1,
+            "allocated_bytes": 11
+          },
+          "upstream": {
+            "p50_ns": 25.93,
+            "p95_ns": 27.71271,
+            "allocations": 1,
+            "allocated_bytes": 16
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 41.730835,
+          "p95_ns": 42.85625,
+          "allocations": 1,
+          "allocated_bytes": 11
+        },
+        "balanced-new-a": {
+          "p50_ns": 44.493125,
+          "p95_ns": 46.166875,
+          "allocations": 1,
+          "allocated_bytes": 11
+        },
+        "balanced-new-b": {
+          "p50_ns": 38.5975,
+          "p95_ns": 39.602085,
+          "allocations": 1,
+          "allocated_bytes": 11
+        },
+        "balanced-old-b": {
+          "p50_ns": 41.640625,
+          "p95_ns": 42.669795,
+          "allocations": 1,
+          "allocated_bytes": 11
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_seconds",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1.23456789s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 21.84375,
+            "p95_ns": 23.41625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 16.38104,
+            "p95_ns": 16.937705,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 25.09396,
+            "p95_ns": 26.048955,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 16.33521,
+            "p95_ns": 17.07104,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 22.45521,
+            "p95_ns": 23.056665,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 16.326665,
+            "p95_ns": 16.89229,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 21.919375,
+            "p95_ns": 22.648955,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 16.344795,
+            "p95_ns": 17.042085,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 21.797915,
+            "p95_ns": 22.412915,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 16.49125,
+            "p95_ns": 24.306875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 22.013545,
+          "p95_ns": 23.660415,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 22.1625,
+          "p95_ns": 23.13458,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 22.075,
+          "p95_ns": 22.81229,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 21.92104,
+          "p95_ns": 22.501875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/format_hours",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "1h2m3.4s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 36.042915,
+            "p95_ns": 37.25896,
+            "allocations": 1,
+            "allocated_bytes": 8
+          },
+          "upstream": {
+            "p50_ns": 24.022085,
+            "p95_ns": 27.25896,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 39.318125,
+            "p95_ns": 40.01125,
+            "allocations": 1,
+            "allocated_bytes": 8
+          },
+          "upstream": {
+            "p50_ns": 23.47917,
+            "p95_ns": 27.8575,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 36.398125,
+            "p95_ns": 38.5375,
+            "allocations": 1,
+            "allocated_bytes": 8
+          },
+          "upstream": {
+            "p50_ns": 24.53146,
+            "p95_ns": 27.31875,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 45.71896,
+            "p95_ns": 46.346455,
+            "allocations": 1,
+            "allocated_bytes": 8
+          },
+          "upstream": {
+            "p50_ns": 24.026875,
+            "p95_ns": 27.605,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 35.93021,
+            "p95_ns": 36.603335,
+            "allocations": 1,
+            "allocated_bytes": 8
+          },
+          "upstream": {
+            "p50_ns": 24.33292,
+            "p95_ns": 27.227295,
+            "allocations": 1,
+            "allocated_bytes": 8
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 40.23854,
+          "p95_ns": 40.91375,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "balanced-new-a": {
+          "p50_ns": 40.58646,
+          "p95_ns": 43.63583,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "balanced-new-b": {
+          "p50_ns": 36.30375,
+          "p95_ns": 36.91354,
+          "allocations": 1,
+          "allocated_bytes": 8
+        },
+        "balanced-old-b": {
+          "p50_ns": 40.074375,
+          "p95_ns": 40.93229,
+          "allocations": 1,
+          "allocated_bytes": 8
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_hours",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "1h2m3.4s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 20.34125,
+            "p95_ns": 21.479375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 17.70354,
+            "p95_ns": 18.147085,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 26.379795,
+            "p95_ns": 27.143335,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 17.7275,
+            "p95_ns": 18.512085,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 21.3675,
+            "p95_ns": 21.73625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 17.715,
+            "p95_ns": 18.384165,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 19.913335,
+            "p95_ns": 20.62583,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 17.68875,
+            "p95_ns": 18.01708,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 19.833125,
+            "p95_ns": 20.54333,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 17.686875,
+            "p95_ns": 18.190625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 20.306045,
+          "p95_ns": 21.337085,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 19.980625,
+          "p95_ns": 20.857085,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 20.18125,
+          "p95_ns": 20.945625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 20.348125,
+          "p95_ns": 20.69625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/format_maximum_go",
+      "semantics": "fresh compact nonnegative duration string used by clock View; known duration; no timing, scheduling or terminal I/O",
+      "output": "2562047h47m16.854775807s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 47.86167,
+            "p95_ns": 48.56375,
+            "allocations": 1,
+            "allocated_bytes": 24
+          },
+          "upstream": {
+            "p50_ns": 35.27229,
+            "p95_ns": 37.486875,
+            "allocations": 1,
+            "allocated_bytes": 24
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 50.377085,
+            "p95_ns": 51.437915,
+            "allocations": 1,
+            "allocated_bytes": 24
+          },
+          "upstream": {
+            "p50_ns": 35.962705,
+            "p95_ns": 37.596455,
+            "allocations": 1,
+            "allocated_bytes": 24
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 48.636045,
+            "p95_ns": 49.97021,
+            "allocations": 1,
+            "allocated_bytes": 24
+          },
+          "upstream": {
+            "p50_ns": 35.728955,
+            "p95_ns": 37.81021,
+            "allocations": 1,
+            "allocated_bytes": 24
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 54.490835,
+            "p95_ns": 55.314375,
+            "allocations": 1,
+            "allocated_bytes": 24
+          },
+          "upstream": {
+            "p50_ns": 35.64521,
+            "p95_ns": 37.72729,
+            "allocations": 1,
+            "allocated_bytes": 24
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 48.029375,
+            "p95_ns": 48.628125,
+            "allocations": 1,
+            "allocated_bytes": 24
+          },
+          "upstream": {
+            "p50_ns": 35.928335,
+            "p95_ns": 38.36792,
+            "allocations": 1,
+            "allocated_bytes": 24
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 47.724165,
+          "p95_ns": 49.478125,
+          "allocations": 1,
+          "allocated_bytes": 24
+        },
+        "balanced-new-a": {
+          "p50_ns": 48.589165,
+          "p95_ns": 49.535205,
+          "allocations": 1,
+          "allocated_bytes": 24
+        },
+        "balanced-new-b": {
+          "p50_ns": 48.395415,
+          "p95_ns": 49.37771,
+          "allocations": 1,
+          "allocated_bytes": 24
+        },
+        "balanced-old-b": {
+          "p50_ns": 47.621875,
+          "p95_ns": 48.38167,
+          "allocations": 1,
+          "allocated_bytes": 24
+        }
+      }
+    },
+    {
+      "case": "clocks/reused_format_maximum_go",
+      "semantics": "compact duration appended into cleared caller-owned reusable UTF-8 buffer; known duration; no scheduling or terminal I/O",
+      "output": "2562047h47m16.854775807s",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 27.476875,
+            "p95_ns": 32.58771,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 26.705205,
+            "p95_ns": 27.70271,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 33.93375,
+            "p95_ns": 34.58771,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 26.810415,
+            "p95_ns": 27.580415,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 29.055,
+            "p95_ns": 33.198545,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 26.77229,
+            "p95_ns": 27.63979,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 27.760415,
+            "p95_ns": 29.234795,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 26.79875,
+            "p95_ns": 27.646665,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 27.67479,
+            "p95_ns": 28.247915,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 26.85583,
+            "p95_ns": 27.72479,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 27.47771,
+          "p95_ns": 28.29375,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 27.96125,
+          "p95_ns": 28.56875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 27.541665,
+          "p95_ns": 28.073125,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 27.47771,
+          "p95_ns": 28.631875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/stopwatch_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=0ns,running=false,accepted=false",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 1.2572295,
+            "p95_ns": 1.3050415,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.1111455,
+            "p95_ns": 6.2925835,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 1.2542915,
+            "p95_ns": 1.3030625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.1375415,
+            "p95_ns": 6.2237705,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 1.2630625,
+            "p95_ns": 1.34325,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.150375,
+            "p95_ns": 6.2801455,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 1.258875,
+            "p95_ns": 1.3034375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.130708,
+            "p95_ns": 6.2255205,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 1.2564165,
+            "p95_ns": 1.304625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.154104,
+            "p95_ns": 6.3266665,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 1.2576875,
+          "p95_ns": 1.3067705,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 1.2620415,
+          "p95_ns": 1.3285,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 1.2723335,
+          "p95_ns": 1.3156875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 1.262583,
+          "p95_ns": 1.302604,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/countdown_paused",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=10000000000ns,running=false,accepted=false",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 1.2736875,
+            "p95_ns": 1.3265835,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.5667915,
+            "p95_ns": 6.6390415,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 1.253333,
+            "p95_ns": 1.311354,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.618583,
+            "p95_ns": 6.740875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 1.272354,
+            "p95_ns": 1.318125,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.643396,
+            "p95_ns": 6.803875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 1.254583,
+            "p95_ns": 1.295396,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.574979,
+            "p95_ns": 6.666771,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 1.270729,
+            "p95_ns": 1.3323125,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.5861875,
+            "p95_ns": 6.6764585,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 1.2678125,
+          "p95_ns": 1.3336455,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 1.278354,
+          "p95_ns": 1.3111875,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 1.2608125,
+          "p95_ns": 1.3186665,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 1.258542,
+          "p95_ns": 1.3346665,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/stopwatch_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=0ns,running=true,accepted=false",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 1.2543125,
+            "p95_ns": 1.2946875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.1638125,
+            "p95_ns": 6.249521,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 1.252104,
+            "p95_ns": 1.308896,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.2029165,
+            "p95_ns": 6.294792,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 1.2609375,
+            "p95_ns": 1.306604,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.211792,
+            "p95_ns": 6.318104,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 1.258021,
+            "p95_ns": 1.2883335,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.200875,
+            "p95_ns": 6.257083,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 1.2920835,
+            "p95_ns": 1.34425,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.199125,
+            "p95_ns": 6.2776665,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 1.251417,
+          "p95_ns": 1.3115835,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 1.254792,
+          "p95_ns": 1.3965625,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 1.253396,
+          "p95_ns": 1.2989375,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 1.2574585,
+          "p95_ns": 1.309354,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    },
+    {
+      "case": "clocks/countdown_foreign",
+      "semantics": "reject ignored tick, preserve cached clock value/running state, emit no new schedule; prebuilt event; no timer execution",
+      "output": "value=10000000000ns,running=true,accepted=false",
+      "stages": {
+        "before": {
+          "matea": {
+            "p50_ns": 1.253729,
+            "p95_ns": 1.3041045,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.6250625,
+            "p95_ns": 6.7119375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "isolated-integers": {
+          "matea": {
+            "p50_ns": 1.252875,
+            "p95_ns": 1.311396,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.6230835,
+            "p95_ns": 6.7298125,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "pairs": {
+          "matea": {
+            "p50_ns": 1.254833,
+            "p95_ns": 1.2966875,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.640125,
+            "p95_ns": 6.724521,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "inlining": {
+          "matea": {
+            "p50_ns": 1.254583,
+            "p95_ns": 1.2879375,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.62725,
+            "p95_ns": 6.711771,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        },
+        "full-inlining": {
+          "matea": {
+            "p50_ns": 1.2650415,
+            "p95_ns": 1.292625,
+            "allocations": 0,
+            "allocated_bytes": 0
+          },
+          "upstream": {
+            "p50_ns": 6.6527295,
+            "p95_ns": 6.6930835,
+            "allocations": 0,
+            "allocated_bytes": 0
+          }
+        }
+      },
+      "balanced": {
+        "balanced-old-a": {
+          "p50_ns": 1.257333,
+          "p95_ns": 1.2995,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-a": {
+          "p50_ns": 1.2641045,
+          "p95_ns": 1.301958,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-new-b": {
+          "p50_ns": 1.258229,
+          "p95_ns": 1.3199375,
+          "allocations": 0,
+          "allocated_bytes": 0
+        },
+        "balanced-old-b": {
+          "p50_ns": 1.251479,
+          "p95_ns": 1.303646,
+          "allocations": 0,
+          "allocated_bytes": 0
+        }
+      }
+    }
+  ],
+  "excluded_run": {
+    "context": "integers-context.json",
+    "reason": "CI log downloads were requested before benchmark completion was confirmed; native isolation was not established. Retain this run and repeat after downloads finish."
+  },
+  "code_size": {
+    "baseline_text_section_bytes": 612860,
+    "full_inlining_text_section_bytes": 614460,
+    "delta_bytes": 1600,
+    "scope": "native complete perf CLI Mach-O __text; not per-application code size or resident memory"
+  },
+  "decision": "Retain inline visibility for the existing bounded private helper chain: small reused-buffer improvements persist in both order trials. Owned output still allocates once and remains mixed/slower than Go; performance verdict remains partial. Reject new arithmetic/dependency/table candidates.",
+  "limits": [
+    "All 31 samples and adverse medians/p95 retained; no causal or universal optimum claim from a single host.",
+    "Go control binary is unchanged across stages; requested Rust bytes and Go allocator accounting differ.",
+    "Baseline rebuilt at identical source paths exactly matches the original binary SHA256. Balanced source reconstruction is explicit and restores current source before timing.",
+    "A separate run lacking confirmed isolation is retained and excluded; it does not contribute to the table.",
+    "The unmodified zero path and fresh allocation costs vary between process launches. No allocator or ASLR control is imposed."
+  ]
+}

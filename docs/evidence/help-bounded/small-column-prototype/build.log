@@ -1,0 +1,22 @@
+     Locking 15 packages to highest Rust 1.99.0 compatible versions
+   Compiling matea-help-fast v0.0.0 (/private/tmp/matea-help-small-prefix/fast)
+   Compiling matea-help-small-prefix v0.0.0 (/private/tmp/matea-help-small-prefix)
+warning: function `old_api` is never used
+  --> caller.rs:56:13
+   |
+56 | api_runner!(old_api,baseline);api_runner!(new_api,current);
+   |             ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+   = note: this warning originates in the macro `api_runner` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: function `new_api` is never used
+  --> caller.rs:56:43
+   |
+56 | api_runner!(old_api,baseline);api_runner!(new_api,current);
+   |                                           ^^^^^^^
+   |
+   = note: this warning originates in the macro `api_runner` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: `matea-help-small-prefix` (bin "matea-help-small-prefix") generated 2 warnings
+    Finished `release` profile [optimized] target(s) in 1.32s

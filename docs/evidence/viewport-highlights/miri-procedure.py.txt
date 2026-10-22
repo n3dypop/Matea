@@ -1,0 +1,11 @@
+import datetime,hashlib,json,os,subprocess
+from pathlib import Path
+root=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea');out=root/'docs/evidence/viewport-highlights'
+files=['Cargo.toml','Cargo.lock','crates/matea-widgets/Cargo.toml','crates/matea-widgets/src/viewport.rs','crates/matea-widgets/src/viewport/highlights.rs','crates/matea-widgets/tests/viewport_highlights.rs','crates/matea-render/src/lib.rs','crates/matea-render/src/rich_text.rs','crates/matea-render/src/text.rs','crates/matea-style/src/lib.rs','crates/matea-style/src/attributes.rs','crates/matea-style/src/attributes/patch.rs']
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();known={p:sha(root/p) for p in files}
+command=['cargo','+nightly','miri','test','--locked','--offline','-p','matea-widgets','--test','viewport_highlights','--','--skip','every_scalar_boundary_range','--skip','pinned_420_source_states']
+c={'schema':1,'status':'running','seed':269,'source_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'source_sha256':known,'command':command,'started_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'limits':['Eight targeted tests. The native finite range corpus and literal 420-row source matrix are deliberately skipped in Miri; they execute in full native acceptance. Not all branches, platforms or memory models.']}
+path=out/'miri-context.json';save=lambda:path.write_text(json.dumps(c,indent=2)+'\n');save()
+with (out/'miri.log').open('wb') as log:r=subprocess.run(command,cwd=root,env=dict(os.environ,MIRIFLAGS='-Zmiri-seed=269'),stdout=log,stderr=subprocess.STDOUT)
+c.update(exit_code=r.returncode,source_changed=[p for p,h in known.items() if sha(root/p)!=h],log_sha256=sha(out/'miri.log'),finished_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+c['status']='complete' if r.returncode==0 and not c['source_changed'] else 'failed';save();raise SystemExit(r.returncode or bool(c['source_changed']))

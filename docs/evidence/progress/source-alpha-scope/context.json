@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "status": "complete_source_observations",
+  "cases": 71,
+  "source_module_setup": "../source-color-scope/context.json",
+  "files_sha256": {
+    "upstream.jsonl": "3a49ecc58794439bbaaa484912b0c445a53b865bac11cb70039a7870feb689f9",
+    "procedure.go.txt": "11600602f27afa87a22660222a8a8f0599a01e185558049402583191ff559df1",
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "observations": [
+    "Prefix counts preserve original premultiplied channels; blended endpoints are integer-unpremultiplied and opaque.",
+    "Zero-alpha RGBA with preserved channels is recovered by the source opaque-8-bit fallback; NRGBA zero-alpha already loses those channels.",
+    "NoColor has opaque black RGBA channels but its symbolic style role differs from a known black input.",
+    "Nil filtering mutates the caller-provided variadic slice; reading the same changed slots through the source prefix shortcut is a code inference, not a separately executed observation."
+  ],
+  "limits": [
+    "Native source calls only, no Rust RGBA16 constructor is implemented or claimed.",
+    "The explicit source image/color input is terminal style/color data; no image engine, decoder/codec or GPU code is involved.",
+    "Public-capability mapping, alpha-aware frame/geometry/hyperlink conformance and platform reproduction remain pending."
+  ]
+}

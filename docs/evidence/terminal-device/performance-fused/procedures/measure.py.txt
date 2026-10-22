@@ -1,0 +1,83 @@
+"""Frozen macOS PTY experiment: no build/instrumentation overlaps timing."""
+import hashlib,json,os,platform,re,statistics,subprocess,sys,termios,pty,fcntl,struct,uuid
+from pathlib import Path
+root=Path.cwd();sys.path.insert(0,str(root/'scripts'))
+from evidence_checks import require
+from performance_records import read_records,read_probe_outputs,summary
+from check_quality import execution_inputs
+from fetch_upstream_issues import atomic_json
+base=root/'docs/evidence/terminal-device/performance-fused';base.mkdir(exist_ok=True)
+attempt=base/'attempts'/uuid.uuid4().hex;attempt.mkdir(parents=True)
+sha=lambda b:hashlib.sha256(b).hexdigest()
+build=[json.loads(line) for line in Path('/private/tmp/matea-device-bench-fused-build.jsonl').read_text().splitlines()]
+rust=next(Path(r['executable']) for r in build if r.get('executable') and r.get('target',{}).get('name')=='terminal_primitives')
+go=Path('/private/tmp/matea-device-comparison/probe')
+binaries={'matea':rust,'source':go};digests={k:sha(p.read_bytes()) for k,p in binaries.items()}
+sources={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+pin=json.loads((root/'docs/evidence/terminal-device-source/pins.json').read_bytes())
+for name,expected in pin['source_file_sha256'].items():require(sha((Path('/private/tmp/matea-terminal-device-reference')/Path(name).name).read_bytes())==expected,'materialized reference drift: '+name)
+procedures=base/'procedures';procedures.mkdir(exist_ok=True)
+for source,name in [(Path(__file__),'measure.py.txt'),(Path('/private/tmp/matea-device-comparison/main.go'),'source-probe.go.txt'),(Path('/private/tmp/matea-device-comparison/go.mod'),'go.mod.txt'),(Path('/private/tmp/matea-device-comparison/go.sum'),'go.sum.txt'),(root/'crates/matea-terminal/benches/terminal_primitives.rs','terminal_primitives.rs.txt')]:
+ (procedures/name).write_bytes(source.read_bytes())
+procedure_hashes={p.name:sha(p.read_bytes()) for p in procedures.iterdir()}
+context={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source_sha256':sources,'binary_sha256':digests,'platform':platform.platform(),'attempt':attempt.relative_to(base).as_posix(),'children':[],'limits':['Four matched successful native syscall operations and two Rust-only owned lifecycle controls on isolated 132x42 macOS PTYs.','Opaque state records validate successful capture and independent before/after configured fields, not all internal state output bytes.','No password latency, other OS, whole framework or universal maximum-speed claim. Source nil-state and EOF differences are separate correctness contracts.','Three ordinary cohorts, 31 positive retained samples per case, confirmed 20ms calibration; all negatives retained. RSS is 31 output-only whole-process children per implementation including startup/runtime, not per-operation peak memory.','No build, native tests, Miri, LLVM or downloads overlap ordinary timing.']}
+def save():
+ atomic_json(attempt/'context.json',context);atomic_json(base/'context.json',context)
+context.update(reference_sha=pin['sha'],reference_source_sha256=pin['source_file_sha256'],procedure_sha256=procedure_hashes)
+def configured(state):
+ result=list(state);result[3]&=~getattr(termios,'PENDIN',0);return result
+def portable(state):return [v if isinstance(v,int) else [x.hex() if isinstance(x,bytes) else x for x in v] for v in state]
+def run(implementation,label,output_only=False,rss=False):
+ master,slave=pty.openpty();before=termios.tcgetattr(slave)
+ fcntl.ioctl(slave,termios.TIOCSWINSZ,struct.pack('HHHH',42,132,0,0))
+ command=[str(binaries[implementation])]+(['--device-measure'] if implementation=='matea' else [])
+ if rss:command=['/usr/bin/time','-l',*command]
+ environment=dict(os.environ,MATEA_PERF_ITERATIONS='20000',MATEA_PERF_MIN_SAMPLE_NS='20000000')
+ if output_only:environment['MATEA_PROBE_OUTPUT_ONLY']='1'
+ else:environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+ item={'implementation':implementation,'label':label,'output_only':output_only,'rss':rss,'before':portable(before)};context['children'].append(item);save()
+ try:
+  child=subprocess.run(command,stdin=slave,capture_output=True,env=environment,timeout=180)
+  name=implementation+'-'+label
+  (attempt/(name+'.jsonl')).write_bytes(child.stdout);(attempt/(name+'.stderr.txt')).write_bytes(child.stderr)
+  after=termios.tcgetattr(slave);item.update(exit_code=child.returncode,stdout=name+'.jsonl',stderr=name+'.stderr.txt',after=portable(after),stdout_sha256=sha(child.stdout),stderr_sha256=sha(child.stderr));save()
+  require(child.returncode==0,'native probe failed: '+name)
+  require(configured(after)==configured(before),'configured device fields changed: '+name)
+  if rss:
+   matches=re.findall(rb'^\s*(\d+)\s+maximum resident set size\s*$',child.stderr,re.M)
+   require(len(matches)==1 and int(matches[0])>0,'missing Darwin child RSS')
+   item['maximum_resident_set_size_bytes']=int(matches[0])
+  else:require(not child.stderr,'unexpected stderr: '+name)
+  records=(read_probe_outputs if output_only else read_records)(child.stdout.decode())
+  require(set(records)==set(oracles)-({'device/owned_raw_cycle','device/owned_raw_fused_cycle'} if implementation=='source' else set()),'incomplete cases')
+  for key,r in records.items():
+   require((r['first_return_value'],r['output'])==oracles[key],'independent device oracle mismatch: '+key)
+   if not output_only:
+    require(r['calibration']['target_ns']==20000000,'changed calibration target')
+    require(all('confirmations_ns' in b for b in r['calibration']['batches']),'missing confirmation history')
+  item['status']='passed';save();return records
+ finally:
+  termios.tcsetattr(slave,termios.TCSANOW,before);os.close(slave);os.close(master)
+oracles={'device/is_terminal':(1,'true'),'device/state':(1,'captured'),'device/size':((132<<16)|42,'132x42'),'device/raw_restore':(1,'restored'),'device/owned_raw_cycle':(1,'restored'),'device/owned_raw_fused_cycle':(1,'restored')}
+save()
+try:
+ cohorts=[]
+ for index in range(3):
+  values={}
+  for implementation in (['source','matea'] if index%2==0 else ['matea','source']):values[implementation]=run(implementation,'timing-'+str(index))
+  rows=[]
+  for key,r in values['matea'].items():
+   row={'case':key,'matea':summary(r),'output_equivalent_for_this_fixture':key in values['source']}
+   if key in values['source']:
+    s=values['source'][key];require(all(r[k]==s[k] for k in ['first_return_value','output','semantics']),'matched semantic/output mismatch');row.update(source=summary(s),source_over_matea_p50=statistics.median(s['samples_ns'])/statistics.median(r['samples_ns']))
+   else:row['note']='Rust-only full owned guard lifecycle; no source ratio.'
+   rows.append(row)
+  cohorts.append({'cohort':index,'cases':rows});context['cohorts']=cohorts;save();print('timing cohort',index,'complete',flush=True)
+ for index in range(31):
+  for implementation in (['source','matea'] if index%2==0 else ['matea','source']):run(implementation,'rss-'+str(index),True,True)
+ require(sources=={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))},'execution input changed')
+ require(digests=={k:sha(p.read_bytes()) for k,p in binaries.items()},'probe binary changed')
+ report={'schema':1,'status':'complete','cohorts':cohorts,'rss':{k:{'children':31,'minimum_bytes':min(v),'p50_bytes':statistics.median(v),'maximum_bytes':max(v)} for k in binaries for v in [[c['maximum_resident_set_size_bytes'] for c in context['children'] if c['implementation']==k and c['rss']]]},'limits':context['limits']}
+ atomic_json(attempt/'report.json',report);context.update(status='complete',report='report.json',report_sha256=sha((attempt/'report.json').read_bytes()));save()
+except BaseException as error:
+ context.update(status='failed',error=f'{type(error).__name__}: {error}');save();raise

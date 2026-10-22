@@ -1,0 +1,139 @@
+"""Frozen independent raw/producer/input/output binding and percentile review."""
+from collections import Counter
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import statistics
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+summary = {"schema": 1, "status": "verified", "produced_at_utc": datetime.now(timezone.utc).isoformat(),
+           "verifier_sha256": sha(Path(__file__).read_bytes()), "candidates": [],
+           "limits": ["Before/current ratio only for equal complete outputs; new contracts have no old-speed ratio.",
+                      "All samples/cohorts/adverse tails retained; no averaging grades or threshold change.",
+                      "Whole-fixture self/descendant peak RSS is not a per-operation allocation count or concurrent sum.",
+                      "Native aarch64 macOS only; no physical terminal, Unicode emulator or production-framework speed claim."]}
+for candidate, folder in [("candidate-1", BASE), ("candidate-2", BASE / "candidate-2")]:
+    result = {"candidate": candidate, "records": 0, "positive_intervals": 0, "rss_children": 0,
+              "source_bindings": {}, "contexts": [], "comparisons": [], "current_only": []}
+    for part in ["performance", "supplement"]:
+        directory = folder / part
+        data = (directory / "context.json").read_bytes()
+        context = json.loads(data)
+        require(context["status"] == "complete", "incomplete attempt")
+        raw = (directory / context["raw"]).read_bytes()
+        require(sha(raw) == context["raw_sha256"], "raw drift")
+        attempt = directory / context["attempt"]
+        require((attempt / "cases.jsonl").read_bytes() == raw, "attempt/raw mismatch")
+        require((attempt / "context.json").read_bytes() == data, "attempt manifest mismatch")
+        for name, expected in context["input_sha256"].items():
+            path = ROOT / name
+            if sha(path.read_bytes()) != expected:
+                require(candidate == "candidate-1" and name in ["scripts/check_terminal_trace.py", "scripts/check_color_trace.py"],
+                        "unexpected source drift: " + name)
+                path = BASE / (Path(name).stem + ".candidate-1.txt")
+                require(sha(path.read_bytes()) == expected, "archived candidate mismatch")
+            result["source_bindings"][name] = {"sha256": expected, "verified_at": str(path.relative_to(ROOT))}
+        records = [json.loads(line) for line in raw.splitlines()]
+        require(len(records) == context["records"] and len({r["case"] for r in records}) == len(records), "record set mismatch")
+        for row in records:
+            samples = row["samples_ns"]
+            require(len(samples) == 31 and all(type(n) is int and n > 0 for n in samples), "invalid sample")
+            require(row["p50_ns"] == statistics.median(samples) and row["p95_ns"] == sorted(samples)[29], "wrong percentile")
+            output = (directory / "outputs" / (row["workload"].replace("/", "-") + ".json.txt")).read_bytes()
+            require(sha(output) == row["output_sha256"] and len(output) == row["output_bytes"], "complete output drift")
+            children = row["whole_fixture_rss_children"]
+            require(len(children) == 3 and all(c["self_peak_rss_bytes"] > 0 and c["output_sha256"] == row["output_sha256"]
+                                             and c["descendant_peak_rss_bytes"] >= 0 for c in children), "RSS/output mismatch")
+        result["records"] += len(records)
+        result["positive_intervals"] += 31 * len(records)
+        result["rss_children"] += 3 * len(records)
+        result["contexts"].append({"path": str((directory / "context.json").relative_to(ROOT)), "sha256": sha(data),
+                                   "raw_sha256": sha(raw), "attempt": context["attempt"]})
+        for cohort in range(1, 4):
+            cases = sorted({r["workload"] for r in records if r["cohort"] == cohort and r["ratio_eligible"]})
+            for case in cases:
+                before = next(r for r in records if r["cohort"] == cohort and r["workload"] == case and r["variant"] == "before")
+                current = next(r for r in records if r["cohort"] == cohort and r["workload"] == case and r["variant"] == "current")
+                require(before["output_sha256"] == current["output_sha256"] and before["output_bytes"] == current["output_bytes"],
+                        "paired full output mismatch")
+                row = {"cohort": cohort, "workload": case,
+                       "before_p50_ns": before["p50_ns"], "current_p50_ns": current["p50_ns"],
+                       "before_p95_ns": before["p95_ns"], "current_p95_ns": current["p95_ns"],
+                       "p50_ratio": current["p50_ns"] / before["p50_ns"], "p95_ratio": current["p95_ns"] / before["p95_ns"],
+                       "before_python_peak_bytes": before["python_traced_peak_bytes"], "current_python_peak_bytes": current["python_traced_peak_bytes"],
+                       "before_self_peak_rss_bytes": [c["self_peak_rss_bytes"] for c in before["whole_fixture_rss_children"]],
+                       "current_self_peak_rss_bytes": [c["self_peak_rss_bytes"] for c in current["whole_fixture_rss_children"]]}
+                result["comparisons"].append(row)
+        result["current_only"].extend({k: row[k] for k in ["workload", "cohort", "p50_ns", "p95_ns", "output_sha256"]}
+                                      for row in records if not row["ratio_eligible"])
+    result["adverse_p50_cohorts"] = [r for r in result["comparisons"] if r["p50_ratio"] > 1]
+    result["adverse_p95_cohorts"] = [r for r in result["comparisons"] if r["p95_ratio"] > 1]
+    require(result["records"] == 135 and result["positive_intervals"] == 4185 and result["rss_children"] == 405,
+            "incomplete candidate workload suite")
+    summary["candidates"].append(result)
+summary["total_records"] = sum(c["records"] for c in summary["candidates"])
+summary["total_positive_intervals"] = sum(c["positive_intervals"] for c in summary["candidates"])
+summary["total_rss_children"] = sum(c["rss_children"] for c in summary["candidates"])
+summary["additional_runs"] = []
+for name, expected_records in [("failure-performance", 9), ("calibrated-controls", 18), ("retention", 3)]:
+    directory = BASE / name
+    data = (directory / "context.json").read_bytes()
+    context = json.loads(data)
+    raw = (directory / context["raw"]).read_bytes()
+    require(context["status"] == "complete" and sha(raw) == context["raw_sha256"], "additional run incomplete")
+    require((directory / context["attempt"] / "cases.jsonl").read_bytes() == raw, "additional attempt mismatch")
+    require((directory / context["attempt"] / "context.json").read_bytes() == data, "additional manifest mismatch")
+    for path, expected in context["input_sha256"].items():
+        require(sha((ROOT / path).read_bytes()) == expected, "additional source drift: " + path)
+    records = [json.loads(line) for line in raw.splitlines()]
+    require(len(records) == expected_records and len({r["case"] for r in records}) == expected_records, "additional count mismatch")
+    for row in records:
+        if name == "calibrated-controls":
+            samples, count = row["samples_total_ns"], row["iterations_per_sample"]
+            require(len(samples) == 31 and all(type(n) is int and n > 0 for n in samples), "invalid batch intervals")
+            history = row["calibration"]
+            require(history and history[-1]["iterations"] == count and all(n >= 20_000_000 for n in history[-1]["observations_ns"]), "missing calibration confirmations")
+            require(all(len(h["observations_ns"]) == 3 for h in history), "calibration history lost")
+            require(row["p50_ns"] == statistics.median(samples) / count and row["p95_ns"] == sorted(samples)[29] / count,
+                    "batch percentile mismatch")
+            other = [r for r in records if r["workload"] == row["workload"]]
+            require(all(r["output_sha256"] == row["output_sha256"] and r["output_bytes"] == row["output_bytes"] for r in other),
+                    "calibrated complete output mismatch")
+        elif name == "failure-performance":
+            output = (directory / "outputs" / (row["workload"] + ".json.txt")).read_bytes()
+            require(sha(output) == row["output_sha256"] and len(output) == row["output_bytes"], "failure output drift")
+            require(json.loads(output)["journal"]["status"] == "failed", "failure accepted")
+            require(len(row["samples_ns"]) == 31 and all(type(n) is int and n > 0 for n in row["samples_ns"]), "bad failure intervals")
+            require(len(row["whole_fixture_rss_children"]) == 3 and all(c["output_sha256"] == row["output_sha256"] and c["self_peak_rss_bytes"] > 0 for c in row["whole_fixture_rss_children"]), "bad failure RSS")
+        else:
+            require(row["record_kind"] == "memory-observation" and "samples_ns" not in row, "memory masquerades as time")
+            require([o["completed_operations"] for o in row["observations"]] == [0, 8, 16, 24, 32], "incomplete retention schedule")
+            require(all(int(o["ps_stdout"].strip()) * 1024 == o["self_current_rss_bytes"] and o["self_current_rss_bytes"] > 0
+                        for o in row["observations"]), "bad own RSS")
+    summary["additional_runs"].append({"path": str((directory / "context.json").relative_to(ROOT)), "sha256": sha(data),
+                                       "raw_sha256": sha(raw), "records": len(records), "kind": name})
+summary["total_timing_records"] = summary["total_records"] + 9 + 18
+summary["total_positive_intervals"] += 279 + 558
+summary["total_rss_children"] += 27
+summary["separate_retention_children"] = 3
+summary["separate_retention_observations"] = 15
+axes = json.loads((BASE / "unmet-axes.json").read_bytes())
+require(len(axes["axes"]) == 48 and Counter(a["axis"] for a in axes["axes"]) == {"reference": 21, "performance": 27},
+        "incomplete axis analysis")
+(BASE / "verified-comparison.json").write_text(json.dumps(summary, indent=2) + "\n")
+print(summary["total_timing_records"], "timing records;", summary["total_positive_intervals"], "positive intervals;", summary["total_rss_children"], "RSS children")
+for result in summary["candidates"]:
+    print(result["candidate"], "adverse p50/p95", len(result["adverse_p50_cohorts"]), len(result["adverse_p95_cohorts"]))

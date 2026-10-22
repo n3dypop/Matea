@@ -1,0 +1,43 @@
+   Compiling matea-core v0.1.0 (${REPOSITORY}/crates/matea-core)
+   Compiling matea-widgets v0.1.0 (${REPOSITORY}/crates/matea-widgets)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.80s
+     Running tests/viewport.rs (target/debug/deps/viewport-ba33bc7721b61cad)
+
+running 3 tests
+test resize_clamps_observed_position_before_applying_navigation ... FAILED
+test trailing_empty_lines_are_scrollable_and_crlf_is_structural ... FAILED
+test viewport_slices_match_an_independent_line_model ... FAILED
+
+failures:
+
+---- resize_clamps_observed_position_before_applying_navigation stdout ----
+
+thread 'resize_clamps_observed_position_before_applying_navigation' (2721064) panicked at crates/matea-widgets/tests/viewport.rs:28:5:
+assertion `left == right` failed
+  left: 5
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- trailing_empty_lines_are_scrollable_and_crlf_is_structural stdout ----
+
+thread 'trailing_empty_lines_are_scrollable_and_crlf_is_structural' (2721065) panicked at crates/matea-widgets/tests/viewport.rs:15:5:
+assertion `left == right` failed
+  left: 2
+ right: 3
+
+---- viewport_slices_match_an_independent_line_model stdout ----
+
+thread 'viewport_slices_match_an_independent_line_model' (2721066) panicked at crates/matea-widgets/tests/viewport.rs:54:17:
+assertion `left == right` failed
+  left: 1
+ right: 2
+
+
+failures:
+    resize_clamps_observed_position_before_applying_navigation
+    trailing_empty_lines_are_scrollable_and_crlf_is_structural
+    viewport_slices_match_an_independent_line_model
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p matea-widgets --test viewport`

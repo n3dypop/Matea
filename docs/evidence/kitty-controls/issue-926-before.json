@@ -1,0 +1,25 @@
+{
+  "number": 926,
+  "title": "Kitty graphics protocol options serialization drops negative z-index",
+  "url": "https://github.com/charmbracelet/x/issues/926",
+  "updated_at": "2026-07-29T12:41:01Z",
+  "labels": [],
+  "matea_reproduction": "fixed_source_negative_omission_reproduced_and_existing_matea_signed_control_regression_confirmed",
+  "disposition": "assessed_implemented_contract",
+  "review": {
+    "status": "complete",
+    "reference": "charm-x-ansi",
+    "reference_sha": "faa4adf95555331dfb439b716cc83767ecdadeb4",
+    "reviewed_updated_at": "2026-07-29T12:41:01Z",
+    "notes": "Body and official specification reviewed. Actual fixed Options.String drops 32816 requested negatives in 65633 finite cases; existing Matea kitty_place preserves all requested signed z values and unrelated controls. Persistent exact-byte z=-1 regression predates this audit, so no production correction was necessary. Native macOS private caller adds only its own package to root dependency identities. Raw compressed outputs, source hashes and independent parsed-control oracle retained.",
+    "scope": "Negative placement-control serialization only; finite i16 domain plus 97 i32 boundaries, not all Kitty options, physical terminal layering, image processing or whole-module parity/performance.",
+    "evidence_sha256": {
+      "docs/kitty-placement-issue-audit.md": "29aa528db0006f5c9cdbbf1e2904b8b256869a3bec1c1bd58ea23f686e8faa89",
+      "docs/evidence/kitty-z-index/issue-926.json": "a3969f594c992d475a73b68f91c8b5503c6b0f4f82d086fbc8e88232cd5b6a24",
+      "docs/evidence/kitty-z-index/context.json": "8cb6ce2abb34c6b120ef2f6ae1fbf43230ccc938041e9a01018d5d05eb39510c",
+      "docs/evidence/kitty-z-index/verification.json": "3678f1c69efea1729452702a5bb7129408c85b40bdfa2670b30555faface17d4",
+      "docs/evidence/kitty-z-index/verify.py.txt": "d3f2d29eb69477761063f1cd613a58abdaf47e828b3b0b9d53c97b139a5a52b7",
+      "crates/matea-terminal/src/protocol.rs": "0fdf75ec389641861bfee1546bac8d3fd317f95fa0719c7a0b58236b1e21ac25"
+    }
+  }
+}

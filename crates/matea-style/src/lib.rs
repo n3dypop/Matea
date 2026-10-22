@@ -1,13 +1,39 @@
 #![forbid(unsafe_code)]
 //! Portable design tokens and deterministic integer layout. No terminal I/O.
+mod attributes;
+pub use attributes::{
+    BlinkStyle, StylePatch, TextAttribute, TextAttributes, TextFrame, UnderlineStyle,
+};
+mod gradient;
+pub use gradient::{Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors};
+mod color_input;
+pub use color_input::{AdaptiveColor, ColorError, PremultipliedRgba16, ProfileColors, Rgba16};
+mod decoration;
+pub use decoration::{
+    Alignment, BlockStyle, BorderPart, BorderParts, BorderPreset, BorderSet, CornerMode,
+    DecorationError, Edges, Insets, TabWidth, TextTransform,
+};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum Color {
     #[default]
     Default,
     Indexed(u8),
     Rgb(u8, u8, u8),
+}
+impl Color {
+    /// Quantize known 16-bit sRGB channels to terminal RGB8. Input depth is
+    /// explicit: small values are never reinterpreted as already 8-bit.
+    /// Alpha/background compositing and unknown terminal colors are separate.
+    ///
+    /// ```
+    /// use matea_style::Color;
+    /// assert_eq!(Color::rgb16(255, 256, 65535), Color::Rgb(0, 1, 255));
+    /// ```
+    pub const fn rgb16(red: u16, green: u16, blue: u16) -> Self {
+        Self::Rgb((red >> 8) as u8, (green >> 8) as u8, (blue >> 8) as u8)
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -38,7 +64,7 @@ const ANSI: [(u8, u8, u8); 16] = [
     (255, 255, 255),
 ];
 
-fn palette(n: u8) -> (u8, u8, u8) {
+const fn palette(n: u8) -> (u8, u8, u8) {
     match n {
         0..=15 => ANSI[n as usize],
         16..=231 => {
@@ -57,6 +83,25 @@ fn palette(n: u8) -> (u8, u8, u8) {
     }
 }
 
+fn distance((r, g, b): (u8, u8, u8), (a, c, d): (u8, u8, u8)) -> u32 {
+    let dr = i32::from(r) - i32::from(a);
+    let dg = i32::from(g) - i32::from(c);
+    let db = i32::from(b) - i32::from(d);
+    (dr * dr + dg * dg + db * db) as u32
+}
+
+/// Nearest cube channel, breaking exact midpoint ties toward the smaller index.
+fn cube_channel(n: u8) -> u8 {
+    match n {
+        0..=47 => 0,
+        48..=115 => 1,
+        116..=155 => 2,
+        156..=195 => 3,
+        196..=235 => 4,
+        _ => 5,
+    }
+}
+
 impl Color {
     /// Quantize by RGB distance; actual ANSI16 palette remains terminal configurable.
     pub fn adapt(self, level: ColorLevel) -> Self {
@@ -71,34 +116,61 @@ impl Color {
         {
             return self;
         }
-        let (r, g, b) = match self {
+        let rgb = match self {
             Self::Rgb(r, g, b) => (r, g, b),
             Self::Indexed(n) => palette(n),
             Self::Default => unreachable!(),
         };
-        let count = if level == ColorLevel::Ansi16 { 16 } else { 256 };
-        let n = (0..count)
-            .min_by_key(|&n| {
-                let (a, c, d) = palette(n as u8);
-                (r as i32 - a as i32).pow(2)
-                    + (g as i32 - c as i32).pow(2)
-                    + (b as i32 - d as i32).pow(2)
-            })
-            .unwrap_or(0);
-        Self::Indexed(n as u8)
+        // The configurable ANSI16 prefix must participate, including duplicates
+        // of cube/gray colors. Strict improvement preserves the first-index tie.
+        let mut nearest = 0u8;
+        let mut best = u32::MAX;
+        for (n, &candidate) in ANSI.iter().enumerate() {
+            let d = distance(rgb, candidate);
+            if d < best {
+                best = d;
+                nearest = n as u8;
+            }
+        }
+        if level == ColorLevel::Ansi16 || best == 0 {
+            return Self::Indexed(nearest);
+        }
+        // Squared RGB distance separates by channel, so only one of the 216
+        // cube points can improve the winner (ties choose the lower channel).
+        let (r, g, b) = rgb;
+        let cube = 16 + 36 * cube_channel(r) + 6 * cube_channel(g) + cube_channel(b);
+        let d = distance(rgb, palette(cube));
+        if d < best {
+            best = d;
+            nearest = cube;
+        }
+        if best != 0 {
+            // Minimize (r-v)^2+(g-v)^2+(b-v)^2 for v=8+10k.
+            // k is nearest to (r+g+b-24)/30; +14 rounds exact ties down.
+            let sum = u16::from(r) + u16::from(g) + u16::from(b);
+            let gray = 232 + (sum.saturating_sub(10) / 30).min(23) as u8;
+            if distance(rgb, palette(gray)) < best {
+                nearest = gray;
+            }
+        }
+        Self::Indexed(nearest)
     }
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+#[must_use = "styles are values; use the returned style"]
 pub struct Style {
     pub fg: Color,
     pub bg: Color,
-    pub bold: bool,
-    pub underline: bool,
-    pub reverse: bool,
+    pub underline_color: Color,
+    pub attributes: TextAttributes,
 }
 
 impl Style {
+    /// Apply explicit settings while preserving properties the patch inherits.
+    pub const fn patched(self, patch: StylePatch) -> Self {
+        patch.resolve(self)
+    }
     pub fn fg(mut self, color: Color) -> Self {
         self.fg = color;
         self
@@ -108,20 +180,75 @@ impl Style {
         self
     }
     pub fn bold(mut self) -> Self {
-        self.bold = true;
+        self.attributes = self.attributes.with(TextAttribute::Bold);
         self
     }
     pub fn underline(mut self) -> Self {
-        self.underline = true;
+        self.attributes = self.attributes.with_underline(UnderlineStyle::Single);
         self
     }
     pub fn reverse(mut self) -> Self {
-        self.reverse = true;
+        self.attributes = self.attributes.with(TextAttribute::Reverse);
         self
     }
+    #[inline]
+    pub fn attribute(mut self, attribute: TextAttribute, enabled: bool) -> Self {
+        self.attributes = self.attributes.set(attribute, enabled);
+        self
+    }
+    #[inline]
+    pub fn has(self, attribute: TextAttribute) -> bool {
+        self.attributes.contains(attribute)
+    }
+    pub fn dim(self) -> Self {
+        self.attribute(TextAttribute::Dim, true)
+    }
+    pub fn italic(self) -> Self {
+        self.attribute(TextAttribute::Italic, true)
+    }
+    pub fn hidden(self) -> Self {
+        self.attribute(TextAttribute::Hidden, true)
+    }
+    pub fn strikethrough(self) -> Self {
+        self.attribute(TextAttribute::Strikethrough, true)
+    }
+    pub fn fraktur(self) -> Self {
+        self.attribute(TextAttribute::Fraktur, true)
+    }
+    pub fn overline(self) -> Self {
+        self.attribute(TextAttribute::Overline, true)
+    }
+    pub fn underline_style(mut self, style: UnderlineStyle) -> Self {
+        self.attributes = self.attributes.with_underline(style);
+        self
+    }
+    pub fn blink(mut self, style: BlinkStyle) -> Self {
+        self.attributes = self.attributes.with_blink(style);
+        self
+    }
+    pub fn text_frame(mut self, style: TextFrame) -> Self {
+        self.attributes = self.attributes.with_frame(style);
+        self
+    }
+    pub fn underline_color(mut self, color: Color) -> Self {
+        self.underline_color = color;
+        self
+    }
+    #[inline]
     pub fn adapt(mut self, level: ColorLevel) -> Self {
-        self.fg = self.fg.adapt(level);
-        self.bg = self.bg.adapt(level);
+        match level {
+            ColorLevel::None => {
+                self.fg = Color::Default;
+                self.bg = Color::Default;
+                self.underline_color = Color::Default;
+            }
+            ColorLevel::TrueColor => {}
+            _ => {
+                self.fg = self.fg.adapt(level);
+                self.bg = self.bg.adapt(level);
+                self.underline_color = self.underline_color.adapt(level);
+            }
+        }
         self
     }
 }
@@ -255,7 +382,12 @@ mod tests {
             Color::Indexed(9)
         );
         assert_eq!(Color::Indexed(200).adapt(ColorLevel::None), Color::Default);
-        assert!(Theme::default().focus.adapt(ColorLevel::None).reverse);
+        assert!(
+            Theme::default()
+                .focus
+                .adapt(ColorLevel::None)
+                .has(TextAttribute::Reverse)
+        );
         for n in 0..=255 {
             assert!(matches!(
                 Color::Indexed(n).adapt(ColorLevel::Ansi16),

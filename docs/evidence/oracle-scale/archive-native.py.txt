@@ -1,0 +1,84 @@
+"""Archive completed current native/LLVM evidence, never relabel older executions."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/oracle-scale"
+DESTINATION = BASE / "final-native"
+sys.path.insert(0, str(ROOT / "scripts"))
+from check_quality import validate_native, validate_coverage, programs, assess
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+native = json.loads((ROOT / "docs/evidence/local-validation.json").read_bytes())
+coverage = json.loads((ROOT / "docs/evidence/quality/rust-execution-coverage.json").read_bytes())
+validate_native(native, ROOT)
+validate_coverage(coverage, ROOT)
+ci = json.loads((BASE / "ci-bindings.json").read_bytes())
+require(ci["status"] == "qualified", "CI unqualified")
+delta = sorted(n for n in native["source_sha256"] if native["source_sha256"][n] != ci["ci_execution_input_sha256"][n])
+require(delta == ["docs/quality-plan.json"], "non-assessment source drift from CI")
+require(sha((BASE / "quality-plan-before.json.txt").read_bytes()) == ci["ci_execution_input_sha256"]["docs/quality-plan.json"], "original CI plan lost")
+before, after = [json.loads(p.read_bytes()) for p in [BASE / "quality-plan-before.json.txt", ROOT / "docs/quality-plan.json"]]
+require(before["high_threshold"] == after["high_threshold"] and before["scope"] == after["scope"], "threshold/scope changed")
+score_changes = []
+for old, new in zip(before["units"], after["units"]):
+    require(old["id"] == new["id"] and old["files"] == new["files"], "unit/file scope changed")
+    for axis, value in old["criteria"].items():
+        if value["score"] != new["criteria"][axis]["score"]:
+            score_changes.append([new["id"], axis, value["score"], new["criteria"][axis]["score"]])
+require(len(before["units"]) == len(after["units"]) and score_changes == [["scripts/independent-terminal-oracles", "performance", 50, 75]], "unexpected score change")
+all_targets = (ROOT / "docs/evidence/all-targets.log").read_text()
+workspace = (ROOT / "docs/evidence/test.log").read_text()
+passed = lambda text: sum(map(int, re.findall(r"test result: ok\. (\d+) passed", text)))
+regular, doctests = passed(all_targets), passed(workspace) - passed(all_targets)
+python_log = (ROOT / "docs/evidence/optimized-python-tests.log").read_text()
+python_count = int(re.search(r"Ran (\d+) tests", python_log)[1])
+skips = int(re.search(r"OK \(skipped=(\d+)\)", python_log)[1])
+review = assess(after, programs(ROOT))
+require(len(native["checks"]) == 47 and regular == 285 and doctests == 14 and python_count == 151,
+        "unexpected current test scope")
+require(len(review["below_high"]) == 47 and not review["all_high"], "unexpected gate")
+rust_names = [n for n in native["source_sha256"] if n.endswith((".rs", ".toml", ".lock"))]
+rust_unchanged = all(sha(subprocess.check_output(["git", "show", "0c95c3774d1af6c37d3055434bb33ae0973c8ed5:" + n], cwd=ROOT))
+                     == native["source_sha256"][n] for n in rust_names)
+require(rust_unchanged, "Rust scope changed; prior Miri cannot be reused")
+for check in native["checks"]:
+    shutil.copyfile(ROOT / "docs/evidence" / check["log"], DESTINATION / check["log"])
+for source, name in [("docs/evidence/local-validation.json", "local-validation.json"),
+                     ("docs/evidence/quality/rust-execution-coverage.json", "rust-execution-coverage.json"),
+                     ("docs/evidence/quality/report.json", "report.json"),
+                     ("docs/evidence/quality/final-gate-status.json", "final-gate-status.json")]:
+    shutil.copyfile(ROOT / source, DESTINATION / name)
+metrics = {"schema": 1, "native_commands": 47, "rust_regular_passed": regular, "rust_doctests_passed": doctests,
+           "python_tests": python_count, "python_conditional_skips": skips,
+           "llvm_source_paths": len(coverage["files"]), "llvm_instances": sum(len(f["instances"]) for f in coverage["files"]),
+           "programs": review["programs"], "review_units": review["review_units"], "below_high_axes": 47,
+           "miri_rerun": False, "rust_source_and_manifest_inputs_unchanged_from": "0c95c3774d1af6c37d3055434bb33ae0973c8ed5",
+           "miri_limits": "No Rust change; prior targeted evidence retained, not counted as a new execution.",
+           "derivation": "All-target test-result sum; workspace difference gives doctests. Python, LLVM canonical paths/instances are separate, not averaged."}
+(DESTINATION / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
+archive = {"schema": 1, "status": "qualified", "ci_commit": ci["source_commit"], "ci_run": ci["run"],
+           "source_sha256": native["source_sha256"], "assessment_only_delta_from_ci": delta,
+           "score_changes": score_changes, "threshold_or_scope_changed": False, "metrics": metrics,
+           "files": {p.name: sha(p.read_bytes()) for p in DESTINATION.iterdir() if p.is_file()},
+           "producer_sha256": sha(Path(__file__).read_bytes())}
+(DESTINATION / "archive.json").write_text(json.dumps(archive, indent=2) + "\n")
+assessment = json.loads((BASE / "assessment-review.json").read_bytes())
+assessment.update(status="qualified", native_archive_sha256=sha((DESTINATION / "archive.json").read_bytes()),
+                  ci_bindings_sha256=sha((BASE / "ci-bindings.json").read_bytes()))
+(BASE / "assessment-review.json").write_text(json.dumps(assessment, indent=2) + "\n")
+print(json.dumps(metrics))

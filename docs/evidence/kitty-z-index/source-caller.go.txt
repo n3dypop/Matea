@@ -1,0 +1,11 @@
+// Original caller: only protocol control serialization, no image data or IO.
+package main
+import("fmt";"github.com/charmbracelet/x/ansi/kitty")
+func main(){
+ values:=make([]int,0,65600);seen:=map[int]bool{}
+ add:=func(z int){if !seen[z]{seen[z]=true;values=append(values,z)}}
+ for z:=-32768;z<=32767;z++{add(z)}
+ for n:=int64(1);n<=2147483647;n*=2{for _,d:=range []int64{-1,0,1}{v:=n+d;if v<=2147483647{add(int(v));add(-int(v))}}}
+ add(-2147483648);add(-2147483647);add(2147483646);add(2147483647)
+ for _,z:=range values{o:=kitty.Options{Action:kitty.Put,ID:7,PlacementID:7,Columns:7,Rows:7,Z:z,Quiet:2,DoNotMoveCursor:true};fmt.Printf("%d\t%x\n",z,[]byte(o.String()))}
+}

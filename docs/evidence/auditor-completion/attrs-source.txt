@@ -1,0 +1,9 @@
+#![cfg(any(unix, windows))]
+#[cfg(all(feature="tea",not(windows)))]
+#[cfg_attr(feature="other", repr(C))]
+pub struct Tea { #[cfg(target_pointer_width="64")] pub cups: u64 }
+#[cfg]
+pub const PATH: u8=0;
+#[cfg="literal"]
+pub const VALUE:u8=0;
+pub mod nested { #![cfg_attr(unix, allow(unused))] pub const C:u8=0; }

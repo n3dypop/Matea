@@ -1,0 +1,30 @@
+2026-10-17T20:40:54.7192206Z Traceback (most recent call last):
+2026-10-17T20:40:54.7193602Z   File "D:\a\Matea\Matea\scripts\report_viewport_performance.py", line 53, in <module>
+2026-10-17T20:40:54.7194572Z     main()
+2026-10-17T20:40:54.7251106Z   File "D:\a\Matea\Matea\scripts\report_viewport_performance.py", line 30, in main
+2026-10-17T20:40:54.7253461Z     require(digest(path) == context["sha256"][harness])
+2026-10-17T20:40:54.7254496Z   File "D:\a\Matea\Matea\scripts\evidence_checks.py", line 7, in require
+2026-10-17T20:40:54.7255674Z     raise AssertionError
+2026-10-17T20:40:54.7256125Z AssertionError
+2026-10-17T20:40:54.7345594Z Traceback (most recent call last):
+2026-10-17T20:40:54.7346390Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 183, in <module>
+2026-10-17T20:40:54.7348868Z     main()
+2026-10-17T20:40:54.7349444Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 169, in main
+2026-10-17T20:40:54.7351898Z     command([sys.executable, ROOT/"scripts"/name, "--check"],env=environment)
+2026-10-17T20:40:54.7353224Z   File "D:\a\Matea\Matea\scripts\check_reference_paths.py", line 19, in command
+2026-10-17T20:40:54.7354331Z     subprocess.run(list(map(str, arguments)), cwd=cwd, env=env, check=True, timeout=300)
+2026-10-17T20:40:54.7355449Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 571, in run
+2026-10-17T20:40:54.7419630Z     raise CalledProcessError(retcode, process.args,
+2026-10-17T20:40:54.7420727Z subprocess.CalledProcessError: Command '['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe', 'D:\\a\\Matea\\Matea\\scripts\\report_viewport_performance.py', '--check']' returned non-zero exit status 1.
+2026-10-17T20:40:54.8486462Z ##[error]Process completed with exit code 1.
+2026-10-17T20:40:54.8705065Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-17T20:40:54.8705536Z with:
+2026-10-17T20:40:54.8705750Z   name: reference-paths-windows-latest
+2026-10-17T20:40:54.8706326Z   path: D:\a\_temp/matea-reference-paths/path-checks.json
+D:\a\_temp/matea-reference-paths/trajectory-errors.json
+
+2026-10-17T20:40:54.8706872Z   if-no-files-found: warn
+2026-10-17T20:40:54.8707334Z   retention-days: 14
+2026-10-17T20:40:54.8707540Z   compression-level: 6
+2026-10-17T20:40:54.8707738Z   overwrite: false
+2026-10-17T20:40:54.8707933Z   include-hidden-files: false

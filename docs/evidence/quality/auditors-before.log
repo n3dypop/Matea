@@ -1,0 +1,13 @@
+.F
+======================================================================
+FAIL: test_rust_nested_platform_and_feature_conditions_are_never_dropped (__main__.SourceAuditorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "${REPOSITORY}/scripts/test_source_auditors.py", line 37, in test_rust_nested_platform_and_feature_conditions_are_never_dropped
+    self.assertIn(condition, entry["cfg"], symbol)
+AssertionError: 'unix' not found in ' # [cfg (feature = "parent")] ' : nested::S.field
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.240s
+
+FAILED (failures=1)

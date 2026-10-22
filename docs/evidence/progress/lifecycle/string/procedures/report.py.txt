@@ -1,0 +1,35 @@
+"""Independent balanced-record/source/RSS verification after collection."""
+import hashlib,json,re,statistics,subprocess,sys,tarfile
+from functools import lru_cache
+from pathlib import Path
+if not __debug__:raise RuntimeError('verification refuses -O')
+ROOT=Path.cwd();BASE=ROOT/'docs/evidence/progress/lifecycle/string';sys.path.insert(0,str(ROOT/'scripts'))
+from performance_records import read_records,summary,read_probe_outputs
+sha=lambda b:hashlib.sha256(b).hexdigest();ctx=json.load(open(BASE/'measurement-context.json'));assert ctx['status']=='complete'
+assert ctx['procedure_sha256']==sha((BASE/'procedures/measure.py.txt').read_bytes())
+for label,head in ctx['heads'].items():
+ for n,d in ctx['source_sha256'][label].items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==d,(label,n)
+records={};summaries=[]
+for item in ctx['runs']:
+ raw=(BASE/item['raw']).read_bytes();assert sha(raw)==item['raw_sha256'];data=read_records(raw.decode());assert len(data)==item['cases']
+ expected=read_probe_outputs((BASE/f'{item["label"]}-{item["group"]}-outputs.jsonl').read_text());assert data.keys()==expected.keys()
+ for name,r in data.items():assert all(r[k]==expected[name][k] for k in ['semantics','output','first_return_value'])
+ records[item['run'],item['group']]=data;summaries.append({**item,'cases':{n:summary(r) for n,r in data.items()}})
+@lru_cache(maxsize=None)
+def archived():
+ with tarfile.open(BASE/'rss-raw.tar.gz','r:gz') as tar:return {m.name:tar.extractfile(m).read() for m in tar.getmembers() if m.isfile() and Path(m.name).name==m.name}
+rss=[]
+for item in ctx['rss']:
+ values=[]
+ for n,d in item['raw_sha256'].items():
+  raw=(BASE/n).read_bytes() if (BASE/n).is_file() else archived()[n];assert sha(raw)==d;values.append(int(re.search(rb'(\d+)\s+maximum resident set size',raw).group(1)))
+ assert len(values)==31 and values==item['peak_rss_bytes'];rss.append({'label':item['label'],'group':item['group'],'p50_bytes':statistics.median(values),'p95_bytes':sorted(values)[29],'min_bytes':min(values),'max_bytes':max(values)})
+comparisons=[]
+for a,b in [(1,2),(4,3)]:
+ for group in ['frames','controls']:
+  before,after=records[a,group],records[b,group];assert before.keys()==after.keys()
+  for n in before:
+   assert all(before[n][k]==after[n][k] for k in ['semantics','output','first_return_value'])
+   old,new=summary(before[n]),summary(after[n]);comparisons.append({'before_run':a,'candidate_run':b,'case':n,'before':old,'candidate':new,'candidate_over_before_p50':new['p50_ns']/old['p50_ns'],'candidate_over_before_p95':new['p95_ns']/old['p95_ns']})
+result={'schema':1,'status':'complete','heads':ctx['heads'],'context_sha256':sha((BASE/'measurement-context.json').read_bytes()),'reporter_sha256':sha(Path(__file__).read_bytes()),'timing_records':sum(len(v) for v in records.values()),'rss_observations':sum(len(r['peak_rss_bytes']) for r in ctx['rss']),'comparisons':comparisons,'runs':summaries,'rss':rss,'limits':ctx['limits']}
+(BASE/'report.json').write_text(json.dumps(result,indent=2)+'\n');print(result['timing_records'],'timings;',result['rss_observations'],'child RSS observations verified')

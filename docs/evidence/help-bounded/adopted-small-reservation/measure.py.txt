@@ -1,0 +1,80 @@
+"""Historical collector: bounded Help preparation, exact outputs and all cohorts."""
+import hashlib,json,os,platform,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('collector refuses -O')
+root=Path.cwd();base=root/'docs/evidence/help-bounded/adopted-small-reservation';work=Path('/private/tmp/matea-help-bounded')
+sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+from measurement_run import MeasurementRun
+from performance_records import read_records,read_probe_outputs,summary
+sha=lambda b:hashlib.sha256(b).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}
+for n,h in inputs.items():assert sha(subprocess.check_output(['git','show',head+':'+n]))==h,n
+old=subprocess.check_output(['git','show','71c9e60:crates/matea-widgets/src/help.rs'],text=True)
+assert (work/'baseline/lib.rs').read_text()==old.replace('use crate::key::Binding;','use matea_widgets::key::Binding;',1)
+assert (work/'reference-helper.go').read_text()==(root/'tools/perf-upstream/main.go').read_text().replace('func main() {','func historicalMain() {',1)
+oracle=read_probe_outputs((base/'baseline-outputs.jsonl').read_text());assert len(oracle)==25
+assert read_probe_outputs((base/'current-outputs.jsonl').read_text())==oracle
+source=read_probe_outputs((base/'source-outputs.jsonl').read_text());assert len(source)==8
+for n,r in source.items():assert r==oracle[n],n
+archives={}
+for p in sorted(base.rglob('*')):
+ if p.is_file() and p.name not in ['context.json','current.jsonl'] and 'attempts' not in p.parts:archives[str(p.relative_to(base))]=sha(p.read_bytes())
+private={str(p.relative_to(work)):sha(p.read_bytes()) for p in work.rglob('*') if p.is_file() and p.suffix in ['.rs','.go','.toml','.lock','.mod','.sum']}
+binaries={'rust':Path('/private/tmp/matea-help-bounded-target/release/matea-help-bounded'),'source':work/'source-probe'}
+binary_hash={n:sha(p.read_bytes()) for n,p in binaries.items()}
+pins={p['name']:p for p in json.load(open(root/'docs/upstream-lock.json'))}
+references={}
+for name in ['bubbles','bubbletea','lipgloss','ultraviolet','harmonica']:
+ path=root.parent/'references'/name
+ actual=subprocess.check_output(['git','rev-parse','HEAD'],cwd=path,text=True).strip();assert actual==pins[name]['sha']
+ subprocess.run(['git','diff','--exit-code',actual,'--','*.go','go.mod','go.sum'],cwd=path,check=True,stdout=subprocess.PIPE)
+ names=subprocess.check_output(['git','ls-files','*.go','go.mod','go.sum'],cwd=path,text=True).splitlines()
+ references[name]={'sha':actual,'source_sha256':{n:sha((path/n).read_bytes()) for n in names}}
+for n,command in [('rustc',['rustc','-vV']),('go',['go','version']),('source-build-info',['go','version','-m',str(binaries['source'])])]:
+ (base/(n+'.txt')).write_bytes(subprocess.check_output(command));archives[n+'.txt']=sha((base/(n+'.txt')).read_bytes())
+environment={**os.environ,'MATEA_PERF_ITERATIONS':'1','MATEA_PERF_MIN_SAMPLE_NS':'20000000'};environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+orders=[['baseline','source','current'],['current','source','baseline'],['source','baseline','current']]
+rows=[];rss=[]
+with MeasurementRun(base,root=root) as run:
+ run.update(source_head=head,root_input_sha256=inputs,baseline_head='71c9e60',reference_sources=references,
+  private_input_sha256=private,binary_sha256=binary_hash,archive_sha256=archives,orders=orders,
+  procedure_sha256=sha(Path(__file__).read_bytes()),platform=platform.platform(),architecture=platform.machine(),
+  scope='25 implemented Help operation/scale controls, eight equal-output pinned Bubbles paths. Rust baseline in a separate private crate preserves the compilation boundary. No rich decorator parity or terminal transport claim.',
+  limits=['All 31 positive calibrated samples, cold observations and adverse cohorts retained. No affinity/frequency/ASLR controls or universal optimum.',
+   'Private metadata and group-reference preparation precedes timing in both languages. View cases include full styled 80x4 cell materialization and consumption.',
+   'Rust allocator request counters and Go MemStats accounting differ. Child RSS is whole-fixture process high-water memory, not a per-operation resident delta.',
+   'The baseline crate differs only in its Binding import path; its code is unchanged old production source. Production current code is called through the actual library. Reference helper only renames its old main.',
+   'No builds, tests, coverage, Miri or downloads overlap ordinary timing. RSS children execute afterwards. Archived callers are historical reproduction files.'])
+ for cohort,order in enumerate(orders,1):
+  for variant in order:
+   cmd=[str(binaries['source'])] if variant=='source' else [str(binaries['rust']),variant]
+   result=subprocess.run(cmd,env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=240,check=False)
+   path=base/run.attempt/f'cohort-{cohort}-{variant}.jsonl';path.write_bytes(result.stdout);path.with_suffix('.stderr').write_bytes(result.stderr)
+   assert result.returncode==0 and not result.stderr,(variant,result.returncode,result.stderr)
+   records=read_records(result.stdout.decode());expected=source if variant=='source' else oracle;assert set(records)==set(expected)
+   for name,r in records.items():
+    assert len(r['samples_ns'])==31
+    for key in ['output','semantics','first_return_value']:assert r[key]==expected[name][key],(name,key)
+    run.record({**r,'case':f'cohort-{cohort}/{variant}/{name}','source_case':name,'cohort':cohort,'variant':variant})
+    rows.append({'cohort':cohort,'variant':variant,'case':name,**summary(r)})
+   print(f'Completed cohort {cohort}, {variant}: {len(records)} cases',flush=True)
+ assert len(rows)==174
+ # Actual child high-water measurements are subsequent to ordinary timings.
+ for variant in ['baseline','current','source']:
+  for index in range(31):
+   cmd=[str(binaries['source'])] if variant=='source' else [str(binaries['rust']),variant]
+   result=subprocess.run(['/usr/bin/time','-l',*cmd],env={**environment,'MATEA_PROBE_OUTPUT_ONLY':'1'},stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
+   path=base/run.attempt/f'rss-{variant}-{index}.jsonl';path.write_bytes(result.stdout);path.with_suffix('.stderr').write_bytes(result.stderr)
+   assert result.returncode==0
+   assert read_probe_outputs(result.stdout.decode())==(source if variant=='source' else oracle)
+   values=[int(line.split()[0]) for line in result.stderr.decode().splitlines() if line.strip().endswith('maximum resident set size')];assert len(values)==1 and values[0]>0
+   rss.append({'variant':variant,'index':index,'maximum_resident_set_bytes':values[0],'stdout_sha256':sha(result.stdout),'stderr_sha256':sha(result.stderr)})
+ assert {n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}==inputs
+ for n,h in private.items():assert sha((work/n).read_bytes())==h,n
+ assert {n:sha(p.read_bytes()) for n,p in binaries.items()}==binary_hash
+ for name,ref in references.items():
+  for n,h in ref['source_sha256'].items():assert sha((root.parent/'references'/name/n).read_bytes())==h
+ run.complete(timing_records=174,retained_intervals=5394,summary=rows,rss=rss)
+print('Complete: 174 records / 5394 intervals; 93 distinct RSS children',flush=True)

@@ -1,0 +1,1202 @@
+{
+  "schema": 1,
+  "status": "complete_bounded_comparison",
+  "corpora": {
+    "repeated": {
+      "before_source": "d412b55df62a70e085780355d845c28b582aa2cf",
+      "after_source": "53cf6994168f9eb80eb20c46b47b3ebf5206a413",
+      "matched_cases": 14,
+      "distinct_Rust_controls": 4,
+      "same_complete_outputs_before_after": true,
+      "same_reference_binary": true,
+      "same_benchmark_sources_and_lockfile": true,
+      "changed_inputs": [
+        ".github/workflows/foundation.yml",
+        "crates/matea-widgets/src/lib.rs",
+        "crates/matea-widgets/src/viewport.rs",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/quality-plan.json",
+        "scripts/check_reference_paths.py"
+      ],
+      "cases": [
+        {
+          "case": "viewport-geometry/construct_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "b3bcd5c803b7037be0b35b3cb7ccc64b90de191ca56a93a4ca078f45bbd269dc",
+          "first_return_value": 3099577093271976259,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 6000.269166666667,
+              "after_p50_ns": 5585.381875,
+              "p50_after_over_before": 0.9308552199672153,
+              "before_p95_ns": 7119.132083333333,
+              "after_p95_ns": 5658.046875,
+              "p95_after_over_before": 0.7947663856730663,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 4998,
+              "after_requested_bytes": 4998
+            },
+            {
+              "before_p50_ns": 5981.779375,
+              "after_p50_ns": 5604.175416666667,
+              "p50_after_over_before": 0.9368743086862288,
+              "before_p95_ns": 6194.670208333333,
+              "after_p95_ns": 5685.338541666667,
+              "p95_after_over_before": 0.9177790504518721,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 4998,
+              "after_requested_bytes": 4998
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/replace_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "b3bcd5c803b7037be0b35b3cb7ccc64b90de191ca56a93a4ca078f45bbd269dc",
+          "first_return_value": 3099577093271976259,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 5899.348958333333,
+              "after_p50_ns": 5520.069375,
+              "p50_after_over_before": 0.9357082305162558,
+              "before_p95_ns": 5936.388958333333,
+              "after_p95_ns": 5610.651041666667,
+              "p95_after_over_before": 0.9451286095043681,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4198,
+              "after_requested_bytes": 4198
+            },
+            {
+              "before_p50_ns": 5931.493125,
+              "after_p50_ns": 5532.265625,
+              "p50_after_over_before": 0.9326935913796579,
+              "before_p95_ns": 6151.388958333333,
+              "after_p95_ns": 5633.341875,
+              "p95_after_over_before": 0.9157837218809696,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4198,
+              "after_requested_bytes": 4198
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/movement_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "70d85b66628278223396f6f9230d56e2fc4a8c38098827599e5b829f0dc44f87",
+          "first_return_value": 18242308376385415968,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 21.049397786458332,
+              "after_p50_ns": 21.213785807291668,
+              "p50_after_over_before": 1.0078096305890087,
+              "before_p95_ns": 21.256646321614582,
+              "after_p95_ns": 21.613125,
+              "p95_after_over_before": 1.01677022202806,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 21.0906982421875,
+              "after_p50_ns": 21.273736165364582,
+              "p50_after_over_before": 1.0086786089808517,
+              "before_p95_ns": 21.381056315104168,
+              "after_p95_ns": 21.532423502604168,
+              "p95_after_over_before": 1.0070794999680661,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/ensure_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "af10a4ecb2c4e1479678904b8ddc447773534dd38fecbede9e61c018516e47ba",
+          "first_return_value": 6422881136898702803,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 20.39794921875,
+              "after_p50_ns": 20.896640625,
+              "p50_after_over_before": 1.0244481149012568,
+              "before_p95_ns": 20.51849365234375,
+              "after_p95_ns": 21.53720458984375,
+              "p95_after_over_before": 1.049648427158474,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.46271484375,
+              "after_p50_ns": 20.92624267578125,
+              "p50_after_over_before": 1.0226523135161034,
+              "before_p95_ns": 20.732828776041668,
+              "after_p95_ns": 21.177842610677082,
+              "p95_after_over_before": 1.021464212117049,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/view_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "37aaf432983ae994348521a564e3fb953b6a393d4ec4c40e15bd80490aab6c78",
+          "first_return_value": 17678985624580694132,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 534.12109375,
+              "after_p50_ns": 534.404296875,
+              "p50_after_over_before": 1.0005302226935313,
+              "before_p95_ns": 543.8433072916666,
+              "after_p95_ns": 541.043828125,
+              "p95_after_over_before": 0.9948524158905108,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 774,
+              "after_requested_bytes": 774
+            },
+            {
+              "before_p50_ns": 532.1223958333334,
+              "after_p50_ns": 538.1011458333334,
+              "p50_after_over_before": 1.0112356669195195,
+              "before_p95_ns": 539.8763020833334,
+              "after_p95_ns": 543.57421875,
+              "p95_after_over_before": 1.006849562858004,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 774,
+              "after_requested_bytes": 774
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/key_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "1f7205a7c008549554cbfb3ca936f8b0ecc79f572f05088c64dfd2dc819bbbef",
+          "first_return_value": 2746152651961504999,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 65.14716471354167,
+              "after_p50_ns": 25.649617513020832,
+              "p50_after_over_before": 0.3937180938848937,
+              "before_p95_ns": 66.09334309895833,
+              "after_p95_ns": 25.988328450520832,
+              "p95_after_over_before": 0.39320644458262277,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 65.318466796875,
+              "after_p50_ns": 25.747172037760418,
+              "p50_after_over_before": 0.3941790629873178,
+              "before_p95_ns": 65.89029947916667,
+              "after_p95_ns": 26.1584130859375,
+              "p95_after_over_before": 0.39699945656201363,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/wheel_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "31e3d1fd9cc16f67fe83977d828161524333273de459d660b203530f93adb4e6",
+          "first_return_value": 12041190276437290630,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 19.837443033854168,
+              "after_p50_ns": 19.918212890625,
+              "p50_after_over_before": 1.0040715860725091,
+              "before_p95_ns": 20.08765380859375,
+              "after_p95_ns": 20.190022786458332,
+              "p95_after_over_before": 1.005096114202286,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 19.899325358072918,
+              "after_p50_ns": 19.965379231770832,
+              "p50_after_over_before": 1.0033194026686496,
+              "before_p95_ns": 20.206197102864582,
+              "after_p95_ns": 20.21935302734375,
+              "p95_after_over_before": 1.0006510836458833,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_aligned_ascii",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "0ed6b22f5be4de98f1dbee891690b816fb0644282a03fbe7b60e7000baecec94",
+          "first_return_value": 5211853602417551761,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 27.926127115885418,
+              "after_p50_ns": 28.105367024739582,
+              "p50_after_over_before": 1.006418358983699,
+              "before_p95_ns": 28.247849934895832,
+              "after_p95_ns": 28.413492838541668,
+              "p95_after_over_before": 1.0058639119093171,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 27.9846875,
+              "after_p50_ns": 28.210245768229168,
+              "p50_after_over_before": 1.008060060282223,
+              "before_p95_ns": 28.22540283203125,
+              "after_p95_ns": 28.356424967447918,
+              "p95_after_over_before": 1.0046419934622857,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_partial_ascii",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "8e4c1163453056bee059ce6e3a521c5ad3f5e7fd1ee2d829be5366b877b4f939",
+          "first_return_value": 1905060214054578979,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 28.005438639322918,
+              "after_p50_ns": 28.251105143229168,
+              "p50_after_over_before": 1.0087720998435392,
+              "before_p95_ns": 28.324720865885418,
+              "after_p95_ns": 28.520439453125,
+              "p95_after_over_before": 1.0069098152164073,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 28.00255615234375,
+              "after_p50_ns": 28.3416064453125,
+              "p50_after_over_before": 1.012107833696474,
+              "before_p95_ns": 28.368089192708332,
+              "after_p95_ns": 28.6444775390625,
+              "p95_after_over_before": 1.0097429313788682,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/construct_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "bd12950fe30d0c34a71006e37b92109557277582d545244562075ae8aef890aa",
+          "first_return_value": 14884739247451241930,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 26459.200833333332,
+              "after_p50_ns": 7183.637083333333,
+              "p50_after_over_before": 0.27149864157209835,
+              "before_p95_ns": 26648.4725,
+              "after_p95_ns": 7248.923541666667,
+              "p95_after_over_before": 0.27202022711308,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5398,
+              "after_requested_bytes": 5398
+            },
+            {
+              "before_p50_ns": 26471.215,
+              "after_p50_ns": 7194.652708333333,
+              "p50_after_over_before": 0.27179155578364395,
+              "before_p95_ns": 26740.9025,
+              "after_p95_ns": 7291.649166666667,
+              "p95_after_over_before": 0.27267775149573453,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5398,
+              "after_requested_bytes": 5398
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/replace_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "bd12950fe30d0c34a71006e37b92109557277582d545244562075ae8aef890aa",
+          "first_return_value": 14884739247451241930,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 26428.924166666668,
+              "after_p50_ns": 7119.2275,
+              "p50_after_over_before": 0.2693725804011003,
+              "before_p95_ns": 26545.798333333332,
+              "after_p95_ns": 7159.921875,
+              "p95_after_over_before": 0.26971959121716627,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4598,
+              "after_requested_bytes": 4598
+            },
+            {
+              "before_p50_ns": 26427.048333333332,
+              "after_p50_ns": 7128.828125,
+              "p50_after_over_before": 0.26975498871768316,
+              "before_p95_ns": 26730.3475,
+              "after_p95_ns": 7367.508541666667,
+              "p95_after_over_before": 0.2756233730843442,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4598,
+              "after_requested_bytes": 4598
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/movement_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "54381abbbbd69cee6899a42c2c1017e1a5ba43f89f9892fe1a7881ac3b92ab6c",
+          "first_return_value": 15500885797570378918,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 21.067063802083332,
+              "after_p50_ns": 21.307915852864582,
+              "p50_after_over_before": 1.0114326349909963,
+              "before_p95_ns": 21.387091471354168,
+              "after_p95_ns": 21.696370442708332,
+              "p95_after_over_before": 1.0144610112959218,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 21.226263834635418,
+              "after_p50_ns": 21.260748697916668,
+              "p50_after_over_before": 1.0016246318028414,
+              "before_p95_ns": 21.516995442708332,
+              "after_p95_ns": 21.50912841796875,
+              "p95_after_over_before": 0.9996343808892589,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/ensure_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "51555f673d76c0a237456a40881f81e4dcb18aa3b0dfeeac6877b5d04f852cfe",
+          "first_return_value": 12212696619572872788,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 20.484381510416668,
+              "after_p50_ns": 20.93468505859375,
+              "p50_after_over_before": 1.0219827749228403,
+              "before_p95_ns": 20.7433740234375,
+              "after_p95_ns": 21.184828287760418,
+              "p95_after_over_before": 1.0212817000659646,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.57156005859375,
+              "after_p50_ns": 21.030171712239582,
+              "p50_after_over_before": 1.0222934795581655,
+              "before_p95_ns": 20.81451416015625,
+              "after_p95_ns": 21.406893717447918,
+              "p95_after_over_before": 1.0284599271803143,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/view_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "a7e3b9e4308e798b2eb7f782167ca71c0067fa1acb190182ef01eba013491569",
+          "first_return_value": 13219622031553891072,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 1443.38328125,
+              "after_p50_ns": 1449.62671875,
+              "p50_after_over_before": 1.004325557584811,
+              "before_p95_ns": 1456.3954166666667,
+              "after_p95_ns": 1462.895,
+              "p95_after_over_before": 1.0044627875499699,
+              "before_allocations": 4,
+              "after_allocations": 4,
+              "before_requested_bytes": 806,
+              "after_requested_bytes": 806
+            },
+            {
+              "before_p50_ns": 1448.5980729166668,
+              "after_p50_ns": 1457.4501041666667,
+              "p50_after_over_before": 1.0061107573007997,
+              "before_p95_ns": 1465.5078125,
+              "after_p95_ns": 1478.4136458333332,
+              "p95_after_over_before": 1.0088063899920925,
+              "before_allocations": 4,
+              "after_allocations": 4,
+              "before_requested_bytes": 806,
+              "after_requested_bytes": 806
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/key_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "1f7205a7c008549554cbfb3ca936f8b0ecc79f572f05088c64dfd2dc819bbbef",
+          "first_return_value": 2746152651961504999,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 65.12986979166666,
+              "after_p50_ns": 25.631951497395832,
+              "p50_after_over_before": 0.3935514009069219,
+              "before_p95_ns": 65.6085888671875,
+              "after_p95_ns": 25.916612955729168,
+              "p95_after_over_before": 0.39501860050964627,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 65.552978515625,
+              "after_p50_ns": 25.875311686197918,
+              "p50_after_over_before": 0.3947236612601876,
+              "before_p95_ns": 67.0722802734375,
+              "after_p95_ns": 28.97610107421875,
+              "p95_after_over_before": 0.4320130604787876,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/wheel_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "31e3d1fd9cc16f67fe83977d828161524333273de459d660b203530f93adb4e6",
+          "first_return_value": 12041190276437290630,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 19.904140625,
+              "after_p50_ns": 19.949171549479168,
+              "p50_after_over_before": 1.0022623897875103,
+              "before_p95_ns": 20.136582845052082,
+              "after_p95_ns": 20.25177001953125,
+              "p95_after_over_before": 1.005720294022353,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 19.931912434895832,
+              "after_p50_ns": 19.96792236328125,
+              "p50_after_over_before": 1.00180664692879,
+              "before_p95_ns": 20.2008056640625,
+              "after_p95_ns": 20.16872802734375,
+              "p95_after_over_before": 0.9984120615161495,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_aligned_unicode",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "b60244aebcb96cbe2db94d65e7ae785e8aae76b4034fba9d38635137c317dcc8",
+          "first_return_value": 11110304904022738783,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 657.6616666666666,
+              "after_p50_ns": 660.2311197916666,
+              "p50_after_over_before": 1.0039069528531641,
+              "before_p95_ns": 677.1440885416666,
+              "after_p95_ns": 674.140625,
+              "p95_after_over_before": 0.9955645133842413,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 658.8747916666666,
+              "after_p50_ns": 663.4678645833334,
+              "p50_after_over_before": 1.0069710861225216,
+              "before_p95_ns": 668.0403645833334,
+              "after_p95_ns": 673.6458333333334,
+              "p95_after_over_before": 1.0083909132549143,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_partial_unicode",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "06da515c3df66df2bbb897194f37f26341b469f167041ffe7e09fec43b89cb0c",
+          "first_return_value": 10787229849286031837,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 491.3400520833333,
+              "after_p50_ns": 497.6578776041667,
+              "p50_after_over_before": 1.0128583564357212,
+              "before_p95_ns": 498.3094661458333,
+              "after_p95_ns": 836.4143880208334,
+              "p95_after_over_before": 1.6785039114148628,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 27,
+              "after_requested_bytes": 27
+            },
+            {
+              "before_p50_ns": 493.3631640625,
+              "after_p50_ns": 496.4518229166667,
+              "p50_after_over_before": 1.0062604164217162,
+              "before_p95_ns": 497.7360026041667,
+              "after_p95_ns": 500.9168880208333,
+              "p95_after_over_before": 1.0063907079255352,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 27,
+              "after_requested_bytes": 27
+            }
+          ]
+        }
+      ]
+    },
+    "varied": {
+      "before_source": "d412b55df62a70e085780355d845c28b582aa2cf",
+      "after_source": "53cf6994168f9eb80eb20c46b47b3ebf5206a413",
+      "matched_cases": 14,
+      "distinct_Rust_controls": 4,
+      "same_complete_outputs_before_after": true,
+      "same_reference_binary": true,
+      "same_benchmark_sources_and_lockfile": true,
+      "changed_inputs": [
+        ".github/workflows/foundation.yml",
+        "crates/matea-widgets/src/lib.rs",
+        "crates/matea-widgets/src/viewport.rs",
+        "crates/matea-widgets/tests/viewport.rs",
+        "docs/quality-plan.json",
+        "scripts/check_reference_paths.py"
+      ],
+      "cases": [
+        {
+          "case": "viewport-geometry/construct_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "204c0e942547760d2e74fe50e83fdfb869645c899702fa9776e59cb4f4853c3d",
+          "first_return_value": 17423740853998420464,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 6540.043541666667,
+              "after_p50_ns": 6132.847291666667,
+              "p50_after_over_before": 0.9377379909773155,
+              "before_p95_ns": 6607.152708333333,
+              "after_p95_ns": 6250.494791666667,
+              "p95_after_over_before": 0.9460194228268967,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5578,
+              "after_requested_bytes": 5578
+            },
+            {
+              "before_p50_ns": 6547.04,
+              "after_p50_ns": 6179.956666666667,
+              "p50_after_over_before": 0.9439314051337195,
+              "before_p95_ns": 6620.355833333333,
+              "after_p95_ns": 6260.234375,
+              "p95_after_over_before": 0.9456039120253733,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5578,
+              "after_requested_bytes": 5578
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/replace_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "204c0e942547760d2e74fe50e83fdfb869645c899702fa9776e59cb4f4853c3d",
+          "first_return_value": 17423740853998420464,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 6494.453125,
+              "after_p50_ns": 6090.052083333333,
+              "p50_after_over_before": 0.9377313171897492,
+              "before_p95_ns": 6563.263958333333,
+              "after_p95_ns": 6181.033125,
+              "p95_after_over_before": 0.9417620812205767,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4778,
+              "after_requested_bytes": 4778
+            },
+            {
+              "before_p50_ns": 6496.111041666667,
+              "after_p50_ns": 6110.720416666667,
+              "p50_after_over_before": 0.9406736395778846,
+              "before_p95_ns": 6560.590208333333,
+              "after_p95_ns": 6153.151041666667,
+              "p95_after_over_before": 0.9378959584841723,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 4778,
+              "after_requested_bytes": 4778
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/movement_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "70d85b66628278223396f6f9230d56e2fc4a8c38098827599e5b829f0dc44f87",
+          "first_return_value": 18242308376385415968,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 21.227281087239582,
+              "after_p50_ns": 21.422932942708332,
+              "p50_after_over_before": 1.0092170002679413,
+              "before_p95_ns": 21.521573079427082,
+              "after_p95_ns": 21.658257649739582,
+              "p95_after_over_before": 1.0063510492382715,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 21.317918294270832,
+              "after_p50_ns": 21.455281575520832,
+              "p50_after_over_before": 1.0064435597957477,
+              "before_p95_ns": 21.50390625,
+              "after_p95_ns": 21.957364095052082,
+              "p95_after_over_before": 1.0210872313048742,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/ensure_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "af10a4ecb2c4e1479678904b8ddc447773534dd38fecbede9e61c018516e47ba",
+          "first_return_value": 6422881136898702803,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 20.589158528645832,
+              "after_p50_ns": 21.077372233072918,
+              "p50_after_over_before": 1.0237121737514348,
+              "before_p95_ns": 20.865953776041668,
+              "after_p95_ns": 22.885267740885418,
+              "p95_after_over_before": 1.096775540984967,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.677014973958332,
+              "after_p50_ns": 21.0741845703125,
+              "p50_after_over_before": 1.0192082656444552,
+              "before_p95_ns": 20.872530924479168,
+              "after_p95_ns": 21.181131998697918,
+              "p95_after_over_before": 1.0147850337525108,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/view_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "37aaf432983ae994348521a564e3fb953b6a393d4ec4c40e15bd80490aab6c78",
+          "first_return_value": 17678985624580694132,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 541.7198177083334,
+              "after_p50_ns": 537.7810416666666,
+              "p50_after_over_before": 0.9927291269159597,
+              "before_p95_ns": 551.104609375,
+              "after_p95_ns": 541.0753125,
+              "p95_after_over_before": 0.9818014643601437,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 774,
+              "after_requested_bytes": 774
+            },
+            {
+              "before_p50_ns": 544.189453125,
+              "after_p50_ns": 540.99609375,
+              "p50_after_over_before": 0.9941318977119785,
+              "before_p95_ns": 557.7278645833334,
+              "after_p95_ns": 551.514765625,
+              "p95_after_over_before": 0.9888599810895676,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 774,
+              "after_requested_bytes": 774
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/key_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "1f7205a7c008549554cbfb3ca936f8b0ecc79f572f05088c64dfd2dc819bbbef",
+          "first_return_value": 2746152651961504999,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 65.8525927734375,
+              "after_p50_ns": 26.01047119140625,
+              "p50_after_over_before": 0.39498021408046846,
+              "before_p95_ns": 66.2286376953125,
+              "after_p95_ns": 26.283297526041668,
+              "p95_after_over_before": 0.396856985749262,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 65.887451171875,
+              "after_p50_ns": 25.99032958984375,
+              "p50_after_over_before": 0.3944655488652154,
+              "before_p95_ns": 66.331787109375,
+              "after_p95_ns": 26.347521158854168,
+              "p95_after_over_before": 0.39720807032395394,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/wheel_ascii",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "31e3d1fd9cc16f67fe83977d828161524333273de459d660b203530f93adb4e6",
+          "first_return_value": 12041190276437290630,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 19.99545654296875,
+              "after_p50_ns": 20.193922526041668,
+              "p50_after_over_before": 1.0099255539700447,
+              "before_p95_ns": 20.191141764322918,
+              "after_p95_ns": 20.342373860677082,
+              "p95_after_over_before": 1.007490022016555,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.096232096354168,
+              "after_p50_ns": 20.193277994791668,
+              "p50_after_over_before": 1.0048290593964182,
+              "before_p95_ns": 20.279202473958332,
+              "after_p95_ns": 20.293375651041668,
+              "p95_after_over_before": 1.0006989020944752,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_aligned_ascii",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "0ed6b22f5be4de98f1dbee891690b816fb0644282a03fbe7b60e7000baecec94",
+          "first_return_value": 5211853602417551761,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 29.993489583333332,
+              "after_p50_ns": 30.084500325520832,
+              "p50_after_over_before": 1.0030343499023227,
+              "before_p95_ns": 30.212945149739582,
+              "after_p95_ns": 30.951300455729168,
+              "p95_after_over_before": 1.0244383757468924,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 30.033806966145832,
+              "after_p50_ns": 30.059102376302082,
+              "p50_after_over_before": 1.00084223122912,
+              "before_p95_ns": 30.162522786458332,
+              "after_p95_ns": 30.2563818359375,
+              "p95_after_over_before": 1.003111777159479,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_partial_ascii",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "8e4c1163453056bee059ce6e3a521c5ad3f5e7fd1ee2d829be5366b877b4f939",
+          "first_return_value": 1905060214054578979,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 30.056322428385418,
+              "after_p50_ns": 30.08938232421875,
+              "p50_after_over_before": 1.001099931500672,
+              "before_p95_ns": 30.314229329427082,
+              "after_p95_ns": 30.506422526041668,
+              "p95_after_over_before": 1.0063400324159988,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 30.0890771484375,
+              "after_p50_ns": 30.083990885416668,
+              "p50_after_over_before": 0.9998309598198795,
+              "before_p95_ns": 30.255262858072918,
+              "after_p95_ns": 30.403882649739582,
+              "p95_after_over_before": 1.0049121963462635,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/construct_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "c9f472548ff5bf1c8c6b5f44b26ee5a94ab977a60cc37b70c65ea4edc1f383da",
+          "first_return_value": 10042173410516749953,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 32410.381666666668,
+              "after_p50_ns": 32546.735833333332,
+              "p50_after_over_before": 1.0042071138831081,
+              "before_p95_ns": 33519.270833333336,
+              "after_p95_ns": 32809.6875,
+              "p95_after_over_before": 0.9788305856394797,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5978,
+              "after_requested_bytes": 5978
+            },
+            {
+              "before_p50_ns": 32554.235833333332,
+              "after_p50_ns": 32644.895833333332,
+              "p50_after_over_before": 1.0027848910496364,
+              "before_p95_ns": 32964.096666666665,
+              "after_p95_ns": 35315.3825,
+              "p95_after_over_before": 1.0713286900323575,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 5978,
+              "after_requested_bytes": 5978
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/replace_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "c9f472548ff5bf1c8c6b5f44b26ee5a94ab977a60cc37b70c65ea4edc1f383da",
+          "first_return_value": 10042173410516749953,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 32183.333333333332,
+              "after_p50_ns": 32415.174166666668,
+              "p50_after_over_before": 1.007203754531331,
+              "before_p95_ns": 33547.98583333333,
+              "after_p95_ns": 32798.4725,
+              "p95_after_over_before": 0.9776584699583183,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 5178,
+              "after_requested_bytes": 5178
+            },
+            {
+              "before_p50_ns": 32154.549166666668,
+              "after_p50_ns": 32563.020833333332,
+              "p50_after_over_before": 1.0127033865270334,
+              "before_p95_ns": 32446.458333333332,
+              "after_p95_ns": 32740.3475,
+              "p95_after_over_before": 1.0090576655130568,
+              "before_allocations": 2,
+              "after_allocations": 2,
+              "before_requested_bytes": 5178,
+              "after_requested_bytes": 5178
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/movement_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "70d85b66628278223396f6f9230d56e2fc4a8c38098827599e5b829f0dc44f87",
+          "first_return_value": 18242308376385415968,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 21.275533040364582,
+              "after_p50_ns": 21.478474934895832,
+              "p50_after_over_before": 1.0095387454756701,
+              "before_p95_ns": 21.508924153645832,
+              "after_p95_ns": 21.781650390625,
+              "p95_after_over_before": 1.0126796782131449,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 21.325616048177082,
+              "after_p50_ns": 21.478373209635418,
+              "p50_after_over_before": 1.0071630831725207,
+              "before_p95_ns": 21.4263916015625,
+              "after_p95_ns": 21.756388346354168,
+              "p95_after_over_before": 1.0154014148032096,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/ensure_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "af10a4ecb2c4e1479678904b8ddc447773534dd38fecbede9e61c018516e47ba",
+          "first_return_value": 6422881136898702803,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 20.728556315104168,
+              "after_p50_ns": 21.104024251302082,
+              "p50_after_over_before": 1.0181135594052115,
+              "before_p95_ns": 20.936007486979168,
+              "after_p95_ns": 21.282246907552082,
+              "p95_after_over_before": 1.0165379870440079,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.63022216796875,
+              "after_p50_ns": 21.111517740885418,
+              "p50_after_over_before": 1.0233296359582567,
+              "before_p95_ns": 20.9424169921875,
+              "after_p95_ns": 21.245592447916668,
+              "p95_after_over_before": 1.014476622055719,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/view_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "a7e3b9e4308e798b2eb7f782167ca71c0067fa1acb190182ef01eba013491569",
+          "first_return_value": 13219622031553891072,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 1475.4665625,
+              "after_p50_ns": 1479.9630729166668,
+              "p50_after_over_before": 1.0030475176672577,
+              "before_p95_ns": 1486.6124479166667,
+              "after_p95_ns": 1515.4709375,
+              "p95_after_over_before": 1.0194122480433792,
+              "before_allocations": 4,
+              "after_allocations": 4,
+              "before_requested_bytes": 806,
+              "after_requested_bytes": 806
+            },
+            {
+              "before_p50_ns": 1578.5915625,
+              "after_p50_ns": 1482.4891145833333,
+              "p50_after_over_before": 0.939121397706909,
+              "before_p95_ns": 5303.569895833333,
+              "after_p95_ns": 1499.7547916666667,
+              "p95_after_over_before": 0.28278212998473456,
+              "before_allocations": 4,
+              "after_allocations": 4,
+              "before_requested_bytes": 806,
+              "after_requested_bytes": 806
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/key_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "1f7205a7c008549554cbfb3ca936f8b0ecc79f572f05088c64dfd2dc819bbbef",
+          "first_return_value": 2746152651961504999,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 65.75669921875,
+              "after_p50_ns": 25.983548177083332,
+              "p50_after_over_before": 0.3951467833056062,
+              "before_p95_ns": 65.950791015625,
+              "after_p95_ns": 26.1108056640625,
+              "p95_after_over_before": 0.3959134570179204,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 66.17377278645833,
+              "after_p50_ns": 26.0089111328125,
+              "p50_after_over_before": 0.39303956896553,
+              "before_p95_ns": 70.70366861979167,
+              "after_p95_ns": 26.079576009114582,
+              "p95_after_over_before": 0.36885746550659576,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/wheel_unicode",
+          "comparison": "matched Go/Rust consumer",
+          "complete_output_sha256": "31e3d1fd9cc16f67fe83977d828161524333273de459d660b203530f93adb4e6",
+          "first_return_value": 12041190276437290630,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 19.951578776041668,
+              "after_p50_ns": 20.22739013671875,
+              "p50_after_over_before": 1.0138240368731262,
+              "before_p95_ns": 20.170966796875,
+              "after_p95_ns": 23.34560791015625,
+              "p95_after_over_before": 1.1573866609989703,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 20.109965006510418,
+              "after_p50_ns": 20.152520345052082,
+              "p50_after_over_before": 1.0021161319041523,
+              "before_p95_ns": 20.201822916666668,
+              "after_p95_ns": 20.477633463541668,
+              "p95_after_over_before": 1.013652755398002,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_aligned_unicode",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "b60244aebcb96cbe2db94d65e7ae785e8aae76b4034fba9d38635137c317dcc8",
+          "first_return_value": 11110304904022738783,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 675.9440104166666,
+              "after_p50_ns": 680.0238802083334,
+              "p50_after_over_before": 1.0060358102576452,
+              "before_p95_ns": 685.2072395833334,
+              "after_p95_ns": 684.891484375,
+              "p95_after_over_before": 0.9995391829068745,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            },
+            {
+              "before_p50_ns": 674.7005208333334,
+              "after_p50_ns": 679.7721354166666,
+              "p50_after_over_before": 1.007516838103325,
+              "before_p95_ns": 682.3763020833334,
+              "after_p95_ns": 697.6432291666666,
+              "p95_after_over_before": 1.0223731788995638,
+              "before_allocations": 0,
+              "after_allocations": 0,
+              "before_requested_bytes": 0,
+              "after_requested_bytes": 0
+            }
+          ]
+        },
+        {
+          "case": "viewport-geometry/borrowed_partial_unicode",
+          "comparison": "distinct Rust iterator control",
+          "complete_output_sha256": "06da515c3df66df2bbb897194f37f26341b469f167041ffe7e09fec43b89cb0c",
+          "first_return_value": 10787229849286031837,
+          "forward_and_reverse": [
+            {
+              "before_p50_ns": 506.7708333333333,
+              "after_p50_ns": 498.4407552083333,
+              "p50_after_over_before": 0.9835624357656731,
+              "before_p95_ns": 510.7432682291667,
+              "after_p95_ns": 500.6570052083333,
+              "p95_after_over_before": 0.9802517944958841,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 27,
+              "after_requested_bytes": 27
+            },
+            {
+              "before_p50_ns": 499.688046875,
+              "after_p50_ns": 499.6853255208333,
+              "p50_after_over_before": 0.999994553893807,
+              "before_p95_ns": 508.202578125,
+              "after_p95_ns": 505.4991276041667,
+              "p95_after_over_before": 0.9946803683467966,
+              "before_allocations": 3,
+              "after_allocations": 3,
+              "before_requested_bytes": 27,
+              "after_requested_bytes": 27
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Two finite 100-line ASCII/Unicode corpora, repeated and unique per-line numeric suffixes. Same tracked benchmark caller source and Go binary across before/after.",
+    "Separate reference/Matea/Matea/reference cohorts before/after, native macOS arm64 only. No affinity/frequency lock or RSS instrumentation; no causal or statistical claim for small differences.",
+    "Go constructor default features remain more extensive; Go View/plain adapter and Rust scene/surface/plain conversion are distinct internal work. No full viewport/module parity, all-high or maximum-speed verdict.",
+    "All cold calls, 31 positive batch means, calibration histories, requested allocation counters and adverse controls are retained. Rust layout requests, Go TotalAlloc and RSS are different measures."
+  ]
+}

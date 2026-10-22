@@ -1,0 +1,76 @@
+import hashlib,json,os,platform,statistics,subprocess,sys
+from pathlib import Path
+ROOT=Path('/Users/misosoup/Developer/Codex/Project Matea/Matea')
+sys.path.insert(0,str(ROOT/'scripts'))
+from check_quality import execution_inputs
+from performance_records import read_records
+OUT=ROOT/'docs/evidence/viewport-controls/performance-after';OUT.mkdir(parents=True,exist_ok=True)
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+def snapshot():
+ head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();facts={}
+ for name in sorted(execution_inputs(ROOT)):
+  raw=(ROOT/name).read_bytes();committed=subprocess.check_output(['git','show',head+':'+name],cwd=ROOT)
+  if raw!=committed:raise ValueError('uncommitted input '+name)
+  facts[name]=digest(raw)
+ return head,facts
+head,sources=snapshot()
+def metadata(manifest):
+ return json.loads(subprocess.check_output(['cargo','metadata','--locked','--offline','--format-version','1','--manifest-path',str(manifest)],cwd=ROOT))
+old=metadata(ROOT/'Cargo.toml');new=metadata(Path('/private/tmp/matea-viewport-measure/Matea/Cargo.toml'))
+old_packages={(p['name'],p['version'],p.get('source')):p for p in old['packages']}
+old_nodes={p['id']:set(p['features']) for p in old['resolve']['nodes']}
+new_nodes={p['id']:set(p['features']) for p in new['resolve']['nodes']}
+feature_differences={}
+for package in new['packages']:
+ if package['name']=='matea-viewport-probe':continue
+ key=(package['name'],package['version'],package.get('source'))
+ if key not in old_packages:raise ValueError('changed benchmark dependency '+str(key))
+ previous=old_packages[key]
+ if not new_nodes[package['id']]<=old_nodes[previous['id']]:raise ValueError('unexpected features '+str(key))
+ if new_nodes[package['id']]!=old_nodes[previous['id']]:feature_differences[str(key)]={'benchmark':sorted(new_nodes[package['id']]),'workspace':sorted(old_nodes[previous['id']])}
+binaries={'matea':ROOT/'target/release/matea-viewport-probe','upstream':Path('/private/tmp/matea-viewport-measure/go-probe')}
+context={'schema':1,'status':'running','source_head':head,'source_sha256':sources,'platform':platform.platform(),'runs':[],
+ 'narrowed_dependency_features':feature_differences,'binary_sha256':{k:digest(v.read_bytes()) for k,v in binaries.items()},'parameters':{'starting_iterations':300,'target_ns':20_000_000,'confirmations':3,'samples':31},
+ 'rustc':subprocess.check_output(['rustc','-Vv'],text=True),'go':subprocess.check_output(['go','version'],text=True),
+ 'limits':['Single native host; sequential reference/Matea/Matea/reference; no owned build/test/Miri/coverage/download overlap during timing. No affinity/frequency control or RSS instrumentation.',
+ 'Nine matched narrow content/line/snapshot operations; three distinct Rust borrowed controls have no upstream ratio. The complete normalized UTF-8 bytes, logical line count and first return match.',
+ 'Constructor includes each implementation default metadata. Matea still lacks horizontal/wrap/gutter/highlight/custom-key capabilities. This partial object/workload comparison cannot establish full constructor or module parity, maximum speed or high scores.',
+ 'Independent owned snapshots are created in matched workloads; borrowed getters are separate Rust controls. Go has GC/drop/allocator accounting differences; Rust System requested layout bytes are not Go TotalAlloc or RSS.',
+ 'SetContentLines is used for both so the Go SetContent CRLF defect is not silently normalized in a supposed comparison. Both process a single existing text element with embedded line breaks.']}
+def save(): (OUT/'context.json').write_text(json.dumps(context,indent=2)+'\n')
+for source,name in [(Path('/private/tmp/matea-viewport-measure/Matea/src/main.rs'),'probe.rs.txt'),(Path('/private/tmp/matea-viewport-measure/Matea/Cargo.toml'),'Cargo.toml.txt'),(Path('/private/tmp/matea-viewport-measure/Matea/Cargo.lock'),'Cargo.lock.txt'),(Path('/private/tmp/matea-viewport-controls-go/benchmark/main.go'),'probe.go.txt'),(Path('/private/tmp/matea-viewport-controls-go/go.mod'),'go.mod.txt')]:
+ raw=source.read_bytes();(OUT/name).write_bytes(raw);context.setdefault('external_inputs',{})[name]=digest(raw)
+save()
+environment={**os.environ,'MATEA_PERF_ITERATIONS':'300','MATEA_PERF_MIN_SAMPLE_NS':'20000000'}
+environment.pop('MATEA_PROBE_OUTPUT_ONLY',None)
+# Build and correctness qualification completed before the timed cohort.
+try:
+ qualified={}
+ for language,binary in binaries.items():
+  result=subprocess.run([str(binary)],env={**environment,'MATEA_PROBE_OUTPUT_ONLY':'1'},capture_output=True,check=True,timeout=30)
+  (OUT/(language+'-outputs.jsonl')).write_bytes(result.stdout)
+  from performance_records import read_probe_outputs
+  qualified[language]=read_probe_outputs(result.stdout.decode())
+ for name,item in qualified['upstream'].items():
+  if any(item[k]!=qualified['matea'][name][k] for k in ['semantics','output','first_return_value']):raise ValueError('unmatched correctness '+name)
+ for index,language in enumerate(['upstream','matea','matea','upstream'],1):
+  result=subprocess.run([str(binaries[language])],env=environment,capture_output=True,timeout=300)
+  raw_name=f'run-{index}-{language}.jsonl';(OUT/raw_name).write_bytes(result.stdout);(OUT/(raw_name+'.stderr')).write_bytes(result.stderr)
+  result.check_returncode();records=read_records(result.stdout.decode())
+  if records.keys()!=qualified[language].keys():raise ValueError('changed case set')
+  for name,item in records.items():
+   if any(item[k]!=qualified[language][name][k] for k in ['semantics','output','first_return_value']):raise ValueError('changed output '+name)
+   if len(item['samples_ns'])!=31 or item['calibration']['target_ns']!=20_000_000 or any(len(batch['confirmations_ns'])!=2 for batch in item['calibration']['batches']):raise ValueError('unqualified intervals '+name)
+  context['runs'].append({'language':language,'raw':raw_name,'sha256':digest(result.stdout),'cases':len(records)})
+  save();print(raw_name,'complete',len(records),flush=True)
+ if snapshot()!=(head,sources):raise ValueError('source changed during timing')
+ if {k:digest(v.read_bytes()) for k,v in binaries.items()}!=context['binary_sha256']:raise ValueError('binary changed during timing')
+ runs=[read_records((OUT/r['raw']).read_text()) for r in context['runs']]
+ rows=[]
+ for name in qualified['upstream']:
+  def summary(item):return {'p50_ns':statistics.median(item['samples_ns']),'p95_ns':sorted(item['samples_ns'])[29],'allocations':item['allocations'],'allocated_bytes':item['allocated_bytes']}
+  rows.append({'case':name,'output_sha256':digest(qualified['upstream'][name]['output'].encode()),'first_return_value':qualified['upstream'][name]['first_return_value'],'forward':{'upstream':summary(runs[0][name]),'matea':summary(runs[1][name])},'reverse':{'upstream':summary(runs[3][name]),'matea':summary(runs[2][name])}})
+ (OUT/'report.json').write_text(json.dumps({'schema':1,'matched_cases':rows,'rust_controls':{name:[{'allocations':run[name]['allocations'],'allocated_bytes':run[name]['allocated_bytes'],'p50_ns':statistics.median(run[name]['samples_ns']),'p95_ns':sorted(run[name]['samples_ns'])[29]} for run in runs[1:3]] for name in qualified['matea'] if name not in qualified['upstream']},'limits':context['limits']},indent=2)+'\n')
+ context['status']='complete';save()
+except Exception as error:
+ context.update(status='failed',error=str(error));save();raise

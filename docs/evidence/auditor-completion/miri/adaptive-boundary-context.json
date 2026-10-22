@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source_head": "9c93ed104d0647c2e386946d885da495fe69eebf",
+  "command": "MIRIFLAGS=-Zmiri-seed=347 cargo +nightly miri test --offline --locked -p matea-api-audit --lib source_dispatch_boundary_preserves_bytes_and_multibyte_positions",
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "b5ed06a5583bc6e5a4374807af5148cde7b4e432983ac3f4c7902a8d85fb10e4",
+    "tools/api-audit/Cargo.toml": "d8a5774e46788c7f8b8dfd4f16280a30d9f6760cb7cffb7151802e81ce6337c6",
+    "tools/api-audit/src/lib.rs": "a6d18b7f126bd9bdece162413ab690513fe86edde6c1c3a0e03415d4782807a1"
+  },
+  "log_sha256": "c77d21c1636fdbad894415c980d5c361e3f5254c31a355e86a6cf5ed89b8bcff",
+  "tests_passed": 1,
+  "limits": [
+    "One interpreter seed and the finite byte-boundary/Unicode test only. Native syntax, output-failure and whole corpus tests remain separate.",
+    "Earlier incremental-item and syntax-atomicity Miri observations retain their original source bindings."
+  ]
+}

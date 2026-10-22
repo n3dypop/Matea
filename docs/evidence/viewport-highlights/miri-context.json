@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "seed": 269,
+  "source_head": "ed05ad9b4b503b2d4ff830a15a5e5bc85fe82641",
+  "source_sha256": {
+    "Cargo.toml": "99ad8f1833aa1297f3ec29a231067dce4eee0af5877e32d8d7bcc0b1047a78ab",
+    "Cargo.lock": "c4b9505483b1028235b2b6d6b097a6a406e1fc7691376f80f2b5fab41f158097",
+    "crates/matea-widgets/Cargo.toml": "98443ad24c27317073ba70aa4506ac997bc5fec547345948a1b90dc0bcf06377",
+    "crates/matea-widgets/src/viewport.rs": "d1aeb5ac294de846084e5f602dd0cbbc2269aec6ce6c9b32c420eb0b9be6abbf",
+    "crates/matea-widgets/src/viewport/highlights.rs": "36c1808956d486fcf1dd2316bdc4de90f8fef1a324ddfe970d25664fb9e744f3",
+    "crates/matea-widgets/tests/viewport_highlights.rs": "88c0efcbb35a109ffec1948623312364d7666c529403af939a25a8ef4a2cd45f",
+    "crates/matea-render/src/lib.rs": "bd50b80a07ed77212917903625085545a8c2347759b1c4cb354f51a2a58d054d",
+    "crates/matea-render/src/rich_text.rs": "1d7719a19006863add7e4f3eb3912c85f341f8ae4634edc55cd64de74f98f2f9",
+    "crates/matea-render/src/text.rs": "1ca05fdb98ba892367f305185e17cf4e694bd7ca6de0e2e342b52a0593b930cc",
+    "crates/matea-style/src/lib.rs": "4adacdba33d91c51bd7f78f7571d12862de9a74e633862dea1e9ea81fbb93fe1",
+    "crates/matea-style/src/attributes.rs": "6ae62f130eb944d40912d5e3b811f81c0dc1ffceac1d641fe4b9038bd772fcad",
+    "crates/matea-style/src/attributes/patch.rs": "3f30891401146d359f497c7d42c69ff57e183879fac6ba84365e12004e32d6a4"
+  },
+  "command": [
+    "cargo",
+    "+nightly",
+    "miri",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "matea-widgets",
+    "--test",
+    "viewport_highlights",
+    "--",
+    "--skip",
+    "every_scalar_boundary_range",
+    "--skip",
+    "pinned_420_source_states"
+  ],
+  "started_at_utc": "2026-10-19T03:51:09.298499+00:00",
+  "limits": [
+    "Eight targeted tests. The native finite range corpus and literal 420-row source matrix are deliberately skipped in Miri; they execute in full native acceptance. Not all branches, platforms or memory models."
+  ],
+  "exit_code": 0,
+  "source_changed": [],
+  "log_sha256": "da3323c8702f5e81f58d81a3d31a575f2ec7e1ce8127659fd22993baca84a099",
+  "finished_at_utc": "2026-10-19T03:51:22.314854+00:00"
+}

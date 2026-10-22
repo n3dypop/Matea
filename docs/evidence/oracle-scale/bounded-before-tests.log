@@ -1,0 +1,929 @@
+F
+======================================================================
+ERROR: test_absolute_cursor_coordinates_clamp_to_screen (__main__.MarginReplayTests) (address='999;999H')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 61, in test_absolute_cursor_coordinates_clamp_to_screen
+    self.assertEqual(ascii_replay(trace)[0], ("\n   X" if address != "999G" else "   X\n"))
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_terminal_trace.py", line 83, in replay
+    cells[y][x] = char
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_absolute_cursor_coordinates_clamp_to_screen (__main__.MarginReplayTests) (address='999;999f')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 61, in test_absolute_cursor_coordinates_clamp_to_screen
+    self.assertEqual(ascii_replay(trace)[0], ("\n   X" if address != "999G" else "   X\n"))
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_terminal_trace.py", line 83, in replay
+    cells[y][x] = char
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_absolute_cursor_coordinates_clamp_to_screen (__main__.MarginReplayTests) (address='2;999H')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 61, in test_absolute_cursor_coordinates_clamp_to_screen
+    self.assertEqual(ascii_replay(trace)[0], ("\n   X" if address != "999G" else "   X\n"))
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_terminal_trace.py", line 83, in replay
+    cells[y][x] = char
+IndexError: list assignment index out of range
+
+======================================================================
+ERROR: test_absolute_cursor_coordinates_clamp_to_screen (__main__.MarginReplayTests) (address='999G')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 61, in test_absolute_cursor_coordinates_clamp_to_screen
+    self.assertEqual(ascii_replay(trace)[0], ("\n   X" if address != "999G" else "   X\n"))
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_terminal_trace.py", line 83, in replay
+    cells[y][x] = char
+IndexError: list assignment index out of range
+
+======================================================================
+ERROR: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='38')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 83, in replay
+    if values[i + 1] == 5:
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='38;5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 84, in replay
+    color = values[i + 2]
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='38:2:1:2:3')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 52, in replay
+    values = [int(n or 0) for n in body.lstrip("?").split(";")]
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 52, in <listcomp>
+    values = [int(n or 0) for n in body.lstrip("?").split(";")]
+ValueError: invalid literal for int() with base 10: '38:2:1:2:3'
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='J', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='J', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='J', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='K', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='K', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='K', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=0, y=0, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='J', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='J', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='J', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='K', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='K', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='K', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 44, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    cells, _ = replay(trace)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/check_color_trace.py", line 20, in replay
+    require(0 <= top < bottom < height)
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/evidence_checks.py", line 7, in require
+    raise AssertionError
+AssertionError
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['A'] != ['']
+
+First differing element 0:
+'A'
+''
+
+- ['A']
+?   -
+
++ ['']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['A'] != ['']
+
+First differing element 0:
+'A'
+''
+
+- ['A']
+?   -
+
++ ['']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['A'] != ['']
+
+First differing element 0:
+'A'
+''
+
+- ['A']
+?   -
+
++ ['']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=1, height=1, x=1, y=0, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['A'] != ['']
+
+First differing element 0:
+'A'
+''
+
+- ['A']
+?   -
+
++ ['']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=0, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABC\nEFGH\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABC\nEFGH\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?      -
+
++ ['ABC\nEFGH\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=0, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABC\nEFGH\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABC\nEFGH\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?      -
+
++ ['ABC\nEFGH\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=0, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABC\nEFGH\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABC\nEFGH\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?      -
+
++ ['ABC\nEFGH\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=0, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABC\nEFGH\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABC\nEFGH\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?      -
+
++ ['ABC\nEFGH\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=1, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFG\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFG\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?            -
+
++ ['ABCD\nEFG\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=1, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFG\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFG\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?            -
+
++ ['ABCD\nEFG\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=1, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFG\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFG\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?            -
+
++ ['ABCD\nEFG\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=1, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFG\nIJKL']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFG\nIJKL'
+
+- ['ABCD\nEFGH\nIJKL']
+?            -
+
++ ['ABCD\nEFG\nIJKL']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=2, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFGH\nIJK']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFGH\nIJK'
+
+- ['ABCD\nEFGH\nIJKL']
+?                  -
+
++ ['ABCD\nEFGH\nIJK']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=2, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFGH\nIJK']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFGH\nIJK'
+
+- ['ABCD\nEFGH\nIJKL']
+?                  -
+
++ ['ABCD\nEFGH\nIJK']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=2, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFGH\nIJK']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFGH\nIJK'
+
+- ['ABCD\nEFGH\nIJKL']
+?                  -
+
++ ['ABCD\nEFGH\nIJK']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=4, height=3, x=4, y=2, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCD\nEFGH\nIJKL'] != ['ABCD\nEFGH\nIJK']
+
+First differing element 0:
+'ABCD\nEFGH\nIJKL'
+'ABCD\nEFGH\nIJK'
+
+- ['ABCD\nEFGH\nIJKL']
+?                  -
+
++ ['ABCD\nEFGH\nIJK']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=0, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?           -
+
++ ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=0, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?           -
+
++ ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=0, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?           -
+
++ ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=0, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?           -
+
++ ['ABCDEFGH\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=1, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                      -
+
++ ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=1, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                      -
+
++ ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=1, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                      -
+
++ ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=1, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                      -
+
++ ['ABCDEFGHI\nJKLMNOPQ\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=2, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                 -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=2, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                 -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=2, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                 -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=2, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                 -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\nBCDEFGHIJ\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=3, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                            -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=3, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                            -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=3, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                            -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=3, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                            -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHI\nKLMNOPQRS']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=4, command='X', mode=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                                       -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=4, command='X', mode=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                                       -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=4, command='X', mode=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                                       -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+======================================================================
+FAIL: test_erase_matches_an_independent_flat_cell_model_at_every_position (__main__.MarginReplayTests) (width=9, height=5, x=9, y=4, command='X', mode=99)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 43, in test_erase_matches_an_independent_flat_cell_model_at_every_position
+    self.assertEqual(ascii_replay(trace), [screen])
+AssertionError: Lists differ: ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'] != ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+First differing element 0:
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS'
+'ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR'
+
+- ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQRS']
+?                                                       -
+
++ ['ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZA\nBCDEFGHIJ\nKLMNOPQR']
+
+======================================================================
+FAIL: test_color_erase_uses_current_rendition_including_delayed_wrap (__main__.MarginReplayTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 53, in test_color_erase_uses_current_rendition_including_delayed_wrap
+    self.assertTrue(erased, command)
+AssertionError: [] is not true : 2X
+
+======================================================================
+FAIL: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='48;2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='48;2;1;2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='38;5;256')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='48;2;256;0;0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+AssertionError: AssertionError not raised
+
+======================================================================
+FAIL: test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected (__main__.MarginReplayTests) (sgr='38;2;0;0;999')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/misosoup/Developer/Codex/Project Matea/Matea/scripts/test_color_trace.py", line 69, in test_incomplete_out_of_range_and_noncanonical_sgr_are_rejected
+    replay({"width": 4, "height": 2, "sequences": ["\x1b[" + sgr + "m"]})
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.064s
+
+FAILED (failures=58, errors=7)

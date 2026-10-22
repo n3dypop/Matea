@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests/viewport.rs (target/debug/deps/viewport-a2dd770b7e7289bd)
+
+running 1 test
+test pinned_public_content_and_vertical_control_observations_match ... FAILED
+
+failures:
+
+---- pinned_public_content_and_vertical_control_observations_match stdout ----
+
+thread 'pinned_public_content_and_vertical_control_observations_match' (4269521) panicked at crates/matea-widgets/tests/viewport.rs:380:17:
+assertion `left == right` failed
+  left: "3\t0\t0\t0\t2\t0\ttrue\tfalse\t0000000000000000\t7465610a636f66666565"
+ right: "3\t0\t0\t0\t2\t0\ttrue\tfalse\t0000000000000000\t7465610d0a636f66666565"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    pinned_public_content_and_vertical_control_observations_match
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p matea-widgets --test viewport`

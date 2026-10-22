@@ -1,0 +1,20 @@
+{
+  "collector_revision": "6aaed94a7b9749a3a70a2c6fef838fb0fa21ce4c",
+  "test_revision": "87b5a402e0117f995a11e53bd7bdcc0b89caf47d",
+  "source_sha256": {
+    "collect_rustdoc.py": "ebb013ea4b26b634be1c44a952040d44af03b5d629f893336911c18ba3d5e23d",
+    "rustdoc_exports.py": "54e5d81a2e3f5134cff6a887ae6ea05b1f7131bfd1a856c92e50153603846710",
+    "evidence_checks.py": "a3cb58d9bcea3be36af605d31e56b384d7bb3bff9fc128b25bdcd49407860a92",
+    "collect_rustdoc_batch.py": "24e41c33fa5cb858094cb0981693d3a4585cbe6297bb99987ab4cc92473c5a92",
+    "fetch_rust_references.py": "a93172174d45a563a3129eaa6b17da5f2373d0618279c619e4b64841c2de8963"
+  },
+  "test_sha256": "dc1e17d30cf4fc21d56ee0b446ae77e43e91d5ffe4eb98280431ad5ac4be8d35",
+  "command": [
+    "python",
+    "${REPRO_TEMP}/test_source_snapshot.py",
+    "SnapshotTests.test_missing_malformed_or_unreadable_exports_never_keep_success_exit_code"
+  ],
+  "exit_code": 1,
+  "log_sha256": "1c74c0ffb16f5b9b3d3549f62b3980559dee2c984ffd896ab9ec12d26ff516d8",
+  "scope": "Exact historical collector/extractor and committed selected regression fixture, with mocked compiler. Missing export and extractor recursion leave incomplete successful run metadata in the old collector. No real compiler or network executed."
+}

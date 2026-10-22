@@ -9,6 +9,8 @@
 | F4 | Input, list, table, viewport, spinner, form and extension contracts | Widget tests and independent component package |
 | F5 | Runnable examples, documentation, cross-platform stabilization and owner review | Linux/Windows/macOS tests, fmt/clippy, smoke/PTY evidence and explicit owner approval |
 
-The current implementation is a Foundation candidate. Its public API is provisional. The gate report records actual results and open limitations. Green CI alone does not authorize advancing beyond F5.
+Owner revision (2026-10-16): all public user-visible features in the six Charm repositories and referenced foundation libraries must be implemented before entering F5. Per-module correctness, performance and upstream issue analysis are required. See coverage-plan.md.
 
-Only after Foundation approval, plan an independent image-rendering extension with CPU fallback and conditional CUDA evaluation. Image conversion, protocol encoding and terminal transport will have separate ownership. No image crate, codec, graphics-protocol encoder, CUDA prototype or image benchmark is included in Foundation.
+The current implementation is an incomplete Foundation prototype. Its public API is provisional. The gate report records actual results and open limitations. Green CI alone does not authorize advancing beyond F5.
+
+Only after Foundation approval, plan an independent image-rendering extension with CPU fallback and conditional CUDA evaluation. Image conversion, protocol encoding and terminal transport will have separate ownership. The owner explicitly includes terminal graphics encoders in Foundation. No image processing crate, decoder/codec, CUDA prototype or image-engine benchmark is included.

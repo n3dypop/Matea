@@ -1,0 +1,31 @@
+"""Sample only this producer's own pure-formatter children, never another app."""
+import hashlib,json,shutil,subprocess,sys
+from pathlib import Path
+if not __debug__:raise RuntimeError('profiler refuses -O')
+root=Path.cwd();base=root/'docs/evidence/clocks-digit-pairs/profile';work=Path('/private/tmp/matea-clock-formatter-profile');sys.path.insert(0,str(root/'scripts'))
+from check_quality import execution_inputs
+sha=lambda b:hashlib.sha256(b).hexdigest()
+for folder in ['','small-decimals','forced-integer','distributions']:
+ assert json.loads((root/'docs/evidence/clocks-digit-pairs'/folder/'context.json').read_bytes())['status']=='complete'
+inputs={n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))};binary=Path('/private/tmp/matea-clock-formatter-profile-target/release/matea-clock-formatter-profile')
+files={}
+for n in ['Cargo.toml','Cargo.lock','caller.rs','build.log']:
+ dest=n+'.txt' if Path(n).suffix in ['.toml','.lock','.rs'] else n;shutil.copy2(work/n,base/dest);files[dest]=sha((base/dest).read_bytes())
+c={'schema':1,'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'procedure_sha256':sha(Path(__file__).read_bytes()),'root_input_sha256':inputs,'binary_sha256':sha(binary.read_bytes()),'archive_sha256':files,'cases':[],'limits':['Dedicated native macOS CPU sampling, not ordinary benchmark timings. No other sampling/build/test/Miri/coverage/download overlaps the already completed ordinary measurements.','Only children started here are sampled and terminated after collection. No other app, terminal state, image processing, codec or CUDA is accessed.','Release with debug=1 supports attribution; stack samples are not precise exclusive CPU time, throughput distributions or a universal bottleneck proof.']}
+save=lambda:(base/'context.json').write_text(json.dumps(c,indent=2)+'\n');save()
+try:
+ for kind in ['micros','mixed']:
+  p=subprocess.Popen([str(binary),kind],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  try:
+   ready=p.stdout.readline().decode();assert ready==f'ready {p.pid}\n'
+   command=['/usr/bin/sample',str(p.pid),'4','1','-mayDie','-file',str(base/(kind+'.sample.txt'))]
+   r=subprocess.run(command,capture_output=True,timeout=60);(base/(kind+'.sampler.log')).write_bytes(r.stdout+r.stderr);assert r.returncode==0 and (base/(kind+'.sample.txt')).stat().st_size>0
+  finally:
+   p.terminate();stdout,stderr=p.communicate(timeout=10)
+  assert p.returncode==-15 and not stderr
+  c['cases'].append({'kind':kind,'own_child_pid':p.pid,'ready':ready,'command':command,'sampler_exit_code':r.returncode,'child_exit_code':p.returncode,'child_stop':'Producer terminates its own pure loop after sampling; no terminal/resource session is created.','sample_sha256':sha((base/(kind+'.sample.txt')).read_bytes()),'sampler_log_sha256':sha((base/(kind+'.sampler.log')).read_bytes())});save()
+ assert {n:sha((root/n).read_bytes()) for n in sorted(execution_inputs(root))}==inputs
+ assert sha(binary.read_bytes())==c['binary_sha256']
+ c['status']='complete';save();print('Two dedicated actual-library CPU profiles collected; no benchmark timings published.')
+except BaseException as e:
+ c.update(status='failed',error_type=type(e).__name__,error=str(e));save();raise

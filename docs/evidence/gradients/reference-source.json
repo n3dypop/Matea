@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "scope": "RGB8 stop/output subset; 548 fixture cases, six matched fresh workloads, six separate Rust streaming controls",
+  "upstream_lock_sha256": "e55c8d978c9d45ad1b51495edee7123b5d7f0ba7b249b9d45b6bd9fa7a3ae91a",
+  "lipgloss_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+  "go_colorful_version": "v1.4.1",
+  "go_colorful_module_checksums": [
+    "github.com/lucasb-eyer/go-colorful v1.4.1 h1:1EO+WB73+EH8EVbzlrG3KLAfEypQWVHIBqlTf+2hNss=",
+    "github.com/lucasb-eyer/go-colorful v1.4.1/go.mod h1:R4dSotOR9KMtayYi1e77YzuveK+i7ruzyGqttikkLy0="
+  ],
+  "source_sha256": {
+    "lipgloss/blending.go": "9fea665f7c047102abc1d28c139f3212404501365f0c2063746c6d6b4dd8681c",
+    "go-colorful/colors.go": "c4fcf429553ae8eeb2eace0f8465f72bdc0ff761a6b2e7abb59efcd60048e548",
+    "go-colorful/LICENSE": "1e4cf2a117516ec1b54041d68ed4f5d331878b04de3386f4790e7b5b9c04e1ec",
+    "gradient-fixture": "2e30647a2de1e5ac078b68ca5ca0780e604f3189cb12279c23989c1b088d59ff",
+    "tools/perf-upstream/main.go": "7a8c4e6c6c2f3545e7863b7b951c544f8c070ba9623d07602767f6a3bb5ed8ec",
+    "tools/perf-probe/src/main.rs": "a55bcea925f14aa3a2345d54d20feadd6ce93debd398caa7f08d0c984c54fbd0",
+    "tools/perf-probe/src/gradients.rs": "76c737a37c74c442ec96e86331ae64b18a27ffdc918f96c5eab0c2bbea49e321",
+    "crates/matea-style/src/gradient.rs": "9e02b8424659ba29cbdd21ce3189580e10437f9ec9b770717cbd8df47e936935",
+    "crates/matea-style/tests/gradients.rs": "edaa604d1848bd1c53e60dbcf154c68f09701664e99b792124260e514d0a6388",
+    "lipgloss/LICENSE": "3f531fb89f23b218fbe16b24fb5950418fa1f0046db5cfddb2c1e0d6d39bfcc0"
+  },
+  "fixture_sha256": "2e30647a2de1e5ac078b68ca5ca0780e604f3189cb12279c23989c1b088d59ff",
+  "fixture_rows": 548,
+  "matched_fresh_cases": 6,
+  "rust_reuse_controls": 6,
+  "binaries_sha256": {
+    "matea": "c5eafa7a4e609a068425f150fcb76f3c87473369b5601c7bc6929e55556555e3",
+    "upstream": "6703e9f95457e1b652765e5e87dba74fe3c26c3ea980d2b0039efb195e7f055f"
+  },
+  "limits": [
+    "Correctness only; no timing or allocation comparison collected yet.",
+    "RGB8 terminal projection is explicit; high-depth/alpha/custom color inputs remain pending."
+  ],
+  "go_checksum_cohort_sha256": "494b3cc253d3469dc31909d4d57efc1c652550f6b4ddd31ebb9901d9c40d2f5d"
+}
