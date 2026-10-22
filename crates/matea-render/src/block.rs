@@ -495,8 +495,8 @@ impl Layout<'_> {
             if !enabled || row_y >= usize::from(s.size().height) {
                 continue;
             }
-            let (lg, lw) = border.glyph_at(left, 0);
-            let (rg, rw) = border.glyph_at(right, 0);
+            let (_, lw) = border.corner(left);
+            let (_, rw) = border.corner(right);
             let lw = if sides.left { usize::from(lw) } else { 0 };
             let rw = if sides.right { usize::from(rw) } else { 0 };
             let index = |column: usize| {
@@ -507,7 +507,9 @@ impl Layout<'_> {
                 }
             };
             if sides.left {
-                draw(s, x, row_y, lg, border_style(patch, index(0)))
+                draw_pattern(s, x, row_y, border.corner_glyphs(left), |column| {
+                    border_style(patch, index(column))
+                })
             }
             let mut column = lw;
             let mut pattern = 0;
@@ -537,13 +539,14 @@ impl Layout<'_> {
                 pattern += 1;
             }
             if sides.right {
-                draw(
+                let column = width.saturating_sub(rw);
+                draw_pattern(
                     s,
-                    x + width.saturating_sub(rw),
+                    x + column,
                     row_y,
-                    rg,
-                    border_style(patch, index(width.saturating_sub(rw))),
-                )
+                    border.corner_glyphs(right),
+                    |offset| border_style(patch, index(column + offset)),
+                );
             }
         }
         for row in 0..self
@@ -574,8 +577,13 @@ impl Layout<'_> {
                 }
                 let style = border_style(patch, index);
                 fill_region(s, column, row_y, reserved as usize, 1, style);
-                let (glyph, _) = border.glyph_at(part, row);
-                draw(s, column, row_y, glyph, style);
+                let (glyph, glyph_width) = border.glyph_at(part, row);
+                let offset = if part == BorderPart::Right {
+                    usize::from(reserved.saturating_sub(glyph_width))
+                } else {
+                    0
+                };
+                draw(s, column + offset, row_y, glyph, style);
             }
         }
     }
@@ -599,6 +607,23 @@ fn draw(s: &mut Surface, x: usize, y: usize, text: &str, style: Style) {
         s.canvas(area).text(x as u16, y as u16, text, style);
     }
 }
+fn draw_pattern<'a>(
+    s: &mut Surface,
+    x: usize,
+    y: usize,
+    glyphs: impl IntoIterator<Item = (&'a str, u16)>,
+    mut style: impl FnMut(usize) -> Style,
+) {
+    let mut offset = 0;
+    for (glyph, width) in glyphs {
+        if x + offset >= usize::from(s.size().width) {
+            break;
+        }
+        draw(s, x + offset, y, glyph, style(offset));
+        offset += usize::from(width);
+    }
+}
+
 fn fill_char(s: &mut Surface, x: usize, y: usize, count: usize, c: char, style: Style) {
     if c == ' ' {
         fill_region(s, x, y, count, 1, style);

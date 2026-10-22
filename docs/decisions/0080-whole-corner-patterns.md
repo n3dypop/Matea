@@ -1,6 +1,7 @@
 # ADR0080: Whole corner patterns with cached rectangular extents
 
-Status: isolated prototype,not integrated or qualified as current Foundation.
+Status: integrated candidate;current-root qualification pending. The isolated
+prototype and its failures remain frozen in evidence.
 The active evaluation axis remains matea-style/lib reference50. No score change.
 
 Lip Gloss issue605 requests multiple independent graphemes per corner; its pinned

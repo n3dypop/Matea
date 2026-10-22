@@ -53,11 +53,11 @@ pub mod prelude {
         BlockError, Cursor, Rect, RichText, Size, StyledBlock, StyledGrapheme, Surface, Text, View,
     };
     pub use matea_style::{
-        AdaptiveColor, Alignment, BlinkStyle, BlockStyle, Border, BorderPart, BorderPreset,
-        BorderSet, Color, ColorError, ColorLevel, DecorationError, Edges, Gradient, GradientColors,
-        GradientError, GradientGrid, GradientGridColors, Insets, PremultipliedRgba16,
-        ProfileColors, Rgba16, Style, StylePatch, TabWidth, TextAttribute, TextAttributes,
-        TextFrame, TextTransform, Theme, UnderlineStyle,
+        AdaptiveColor, Alignment, BlinkStyle, BlockStyle, Border, BorderPart, BorderParts,
+        BorderPreset, BorderSet, Color, ColorError, ColorLevel, CornerMode, DecorationError, Edges,
+        Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors, Insets,
+        PremultipliedRgba16, ProfileColors, Rgba16, Style, StylePatch, TabWidth, TextAttribute,
+        TextAttributes, TextFrame, TextTransform, Theme, UnderlineStyle,
     };
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{

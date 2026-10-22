@@ -549,7 +549,7 @@ fn wide_custom_borders_preserve_clusters_and_fill_unfit_cells() {
     assert_eq!(frame.size(), Size::new(6, 4));
     assert_eq!(
         frame.plain(),
-        "👩‍💻茶 e\u{301}\ne\u{301} ab👩‍💻\ne\u{301} c x\ne\u{301}茶 👩‍💻"
+        "👩‍💻茶 e\u{301}\ne\u{301} ab👩‍💻\ne\u{301} c  x\ne\u{301}茶 👩‍💻"
     );
     for width in 1..=6 {
         let cropped = StyledBlock::new("ab\nc", style.clone())
@@ -587,7 +587,7 @@ fn wide_custom_borders_preserve_clusters_and_fill_unfit_cells() {
         ..Edges::default()
     };
     let frame = StyledBlock::new("a\nb\nc", side).unwrap().render().unwrap();
-    assert_eq!(frame.plain(), "e\u{301}a👩‍💻\ne\u{301}bx\ne\u{301}c👩‍💻");
+    assert_eq!(frame.plain(), "e\u{301}a👩‍💻\ne\u{301}b x\ne\u{301}c👩‍💻");
 }
 
 #[test]
@@ -694,4 +694,149 @@ fn pinned_attribute_groups_and_combining_spaces() {
         &mismatches[..mismatches.len().min(12)]
     );
     assert_eq!(checked, if cfg!(miri) { 10 } else { 288 });
+}
+
+#[test]
+fn full_corner_patterns_and_wide_right_corners_reserve_a_rectangle() {
+    use matea_style::{BorderSet, CornerMode};
+    let border = BorderSet::custom([
+        " ",
+        "│",
+        " ",
+        "│",
+        "┌──",
+        "──┐",
+        "└──",
+        "──┘",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ])
+    .unwrap()
+    .with_corner_mode(CornerMode::WholePattern)
+    .unwrap();
+    let full = StyledBlock::new("ab\nc", BlockStyle::default().border(border)).unwrap();
+    let frame = full.render().unwrap();
+    assert_eq!(frame.size(), Size::new(8, 4));
+    assert_eq!(frame.plain(), "┌──  ──┐\n│  ab  │\n│  c   │\n└──  ──┘");
+    let border =
+        BorderSet::custom(["─", "│", "─", "│", "┌", "⏩", "└", "⏩", "", "", "", "", ""]).unwrap();
+    let frame = StyledBlock::new("ab\nc", BlockStyle::default().border(border.clone()))
+        .unwrap()
+        .render()
+        .unwrap();
+    assert_eq!(frame.size(), Size::new(5, 4));
+    assert_eq!(frame.plain(), "┌──⏩\n│ab │\n│c  │\n└──⏩");
+    let empty = StyledBlock::new("", BlockStyle::default().border(border))
+        .unwrap()
+        .render()
+        .unwrap();
+    assert_eq!(empty.size(), Size::new(3, 3));
+    assert_eq!(empty.plain(), "┌⏩\n│ │\n└⏩");
+}
+
+#[test]
+fn full_corner_gradients_use_each_cached_cluster_and_signed_offset() {
+    use matea_style::{BorderSet, CornerMode, Gradient};
+    use std::sync::Arc;
+    let border = BorderSet::custom([
+        " ",
+        "│",
+        " ",
+        "│",
+        "┌──",
+        "──┐",
+        "└──",
+        "──┘",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ])
+    .unwrap()
+    .with_corner_mode(CornerMode::WholePattern)
+    .unwrap();
+    let stops: Vec<[u8; 3]> = (0..24).map(|i| [i, 17, 255 - i]).collect();
+    let gradient = Arc::new(Gradient::new(&stops).unwrap());
+    for offset in [i64::MIN, -49, -1, 0, 1, 49, i64::MAX] {
+        let mut style = BlockStyle::default().border(border.clone());
+        style.border_gradient = Some(gradient.clone());
+        style.border_gradient_offset = Some(offset);
+        let frame = StyledBlock::new("ab\nc", style).unwrap().render().unwrap();
+        let expected = |index: i128| {
+            let i = (index - i128::from(offset)).rem_euclid(24) as u8;
+            Color::Rgb(i, 17, 255 - i)
+        };
+        for x in 0..8 {
+            assert_eq!(frame.row(0)[x].style().fg, expected(x as i128));
+            assert_eq!(frame.row(3)[x].style().fg, expected(21 - x as i128));
+        }
+        for y in 1..=2 {
+            for x in [0, 1, 2] {
+                assert_eq!(frame.row(y)[x].style().fg, expected(24 - y as i128));
+            }
+            for x in [5, 6, 7] {
+                assert_eq!(frame.row(y)[x].style().fg, expected(9 + y as i128));
+            }
+        }
+        for width in 0..=8 {
+            let cropped = StyledBlock::new("ab\nc", BlockStyle::default().border(border.clone()))
+                .unwrap()
+                .render_within(Size::new(width, 4))
+                .unwrap();
+            assert_eq!(cropped.size(), Size::new(width, 4));
+        }
+    }
+}
+
+#[test]
+fn full_corners_clip_whole_clusters_at_each_viewport_edge() {
+    use matea_style::{BorderParts, BorderSet, CornerMode};
+    let border = BorderSet::custom(BorderParts {
+        top: " ",
+        bottom: " ",
+        left: "|",
+        right: "|",
+        top_left: "茶e\u{301}",
+        top_right: "x👩‍💻",
+        bottom_left: "e\u{301}茶",
+        bottom_right: "👩‍💻x",
+        ..BorderParts::default()
+    })
+    .unwrap()
+    .with_corner_mode(CornerMode::WholePattern)
+    .unwrap();
+    let block = StyledBlock::new("a", BlockStyle::default().border(border)).unwrap();
+    assert_eq!(
+        block.render().unwrap().plain(),
+        "茶e\u{301} x👩‍💻\n|  a  |\ne\u{301}茶 👩‍💻x"
+    );
+    assert_eq!(
+        block.render_within(Size::new(1, 3)).unwrap().plain(),
+        "\n|\ne\u{301}"
+    );
+    assert_eq!(
+        block.render_within(Size::new(2, 3)).unwrap().plain(),
+        "茶\n|\ne\u{301}"
+    );
+    for width in 0..=7 {
+        for height in 0..=3 {
+            let frame = block.render_within(Size::new(width, height)).unwrap();
+            assert_eq!(frame.size(), Size::new(width, height));
+            for y in 0..height {
+                for (x, c) in frame.row(y).iter().enumerate() {
+                    if c.is_continuation() {
+                        assert!(x > 0);
+                        assert_eq!(frame.row(y)[x - 1].width(), 2);
+                    } else if c.width() == 2 {
+                        assert!(x + 1 < usize::from(width));
+                        assert!(frame.row(y)[x + 1].is_continuation());
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,25 @@
+"""Adopt the validated corner prototype with approved root manifests unchanged."""
+import hashlib,json,shutil,subprocess
+from pathlib import Path
+r=Path.cwd();b=r/'docs/evidence/block-corners';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+c=json.loads((b/'prototype-context.json').read_bytes());before_head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+manifest={name:sha(r/name) for name in ['Cargo.toml','Cargo.lock','crates/matea-style/Cargo.toml','crates/matea-render/Cargo.toml']}
+for name,digest in c['root_before_sha256'].items():assert sha(r/name)==digest,name
+for name,digest in c['prototype_sha256'].items():
+ source=b/(name.replace('/','--')+'.txt');assert sha(source)==digest;shutil.copyfile(source,r/name)
+p=r/'crates/matea/src/lib.rs';text=p.read_text();text=text.replace('BorderPart, BorderPreset','BorderPart, BorderParts, BorderPreset').replace('ColorLevel, DecorationError','ColorLevel, CornerMode, DecorationError');p.write_text(text)
+assert manifest=={name:sha(r/name) for name in manifest}
+planp=r/'docs/quality-plan.json';plan=json.loads(planp.read_bytes());(b/'quality-plan-before.json.txt').write_bytes(planp.read_bytes())
+affected=['matea-style/lib','matea-render/lib','matea/lib','matea-style/integration-tests','matea-render/integration-tests']
+for unit in plan['units']:
+ if unit['id'] in affected:
+  unit['criteria']['portability']['reason']='Current corner-source qualification is tracked in docs/evidence/block-corners/ci-bindings.json. A75 verdict applies only to qualified exact execution inputs;the candidate is provisional until that binding succeeds. Physical terminal/emulator interoperability and native32-bit runs remain explicitly bounded.'
+  for name in ['docs/corner-pattern-audit.md','docs/evidence/block-corners/integration.json','docs/evidence/block-corners/ci-bindings.json']:
+   if name not in unit['evidence']:unit['evidence'].append(name)
+ if unit['id']=='matea-style/lib':unit['remaining']=['Active reference axis:whole corner modes/named inputs and side alignment integrated for qualification;hyperlink/raw tab contracts,placement/join/whitespace patterns,precise colors,x/ansi and Ratatui source/compiler feature/target closure remain open. No reference promotion.']
+planp.write_text(json.dumps(plan,indent=2,ensure_ascii=False)+'\n')
+(b/'ci-bindings.json').write_text(json.dumps({'schema':1,'status':'in_progress','scope':'Current corner candidate.Qualified f9c34b7 block decoration is historical,not this code.'},indent=2)+'\n')
+paths=[*c['prototype_sha256'],'crates/matea/src/lib.rs']
+record={'schema':1,'status':'integrated_pending_current_root_qualification','base_commit':before_head,'prototype_base_commit':c['base_commit'],'active_axis':'matea-style/lib/reference','active_reference_score':50,'reference_axis_complete':False,'baseline_low_axes':47,'candidate_portability_pending_units':affected,'score_changes':[],'approved_manifests_unchanged':manifest,'source_sha256':{p:sha(r/p) for p in paths},'prototype_sha256':c['prototype_sha256'],'prototype_native_miri_scope':'Isolated evidence retained;not relabeled as current root execution.','procedure_sha256':sha(Path(__file__).resolve())}
+(b/'integration.json').write_text(json.dumps(record,indent=2,ensure_ascii=False)+'\n')
+print('Adopted four exact prototype files and facade exports;root manifests/locks unchanged;current qualification pending')

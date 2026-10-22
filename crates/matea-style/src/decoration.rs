@@ -169,6 +169,85 @@ impl BorderPreset {
         }
     }
 }
+/// Borrowed named input for a custom border. Construction validates and owns
+/// all strings, so the resulting BorderSet never borrows this configuration.
+///
+/// ```
+/// use matea_style::{BorderParts,BorderPart,BorderSet};
+/// let border = BorderSet::custom(BorderParts { top: "─", left: "│", ..BorderParts::default() })?;
+/// assert_eq!(border.part(BorderPart::Top), "─");
+/// # Ok::<(), matea_style::DecorationError>(())
+/// ```
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct BorderParts<'a> {
+    pub top: &'a str,
+    pub right: &'a str,
+    pub bottom: &'a str,
+    pub left: &'a str,
+    pub top_left: &'a str,
+    pub top_right: &'a str,
+    pub bottom_left: &'a str,
+    pub bottom_right: &'a str,
+    pub middle_left: &'a str,
+    pub middle_right: &'a str,
+    pub middle: &'a str,
+    pub middle_top: &'a str,
+    pub middle_bottom: &'a str,
+}
+impl<'a> BorderParts<'a> {
+    fn into_array(self) -> [&'a str; 13] {
+        [
+            self.top,
+            self.right,
+            self.bottom,
+            self.left,
+            self.top_left,
+            self.top_right,
+            self.bottom_left,
+            self.bottom_right,
+            self.middle_left,
+            self.middle_right,
+            self.middle,
+            self.middle_top,
+            self.middle_bottom,
+        ]
+    }
+}
+impl<'a> From<[&'a str; 13]> for BorderParts<'a> {
+    fn from(parts: [&'a str; 13]) -> Self {
+        let [
+            top,
+            right,
+            bottom,
+            left,
+            top_left,
+            top_right,
+            bottom_left,
+            bottom_right,
+            middle_left,
+            middle_right,
+            middle,
+            middle_top,
+            middle_bottom,
+        ] = parts;
+        Self {
+            top,
+            right,
+            bottom,
+            left,
+            top_left,
+            top_right,
+            bottom_left,
+            bottom_right,
+            middle_left,
+            middle_right,
+            middle,
+            middle_top,
+            middle_bottom,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 struct Glyph {
     range: Range<usize>,
@@ -188,9 +267,19 @@ enum BorderData {
 
 /// Immutable validated glyph patterns. Built-ins allocate nothing; custom
 /// patterns own their text/segmentation once and share it on Clone. Corners
-/// render the first whole grapheme; side patterns cycle through whole clusters.
+/// default to the first whole grapheme; WholePattern keeps the full sequence.
+/// Side patterns cycle through whole clusters.
 #[derive(Clone, Debug)]
-pub struct BorderSet(BorderData);
+pub struct BorderSet(BorderData, Option<[u16; 4]>);
+
+/// How a corner pattern contributes to a rectangular frame. WholePattern keeps
+/// every grapheme (for example `┌──`), with its complete width reserved in rows.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum CornerMode {
+    #[default]
+    FirstCluster,
+    WholePattern,
+}
 impl Default for BorderSet {
     fn default() -> Self {
         Self::preset(BorderPreset::Rounded)
@@ -212,12 +301,13 @@ impl From<crate::Border> for BorderSet {
 }
 impl BorderSet {
     pub const fn preset(preset: BorderPreset) -> Self {
-        Self(BorderData::Preset(preset))
+        Self(BorderData::Preset(preset), None)
     }
     /// Parts use BorderPart::ALL order. Empty parts are valid and render a
     /// space when their side is enabled. Controls and zero-width clusters are
     /// rejected before publishing any object; input strings are never mutated.
-    pub fn custom(parts: [&str; 13]) -> Result<Self, DecorationError> {
+    pub fn custom<'a>(parts: impl Into<BorderParts<'a>>) -> Result<Self, DecorationError> {
+        let parts = parts.into().into_array();
         // Validate the full borrowed input before allocating owned text/cache.
         for (part, text) in BorderPart::ALL.into_iter().zip(parts) {
             if text.chars().any(char::is_control) {
@@ -247,7 +337,7 @@ impl BorderSet {
                 width,
             }
         });
-        Ok(Self(BorderData::Custom(Arc::new(patterns))))
+        Ok(Self(BorderData::Custom(Arc::new(patterns)), None))
     }
     pub fn part(&self, part: BorderPart) -> &str {
         match &self.0 {
@@ -255,11 +345,100 @@ impl BorderSet {
             BorderData::Custom(parts) => &parts[part as usize].text,
         }
     }
+    /// Edge patterns reserve their largest grapheme. Nonempty corners reserve
+    /// their first cluster or whole pattern, according to CornerMode. Empty
+    /// parts report0; enabled empty corners use a one-cell fallback in corner().
     pub fn part_width(&self, part: BorderPart) -> u16 {
+        if let Some(index) = Self::corner_index(part) {
+            if let Some(widths) = self.1 {
+                return widths[index];
+            }
+            return if self.part(part).is_empty() {
+                0
+            } else {
+                self.glyph_at(part, 0).1
+            };
+        }
         match &self.0 {
             BorderData::Preset(_) => u16::from(!self.part(part).is_empty()),
             BorderData::Custom(parts) => parts[part as usize].width,
         }
+    }
+    fn corner_index(part: BorderPart) -> Option<usize> {
+        match part {
+            BorderPart::TopLeft => Some(0),
+            BorderPart::TopRight => Some(1),
+            BorderPart::BottomLeft => Some(2),
+            BorderPart::BottomRight => Some(3),
+            _ => None,
+        }
+    }
+    pub fn corner_mode(&self) -> CornerMode {
+        if self.1.is_some() {
+            CornerMode::WholePattern
+        } else {
+            CornerMode::FirstCluster
+        }
+    }
+    /// Validate and cache full corner extents before changing the mode. Sharing
+    /// the original border does not change its mode or allocate another cache.
+    pub fn with_corner_mode(mut self, mode: CornerMode) -> Result<Self, DecorationError> {
+        self.1 = match mode {
+            CornerMode::FirstCluster => None,
+            CornerMode::WholePattern => {
+                let mut widths = [0; 4];
+                for (index, part) in [
+                    BorderPart::TopLeft,
+                    BorderPart::TopRight,
+                    BorderPart::BottomLeft,
+                    BorderPart::BottomRight,
+                ]
+                .into_iter()
+                .enumerate()
+                {
+                    let width = match &self.0 {
+                        BorderData::Preset(_) => u16::from(!self.part(part).is_empty()),
+                        BorderData::Custom(parts) => parts[part as usize]
+                            .glyphs
+                            .iter()
+                            .try_fold(0u16, |total, glyph| total.checked_add(glyph.width))
+                            .ok_or(DecorationError::WidthOverflow)?,
+                    };
+                    widths[index] = width;
+                }
+                Some(widths)
+            }
+        };
+        Ok(self)
+    }
+    /// Complete corner text in WholePattern mode, otherwise its first cluster.
+    /// For non-corner parts this returns the first cluster in either mode.
+    pub fn corner(&self, part: BorderPart) -> (&str, u16) {
+        if let (Some(widths), Some(index)) = (self.1, Self::corner_index(part)) {
+            let text = self.part(part);
+            return (
+                if text.is_empty() { " " } else { text },
+                widths[index].max(1),
+            );
+        }
+        self.glyph_at(part, 0)
+    }
+    /// Borrow the cached corner clusters without segmentation or allocation.
+    /// Empty patterns yield one space; FirstCluster yields exactly one glyph.
+    pub fn corner_glyphs(
+        &self,
+        part: BorderPart,
+    ) -> impl ExactSizeIterator<Item = (&str, u16)> + DoubleEndedIterator + std::iter::FusedIterator + '_
+    {
+        let count = if self.1.is_some() && Self::corner_index(part).is_some() {
+            match &self.0 {
+                BorderData::Preset(_) => 1,
+                BorderData::Custom(parts) => parts[part as usize].glyphs.len().max(1),
+            }
+        } else {
+            1
+        };
+        (0..count).map(move |index| self.glyph_at(part, index))
     }
     pub fn is_empty(&self) -> bool {
         BorderPart::ALL.into_iter().all(|p| self.part(p).is_empty())
@@ -682,5 +861,127 @@ mod tests {
         fn send_sync<T: Send + Sync>() {}
         send_sync::<BlockStyle>();
         send_sync::<BorderSet>();
+    }
+}
+
+#[cfg(test)]
+mod full_corner_tests {
+    use super::*;
+    #[test]
+    fn full_patterns_cache_extents_and_share_validated_storage() {
+        let parts = [
+            "-~",
+            "|",
+            "-~",
+            "|",
+            "e\u{301}茶",
+            "👩‍💻x",
+            "└──",
+            "──┘",
+            "",
+            "",
+            "",
+            "",
+            "",
+        ];
+        let original = BorderSet::custom(parts).unwrap();
+        assert_eq!(original.corner_mode(), CornerMode::FirstCluster);
+        assert_eq!(original.part_width(BorderPart::TopLeft), 1);
+        assert_eq!(original.corner(BorderPart::TopLeft), ("e\u{301}", 1));
+        let full = original
+            .clone()
+            .with_corner_mode(CornerMode::WholePattern)
+            .unwrap();
+        assert_eq!(full.corner(BorderPart::TopLeft), ("e\u{301}茶", 3));
+        assert_eq!(full.corner(BorderPart::TopRight), ("👩‍💻x", 3));
+        assert_eq!(full.corner(BorderPart::Top), ("-", 1));
+        assert_eq!(
+            full.corner_glyphs(BorderPart::TopLeft).collect::<Vec<_>>(),
+            vec![("e\u{301}", 1), ("茶", 2)]
+        );
+        {
+            let mut glyphs = full.corner_glyphs(BorderPart::TopRight);
+            assert_eq!(glyphs.len(), 2);
+            assert_eq!(glyphs.next_back(), Some(("x", 1)));
+            assert_eq!(glyphs.next(), Some(("👩‍💻", 2)));
+            assert_eq!(glyphs.next(), None);
+            assert_eq!(glyphs.next_back(), None);
+        }
+        let (BorderData::Custom(a), BorderData::Custom(b)) = (&original.0, &full.0) else {
+            panic!()
+        };
+        assert!(Arc::ptr_eq(a, b));
+        assert_eq!(original.corner_mode(), CornerMode::FirstCluster);
+        let style = BlockStyle::default().border(full.clone());
+        assert_eq!(
+            style.border_insets(),
+            Insets {
+                top: 1,
+                right: 3,
+                bottom: 1,
+                left: 3
+            }
+        );
+        let reset = full.with_corner_mode(CornerMode::FirstCluster).unwrap();
+        assert_eq!(reset.corner_mode(), CornerMode::FirstCluster);
+        assert_eq!(reset.corner(BorderPart::TopLeft), ("e\u{301}", 1));
+        let empty = BorderSet::custom([""; 13])
+            .unwrap()
+            .with_corner_mode(CornerMode::WholePattern)
+            .unwrap();
+        assert_eq!(empty.corner(BorderPart::BottomLeft), (" ", 1));
+        assert_eq!(
+            empty
+                .corner_glyphs(BorderPart::BottomLeft)
+                .collect::<Vec<_>>(),
+            vec![(" ", 1)]
+        );
+        assert_eq!(
+            BorderSet::preset(BorderPreset::Rounded)
+                .with_corner_mode(CornerMode::WholePattern)
+                .unwrap()
+                .corner(BorderPart::TopLeft),
+            ("╭", 1)
+        );
+    }
+    #[test]
+    fn named_parts_are_owned_and_match_the_array_contract() {
+        let border = {
+            let top = String::from("茶-");
+            let parts = BorderParts {
+                top: &top,
+                top_left: "┌──",
+                ..BorderParts::default()
+            };
+            BorderSet::custom(parts).unwrap()
+        };
+        assert_eq!(border.part(BorderPart::Top), "茶-");
+        assert_eq!(border.part(BorderPart::TopLeft), "┌──");
+        let array: [&str; 13] = std::array::from_fn(|i| border.part(BorderPart::ALL[i]));
+        let repeated = BorderSet::custom(array).unwrap();
+        for part in BorderPart::ALL {
+            assert_eq!(repeated.part(part), border.part(part));
+        }
+    }
+    #[test]
+    #[cfg_attr(
+        miri,
+        ignore = "65535/65536-cell corner corpus runs natively; small clusters/mode ownership run under Miri"
+    )]
+    fn full_corner_width_limit_is_checked_before_publication() {
+        for size in [65535, 65536] {
+            let corner = "x".repeat(size);
+            let mut parts = [""; 13];
+            parts[4] = &corner;
+            let original = BorderSet::custom(parts).unwrap();
+            let changed = original.clone().with_corner_mode(CornerMode::WholePattern);
+            if size == 65535 {
+                assert_eq!(changed.unwrap().part_width(BorderPart::TopLeft), 65535);
+            } else {
+                assert_eq!(changed.unwrap_err(), DecorationError::WidthOverflow);
+            }
+            assert_eq!(original.corner_mode(), CornerMode::FirstCluster);
+            assert_eq!(original.corner(BorderPart::TopLeft), ("x", 1));
+        }
     }
 }

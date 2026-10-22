@@ -10,8 +10,8 @@ mod color_input;
 pub use color_input::{AdaptiveColor, ColorError, PremultipliedRgba16, ProfileColors, Rgba16};
 mod decoration;
 pub use decoration::{
-    Alignment, BlockStyle, BorderPart, BorderPreset, BorderSet, DecorationError, Edges, Insets,
-    TabWidth, TextTransform,
+    Alignment, BlockStyle, BorderPart, BorderParts, BorderPreset, BorderSet, CornerMode,
+    DecorationError, Edges, Insets, TabWidth, TextTransform,
 };
 
 /// Semantic terminal color. Indexed values use the xterm palette.

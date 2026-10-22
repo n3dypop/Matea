@@ -1,5 +1,7 @@
 # Structured block decoration: active style reference axis
 
+This page records the qualified f9c34b7 checkpoint. The subsequent corner
+candidate is tracked in[corner-pattern-audit.md](corner-pattern-audit.md).
 This is a bounded increment of `matea-style/lib` reference, still score50.
 The47 below-high axes and threshold75 are unchanged. No additional axis closes.
 The owner authorized approximately25 sequential axes; a decorator subtask is not
@@ -88,7 +90,7 @@ instances; its3 zero-hash transitive hashbrown warnings are diagnosed and retain
 New production line execution is98.72% block/99.29% decoration(includes embedded
 tests in decoration); these are not branch or memory-safety proofs. Native
 [Linux/macOS/Windows+MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39746958503)
-passes all four required jobs at f9c34b7. All212 current execution inputs match
+passes all four required jobs at f9c34b7. All212 execution inputs at that checkpoint match
 that commit exactly; each OS executes47 acceptance commands and all15 new
 style/render methods. Uploaded raw journals/logs are hash verified; missing
 upload members are explicit. Reference/measurement-driver recollection is skipped.
