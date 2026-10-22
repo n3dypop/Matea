@@ -1,0 +1,108 @@
+"""Freeze exact-commit CI facts and uploaded raw native journals/logs."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+import zipfile
+
+ROOT = Path.cwd()
+BASE = ROOT / "docs/evidence/style-reference-color"
+RAW = ROOT / "docs/evidence/terminal-device/ci-2d7c0a9-style-colors"
+RUN = "39706846391"
+HEAD = "2d7c0a973442461e21643e3cc7f58d6697a5e680"
+sys.path.insert(0, str(ROOT / "scripts"))
+from check_quality import execution_inputs
+
+
+def require(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def call(args):
+    return subprocess.check_output(args, cwd=ROOT, timeout=120)
+
+
+run_data = call(["gh", "run", "view", RUN, "--json", "status,conclusion,headSha,jobs,url,event"])
+run = json.loads(run_data)
+require(run["headSha"] == HEAD and run["status"] == "completed" and run["conclusion"] == "success", "CI not qualified")
+required = {"foundation (ubuntu-latest)", "foundation (windows-latest)", "foundation (macos-latest)", "msrv"}
+require({j["name"] for j in run["jobs"] if j["conclusion"] == "success"} == required, "missing successful required job")
+for job in run["jobs"]:
+    if job["name"] in required:
+        require(all(s["conclusion"] in ("success", "skipped") for s in job["steps"]), "failed required step")
+artifacts_data = call(["gh", "api", f"repos/n3dypop/Matea/actions/runs/{RUN}/artifacts"])
+artifacts = json.loads(artifacts_data)["artifacts"]
+RAW.mkdir(parents=True, exist_ok=True)
+(RAW / "run.json").write_bytes(run_data)
+(RAW / "artifacts.json").write_bytes(artifacts_data)
+inputs = sorted(execution_inputs(ROOT))
+committed = {n: sha(call(["git", "show", HEAD + ":" + n])) for n in inputs}
+require(len(inputs) == 204, "execution scope changed")
+facts = {"schema": 1, "status": "qualified", "run": run["url"], "run_id": int(RUN), "source_commit": HEAD,
+         "required_jobs": sorted(required), "skipped_jobs": [j["name"] for j in run["jobs"] if j["conclusion"] == "skipped"],
+         "ci_execution_input_sha256": committed, "hosts": [],
+         "limits": ["Four ordinary Foundation/MSRV jobs, not reference/measurement-driver recollection.",
+                    "CI elapsed values are not performance distributions; timing verdicts use separate native experiments.",
+                    "Only uploaded current journals/logs are retained; missing upload members are explicit."]}
+for host in ["ubuntu", "windows", "macos"]:
+    artifact = next(a for a in artifacts if a["name"] == "native-drivers-" + host + "-latest")
+    require(not artifact["expired"], "artifact expired")
+    zip_path = Path("/private/tmp") / ("matea-style-color-ci-" + host + ".zip")
+    with zip_path.open("wb") as output:
+        subprocess.run(["gh", "api", f"repos/n3dypop/Matea/actions/artifacts/{artifact['id']}/zip"],
+                       cwd=ROOT, stdout=output, check=True, timeout=300)
+    destination = RAW / host
+    destination.mkdir(exist_ok=True)
+    with zipfile.ZipFile(zip_path) as archive:
+        names = set(archive.namelist())
+        def read(name):
+            if "docs/evidence/" + name in names:
+                return archive.read("docs/evidence/" + name)
+            if name in names:
+                return archive.read(name)
+            return None
+        native_bytes = read("local-validation.json")
+        coverage_bytes = read("quality/rust-execution-coverage.json")
+        require(native_bytes and coverage_bytes, "current native journals missing")
+        native, coverage = json.loads(native_bytes), json.loads(coverage_bytes)
+        require(native["status"] == "complete" and native["all_local_checks_passed"] and native["source_changed_during_run"] == [], "native incomplete")
+        require(native["source_sha256"] == committed and len(native["checks"]) == 47 and all(c["exit_code"] == 0 for c in native["checks"]), "native source/check mismatch")
+        require(coverage["status"] == "complete" and coverage["input_sha256"] == committed, "LLVM source mismatch")
+        (destination / "local-validation.json").write_bytes(native_bytes)
+        (destination / "rust-execution-coverage.json").write_bytes(coverage_bytes)
+        logs = []
+        for check in native["checks"]:
+            data = read(check["log"])
+            if data is None:
+                logs.append({"name": check["name"], "uploaded": False, "expected_sha256": check["log_sha256"]})
+                continue
+            require(sha(data) == check["log_sha256"], "raw CI log mismatch: " + check["log"])
+            (destination / check["log"]).write_bytes(data)
+            logs.append({"name": check["name"], "uploaded": True, "sha256": sha(data)})
+        release = (destination / "release-tests.log").read_text(encoding="utf-8")
+        methods = ["pinned_public_color_operations_and_standard_premultiplication",
+                   "invalid_formats_numeric_boundaries_and_unknown_colors_are_explicit",
+                   "every_channel_and_boundary_alpha_preserves_premultiplied_invariants",
+                   "alpha_composition_uses_known_colors_and_independent_rational_model",
+                   "profile_selection_and_rgb_depth_do_not_guess_or_quantize",
+                   "pinned_color_types_and_selection_distinguish_unknown_and_explicit_depth"]
+        require(all("test " + name + " ... ok" in release for name in methods), "new color tests did not execute")
+        python_log = (destination / "optimized-python-tests.log").read_bytes()
+        require(re.search(rb"Ran 151 tests", python_log), "Python scope changed")
+        facts["hosts"].append({"host": host, "artifact_id": artifact["id"], "artifact_size_bytes": artifact["size_in_bytes"],
+                               "downloaded_zip_sha256": sha(zip_path.read_bytes()), "native_commands": 47,
+                               "python_tests": 151, "new_color_test_methods": methods,
+                               "source_observations_exercised": 30180,
+                               "native_sha256": sha(native_bytes), "coverage_sha256": sha(coverage_bytes), "logs": logs})
+    print(host + ": exact 204-input native/LLVM journals; six color tests /151 Python tests", flush=True)
+facts["raw_files"] = {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in RAW.rglob("*") if p.is_file()}
+facts["producer_sha256"] = sha(Path(__file__).read_bytes())
+(BASE / "ci-bindings.json").write_text(json.dumps(facts, indent=2) + "\n")
+print("Four required jobs qualified; reference/measurement-driver jobs explicitly skipped")

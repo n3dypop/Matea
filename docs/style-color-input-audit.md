@@ -48,7 +48,7 @@ independent opaque-background rational model, and 49 mixed-alpha combinations
 against an independent floating model. Negative syntax, signed boundaries,
 unknown colors, NaN/infinity, premultiplication errors and all profile branches
 are covered. The existing exhaustive RGB quantization and compact Style/Color
-size checks remain required. Miri uses seed239, five boundary tests; it skips
+size checks remain required. Miri uses seed 239, five boundary tests; it skips
 the 29,898 source rows and samples nine scalar/opacity boundaries rather than
 claiming exhaustive Miri coverage. Native/Miri/3 OS source bindings are recorded
 alongside this audit as qualification completes.
@@ -58,3 +58,32 @@ Pure integer values avoid heap ownership and unsafe code, but that is a design
 property, not a measured module performance verdict. The open style axis still
 requires common decorators/dimensions, rich text/whitespace/hyperlink contracts,
 inheritance, all features/platforms and precise/custom-color closure before 75.
+
+## Qualified color increment
+
+[CI 39706846391](https://github.com/n3dypop/Matea/actions/runs/39706846391)
+qualifies code/fixtures at 2d7c0a9 on Linux, Windows and macOS plus Rust1.88.
+Four required jobs succeed; reference/measurement-driver recollection jobs are
+explicitly skipped. Each native/LLVM journal binds all 204 inputs and 47 checks;
+six new methods execute all 30180 observations in each release log. Uploaded
+logs are checked byte-for-byte, with missing upload members explicit, in
+[evidence](evidence/style-reference-color/ci-bindings.json).
+
+Final assessment inputs differ only in corrected historical portability reasons
+and evidence references in quality-plan.json. No executable/fixture differs
+from the CI commit. The initial 47 successful checks are preserved separately;
+the final 204 inputs run all 47 again and pass 291 Rust tests plus 15 doctests,
+151 Python tests with 2 conditional skips, and LLVM 99 canonical paths / 106
+instances. Three transitive hashbrown zero-hash profile warnings are diagnosed,
+retained and not suppressed. Miri seed 239 passes 5 boundary tests with 1 explicit
+large-corpus skip. The corrected profile-adapter failure remains retained.
+
+[The final archive](evidence/style-reference-color/final-native/archive.json)
+verifies zero score changes, three stale portability-reason corrections and two
+new maintained programs. The broader axis remains50 and overall 47 axes remain
+below 75. Thirty-three raw color declarations are newly linked, reducing unlinked
+raw declarations to 6650. A newly explicit partial capability row raises that
+row count to 22; it records existing unmet scope rather than adding an axis.
+[748 style-family raw candidates](evidence/style-reference-color/style-axis-queue.json)
+retain identities, source/conditions and existing evidence for the next sequential
+work. This list is not a claim of completed public export closure.

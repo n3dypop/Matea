@@ -1,6 +1,6 @@
 # ADR 0078: Explicit color intent before shared decoration
 
-Status: implemented color increment; qualification in progress. Public APIs provisional.
+Status: color increment qualified; full style reference axis remains open. Public APIs provisional.
 
 The active evaluation axis is `matea-style/lib` reference. Owner direction is
 one axis at a time. This increment implements the first color-input subtask;

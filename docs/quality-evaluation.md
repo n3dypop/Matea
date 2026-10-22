@@ -211,3 +211,14 @@ does not erase the behavioral gap. The 111-program/41-unit inventory still has
 3 OS＋MSRVの4必須CI成功と200入力を照合し、評価更新後47受入、Rust285＋14 doctest、Python151（skip 2）、LLVM97/104を確認しました。
 最初のinventory失敗を保存し、同一ソースの46成功を保持して1件のみ再試験。Rust変更がないためMiriを追加実行していません。
 Stage Aは継続、Stage BとF5は閉じています。
+
+
+2026-10-22 sequential style-reference increment: exactly one active axis,
+`matea-style/lib/reference`, remains50. Color-input changes add two maintained
+programs and33 raw source links with30180 source observations. Final native47,
+Rust291+15 doctests, Python151/skip2, Miri5/ignore1 and LLVM 99 paths / 106 instances
+pass. Required 3 OS/MSRV CI 39706846391 and 204 input hashes/raw logs qualify the
+same code and fixtures; only assessment metadata differs. Three stale portability
+reason texts are corrected with no score change. All47 below-high axes remain,
+and Stage B/F5 remain closed. See style-color-input-audit.md and
+sequential-axis-plan.md; do not re-run frozen historical finalizers indiscriminately.

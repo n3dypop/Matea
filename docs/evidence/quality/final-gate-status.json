@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "status": "incomplete",
-  "checked_at_utc": "2026-10-21T23:19:58.898246+00:00",
-  "source_head": "ce3d2038c6f788bce87af9e165019045e6e7d761",
+  "checked_at_utc": "2026-10-22T02:03:22.255073+00:00",
+  "source_head": "2d7c0a973442461e21643e3cc7f58d6697a5e680",
   "source_context": "Current native/LLVM execution inputs are validated before publication. Current source-ledger hashes and command stdout bind subsequent issue assessments; old CI or assessment metadata is never relabeled as a new execution.",
   "checks": {
     "quality": {
@@ -12,7 +12,7 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "158 program files; 44 review units; 47 assessments below 75; all_high=False\n",
+      "stdout": "160 program files; 44 review units; 47 assessments below 75; all_high=False\n",
       "stderr": ""
     },
     "coverage": {
@@ -22,29 +22,29 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "11 reference inventories; 7455 declaration candidates; 6683 unlinked; 21 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 822 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\nGo target/export closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
+      "stdout": "11 reference inventories; 7455 declaration candidates; 6650 unlinked; 22 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 822 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\nGo target/export closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
       "stderr": ""
     }
   },
-  "program_files": 158,
+  "program_files": 160,
   "review_units": 44,
   "below_high_axes": 47,
   "below_high_dimensions": {
     "reference": 21,
     "performance": 26
   },
-  "unlinked_source_declarations": 6683,
-  "partial_or_unmeasured_capabilities": 21,
+  "unlinked_source_declarations": 6650,
+  "partial_or_unmeasured_capabilities": 22,
   "pending_issue_reports": 822,
   "stage_a": "ongoing",
   "stage_b": "not_started",
   "f5": "closed",
-  "native_report_sha256": "31b4a7c3e487740e81a10808075e54ba367ec326cd039d8677de84deeac9d331",
-  "coverage_report_sha256": "2c1b574dc3fc70110c92a13f45595f739893f1d52126a93381c7774fcb8b9b66",
+  "native_report_sha256": "fff6d1f2cffb5f36e55c7f11657364ba1be7bcd810d05768ba8e80ff5542ad6b",
+  "coverage_report_sha256": "7f6f745e21e38d31ae27f51aef43b61285fbea8a0b66d317f1422959eb23bf9d",
   "ledger_sha256": {
     "docs/coverage/bubbles.json": "24bda38724b4f554924a54f08e8ef017e65e37cea441d6e3d8111522fd0a23b4",
     "docs/coverage/bubbletea.json": "d9944f3bb1f3897fa63ff8ab3f05f92b54f9150dfb33d3cd3d68ecd3289904af",
-    "docs/coverage/capabilities.json": "5d5b13d91585339bbac8ab3fc0fadea4793cc9c3de298aab1d9e44b9658630fb",
+    "docs/coverage/capabilities.json": "627eb5164ab51fb76cf9ba4a187b83a18acbe3b1758c6bfa0c1993b53753f8b5",
     "docs/coverage/charm-x-ansi.json": "0ca6894381d7368c0c063814535c1897d25c5a07b352f8119a9fb9c1f6d453e9",
     "docs/coverage/charm-x-term.json": "f35148ba667f0d2e8e7b9b92ad913c8103b7f157c7fe29e8340a88adcc0febf5",
     "docs/coverage/crossterm.json": "81d49c0afec205c1b9d0bd87daf83435814fad36e995976f7736e244b2f22e94",

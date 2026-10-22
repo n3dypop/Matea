@@ -12,7 +12,7 @@ Progress、TextInputの装飾互換性が依存するため、共通の契約を
 
 1. 色入力：文字列表現、明暗と能力別選択、明示的な色深度・アルファ、
    既定色と不正入力、参照元の色演算との差を固定fixtureと独立モデルで検証。
-   実装済み。全体検証・CIと証拠の固定を進行中。
+   現在の実装範囲はnative/Miri/3 OS CIの照合まで完了。精密/custom変換の残件は4で扱う。
 2. 共通装飾の型と寸法：セルStyleの軽量性を維持してpadding、margin、
    border、min/max寸法、alignmentとinherit/unsetの責務を分離する。
 3. 装飾した文字の構造化描画：wrap、clip、transform、hyperlink、空白の

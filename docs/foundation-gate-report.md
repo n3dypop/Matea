@@ -1,13 +1,19 @@
 # Matea Foundation gate report
 
-2026-10-22逐次実行追補。現在の作業対象は`matea-style/lib`参照互換性の1軸だけ。
-[実行順と達成条件](sequential-axis-plan.md)を固定し、色入力を実装しました。
-30,180件の固定参照元観測、全scalar/alpha境界の独立モデル、型付き不正入力を
-6試験で検証し、Miri seed239の5境界試験も通過。全体native/CI照合は進行中です。
-33宣言を新たにリンクしraw未リンクは6,650、部分／未測定能力は22行。
-色入力だけでは軸全体の完了条件を満たさないため、点数変更はなく47軸未達を維持。
-装飾・寸法・rich表現・精密色等の残件は同じ参照軸の次の小項目です。
-Stage B／F5／画像エンジン・CUDAのgateは閉じています。
+2026-10-22逐次実行追補。現在の対象は`matea-style/lib`参照互換性の1軸だけ。
+[実行順と達成条件](sequential-axis-plan.md)を固定し、色入力の小項目を実装・検証しました。
+30,180件の固定参照元観測、全scalar/alpha境界の独立モデル、型付き不正入力を6試験で照合。
+通常色と乗算済み色を分け、不正なpremultiplication・RGB16のshift-only深度を是正しました。
+[2d7c0a9の3 OS＋MSRV CI](https://github.com/n3dypop/Matea/actions/runs/39706846391)の必須4ジョブが成功。
+各OSの204入力、47受入、新規6試験、Python151を固定commitと生ログへ照合しました。
+参照／計測ドライバー再収集は今回はskip。最終入力との差は古いCI参照を訂正した評価metadataだけです。
+最終native47、Rust291＋15 doctest、Python151（skip 2）、LLVM99 source／106 instanceが成功。
+Miri seed239は5境界試験成功・大きな参照fixture1試験は明示skip。nativeでは全行を実行しています。
+初回47成功も別保存し、評価文言訂正後の最終入力で再実行しました。依存profilingの3警告は診断・保持。
+33宣言を新規リンクしraw未リンクは6,650、部分／未測定能力は22行。既存未対応範囲の明示であり軸の追加ではありません。
+点数変更はなく160 program／44単位・47軸未達（参照21・性能26）を維持。
+装飾・寸法・rich表現・精密/custom変換等は同じ参照軸の残件です。748宣言候補の次の確認表を用意しました。
+[実装・差・限界](style-color-input-audit.md)。Stage B／F5／画像エンジン・CUDAのgateは閉じています。
 
 以下は過去の各チェックポイントです。
 

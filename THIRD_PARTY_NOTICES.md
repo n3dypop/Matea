@@ -53,6 +53,16 @@ Bubbles viewport/viewport.go at the same revision. The independent Rust state
 owns content, validates index/resize invariants and saturates movement; CRLF and
 overflow differences are recorded in ADR 0047 and the viewport source audit.
 
+## Terminal style color inputs
+
+The altered Rust color-input parsing and RGB8 adjustment behavior in
+`matea-style/src/color_input.rs` is informed by Lip Gloss `color.go` at
+19f011f1cc573e5d2bf9d7a9c4f14d429647759e. Its MIT notice is Copyright (c)
+2021-2026 Charmbracelet, Inc.; the full MIT permission and disclaimer above apply
+to these adapted sections. Matea adds explicit errors, unknown default colors,
+canonical depth conversion, validated premultiplied types and explicit known
+background composition. The original upstream code is not vendored here.
+
 ## Motion implementation attribution
 
 Matea's Rust spring implementation is an altered implementation informed by
