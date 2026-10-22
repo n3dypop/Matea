@@ -1,0 +1,40 @@
+// Frozen source producer: original fixture enumeration, actual pinned APIs.
+package main
+import (
+ "bufio"
+ "fmt"
+ "image/color"
+ "os"
+ "strconv"
+ "strings"
+ "charm.land/lipgloss/v2"
+ uv "github.com/charmbracelet/ultraviolet"
+ "github.com/charmbracelet/x/ansi"
+)
+type config [24]int
+func base()config { var c config;c[14]=-1;c[15]=-1;c[17]=4;c[21]=1;c[22]=-1;c[23]=-1;return c }
+func rgb(c color.Color)string{if c==nil{return "-"};r,g,b,_:=c.RGBA();return fmt.Sprintf("%02x%02x%02x",r>>8,g>>8,b>>8)}
+func main(){
+ out:=bufio.NewWriter(os.Stdout);defer out.Flush();id:=0
+ presets:=[]lipgloss.Border{lipgloss.NormalBorder(),lipgloss.RoundedBorder(),lipgloss.ASCIIBorder(),lipgloss.ThickBorder(),lipgloss.DoubleBorder(),lipgloss.BlockBorder(),lipgloss.OuterHalfBlockBorder(),lipgloss.InnerHalfBlockBorder(),lipgloss.HiddenBorder(),lipgloss.MarkdownBorder(),{}}
+ emit:=func(family,text string,c config,mode int){
+  s:=lipgloss.NewStyle().Padding(c[0],c[1],c[2],c[3]).Margin(c[4],c[5],c[6],c[7]).Width(c[8]).Height(c[9]).MaxWidth(c[10]).MaxHeight(c[11]).Align(lipgloss.Position(float64(c[12])/2),lipgloss.Position(float64(c[13])/2)).Inline(c[16]!=0).TabWidth(c[17]).ColorWhitespace(c[21]!=0)
+  if c[14]>=0 { if c[15]<0{s=s.BorderStyle(presets[c[14]])}else{s=s.Border(presets[c[14]],c[15]&1!=0,c[15]&2!=0,c[15]&4!=0,c[15]&8!=0)} }
+  if c[18]!=0{s=s.PaddingChar(rune(c[18]))};if c[19]!=0{s=s.MarginChar(rune(c[19]))}
+  flags:=c[20];s=s.Bold(flags&1!=0).Italic(flags&2!=0).Underline(flags&4!=0).Strikethrough(flags&8!=0).Reverse(flags&16!=0)
+  if flags&32!=0{s=s.Foreground(lipgloss.Color("#b42358")).Background(lipgloss.Color("#173229")).MarginBackground(lipgloss.Color("#245617")).BorderForeground(lipgloss.Color("#435261")).BorderBackground(lipgloss.Color("#126743"))}
+  if flags&64!=0{s=s.UnderlineColor(lipgloss.Color("#1234ab"))}
+  if c[22]>=0{s=s.UnderlineSpaces(c[22]!=0)};if c[23]>=0{s=s.StrikethroughSpaces(c[23]!=0)}
+  child:=lipgloss.NewStyle().Padding(1).Margin(1)
+  if mode&1!=0{child=child.Width(0).Height(0)}
+  if mode&2!=0{child=child.Foreground(lipgloss.NoColor{}).Bold(false).Underline(false)}
+  if mode&4!=0{child=child.BorderLeft(false).MarginBackground(lipgloss.NoColor{}).Inline(false).TabWidth(0).PaddingChar('.').MarginChar('!')}
+  s=child.Inherit(s)
+  raw:=s.Render(text);w,h:=lipgloss.Size(raw);frame:=uv.NewScreenBuffer(w,h);frame.Method=ansi.GraphemeWidth;uv.NewStyledString(raw).Draw(frame,frame.Bounds())
+  var cells strings.Builder
+  for y:=0;y<h;y++{for x:=0;x<w;x++{cell:=frame.CellAt(x,y);if cell.Width==0{cells.WriteString("0,,-,-,-,0,0;");continue};a:=0;if cell.Style.Attrs&uv.AttrBold!=0{a|=1};if cell.Style.Attrs&uv.AttrItalic!=0{a|=2};if cell.Style.Attrs&uv.AttrReverse!=0{a|=4};if cell.Style.Attrs&uv.AttrStrikethrough!=0{a|=8};fmt.Fprintf(&cells,"%d,%x,%s,%s,%s,%d,%d;",cell.Width,cell.Content,rgb(cell.Style.Fg),rgb(cell.Style.Bg),rgb(cell.Style.UnderlineColor),a,cell.Style.Underline)}}
+  fields:=make([]string,len(c));for i,n:=range c{fields[i]=strconv.Itoa(n)}
+  fmt.Fprintf(out,"%s-%d\t%x\t%s\t%d\t%d\t%x\t%s\t",family,id,text,strings.Join(fields,","),w,h,raw,cells.String());fmt.Fprintf(out,"%d\n",mode);id++
+ }
+ for _,flags:=range []int{0,1,4,8,16,32,64,127}{for mode:=0;mode<8;mode++ {c:=base();c[0]=2;c[1]=2;c[2]=2;c[3]=2;c[4]=3;c[5]=3;c[6]=3;c[7]=3;c[8]=8;c[9]=4;c[12]=1;c[13]=2;c[14]=4;c[20]=flags;emit("inherit","a b\nc",c,mode)}}
+}

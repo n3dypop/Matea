@@ -1,6 +1,6 @@
 {
   "all_high": false,
-  "programs": 160,
+  "programs": 163,
   "review_units": 44,
   "below_high": [
     {
@@ -429,7 +429,8 @@
         "crates/matea-render/src/rich_text.rs",
         "crates/matea-render/tests/rich_text.rs",
         "crates/matea-render/src/snapshot.rs",
-        "crates/matea-render/tests/surface_snapshot.rs"
+        "crates/matea-render/tests/surface_snapshot.rs",
+        "crates/matea-render/src/block.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -454,7 +455,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact unit sources match successful 2948000 native Linux/Windows/macOS, MSRV 1.88 and pinned source/probe CI. All 44 acceptance checks pass per OS; optional Ratatui profiles, independent frame outputs and native execution coverage are retained. Physical terminal interoperability remains bounded; newer auditor changes are excluded."
+          "reason": "Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification."
         }
       },
       "evidence": [
@@ -470,7 +471,10 @@
         "docs/decisions/0055-pinned-width-fast-path-with-script-fallback.md",
         "docs/decisions/0060-owned-cell-scenes-and-consuming-frame-transfer.md",
         "crates/matea-render/tests/surface_snapshot.rs",
-        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json"
+        "docs/evidence/ratatui-bridge/ci-2948000/source-bindings.json",
+        "docs/style-block-decoration-audit.md",
+        "docs/evidence/block-style/fixture-verification.json",
+        "docs/evidence/block-style/ci-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -527,7 +531,8 @@
         "crates/matea-style/src/attributes.rs",
         "crates/matea-style/src/gradient.rs",
         "crates/matea-style/src/attributes/patch.rs",
-        "crates/matea-style/src/color_input.rs"
+        "crates/matea-style/src/color_input.rs",
+        "crates/matea-style/src/decoration.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -552,7 +557,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Current color-input qualification, exact three-native-host/MSRV results and source bindings are tracked in docs/style-color-input-audit.md and its evidence. Six new tests exercise 30180 pinned color observations and independent scalar/alpha models; five boundary tests pass Miri seed239 with the large source corpus explicitly native-only. Previous 941623d/0c95c37 source bindings are historical evidence for unchanged subsets, not current color-input execution. Physical emulator/palette/font/IME/SSH behavior, full target/feature closure and other-host performance remain unverified."
+          "reason": "Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification."
         }
       },
       "evidence": [
@@ -572,10 +577,13 @@
         "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
         "docs/style-color-input-audit.md",
         "docs/evidence/style-reference-color/fixture-verification.json",
-        "docs/sequential-axis-plan.md"
+        "docs/sequential-axis-plan.md",
+        "docs/style-block-decoration-audit.md",
+        "docs/evidence/block-style/fixture-verification.json",
+        "docs/evidence/block-style/ci-bindings.json"
       ],
       "remaining": [
-        "Active reference axis: first color-input subtask implemented; shared decoration/geometry, rich whitespace/hyperlink/transform, precise/custom transformations, full source/feature/target closure remain pending. No score promotion before the full axis qualifies."
+        "Active reference axis: common block intent and structured decoration increment tested; rich hyperlinks,precise/custom color transforms,full raw/compiler feature/target contracts and matched module performance remain open. No score promotion until this axis qualifies."
       ]
     },
     {
@@ -1389,7 +1397,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Current color-input qualification, exact three-native-host/MSRV results and source bindings are tracked in docs/style-color-input-audit.md and its evidence. Six new tests exercise 30180 pinned color observations and independent scalar/alpha models; five boundary tests pass Miri seed239 with the large source corpus explicitly native-only. Previous 941623d/0c95c37 source bindings are historical evidence for unchanged subsets, not current color-input execution. Physical emulator/palette/font/IME/SSH behavior, full target/feature closure and other-host performance remain unverified."
+          "reason": "Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification."
         }
       },
       "evidence": [
@@ -1406,7 +1414,8 @@
         "docs/kitty-controls-audit.md",
         "docs/evidence/kitty-controls/ci-source-bindings.json",
         "docs/style-color-input-audit.md",
-        "docs/evidence/style-reference-color/fixture-verification.json"
+        "docs/evidence/style-reference-color/fixture-verification.json",
+        "docs/evidence/block-style/ci-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1458,7 +1467,8 @@
       "id": "matea-render/integration-tests",
       "files": [
         "crates/matea-render/tests/invariants.rs",
-        "crates/matea-render/tests/text.rs"
+        "crates/matea-render/tests/text.rs",
+        "crates/matea-render/tests/blocks.rs"
       ],
       "criteria": {
         "rust_design": {
@@ -1483,14 +1493,17 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Exact program source matches final Linux/Windows/macOS and MSRV 1.88 CI. Required source/probe fixtures run on all three OSes. Unix-only paths execute on Linux/macOS; Windows PTY, physical emulators and native console behavior remain unverified."
+          "reason": "Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification."
         }
       },
       "evidence": [
         "docs/evidence/local-validation.json",
         "docs/evidence/quality/ci-run.json",
         "docs/evidence/optimization/ci-run.json",
-        "docs/evidence/cursor/ci-source-bindings.json"
+        "docs/evidence/cursor/ci-source-bindings.json",
+        "docs/style-block-decoration-audit.md",
+        "docs/evidence/block-style/fixture-verification.json",
+        "docs/evidence/block-style/ci-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -1569,7 +1582,7 @@
         },
         "portability": {
           "score": 75,
-          "reason": "Current color-input qualification, exact three-native-host/MSRV results and source bindings are tracked in docs/style-color-input-audit.md and its evidence. Six new tests exercise 30180 pinned color observations and independent scalar/alpha models; five boundary tests pass Miri seed239 with the large source corpus explicitly native-only. Previous 941623d/0c95c37 source bindings are historical evidence for unchanged subsets, not current color-input execution. Physical emulator/palette/font/IME/SSH behavior, full target/feature closure and other-host performance remain unverified."
+          "reason": "Cross-platform qualification is recorded in docs/evidence/block-style/ci-bindings.json. Claims apply only when its status is qualified and current execution inputs match. Physical terminal/emulator interoperability remains explicitly bounded; source snapshots are not emulator verification."
         }
       },
       "evidence": [
@@ -1579,7 +1592,8 @@
         "docs/evidence/cursor/ci-source-bindings.json",
         "docs/evidence/precise-color-inputs/ci-941623d/source-bindings.json",
         "docs/style-color-input-audit.md",
-        "docs/evidence/style-reference-color/fixture-verification.json"
+        "docs/evidence/style-reference-color/fixture-verification.json",
+        "docs/evidence/block-style/ci-bindings.json"
       ],
       "remaining": [
         "Review all raw/compiler public capabilities; add missing independent correctness and module performance evidence."
@@ -2426,7 +2440,7 @@
       ]
     }
   ],
-  "plan_sha256": "a5b587a4eac5404b729772ecefb81e0213cd62a138069117df744a4650665bf6",
+  "plan_sha256": "a2f397d3ede89cba1d0aa130b3d0980984d0da65f0f535802b96915c9317ecc9",
   "validation": "docs/evidence/local-validation.json",
   "files": [
     {
@@ -2854,8 +2868,59 @@
       }
     },
     {
+      "file": "crates/matea-render/src/block.rs",
+      "sha256": "190dd7daead0d6bb08520b28aeb4415253b0d7f3c313a21c721669741acc4246",
+      "units": [
+        "matea-render/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/src/block.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-render/src/block.rs",
+            "summary": {
+              "lines": {
+                "count": 546,
+                "covered": 539,
+                "percent": 98.71794871794873
+              },
+              "functions": {
+                "count": 40,
+                "covered": 39,
+                "percent": 97.5
+              },
+              "instantiations": {
+                "count": 123,
+                "covered": 42,
+                "percent": 34.146341463414636
+              },
+              "regions": {
+                "count": 1017,
+                "covered": 997,
+                "notcovered": 20,
+                "percent": 98.03343166175024
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "file": "crates/matea-render/src/lib.rs",
-      "sha256": "124e6ae3c0c95d4802a62c3e8c9e3b77a1884184cce4f83b38c34789ccd6637d",
+      "sha256": "31165d2a0b954090470b63a14573ff776f64410436a898d5e1a3a0e5010c3557",
       "units": [
         "matea-render/lib"
       ],
@@ -2868,24 +2933,24 @@
             "summary": {
               "lines": {
                 "count": 732,
-                "covered": 712,
-                "percent": 97.26775956284153
+                "covered": 715,
+                "percent": 97.6775956284153
               },
               "functions": {
                 "count": 73,
-                "covered": 69,
-                "percent": 94.52054794520548
+                "covered": 70,
+                "percent": 95.8904109589041
               },
               "instantiations": {
                 "count": 277,
-                "covered": 224,
-                "percent": 80.86642599277978
+                "covered": 225,
+                "percent": 81.2274368231047
               },
               "regions": {
                 "count": 1364,
-                "covered": 1329,
-                "notcovered": 35,
-                "percent": 97.43401759530792
+                "covered": 1334,
+                "notcovered": 30,
+                "percent": 97.80058651026393
               },
               "branches": {
                 "count": 0,
@@ -2919,24 +2984,24 @@
             "summary": {
               "lines": {
                 "count": 212,
-                "covered": 189,
-                "percent": 89.15094339622641
+                "covered": 192,
+                "percent": 90.56603773584906
               },
               "functions": {
                 "count": 25,
-                "covered": 23,
-                "percent": 92
+                "covered": 24,
+                "percent": 96
               },
               "instantiations": {
-                "count": 82,
-                "covered": 57,
-                "percent": 69.51219512195121
+                "count": 86,
+                "covered": 61,
+                "percent": 70.93023255813954
               },
               "regions": {
                 "count": 310,
-                "covered": 273,
-                "notcovered": 37,
-                "percent": 88.06451612903226
+                "covered": 277,
+                "notcovered": 33,
+                "percent": 89.35483870967742
               },
               "branches": {
                 "count": 0,
@@ -2979,9 +3044,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 26,
-                "covered": 15,
-                "percent": 57.692307692307686
+                "count": 22,
+                "covered": 10,
+                "percent": 45.45454545454545
               },
               "regions": {
                 "count": 145,
@@ -3039,6 +3104,57 @@
                 "covered": 116,
                 "notcovered": 3,
                 "percent": 97.47899159663865
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "crates/matea-render/tests/blocks.rs",
+      "sha256": "be6339c28950f06657d27ccd33a150d0c67976caa9cd86cd5ca631ae48c45e8e",
+      "units": [
+        "matea-render/integration-tests"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-render/tests/blocks.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-render/tests/blocks.rs",
+            "summary": {
+              "lines": {
+                "count": 582,
+                "covered": 544,
+                "percent": 93.47079037800687
+              },
+              "functions": {
+                "count": 27,
+                "covered": 27,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 27,
+                "covered": 27,
+                "percent": 100
+              },
+              "regions": {
+                "count": 1125,
+                "covered": 1058,
+                "notcovered": 67,
+                "percent": 94.04444444444444
               },
               "branches": {
                 "count": 0,
@@ -3285,9 +3401,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 118,
-                "covered": 104,
-                "percent": 88.13559322033898
+                "count": 125,
+                "covered": 109,
+                "percent": 87.2
               },
               "regions": {
                 "count": 179,
@@ -3337,8 +3453,8 @@
               },
               "instantiations": {
                 "count": 87,
-                "covered": 53,
-                "percent": 60.91954022988506
+                "covered": 60,
+                "percent": 68.96551724137932
               },
               "regions": {
                 "count": 220,
@@ -3415,6 +3531,57 @@
       }
     },
     {
+      "file": "crates/matea-style/src/decoration.rs",
+      "sha256": "483ed18dacdc419f37b1ce5d2999df9e9521c4f931acee80af7f039fe3f59d62",
+      "units": [
+        "matea-style/lib"
+      ],
+      "native_execution_coverage": {
+        "file": "crates/matea-style/src/decoration.rs",
+        "instances": [
+          {
+            "unit": 0,
+            "compiler_filename": "crates/matea-style/src/decoration.rs",
+            "summary": {
+              "lines": {
+                "count": 421,
+                "covered": 418,
+                "percent": 99.2874109263658
+              },
+              "functions": {
+                "count": 47,
+                "covered": 47,
+                "percent": 100
+              },
+              "instantiations": {
+                "count": 143,
+                "covered": 88,
+                "percent": 61.53846153846154
+              },
+              "regions": {
+                "count": 629,
+                "covered": 625,
+                "notcovered": 4,
+                "percent": 99.36406995230524
+              },
+              "branches": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              },
+              "mcdc": {
+                "count": 0,
+                "covered": 0,
+                "notcovered": 0,
+                "percent": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "file": "crates/matea-style/src/gradient.rs",
       "sha256": "344ba7852065611381d97ccd825711eb4dbfebe019c639859a277089d98a4f71",
       "units": [
@@ -3467,7 +3634,7 @@
     },
     {
       "file": "crates/matea-style/src/lib.rs",
-      "sha256": "aaf61f4b68eb31e527af0bf30c3895d1706622e1202866305721cb88968453d5",
+      "sha256": "20f364a4427896a41d32820b73d4b42b0b00d12a8001a106ee7525e54ce89c79",
       "units": [
         "matea-style/lib"
       ],
@@ -3489,9 +3656,9 @@
                 "percent": 100
               },
               "instantiations": {
-                "count": 119,
-                "covered": 81,
-                "percent": 68.0672268907563
+                "count": 122,
+                "covered": 83,
+                "percent": 68.0327868852459
               },
               "regions": {
                 "count": 393,
@@ -6762,7 +6929,7 @@
     },
     {
       "file": "crates/matea/src/lib.rs",
-      "sha256": "7c557eb8371e8df1b590ede2669ece7805683bd7563c35480c78d896cb7e45dc",
+      "sha256": "a7085ef78d455b5dea875df83c9e9ac8b969772289a20fe61723a0fb70781b36",
       "units": [
         "matea/lib"
       ],

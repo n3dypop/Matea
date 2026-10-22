@@ -42,7 +42,7 @@
         },
         {
           "number": 1857,
-          "title": "Keystrokes wait for the next frame tick (\u224813 ms echo at 60 fps); render input at once and diff only changed lines",
+          "title": "Keystrokes wait for the next frame tick (≈13 ms echo at 60 fps); render input at once and diff only changed lines",
           "url": "https://github.com/charmbracelet/bubbletea/issues/1857",
           "updated_at": "2026-10-11T08:15:58Z",
           "labels": [],
@@ -231,7 +231,7 @@
         },
         {
           "number": 1709,
-          "title": "tea.Println content bypasses color-profile downsampling \u2014 NO_COLOR and low-color terminals get full-color scrollback",
+          "title": "tea.Println content bypasses color-profile downsampling — NO_COLOR and low-color terminals get full-color scrollback",
           "url": "https://github.com/charmbracelet/bubbletea/issues/1709",
           "updated_at": "2026-07-04T05:05:15Z",
           "labels": [],
@@ -1236,8 +1236,24 @@
           "url": "https://github.com/charmbracelet/lipgloss/issues/731",
           "updated_at": "2026-09-06T11:40:23Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "partially_assessed_explicit_remaining_contract",
+          "disposition": "partially_assessed_pending_followup",
+          "review": {
+            "status": "partial",
+            "reference": "lipgloss",
+            "reference_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+            "reviewed_updated_at": "2026-09-06T11:40:23Z",
+            "notes": "Partial: independent Option<bool> border/inline intent avoids truncating high property bits into pointer-width integers. Typed intent tests cover left/inline overrides,but native32-bit source and Rust runs have not been performed; do not infer32-bit qualification from64-bit CI.",
+            "evidence_sha256": {
+              "crates/matea-style/src/decoration.rs": "483ed18dacdc419f37b1ce5d2999df9e9521c4f931acee80af7f039fe3f59d62",
+              "crates/matea-render/src/block.rs": "190dd7daead0d6bb08520b28aeb4415253b0d7f3c313a21c721669741acc4246",
+              "crates/matea-render/tests/blocks.rs": "be6339c28950f06657d27ccd33a150d0c67976caa9cd86cd5ca631ae48c45e8e",
+              "docs/evidence/block-style/fixture-verification.json": "6e832708e97f0d28b0ca4fd5238ae8c202a144d0e0508b639f36efb551f0a72b",
+              "docs/evidence/block-style/issues.go.txt": "f32d09e440ac409168f4dc3adfc13b8bf7022b7b0f1aea071a1205dbca5c866a",
+              "docs/evidence/block-style/issue-522-source.tsv": "e8fc5e33e2b2844c5f05cdf22e489ad286d1213c412317ba0e146514a87b9bdc",
+              "docs/evidence/block-style/issue-731.json": "d8c2959198452297138ef31a457f964e66d890b63c6d7d52d18b839359181385"
+            }
+          }
         },
         {
           "number": 729,
@@ -1292,8 +1308,24 @@
           "labels": [
             "enhancement"
           ],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "partially_assessed_explicit_remaining_contract",
+          "disposition": "partially_assessed_pending_followup",
+          "review": {
+            "status": "partial",
+            "reference": "lipgloss",
+            "reference_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+            "reviewed_updated_at": "2026-02-02T23:37:04Z",
+            "notes": "Partial: Matea preserves a full combining/ZWJ cluster instead of one source rune. Multiple separate graphemes in one corner are still intentionally truncated; the requested multi-character corner contract is not implemented.",
+            "evidence_sha256": {
+              "crates/matea-style/src/decoration.rs": "483ed18dacdc419f37b1ce5d2999df9e9521c4f931acee80af7f039fe3f59d62",
+              "crates/matea-render/src/block.rs": "190dd7daead0d6bb08520b28aeb4415253b0d7f3c313a21c721669741acc4246",
+              "crates/matea-render/tests/blocks.rs": "be6339c28950f06657d27ccd33a150d0c67976caa9cd86cd5ca631ae48c45e8e",
+              "docs/evidence/block-style/fixture-verification.json": "6e832708e97f0d28b0ca4fd5238ae8c202a144d0e0508b639f36efb551f0a72b",
+              "docs/evidence/block-style/issues.go.txt": "f32d09e440ac409168f4dc3adfc13b8bf7022b7b0f1aea071a1205dbca5c866a",
+              "docs/evidence/block-style/issue-522-source.tsv": "e8fc5e33e2b2844c5f05cdf22e489ad286d1213c412317ba0e146514a87b9bdc",
+              "docs/evidence/block-style/issue-605.json": "ccc4bbaaad38957178897efc56e6307374d2f222510952d154d7fdb9a28fcfa3"
+            }
+          }
         },
         {
           "number": 599,
@@ -1324,7 +1356,7 @@
         },
         {
           "number": 570,
-          "title": "\ud83e\udda5  Easily display lists as \"auto-sizing\" multi-columns (\ud83d\udcf0 style)",
+          "title": "🦥  Easily display lists as \"auto-sizing\" multi-columns (📰 style)",
           "url": "https://github.com/charmbracelet/lipgloss/issues/570",
           "updated_at": "2025-09-30T23:16:40Z",
           "labels": [
@@ -1388,8 +1420,24 @@
           "url": "https://github.com/charmbracelet/lipgloss/issues/522",
           "updated_at": "2025-06-16T20:51:13Z",
           "labels": [],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "not_reproduced_at_fixed_source_and_typed_regression",
+          "disposition": "fixed_source_behavior_verified",
+          "review": {
+            "status": "complete",
+            "reference": "lipgloss",
+            "reference_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+            "reviewed_updated_at": "2025-06-16T20:51:13Z",
+            "notes": "Complete bounded assessment: the reported implicit-border size0 defect is not reproduced at Lip Gloss19f011f1. Current get.go explicitly handles isBorderStyleSetWithoutSides. Both actual Go styles report2x2 frame overhead and render3x3. Matea default side presence and frame extents are covered by existing style unit test and built-in corpus. This is source-pin verification,not a claim of an upstream fix or terminal emulator support.",
+            "evidence_sha256": {
+              "crates/matea-style/src/decoration.rs": "483ed18dacdc419f37b1ce5d2999df9e9521c4f931acee80af7f039fe3f59d62",
+              "crates/matea-render/src/block.rs": "190dd7daead0d6bb08520b28aeb4415253b0d7f3c313a21c721669741acc4246",
+              "crates/matea-render/tests/blocks.rs": "be6339c28950f06657d27ccd33a150d0c67976caa9cd86cd5ca631ae48c45e8e",
+              "docs/evidence/block-style/fixture-verification.json": "6e832708e97f0d28b0ca4fd5238ae8c202a144d0e0508b639f36efb551f0a72b",
+              "docs/evidence/block-style/issues.go.txt": "f32d09e440ac409168f4dc3adfc13b8bf7022b7b0f1aea071a1205dbca5c866a",
+              "docs/evidence/block-style/issue-522-source.tsv": "e8fc5e33e2b2844c5f05cdf22e489ad286d1213c412317ba0e146514a87b9bdc",
+              "docs/evidence/block-style/issue-522.json": "33d4e0bdf7855fe9cec65a805412f686fcaf75d921dc02992f21c4147d91fa0d"
+            }
+          }
         },
         {
           "number": 520,
@@ -1744,8 +1792,24 @@
           "labels": [
             "bug"
           ],
-          "matea_reproduction": "pending",
-          "disposition": "untriaged_report_not_confirmed_defect"
+          "matea_reproduction": "partially_assessed_explicit_remaining_contract",
+          "disposition": "partially_assessed_pending_followup",
+          "review": {
+            "status": "partial",
+            "reference": "lipgloss",
+            "reference_sha": "19f011f1cc573e5d2bf9d7a9c4f14d429647759e",
+            "reviewed_updated_at": "2022-10-05T04:59:57Z",
+            "notes": "Partial: source report asks for padding narrower body rows when right corners are wide. Matea reserves maximum side/corner cell width and tests whole-cluster borders; the exact only-wide-right-corner scenario and full side alignment require a dedicated follow-up regression before closure.",
+            "evidence_sha256": {
+              "crates/matea-style/src/decoration.rs": "483ed18dacdc419f37b1ce5d2999df9e9521c4f931acee80af7f039fe3f59d62",
+              "crates/matea-render/src/block.rs": "190dd7daead0d6bb08520b28aeb4415253b0d7f3c313a21c721669741acc4246",
+              "crates/matea-render/tests/blocks.rs": "be6339c28950f06657d27ccd33a150d0c67976caa9cd86cd5ca631ae48c45e8e",
+              "docs/evidence/block-style/fixture-verification.json": "6e832708e97f0d28b0ca4fd5238ae8c202a144d0e0508b639f36efb551f0a72b",
+              "docs/evidence/block-style/issues.go.txt": "f32d09e440ac409168f4dc3adfc13b8bf7022b7b0f1aea071a1205dbca5c866a",
+              "docs/evidence/block-style/issue-522-source.tsv": "e8fc5e33e2b2844c5f05cdf22e489ad286d1213c412317ba0e146514a87b9bdc",
+              "docs/evidence/block-style/issue-114.json": "4087a7657986dcc3e206d612c0ef44841dcafc9d71262a684aa79236d9ebc3c5"
+            }
+          }
         },
         {
           "number": 112,
@@ -4135,7 +4199,7 @@
         },
         {
           "number": 563,
-          "title": "Tables cannot draw row dividers or an outer frame \u2014 border visibility is hardcoded",
+          "title": "Tables cannot draw row dividers or an outer frame — border visibility is hardcoded",
           "url": "https://github.com/charmbracelet/glamour/issues/563",
           "updated_at": "2026-05-27T15:36:14Z",
           "labels": [],
@@ -5104,7 +5168,7 @@
       "issues": [
         {
           "number": 214,
-          "title": "perf: full-width InsertLineArea/DeleteLineArea copy every cell, making each scroll O(width \u00d7 height)",
+          "title": "perf: full-width InsertLineArea/DeleteLineArea copy every cell, making each scroll O(width × height)",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/214",
           "updated_at": "2026-10-14T04:21:49Z",
           "labels": [],
@@ -5203,7 +5267,7 @@
         },
         {
           "number": 160,
-          "title": "Render() pads unstyled trailing cells since #128 \u2014 is width fidelity the intended contract?",
+          "title": "Render() pads unstyled trailing cells since #128 — is width fidelity the intended contract?",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/160",
           "updated_at": "2026-08-20T15:27:11Z",
           "labels": [],
@@ -5275,7 +5339,7 @@
         },
         {
           "number": 54,
-          "title": "Testing that\u2019s sort of like playwright",
+          "title": "Testing that’s sort of like playwright",
           "url": "https://github.com/charmbracelet/ultraviolet/issues/54",
           "updated_at": "2025-10-22T05:30:53Z",
           "labels": [],
@@ -5363,7 +5427,7 @@
         },
         {
           "number": 949,
-          "title": "vt: IRM (insert mode, CSI 4 h) is not implemented \u2014 printed cells overwrite instead of shifting the line right",
+          "title": "vt: IRM (insert mode, CSI 4 h) is not implemented — printed cells overwrite instead of shifting the line right",
           "url": "https://github.com/charmbracelet/x/issues/949",
           "updated_at": "2026-08-17T23:07:36Z",
           "labels": [],
@@ -7428,7 +7492,7 @@
         },
         {
           "number": 1072,
-          "title": "Windows: emoji panel input (KEYEVENTF_UNICODE) is silently dropped \u2014 surrogate key-up halves poison the pairing",
+          "title": "Windows: emoji panel input (KEYEVENTF_UNICODE) is silently dropped — surrogate key-up halves poison the pairing",
           "url": "https://github.com/crossterm-rs/crossterm/issues/1072",
           "updated_at": "2026-07-25T12:51:28Z",
           "labels": [],

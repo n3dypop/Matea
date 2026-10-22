@@ -1,0 +1,29 @@
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.71s
+     Running tests/blocks.rs (target/debug/deps/blocks-e88ba50b38fd2a77)
+
+running 7 tests
+test rich_styles_survive_inline_cluster_merging_and_block_overrides ... ok
+test construction_normalizes_after_one_capturing_transform ... ok
+test validation_and_user_panic_never_publish_partial_blocks ... ok
+test clipping_and_view_composition_preserve_whole_graphemes_and_damage ... ok
+test generated_wraps_preserve_non_whitespace_and_bound_every_row ... FAILED
+test pinned_border_gradient_perimeter_and_offsets ... ok
+test pinned_block_projection ... ok
+
+failures:
+
+---- generated_wraps_preserve_non_whitespace_and_bound_every_row stdout ----
+
+thread 'generated_wraps_preserve_non_whitespace_and_bound_every_row' (2212556) panicked at crates/matea-render/tests/blocks.rs:464:13:
+assertion `left == right` failed: size "茶- aa" target=2
+  left: 3
+ right: 2
+
+
+failures:
+    generated_wraps_preserve_non_whitespace_and_bound_every_row
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+error: test failed, to rerun pass `-p matea-render --test blocks`

@@ -93,3 +93,14 @@ freely, subject to the following restrictions:
 3. This notice may not be removed or altered from any source
    distribution.
 ```
+
+## Structured block decoration
+
+`matea-style/src/decoration.rs` and `matea-render/src/block.rs` are altered Rust
+implementations informed by Lip Gloss style/set/get/unset/borders.go at
+19f011f1cc573e5d2bf9d7a9c4f14d429647759e and x/ansi wrap.go at
+faa4adf95555331dfb439b716cc83767ecdadeb4. The MIT copyright/permission/disclaimer
+above apply to the adapted sections (Charmbracelet, Inc.). Matea separates
+optional layout intent from cell values, owns shared immutable text/patterns,
+uses whole graphemes and checked cell geometry, and rejects non-progressing or
+control-bearing border patterns. The source is audited outside this repository.

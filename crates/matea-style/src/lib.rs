@@ -8,6 +8,11 @@ mod gradient;
 pub use gradient::{Gradient, GradientColors, GradientError, GradientGrid, GradientGridColors};
 mod color_input;
 pub use color_input::{AdaptiveColor, ColorError, PremultipliedRgba16, ProfileColors, Rgba16};
+mod decoration;
+pub use decoration::{
+    Alignment, BlockStyle, BorderPart, BorderPreset, BorderSet, DecorationError, Edges, Insets,
+    TabWidth, TextTransform,
+};
 
 /// Semantic terminal color. Indexed values use the xterm palette.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]

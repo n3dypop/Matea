@@ -1,0 +1,42 @@
+// Frozen source producer: original fixture enumeration, actual pinned APIs.
+package main
+import (
+ "bufio"
+ "fmt"
+ "image/color"
+ "os"
+ "strconv"
+ "strings"
+ "charm.land/lipgloss/v2"
+ uv "github.com/charmbracelet/ultraviolet"
+ "github.com/charmbracelet/x/ansi"
+)
+type config [24]int
+func base()config { var c config;c[14]=-1;c[15]=-1;c[17]=4;c[21]=1;c[22]=-1;c[23]=-1;return c }
+func rgb(c color.Color)string{if c==nil{return "-"};r,g,b,_:=c.RGBA();return fmt.Sprintf("%02x%02x%02x",r>>8,g>>8,b>>8)}
+func main(){
+ out:=bufio.NewWriter(os.Stdout);defer out.Flush();id:=0
+ presets:=[]lipgloss.Border{lipgloss.NormalBorder(),lipgloss.RoundedBorder(),lipgloss.ASCIIBorder(),lipgloss.ThickBorder(),lipgloss.DoubleBorder(),lipgloss.BlockBorder(),lipgloss.OuterHalfBlockBorder(),lipgloss.InnerHalfBlockBorder(),lipgloss.HiddenBorder(),lipgloss.MarkdownBorder(),{}}
+ emit:=func(family,text string,c config){
+  s:=lipgloss.NewStyle().Padding(c[0],c[1],c[2],c[3]).Margin(c[4],c[5],c[6],c[7]).Width(c[8]).Height(c[9]).MaxWidth(c[10]).MaxHeight(c[11]).Align(lipgloss.Position(float64(c[12])/2),lipgloss.Position(float64(c[13])/2)).Inline(c[16]!=0).TabWidth(c[17]).ColorWhitespace(c[21]!=0)
+  if c[14]>=0 { if c[15]<0{s=s.BorderStyle(presets[c[14]])}else{s=s.Border(presets[c[14]],c[15]&1!=0,c[15]&2!=0,c[15]&4!=0,c[15]&8!=0)} }
+  if c[18]!=0{s=s.PaddingChar(rune(c[18]))};if c[19]!=0{s=s.MarginChar(rune(c[19]))}
+  flags:=c[20];s=s.Bold(flags&1!=0).Italic(flags&2!=0).Underline(flags&4!=0).Strikethrough(flags&8!=0).Reverse(flags&16!=0)
+  if flags&32!=0{s=s.Foreground(lipgloss.Color("#b42358")).Background(lipgloss.Color("#173229")).MarginBackground(lipgloss.Color("#245617")).BorderForeground(lipgloss.Color("#435261")).BorderBackground(lipgloss.Color("#126743"))}
+  if flags&64!=0{s=s.UnderlineColor(lipgloss.Color("#1234ab"))}
+  if c[22]>=0{s=s.UnderlineSpaces(c[22]!=0)};if c[23]>=0{s=s.StrikethroughSpaces(c[23]!=0)}
+  raw:=s.Render(text);w,h:=lipgloss.Size(raw);frame:=uv.NewScreenBuffer(w,h);frame.Method=ansi.GraphemeWidth;uv.NewStyledString(raw).Draw(frame,frame.Bounds())
+  var cells strings.Builder
+  for y:=0;y<h;y++{for x:=0;x<w;x++{cell:=frame.CellAt(x,y);if cell.Width==0{cells.WriteString("0,,-,-,-,0,0;");continue};a:=0;if cell.Style.Attrs&uv.AttrBold!=0{a|=1};if cell.Style.Attrs&uv.AttrItalic!=0{a|=2};if cell.Style.Attrs&uv.AttrReverse!=0{a|=4};if cell.Style.Attrs&uv.AttrStrikethrough!=0{a|=8};fmt.Fprintf(&cells,"%d,%x,%s,%s,%s,%d,%d;",cell.Width,cell.Content,rgb(cell.Style.Fg),rgb(cell.Style.Bg),rgb(cell.Style.UnderlineColor),a,cell.Style.Underline)}}
+  fields:=make([]string,len(c));for i,n:=range c{fields[i]=strconv.Itoa(n)}
+  fmt.Fprintf(out,"%s-%d\t%x\t%s\t%d\t%d\t%x\t%s\n",family,id,text,strings.Join(fields,","),w,h,raw,cells.String());id++
+ }
+ for preset:=0;preset<11;preset++{for mask:=0;mask<16;mask++{for _,text:=range []string{"","ab\nc","茶e\u0301"}{c:=base();c[14]=preset;c[15]=mask;emit("border",text,c)}}}
+ texts:=[]string{"","tea","tea time","a\nbc\n","茶e\u0301 👩‍💻","one-two-long","  a b  ","a\u00a0b c","A\tB\r\nC"}
+ for width:=0;width<12;width++{for _,text:=range texts{for align:=0;align<3;align++{for pad:=0;pad<3;pad++{c:=base();c[8]=width;c[12]=align;c[1]=pad;c[3]=pad;emit("wrap",text,c)}}}}
+ for height:=0;height<6;height++{for align:=0;align<3;align++{for pad:=0;pad<4;pad++{for margin:=0;margin<3;margin++{c:=base();c[8]=8;c[9]=height;c[13]=align;c[0]=pad&1;c[2]=(pad>>1)&1;c[4]=margin;c[5]=margin;c[6]=margin;c[7]=margin;emit("height","a\nbc",c)}}}}
+ for mw:=0;mw<9;mw++{for mh:=0;mh<5;mh++{for preset:=0;preset<4;preset++{c:=base();c[8]=8;c[9]=4;c[14]=preset;c[10]=mw;c[11]=mh;c[0]=1;c[1]=1;c[2]=1;c[3]=1;c[4]=1;c[7]=1;emit("clip","茶e\u0301",c)}}}
+ for flags:=0;flags<128;flags++{for whites:=0;whites<2;whites++{c:=base();c[20]=flags;c[21]=whites;c[8]=9;c[9]=5;c[0]=1;c[1]=1;c[2]=1;c[3]=1;c[4]=1;c[5]=1;c[6]=1;c[7]=1;c[14]=1;c[22]=(flags%3)-1;c[23]=((flags/3)%3)-1;emit("style","a b\nc",c)}}
+ for inline:=0;inline<2;inline++{for tab:=0;tab<5;tab++{c:=base();c[16]=inline;c[17]=tab;c[14]=1;c[0]=1;c[1]=1;c[4]=1;c[8]=10;c[9]=5;emit("tabs","a\tb\r\nc",c)}}
+ for _,fill:=range []int{'.',0xa0,'茶'}{c:=base();c[18]=fill;c[19]=fill;c[0]=1;c[1]=1;c[2]=1;c[3]=1;c[4]=1;c[5]=1;c[6]=1;c[7]=1;emit("fill","a",c)}
+}

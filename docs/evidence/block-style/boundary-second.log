@@ -1,0 +1,56 @@
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running unittests src/lib.rs (target/debug/deps/matea_render-d09641a814fc5c6c)
+
+running 12 tests
+test rich_text::tests::every_scalar_context_matches_per_grapheme_width ... ignored, exhaustive scalar contexts, explicitly executed by native acceptance
+test tests::cursor_metadata_does_not_damage_cells_and_invalid_positions_hide ... ok
+test tests::overlapping_wide_glyph_is_removed_atomically ... ok
+test tests::extended_attributes_keep_the_cell_budget_and_follow_whole_graphemes ... ok
+test tests::cursor_clips_normalizes_wide_cells_and_obeys_paint_order ... ok
+test tests::diff_handles_wide_to_narrow_style_and_resize ... ok
+test tests::cursor_composes_through_layout_panel_and_layers ... ok
+test tests::sanitization_borrows_safe_input_and_handles_all_controls ... ok
+test tests::unicode_clipping_and_controls ... ok
+test tests::panel_retains_owned_render_tokens_through_theme_mutation_clone_and_layout ... ok
+test tests::zero_and_oversized_geometry ... ok
+test rich_text::tests::fast_width_preserves_cross_grapheme_script_and_emoji_policies ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/blocks.rs (target/debug/deps/blocks-e88ba50b38fd2a77)
+
+running 7 tests
+test rich_styles_survive_inline_cluster_merging_and_block_overrides ... ok
+test construction_normalizes_after_one_capturing_transform ... ok
+test validation_and_user_panic_never_publish_partial_blocks ... ok
+test clipping_and_view_composition_preserve_whole_graphemes_and_damage ... ok
+test generated_wraps_preserve_non_whitespace_and_bound_every_row ... FAILED
+test pinned_border_gradient_perimeter_and_offsets ... FAILED
+test pinned_block_projection ... ok
+
+failures:
+
+---- generated_wraps_preserve_non_whitespace_and_bound_every_row stdout ----
+
+thread 'generated_wraps_preserve_non_whitespace_and_bound_every_row' (2211399) panicked at crates/matea-render/tests/blocks.rs:464:13:
+assertion `left == right` failed: size "a -aa" target=1
+  left: 2
+ right: 1
+
+---- pinned_border_gradient_perimeter_and_offsets stdout ----
+gradient gradient-60 cfg=0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,4,0,0,32,1,-1,-1 offset=-17 actual 1,e29480,0000ff,126743,-,0,0;1,61,b42358,173229,-,0,0; source 1,e29480,f30035,126743,-,0,0;1,61,b42358,173229,-,0,0;
+gradient gradient-62 cfg=0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,4,0,0,32,1,-1,-1 offset=-17 actual 1,e29480,0066aa,126743,-,0,0;1,61,b42358,173229,-,0,0; source 1,e29480,ffbf6b,126743,-,0,0;1,61,b42358,173229,-,0,0;
+gradient gradient-63 cfg=0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,4,0,0,32,1,-1,-1 offset=-1 actual 1,e29480,0000ff,126743,-,0,0;1,61,b42358,173229,-,0,0; source 1,e29480,f30035,126743,-,0,0;1,61,b42358,173229,-,0,0;
+
+thread 'pinned_border_gradient_perimeter_and_offsets' (2211401) panicked at crates/matea-render/tests/blocks.rs:290:5:
+440 gradient mismatches; first ["gradient-60", "gradient-62", "gradient-63", "gradient-65", "gradient-69", "gradient-71", "gradient-75", "gradient-77", "gradient-78", "gradient-80", "gradient-84", "gradient-86"]
+
+
+failures:
+    generated_wraps_preserve_non_whitespace_and_bound_every_row
+    pinned_border_gradient_perimeter_and_offsets
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+error: test failed, to rerun pass `-p matea-render --test blocks`

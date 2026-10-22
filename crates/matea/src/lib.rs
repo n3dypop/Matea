@@ -49,11 +49,15 @@ pub mod prelude {
         MediaKey, Model, ModifierKey, Modifiers, Mouse, MouseButton, MouseKind, Response, Runtime,
         ScrollDirection, Subscription, SubscriptionId, Task, ViewContext,
     };
-    pub use matea_render::{Cursor, Rect, RichText, Size, StyledGrapheme, Surface, Text, View};
+    pub use matea_render::{
+        BlockError, Cursor, Rect, RichText, Size, StyledBlock, StyledGrapheme, Surface, Text, View,
+    };
     pub use matea_style::{
-        AdaptiveColor, BlinkStyle, Border, Color, ColorError, ColorLevel, Gradient, GradientColors,
-        GradientError, GradientGrid, GradientGridColors, PremultipliedRgba16, ProfileColors,
-        Rgba16, Style, StylePatch, TextAttribute, TextAttributes, TextFrame, Theme, UnderlineStyle,
+        AdaptiveColor, Alignment, BlinkStyle, BlockStyle, Border, BorderPart, BorderPreset,
+        BorderSet, Color, ColorError, ColorLevel, DecorationError, Edges, Gradient, GradientColors,
+        GradientError, GradientGrid, GradientGridColors, Insets, PremultipliedRgba16,
+        ProfileColors, Rgba16, Style, StylePatch, TabWidth, TextAttribute, TextAttributes,
+        TextFrame, TextTransform, Theme, UnderlineStyle,
     };
     pub use matea_widgets::key::{Binding, NavigationKeys};
     pub use matea_widgets::{

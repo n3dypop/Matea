@@ -7,6 +7,8 @@ mod text;
 pub use text::Text;
 mod rich_text;
 pub use rich_text::{RichText, StyledGrapheme};
+mod block;
+pub use block::{BlockError, StyledBlock};
 mod snapshot;
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;

@@ -1,0 +1,31 @@
+   Compiling matea-render v0.1.0 (/Users/misosoup/Developer/Codex/Project Matea/Matea/crates/matea-render)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running tests/blocks.rs (target/debug/deps/blocks-e88ba50b38fd2a77)
+
+running 9 tests
+test rich_styles_survive_inline_cluster_merging_and_block_overrides ... ok
+test construction_normalizes_after_one_capturing_transform ... ok
+test validation_and_user_panic_never_publish_partial_blocks ... ok
+test wide_custom_borders_preserve_clusters_and_fill_unfit_cells ... FAILED
+test clipping_and_view_composition_preserve_whole_graphemes_and_damage ... ok
+test pinned_custom_border_patterns_and_first_corner ... ok
+test pinned_border_gradient_perimeter_and_offsets ... ok
+test pinned_block_projection ... ok
+test generated_wraps_preserve_non_whitespace_and_bound_every_row ... ok
+
+failures:
+
+---- wide_custom_borders_preserve_clusters_and_fill_unfit_cells stdout ----
+
+thread 'wide_custom_borders_preserve_clusters_and_fill_unfit_cells' (2216081) panicked at crates/matea-render/tests/blocks.rs:542:5:
+assertion `left == right` failed
+  left: "👩\u{200d}💻茶 e\u{301}\ne\u{301} ab👩\u{200d}💻\ne\u{301} c x\ne\u{301}茶 👩\u{200d}💻"
+ right: "👩\u{200d}💻茶e\u{301}\ne\u{301} ab👩\u{200d}💻\ne\u{301} c x\ne\u{301}茶 👩\u{200d}💻"
+
+
+failures:
+    wide_custom_borders_preserve_clusters_and_fill_unfit_cells
+
+test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+error: test failed, to rerun pass `-p matea-render --test blocks`

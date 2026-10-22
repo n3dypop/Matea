@@ -1,0 +1,20 @@
+// Frozen liveness/corner observation; not a performance benchmark.
+package main
+import (
+ "fmt"
+ "time"
+ "charm.land/lipgloss/v2"
+)
+func main(){
+ b:=lipgloss.NormalBorder();b.Top="\u0301"
+ done:=make(chan string,1)
+ go func(){done<-lipgloss.NewStyle().Border(b).Render("abc")}()
+ select {case raw:=<-done:fmt.Printf("zero_width_border_completed raw=%x\n",raw)
+ case <-time.After(50*time.Millisecond):fmt.Println("zero_width_border_watchdog_expired_ms=50")}
+ b=lipgloss.NormalBorder();b.TopLeft="e\u0301";b.Left="👩‍💻";b.Right="👩‍💻"
+ raw:=lipgloss.NewStyle().Border(b).Render("a\nb")
+ fmt.Printf("rune_border_raw=%x\n",raw)
+ p:=lipgloss.NewStyle().PaddingChar('.').MarginChar('!')
+ c:=lipgloss.NewStyle().Inherit(p)
+ fmt.Printf("inherited_fill_characters=%d,%d\n",c.GetPaddingChar(),c.GetMarginChar())
+}

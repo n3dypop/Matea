@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "status": "incomplete",
-  "checked_at_utc": "2026-10-22T02:03:22.255073+00:00",
-  "source_head": "2d7c0a973442461e21643e3cc7f58d6697a5e680",
+  "checked_at_utc": "2026-10-22T08:17:06.420755+00:00",
+  "source_head": "f0c59d96edf1b1dcdb664315c83587565aa5425a",
   "source_context": "Current native/LLVM execution inputs are validated before publication. Current source-ledger hashes and command stdout bind subsequent issue assessments; old CI or assessment metadata is never relabeled as a new execution.",
   "checks": {
     "quality": {
@@ -12,7 +12,7 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "160 program files; 44 review units; 47 assessments below 75; all_high=False\n",
+      "stdout": "163 program files; 44 review units; 47 assessments below 75; all_high=False\n",
       "stderr": ""
     },
     "coverage": {
@@ -22,29 +22,29 @@
         "--gate"
       ],
       "exit_code": 1,
-      "stdout": "11 reference inventories; 7455 declaration candidates; 6650 unlinked; 22 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 822 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\nGo target/export closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
+      "stdout": "11 reference inventories; 7455 declaration candidates; 6474 unlinked; 23 partial/unmeasured capabilities; 2 unresolved Rust export graphs\n91 module verdicts pending; 821 issue reports and 115 source markers need ledger disposition\nDependency/public-capability closure reviewed: False\nGo target/export closure reviewed: False\n6902 compiler profile export candidates unlinked (overlap source inventory); target/signature closure reviewed: False\nF5 CLOSED\n",
       "stderr": ""
     }
   },
-  "program_files": 160,
+  "program_files": 163,
   "review_units": 44,
   "below_high_axes": 47,
   "below_high_dimensions": {
     "reference": 21,
     "performance": 26
   },
-  "unlinked_source_declarations": 6650,
-  "partial_or_unmeasured_capabilities": 22,
-  "pending_issue_reports": 822,
+  "unlinked_source_declarations": 6474,
+  "partial_or_unmeasured_capabilities": 23,
+  "pending_issue_reports": 821,
   "stage_a": "ongoing",
   "stage_b": "not_started",
   "f5": "closed",
-  "native_report_sha256": "fff6d1f2cffb5f36e55c7f11657364ba1be7bcd810d05768ba8e80ff5542ad6b",
-  "coverage_report_sha256": "7f6f745e21e38d31ae27f51aef43b61285fbea8a0b66d317f1422959eb23bf9d",
+  "native_report_sha256": "c3d6168c8284e8e23779511d231fccf019aec0c37f1f3d876005cbbe0de7b80a",
+  "coverage_report_sha256": "b2015821868f3b338a3d01a574c95e0c481b40fb0415bb23d276894db4249836",
   "ledger_sha256": {
     "docs/coverage/bubbles.json": "24bda38724b4f554924a54f08e8ef017e65e37cea441d6e3d8111522fd0a23b4",
     "docs/coverage/bubbletea.json": "d9944f3bb1f3897fa63ff8ab3f05f92b54f9150dfb33d3cd3d68ecd3289904af",
-    "docs/coverage/capabilities.json": "627eb5164ab51fb76cf9ba4a187b83a18acbe3b1758c6bfa0c1993b53753f8b5",
+    "docs/coverage/capabilities.json": "ee09b6ed5d784f0c8013868d526ba45272f9d9d0d6c031ddfd43075796b2d4e6",
     "docs/coverage/charm-x-ansi.json": "0ca6894381d7368c0c063814535c1897d25c5a07b352f8119a9fb9c1f6d453e9",
     "docs/coverage/charm-x-term.json": "f35148ba667f0d2e8e7b9b92ad913c8103b7f157c7fe29e8340a88adcc0febf5",
     "docs/coverage/crossterm.json": "81d49c0afec205c1b9d0bd87daf83435814fad36e995976f7736e244b2f22e94",
@@ -57,7 +57,7 @@
     "docs/coverage/ratatui.json": "7dd7fbf770de6b674263b591bfdae47add92397d6da882ccd1034a1ce30352e2",
     "docs/coverage/summary.json": "f917f6bc74d3818f2ac33c4db47cba1d0e6f15968405c9b032a2b45a7839b28a",
     "docs/coverage/ultraviolet.json": "fa77b127d03f9d07364cbb9060046735b6fb9bef516e5754e044ab4eaa6edbeb",
-    "docs/coverage/upstream-issues.json": "73386b87e060a6e40b0e9d256b7d1e4920977ef19eb43701d5eb5867c920da1b"
+    "docs/coverage/upstream-issues.json": "f9fa677d1c722ecc328157e4f54a8ca6bbcddd34b9e5df5b2a034df0868bb48f"
   },
   "procedure_sha256": "e8df6a4b5516e6f397229bba00df3489a16c5fc2c1b838277ff76edf91e5c9eb"
 }
