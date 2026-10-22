@@ -1,6 +1,7 @@
 # ADR0080: Whole corner patterns with cached rectangular extents
 
-Status: integrated candidate;current-root qualification pending. The isolated
+Status: implemented and qualified at2209956;API remains provisional.
+[Qualification](../evidence/block-corners/qualification.json). The isolated
 prototype and its failures remain frozen in evidence.
 The active evaluation axis remains matea-style/lib reference50. No score change.
 

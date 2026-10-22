@@ -1,10 +1,12 @@
 # Corner patterns and rectangular side alignment
 
-Current corner integration is a candidate;full current-root/native/Miri/LLVM/CI
-qualification is pending. The previous block increment at f9c34b7 has qualified
+Current corner integration is qualified at2209956. Its212 execution inputs match
+the[successful3OS/MSRV run](https://github.com/n3dypop/Matea/actions/runs/39753359367).
+The previous block increment at f9c34b7 has qualified
 3OS/MSRV evidence. Its results are historical and are not relabeled as this code.
 The active axis remains matea-style/lib reference50;the baseline47 below-high
-axes are unchanged. Five dependent units need current portability revalidation.
+axes are unchanged. Five dependent units have current-source portability bindings;
+physical emulator and native32-bit limits remain explicit.
 
 [ADR0080](decisions/0080-whole-corner-patterns.md) adds CornerMode::WholePattern
 and borrowed named BorderParts input. BorderSet owns validated strings and cached
@@ -30,12 +32,24 @@ all-target Clippy,and new Miri5 methods at seed251. One65535/65536-cell boundary
 corpus runs natively and is explicitly ignored under Miri. Additional tests cover
 named borrowed input ownership,shared caches,mode changes,iterator lifetime,
 combining/CJK/ZWJ crop boundaries,each corner gradient coordinate and signed offset
-extremes. Prototype failure logs are retained. These scoped runs are not current
-root integration qualification or benchmark results.
+extremes. Prototype failure logs are retained. Those are isolated prototype records.
+Current root qualification passes47 commands,Rust312 tests+18 doctests,Python151
+(two local conditional skips),Miri20 tests(one explicit native-only boundary
+corpus),and LLVM102 paths/109 compiler instances. Three transitive hashbrown
+profile warnings are diagnosed and retained. Each OS executes47 commands and
+all21 style/block methods. Reference/measurement-driver recollection is skipped.
+[Qualification](evidence/block-corners/qualification.json) is not a benchmark.
 
 [The exact integration record](evidence/block-corners/integration.json) binds the
-four adopted prototype files and facade. No source issue is closed until current
-integration evidence and its ledger hashes are checked. The large style source
+four adopted prototype files and facade. The ledger rechecks522 and completes
+the bounded114/605 assessments;731 remains partial because native32-bit runs are
+absent. Pending reports are819. No upstream GitHub issue was modified. The large style source
 frontier,hyperlinks,raw tabs,precise colors,remaining utilities,conditional exports
 and matched module performance remain open. StageB/F5/image engine/codec/CUDA
 remain gated. No performance ratio or universal optimum is asserted.
+
+Performance remains pending:the block constructor's owned AsRef input can still
+copy text,and current row layout traverses/retains full input rows before a
+viewport crop. The viewport bounds Surface allocation;it is not a global memory
+bound for input and layout metadata. Matched module benchmarks must cover these
+paths before an allocation/speed improvement or maximum-performance claim.
